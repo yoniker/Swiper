@@ -119,6 +119,7 @@ class _CardStackState extends State<CardStack> {
 
   void _onSlideComplete(SlideDirection direction) {
     Match currenMatch = widget.matchEngine.currentMatch;
+
     switch (direction) {
       case SlideDirection.left:
         currenMatch.nope();
@@ -410,9 +411,9 @@ class _DraggableCardState extends State<DraggableCard>
               height: anchorBounds.height,
               padding: const EdgeInsets.all(16.0),
               child:  GestureDetector(
-                onPanStart: _onPanStart,
-                onPanUpdate: _onPanUpdate,
-                onPanEnd: _onPanEnd,
+                onPanStart: widget.isDraggable?_onPanStart:null,
+                onPanUpdate: widget.isDraggable?_onPanUpdate:null,
+                onPanEnd: widget.isDraggable?_onPanEnd:null,
                 child: widget.card,
               ),
             ),

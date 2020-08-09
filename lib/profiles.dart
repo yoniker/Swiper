@@ -45,10 +45,17 @@ final List<Profile> demoProfiles = [
 
   ),
 
+
+
+];
+
+
+
+final List<Profile> moreDemoProfile=[
   Profile(
-    photos: ['assets/cloe.jpg'],
-    name:"Cloe",
-    bio:"Want dor!!!"
+      photos: ['assets/cloe.jpg'],
+      name:"Cloe",
+      bio:"Want dor!!!"
   ),
   Profile(
       photos: ['assets/romanova.jpg'],
@@ -60,13 +67,6 @@ final List<Profile> demoProfiles = [
       name:"Daniella",
       bio:"Want dor!!!"
   )
-
-];
-
-
-
-final List<Profile> moreDemoProfile=[
-
 ];
 
 class Profile {

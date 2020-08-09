@@ -2,15 +2,17 @@ import 'package:flutter/widgets.dart';
 import './profiles.dart';
 
 class MatchEngine extends ChangeNotifier {
-  final List<Match> _matches;
+  List<Match> _matches;
   int _currentMatchIndex;
   int _nextMatchIndex;
+  bool addedMoreProfiles;
 
   MatchEngine({
     List<Match> matches,
   }) : _matches = matches {
     _currentMatchIndex = 0;
     _nextMatchIndex = 1;
+    addedMoreProfiles = false;
   }
 
   Match get currentMatch => _matches[_currentMatchIndex];
@@ -20,8 +22,18 @@ class MatchEngine extends ChangeNotifier {
     if (currentMatch.decision != Decision.indecided) {
       currentMatch.reset();
       _currentMatchIndex = _nextMatchIndex;
-      _nextMatchIndex =
-          _nextMatchIndex < _matches.length - 1 ? _nextMatchIndex + 1 : 0;
+      if (_nextMatchIndex < _matches.length - 1) {
+        _nextMatchIndex = _nextMatchIndex + 1;
+      } else {
+        if (!addedMoreProfiles) {
+          _matches += moreDemoProfile.map((Profile profile) {
+            return Match(profile: profile);
+          }).toList();
+          addedMoreProfiles=true;
+        }
+        _nextMatchIndex =
+            _nextMatchIndex < _matches.length - 1 ? _nextMatchIndex + 1 : 0;
+      }
       notifyListeners();
     }
   }
