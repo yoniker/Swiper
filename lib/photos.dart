@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class PhotoBrowser extends StatefulWidget {
   final List<String> photoAssetPaths;
   final int visiblePhotoIndex;
-
-  PhotoBrowser({this.photoAssetPaths, this.visiblePhotoIndex});
+  final bool clickable;
+  PhotoBrowser({this.photoAssetPaths, this.visiblePhotoIndex,this.clickable});
 
   @override
   _PhotoBrowserState createState() => _PhotoBrowserState();
@@ -48,7 +48,7 @@ class _PhotoBrowserState extends State<PhotoBrowser> {
       fit: StackFit.expand,
       children: <Widget>[
         new GestureDetector(
-          onTap: _prevImage,
+          onTap: widget.clickable? _prevImage:(){},
           child: new FractionallySizedBox(
             widthFactor: 0.5,
             heightFactor: 1.0,
@@ -59,7 +59,7 @@ class _PhotoBrowserState extends State<PhotoBrowser> {
           ),
         ),
         new GestureDetector(
-          onTap: _nextImage,
+          onTap: widget.clickable?_nextImage:(){},
           child: new FractionallySizedBox(
             widthFactor: 0.5,
             heightFactor: 1.0,
@@ -88,7 +88,7 @@ class _PhotoBrowserState extends State<PhotoBrowser> {
           top: 0.0,
           left: 0.0,
           right: 0.0,
-          child: new SelectedPhotoIndicator(
+          child: SelectedPhotoIndicator(
             photoCount: widget.photoAssetPaths.length,
             visiblePhotoIndex: visiblePhotoIndex,
           ),
@@ -114,23 +114,23 @@ class SelectedPhotoIndicator extends StatelessWidget {
           height: 3.0,
           decoration: new BoxDecoration(
               color: Colors.black.withOpacity(0.2),
-              borderRadius: new BorderRadius.circular(2.5)),
+              borderRadius: BorderRadius.circular(2.5)),
         ),
       ),
     );
   }
 
   Widget _buildActiveIndicator() {
-    return new Expanded(
-      child: new Padding(
+    return  Expanded(
+      child:  Padding(
         padding: const EdgeInsets.only(left: 2.0, right: 2.0),
-        child: new Container(
+        child:  Container(
           height: 3.0,
-          decoration: new BoxDecoration(
+          decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: new BorderRadius.circular(2.5),
               boxShadow: [
-                new BoxShadow(
+                 BoxShadow(
                     color: const Color(0x22000000),
                     blurRadius: 2.0,
                     spreadRadius: 0.0,
@@ -153,9 +153,9 @@ class SelectedPhotoIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Padding(
+    return  Padding(
       padding: const EdgeInsets.all(0.0),
-      child: new Row(
+      child:  Row(
         children: _buildIndicators(),
       ),
     );

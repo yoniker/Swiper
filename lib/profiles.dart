@@ -1,39 +1,31 @@
 final List<Profile> demoProfiles = [
-  new Profile(
+   Profile(
     photos: [
       "assets/dor1.jpg",
       "assets/dor2.jpg",
       "assets/dor3.jpg",
       "assets/king.jpg",
     ],
-    name: "Dor Bachars",
-    bio: "King of the universe",
+    name: "דור בכר",
+    bio: "מלך היקום",
   ),
-  new Profile(
-    photos: [
-      "assets/erez1.jpg",
-      "assets/erez2.jpg",
-      "assets/erez3.jpg",
-    ],
-    name: "Erez",
-    bio: "I like to sleep",
-  ),
-  new Profile(
+
+   Profile(
     photos: [
       "assets/yoni1.jpg",
       "assets/yoni2.jpg",
       "assets/yoni3.jpg",
     ],
-    name: "Yoni",
-    bio: "I want Dor",
+    name: "יוני קרן",
+    bio: "אני מעוניין בכל אחת שתתפשר עליי במקום דור",
   ),
   Profile(
     photos: [
       "assets/gigi1.jpg",
       "assets/gigi2.jpg",
       "assets/gigi3.jpg",],
-        name:"Gigi",
-        bio:"Want Dor"
+        name:"ג'יג'י",
+        bio:"אני רוצה את דור"
 
   ),
   Profile(
@@ -41,7 +33,7 @@ final List<Profile> demoProfiles = [
         "assets/alessandra1.jpg",
         "assets/alessandra2.jpg",],
       name:"Alessandra",
-      bio:"Want Dor!!!"
+      bio:"מוכנה לחכות עד השניה האחרונה של החיים,רק דור!"
 
   ),
 
@@ -54,13 +46,13 @@ final List<Profile> demoProfiles = [
 final List<Profile> moreDemoProfile=[
   Profile(
       photos: ['assets/cloe.jpg'],
-      name:"Cloe",
-      bio:"Want dor!!!"
+      name:"קלואי",
+      bio:"אני אעשה הכל בשביל דור, מי שהוא לא דור בבקשה להפסיק להטריד"
   ),
   Profile(
       photos: ['assets/romanova.jpg'],
-      name:"Romanova",
-      bio:"Want dor!!!"
+      name:"רומנובה",
+      bio:"דור שם עליי זין,איזה כיף!!!"
   ),
   Profile(
       photos: ['assets/daniela.jpg'],

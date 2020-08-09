@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import './cards.dart';
 import './matches.dart';
 import './profiles.dart';
-
+import 'package:flutter_svg/flutter_svg.dart';
 void main() => runApp(MyApp());
 
 final MatchEngine matchEngine = new MatchEngine(
@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColorBrightness: Brightness.light,
         primarySwatch: Colors.blue,
@@ -35,15 +36,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Match match = new Match();
+  Match match =  Match();
 
   Widget _buildAppBar() {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0.0,
       centerTitle: true,
-      leading: new IconButton(
-        icon: new Icon(
+      leading:  IconButton(
+        icon:  Icon(
           Icons.person,
           color: Colors.grey,
           size: 40.0,
@@ -52,13 +53,10 @@ class _MyHomePageState extends State<MyHomePage> {
           // TODO
         },
       ),
-      title: new FlutterLogo(
-        size: 30.0,
-        colors: Colors.red,
-      ),
+      title:  Container(child:Image.asset('assets/bigD.png',width:50,height:50),color:Colors.transparent),
       actions: <Widget>[
-        new IconButton(
-          icon: new Icon(
+         IconButton(
+          icon: Icon(
             Icons.chat_bubble,
             color: Colors.grey,
             size: 40.0,
@@ -75,38 +73,38 @@ class _MyHomePageState extends State<MyHomePage> {
     return BottomAppBar(
         color: Colors.transparent,
         elevation: 0.0,
-        child: new Padding(
+        child:  Padding(
           padding: const EdgeInsets.all(16.0),
-          child: new Row(
+          child:  Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              new RoundIconButton.small(
+               RoundIconButton.small(
                 icon: Icons.refresh,
                 iconColor: Colors.orange,
                 onPressed: () {},
               ),
-              new RoundIconButton.large(
+               RoundIconButton.large(
                 icon: Icons.clear,
                 iconColor: Colors.red,
                 onPressed: () {
                   matchEngine.currentMatch.nope();
                 },
               ),
-              new RoundIconButton.small(
+               RoundIconButton.small(
                 icon: Icons.star,
                 iconColor: Colors.blue,
                 onPressed: () {
                   matchEngine.currentMatch.superLike();
                 },
               ),
-              new RoundIconButton.large(
+               RoundIconButton.large(
                 icon: Icons.favorite,
                 iconColor: Colors.green,
                 onPressed: () {
                   matchEngine.currentMatch.like();
                 },
               ),
-              new RoundIconButton.small(
+               RoundIconButton.small(
                 icon: Icons.lock,
                 iconColor: Colors.purple,
                 onPressed: () {},
@@ -120,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: new CardStack(
+      body:  CardStack(
         matchEngine: matchEngine,
       ),
       bottomNavigationBar: _buildBottomBar(),
@@ -158,16 +156,16 @@ class RoundIconButton extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      decoration: new BoxDecoration(
+      decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.white,
           boxShadow: [
-            new BoxShadow(color: const Color(0x11000000), blurRadius: 10.0),
+             BoxShadow(color: const Color(0x11000000), blurRadius: 10.0),
           ]),
-      child: new RawMaterialButton(
-        shape: new CircleBorder(),
+      child:  RawMaterialButton(
+        shape:  CircleBorder(),
         elevation: 0.0,
-        child: new Icon(
+        child:  Icon(
           icon,
           color: iconColor,
         ),

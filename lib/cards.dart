@@ -27,7 +27,7 @@ class _CardStackState extends State<CardStack> {
     _currentMatch = widget.matchEngine.currentMatch;
     _currentMatch.addListener(_onMatchChange);
 
-    _frontCard = new Key(_currentMatch.profile.name);
+    _frontCard = Key(_currentMatch.profile.name);
   }
 
   @override
@@ -70,7 +70,7 @@ class _CardStackState extends State<CardStack> {
         _currentMatch.addListener(_onMatchChange);
       }
 
-      _frontCard = new Key(_currentMatch.profile.name);
+      _frontCard = Key(_currentMatch.profile.name);
     });
   }
 
@@ -84,6 +84,7 @@ class _CardStackState extends State<CardStack> {
       alignment: Alignment.center,
       child: ProfileCard(
         profile: widget.matchEngine.nextMatch.profile,
+        clickable: false,
       ),
     );
   }
@@ -92,6 +93,7 @@ class _CardStackState extends State<CardStack> {
     return ProfileCard(
       key: _frontCard,
       profile: widget.matchEngine.currentMatch.profile,
+      clickable: true,
     );
   }
 
@@ -204,7 +206,7 @@ class _DraggableCardState extends State<DraggableCard>
   @override
   void initState() {
     super.initState();
-    slideBackAnimation = new AnimationController(
+    slideBackAnimation = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     )
@@ -226,7 +228,7 @@ class _DraggableCardState extends State<DraggableCard>
         }
       });
 
-    slideOutAnimation = new AnimationController(
+    slideOutAnimation = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
     )
@@ -352,7 +354,7 @@ class _DraggableCardState extends State<DraggableCard>
 
     setState(() {
       if (isInLeftRegion || isInRightRegion) {
-        slideOutTween = new Tween(
+        slideOutTween =  Tween(
             begin: cardOffset, end: dragVector * (2 * context.size.width));
 
         slideOutAnimation.forward(from: 0.0);
@@ -360,7 +362,7 @@ class _DraggableCardState extends State<DraggableCard>
         slideOutDirection =
             isInLeftRegion ? SlideDirection.left : SlideDirection.right;
       } else if (isInTopRegion) {
-        slideOutTween = new Tween(
+        slideOutTween =  Tween(
             begin: cardOffset, end: dragVector * (2 * context.size.height));
         slideOutAnimation.forward(from: 0.0);
 
@@ -394,7 +396,7 @@ class _DraggableCardState extends State<DraggableCard>
 
   @override
   Widget build(BuildContext context) {
-    return new AnchoredOverlay(
+    return  AnchoredOverlay(
       showOverlay: true,
       child:  Center(),
       overlayBuilder: (BuildContext context, Rect anchorBounds, Offset anchor) {
@@ -402,7 +404,7 @@ class _DraggableCardState extends State<DraggableCard>
           position: anchor,
           child:  Transform(
             transform:
-                new Matrix4.translationValues(cardOffset.dx, cardOffset.dy, 0.0)
+                 Matrix4.translationValues(cardOffset.dx, cardOffset.dy, 0.0)
                   ..rotateZ(_rotation(anchorBounds)),
             origin: _rotationOrigin(anchorBounds),
             child:  Container(
@@ -426,8 +428,9 @@ class _DraggableCardState extends State<DraggableCard>
 
 class ProfileCard extends StatefulWidget {
   final Profile profile;
+  final bool clickable;
 
-  ProfileCard({Key key, this.profile}) : super(key: key);
+  ProfileCard({Key key, this.profile,this.clickable}) : super(key: key);
 
   @override
   _ProfileCardState createState() => _ProfileCardState();
@@ -438,6 +441,7 @@ class _ProfileCardState extends State<ProfileCard> {
     return PhotoBrowser(
       photoAssetPaths: widget.profile.photos,
       visiblePhotoIndex: 0,
+      clickable:widget.clickable
     );
   }
 
@@ -446,7 +450,7 @@ class _ProfileCardState extends State<ProfileCard> {
       left: 0.0,
       right: 0.0,
       bottom: 0.0,
-      child: new Container(
+      child:  Container(
         decoration:  BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -466,9 +470,9 @@ class _ProfileCardState extends State<ProfileCard> {
                 children: <Widget>[
                    Text(widget.profile.name,
                       style:
-                          new TextStyle(color: Colors.white, fontSize: 24.0)),
+                           TextStyle(color: Colors.white, fontSize: 24.0)),
                    Text(widget.profile.bio,
-                      style: new TextStyle(color: Colors.white, fontSize: 18.0))
+                      style:  TextStyle(color: Colors.white, fontSize: 18.0))
                 ],
               ),
             ),
@@ -489,19 +493,19 @@ class _ProfileCardState extends State<ProfileCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: new BoxDecoration(
-          borderRadius: new BorderRadius.circular(10.0),
+      decoration:  BoxDecoration(
+          borderRadius:  BorderRadius.circular(10.0),
           boxShadow: [
-            new BoxShadow(
+             BoxShadow(
               color: const Color(0x11000000),
               blurRadius: 5.0,
               spreadRadius: 2.0,
             )
           ]),
       child: ClipRRect(
-        borderRadius: new BorderRadius.circular(10.0),
-        child: new Material(
-          child: new Stack(
+        borderRadius:  BorderRadius.circular(10.0),
+        child:  Material(
+          child:  Stack(
             fit: StackFit.expand,
             children: <Widget>[
               _buildBackground(),
