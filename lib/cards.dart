@@ -119,7 +119,6 @@ class _CardStackState extends State<CardStack> {
 
   void _onSlideComplete(SlideDirection direction) {
     Match currenMatch = widget.matchEngine.currentMatch;
-
     switch (direction) {
       case SlideDirection.left:
         currenMatch.nope();
@@ -396,21 +395,21 @@ class _DraggableCardState extends State<DraggableCard>
   Widget build(BuildContext context) {
     return new AnchoredOverlay(
       showOverlay: true,
-      child: new Center(),
+      child:  Center(),
       overlayBuilder: (BuildContext context, Rect anchorBounds, Offset anchor) {
         return CenterAbout(
           position: anchor,
-          child: new Transform(
+          child:  Transform(
             transform:
                 new Matrix4.translationValues(cardOffset.dx, cardOffset.dy, 0.0)
                   ..rotateZ(_rotation(anchorBounds)),
             origin: _rotationOrigin(anchorBounds),
-            child: new Container(
+            child:  Container(
               key: profileCardKey,
               width: anchorBounds.width,
               height: anchorBounds.height,
               padding: const EdgeInsets.all(16.0),
-              child: new GestureDetector(
+              child:  GestureDetector(
                 onPanStart: _onPanStart,
                 onPanUpdate: _onPanUpdate,
                 onPanEnd: _onPanEnd,
@@ -435,19 +434,19 @@ class ProfileCard extends StatefulWidget {
 
 class _ProfileCardState extends State<ProfileCard> {
   Widget _buildBackground() {
-    return new PhotoBrowser(
+    return PhotoBrowser(
       photoAssetPaths: widget.profile.photos,
       visiblePhotoIndex: 0,
     );
   }
 
   Widget _buildProfileSynopsis() {
-    return new Positioned(
+    return  Positioned(
       left: 0.0,
       right: 0.0,
       bottom: 0.0,
       child: new Container(
-        decoration: new BoxDecoration(
+        decoration:  BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -456,26 +455,30 @@ class _ProfileCardState extends State<ProfileCard> {
               Colors.black.withOpacity(0.8),
             ])),
         padding: const EdgeInsets.all(24.0),
-        child: new Row(
+        child:  Row(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            new Expanded(
-              child: new Column(
+             Expanded(
+              child:  Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  new Text(widget.profile.name,
+                   Text(widget.profile.name,
                       style:
                           new TextStyle(color: Colors.white, fontSize: 24.0)),
-                  new Text(widget.profile.bio,
+                   Text(widget.profile.bio,
                       style: new TextStyle(color: Colors.white, fontSize: 18.0))
                 ],
               ),
             ),
-            new Icon(
-              Icons.info,
-              color: Colors.white,
-            )
+             IconButton(
+               color: Colors.transparent,
+               onPressed: (){print('Implement images slider for current profile');},
+               icon: Icon(
+                Icons.info,
+                color: Colors.white,
+            ),
+             )
           ],
         ),
       ),
