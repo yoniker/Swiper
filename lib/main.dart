@@ -88,6 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 iconColor: Colors.red,
                 onPressed: () {
                   matchEngine.currentMatch.nope();
+                  matchEngine.cycleMatch();
                 },
               ),
                RoundIconButton.small(
@@ -95,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 iconColor: Colors.blue,
                 onPressed: () {
                   matchEngine.currentMatch.superLike();
+                  matchEngine.cycleMatch(); //TODO for some reason,it crushes unless I call this, figure out why
                 },
               ),
                RoundIconButton.large(
@@ -102,6 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 iconColor: Colors.green,
                 onPressed: () {
                   matchEngine.currentMatch.like();
+                  matchEngine.cycleMatch();
                 },
               ),
                RoundIconButton.small(
