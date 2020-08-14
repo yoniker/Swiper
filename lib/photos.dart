@@ -79,7 +79,7 @@ class _PhotoBrowserState extends State<PhotoBrowser> {
       fit: StackFit.expand,
       children: <Widget>[
         // Photo
-        new Image.asset(
+        new Image.network(
           widget.photoAssetPaths[visiblePhotoIndex],
           fit: BoxFit.cover,
         ),

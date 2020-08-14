@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import './cards.dart';
 import './matches.dart';
 import './profiles.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-void main() => runApp(MyApp());
+
+void main() async {
+  runApp(MyApp());}
 
 final MatchEngine matchEngine = new MatchEngine(
     matches: demoProfiles.map((Profile profile) {
@@ -37,6 +38,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Match match =  Match();
+  @override
+  void initState(){
+    super.initState();
+
+  }
+
 
   Widget _buildAppBar() {
     return AppBar(
@@ -87,24 +94,28 @@ class _MyHomePageState extends State<MyHomePage> {
                 icon: Icons.clear,
                 iconColor: Colors.red,
                 onPressed: () {
-                  matchEngine.currentMatch.nope();
-                  matchEngine.cycleMatch();
-                },
+                if (matchEngine.currentMatch()!=null){
+                  matchEngine.currentMatch().nope();
+                  matchEngine.goToNextMatch();
+                }},
               ),
                RoundIconButton.small(
                 icon: Icons.star,
                 iconColor: Colors.blue,
                 onPressed: () {
-                  matchEngine.currentMatch.superLike();
-                  matchEngine.cycleMatch(); //TODO for some reason,it crushes unless I call this, figure out why
-                },
+                  if (matchEngine.currentMatch()!=null) {
+                    matchEngine.currentMatch().superLike();
+                    matchEngine
+                        .goToNextMatch(); //TODO for some reason,it crushes unless I call this, figure out why
+                  }},
               ),
                RoundIconButton.large(
                 icon: Icons.favorite,
                 iconColor: Colors.green,
                 onPressed: () {
-                  matchEngine.currentMatch.like();
-                  matchEngine.cycleMatch();
+                  if (matchEngine.currentMatch()!=null){
+                  matchEngine.currentMatch().like();
+                  matchEngine.goToNextMatch();}
                 },
               ),
                RoundIconButton.small(

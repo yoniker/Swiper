@@ -1,40 +1,64 @@
 import 'package:flutter/widgets.dart';
+import 'package:tinder/services/networking.dart';
 import './profiles.dart';
+import 'dart:collection';
 
 class MatchEngine extends ChangeNotifier {
-  List<Match> _matches;
-  int _currentMatchIndex;
-  int _nextMatchIndex;
+  static const MINIMUM_CACHED_PROFILES=100; //TODO get it from shared preferences rather than hardcoded
+  Queue<Match> _matches;
   bool addedMoreProfiles;
+  Future itemsBeingGotten; //See https://stackoverflow.com/questions/63402499/flutter-how-not-to-call-the-same-service-over-and-over/63402620?noredirect=1#comment112113319_63402620
 
   MatchEngine({
     List<Match> matches,
-  }) : _matches = matches {
-    _currentMatchIndex = 0;
-    _nextMatchIndex = 1;
-    addedMoreProfiles = false;
+  }):_matches=Queue<Match>()   {
+    if (matches!=null){
+    _matches.addAll(matches);}
+    addMatchesIfNeeded();
+  }
+  int length(){return _matches.length;}
+  Match  currentMatch() {
+    if(_matches.length<=0){return null;}
+    return _matches.elementAt(0);}
+  Match nextMatch()  {
+    if(_matches.length<=1){return null;}
+    return _matches.elementAt(1);}
+
+  Future<void> getMoreMatchesFromServer() async {
+    if (! (itemsBeingGotten == null && _matches.length < MINIMUM_CACHED_PROFILES)) {
+      print('going to return from getMoreMatchesFromServer,itemsBeingGotten is $itemsBeingGotten');
+      return;} //TODO use user's settings rather than an arbitrary value
+      try {
+        print('going to try and get matches at getMoreMatchesFromServer');
+        itemsBeingGotten = NetworkHelper().getMatches();
+        dynamic matches = await itemsBeingGotten;
+        List newProfiles = matches.map<Profile>((match){return Profile.fromMatch(match);}).toList();
+        List<Match> newPotentialMatches=newProfiles.map<Match>((profile){return Match(profile: profile);}).toList();
+        print('newPotentialMatches found ${newPotentialMatches.length} matches');
+        if (newPotentialMatches.length>0) {
+          _matches.addAll(newPotentialMatches);
+          print('Finished getting matches at getMoreMatchesFromServer,new _matches length is ${_matches.length}');
+          notifyListeners();
+        }
+      } finally {
+        itemsBeingGotten = null;
+        addMatchesIfNeeded();
+      }
+
+
   }
 
-  Match get currentMatch => _matches[_currentMatchIndex];
-  Match get nextMatch => _matches[_nextMatchIndex];
+  void addMatchesIfNeeded(){
+    if(this.length()<MINIMUM_CACHED_PROFILES){
+      print('will try to get more matches since length of queue is ${this.length()}');
+      getMoreMatchesFromServer();} //TODO use user's settings instead of a hardcoded value
+  }
 
-  void cycleMatch() {
-    if (currentMatch.decision != Decision.indecided) {
-      currentMatch.reset();
-      _currentMatchIndex = _nextMatchIndex;
-      if (_nextMatchIndex < _matches.length - 1) {
-        _nextMatchIndex = _nextMatchIndex + 1;
-      } else {
-        if (!addedMoreProfiles) {
-          _matches += moreDemoProfile.map((Profile profile) {
-            return Match(profile: profile);
-          }).toList();
-          addedMoreProfiles=true;
-        }
-        _nextMatchIndex =
-            _nextMatchIndex < _matches.length - 1 ? _nextMatchIndex + 1 : 0;
-      }
+  void goToNextMatch() {
+    if (currentMatch().decision != Decision.indecided) {
+      _matches.removeFirst();
       notifyListeners();
+      addMatchesIfNeeded();
     }
   }
 }
@@ -48,7 +72,7 @@ class Match extends ChangeNotifier {
   void like() {
     if (decision == Decision.indecided) {
       decision = Decision.like;
-      print('user decision: Like ${profile.name}');
+      print('user decision: Like ${profile.username}');
       notifyListeners();
     }
   }
@@ -56,7 +80,7 @@ class Match extends ChangeNotifier {
   void nope() {
     if (decision == Decision.indecided) {
       decision = Decision.nope;
-      print('User decision:Nope ${profile.name}');
+      print('User decision:Nope ${profile.username}');
       notifyListeners();
     }
   }

@@ -4,6 +4,8 @@ import 'package:fluttery_dart2/layout.dart';
 import 'package:tinder/profiles.dart';
 import './photos.dart';
 import './matches.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 
 class CardStack extends StatefulWidget {
   final MatchEngine matchEngine;
@@ -22,12 +24,24 @@ class _CardStackState extends State<CardStack> {
   @override
   void initState() {
     super.initState();
+    addCards();
     widget.matchEngine.addListener(_onMatchEngineChange);
+    if(widget.matchEngine.length()>0) {
+      _currentMatch = widget.matchEngine.currentMatch();
+      _currentMatch.addListener(_onMatchChange);
+      _frontCard = Key(_currentMatch.profile.username);
+    }
 
-    _currentMatch = widget.matchEngine.currentMatch;
-    _currentMatch.addListener(_onMatchChange);
+  }
 
-    _frontCard = Key(_currentMatch.profile.name);
+  void addCards() async
+
+  { print('Trying to add more cards...');
+    await widget.matchEngine.getMoreMatchesFromServer();
+    setState(() {
+
+    });
+
   }
 
   @override
@@ -42,7 +56,7 @@ class _CardStackState extends State<CardStack> {
         _currentMatch.removeListener(_onMatchChange);
       }
 
-      _currentMatch = widget.matchEngine.currentMatch;
+      _currentMatch = widget.matchEngine.currentMatch();
       if (_currentMatch != null) {
         _currentMatch.addListener(_onMatchChange);
       }
@@ -60,17 +74,19 @@ class _CardStackState extends State<CardStack> {
   }
 
   _onMatchEngineChange() {
+    print('onMatchEngineCalled!');
     setState(() {
       if (_currentMatch != null) {
         _currentMatch.removeListener(_onMatchChange);
       }
 
-      _currentMatch = widget.matchEngine.currentMatch;
+      _currentMatch = widget.matchEngine.currentMatch();
       if (_currentMatch != null) {
         _currentMatch.addListener(_onMatchChange);
+        _frontCard = Key(_currentMatch.profile.username);
       }
 
-      _frontCard = Key(_currentMatch.profile.name);
+
     });
   }
 
@@ -79,26 +95,51 @@ class _CardStackState extends State<CardStack> {
   }
 
   Widget _buildBackCard() {
-    return Transform(
+    if (widget.matchEngine.nextMatch()!=null){
+    Widget card= Transform(
       transform: Matrix4.identity()..scale(_nextCardScale, _nextCardScale),
       alignment: Alignment.center,
       child: ProfileCard(
-        profile: widget.matchEngine.nextMatch.profile,
+        profile: widget.matchEngine.nextMatch().profile,
         clickable: false,
       ),
     );
+    return DraggableCard(
+      screenHeight: MediaQuery.of(context).size.height,
+      screenWidth: MediaQuery.of(context).size.width,
+      isDraggable: false,
+      card: card,
+    );
+
+    }
+
+    return SpinKitDoubleBounce(size:200,color:Colors.blueAccent);
   }
 
   Widget _buildFrontCard() {
-    return ProfileCard(
-      key: _frontCard,
-      profile: widget.matchEngine.currentMatch.profile,
-      clickable: true,
-    );
+    if(widget.matchEngine.currentMatch()!=null) {
+
+      Widget card =  ProfileCard(
+        key: _frontCard,
+        profile: widget.matchEngine.currentMatch().profile,
+        clickable: true,
+      );
+
+      return DraggableCard(
+        screenHeight: MediaQuery.of(context).size.height,
+        screenWidth: MediaQuery.of(context).size.width,
+        card: card,
+        slideTo: _desiredSlideOutDirection(),
+        onSlideUpdate: _onSlideUpdate,
+        onSlideComplete: _onSlideComplete,
+      );
+
+    }
+  return SpinKitDoubleBounce(size:200,color:Colors.blueAccent);
   }
 
   SlideDirection _desiredSlideOutDirection() {
-    switch (widget.matchEngine.currentMatch.decision) {
+    switch (widget.matchEngine.currentMatch().decision) {
       case Decision.nope:
         return SlideDirection.left;
         break;
@@ -120,7 +161,7 @@ class _CardStackState extends State<CardStack> {
   }
 
   void _onSlideComplete(SlideDirection direction) {
-    Match currenMatch = widget.matchEngine.currentMatch;
+    Match currenMatch = widget.matchEngine.currentMatch();
 
     switch (direction) {
       case SlideDirection.left:
@@ -134,27 +175,15 @@ class _CardStackState extends State<CardStack> {
         break;
     }
 
-    widget.matchEngine.cycleMatch();
+    widget.matchEngine.goToNextMatch();
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        DraggableCard(
-          screenHeight: MediaQuery.of(context).size.height,
-          screenWidth: MediaQuery.of(context).size.width,
-          isDraggable: false,
-          card: _buildBackCard(),
-        ),
-        DraggableCard(
-          screenHeight: MediaQuery.of(context).size.height,
-          screenWidth: MediaQuery.of(context).size.width,
-          card: _buildFrontCard(),
-          slideTo: _desiredSlideOutDirection(),
-          onSlideUpdate: _onSlideUpdate,
-          onSlideComplete: _onSlideComplete,
-        )
+        _buildBackCard(),
+        _buildFrontCard()
       ],
     );
   }
@@ -438,7 +467,7 @@ class ProfileCard extends StatefulWidget {
 class _ProfileCardState extends State<ProfileCard> {
   Widget _buildBackground() {
     return PhotoBrowser(
-      photoAssetPaths: widget.profile.photos,
+      photoAssetPaths: widget.profile.imageUrls,
       visiblePhotoIndex: 0,
       clickable:widget.clickable
     );
@@ -467,11 +496,11 @@ class _ProfileCardState extends State<ProfileCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                   Text(widget.profile.name,
+                  widget.profile.username!=null? Text(widget.profile.username,
                       style:
-                           TextStyle(color: Colors.white, fontSize: 24.0)),
-                   Text(widget.profile.bio,
-                      style:  TextStyle(color: Colors.white, fontSize: 18.0))
+                           TextStyle(color: Colors.white, fontSize: 24.0)) : null,
+                  widget.profile.headline!=null?Text(widget.profile.headline,
+                      style:  TextStyle(color: Colors.white, fontSize: 18.0)):null
                 ],
               ),
             ),

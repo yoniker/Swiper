@@ -1,70 +1,20 @@
-final List<Profile> demoProfiles = [
-   Profile(
-    photos: [
-      "assets/dor1.jpg",
-      "assets/dor2.jpg",
-      "assets/dor3.jpg",
-      "assets/king.jpg",
-    ],
-    name: "דור בכר",
-    bio: "מלך היקום",
-  ),
+import 'package:tinder/services/networking.dart';
 
-   Profile(
-    photos: [
-      "assets/yoni1.jpg",
-      "assets/yoni2.jpg",
-      "assets/yoni3.jpg",
-    ],
-    name: "יוני קרן",
-    bio: "אני מעוניין בכל אחת שתתפשר עליי במקום דור",
-  ),
-  Profile(
-    photos: [
-      "assets/gigi1.jpg",
-      "assets/gigi2.jpg",
-      "assets/gigi3.jpg",],
-        name:"ג'יג'י",
-        bio:"אני רוצה את דור"
-
-  ),
-  Profile(
-      photos: [
-        "assets/alessandra1.jpg",
-        "assets/alessandra2.jpg",],
-      name:"Alessandra",
-      bio:"מוכנה לחכות עד השניה האחרונה של החיים,רק דור!"
-
-  ),
-
-
-
-];
-
-
-
-final List<Profile> moreDemoProfile=[
-  Profile(
-      photos: ['assets/cloe.jpg'],
-      name:"קלואי",
-      bio:"אני אעשה הכל בשביל דור, מי שהוא לא דור בבקשה להפסיק להטריד"
-  ),
-  Profile(
-      photos: ['assets/romanova.jpg'],
-      name:"רומנובה",
-      bio:"דור שם עליי זין,איזה כיף!!!"
-  ),
-  Profile(
-      photos: ['assets/daniela.jpg'],
-      name:"Daniella",
-      bio:"Want dor!!!"
-  )
-];
-
+final List<Profile> demoProfiles=[];
 class Profile {
-  final List<String> photos;
-  final String name;
-  final String bio;
+  final List<String> imageUrls;
+  final String username;
+  final String headline;
+  final String description;
+  final int age;
+  final String location;
 
-  Profile({this.photos, this.name, this.bio});
+  Profile({  this.imageUrls, this.username, this.headline, this.description, this.age, this.location});
+
+  factory Profile.fromMatch(dynamic match){
+    print(match);
+    List images=match['images'];
+    List<String> imagesUrls=images.map((image)=>image['file_path']).toList().cast<String>();
+  return Profile(username: match['username'],headline: match['headline'],description: match['description'],age:match['age'],location: match['location_desc'],imageUrls: NetworkHelper.serverImagesUrl(imagesUrls)
+  );}
 }
