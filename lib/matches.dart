@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:tinder/services/networking.dart';
+import 'package:betabeta/services/networking.dart';
 import './profiles.dart';
 import 'dart:collection';
 

@@ -1,4 +1,4 @@
-import 'package:tinder/services/networking.dart';
+import 'package:betabeta/services/networking.dart';
 
 final List<Profile> demoProfiles=[];
 class Profile {

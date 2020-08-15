@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fluttery_dart2/layout.dart';
-import 'package:tinder/profiles.dart';
+import 'package:betabeta/profiles.dart';
 import './photos.dart';
 import './matches.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';

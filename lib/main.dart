@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'matching_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as JSON;
+import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
 void main()  {
   runApp(MyApp());}
@@ -34,11 +36,35 @@ class LoginHome extends StatefulWidget {
 
 class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flutter-facebook-login/
   final facebookLogin = FacebookLogin();
-  bool _isLoggedIn=false;
-  Map userProfile;
-  _loginWithFB() async{
+  String name;
+  String facebookId;
+  String facebookProfileImageUrl;
+  bool _errorTryingToLogin;
+  String _errorMessage;
 
 
+  @override
+  void initState(){
+    super.initState();
+    _errorTryingToLogin=false;
+    _getDataFromPrefs();
+  }
+  
+  _getDataFromPrefs() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    name = prefs.getString('name');
+
+    if(name!=null){
+      facebookId=prefs.getString('facebook_id');
+      facebookProfileImageUrl=prefs.getString('facebook_profile_image_url');
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MatchingScreen(title: 'Flutter Demo Home Page')));
+
+
+    }
+    
+  }
+  
+  _getFBLoginInfo() async{
     final result = await facebookLogin.logIn(['public_profile']);
 
     switch (result.status) {
@@ -46,18 +72,19 @@ class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flu
         final token = result.accessToken.token;
         final graphResponse = await http.get('https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=$token');
         final profile = JSON.jsonDecode(graphResponse.body);
-        print(profile);
-        setState(() {
-          userProfile = profile;
-          _isLoggedIn = true;
-        });
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        //Save name, id and picture url to persistent storage, and move on to the next screen
+        await prefs.setString('name', profile['name']);
+        await prefs.setString('facebook_id', profile['id']);
+        await prefs.setString('facebook_profile_image_url', profile['picture']['data']['url']);
+        _getDataFromPrefs();
         break;
 
       case FacebookLoginStatus.cancelledByUser:
-        setState(() => _isLoggedIn = false );
+        setState(() {_errorTryingToLogin = true;  _errorMessage='User cancelled Login';});
         break;
       case FacebookLoginStatus.error:
-        setState(() => _isLoggedIn = false );
+        setState(()  {_errorTryingToLogin = true; _errorMessage=result.errorMessage??'Error trying to login';} );
         break;
     }
 
@@ -72,12 +99,32 @@ class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flu
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              OutlineButton(
-                child:Text('FaceBook Login'),
-                onPressed: (){
-                  _loginWithFB();
-                  //Navigator.push(context, MaterialPageRoute(builder: (context) => MatchingScreen(title: 'Flutter Demo Home Page')));
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FacebookSignInButton(
+                    onPressed: (){
+                      _getFBLoginInfo();
+                      //Navigator.push(context, MaterialPageRoute(builder: (context) => MatchingScreen(title: 'Flutter Demo Home Page')));
+                    },
+                  ),
+                  _errorTryingToLogin?
+                      FlatButton(
+                        child:Text('❗'),
+                        onPressed: (){
+                          showDialog(context: context,builder: (_) {
+                            return AlertDialog(
+                              title: Text("Error"),
+                              content:Text(_errorMessage??"Error when trying to login"),
+
+                            );
+                          },
+                          barrierDismissible: true);
+
+                        }
+                      )
+                      :Container()
+                ],
               )
             ],
           ),
