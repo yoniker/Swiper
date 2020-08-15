@@ -161,17 +161,16 @@ class _CardStackState extends State<CardStack> {
   }
 
   void _onSlideComplete(SlideDirection direction) {
-    Match currenMatch = widget.matchEngine.currentMatch();
 
     switch (direction) {
       case SlideDirection.left:
-        currenMatch.nope();
+        widget.matchEngine.currentMatchDecision(Decision.nope);
         break;
       case SlideDirection.right:
-        currenMatch.like();
+        widget.matchEngine.currentMatchDecision(Decision.like);
         break;
       case SlideDirection.up:
-        currenMatch.superLike();
+        widget.matchEngine.currentMatchDecision(Decision.superLike);
         break;
     }
 

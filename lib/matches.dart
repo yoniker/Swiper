@@ -1,3 +1,4 @@
+import 'package:betabeta/FacebookProfile.dart';
 import 'package:flutter/widgets.dart';
 import 'package:betabeta/services/networking.dart';
 import './profiles.dart';
@@ -8,8 +9,8 @@ class MatchEngine extends ChangeNotifier {
   Queue<Match> _matches;
   bool addedMoreProfiles;
   Future itemsBeingGotten; //See https://stackoverflow.com/questions/63402499/flutter-how-not-to-call-the-same-service-over-and-over/63402620?noredirect=1#comment112113319_63402620
-
-  MatchEngine({
+  FacebookProfile userProfile;
+  MatchEngine({this.userProfile,
     List<Match> matches,
   }):_matches=Queue<Match>()   {
     if (matches!=null){
@@ -61,44 +62,23 @@ class MatchEngine extends ChangeNotifier {
       addMatchesIfNeeded();
     }
   }
+
+  currentMatchDecision(Decision decision){
+    Match currentMatch=this.currentMatch();
+    if(currentMatch.decision == Decision.indecided){
+      currentMatch.decision = decision;
+      notifyListeners();
+      print('user decision: ${decision} ${currentMatch.profile.username}');
+    }
+  }
 }
 
 class Match extends ChangeNotifier {
+
   final Profile profile;
   Decision decision = Decision.indecided;
 
   Match({this.profile});
-
-  void like() {
-    if (decision == Decision.indecided) {
-      decision = Decision.like;
-      print('user decision: Like ${profile.username}');
-      notifyListeners();
-    }
-  }
-
-  void nope() {
-    if (decision == Decision.indecided) {
-      decision = Decision.nope;
-      print('User decision:Nope ${profile.username}');
-      notifyListeners();
-    }
-  }
-
-  void superLike() {
-    if (decision == Decision.indecided) {
-      decision = Decision.superLike;
-      print('User decision:superlike');
-      notifyListeners();
-    }
-  }
-
-  void reset() {
-    if (decision != Decision.indecided) {
-      decision = Decision.indecided;
-      notifyListeners();
-    }
-  }
 }
 
 enum Decision {

@@ -1,14 +1,12 @@
+import 'package:betabeta/FacebookProfile.dart';
 import 'package:flutter/material.dart';
+import 'package:betabeta/matches.dart';
 import './cards.dart';
 import './matches.dart';
 import './profiles.dart';
 
 
 
-final MatchEngine matchEngine = new MatchEngine(
-    matches: demoProfiles.map((Profile profile) {
-      return Match(profile: profile);
-    }).toList());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -27,9 +25,12 @@ class MyApp extends StatelessWidget {
 }
 
 class MatchingScreen extends StatefulWidget {
-  MatchingScreen({Key key, this.title}) : super(key: key);
-
+  MatchingScreen({Key key, this.title,this.userProfile}) :
+        matchEngine = MatchEngine(userProfile: userProfile),
+        super(key: key);
+  final MatchEngine matchEngine;
   final String title;
+  final FacebookProfile userProfile;
 
   @override
   _MatchingScreenState createState() => _MatchingScreenState();
@@ -93,18 +94,18 @@ class _MatchingScreenState extends State<MatchingScreen> {
                 icon: Icons.clear,
                 iconColor: Colors.red,
                 onPressed: () {
-                  if (matchEngine.currentMatch()!=null){
-                    matchEngine.currentMatch().nope();
-                    matchEngine.goToNextMatch();
+                  if (widget.matchEngine.currentMatch()!=null){
+                    widget.matchEngine.currentMatchDecision(Decision.nope);
+                    widget.matchEngine.goToNextMatch();
                   }},
               ),
               RoundIconButton.small(
                 icon: Icons.star,
                 iconColor: Colors.blue,
                 onPressed: () {
-                  if (matchEngine.currentMatch()!=null) {
-                    matchEngine.currentMatch().superLike();
-                    matchEngine
+                  if (widget.matchEngine.currentMatch()!=null) {
+                    widget.matchEngine.currentMatchDecision(Decision.superLike);
+                    widget.matchEngine
                         .goToNextMatch(); //TODO for some reason,it crushes unless I call this, figure out why
                   }},
               ),
@@ -112,9 +113,9 @@ class _MatchingScreenState extends State<MatchingScreen> {
                 icon: Icons.favorite,
                 iconColor: Colors.green,
                 onPressed: () {
-                  if (matchEngine.currentMatch()!=null){
-                    matchEngine.currentMatch().like();
-                    matchEngine.goToNextMatch();}
+                  if (widget.matchEngine.currentMatch()!=null){
+                    widget.matchEngine.currentMatchDecision(Decision.like);
+                    widget.matchEngine.goToNextMatch();}
                 },
               ),
               RoundIconButton.small(
@@ -132,7 +133,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
     return Scaffold(
       appBar: _buildAppBar(),
       body:  CardStack(
-        matchEngine: matchEngine,
+        matchEngine: widget.matchEngine,
       ),
       bottomNavigationBar: _buildBottomBar(),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'FacebookProfile.dart';
 import 'matching_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
@@ -57,7 +58,8 @@ class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flu
     if(name!=null){
       facebookId=prefs.getString('facebook_id');
       facebookProfileImageUrl=prefs.getString('facebook_profile_image_url');
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MatchingScreen(title: 'Flutter Demo Home Page')));
+      FacebookProfile currentUserFacebookProfile = FacebookProfile(name:name,facebookId: facebookId,facebookProfileImageUrl: facebookProfileImageUrl);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MatchingScreen(title: 'Flutter Demo Home Page',userProfile:currentUserFacebookProfile)));
 
 
     }
@@ -95,6 +97,21 @@ class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flu
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            'assets/bigD.png',
+            fit: BoxFit.contain,
+            height: 32,
+          ),
+          Container(
+              padding: const EdgeInsets.all(8.0), child: Text('MVPBeta Login'))
+        ],
+
+      )
+      ),
         body:Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -125,6 +142,23 @@ class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flu
                       )
                       :Container()
                 ],
+              ),
+
+              Text("Don't worry, it's just your public profile.",
+              style: TextStyle(color:Colors.grey,),textAlign: TextAlign.center,
+              ),
+              Text('We never post to Facebook.',style: TextStyle(color:Colors.grey,)),
+              GestureDetector(
+                child: Container(child: Text('What does public profile mean?',style:TextStyle(color:Colors.grey,fontWeight: FontWeight.bold,decoration: TextDecoration.underline)),
+                ),
+                onTap: (){showDialog(context: context,builder: (_) {
+                  return AlertDialog(
+                    title: Text("Public Profile Info"),
+                    content:Text("Public Profile includes just your name and profile picture. This information is literally available to anyone in the world."),
+
+                  );
+                },
+                    barrierDismissible: true);},
               )
             ],
           ),
