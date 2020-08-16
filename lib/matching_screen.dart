@@ -1,4 +1,4 @@
-import 'package:betabeta/search_preferences.dart';
+import 'package:betabeta/search_preferences_screen.dart';
 import 'package:betabeta/user_profile.dart';
 import 'package:betabeta/cards.dart';
 import 'package:flutter/material.dart';
@@ -143,7 +143,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
     if(bodyToShow==BodyToShow.Swiping){
       return CardStack(matchEngine: widget.matchEngine,);
     }
-    return SearchPreferences(matchEngine: widget.matchEngine);
+    return SearchPreferencesScreen(matchEngine: widget.matchEngine);
   }
 
   @override
