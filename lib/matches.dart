@@ -101,6 +101,7 @@ class Match extends ChangeNotifier {
 }
 
 enum Decision {
+  dontKnow,
   indecided,
   nope,
   like,

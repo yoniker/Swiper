@@ -48,7 +48,11 @@ class _MatchingScreenState extends State<MatchingScreen> {
     super.initState();
 
   }
-
+  currentMatchDecision(Decision decision){
+    if (widget.matchEngine.currentMatch()!=null){
+      widget.matchEngine.currentMatchDecision(decision);
+      widget.matchEngine.goToNextMatch();}
+  }
 
   Widget _buildAppBar() {
     Color profileColor= currentTab==MatchTab.Settings?Colors.redAccent:Colors.grey;
@@ -109,35 +113,28 @@ class _MatchingScreenState extends State<MatchingScreen> {
               ),
               RoundIconButton.large(
                 icon: Icons.clear,
-                iconColor: Colors.red,
+                iconColor: Colors.r ed,
                 onPressed: () {
-                  if (widget.matchEngine.currentMatch()!=null){
-                    widget.matchEngine.currentMatchDecision(Decision.nope);
-                    widget.matchEngine.goToNextMatch();
-                  }},
+                  currentMatchDecision(Decision.nope);},
               ),
               RoundIconButton.small(
                 icon: Icons.star,
                 iconColor: Colors.blue,
                 onPressed: () {
-                  if (widget.matchEngine.currentMatch()!=null) {
-                    widget.matchEngine.currentMatchDecision(Decision.superLike);
-                    widget.matchEngine
-                        .goToNextMatch(); //TODO for some reason,it crushes unless I call this, figure out why
-                  }},
+                  currentMatchDecision(Decision.superLike);},
               ),
               RoundIconButton.large(
                 icon: Icons.favorite,
                 iconColor: Colors.green,
                 onPressed: () {
-                  if (widget.matchEngine.currentMatch()!=null){
-                    widget.matchEngine.currentMatchDecision(Decision.like);
-                    widget.matchEngine.goToNextMatch();}
+                  currentMatchDecision(Decision.like);
                 },
               ),
               RoundButton.small(
                 child:Text('?',style: TextStyle(color:Colors.grey,fontSize: 30,fontWeight: FontWeight.bold),),
-                onPressed: () {},
+                onPressed: () {
+                  currentMatchDecision(Decision.dontKnow);
+                },
               ),
             ],
           ),
