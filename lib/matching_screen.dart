@@ -99,7 +99,9 @@ class _MatchingScreenState extends State<MatchingScreen> {
               RoundIconButton.small(
                 icon: Icons.refresh,
                 iconColor: Colors.orange,
-                onPressed: () {},
+                onPressed: () {
+                  widget.matchEngine.goBack();
+                },
               ),
               RoundIconButton.large(
                 icon: Icons.clear,

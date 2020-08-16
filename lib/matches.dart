@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class MatchEngine extends ChangeNotifier {
   static const MINIMUM_CACHED_PROFILES=20; //TODO get it from shared preferences rather than hardcoded
+  Queue<Match> _previousMatches; //This will be a stack
   Queue<Match> _matches;
   bool addedMoreProfiles;
   Future itemsBeingGotten; //See https://stackoverflow.com/questions/63402499/flutter-how-not-to-call-the-same-service-over-and-over/63402620?noredirect=1#comment112113319_63402620
@@ -31,18 +32,14 @@ class MatchEngine extends ChangeNotifier {
 
   Future<void> getMoreMatchesFromServer() async {
     if (! (itemsBeingGotten == null && _matches.length < MINIMUM_CACHED_PROFILES)) {
-      print('going to return from getMoreMatchesFromServer,itemsBeingGotten is $itemsBeingGotten');
       return;} //TODO use user's settings rather than an arbitrary value
       try {
-        print('going to try and get matches at getMoreMatchesFromServer');
         itemsBeingGotten = NetworkHelper().getMatches();
         dynamic matches = await itemsBeingGotten;
         List newProfiles = matches.map<Profile>((match){return Profile.fromMatch(match);}).toList();
         List<Match> newPotentialMatches=newProfiles.map<Match>((profile){return Match(profile: profile);}).toList();
-        print('newPotentialMatches found ${newPotentialMatches.length} matches');
         if (newPotentialMatches.length>0) {
           _matches.addAll(newPotentialMatches);
-          print('Finished getting matches at getMoreMatchesFromServer,new _matches length is ${_matches.length}');
           notifyListeners();
         }
       } finally {
@@ -55,15 +52,31 @@ class MatchEngine extends ChangeNotifier {
 
   void addMatchesIfNeeded(){
     if(this.length()<MINIMUM_CACHED_PROFILES){
-      print('will try to get more matches since length of queue is ${this.length()}');
       getMoreMatchesFromServer();} //TODO use user's settings instead of a hardcoded value
   }
 
   void goToNextMatch() {
     if (currentMatch().decision != Decision.indecided) {
-      _matches.removeFirst();
+      _previousMatches.addLast(_matches.removeFirst());
       notifyListeners();
       addMatchesIfNeeded();
+    }
+  }
+
+  void goBack(){
+    if(_previousMatches.length>0){
+    _matches.addFirst(_previousMatches.removeLast());
+      //notifyListeners();
+    }
+
+    printMatches();
+  }
+
+  void printMatches(){
+    if(length()>=3){
+      for(int i=0; i<3; ++i){
+        print(_matches.elementAt(i).profile.username);
+      }
     }
   }
 
@@ -72,7 +85,6 @@ class MatchEngine extends ChangeNotifier {
     if(currentMatch.decision == Decision.indecided){
       currentMatch.decision = decision;
       notifyListeners();
-      print('user decision: $decision ${currentMatch.profile.username}');
       NetworkHelper().postUserDecision(userProfile: userProfile,decision: decision,otherUserProfile: currentMatch.profile);
     }
   }
