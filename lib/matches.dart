@@ -7,7 +7,7 @@ import 'dart:collection';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MatchEngine extends ChangeNotifier {
-  static const MINIMUM_CACHED_PROFILES=20; //TODO get it from shared preferences rather than hardcoded
+  static const MINIMUM_CACHED_PROFILES=5; //TODO get it from shared preferences rather than hardcoded
   Queue<Match> _previousMatches; //This will be a stack
   Queue<Match> _matches;
   bool addedMoreProfiles;
@@ -15,7 +15,7 @@ class MatchEngine extends ChangeNotifier {
   FacebookProfile userProfile;
   MatchEngine({this.userProfile,
     List<Match> matches,
-  }):_matches=Queue<Match>()   {
+  }):_matches=Queue<Match>(),_previousMatches=Queue<Match>()   {
     if (matches!=null){
     _matches.addAll(matches);}
     addMatchesIfNeeded();
@@ -65,8 +65,10 @@ class MatchEngine extends ChangeNotifier {
 
   void goBack(){
     if(_previousMatches.length>0){
-    _matches.addFirst(_previousMatches.removeLast());
-      //notifyListeners();
+      Match previousMatch = _previousMatches.removeLast();
+      previousMatch.decision=Decision.indecided;
+    _matches.addFirst(previousMatch);
+    notifyListeners();
     }
 
     printMatches();

@@ -36,7 +36,7 @@ class _CardStackState extends State<CardStack> {
 
   void addCards() async
 
-  { print('Trying to add more cards...');
+  {
     await widget.matchEngine.getMoreMatchesFromServer();
     setState(() {
 
