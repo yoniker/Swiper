@@ -101,11 +101,7 @@ class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flu
         title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
-            'assets/bigD.png',
-            fit: BoxFit.contain,
-            height: 32,
-          ),
+          Text('D',style:TextStyle(fontSize: 55,fontFamily: 'RougeScript',fontWeight: FontWeight.bold)),
           Container(
               padding: const EdgeInsets.all(8.0), child: Text('MVPBeta Login'))
         ],
@@ -144,7 +140,7 @@ class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flu
                 ],
               ),
 
-              Text("Don't worry, it's just your public profile.",
+              Text("Don't worry, we only ask for your public profile.",
               style: TextStyle(color:Colors.grey,),textAlign: TextAlign.center,
               ),
               Text('We never post to Facebook.',style: TextStyle(color:Colors.grey,)),

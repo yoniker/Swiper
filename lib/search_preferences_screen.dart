@@ -1,4 +1,5 @@
 
+import 'package:betabeta/main.dart';
 import 'package:betabeta/matches.dart';
 import 'package:flutter/material.dart';
 import 'package:gender_picker/gender_picker.dart';
@@ -64,6 +65,16 @@ class _SearchPreferencesScreenState extends State<SearchPreferencesScreen> {
     return 'Everyone';
   }
 
+  _logout()async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //Save name, id and picture url to persistent storage, and move on to the next screen
+    await prefs.remove('name');
+    await prefs.remove('facebook_id');
+    await prefs.remove('facebook_profile_image_url');
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+        LoginHome()), (Route<dynamic> route) => false);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -114,7 +125,7 @@ class _SearchPreferencesScreenState extends State<SearchPreferencesScreen> {
             padding: const EdgeInsets.all(3),
             size: 50, //default : 40
           ),
-          FacebookSignInButton(text:'Facebook logout',onPressed: (){},), //TODO logout
+          FacebookSignInButton(text:'Facebook logout',onPressed: (){_logout();},),
         ],
 
       )

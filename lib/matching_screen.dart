@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-enum BodyToShow {
+enum MatchTab {
   Settings,Swiping
 }
 
@@ -41,7 +41,7 @@ class MatchingScreen extends StatefulWidget {
 
 class _MatchingScreenState extends State<MatchingScreen> {
   Match match =  Match();
-  BodyToShow bodyToShow=BodyToShow.Swiping;
+  MatchTab currentTab=MatchTab.Swiping;
   @override
   void initState(){
     super.initState();
@@ -50,6 +50,9 @@ class _MatchingScreenState extends State<MatchingScreen> {
 
 
   Widget _buildAppBar() {
+    Color profileColor= currentTab==MatchTab.Settings?Colors.redAccent:Colors.grey;
+    Color bigDColor=currentTab==MatchTab.Swiping?Colors.redAccent:Colors.grey;
+
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0.0,
@@ -57,21 +60,21 @@ class _MatchingScreenState extends State<MatchingScreen> {
       leading:  IconButton(
         icon:  Icon(
           Icons.person,
-          color: Colors.grey,
+          color: profileColor,
           size: 40.0,
         ),
         onPressed: () {
           setState(() {
-            bodyToShow = BodyToShow.Settings;
+            currentTab = MatchTab.Settings;
           });
 
         },
       ),
       title:  FlatButton(onPressed:()=> setState(() {
-        bodyToShow=BodyToShow.Swiping;
+        currentTab=MatchTab.Swiping;
 
       }),
-          child: Container(child:Image.asset('assets/bigD.png',width:50,height:50),color:Colors.transparent)),
+          child: Container(child:Text('D',style:TextStyle(color:bigDColor,fontSize: 55,fontFamily: 'RougeScript',fontWeight: FontWeight.bold)))),
       actions: <Widget>[
         IconButton(
           icon: Icon(
@@ -142,7 +145,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
   }
 
   Widget _build_body(){
-    if(bodyToShow==BodyToShow.Swiping){
+    if(currentTab==MatchTab.Swiping){
       return CardStack(matchEngine: widget.matchEngine,);
     }
     return SearchPreferencesScreen(matchEngine: widget.matchEngine);

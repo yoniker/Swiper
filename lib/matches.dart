@@ -7,7 +7,7 @@ import 'dart:collection';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MatchEngine extends ChangeNotifier {
-  static const MINIMUM_CACHED_PROFILES=5; //TODO get it from shared preferences rather than hardcoded
+  static const MINIMUM_CACHED_PROFILES=15; //TODO get it from shared preferences rather than hardcoded
   Queue<Match> _previousMatches; //This will be a stack
   Queue<Match> _matches;
   bool addedMoreProfiles;
