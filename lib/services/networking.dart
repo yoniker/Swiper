@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:betabeta/profiles.dart';
 import 'dart:convert';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+
 class NetworkHelper{
   static const SERVER_ADDR='http://10.0.0.22:8081'; //TODO this is a local address,replace with a real external ip
   //getMatches: Grab some matches and image links from the server
@@ -26,6 +28,7 @@ class NetworkHelper{
     }
 
     dynamic listProfiles=jsonDecode(response.body);
+    print('Dor?');
     return listProfiles;
   }
 
@@ -41,12 +44,23 @@ class NetworkHelper{
 
   }
 
+  void prefetchImages(List<String> imagesUrls){
+    for(String imageUrl in imagesUrls){
+      String actualUrl=NetworkHelper.SERVER_ADDR+'/images/'+ imageUrl;
+      print('prefetching $actualUrl');
+      DefaultCacheManager().getSingleFile(actualUrl);
+      //CachedNetworkImageProvider(actualUrl);
+    }
+  }
+
   static String getQueryFromPreferences(SearchPreferences searchPreferences){
     if(searchPreferences.genderPreferred==null || searchPreferences.genderPreferred.length==0){
       return '';
     }
     return '?gender=${searchPreferences.genderPreferred}';
   }
+
+
 
 
 }

@@ -13,7 +13,9 @@ class Profile {
   factory Profile.fromMatch(dynamic match){
     print(match);
     List images=match['images'];
-    List<String> imagesUrls=images.map((image)=>image['file_path']).toList().cast<String>();
+    List<String> imagesUrls=images.cast<String>();
+    NetworkHelper().prefetchImages(imagesUrls);
+    print(imagesUrls);
   return Profile(username: match['username'],headline: match['headline'],description: match['description'],age:match['age'],location: match['location_desc'],imageUrls: NetworkHelper.serverImagesUrl(imagesUrls)
   );}
 }

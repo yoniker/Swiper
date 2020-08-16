@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class PhotoBrowser extends StatefulWidget {
   final List<String> photoAssetPaths;
@@ -79,9 +80,11 @@ class _PhotoBrowserState extends State<PhotoBrowser> {
       fit: StackFit.expand,
       children: <Widget>[
         // Photo
-        new Image.network(
+        CachedNetworkImage(
+          placeholder: (context, url) => CircularProgressIndicator(),
+          imageUrl:
           widget.photoAssetPaths[visiblePhotoIndex],
-          fit: BoxFit.cover,
+            fit: BoxFit.cover
         ),
         // Photo indicator
         new Positioned(

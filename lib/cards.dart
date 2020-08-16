@@ -497,9 +497,9 @@ class _ProfileCardState extends State<ProfileCard> {
                 children: <Widget>[
                   widget.profile.username!=null? Text(widget.profile.username,
                       style:
-                           TextStyle(color: Colors.white, fontSize: 24.0)) : null,
+                           TextStyle(color: Colors.white, fontSize: 24.0)) : Text(''),
                   widget.profile.headline!=null?Text(widget.profile.headline,
-                      style:  TextStyle(color: Colors.white, fontSize: 18.0)):null
+                      style:  TextStyle(color: Colors.white, fontSize: 18.0)):Text('')
                 ],
               ),
             ),
