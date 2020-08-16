@@ -1,9 +1,9 @@
-import 'package:betabeta/FacebookProfile.dart';
+import 'package:betabeta/search_preferences.dart';
+import 'package:betabeta/user_profile.dart';
+import 'package:betabeta/cards.dart';
 import 'package:flutter/material.dart';
 import 'package:betabeta/matches.dart';
-import './cards.dart';
-import './matches.dart';
-import './profiles.dart';
+
 
 
 
@@ -23,6 +23,10 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+enum BodyToShow {
+  Settings,Swiping
+}
+
 
 class MatchingScreen extends StatefulWidget {
   MatchingScreen({Key key, this.title,this.userProfile}) :
@@ -31,13 +35,13 @@ class MatchingScreen extends StatefulWidget {
   final MatchEngine matchEngine;
   final String title;
   final FacebookProfile userProfile;
-
   @override
   _MatchingScreenState createState() => _MatchingScreenState();
 }
 
 class _MatchingScreenState extends State<MatchingScreen> {
   Match match =  Match();
+  BodyToShow bodyToShow=BodyToShow.Swiping;
   @override
   void initState(){
     super.initState();
@@ -57,10 +61,17 @@ class _MatchingScreenState extends State<MatchingScreen> {
           size: 40.0,
         ),
         onPressed: () {
-          // TODO
+          setState(() {
+            bodyToShow = BodyToShow.Settings;
+          });
+
         },
       ),
-      title:  Container(child:Image.asset('assets/bigD.png',width:50,height:50),color:Colors.transparent),
+      title:  FlatButton(onPressed:()=> setState(() {
+        bodyToShow=BodyToShow.Swiping;
+
+      }),
+          child: Container(child:Image.asset('assets/bigD.png',width:50,height:50),color:Colors.transparent)),
       actions: <Widget>[
         IconButton(
           icon: Icon(
@@ -128,13 +139,18 @@ class _MatchingScreenState extends State<MatchingScreen> {
         ));
   }
 
+  Widget _build_body(){
+    if(bodyToShow==BodyToShow.Swiping){
+      return CardStack(matchEngine: widget.matchEngine,);
+    }
+    return SearchPreferences(matchEngine: widget.matchEngine);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body:  CardStack(
-        matchEngine: widget.matchEngine,
-      ),
+      body:  _build_body(),
       bottomNavigationBar: _buildBottomBar(),
     );
   }

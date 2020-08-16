@@ -121,6 +121,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.9"
+  gender_picker:
+    dependency: "direct main"
+    description:
+      name: gender_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
   http:
     dependency: "direct main"
     description:

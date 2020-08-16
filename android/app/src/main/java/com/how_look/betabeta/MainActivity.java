@@ -1,4 +1,4 @@
-package com.example.tinder;
+package com.how_look.betabeta;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

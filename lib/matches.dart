@@ -1,11 +1,13 @@
-import 'package:betabeta/FacebookProfile.dart';
+import 'package:betabeta/user_profile.dart';
+import 'package:betabeta/profiles.dart';
 import 'package:flutter/widgets.dart';
 import 'package:betabeta/services/networking.dart';
-import './profiles.dart';
 import 'dart:collection';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class MatchEngine extends ChangeNotifier {
-  static const MINIMUM_CACHED_PROFILES=100; //TODO get it from shared preferences rather than hardcoded
+  static const MINIMUM_CACHED_PROFILES=20; //TODO get it from shared preferences rather than hardcoded
   Queue<Match> _matches;
   bool addedMoreProfiles;
   Future itemsBeingGotten; //See https://stackoverflow.com/questions/63402499/flutter-how-not-to-call-the-same-service-over-and-over/63402620?noredirect=1#comment112113319_63402620
@@ -17,6 +19,8 @@ class MatchEngine extends ChangeNotifier {
     _matches.addAll(matches);}
     addMatchesIfNeeded();
   }
+
+  clear(){_matches.clear();}
   int length(){return _matches.length;}
   Match  currentMatch() {
     if(_matches.length<=0){return null;}
@@ -68,7 +72,8 @@ class MatchEngine extends ChangeNotifier {
     if(currentMatch.decision == Decision.indecided){
       currentMatch.decision = decision;
       notifyListeners();
-      print('user decision: ${decision} ${currentMatch.profile.username}');
+      print('user decision: $decision ${currentMatch.profile.username}');
+      NetworkHelper().postUserDecision(userProfile: userProfile,decision: decision,otherUserProfile: currentMatch.profile);
     }
   }
 }

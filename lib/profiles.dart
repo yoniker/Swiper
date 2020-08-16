@@ -8,7 +8,6 @@ class Profile {
   final String description;
   final int age;
   final String location;
-
   Profile({  this.imageUrls, this.username, this.headline, this.description, this.age, this.location});
 
   factory Profile.fromMatch(dynamic match){

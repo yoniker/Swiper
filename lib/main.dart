@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'FacebookProfile.dart';
+import 'user_profile.dart';
 import 'matching_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
