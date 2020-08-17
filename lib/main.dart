@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'user_profile.dart';
 import 'matching_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -72,13 +73,16 @@ class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flu
     switch (result.status) {
       case FacebookLoginStatus.loggedIn:
         final token = result.accessToken.token;
-        final graphResponse = await http.get('https://graph.facebook.com/v2.12/me?fields=name,picture,email&access_token=$token');
+        final graphResponse = await http.get('https://graph.facebook.com/v2.12/me?fields=name,picture&access_token=$token');
         final profile = JSON.jsonDecode(graphResponse.body);
         SharedPreferences prefs = await SharedPreferences.getInstance();
         //Save name, id and picture url to persistent storage, and move on to the next screen
         await prefs.setString('name', profile['name']);
         await prefs.setString('facebook_id', profile['id']);
-        await prefs.setString('facebook_profile_image_url', profile['picture']['data']['url']);
+        final pictureResponse = await http.get('https://graph.facebook.com/v2.12/${profile['id']}/picture?type=large&redirect=0'); //'https://graph.facebook.com/v2.12/10218504761950570/picture?type=large&redirect=0'
+        String reasonablePictureUrl=JSON.jsonDecode(pictureResponse.body)['data']['url'];
+        DefaultCacheManager().getSingleFile(reasonablePictureUrl);
+        await prefs.setString('facebook_profile_image_url', reasonablePictureUrl); //The url in the profile response is just 50x50,this one 200x200
         _getDataFromPrefs();
         break;
 

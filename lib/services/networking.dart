@@ -28,7 +28,6 @@ class NetworkHelper{
     }
 
     dynamic listProfiles=jsonDecode(response.body);
-    print('Dor?');
     return listProfiles;
   }
 

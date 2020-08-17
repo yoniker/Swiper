@@ -1,13 +1,9 @@
 import 'package:betabeta/round_icon_button.dart';
-import 'package:betabeta/search_preferences_screen.dart';
+import 'package:betabeta/tabs/settings_tab.dart';
 import 'package:betabeta/user_profile.dart';
 import 'package:betabeta/cards.dart';
 import 'package:flutter/material.dart';
 import 'package:betabeta/matches.dart';
-
-
-
-
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -113,7 +109,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
               ),
               RoundIconButton.large(
                 icon: Icons.clear,
-                iconColor: Colors.r ed,
+                iconColor: Colors.red,
                 onPressed: () {
                   currentMatchDecision(Decision.nope);},
               ),
@@ -145,7 +141,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
     if(currentTab==MatchTab.Swiping){
       return CardStack(matchEngine: widget.matchEngine,);
     }
-    return SearchPreferencesScreen(matchEngine: widget.matchEngine);
+    return SettingsTab();//SearchPreferencesScreen(matchEngine: widget.matchEngine);
   }
 
   @override
@@ -153,7 +149,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
     return Scaffold(
       appBar: _buildAppBar(),
       body:  _build_body(),
-      bottomNavigationBar: _buildBottomBar(),
+      bottomNavigationBar: currentTab==MatchTab.Swiping?_buildBottomBar():null,
     );
   }
 }

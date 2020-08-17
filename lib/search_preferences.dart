@@ -1,4 +1,3 @@
-import 'package:betabeta/search_preferences_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchPreferences{
