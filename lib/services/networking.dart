@@ -9,7 +9,7 @@ import 'dart:convert';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class NetworkHelper{
-  static const SERVER_ADDR='http://10.0.0.22:8081'; //TODO this is a local address,replace with a real external ip
+  static const SERVER_ADDR='http://46.116.108.208:8081'; //TODO this is a local address,replace with a real external ip
   //getMatches: Grab some matches and image links from the server
   dynamic getMatches({bool discardIfPreferencesChanged=true}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -37,7 +37,7 @@ class NetworkHelper{
 
 
   postUserDecision({FacebookProfile userProfile,Decision decision,Profile otherUserProfile})async{
-    Map<String,String> toSend = {'username':otherUserProfile.username,'decision':decision.toString().substring("Decision.".length,decision.toString().length)};
+    Map<String,String> toSend = {'deciderName':userProfile.name,'decidee':otherUserProfile.username,'decision':decision.toString().substring("Decision.".length,decision.toString().length)};
     String encoded = jsonEncode(toSend);
     http.Response response = await http.post(SERVER_ADDR+'/decision/${userProfile.facebookId}',body:encoded); //TODO something if response wasnt 200
 
@@ -46,7 +46,6 @@ class NetworkHelper{
   void prefetchImages(List<String> imagesUrls){
     for(String imageUrl in imagesUrls){
       String actualUrl=NetworkHelper.SERVER_ADDR+'/images/'+ imageUrl;
-      print('prefetching $actualUrl');
       DefaultCacheManager().getSingleFile(actualUrl);
       //CachedNetworkImageProvider(actualUrl);
     }
@@ -56,7 +55,25 @@ class NetworkHelper{
     if(searchPreferences.genderPreferred==null || searchPreferences.genderPreferred.length==0){
       return '';
     }
-    return '?gender=${searchPreferences.genderPreferred}';
+
+    String queryGenderString;
+    switch(searchPreferences.genderPreferred){
+      case 'Women':
+        queryGenderString='Female';
+        break;
+      case 'Men':
+        queryGenderString='Male';
+        break;
+      case 'Everyone':
+        queryGenderString='Everyone';
+        break;
+      default:
+        queryGenderString='Female';
+        break;
+
+
+    }
+    return '?gender=$queryGenderString';
   }
 
 

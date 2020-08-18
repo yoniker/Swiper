@@ -46,38 +46,43 @@ class _GenderSelectorState extends State<GenderSelector> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text('Show me:',style:TextStyle(color: Colors.black),),
+    return WillPopScope(
+      onWillPop: (){
+    Navigator.pop(context, selectedGender);
+    return new Future(() => false);
+    },
+      child: Scaffold(
+        appBar: AppBar(
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Text('Show me:',style:TextStyle(color: Colors.black),),
 
-        leading: IconButton(
-          icon:Icon(Icons.arrow_back,color:Colors.redAccent),
-          onPressed: (){
-            print('returning $selectedGender HAHAHA');
-            Navigator.pop(context,selectedGender);
-          },
+          leading: IconButton(
+            icon:Icon(Icons.arrow_back,color:Colors.redAccent),
+            onPressed: (){
+              Navigator.pop(context,selectedGender);
+            },
 
-        ) ,
-      ),
-      body: Column(
-        // Column is also a layout widget. It takes a list of children and
-        // arranges them vertically. By default, it sizes itself to fit its
-        // children horizontally, and tries to be as tall as its parent.
-        //
-        // Invoke "debug painting" (press "p" in the console, choose the
-        // "Toggle Debug Paint" action from the Flutter Inspector in Android
-        // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-        // to see the wireframe for each widget.
-        //
-        // Column has various properties to control how it sizes itself and
-        // how it positions its children. Here we use mainAxisAlignment to
-        // center the children vertically; the main axis here is the vertical
-        // axis because Columns are vertical (the cross axis would be
-        // horizontal).
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: POSSIBLE_GENDERS.map((gender)=>_createGenderTile(gender)).toList(),
+          ) ,
+        ),
+        body: Column(
+          // Column is also a layout widget. It takes a list of children and
+          // arranges them vertically. By default, it sizes itself to fit its
+          // children horizontally, and tries to be as tall as its parent.
+          //
+          // Invoke "debug painting" (press "p" in the console, choose the
+          // "Toggle Debug Paint" action from the Flutter Inspector in Android
+          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+          // to see the wireframe for each widget.
+          //
+          // Column has various properties to control how it sizes itself and
+          // how it positions its children. Here we use mainAxisAlignment to
+          // center the children vertically; the main axis here is the vertical
+          // axis because Columns are vertical (the cross axis would be
+          // horizontal).
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: POSSIBLE_GENDERS.map((gender)=>_createGenderTile(gender)).toList(),
+        ),
       ),
     ); // This trailing comma makes auto-formatting nicer for build methods
   }

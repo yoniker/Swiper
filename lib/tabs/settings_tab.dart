@@ -3,6 +3,7 @@ import 'package:betabeta/main.dart';
 import 'package:betabeta/popups/genderselector.dart';
 import 'package:betabeta/popups/popup.dart';
 import 'package:betabeta/round_icon_button.dart';
+import 'package:betabeta/search_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
@@ -10,6 +11,8 @@ import 'package:page_indicator/page_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsTab extends StatefulWidget {
+  final ValueSetter<bool> wrapUp;
+  SettingsTab({this.wrapUp});
   @override
   _SettingsTabState createState() => _SettingsTabState();
 }
@@ -22,25 +25,17 @@ class _SettingsTabState extends State<SettingsTab>
   PageController _controller = new PageController();
   Timer _pageChangeTimer;
   Timer colorTimer;
-
-  bool _changedPreferredGender=false;
-  String preferredGender;
+  SearchPreferences userPreferences;
+  SearchPreferences initialPreferences;
   String name='';
   String profileImageUrl='https://lunada.co.il/wp-content/uploads/2016/04/12198090531909861341man-silhouette.svg_.hi_-300x284.png';
 
 
 
-
   getPreferencesFromSharedPreferences()async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String preferredGenderSaved = prefs.getString('preferredGender');
-    if(preferredGenderSaved!=preferredGender && _changedPreferredGender==false){
-      setState(() {
-        preferredGender = preferredGenderSaved;
-        _changedPreferredGender=true;
-      });
-    }
-
+    userPreferences = SearchPreferences.fromSharedPreferences(prefs);
+    initialPreferences = SearchPreferences.clone(userPreferences);
     name =  prefs.getString('name');
     profileImageUrl=prefs.getString('facebook_profile_image_url');
   }
@@ -59,6 +54,7 @@ class _SettingsTabState extends State<SettingsTab>
   void dispose() {
     _pageChangeTimer.cancel();
     _controller.dispose();
+    widget.wrapUp(userPreferences!=initialPreferences);
     super.dispose();
   }
 
@@ -68,6 +64,7 @@ class _SettingsTabState extends State<SettingsTab>
     await prefs.remove('name');
     await prefs.remove('facebook_id');
     await prefs.remove('facebook_profile_image_url');
+    await prefs.remove('preferredGender');
     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
         LoginHome()), (Route<dynamic> route) => false);}
 
@@ -108,7 +105,6 @@ class _SettingsTabState extends State<SettingsTab>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    getPreferencesFromSharedPreferences();
     return new Scaffold(
       body: new Stack(
         children: <Widget>[_buildProfileInfo(), _buildSettingsBottom()],
@@ -161,17 +157,17 @@ class _SettingsTabState extends State<SettingsTab>
           new SizedBox(
             height: 10.0,
           ),
-          new Text(
+          const Text(
             "Some info about you will be entered here",
             style: TextStyle(
               fontSize: 12.0,
             ),
           ),
-          new SizedBox(
+          const SizedBox(
             height: 20.0,
           ),
-          FacebookSignInButton(text:'Facebook logout',onPressed: (){_logout();},),
-          new SizedBox(
+           FacebookSignInButton(text:'Facebook logout',onPressed: (){_logout();},),
+          const SizedBox(
             height: 20.0,
           ),
           _buildSettingsButtons()
@@ -253,18 +249,16 @@ class _SettingsTabState extends State<SettingsTab>
     );
   }
 
-
-
-  showPopup(BuildContext context, Widget widget, String title,
-      {BuildContext popupContext}) {
-    Navigator.push(
+  showPopup(BuildContext context, String title,
+      {BuildContext popupContext})async {
+    return await Navigator.push(
       context,
       PopupLayout(
         top: 30,
         left: 30,
         right: 30,
         bottom: 50,
-        child: GenderSelector(selectedGender:'Women'),
+        child: GenderSelector(selectedGender:userPreferences.genderPreferred??'Women'),
       ),
     );
   }
@@ -277,17 +271,20 @@ class _SettingsTabState extends State<SettingsTab>
       children: <Widget>[
         new Column(
           children: <Widget>[
-            new RoundIconButton.large(
+             RoundIconButton.large(
               icon: Icons.settings,
               iconColor: Colors.red,
-              onPressed: () {
-                showPopup(context, GenderSelector(selectedGender:'Men'), 'Show me:');
+              onPressed: () async {
+                var genderPreferred=await showPopup(context, 'Show me:');
+                if(userPreferences!=null){
+                  userPreferences.genderPreferred=genderPreferred;
+                }
               },
             ),
             new SizedBox(
               height: 10.0,
             ),
-            new Text(
+            const Text(
               "SETTINGS",
               style: TextStyle(color: Colors.grey, fontSize: 12.0),
             )
@@ -295,7 +292,7 @@ class _SettingsTabState extends State<SettingsTab>
         ),
         new Column(
           children: <Widget>[
-            new RoundIconButton.small(
+             RoundIconButton.small(
               icon: Icons.camera_alt,
               iconColor: Colors.blue,
               onPressed: () {
@@ -305,7 +302,7 @@ class _SettingsTabState extends State<SettingsTab>
             new SizedBox(
               height: 10.0,
             ),
-            new Text(
+            const Text(
               "ADD MEDIA",
               style: TextStyle(color: Colors.grey, fontSize: 12.0),
             )
@@ -320,10 +317,10 @@ class _SettingsTabState extends State<SettingsTab>
                 //TODO
               },
             ),
-            new SizedBox(
+            const SizedBox(
               height: 10.0,
             ),
-            new Text(
+            const Text(
               "EDIT INFO",
               style: TextStyle(color: Colors.grey, fontSize: 12.0),
             )
@@ -345,22 +342,25 @@ class BigDPlusMessage {
 }
 
 final List<BigDPlusMessage> bigDList = [
+  /*
   new BigDPlusMessage(
       title: "Get BigD Plus", subTitle: "See your future family!"),
-  new BigDPlusMessage(title: "Get Matches Faster", subTitle: ""),
+  new BigDPlusMessage(title: "Get Matches Faster", subTitle: "You are shown to people who will be interested in you, thanks to our advanced AI"),
   new BigDPlusMessage(
       title: "Choose only hot people",
       subTitle: "Our AI learns your taste,fast!"),
   new BigDPlusMessage(
-      title: "Swipe Around The World",
-      subTitle: "Passport to anywhere with BigD Plus"),
+      title: "Personalize your experience",
+      subTitle: "Our AI enables you to see only people that you will like,people who will be interested in you, or both"),
   new BigDPlusMessage(
-      title: "Control Your Profile",
-      subTitle: "Limit what others see with BigD Plus"),
+      title: "Help you to choose photos",
+      subTitle: "Our AI will scan your photos, and recommend recent photos which other users will like!"),
+  new BigDPlusMessage(title: "Take a glimpse into the future",
+subTitle: "See your potential children with your match! See your future family photo!"),*/
   new BigDPlusMessage(
-      title: "I Mean't to Swipe Right",
-      subTitle: "Get unlimited Rewinds with BigD Plus!"),
+      title: "Meet Dor, king of the multiverse",
+      subTitle: "Learn how to humble yourself!"),
   new BigDPlusMessage(
-      title: "Increase Your Chances",
-      subTitle: "Get unlimited Likes with BigD Plus!"),
+      title: "Smoke Dorgila",
+      subTitle: "Get unlimited Dorgila with BigD Plus!"),
 ];

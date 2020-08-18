@@ -1,4 +1,5 @@
 import 'package:betabeta/round_icon_button.dart';
+import 'package:betabeta/search_preferences.dart';
 import 'package:betabeta/tabs/settings_tab.dart';
 import 'package:betabeta/user_profile.dart';
 import 'package:betabeta/cards.dart';
@@ -141,7 +142,15 @@ class _MatchingScreenState extends State<MatchingScreen> {
     if(currentTab==MatchTab.Swiping){
       return CardStack(matchEngine: widget.matchEngine,);
     }
-    return SettingsTab();//SearchPreferencesScreen(matchEngine: widget.matchEngine);
+    return SettingsTab(
+      wrapUp: (bool preferencesChanged){
+        if(preferencesChanged){
+          widget.matchEngine.clear();
+        }
+
+      }
+      ,
+    );//SearchPreferencesScreen(matchEngine: widget.matchEngine);
   }
 
   @override
