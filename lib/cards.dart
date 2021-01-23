@@ -225,6 +225,8 @@ class _DraggableCardState extends State<DraggableCard>
   Offset cardOffset = const Offset(0.0, 0.0);
   Offset dragStart;
   Offset dragPosition;
+  List<Offset> gestureOffsets; //Track if all offsets happened at the same direction
+  List<Duration> gestureTimeStamps; //Track all of the time stamps to test if it happened "fast enough"
   Offset slideBackStart;
   SlideDirection slideOutDirection;
   AnimationController slideBackAnimation;
@@ -252,6 +254,8 @@ class _DraggableCardState extends State<DraggableCard>
             dragStart = null;
             slideBackStart = null;
             dragPosition = null;
+            gestureOffsets = null;
+            gestureTimeStamps = null;
           });
         }
       });
@@ -322,6 +326,8 @@ class _DraggableCardState extends State<DraggableCard>
     slideOutAnimation.forward(from: 0.0);
   }
 
+
+
   Offset _chooseRandomDragStart() {
     final cardContex = profileCardKey.currentContext;
     final cardTopLeft = (cardContex.findRenderObject() as RenderBox)
@@ -356,6 +362,8 @@ class _DraggableCardState extends State<DraggableCard>
 
   void _onPanStart(DragStartDetails details) {
     dragStart = details.globalPosition;
+    gestureOffsets = List<Offset>();
+    gestureTimeStamps = List<Duration>();
 
     if (slideBackAnimation.isAnimating) {
       slideBackAnimation.stop(canceled: true);
@@ -366,6 +374,8 @@ class _DraggableCardState extends State<DraggableCard>
     setState(() {
       dragPosition = details.globalPosition;
       cardOffset = dragPosition - dragStart;
+      gestureOffsets.add(cardOffset);
+      gestureTimeStamps.add(details.sourceTimeStamp);
 
       if (null != widget.onSlideUpdate) {
         widget.onSlideUpdate(cardOffset.distance);
@@ -373,11 +383,47 @@ class _DraggableCardState extends State<DraggableCard>
     });
   }
 
+  FastSwipe detectFastSwipe(){
+    const int MINIMUM_GESTURE_LENGTH=40;
+    const double MINIMUM_DURATION_TIME = 1; //TODO convert it into Duration since it's more like dart than this
+    const double MAXIMUM_DURATION_TIME = 1000;
+
+    if(gestureTimeStamps.length<2){return FastSwipe.notFastSwipe;}
+    final int gestureTime = (gestureTimeStamps[gestureTimeStamps.length-1]-gestureTimeStamps[0]).inMilliseconds;
+    if(gestureTime<MINIMUM_DURATION_TIME){return FastSwipe.notFastSwipe;}
+    if(gestureTime>MAXIMUM_DURATION_TIME){return FastSwipe.notFastSwipe;} //TODO again,it's important to cut the lists but for now
+    double overAllGestureSize = gestureOffsets[gestureOffsets.length-1].dx-gestureOffsets[0].dx;
+    if(overAllGestureSize.abs()<MINIMUM_GESTURE_LENGTH){return FastSwipe.notFastSwipe;}
+    //TODO cut both lists such that we will observe only the very last motions eg 1/2 miliseconds
+    bool monotonic=true;
+    for(int i=1; i<gestureOffsets.length; ++i){
+      if(gestureOffsets[i].dx.abs()<gestureOffsets[i-1].dx.abs()){
+        monotonic = false;
+        break;
+      }
+    }
+    if(!monotonic){return FastSwipe.notFastSwipe;}
+
+    if(gestureOffsets[0].dx>gestureOffsets[1].dx){
+      return FastSwipe.Left;
+    }
+
+    return FastSwipe.Right;
+
+
+  }
+
   void _onPanEnd(DragEndDetails details) {
+
+
     final dragVector = cardOffset / cardOffset.distance;
-    final isInLeftRegion = (cardOffset.dx / context.size.width) < -0.45;
-    final isInRightRegion = (cardOffset.dx / context.size.width) > 0.45;
-    final isInTopRegion = (cardOffset.dy / context.size.height) < -0.40;
+    bool isInLeftRegion = (cardOffset.dx / context.size.width) < -0.35;
+    bool isInRightRegion = (cardOffset.dx / context.size.width) > 0.35;
+    final isInTopRegion = (cardOffset.dy / context.size.height) < -0.30;
+    final FastSwipe fastSwipeStatus = detectFastSwipe();
+
+    isInLeftRegion|=fastSwipeStatus==FastSwipe.Left;
+    isInRightRegion|=fastSwipeStatus==FastSwipe.Right;
 
     setState(() {
       if (isInLeftRegion || isInRightRegion) {
@@ -543,4 +589,10 @@ class _ProfileCardState extends State<ProfileCard> {
       ),
     );
   }
+}
+
+enum FastSwipe {
+  notFastSwipe,
+  Right,
+  Left
 }

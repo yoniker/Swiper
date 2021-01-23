@@ -9,7 +9,7 @@ import 'dart:convert';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class NetworkHelper{
-  static const SERVER_ADDR='http://46.116.108.208:8081'; //TODO this is a local address,replace with a real external ip
+  static const SERVER_ADDR='http://62.90.219.93:8081';
   //getMatches: Grab some matches and image links from the server
   dynamic getMatches({bool discardIfPreferencesChanged=true}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -47,6 +47,7 @@ class NetworkHelper{
     for(String imageUrl in imagesUrls){
       String actualUrl=NetworkHelper.SERVER_ADDR+'/images/'+ imageUrl;
       DefaultCacheManager().getSingleFile(actualUrl);
+
       //CachedNetworkImageProvider(actualUrl);
     }
   }

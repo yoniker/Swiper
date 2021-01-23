@@ -81,6 +81,7 @@ class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flu
         await prefs.setString('facebook_id', profile['id']);
         final pictureResponse = await http.get('https://graph.facebook.com/v2.12/${profile['id']}/picture?type=large&redirect=0'); //'https://graph.facebook.com/v2.12/10218504761950570/picture?type=large&redirect=0'
         String reasonablePictureUrl=JSON.jsonDecode(pictureResponse.body)['data']['url'];
+        DefaultCacheManager().emptyCache();
         DefaultCacheManager().getSingleFile(reasonablePictureUrl);
         await prefs.setString('facebook_profile_image_url', reasonablePictureUrl); //The url in the profile response is just 50x50,this one 200x200
         _getDataFromPrefs();
