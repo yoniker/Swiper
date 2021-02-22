@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fluttery_dart2/layout.dart';
 import 'package:betabeta/profiles.dart';
+import 'package:provider/provider.dart';
 import './photos.dart';
 import './matches.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -26,8 +27,8 @@ class _CardStackState extends State<CardStack> {
     super.initState();
     addCards();
     widget.matchEngine.addListener(_onMatchEngineChange);
-    if(widget.matchEngine.length()>0) {
-      _currentMatch = widget.matchEngine.currentMatch();
+    if(Provider.of<MatchEngine>(context, listen: false).length()>0) {
+      _currentMatch = Provider.of<MatchEngine>(context, listen: false).currentMatch();
       _currentMatch.addListener(_onMatchChange);
       _frontCard = Key(_currentMatch.profile.username);
     }
@@ -37,7 +38,7 @@ class _CardStackState extends State<CardStack> {
   void addCards() async
 
   {
-    await widget.matchEngine.getMoreMatchesFromServer();
+    await Provider.of<MatchEngine>(context, listen: false).getMoreMatchesFromServer();
     setState(() {
 
     });
@@ -69,7 +70,7 @@ class _CardStackState extends State<CardStack> {
       _currentMatch.removeListener(_onMatchChange);
     }
 
-    widget.matchEngine.removeListener(_onMatchEngineChange);
+    Provider.of<MatchEngine>(context, listen: false).removeListener(_onMatchEngineChange);
     super.dispose();
   }
 
@@ -80,7 +81,7 @@ class _CardStackState extends State<CardStack> {
         _currentMatch.removeListener(_onMatchChange);
       }
 
-      _currentMatch = widget.matchEngine.currentMatch();
+      _currentMatch = Provider.of<MatchEngine>(context, listen: false).currentMatch();
       if (_currentMatch != null) {
         _currentMatch.addListener(_onMatchChange);
         _frontCard = Key(_currentMatch.profile.username);
@@ -95,12 +96,12 @@ class _CardStackState extends State<CardStack> {
   }
 
   Widget _buildBackCard() {
-    if (widget.matchEngine.nextMatch()!=null){
+    if (Provider.of<MatchEngine>(context, listen: false).nextMatch()!=null){
     Widget card= Transform(
       transform: Matrix4.identity()..scale(_nextCardScale, _nextCardScale),
       alignment: Alignment.center,
       child: ProfileCard(
-        profile: widget.matchEngine.nextMatch().profile,
+        profile: Provider.of<MatchEngine>(context, listen: false).nextMatch().profile,
         clickable: false,
       ),
     );
@@ -117,11 +118,11 @@ class _CardStackState extends State<CardStack> {
   }
 
   Widget _buildFrontCard() {
-    if(widget.matchEngine.currentMatch()!=null) {
+    if(Provider.of<MatchEngine>(context, listen: false).currentMatch()!=null) {
 
       Widget card =  ProfileCard(
         key: _frontCard,
-        profile: widget.matchEngine.currentMatch().profile,
+        profile: Provider.of<MatchEngine>(context, listen: false).currentMatch().profile,
         clickable: true,
       );
 
@@ -139,7 +140,7 @@ class _CardStackState extends State<CardStack> {
   }
 
   SlideDirection _desiredSlideOutDirection() {
-    switch (widget.matchEngine.currentMatch().decision) {
+    switch (Provider.of<MatchEngine>(context, listen: false).currentMatch().decision) {
       case Decision.nope:
         return SlideDirection.left;
         break;
@@ -162,19 +163,21 @@ class _CardStackState extends State<CardStack> {
 
   void _onSlideComplete(SlideDirection direction) {
 
+    Decision decision = Decision.indecided;
+
     switch (direction) {
       case SlideDirection.left:
-        widget.matchEngine.currentMatchDecision(Decision.nope);
+        decision = Decision.nope;
         break;
       case SlideDirection.right:
-        widget.matchEngine.currentMatchDecision(Decision.like);
+        decision = Decision.like;
         break;
       case SlideDirection.up:
-        widget.matchEngine.currentMatchDecision(Decision.superLike);
+        decision = Decision.superLike;
         break;
     }
 
-    widget.matchEngine.goToNextMatch();
+    Provider.of<MatchEngine>(context, listen: false).currentMatchDecision(decision);
   }
 
   @override

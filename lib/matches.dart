@@ -83,15 +83,20 @@ class MatchEngine extends ChangeNotifier {
     }
   }
 
-  currentMatchDecision(Decision decision){
+  currentMatchDecision(Decision decision,{bool nextMatch:true}){
     Match currentMatch=this.currentMatch();
-    if(currentMatch.decision == Decision.indecided){
-      currentMatch.decision = decision;
-      notifyListeners();
+    if(currentMatch!=null && currentMatch.decision == Decision.indecided){
+      currentMatch.decision = decision;}
+    if(nextMatch){
+      goToNextMatch();
+    }
+
+
+    notifyListeners();
       NetworkHelper().postUserDecision(userProfile: userProfile,decision: decision,otherUserProfile: currentMatch.profile);
     }
   }
-}
+
 
 class Match extends ChangeNotifier {
 
