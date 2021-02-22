@@ -9,28 +9,23 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 
 class CardStack extends StatefulWidget {
-  final MatchEngine matchEngine;
 
-  CardStack({this.matchEngine});
+  CardStack();
 
   @override
   _CardStackState createState() => _CardStackState();
 }
 
 class _CardStackState extends State<CardStack> {
-  Key _frontCard;
-  Match _currentMatch;
   double _nextCardScale = 0.0;
 
   @override
   void initState() {
     super.initState();
     addCards();
-    widget.matchEngine.addListener(_onMatchEngineChange);
-    if(Provider.of<MatchEngine>(context, listen: false).length()>0) {
-      _currentMatch = Provider.of<MatchEngine>(context, listen: false).currentMatch();
-      _currentMatch.addListener(_onMatchChange);
-      _frontCard = Key(_currentMatch.profile.username);
+    MatchEngine matchEngine = Provider.of<MatchEngine>(context, listen: false);
+    //matchEngine.addListener(_onMatchEngineChange);
+    if(matchEngine.length()>0) {
     }
 
   }
@@ -45,6 +40,7 @@ class _CardStackState extends State<CardStack> {
 
   }
 
+  /*
   @override
   void didUpdateWidget(CardStack oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -63,17 +59,21 @@ class _CardStackState extends State<CardStack> {
       }
     }
   }
+  */
+
 
   @override
   void dispose() {
-    if (_currentMatch != null) {
-      _currentMatch.removeListener(_onMatchChange);
+    Match currentMatch = Provider.of<MatchEngine>(context, listen: false).currentMatch();
+    if (currentMatch != null) {
+      //currentMatch.removeListener(_onMatchChange);
     }
 
-    Provider.of<MatchEngine>(context, listen: false).removeListener(_onMatchEngineChange);
+    //Provider.of<MatchEngine>(context, listen: false).removeListener(_onMatchEngineChange);
     super.dispose();
   }
 
+  /*
   _onMatchEngineChange() {
     print('onMatchEngineCalled!');
     setState(() {
@@ -90,6 +90,7 @@ class _CardStackState extends State<CardStack> {
 
     });
   }
+   */
 
   _onMatchChange() {
     setState(() {});
@@ -118,10 +119,11 @@ class _CardStackState extends State<CardStack> {
   }
 
   Widget _buildFrontCard() {
-    if(Provider.of<MatchEngine>(context, listen: false).currentMatch()!=null) {
+    MatchEngine matchEngine = Provider.of<MatchEngine>(context, listen: false);
+    if(matchEngine.currentMatch()!=null) {
 
       Widget card =  ProfileCard(
-        key: _frontCard,
+        key: Key(matchEngine.currentMatch().profile.username),
         profile: Provider.of<MatchEngine>(context, listen: false).currentMatch().profile,
         clickable: true,
       );
@@ -182,13 +184,21 @@ class _CardStackState extends State<CardStack> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        _buildBackCard(),
-        _buildFrontCard()
-      ],
-    );
-  }
+    return
+    Consumer<MatchEngine>(
+      builder: (context, matchEngine, child) {
+         return Stack(
+          children: <Widget>[
+            _buildBackCard(),
+            _buildFrontCard()
+          ],
+        );
+      },
+    );}
+
+
+
+
 }
 
 enum SlideDirection {

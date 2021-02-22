@@ -140,7 +140,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
 
   Widget _buildBody(){
     if(currentTab==MatchTab.Swiping){
-      return CardStack(matchEngine: Provider.of<MatchEngine>(context, listen: false),);
+      return CardStack();
     }
     return SettingsTab(
       wrapUp: (bool preferencesChanged){
