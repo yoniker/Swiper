@@ -1,5 +1,7 @@
+import 'package:betabeta/matches.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:provider/provider.dart';
 import 'user_profile.dart';
 import 'matching_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,7 +11,14 @@ import 'dart:convert' as JSON;
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
 void main()  {
-  runApp(MyApp());}
+  runApp(
+      ChangeNotifierProvider(
+        create: (context) => MatchEngine(),
+        child: MyApp(),
+      )
+  );
+
+ }
 
 
 class MyApp extends StatelessWidget {

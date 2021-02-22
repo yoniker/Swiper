@@ -37,6 +37,7 @@ class NetworkHelper{
 
 
   postUserDecision({FacebookProfile userProfile,Decision decision,Profile otherUserProfile})async{
+    if(userProfile==null){print('TODO fix the profile @matchEngine stuff'); return;}
     Map<String,String> toSend = {'deciderName':userProfile.name,'decidee':otherUserProfile.username,'decision':decision.toString().substring("Decision.".length,decision.toString().length)};
     String encoded = jsonEncode(toSend);
     http.Response response = await http.post(SERVER_ADDR+'/decision/${userProfile.facebookId}',body:encoded); //TODO something if response wasnt 200

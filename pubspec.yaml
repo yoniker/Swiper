@@ -35,6 +35,7 @@ dependencies:
   cached_network_image: ^2.2.0+1
   flutter_cache_manager: ^1.4.1
   page_indicator: ^0.3.0
+  provider: ^4.3.3
 
 
 dev_dependencies:

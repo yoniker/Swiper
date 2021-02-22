@@ -4,6 +4,7 @@ import 'package:betabeta/user_profile.dart';
 import 'package:betabeta/cards.dart';
 import 'package:flutter/material.dart';
 import 'package:betabeta/matches.dart';
+import 'package:provider/provider.dart';
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -27,9 +28,9 @@ enum MatchTab {
 
 class MatchingScreen extends StatefulWidget {
   MatchingScreen({Key key, this.title,this.userProfile}) :
-        matchEngine = MatchEngine(userProfile: userProfile),
+        //matchEngine = MatchEngine(userProfile: userProfile),
         super(key: key);
-  final MatchEngine matchEngine;
+  //final MatchEngine matchEngine;
   final String title;
   final FacebookProfile userProfile;
   @override
@@ -45,9 +46,9 @@ class _MatchingScreenState extends State<MatchingScreen> {
 
   }
   currentMatchDecision(Decision decision){
-    if (widget.matchEngine.currentMatch()!=null){
-      widget.matchEngine.currentMatchDecision(decision);
-      widget.matchEngine.goToNextMatch();}
+    if (Provider.of<MatchEngine>(context, listen: false).currentMatch()!=null){
+      Provider.of<MatchEngine>(context, listen: false).currentMatchDecision(decision);
+      Provider.of<MatchEngine>(context, listen: false).goToNextMatch();}
   }
 
   Widget _buildAppBar() {
@@ -104,7 +105,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
                 icon: Icons.refresh,
                 iconColor: Colors.orange,
                 onPressed: () {
-                  widget.matchEngine.goBack();
+                  Provider.of<MatchEngine>(context, listen: false).goBack();
                 },
               ),
               RoundIconButton.large(
@@ -139,12 +140,12 @@ class _MatchingScreenState extends State<MatchingScreen> {
 
   Widget _buildBody(){
     if(currentTab==MatchTab.Swiping){
-      return CardStack(matchEngine: widget.matchEngine,);
+      return CardStack(matchEngine: Provider.of<MatchEngine>(context, listen: false),);
     }
     return SettingsTab(
       wrapUp: (bool preferencesChanged){
         if(preferencesChanged){
-          widget.matchEngine.clear();
+          Provider.of<MatchEngine>(context, listen: false).clear();
         }
 
       }
