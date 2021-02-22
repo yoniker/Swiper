@@ -1,5 +1,4 @@
 import 'package:betabeta/round_icon_button.dart';
-import 'package:betabeta/search_preferences.dart';
 import 'package:betabeta/tabs/settings_tab.dart';
 import 'package:betabeta/user_profile.dart';
 import 'package:betabeta/cards.dart';
@@ -138,7 +137,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
         ));
   }
 
-  Widget _build_body(){
+  Widget _buildBody(){
     if(currentTab==MatchTab.Swiping){
       return CardStack(matchEngine: widget.matchEngine,);
     }
@@ -157,7 +156,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body:  _build_body(),
+      body:  _buildBody(),
       bottomNavigationBar: currentTab==MatchTab.Swiping?_buildBottomBar():null,
     );
   }

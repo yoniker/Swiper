@@ -9,7 +9,7 @@ import 'dart:convert';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class NetworkHelper{
-  static const SERVER_ADDR='http://62.90.219.93:8081';
+  static const SERVER_ADDR='http://212.179.243.93:8081/';
   //getMatches: Grab some matches and image links from the server
   dynamic getMatches({bool discardIfPreferencesChanged=true}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
