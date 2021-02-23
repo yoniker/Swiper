@@ -135,8 +135,8 @@ class _SettingsTabState extends State<SettingsTab>
         //mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           new Container(
-            height: 120.0,
-            width: 120.0,
+            height: 110.0,
+            width: 110.0,
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image: CachedNetworkImageProvider(

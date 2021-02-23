@@ -62,16 +62,6 @@ class _CardStackState extends State<CardStack> {
   */
 
 
-  @override
-  void dispose() {
-    Match currentMatch = Provider.of<MatchEngine>(context, listen: false).currentMatch();
-    if (currentMatch != null) {
-      //currentMatch.removeListener(_onMatchChange);
-    }
-
-    //Provider.of<MatchEngine>(context, listen: false).removeListener(_onMatchEngineChange);
-    super.dispose();
-  }
 
   /*
   _onMatchEngineChange() {
