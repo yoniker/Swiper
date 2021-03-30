@@ -1,10 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fluttery_dart2/layout.dart';
-import 'package:betabeta/profiles.dart';
+import 'package:betabeta/models/profile.dart';
 import 'package:provider/provider.dart';
-import './photos.dart';
-import './matches.dart';
+import 'photos.dart';
+import '../models/match_engine.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 
@@ -23,11 +23,6 @@ class _CardStackState extends State<CardStack> {
   void initState() {
     super.initState();
     addCards();
-    MatchEngine matchEngine = Provider.of<MatchEngine>(context, listen: false);
-    //matchEngine.addListener(_onMatchEngineChange);
-    if(matchEngine.length()>0) {
-    }
-
   }
 
   void addCards() async
@@ -39,53 +34,6 @@ class _CardStackState extends State<CardStack> {
     });
 
   }
-
-  /*
-  @override
-  void didUpdateWidget(CardStack oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (widget.matchEngine != oldWidget.matchEngine) {
-      oldWidget.matchEngine.removeListener(_onMatchEngineChange);
-      widget.matchEngine.addListener(_onMatchEngineChange);
-
-      if (_currentMatch != null) {
-        _currentMatch.removeListener(_onMatchChange);
-      }
-
-      _currentMatch = widget.matchEngine.currentMatch();
-      if (_currentMatch != null) {
-        _currentMatch.addListener(_onMatchChange);
-      }
-    }
-  }
-  */
-
-
-
-  /*
-  _onMatchEngineChange() {
-    print('onMatchEngineCalled!');
-    setState(() {
-      if (_currentMatch != null) {
-        _currentMatch.removeListener(_onMatchChange);
-      }
-
-      _currentMatch = Provider.of<MatchEngine>(context, listen: false).currentMatch();
-      if (_currentMatch != null) {
-        _currentMatch.addListener(_onMatchChange);
-        _frontCard = Key(_currentMatch.profile.username);
-      }
-
-
-    });
-  }
-   */
-
-  _onMatchChange() {
-    setState(() {});
-  }
-
   Widget _buildBackCard() {
     if (Provider.of<MatchEngine>(context, listen: false).nextMatch()!=null){
     Widget card= Transform(

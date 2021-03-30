@@ -1,6 +1,5 @@
 import 'package:betabeta/services/networking.dart';
 
-final List<Profile> demoProfiles=[];
 class Profile {
   final List<String> imageUrls;
   final String username;

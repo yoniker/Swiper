@@ -1,15 +1,15 @@
 
-import 'package:betabeta/matches.dart';
+import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/search_preferences.dart';
 import 'package:betabeta/user_profile.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:betabeta/profiles.dart';
+import 'package:betabeta/models/profile.dart';
 import 'dart:convert';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class NetworkHelper{
-  static const SERVER_ADDR='http://212.179.243.93:8081/';
+  static const SERVER_ADDR='http://192.116.48.67:8081/';
   //getMatches: Grab some matches and image links from the server
   dynamic getMatches({bool discardIfPreferencesChanged=true}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

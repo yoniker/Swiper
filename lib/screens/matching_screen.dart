@@ -1,9 +1,9 @@
-import 'package:betabeta/round_icon_button.dart';
+import 'package:betabeta/widgets/round_icon_button.dart';
 import 'package:betabeta/tabs/settings_tab.dart';
 import 'package:betabeta/user_profile.dart';
-import 'package:betabeta/cards.dart';
+import 'package:betabeta/widgets/cards.dart';
 import 'package:flutter/material.dart';
-import 'package:betabeta/matches.dart';
+import 'package:betabeta/models/match_engine.dart';
 import 'package:provider/provider.dart';
 
 class MyApp extends StatelessWidget {

@@ -1,5 +1,5 @@
 import 'package:betabeta/user_profile.dart';
-import 'package:betabeta/profiles.dart';
+import 'package:betabeta/models/profile.dart';
 import 'package:flutter/widgets.dart';
 import 'package:betabeta/services/networking.dart';
 import 'dart:collection';

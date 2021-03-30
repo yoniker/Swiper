@@ -1,9 +1,9 @@
-import 'package:betabeta/matches.dart';
+import 'package:betabeta/models/match_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:provider/provider.dart';
 import 'user_profile.dart';
-import 'matching_screen.dart';
+import 'screens/matching_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:http/http.dart' as http;
