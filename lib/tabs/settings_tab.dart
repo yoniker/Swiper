@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:betabeta/main.dart';
 import 'package:betabeta/popups/genderselector.dart';
 import 'package:betabeta/popups/popup.dart';
+import 'package:betabeta/screens/settings_screen.dart';
 import 'package:betabeta/widgets/round_icon_button.dart';
 import 'package:betabeta/search_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -274,11 +275,14 @@ class _SettingsTabState extends State<SettingsTab>
              RoundIconButton.large(
               icon: Icons.settings,
               iconColor: Colors.red,
-              onPressed: () async {
+              onPressed: 
+                  /*() async {
                 var genderPreferred=await showPopup(context, 'Show me:');
                 if(userPreferences!=null){
                   userPreferences.genderPreferred=genderPreferred;
                 }
+              }*/(){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>SettingsScreen()));
               },
             ),
             new SizedBox(
