@@ -11,14 +11,14 @@ import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:page_indicator/page_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SettingsTab extends StatefulWidget {
-  SettingsTab();
+class ProfileTab extends StatefulWidget {
+  ProfileTab();
   @override
-  _SettingsTabState createState() => _SettingsTabState();
+  _ProfileTabState createState() => _ProfileTabState();
 }
 
-class _SettingsTabState extends State<SettingsTab>
-    with AutomaticKeepAliveClientMixin<SettingsTab> {
+class _ProfileTabState extends State<ProfileTab>
+    with AutomaticKeepAliveClientMixin<ProfileTab> {
   int currentPage = 0;
   int currentColor = 0;
   bool reverse = false;

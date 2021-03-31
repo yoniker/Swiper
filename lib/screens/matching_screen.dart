@@ -1,5 +1,5 @@
 import 'package:betabeta/widgets/round_icon_button.dart';
-import 'package:betabeta/tabs/settings_tab.dart';
+import 'package:betabeta/tabs/profile_tab.dart';
 
 import 'package:betabeta/widgets/cards.dart';
 import 'package:flutter/material.dart';
@@ -125,7 +125,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
     if(currentTab==MatchTab.Swiping){
       return CardStack();
     }
-    return SettingsTab(
+    return ProfileTab(
     );//SearchPreferencesScreen(matchEngine: widget.matchEngine);
   }
 

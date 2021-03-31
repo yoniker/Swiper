@@ -24,21 +24,43 @@ extension ToDisplayString on Gender {
 class _SettingsScreenState extends State<SettingsScreen> {
 
 
-
+  static const minAge = 18;
+  static const maxAge = 75;
 
   Gender _currentGenderSelected = Gender.values.firstWhere((e) => e.toShortString() == SettingsData().preferredGender);
 
   String address;
   String groupValue = "your";
 
-  RangeValues values = RangeValues(17, 36);
-  RangeLabels labels = RangeLabels('15', '56');
+  RangeValues _ages = RangeValues(SettingsData().minAge.toDouble(), SettingsData().maxAge.toDouble());
+  RangeLabels labels = RangeLabels(minAge.toString(), maxAge.toString());
 
   bool status = true;
-  double _currentSliderValue = 5;
+  double _currentDistanceValue = 5;
 
   @override
   Widget build(BuildContext context) {
+    String agesRangeText;
+    if(_ages.start<=minAge) {
+      if(_ages.end>=maxAge){
+        agesRangeText = 'Any Age';
+      }
+      else{
+        agesRangeText = 'Younger than ${_ages.end.toInt()}';
+      }
+    }
+    else{
+      if(_ages.end>=maxAge){
+        agesRangeText = 'Older than ${_ages.start.toInt()}';
+      }
+      else{
+        agesRangeText = '${_ages.start.toInt()} - ${_ages.end.toInt()}';
+      }
+    }
+
+    if(_ages.start == _ages.end){
+      agesRangeText = 'Exactly ${_ages.start.toInt()}';
+    }
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -165,7 +187,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               Row(
                                 children: [
                                   Text(
-                                    'ossithedog@gmail.com',
+                                    'some_email@gmail.com',
                                     style: TextStyle(
                                         color: Colors.pink, fontSize: 16),
                                   ),
@@ -326,10 +348,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                             Row(
                               children: [
-                                Text(_currentSliderValue.round().toString(), style: TextStyle(
+                                Text(_currentDistanceValue.round().toString(), style: TextStyle(
                                     color: Colors.grey[600], fontSize: 16),),
                                 Text(
-                                  ' mi',
+                                  ' km',
                                   style: TextStyle(
                                       color: Colors.grey[600], fontSize: 16),
                                 ),
@@ -339,14 +361,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                         Slider(
                           activeColor: Colors.pink,
-                          value: _currentSliderValue,
+                          value: _currentDistanceValue,
                           min: 0,
                           max: 100,
                           divisions: 1000,
-                          label: _currentSliderValue.round().toString(),
+                          label: _currentDistanceValue.round().toString(),
                           onChanged: (double value) {
                             setState(() {
-                              _currentSliderValue = value;
+                              _currentDistanceValue = value;
                             });
                           },
                         ),
@@ -412,7 +434,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         Column(
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.baseline,
                               textBaseline: TextBaseline.alphabetic,
                               children: <Widget>[
@@ -421,14 +442,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   style: TextStyle(
                                     fontSize: 20,),
                                 ),
-                                Text(
-                                  '  ' + '${values.start.round()} - ${values.end.round()}',
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                    fontSize: 16,
-                                  ),
-                                ),
+
                               ],
+                            ),
+                            Text(
+                              agesRangeText,
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 16,
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 10.0, right: 10),
@@ -437,7 +459,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   Expanded(
                                       flex: 0,
                                       child: Text(
-                                        '15',
+                                        _ages.start.toInt().toString(),
                                         style: TextStyle(
                                           color: Colors.pink,
                                           fontSize: 15,
@@ -446,18 +468,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   Expanded(
                                     child: RangeSlider(
                                       activeColor: Colors.pink,
-                                      min: 15,
-                                      max: 55,
-                                      values: values,
+                                      min: 18,
+                                      max: 75,
+                                      values: _ages,
                                       divisions: 100,
                                       labels: labels,
                                       onChanged: (value) {
+
                                         print('START: ${value.start}, END: ${value.end}');
                                         setState(() {
-                                          values = value;
+                                          SettingsData().minAge = value.start.toInt();
+                                          SettingsData().maxAge = value.end.toInt();
+                                          String endString = value.end.toInt()<maxAge?value.end.toInt().toString():'$maxAge+';
+                                          _ages = value;
                                           labels = RangeLabels(
                                               '${value.start.toInt().toString()}',
-                                              '${value.end.toInt().toString()}');
+                                              '$endString');
                                         });
                                       },
                                     ),
@@ -465,7 +491,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   Expanded(
                                       flex: 0,
                                       child: Text(
-                                        '55',
+                                          _ages.end.toInt()<75?_ages.end.toInt().toString():'75+',
                                         style: TextStyle(
                                           color: Colors.pink,
                                           fontSize: 15,
