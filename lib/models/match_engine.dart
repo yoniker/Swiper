@@ -1,4 +1,3 @@
-import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/user_profile.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:flutter/widgets.dart';
@@ -12,16 +11,19 @@ class MatchEngine extends ChangeNotifier {
   bool addedMoreProfiles;
   Future itemsBeingGotten; //See https://stackoverflow.com/questions/63402499/flutter-how-not-to-call-the-same-service-over-and-over/63402620?noredirect=1#comment112113319_63402620
   FacebookProfile userProfile;
-  MatchEngine({this.userProfile,
-    List<Match> matches, SettingsData settingsData,
-  }):_matches=Queue<Match>(),_previousMatches=Queue<Match>()   {
-    if (matches!=null){
-    _matches.addAll(matches);}
-    addMatchesIfNeeded();
+
+  MatchEngine._privateConstructor():_matches=Queue<Match>(),_previousMatches=Queue<Match>(){
+        addMatchesIfNeeded();
+      }
+  static final MatchEngine _instance = MatchEngine._privateConstructor();
+
+  factory MatchEngine(){
+    return _instance;
   }
 
   clear(){
     _matches.clear();
+    notifyListeners();
     addMatchesIfNeeded();
   }
   int length(){return _matches.length;}

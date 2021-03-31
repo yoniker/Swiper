@@ -12,33 +12,12 @@ import 'dart:convert' as JSON;
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
 void main()  {
+  SettingsData();
   runApp(
-
-
-
-
       ChangeNotifierProvider(
-        create: (context) => SettingsData(),
-        child:
-
-        Consumer<SettingsData>(
-          builder: (context, settingsData, child) {
-            return ChangeNotifierProvider(
-              create: (context) => MatchEngine(settingsData:settingsData),
-              child: MyApp(),
-            );
-          },
-        )
-
-
-
-
-        ,
+        create: (context) => MatchEngine(),
+        child: MyApp(),
       )
-
-
-
-
   );
 
  }

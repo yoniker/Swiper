@@ -15,7 +15,6 @@ class MatchingScreen extends StatefulWidget {
   MatchingScreen({Key key, this.title,this.userProfile}) :
         //matchEngine = MatchEngine(userProfile: userProfile),
         super(key: key);
-  //final MatchEngine matchEngine;
   final String title;
   final FacebookProfile userProfile;
   @override
