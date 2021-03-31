@@ -1,3 +1,4 @@
+import 'package:betabeta/models/settings_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -9,9 +10,9 @@ class SettingsScreen extends StatefulWidget {
 }
 
 enum Gender{
-  Man,
-  Woman,
-  Any
+  Men,
+  Women,
+  Everyone
 }
 
 extension ToDisplayString on Gender {
@@ -25,7 +26,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
 
 
-  var _currentGenderSelected = Gender.Woman;
+  Gender _currentGenderSelected = Gender.values.firstWhere((e) => e.toShortString() == SettingsData().preferredGender);
 
   String address;
   String groupValue = "your";
@@ -399,6 +400,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               }).toList(),
                               onChanged: (Gender newValueSelected){
                                 setState(() {
+                                  SettingsData().preferredGender = newValueSelected.toShortString();
                                   this._currentGenderSelected = newValueSelected;
                                 });
                               },

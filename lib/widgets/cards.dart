@@ -313,8 +313,8 @@ class _DraggableCardState extends State<DraggableCard>
 
   void _onPanStart(DragStartDetails details) {
     dragStart = details.globalPosition;
-    gestureOffsets = List<Offset>();
-    gestureTimeStamps = List<Duration>();
+    gestureOffsets = [];
+    gestureTimeStamps = [];
 
     if (slideBackAnimation.isAnimating) {
       slideBackAnimation.stop(canceled: true);

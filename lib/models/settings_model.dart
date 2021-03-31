@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:collection';
 
+import 'package:betabeta/models/match_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,7 +27,7 @@ class SettingsData extends ChangeNotifier{
     _readFromShared = false;
     _name = 'Loading...';
     _facebookId = '';
-    _facebookProfileImageUrl = '';
+    _facebookProfileImageUrl = 'https://lunada.co.il/wp-content/uploads/2016/04/12198090531909861341man-silhouette.svg_.hi_-300x284.png';
     _preferredGender = 'Everyone';
     _minAge = 18;
     _maxAge = 75;
@@ -37,7 +37,7 @@ class SettingsData extends ChangeNotifier{
 
   }
 
-  void readSettingsFromShared() async{
+  Future<void> readSettingsFromShared() async{
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     _preferredGender = sharedPreferences.getString(PREFERRED_GENDER_KEY)??_preferredGender;
     _name = sharedPreferences.getString(NAME_KEY) ?? _name;
@@ -46,6 +46,7 @@ class SettingsData extends ChangeNotifier{
     _minAge = sharedPreferences.getInt(MIN_AGE_KEY) ?? _minAge;
     _maxAge = sharedPreferences.getInt(MAX_AGE_KEY) ?? _maxAge;
     _readFromShared = true;
+    return;
   }
 
 
@@ -56,7 +57,18 @@ class SettingsData extends ChangeNotifier{
     return _instance;
   }
 
+  bool get readFromShared{
+    return _readFromShared;
+  }
 
+  String get preferredGender{
+    return _preferredGender;
+  }
+
+  set preferredGender(String newPreferredGender){
+    _preferredGender = newPreferredGender;
+    saveToSharedPreferences(PREFERRED_GENDER_KEY, newPreferredGender);
+  }
 
   String get name{
     return _name;
@@ -111,6 +123,7 @@ class SettingsData extends ChangeNotifier{
   void saveToSharedPreferences(String sharedPreferencesKey, dynamic newValue) async {
     if (_debounce?.isActive ?? false) _debounce.cancel();
     _debounce = Timer(_debounceTime, () {
+      MatchEngine().clear();
       notifyListeners();
     });
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();

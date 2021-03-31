@@ -1,4 +1,3 @@
-import 'package:betabeta/user_profile.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:flutter/widgets.dart';
 import 'package:betabeta/services/networking.dart';
@@ -10,7 +9,6 @@ class MatchEngine extends ChangeNotifier {
   Queue<Match> _matches;
   bool addedMoreProfiles;
   Future itemsBeingGotten; //See https://stackoverflow.com/questions/63402499/flutter-how-not-to-call-the-same-service-over-and-over/63402620?noredirect=1#comment112113319_63402620
-  FacebookProfile userProfile;
 
   MatchEngine._privateConstructor():_matches=Queue<Match>(),_previousMatches=Queue<Match>(){
         addMatchesIfNeeded();
@@ -36,7 +34,7 @@ class MatchEngine extends ChangeNotifier {
 
   Future<void> getMoreMatchesFromServer() async {
     if (! (itemsBeingGotten == null && _matches.length < MINIMUM_CACHED_PROFILES)) {
-      return;} //TODO use user's settings rather than an arbitrary value
+      return;} //TODO use user's cache settings rather than an arbitrary value
       try {
         itemsBeingGotten = NetworkHelper().getMatches();
         dynamic matches = await itemsBeingGotten;
@@ -96,7 +94,7 @@ class MatchEngine extends ChangeNotifier {
 
 
     notifyListeners();
-      NetworkHelper().postUserDecision(userProfile: userProfile,decision: decision,otherUserProfile: currentMatch.profile);
+      NetworkHelper().postUserDecision(decision: decision,otherUserProfile: currentMatch.profile);
     }
   }
 

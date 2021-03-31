@@ -3,16 +3,13 @@ import 'package:betabeta/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:provider/provider.dart';
-import 'user_profile.dart';
 import 'screens/matching_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as JSON;
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
 void main()  {
-  SettingsData();
   runApp(
       ChangeNotifierProvider(
         create: (context) => MatchEngine(),
@@ -28,7 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Swiper MVP',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColorBrightness: Brightness.light,
@@ -49,9 +46,6 @@ class LoginHome extends StatefulWidget {
 
 class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flutter-facebook-login/
   final facebookLogin = FacebookLogin();
-  String name;
-  String facebookId;
-  String facebookProfileImageUrl;
   bool _errorTryingToLogin;
   String _errorMessage;
 
@@ -60,20 +54,14 @@ class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flu
   void initState(){
     super.initState();
     _errorTryingToLogin=false;
-    _getDataFromPrefs();
+    _getSettings();
   }
   
-  _getDataFromPrefs() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    name = prefs.getString('name');
-
-    if(name!=null){
-      facebookId=prefs.getString('facebook_id');
-      facebookProfileImageUrl=prefs.getString('facebook_profile_image_url');
-      FacebookProfile currentUserFacebookProfile = FacebookProfile(name:name,facebookId: facebookId,facebookProfileImageUrl: facebookProfileImageUrl);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MatchingScreen(title: 'Flutter Demo Home Page',userProfile:currentUserFacebookProfile)));
-
-
+  _getSettings() async {
+    SettingsData settings = SettingsData();
+    await settings.readSettingsFromShared();
+    if(settings.readFromShared && settings.name!=''){
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MatchingScreen(title: 'Swiper MVP')));
     }
     
   }
@@ -86,16 +74,16 @@ class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flu
         final token = result.accessToken.token;
         final graphResponse = await http.get('https://graph.facebook.com/v2.12/me?fields=name,picture&access_token=$token');
         final profile = JSON.jsonDecode(graphResponse.body);
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        //Save name, id and picture url to persistent storage, and move on to the next screen
-        await prefs.setString('name', profile['name']);
-        await prefs.setString('facebook_id', profile['id']);
+        //Save name, id and picture url to settings(persistent storage), and move on to the next screen
+        SettingsData settings = SettingsData();
+        settings.name = profile['name'];
+        settings.facebookId = profile['id'];
         final pictureResponse = await http.get('https://graph.facebook.com/v2.12/${profile['id']}/picture?type=large&redirect=0'); //'https://graph.facebook.com/v2.12/10218504761950570/picture?type=large&redirect=0'
         String reasonablePictureUrl=JSON.jsonDecode(pictureResponse.body)['data']['url'];
         DefaultCacheManager().emptyCache();
         DefaultCacheManager().getSingleFile(reasonablePictureUrl);
-        await prefs.setString('facebook_profile_image_url', reasonablePictureUrl); //The url in the profile response is just 50x50,this one 200x200
-        _getDataFromPrefs();
+        settings.facebookProfileImageUrl = reasonablePictureUrl;
+        _getSettings();
         break;
 
       case FacebookLoginStatus.cancelledByUser:
@@ -138,7 +126,7 @@ class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flu
                     },
                   ),
                   _errorTryingToLogin?
-                      FlatButton(
+                      TextButton(
                         child:Text('❗'),
                         onPressed: (){
                           showDialog(context: context,builder: (_) {

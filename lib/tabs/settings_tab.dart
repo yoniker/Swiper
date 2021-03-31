@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:betabeta/main.dart';
+import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/popups/genderselector.dart';
 import 'package:betabeta/popups/popup.dart';
 import 'package:betabeta/screens/settings_screen.dart';
 import 'package:betabeta/widgets/round_icon_button.dart';
-import 'package:betabeta/search_preferences.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
@@ -12,8 +12,7 @@ import 'package:page_indicator/page_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsTab extends StatefulWidget {
-  final ValueSetter<bool> wrapUp;
-  SettingsTab({this.wrapUp});
+  SettingsTab();
   @override
   _SettingsTabState createState() => _SettingsTabState();
 }
@@ -26,20 +25,11 @@ class _SettingsTabState extends State<SettingsTab>
   PageController _controller = new PageController();
   Timer _pageChangeTimer;
   Timer colorTimer;
-  SearchPreferences userPreferences;
-  SearchPreferences initialPreferences;
-  String name='';
-  String profileImageUrl='https://lunada.co.il/wp-content/uploads/2016/04/12198090531909861341man-silhouette.svg_.hi_-300x284.png';
+  String name=SettingsData().name;
+  String profileImageUrl= SettingsData().facebookProfileImageUrl;
 
 
 
-  getPreferencesFromSharedPreferences()async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    userPreferences = SearchPreferences.fromSharedPreferences(prefs);
-    initialPreferences = SearchPreferences.clone(userPreferences);
-    name =  prefs.getString('name');
-    profileImageUrl=prefs.getString('facebook_profile_image_url');
-  }
 
 
 
@@ -47,7 +37,6 @@ class _SettingsTabState extends State<SettingsTab>
   void initState() {
     // TODO: implement initState
     super.initState();
-    getPreferencesFromSharedPreferences();
     _pageChanger();
   }
 
@@ -55,7 +44,6 @@ class _SettingsTabState extends State<SettingsTab>
   void dispose() {
     _pageChangeTimer.cancel();
     _controller.dispose();
-    widget.wrapUp(userPreferences!=initialPreferences);
     super.dispose();
   }
 
@@ -259,7 +247,7 @@ class _SettingsTabState extends State<SettingsTab>
         left: 30,
         right: 30,
         bottom: 50,
-        child: GenderSelector(selectedGender:userPreferences.genderPreferred??'Women'),
+        child: GenderSelector(selectedGender:SettingsData().preferredGender),
       ),
     );
   }

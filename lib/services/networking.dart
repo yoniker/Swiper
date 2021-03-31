@@ -1,9 +1,7 @@
 
 import 'package:betabeta/models/match_engine.dart';
-import 'package:betabeta/search_preferences.dart';
-import 'package:betabeta/user_profile.dart';
+import 'package:betabeta/models/settings_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:betabeta/models/profile.dart';
 import 'dart:convert';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -11,18 +9,11 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 class NetworkHelper{
   static const SERVER_ADDR='http://192.116.48.67:8081/';
   //getMatches: Grab some matches and image links from the server
-  dynamic getMatches({bool discardIfPreferencesChanged=true}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    SearchPreferences userPreferences = SearchPreferences.fromSharedPreferences(prefs);
-    String query = getQueryFromPreferences(userPreferences);
-    String userName = prefs.getString('facebook_id') ?? 'SOMEUSER'; //TODO Login screen if the username in sharedprefs is null
+  dynamic getMatches() async {
+    SettingsData settings = SettingsData();
+    String query = getQueryFromSettings();
+    String userName = settings.facebookId ?? 'SOMEUSER'; //TODO Login screen if the username in sharedprefs is null
     http.Response response=await http.get(NetworkHelper.SERVER_ADDR+'/matches/$userName$query'); //eg /12313?gender=Male
-    if (discardIfPreferencesChanged){
-      SearchPreferences userCurrentPreferences = SearchPreferences.fromSharedPreferences(prefs);
-      if(userCurrentPreferences!=userPreferences){
-        return [];
-      }
-    }
     if (response.statusCode!=200){
       return null; //TODO error handling
     }
@@ -36,11 +27,12 @@ class NetworkHelper{
   }
 
 
-  postUserDecision({FacebookProfile userProfile,Decision decision,Profile otherUserProfile})async{
-    if(userProfile==null){print('TODO fix the profile @matchEngine stuff'); return;}
-    Map<String,String> toSend = {'deciderName':userProfile.name,'decidee':otherUserProfile.username,'decision':decision.toString().substring("Decision.".length,decision.toString().length)};
+  postUserDecision({Decision decision,Profile otherUserProfile})async{
+    SettingsData settings = SettingsData();
+    if(true){print('TODO fix the profile @matchEngine stuff'); return;}
+    Map<String,String> toSend = {'deciderName':settings.name,'decidee':otherUserProfile.username,'decision':decision.toString().substring("Decision.".length,decision.toString().length)};
     String encoded = jsonEncode(toSend);
-    http.Response response = await http.post(SERVER_ADDR+'/decision/${userProfile.facebookId}',body:encoded); //TODO something if response wasnt 200
+    http.Response response = await http.post(SERVER_ADDR+'/decision/${settings.facebookId}',body:encoded); //TODO something if response wasnt 200
 
   }
 
@@ -53,13 +45,14 @@ class NetworkHelper{
     }
   }
 
-  static String getQueryFromPreferences(SearchPreferences searchPreferences){
-    if(searchPreferences.genderPreferred==null || searchPreferences.genderPreferred.length==0){
+  static String getQueryFromSettings(){
+    SettingsData settings = SettingsData();
+    if(!settings.readFromShared){
       return '';
     }
 
     String queryGenderString;
-    switch(searchPreferences.genderPreferred){
+    switch(settings.preferredGender){
       case 'Women':
         queryGenderString='Female';
         break;

@@ -1,6 +1,6 @@
 import 'package:betabeta/widgets/round_icon_button.dart';
 import 'package:betabeta/tabs/settings_tab.dart';
-import 'package:betabeta/user_profile.dart';
+
 import 'package:betabeta/widgets/cards.dart';
 import 'package:flutter/material.dart';
 import 'package:betabeta/models/match_engine.dart';
@@ -12,11 +12,10 @@ enum MatchTab {
 
 
 class MatchingScreen extends StatefulWidget {
-  MatchingScreen({Key key, this.title,this.userProfile}) :
+  MatchingScreen({Key key, this.title}) :
         //matchEngine = MatchEngine(userProfile: userProfile),
         super(key: key);
   final String title;
-  final FacebookProfile userProfile;
   @override
   _MatchingScreenState createState() => _MatchingScreenState();
 }
@@ -127,13 +126,6 @@ class _MatchingScreenState extends State<MatchingScreen> {
       return CardStack();
     }
     return SettingsTab(
-      wrapUp: (bool preferencesChanged){
-        if(preferencesChanged){
-          Provider.of<MatchEngine>(context, listen: false).clear();
-        }
-
-      }
-      ,
     );//SearchPreferencesScreen(matchEngine: widget.matchEngine);
   }
 
