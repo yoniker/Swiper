@@ -1,4 +1,5 @@
 import 'package:betabeta/models/match_engine.dart';
+import 'package:betabeta/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:provider/provider.dart';
@@ -12,10 +13,32 @@ import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
 void main()  {
   runApp(
+
+
+
+
       ChangeNotifierProvider(
-        create: (context) => MatchEngine(),
-        child: MyApp(),
+        create: (context) => SettingsData(),
+        child:
+
+        Consumer<SettingsData>(
+          builder: (context, settingsData, child) {
+            return ChangeNotifierProvider(
+              create: (context) => MatchEngine(settingsData:settingsData),
+              child: MyApp(),
+            );
+          },
+        )
+
+
+
+
+        ,
       )
+
+
+
+
   );
 
  }

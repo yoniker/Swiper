@@ -6,21 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:provider/provider.dart';
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColorBrightness: Brightness.light,
-        primarySwatch: Colors.blue,
-      ),
-      home: MatchingScreen(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
 enum MatchTab {
   Settings,Swiping
 }
@@ -72,7 +57,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
 
         },
       ),
-      title:  FlatButton(onPressed:()=> setState(() {
+      title:  TextButton(onPressed:()=> setState(() {
         currentTab=MatchTab.Swiping;
 
       }),
