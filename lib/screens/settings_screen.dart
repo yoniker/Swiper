@@ -1,4 +1,5 @@
 import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/services/networking.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -468,10 +469,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   Expanded(
                                     child: RangeSlider(
                                       activeColor: Colors.pink,
-                                      min: 18,
-                                      max: 75,
+                                      min: minAge.toDouble(),
+                                      max: maxAge.toDouble(),
                                       values: _ages,
-                                      divisions: 100,
+                                      divisions: 1000,
                                       labels: labels,
                                       onChanged: (value) {
 
@@ -507,7 +508,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
               ),
+            TextButton(onPressed: (){NetworkHelper().postUserSettings();}, child: Text('Update server'))
             ],
+
           ),
         ),
       ),

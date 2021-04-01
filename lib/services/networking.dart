@@ -13,6 +13,7 @@ class NetworkHelper{
     SettingsData settings = SettingsData();
     String query = getQueryFromSettings();
     String userName = settings.facebookId ?? 'SOMEUSER'; //TODO Login screen if the username in sharedprefs is null
+    print('username is $userName');
     http.Response response=await http.get(NetworkHelper.SERVER_ADDR+'/matches/$userName$query'); //eg /12313?gender=Male
     if (response.statusCode!=200){
       return null; //TODO error handling
@@ -35,6 +36,15 @@ class NetworkHelper{
     http.Response response = await http.post(SERVER_ADDR+'/decision/${settings.facebookId}',body:encoded); //TODO something if response wasnt 200
 
   }
+
+
+  postUserSettings()async{
+    SettingsData settings = SettingsData();
+    Map<String,String> toSend = {'decider_facebook_id':settings.facebookId,'update_date':'8.0','decider_name':settings.name,'min_age':settings.minAge.toString(),'max_age':settings.maxAge.toString(),'gender_preferred':settings.preferredGender};
+    String encoded = jsonEncode(toSend);
+    http.Response response = await http.post(SERVER_ADDR+'/settings/${settings.facebookId}',body:encoded); //TODO something if response wasnt 200
+
+    }
 
   void prefetchImages(List<String> imagesUrls){
     for(String imageUrl in imagesUrls){

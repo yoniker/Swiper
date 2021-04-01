@@ -60,7 +60,7 @@ class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flu
   _getSettings() async {
     SettingsData settings = SettingsData();
     await settings.readSettingsFromShared();
-    if(settings.readFromShared && settings.name!=''){
+    if(settings.readFromShared && settings.facebookId!=''){
       Navigator.push(context, MaterialPageRoute(builder: (context) => MatchingScreen(title: 'Swiper MVP')));
     }
     
