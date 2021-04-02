@@ -1,5 +1,4 @@
 import 'package:betabeta/models/settings_model.dart';
-import 'package:betabeta/services/networking.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';

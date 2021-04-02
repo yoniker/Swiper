@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class PhotoBrowser extends StatefulWidget {
   final List<String> photoAssetPaths;
@@ -13,6 +12,7 @@ class PhotoBrowser extends StatefulWidget {
 
 class _PhotoBrowserState extends State<PhotoBrowser> {
   int visiblePhotoIndex;
+  List<Image> images;
 
   @override
   void initState() {
@@ -23,11 +23,27 @@ class _PhotoBrowserState extends State<PhotoBrowser> {
   @override
   void didUpdateWidget(PhotoBrowser oldWidget) {
     super.didUpdateWidget(oldWidget);
+    updateImages(context);
     if (widget.visiblePhotoIndex != oldWidget.visiblePhotoIndex) {
       setState(() {
         visiblePhotoIndex = widget.visiblePhotoIndex;
       });
     }
+  }
+
+  void updateImages(context){
+    images = [];
+    for(int imageIndex=0; imageIndex<widget.photoAssetPaths.length; imageIndex++){
+      Image img = Image.network(widget.photoAssetPaths[imageIndex],fit:BoxFit.cover);
+      precacheImage(img.image, context);
+      images.add(img);
+
+    }
+  }
+  @override
+  void didChangeDependencies() {
+    updateImages(context);
+    super.didChangeDependencies();
   }
 
   void _prevImage() {
@@ -80,12 +96,13 @@ class _PhotoBrowserState extends State<PhotoBrowser> {
       fit: StackFit.expand,
       children: <Widget>[
         // Photo
-        CachedNetworkImage(
+        images[visiblePhotoIndex],
+        /*CachedNetworkImage(
           placeholder: (context, url) => CircularProgressIndicator(),
           imageUrl:
           widget.photoAssetPaths[visiblePhotoIndex],
             fit: BoxFit.cover
-        ),
+        ),*/
         // Photo indicator
         new Positioned(
           top: 0.0,
