@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:betabeta/models/match_engine.dart';
+import 'package:betabeta/services/networking.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,7 +13,7 @@ class SettingsData extends ChangeNotifier{
   static const String FACEBOOK_PROFILE_IMAGE_URL_KEY = 'facebook_profile_image_url';
   static const String MIN_AGE_KEY = 'min_age';
   static const String MAX_AGE_KEY = 'max_age';
-  static const _debounceTime = Duration(milliseconds: 200); //Debounce time such that we notify listeners
+  static const _debounceSettingsTime = Duration(seconds: 2); //Debounce time such that we notify listeners
   String _name;
   String _facebookId;
   String _facebookProfileImageUrl;
@@ -67,7 +68,7 @@ class SettingsData extends ChangeNotifier{
 
   set preferredGender(String newPreferredGender){
     _preferredGender = newPreferredGender;
-    saveToSharedPreferences(PREFERRED_GENDER_KEY, newPreferredGender);
+    savePreferences(PREFERRED_GENDER_KEY, newPreferredGender);
   }
 
   String get name{
@@ -76,7 +77,7 @@ class SettingsData extends ChangeNotifier{
 
   set name(String newName){
     _name = newName;
-    saveToSharedPreferences(NAME_KEY, newName);
+    savePreferences(NAME_KEY, newName);
   }
 
 
@@ -86,7 +87,7 @@ class SettingsData extends ChangeNotifier{
 
   set facebookId(String newFacebookId){
     _facebookId = newFacebookId;
-    saveToSharedPreferences(FACEBOOK_ID_KEY, newFacebookId);
+    savePreferences(FACEBOOK_ID_KEY, newFacebookId);
   }
 
   String get facebookProfileImageUrl{
@@ -95,7 +96,7 @@ class SettingsData extends ChangeNotifier{
 
   set facebookProfileImageUrl(String newUrl){
     _facebookProfileImageUrl = newUrl;
-    saveToSharedPreferences(FACEBOOK_PROFILE_IMAGE_URL_KEY, newUrl);
+    savePreferences(FACEBOOK_PROFILE_IMAGE_URL_KEY, newUrl);
   }
 
 
@@ -106,7 +107,7 @@ class SettingsData extends ChangeNotifier{
 
    set minAge(int newMinAge){
     _minAge = newMinAge;
-    saveToSharedPreferences(MIN_AGE_KEY,newMinAge);
+    savePreferences(MIN_AGE_KEY,newMinAge);
   }
 
   int get maxAge{
@@ -115,16 +116,16 @@ class SettingsData extends ChangeNotifier{
 
   set maxAge(int newMaxAge){
     _maxAge = newMaxAge;
-    saveToSharedPreferences(MAX_AGE_KEY, newMaxAge);
+    savePreferences(MAX_AGE_KEY, newMaxAge);
   }
 
 
 
-  void saveToSharedPreferences(String sharedPreferencesKey, dynamic newValue) async {
+  void savePreferences(String sharedPreferencesKey, dynamic newValue) async {
     if (_debounce?.isActive ?? false) _debounce.cancel();
-    _debounce = Timer(_debounceTime, () {
+    _debounce = Timer(_debounceSettingsTime, () async{
+      await NetworkHelper().postUserSettings();
       MatchEngine().clear();
-      notifyListeners();
     });
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if(newValue is int) {

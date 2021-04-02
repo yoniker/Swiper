@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:http/http.dart' as http;
@@ -8,12 +10,24 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class NetworkHelper{
   static const SERVER_ADDR='http://192.116.48.67:8081/';
+  static final NetworkHelper _instance = NetworkHelper._internal();
+  static const MIN_MATCHES_CALL_INTERVAL = Duration(seconds: 1);
+  DateTime _lastMatchCall=DateTime(2000);
+
+  factory NetworkHelper() {
+    return _instance;
+  }
+
+  NetworkHelper._internal();
   //getMatches: Grab some matches and image links from the server
   dynamic getMatches() async {
+    if(DateTime.now().difference(_lastMatchCall) < MIN_MATCHES_CALL_INTERVAL){
+      await Future.delayed(MIN_MATCHES_CALL_INTERVAL - DateTime.now().difference(_lastMatchCall));
+    }
     SettingsData settings = SettingsData();
     String query = getQueryFromSettings();
     String userName = settings.facebookId ?? 'SOMEUSER'; //TODO Login screen if the username in sharedprefs is null
-    print('username is $userName');
+    _lastMatchCall = DateTime.now();
     http.Response response=await http.get(NetworkHelper.SERVER_ADDR+'/matches/$userName$query'); //eg /12313?gender=Male
     if (response.statusCode!=200){
       return null; //TODO error handling

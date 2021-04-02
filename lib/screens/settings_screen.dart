@@ -508,7 +508,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
               ),
-            TextButton(onPressed: (){NetworkHelper().postUserSettings();}, child: Text('Update server'))
+            //TextButton(onPressed: (){}, child: Text('Update server'))
             ],
 
           ),

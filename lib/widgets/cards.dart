@@ -492,9 +492,12 @@ class _ProfileCardState extends State<ProfileCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  widget.profile.username!=null? Text(widget.profile.username,
-                      style:
-                           TextStyle(color: Colors.white, fontSize: 24.0)) : Text(''),
+
+
+                     widget.profile.username!=null? Text(widget.profile.username+', '+widget.profile.age.toString(),
+                        style:
+                             TextStyle(color: Colors.white, fontSize: 24.0)) : Text(''),
+
                   widget.profile.headline!=null?Text(widget.profile.headline,
                       style:  TextStyle(color: Colors.white, fontSize: 18.0)):Text('')
                 ],
