@@ -37,6 +37,8 @@ dependencies:
   page_indicator: ^0.3.0
   provider: ^4.3.3
   flutter_switch: ^0.3.0
+  fuzzy: <1.0.0
+  trotter: ^1.1.0
 
 
 dev_dependencies:
@@ -60,6 +62,7 @@ flutter:
 
   assets:
     - assets/
+    - assets/mobile_celebs.db #TODO redundant as fuck right?
   fonts:
     - family: RougeScript
       fonts:

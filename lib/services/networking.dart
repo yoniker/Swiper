@@ -6,6 +6,7 @@ import 'package:betabeta/models/settings_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:betabeta/models/profile.dart';
 import 'dart:convert';
+import 'dart:convert' as json;
 
 class NetworkHelper{
   static const SERVER_ADDR='http://192.116.48.67:8081/';
@@ -18,6 +19,20 @@ class NetworkHelper{
   }
 
   NetworkHelper._internal();
+
+  static Future<List<String>> getCeleblinks(String celebName)async{
+    http.Response resp = await http.get(SERVER_ADDR+'celeblinks/$celebName');
+    if(resp.statusCode==200){ //TODO think how to handle network errors
+      var parsed = json.jsonDecode(resp.body);
+      List<String> imagesLinks = parsed.cast<String>();
+      return imagesLinks;
+    }
+
+    return [];
+  }
+
+
+
   //getMatches: Grab some matches and image links from the server
   dynamic getMatches() async {
     if(DateTime.now().difference(_lastMatchCall) < MIN_MATCHES_CALL_INTERVAL){

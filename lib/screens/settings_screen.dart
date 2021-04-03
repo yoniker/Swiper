@@ -1,7 +1,11 @@
+import 'package:betabeta/models/celebs_info_model.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:provider/provider.dart';
+
+import 'celebrity_selection_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   static String id = 'screen1';
@@ -500,6 +504,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 ],
                               ),
                             ),
+                            TextButton(onPressed: (){
+                              Navigator.push(context,MaterialPageRoute(builder: (context)=>ScreenCelebritySelection()));
+                            }, child: Text('Celebs'))
+
+
+
                           ],
                         ),
                       ],

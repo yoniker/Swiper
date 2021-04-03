@@ -3,6 +3,7 @@ import 'package:betabeta/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:provider/provider.dart';
+import 'models/celebs_info_model.dart';
 import 'screens/matching_screen.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:http/http.dart' as http;
@@ -13,7 +14,13 @@ void main()  {
   runApp(
       ChangeNotifierProvider(
         create: (context) => MatchEngine(),
-        child: MyApp(),
+        child:
+        ChangeNotifierProvider(
+            create: (context) => CelebsInfo(),
+            child:MyApp()
+        )
+
+
       )
   );
 
