@@ -61,7 +61,7 @@ class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flu
     SettingsData settings = SettingsData();
     await settings.readSettingsFromShared();
     if(settings.readFromShared && settings.facebookId!=''){
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MatchingScreen(title: 'Swiper MVP')));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MatchingScreen(title: 'Swiper MVP')));
     }
     
   }
