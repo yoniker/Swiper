@@ -9,7 +9,7 @@ import 'dart:convert';
 import 'dart:convert' as json;
 
 class NetworkHelper{
-  static const SERVER_ADDR='http://192.116.48.67:8081/';
+  static const SERVER_ADDR='192.116.48.67:8081';
   static final NetworkHelper _instance = NetworkHelper._internal();
   static const MIN_MATCHES_CALL_INTERVAL = Duration(seconds: 1);
   DateTime _lastMatchCall=DateTime(2000);
@@ -21,7 +21,8 @@ class NetworkHelper{
   NetworkHelper._internal();
 
   static Future<List<String>> getCeleblinks(String celebName)async{
-    http.Response resp = await http.get(SERVER_ADDR+'celeblinks/$celebName');
+    Uri celebsLinkUri = Uri.http(SERVER_ADDR, 'celeblinks/$celebName');
+    http.Response resp = await http.get(celebsLinkUri);
     if(resp.statusCode==200){ //TODO think how to handle network errors
       var parsed = json.jsonDecode(resp.body);
       List<String> imagesLinks = parsed.cast<String>();
@@ -39,10 +40,10 @@ class NetworkHelper{
       await Future.delayed(MIN_MATCHES_CALL_INTERVAL - DateTime.now().difference(_lastMatchCall));
     }
     SettingsData settings = SettingsData();
-    String query = getQueryFromSettings();
     String userName = settings.facebookId ?? 'SOMEUSER'; //TODO Login screen if the username in sharedprefs is null
     _lastMatchCall = DateTime.now();
-    http.Response response=await http.get(NetworkHelper.SERVER_ADDR+'/matches/$userName$query'); //eg /12313?gender=Male
+    Uri matchesUrl = Uri.http(SERVER_ADDR, '/matches/$userName');
+    http.Response response=await http.get(matchesUrl); //eg /12313?gender=Male
     if (response.statusCode!=200){
       return null; //TODO error handling
     }
@@ -61,7 +62,8 @@ class NetworkHelper{
     if(true){print('TODO fix the profile @matchEngine stuff'); return;}
     Map<String,String> toSend = {'deciderName':settings.name,'decidee':otherUserProfile.username,'decision':decision.toString().substring("Decision.".length,decision.toString().length)};
     String encoded = jsonEncode(toSend);
-    http.Response response = await http.post(SERVER_ADDR+'/decision/${settings.facebookId}',body:encoded); //TODO something if response wasnt 200
+    Uri postDecisionUri = Uri.http(SERVER_ADDR, '/decision/${settings.facebookId}');
+    http.Response response = await http.post(postDecisionUri,body:encoded); //TODO something if response wasnt 200
 
   }
 
@@ -70,7 +72,8 @@ class NetworkHelper{
     SettingsData settings = SettingsData();
     Map<String,String> toSend = {'decider_facebook_id':settings.facebookId,'update_date':'8.0','decider_name':settings.name,'min_age':settings.minAge.toString(),'max_age':settings.maxAge.toString(),'gender_preferred':settings.preferredGender};
     String encoded = jsonEncode(toSend);
-    http.Response response = await http.post(SERVER_ADDR+'/settings/${settings.facebookId}',body:encoded); //TODO something if response wasnt 200
+    Uri postSettingsUri = Uri.http(SERVER_ADDR, '/settings/${settings.facebookId}');
+    http.Response response = await http.post(postSettingsUri,body:encoded); //TODO something if response wasnt 200
 
     }
 

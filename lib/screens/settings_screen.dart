@@ -1,9 +1,9 @@
-import 'package:betabeta/models/celebs_info_model.dart';
 import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/widgets/cupertino_range_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:provider/provider.dart';
+
 
 import 'celebrity_selection_screen.dart';
 
@@ -37,7 +37,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String groupValue = "your";
 
   RangeValues _ages = RangeValues(SettingsData().minAge.toDouble(), SettingsData().maxAge.toDouble());
-  RangeLabels labels = RangeLabels(minAge.toString(), maxAge.toString());
 
   bool status = true;
   double _currentDistanceValue = 5;
@@ -45,25 +44,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     String agesRangeText;
-    if(_ages.start<=minAge) {
-      if(_ages.end>=maxAge){
+    if(_ages.start.toInt()<=minAge) {
+      if(_ages.end.toInt()>=maxAge){
         agesRangeText = 'Any Age';
       }
       else{
-        agesRangeText = 'Younger than ${_ages.end.toInt()}';
+        agesRangeText = '${_ages.end.toInt()} And Younger';
       }
     }
     else{
-      if(_ages.end>=maxAge){
-        agesRangeText = 'Older than ${_ages.start.toInt()}';
+      if(_ages.end.toInt()>=maxAge){
+        agesRangeText = '${_ages.start.toInt()} And Older';
       }
       else{
         agesRangeText = '${_ages.start.toInt()} - ${_ages.end.toInt()}';
       }
     }
 
-    if(_ages.start == _ages.end){
+    if(_ages.start.toInt() == _ages.end.toInt()){
       agesRangeText = 'Exactly ${_ages.start.toInt()}';
+      if(_ages.start.toInt()==maxAge){
+        agesRangeText = '${_ages.start.toInt()} And Older';
+      }
     }
     return SafeArea(
       child: Scaffold(
@@ -96,188 +98,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 40,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: Text(
-                  'ACCOUNT SETTINGS',
-                  style: TextStyle(color: Colors.grey[700]),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0, bottom: 8),
-                child: Card(
-                  margin: EdgeInsets.all(0),
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(0),
-                      bottomLeft: Radius.circular(0),
-                      topRight: Radius.circular(0),
-                      topLeft: Radius.circular(0),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                                flex: 0,
-                                child: Text(
-                                  'Phone Number',
-                                  style: TextStyle(fontSize: 16),
-                                )),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              child: TextFormField(
-                                keyboardType: TextInputType.phone,
-                                style: TextStyle(color: Colors.black),
-                                decoration: new InputDecoration(
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.all(8),
-                                  hintText: 'Enter Phone No. here',
-                                  hintStyle: TextStyle(
-                                      fontFamily: 'Lato-Regular',
-                                      color: Colors.white,
-                                      fontSize: 12),
-                                  filled: true,
-                                  fillColor: Colors.black.withOpacity(0.1),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(5),
-                                    ),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Divider(),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4, bottom: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Connected Accounts',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                color: Colors.grey,
-                                size: 15,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Divider(),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4, bottom: 7),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Email',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    'some_email@gmail.com',
-                                    style: TextStyle(
-                                        color: Colors.pink, fontSize: 16),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: Colors.grey,
-                                    size: 15,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0, bottom: 8),
-                child: Card(
-                  margin: EdgeInsets.all(0),
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(0),
-                      bottomLeft: Radius.circular(0),
-                      topRight: Radius.circular(0),
-                      topLeft: Radius.circular(0),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4, bottom: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Show me in Discovery',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                ),
-                              ),
-                              FlutterSwitch(
-                                inactiveColor: Colors.grey,
-                                activeColor: Colors.green,
-                                width: 50.0,
-                                height: 30.0,
-                                valueFontSize: 0.0,
-                                toggleSize: 26.0,
-                                value: status,
-                                borderRadius: 30.0,
-                                padding: 1.0,
-                                showOnOff: true,
-                                onToggle: (val) {
-                                  setState(() {
-                                    status = val;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 15),
-                child: Text(
-                  'While turned off, you will not be shown in the card stack. You can still see and chat with your matches.',
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ),
-              Divider(),
+              SizedBox(height: 15.0,),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
                 child: Text(
@@ -363,13 +184,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                           ],
                         ),
-                        Slider(
+                        CupertinoSlider(
                           activeColor: Colors.pink,
                           value: _currentDistanceValue,
                           min: 0,
                           max: 100,
                           divisions: 1000,
-                          label: _currentDistanceValue.round().toString(),
                           onChanged: (double value) {
                             setState(() {
                               _currentDistanceValue = value;
@@ -470,13 +290,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         ),
                                       )),
                                   Expanded(
-                                    child: RangeSlider(
+                                    child: CupertinoRangeSlider(
                                       activeColor: Colors.pink,
                                       min: minAge.toDouble(),
                                       max: maxAge.toDouble(),
                                       values: _ages,
-                                      divisions: 1000,
-                                      labels: labels,
+                                      divisions: 10000,
                                       onChanged: (value) {
 
                                         print('START: ${value.start}, END: ${value.end}');
@@ -485,9 +304,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           SettingsData().maxAge = value.end.toInt();
                                           String endString = value.end.toInt()<maxAge?value.end.toInt().toString():'$maxAge+';
                                           _ages = value;
-                                          labels = RangeLabels(
-                                              '${value.start.toInt().toString()}',
-                                              '$endString');
                                         });
                                       },
                                     ),

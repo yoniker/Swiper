@@ -34,7 +34,7 @@ class _PhotoBrowserState extends State<PhotoBrowser> {
   void updateImages(context){
     images = [];
     for(int imageIndex=0; imageIndex<widget.photoAssetPaths.length; imageIndex++){
-      Image img = Image.network(widget.photoAssetPaths[imageIndex],fit:BoxFit.cover);
+      Image img = Image.network('http://'+widget.photoAssetPaths[imageIndex],fit:BoxFit.cover);
       precacheImage(img.image, context);
       images.add(img);
 

@@ -15,7 +15,7 @@ void main()  {
       ChangeNotifierProvider(
         create: (context) => MatchEngine(),
         child:
-        ChangeNotifierProvider(
+        ChangeNotifierProvider(//TODO put it in a lower place down the Widget tree...
             create: (context) => CelebsInfo(),
             child:MyApp()
         )
@@ -79,13 +79,19 @@ class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flu
     switch (result.status) {
       case FacebookLoginStatus.loggedIn:
         final token = result.accessToken.token;
-        final graphResponse = await http.get('https://graph.facebook.com/v2.12/me?fields=name,picture&access_token=$token');
+        Map<String,dynamic> fbProfileQueryParameters = {'fields':'name,picture','access_token':'$token'};
+        Uri facebookProfileUri = Uri.https('graph.facebook.com', 'v2.12/me',fbProfileQueryParameters);
+        //final graphResponse = await http.get('https://graph.facebook.com/v2.12/me?fields=name,picture&access_token=$token');
+        final graphResponse = await http.get(facebookProfileUri);
         final profile = JSON.jsonDecode(graphResponse.body);
         //Save name, id and picture url to settings(persistent storage), and move on to the next screen
         SettingsData settings = SettingsData();
         settings.name = profile['name'];
         settings.facebookId = profile['id'];
-        final pictureResponse = await http.get('https://graph.facebook.com/v2.12/${profile['id']}/picture?type=large&redirect=0'); //'https://graph.facebook.com/v2.12/10218504761950570/picture?type=large&redirect=0'
+        Map<String,dynamic> fbImageQueryParameters={'type':'large','redirect':'0'};
+        Uri fbImageUri = Uri.https('graph.facebook.com', 'v2.12/${profile['id']}/picture',fbImageQueryParameters);
+        //final pictureResponse = await http.get('https://graph.facebook.com/v2.12/${profile['id']}/picture?type=large&redirect=0'); //'https://graph.facebook.com/v2.12/10218504761950570/picture?type=large&redirect=0'
+        final pictureResponse = await http.get(fbImageUri);
         String reasonablePictureUrl=JSON.jsonDecode(pictureResponse.body)['data']['url'];
         DefaultCacheManager().emptyCache();
         DefaultCacheManager().getSingleFile(reasonablePictureUrl);

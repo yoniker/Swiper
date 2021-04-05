@@ -26,14 +26,14 @@ dependencies:
 
   # fluttery: ^0.0.8
   fluttery_dart2: ^0.0.9
-  flutter_svg: ^0.18.0
-  http: ^0.12.2
-  shared_preferences: ^0.5.8
+  flutter_svg: 0.18.1
+  http: ^0.13.1
+  shared_preferences: ^2.0.5
   flutter_spinkit: ^4.1.2+1
   flutter_facebook_login: ^3.0.0
   flutter_auth_buttons: ^0.9.0
   cached_network_image: ^2.2.0+1
-  flutter_cache_manager: ^1.4.1
+  flutter_cache_manager: 2.1.2
   page_indicator: ^0.3.0
   provider: ^4.3.3
   flutter_switch: ^0.3.0
