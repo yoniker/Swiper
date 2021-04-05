@@ -1,7 +1,7 @@
 import 'package:betabeta/models/settings_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_switch/flutter_switch.dart';
+// import 'package:flutter_switch/flutter_switch.dart';
 
 class SettingsScreen extends StatefulWidget {
   static String id = 'screen1';
@@ -241,23 +241,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   fontSize: 20,
                                 ),
                               ),
-                              FlutterSwitch(
-                                inactiveColor: Colors.grey,
-                                activeColor: Colors.green,
-                                width: 50.0,
-                                height: 30.0,
-                                valueFontSize: 0.0,
-                                toggleSize: 26.0,
-                                value: status,
-                                borderRadius: 30.0,
-                                padding: 1.0,
-                                showOnOff: true,
-                                onToggle: (val) {
-                                  setState(() {
-                                    status = val;
-                                  });
-                                },
-                              ),
+                              // FlutterSwitch(
+                              //   inactiveColor: Colors.grey,
+                              //   activeColor: Colors.green,
+                              //   width: 50.0,
+                              //   height: 30.0,
+                              //   valueFontSize: 0.0,
+                              //   toggleSize: 26.0,
+                              //   value: status,
+                              //   borderRadius: 30.0,
+                              //   padding: 1.0,
+                              //   showOnOff: true,
+                              //   onToggle: (val) {
+                              //     setState(() {
+                              //       status = val;
+                              //     });
+                              //   },
+                              // ),
                             ],
                           ),
                         )

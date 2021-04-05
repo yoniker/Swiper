@@ -170,7 +170,7 @@ class DraggableCard extends StatefulWidget {
 }
 
 class _DraggableCardState extends State<DraggableCard>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   Decision decision;
   GlobalKey profileCardKey = GlobalKey(debugLabel: 'profile_card_key');
   Offset cardOffset = const Offset(0.0, 0.0);
