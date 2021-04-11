@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +25,8 @@ class SettingsData extends ChangeNotifier{
   SettingsData._privateConstructor(){
     //Fill in some "default" values which should be filled in within milliseconds of opening the App
     _readFromShared = false;
-    _name = 'Loading...';
-    _facebookId = '';
+    _name = 'Dummy user';
+    _facebookId = '123456';
     _facebookProfileImageUrl = 'https://lunada.co.il/wp-content/uploads/2016/04/12198090531909861341man-silhouette.svg_.hi_-300x284.png';
     _preferredGender = 'Everyone';
     _minAge = 18;

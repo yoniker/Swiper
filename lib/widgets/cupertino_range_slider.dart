@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart' show CupertinoColors;
 
 import 'cupertino_range_slider_thumb_shape.dart';
 import 'package:flutter/material.dart';
