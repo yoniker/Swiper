@@ -358,36 +358,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     GlobalWidgets.buildSettingsBlock(
                       description:
                       'With this enabled your profile will be visible to other people using this App',
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Go to Advanced filters',
-                            style: _varryingTextStyle,
-                          ),
-                          TextButton(
-                            style: ButtonStyle(
-                              overlayColor: MaterialStateProperty.all(
-                                  colorBlend01.withOpacity(0.2)),
-                            ),
-                            child: GlobalWidgets.imageToIcon(
-                              'assets/images/forward_arrow.png',
-                            ),
-                            onPressed: () {
+                      child: GestureDetector(
+                        onTap: () {
 
 
-                              // Direct user to the Advanced filters Page.
-                              Navigator.of(context).push(
-                                CupertinoPageRoute(
-                                  builder: (context) {
-                                    return AdvancedSettingsScreen();
-                                  },
-                                ),
-                              );
-                            },
-                          ),
-                        ],
+                        // Direct user to the Advanced filters Page.
+                        Navigator.of(context).push(
+                      CupertinoPageRoute(
+                        builder: (context) {
+                          return AdvancedSettingsScreen();
+                        },
+                      ),
+                    );
+              },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(mainAxisAlignment: MainAxisAlignment.start,
+                              children: [Text(
+                                'Artificial Intelligence Filters',
+                                style: _varryingTextStyle,
+                              ),
+                              SizedBox(width: 4.0,),
+                              Icon(Icons.psychology_rounded,
+                              color: colorBlend01,),
+                              ],
+                            ),
+                            Icon(Icons.arrow_forward_ios),
+
+                          ],
+                        ),
                       ),
                     ),
                     Padding(
