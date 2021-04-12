@@ -1,0 +1,659 @@
+import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/enums.dart';
+import 'package:betabeta/data_models/advanced_filter.dart';
+import 'package:betabeta/data_models/celeb.dart';
+import 'package:betabeta/screens/celebrity_selection_screen.dart';
+import 'package:betabeta/widgets/global_widgets.dart';
+import 'package:betabeta/widgets/custom_app_bar.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+
+class AdvancedSettingsScreen extends StatefulWidget {
+  AdvancedSettingsScreen({Key key}) : super(key: key);
+
+  @override
+  _AdvancedSettingsScreenState createState() => _AdvancedSettingsScreenState();
+}
+
+class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
+  // Create a new instance of the SettingsService class.
+
+  // An instance of [AdvancedFilter] class.
+  AdvancedFilter _advancedFilter;
+
+  //
+  bool _applyFilter = false;
+
+  // The index of the selected filter.
+  int _filterIndex = 0;
+
+  //
+  int _availableFilters = 1;
+
+  //
+  Celeb _selectedCeleb;
+
+  //
+  int _auditionCount = 50;
+
+  //
+  void _initializeAdvancedFilters() async {
+    // Initialize all AdvancedFilter settings into their respective
+    // state Variables. This essentially enables us to load the cached
+    // user preferences into our Advancedfilter widget.
+
+    // get the saved AdvancedFilter from persistent storage.
+    _advancedFilter = AdvancedFilter(filterIndex:1,
+        filterType:FilterType.SELECT_CELEB,
+        auditionCount:45,
+        selectedCeleb:Celeb(celebName: 'Dor'));
+    // Add a postFrameCallback to be fired. This will set the sate of this variable
+    // immediately the build is completed.
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        // initialize all important configuration variables.
+        _filterIndex = _advancedFilter.filterIndex;
+        _selectedCeleb = _advancedFilter.selectedCeleb;
+        _auditionCount = _advancedFilter.auditionCount;
+
+        if (_filterIndex < 1) {
+          _availableFilters = 0;
+        }
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // call the `_initializeAdvancedFilters` method to initialize all important
+    // user configurations.
+    _initializeAdvancedFilters();
+  }
+
+  void applyFilter() async {
+    // Check if user made any changes and also switched on
+    // the Apply Filter switch.
+    if (!_applyFilter) {
+      // Do nothing.
+      //<debug>
+      print('NO CHANGE APPLIED!');
+    } else {
+      // convert the current filterIndex to String.
+      var filterString = getFilterStringFromIndex(_filterIndex);
+
+      var newFilter = _advancedFilter.copyWith(
+        filterIndex: _filterIndex,
+        filterType: filterTypeFromString(
+            filterString), // convert the `filterString` to a `FilterType`.
+        auditonCount: _auditionCount,
+        // save the selected celebrity as the new celebrity.
+        selectedCeleb: _selectedCeleb,
+      );
+
+
+    }
+  }
+
+  static String getFilterStringFromIndex(int index) {
+    switch (index) {
+      case 0:
+        return 'none';
+        break;
+      case 1:
+        return 'select_celeb';
+        break;
+      case 2:
+        return 'use_taste';
+        break;
+      default:
+        return 'none';
+    }
+  }
+
+  Widget _buildFilterWidget({
+    String title,
+    String endCatchPhrase,
+    String description,
+    Widget child,
+    int index,
+  }) {
+    return GlobalWidgets.buildSettingsBlock(
+      title: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: (index != _filterIndex)
+                    ? Text(
+                  '"$title" ',
+                  style: _boldTextStyle,
+                )
+                    : RichText(
+                  text: TextSpan(
+                    style: _defaultTextStyle,
+                    children: <InlineSpan>[
+                      TextSpan(
+                        text: '"$title" ',
+                        style: _boldTextStyle,
+                      ),
+                      TextSpan(
+                        text: '$description ',
+                      ),
+                      TextSpan(
+                        text: '"$endCatchPhrase".',
+                        style: _boldTextStyle,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child:CupertinoSwitch(
+    value: index == _filterIndex,
+    activeColor: colorBlend01,
+    onChanged: (value) {
+      setState(() {
+        if (value == true){
+        _filterIndex = index;}
+        else{
+          _filterIndex = -1;
+        }
+      });
+    },
+              )),
+            ],
+          ),
+        ],
+      ),
+      child: child,
+    );
+  }
+
+  //
+  var _defaultTextStyle = TextStyle(
+    color: Colors.black,
+    fontFamily: 'Nunito',
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+  );
+
+  var _boldTextStyle = TextStyle(
+    color: Colors.black,
+    fontFamily: 'Nunito',
+    fontSize: 16,
+    fontWeight: FontWeight.w700,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    //
+    _filterIndex>=0 ? _availableFilters=0 : _availableFilters = 1;
+    resolveIntToString() {
+      if (_availableFilters == 1) {
+        return 'one';
+      } else {
+        return 'no';
+      }
+    }
+
+    return Scaffold(
+      backgroundColor: whiteCardColor,
+      body: Padding(
+        padding:
+        MediaQuery.of(context).padding.copyWith(left: 12.0, right: 12.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            CustomAppBar(
+              title: 'Advanced filters',
+              iconURI: null,
+              isReversed: true,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: darkCardColor,
+                    blurRadius: 12.0,
+                  ),
+                ],
+              ),
+              child: RichText(
+                text: TextSpan(
+                  style: _defaultTextStyle,
+                  children: <InlineSpan>[
+                    TextSpan(
+                      style: _boldTextStyle,
+                      text: ' ${resolveIntToString()} ',
+                    ),
+                    TextSpan(text: 'filter(s) left'),
+                  ],
+                ),
+              ),
+            ),
+            Container(
+              child: Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          style: _defaultTextStyle,
+                          children: <InlineSpan>[
+                            TextSpan(
+                              text: 'You can pick from one of these ',
+                            ),
+                            TextSpan(
+                              text: 'advanced filters',
+                              style: _boldTextStyle,
+                            ),
+                          ],
+                        ),
+                      ),
+                      _buildFilterWidget(
+                        description:
+                        'This filter enables you to search for people who look similar to the selected',
+                        title: 'Celeb Clone',
+                        endCatchPhrase: 'celebrity',
+                        index: 1,
+                        child: AnimatedContainer(
+                          duration: Duration(milliseconds: 500),
+                          height: (_filterIndex != 1)?0:175,
+                          child: (_filterIndex != 1)
+                              ? SizedBox.shrink()
+                              : SingleChildScrollView(
+                                child: Column(
+                            children: [
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Search Celeb',
+                                      style: _boldTextStyle,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(right: 8.0),
+                                          child: Text(
+                                            '${_selectedCeleb?.celebName}',
+                                            style: _defaultTextStyle,
+                                          ),
+                                        ),
+                                        TextButton(
+                                          style: ButtonStyle(
+                                            overlayColor:
+                                            MaterialStateProperty.all(
+                                                colorBlend01
+                                                    .withOpacity(0.2)),
+                                          ),
+                                          child: GlobalWidgets.imageToIcon(
+                                            'assets/images/forward_arrow.png',
+                                          ),
+                                          onPressed: () {
+                                            // Direct user to the Celebrity Selection Page.
+                                            Navigator.of(context).push<Celeb>(
+                                              CupertinoPageRoute<Celeb>(
+                                                builder: (context) {
+                                                  return ScreenCelebritySelection();
+                                                },
+                                              ),
+                                            ).then((selectedCeleb) {
+                                              setState(() {
+                                                // Set the `_selectedCeleb` variable to the newly selected
+                                                // celebrity from the [CelebritySelectionScreen] page given that it is not null.
+                                                if (selectedCeleb != null) {
+                                                  _selectedCeleb =
+                                                      selectedCeleb;
+                                                } else {
+                                                  //
+                                                  print(
+                                                      'No Celebrity Selected!');
+                                                }
+                                              });
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Divider(
+                                  color: darkCardColor,
+                                  thickness: 2.0,
+                                  indent: 24.0,
+                                  endIndent: 24.0,
+                                ),
+
+                                // Build the Audition count tab.
+                                Container(
+                                  child: Column(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5.0,
+                                          vertical: 5.0,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              '21',
+                                              style: _defaultTextStyle,
+                                            ),
+                                            Expanded(
+                                              child: Center(
+                                                child: RichText(
+                                                  text: TextSpan(
+                                                    style: _defaultTextStyle,
+                                                    children: <InlineSpan>[
+                                                      TextSpan(
+                                                        text:
+                                                        'Audition $_auditionCount ',
+                                                        style:
+                                                        _defaultTextStyle,
+                                                      ),
+                                                      TextSpan(
+                                                        text: 'People ',
+                                                        style:
+                                                        _boldTextStyle,
+                                                      ),
+                                                      WidgetSpan(
+                                                        child: GestureDetector(
+                                                          child: Text(
+                                                            "  what's this?",
+                                                            style:
+                                                            _defaultTextStyle
+                                                                .copyWith(
+                                                              color: linkColor,
+                                                            ),
+                                                          ),
+                                                          onTap: () {
+                                                            // print "what's this" to console for now.
+                                                            // TODO: Add Appropriate functionality.
+
+                                                            // What's this Functionality.
+                                                            GlobalWidgets
+                                                                .showAlertDialogue(
+                                                              context,
+                                                              title:
+                                                              'Audition Count',
+                                                              message:
+                                                              'This denotes the number of profiles to display, the highest you can select is 100',
+                                                            );
+                                                            //<debug>
+                                                            //
+                                                            print(
+                                                                "what's this");
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Text(
+                                              '100',
+                                              style: _defaultTextStyle,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 5.0,
+                                          vertical: 5.0,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.person_outline,
+                                              size: 24.0,
+                                              color: colorBlend01,
+                                            ),
+                                            Expanded(
+                                              child: Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 12.0),
+                                                child: CupertinoSlider(
+                                                  activeColor: colorBlend01,
+                                                  value: _auditionCount
+                                                      .roundToDouble(),
+                                                  min: 21,
+                                                  max: 100,
+                                                  divisions: 80,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      _auditionCount =
+                                                          value.toInt();
+                                                      // print the current value of `_auditionCount` to console.
+                                                      //<debug>
+                                                      print(_auditionCount);
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                            Icon(
+                                              Icons.people_alt_outlined,
+                                              size: 24.0,
+                                              color: colorBlend01,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                            ],
+                          ),
+                              ),
+                        ),
+                      ),
+                      _buildFilterWidget(
+                        description:
+                        'This enables you to filter matches based on your taste',
+                        title: 'Taste Scrap',
+                        endCatchPhrase: 'what you want',
+                        index: 2,
+                        child: (_filterIndex != 2)
+                            ? SizedBox.shrink()
+                            : Container(
+                          child: Column(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 5.0,
+                                  vertical: 5.0,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '21',
+                                      style: _defaultTextStyle,
+                                    ),
+                                    Expanded(
+                                      child: Center(
+                                        child: RichText(
+                                          text: TextSpan(
+                                            style: _defaultTextStyle,
+                                            children: <InlineSpan>[
+                                              TextSpan(
+                                                text:
+                                                'Audition $_auditionCount ',
+                                                style: _defaultTextStyle,
+                                              ),
+                                              TextSpan(
+                                                text: 'People ',
+                                                style: _boldTextStyle,
+                                              ),
+                                              WidgetSpan(
+                                                child: GestureDetector(
+                                                  child: Text(
+                                                    "  what's this?",
+                                                    style: _defaultTextStyle
+                                                        .copyWith(
+                                                      color: linkColor,
+                                                    ),
+                                                  ),
+                                                  onTap: () {
+                                                    // print "what's this" to console for now.
+                                                    // TODO: Add Appropriate functionality.
+
+                                                    // What's this Functionality.
+                                                    GlobalWidgets
+                                                        .showAlertDialogue(
+                                                      context,
+                                                      title:
+                                                      'Audition Count',
+                                                      message:
+                                                      'This denotes the number of profiles to display, the highest you can select is 100',
+                                                    );
+                                                    //<debug>
+                                                    //
+                                                    print("what's this");
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      '100',
+                                      style: _defaultTextStyle,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 5.0,
+                                  vertical: 5.0,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.person_outline,
+                                      size: 24.0,
+                                      color: colorBlend01,
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 12.0),
+                                        child: CupertinoSlider(
+                                          activeColor: colorBlend01,
+                                          value: _auditionCount
+                                              .roundToDouble(),
+                                          min: 21,
+                                          max: 100,
+                                          divisions: 80,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _auditionCount =
+                                                  value.toInt();
+                                              // print the current value of `_auditionCount` to console.
+                                              //<debug>
+                                              print(_auditionCount);
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.person_outline,
+                                      size: 24.0,
+                                      color: colorBlend01,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      // build the [done] button.
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8.0),
+                        child: TextButton(
+                          style: ButtonStyle(
+                            overlayColor: MaterialStateProperty.all(
+                                (!_applyFilter)
+                                    ? Colors.grey[350]
+                                    : colorBlend01.withOpacity(0.2)),
+                          ),
+                          child: Text(
+                            'Done',
+                            style: _boldTextStyle.copyWith(
+                              color: colorBlend02,
+                            ),
+                          ),
+                          onPressed: () {
+                            // call the `saveFilter` Function when the done button is clicked
+
+                            if (_applyFilter) {
+                              // call the `applyFilter` Function when the done button is clicked.
+                              applyFilter();
+
+                              // print to console.
+                              print('Apply Filter is $_applyFilter');
+                            }
+
+                            // Pop current context.
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

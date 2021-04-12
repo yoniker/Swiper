@@ -2,8 +2,8 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
 
-class TitleTile extends StatelessWidget {
-  const TitleTile({
+class CustomAppBar extends StatelessWidget {
+  const CustomAppBar({
     Key key,
     @required this.title,
     @required this.iconURI,

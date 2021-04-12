@@ -125,8 +125,7 @@ class _MatchingScreenState extends State<MatchingScreen> {
     if(currentTab==MatchTab.Swiping){
       return CardStack();
     }
-    return ProfileTab(
-    );//SearchPreferencesScreen(matchEngine: widget.matchEngine);
+    return ProfileTab();
   }
 
   @override

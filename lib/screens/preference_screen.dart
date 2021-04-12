@@ -4,9 +4,11 @@ import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/widgets/cupertino_range_slider.dart';
 import 'package:betabeta/widgets/dropdown_form_field.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
-import 'package:betabeta/widgets/title_tile.dart';
+import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide DropdownButtonFormField;
+
+import 'advanced_settings_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   SettingsScreen({Key key}) : super(key: key);
@@ -29,23 +31,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     // call the `initializePreferences` method to initialize all important
     // user configurations.
-  }
-
-  DropdownMenuItem<String> _buildDropDownMenuItem(String currentLocation) {
-    return DropdownMenuItem<String>(
-      child: Text(
-        '$currentLocation',
-        style: TextStyle(
-          fontFamily: 'Nunito',
-          fontSize: 15,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-      value: '$currentLocation',
-      onTap: () {
-
-      },
-    );
   }
 
   //
@@ -390,7 +375,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               'assets/images/forward_arrow.png',
                             ),
                             onPressed: () {
-                              /*
+
 
                               // Direct user to the Advanced filters Page.
                               Navigator.of(context).push(
@@ -399,7 +384,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     return AdvancedSettingsScreen();
                                   },
                                 ),
-                              ); */
+                              );
                             },
                           ),
                         ],
@@ -410,16 +395,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       child: TextButton(
                         style: ButtonStyle(
                           overlayColor: MaterialStateProperty.all(
-                              (0 == 0)
-                                  ? Colors.grey[350]
-                                  : colorBlend01.withOpacity(0.2)),
+                              colorBlend01.withOpacity(0.2)),
                         ),
                         child: Text(
                           'Done',
                           style: _varryingTextStyle.copyWith(
-                            color: (0 == 0)
-                                ? Colors.grey[500]
-                                : colorBlend02,
+                            color: colorBlend02,
                           ),
                         ),
                         onPressed: () {
@@ -437,7 +418,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             Align(
               alignment: Alignment.topCenter,
-              child: TitleTile(
+              child: CustomAppBar(
                 title: 'Settings',
                 iconURI: 'assets/images/settings_icon.png',
               ),

@@ -1,4 +1,4 @@
-class Celeb{
+class Celeb {
   final String celebName;
   final String name;
   final List<String> aliases;
@@ -8,15 +8,43 @@ class Celeb{
   List<String> imagesUrls;
 
   Celeb({
-    this.celebName,this.name,this.aliases,this.birthday,
-    this.description,this.country
-  }){imagesUrls = null;
+    this.celebName,
+    this.name,
+    this.aliases,
+    this.birthday,
+    this.description,
+    this.country,
+    this.imagesUrls,
+  });
+
+  factory Celeb.fromJson(Map<String, dynamic> json) {
+    //
+    return Celeb(
+      celebName: json['celeb_name'] ?? null,
+      name: json['name'],
+      aliases: List<String>.from(json['aliases'].map((x) => x)) ?? <String>[],
+      birthday: json['birthday'] ?? null,
+      description: json['description'],
+      country: json['country'],
+      imagesUrls: List<String>.from(json['image_urls'].map((x) => x)) ?? <String>[],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'celeb_name': celebName,
+      'name': name,
+      'aliases': aliases,
+      'birthday': birthday,
+      'description': description,
+      'country': country,
+      'image_urls': imagesUrls ?? null,
+    };
   }
 
   @override
   bool operator ==(Object other) {
     return (other is Celeb) && (other.celebName == celebName);
-
   }
 
   @override
