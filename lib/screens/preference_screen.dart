@@ -7,6 +7,7 @@ import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide DropdownButtonFormField;
+import 'dart:math' as math;
 
 import 'advanced_settings_screen.dart';
 
@@ -166,10 +167,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   MainAxisAlignment.spaceAround,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Icon(
-                                      Icons.directions_bike_rounded,
-                                      size: 24.0,
-                                      color: colorBlend01,
+                                    Transform(
+                                      alignment: Alignment.center,
+                                      transform: Matrix4.rotationY(math.pi),
+                                      child: Icon(
+                                        Icons.directions_bike_rounded,
+                                        size: 24.0,
+                                        color: colorBlend01,
+                                      ),
                                     ),
                                     Expanded(
                                       child: Padding(
@@ -189,10 +194,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         ),
                                       ),
                                     ),
-                                    Icon(
-                                      Icons.local_airport_rounded,
-                                      size: 24.0,
-                                      color: colorBlend01,
+                                    Transform.rotate(
+                                      alignment: Alignment.center,
+                                      angle: math.pi /2,
+                                      child: Icon(
+                                        Icons.local_airport_rounded,
+                                        size: 24.0,
+                                        color: colorBlend01,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -289,10 +298,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   MainAxisAlignment.spaceAround,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Icon(
-                                      Icons.child_friendly_rounded,
-                                      size: 24.0,
-                                      color: colorBlend01,
+
+                                    Transform(
+                                      alignment: Alignment.center,
+                                transform: Matrix4.rotationY(math.pi),
+                                      child: Icon(
+                                        Icons.child_friendly_rounded,
+                                        size: 24.0,
+                                        color: colorBlend01,
+                                      ),
                                     ),
                                     Expanded(
                                       child: Padding(
