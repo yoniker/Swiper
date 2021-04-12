@@ -302,7 +302,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         setState(() {
                                           SettingsData().minAge = value.start.toInt();
                                           SettingsData().maxAge = value.end.toInt();
-                                          String endString = value.end.toInt()<maxAge?value.end.toInt().toString():'$maxAge+';
                                           _ages = value;
                                         });
                                       },

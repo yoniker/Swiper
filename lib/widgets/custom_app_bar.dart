@@ -6,8 +6,7 @@ class CustomAppBar extends StatelessWidget {
   const CustomAppBar({
     Key key,
     @required this.title,
-    @required this.iconURI,
-    this.isReversed = false,
+    @required this.icon,
     this.hasBackButton = true,
   })  : color = Colors.black,
         super(key: key);
@@ -16,60 +15,17 @@ class CustomAppBar extends StatelessWidget {
   final String title;
 
   /// This is the asset image path of the icons used.
-  final String iconURI;
+  final Widget icon;
 
   /// Determine wheter to include a back-button at
   /// start of the tile (same as trailing icon in the original Appbar class).
   final bool hasBackButton;
-
-  /// Determine whether the title of the `TitleTile` should
-  /// be placed aligned to the Left or Right.
-  final bool isReversed;
 
   /// The Color of the title text. Defaults to `Colors.black`
   final Color color;
 
   @override
   Widget build(BuildContext context) {
-    //
-    Widget _reversed() {
-      return Container(
-        margin: EdgeInsets.symmetric(vertical: 12.0),
-        padding: EdgeInsets.symmetric(horizontal: 5.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            if (hasBackButton)
-              InkWell(
-                borderRadius: BorderRadius.circular(8.0),
-                onTap: () {
-                  // Pop the current page.
-                  Navigator.of(context).pop();
-                },
-                child: GlobalWidgets.imageToIcon(
-                  'assets/images/back_arrow.png',
-                ),
-              ),
-            Padding(
-              padding: EdgeInsets.only(left: 10.0),
-              child: Text(
-                title,
-                style: TextStyle(
-                  color: color,
-                  fontSize: 22,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    //
-    Widget _buildStandardTile() {
       return Container(
         margin: EdgeInsets.symmetric(vertical: 12.0),
         padding: EdgeInsets.symmetric(horizontal: 5.0),
@@ -106,16 +62,14 @@ class CustomAppBar extends StatelessWidget {
                 ),
               ],
             ),
-            GlobalWidgets.imageToIcon(iconURI),
+            icon,
           ],
         ),
       );
-    }
 
-    if (isReversed) {
-      return _reversed();
-    } else {
-      return _buildStandardTile();
-    }
+
+
+
+
   }
 }

@@ -218,7 +218,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           ' ${_maxDistance.toStringAsFixed(2)} ',
                                         ),
                                         TextSpan(
-                                          text: '"km away"',
+                                          text: 'km away',
                                           style: _varryingTextStyle,
                                         ),
                                       ],
@@ -234,7 +234,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     GlobalWidgets.buildSettingsBlock(
                       catchPhrase: 'Who',
                       description:
-                      'The type of Gender you prefer to date. Used to find great matches that can go with your profile.',
+                      'Basic Filters',
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,7 +256,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     child:
                                     DropdownButtonFormFieldModified<Gender>(
                                       decoration: InputDecoration.collapsed(
-                                        hintText: 'pick your Gender',
+                                        hintText: 'dor Gender',
                                         hintStyle: _defaultTextStyle.copyWith(
                                           color: darkTextColor,
                                         ),
@@ -303,7 +303,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       alignment: Alignment.center,
                                 transform: Matrix4.rotationY(math.pi),
                                       child: Icon(
-                                        Icons.child_friendly_rounded,
+                                        Icons.child_friendly_outlined,
                                         size: 24.0,
                                         color: colorBlend01,
                                       ),
@@ -356,7 +356,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           ),
                                         ),
                                         TextSpan(
-                                          text: '"years"',
+                                          text: 'years',
                                           style: _varryingTextStyle,
                                         ),
                                       ],
@@ -369,22 +369,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ],
                       ),
                     ),
-                    GlobalWidgets.buildSettingsBlock(
-                      description:
-                      'With this enabled your profile will be visible to other people using this App',
-                      child: GestureDetector(
-                        onTap: () {
+                    GestureDetector(
+                      onTap: () {
 
 
                         // Direct user to the Advanced filters Page.
                         Navigator.of(context).push(
-                      CupertinoPageRoute(
-                        builder: (context) {
-                          return AdvancedSettingsScreen();
-                        },
-                      ),
-                    );
-              },
+                          CupertinoPageRoute(
+                            builder: (context) {
+                              return AdvancedSettingsScreen();
+                            },
+                          ),
+                        );
+                      },
+                      child: GlobalWidgets.buildSettingsBlock(
+                        description:
+                        'With this enabled your profile will be visible to other people using this App',
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -395,8 +395,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 style: _varryingTextStyle,
                               ),
                               SizedBox(width: 4.0,),
-                              Icon(Icons.psychology_rounded,
-                              color: colorBlend01,),
+                              Icon(Icons.psychology_outlined,
+                              color: colorBlend01,size: 34.0,),
                               ],
                             ),
                             Icon(Icons.arrow_forward_ios),
@@ -435,7 +435,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               alignment: Alignment.topCenter,
               child: CustomAppBar(
                 title: 'Settings',
-                iconURI: 'assets/images/settings_icon.png',
+                icon:Icon(Icons.settings),//iconURI: 'assets/images/settings_icon.png',
               ),
             ),
           ],

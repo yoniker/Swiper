@@ -84,7 +84,7 @@ class GlobalWidgets {
                   if (catchPhrase != null)
                     TextSpan(
                       // Add a quote and a string to the catchPhrases [TextSpan] `text`.
-                      text: '"$catchPhrase"' + ' ',
+                      text: '$catchPhrase' + ' ',
                       style: _textStyle.copyWith(
                           fontWeight: FontWeight.w700),
                     ),

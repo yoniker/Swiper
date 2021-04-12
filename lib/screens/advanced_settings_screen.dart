@@ -73,30 +73,6 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
     _initializeAdvancedFilters();
   }
 
-  void applyFilter() async {
-    // Check if user made any changes and also switched on
-    // the Apply Filter switch.
-    if (!_applyFilter) {
-      // Do nothing.
-      //<debug>
-      print('NO CHANGE APPLIED!');
-    } else {
-      // convert the current filterIndex to String.
-      var filterString = getFilterStringFromIndex(_filterIndex);
-
-      var newFilter = _advancedFilter.copyWith(
-        filterIndex: _filterIndex,
-        filterType: filterTypeFromString(
-            filterString), // convert the `filterString` to a `FilterType`.
-        auditonCount: _auditionCount,
-        // save the selected celebrity as the new celebrity.
-        selectedCeleb: _selectedCeleb,
-      );
-
-
-    }
-  }
-
   static String getFilterStringFromIndex(int index) {
     switch (index) {
       case 0:
@@ -115,7 +91,6 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
 
   Widget _buildFilterWidget({
     String title,
-    String endCatchPhrase,
     String description,
     Widget child,
     int index,
@@ -132,7 +107,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
               Expanded(
                 child: (index != _filterIndex)
                     ? Text(
-                  '"$title" ',
+                  '$title ',
                   style: _boldTextStyle,
                 )
                     : RichText(
@@ -140,15 +115,11 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                     style: _defaultTextStyle,
                     children: <InlineSpan>[
                       TextSpan(
-                        text: '"$title" ',
+                        text: '$title ',
                         style: _boldTextStyle,
                       ),
                       TextSpan(
                         text: '$description ',
-                      ),
-                      TextSpan(
-                        text: '"$endCatchPhrase".',
-                        style: _boldTextStyle,
                       ),
                     ],
                   ),
@@ -213,9 +184,8 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             CustomAppBar(
-              title: 'Advanced filters',
-              iconURI: null,
-              isReversed: true,
+              title: 'A.I. Filters',
+               icon: Icon(Icons.psychology_outlined,size:34.0),
             ),
             Container(
               padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
@@ -255,7 +225,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                               text: 'You can pick from one of these ',
                             ),
                             TextSpan(
-                              text: 'advanced filters',
+                              text: 'A.I. filters',
                               style: _boldTextStyle,
                             ),
                           ],
@@ -263,9 +233,8 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                       ),
                       _buildFilterWidget(
                         description:
-                        'This filter enables you to search for people who look similar to the selected',
-                        title: 'Celeb Clone',
-                        endCatchPhrase: 'celebrity',
+                        'Search for people who look similar to a celebrity of your choice',
+                        title: 'Celeb Look-Alike',
                         index: 1,
                         child: AnimatedContainer(
                           duration: Duration(milliseconds: 500),
@@ -482,8 +451,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                       _buildFilterWidget(
                         description:
                         'This enables you to filter matches based on your taste',
-                        title: 'Taste Scrap',
-                        endCatchPhrase: 'what you want',
+                        title: 'Learnt Taste',
                         index: 2,
                         child: (_filterIndex != 2)
                             ? SizedBox.shrink()
