@@ -97,7 +97,10 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
                             itemCount:_numCelebsToShow,
                             itemBuilder:(BuildContext context, int index){
                               Celeb currentCeleb = celebInfo.entireCelebsList[index];
-                              return CelebWidget(theCeleb:currentCeleb,celebsInfo:celebInfo);
+                              return CelebWidget(theCeleb:currentCeleb,celebsInfo:celebInfo,onTap:(){
+                                print('Main celeb widget got ${currentCeleb.celebName}');
+                                Navigator.pop(context, currentCeleb);
+                              },);
                             },
 
 

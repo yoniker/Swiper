@@ -76,7 +76,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     fontWeight: FontWeight.w700,
   );
 
-  String _resolveAgeRangeDescriptionString(double start, double end) {
+  String _simpleAgeRangeString(double start, double end) {
     if (end < SettingsScreen.maxAge) {
       return ' ${start.round()}-${end.round()} ';
     } else {

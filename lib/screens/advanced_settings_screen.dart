@@ -30,7 +30,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
   int _availableFilters = 1;
 
   //
-  Celeb _selectedCeleb=Celeb(celebName:SettingsData().celebId); //TODO support Celeb fetching from SettingsData
+  Celeb _selectedCeleb=Celeb(celebName:SettingsData().celebId,imagesUrls: [SettingsData().filterDisplayImageUrl]); //TODO support Celeb fetching from SettingsData
 
   //
   int _auditionCount = 50; //TODO support audition count at SettingsData
@@ -212,7 +212,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                         Padding(
                                           padding: EdgeInsets.only(right: 8.0),
                                           child: Text(
-                                            '${_selectedCeleb?.celebName}',
+                                            '${_selectedCeleb.celebName}',
                                             style: _defaultTextStyle,
                                           ),
                                         ),
@@ -235,6 +235,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                 },
                                               ),
                                             ).then((selectedCeleb) {
+                                              //print('${selectedCeleb.celebName} was selected!');
                                               setState(() {
                                                 // Set the `_selectedCeleb` variable to the newly selected
                                                 // celebrity from the [CelebritySelectionScreen] page given that it is not null.
