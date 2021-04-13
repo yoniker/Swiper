@@ -34,15 +34,15 @@ class GlobalWidgets {
     Widget title,
 
     ///
-    EdgeInsetsGeometry outterPadding =
+    EdgeInsetsGeometry outerPadding =
     const EdgeInsets.symmetric(horizontal: 2.0, vertical: 16.0),
 
     //
-    EdgeInsetsGeometry tittlePadding = const EdgeInsets.all(8.0),
+    EdgeInsetsGeometry titlePadding = const EdgeInsets.all(8.0),
 
     //
     EdgeInsetsGeometry widgetPadding =
-    const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
+    const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
   }) {
     // assertion layer
     assert(
@@ -59,7 +59,7 @@ class GlobalWidgets {
     );
 
     return Container(
-      margin: outterPadding,
+      margin: outerPadding,
       decoration: BoxDecoration(
         border: Border.all(
           color: darkCardColor,
@@ -72,7 +72,7 @@ class GlobalWidgets {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            padding: tittlePadding,
+            padding: titlePadding,
             decoration: BoxDecoration(
               color: darkCardColor,
             ),
