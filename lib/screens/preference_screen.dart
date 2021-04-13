@@ -25,7 +25,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   
   Gender _currentGenderSelected = Gender.values.firstWhere((e) => e.toShortString() == SettingsData().preferredGender);
   RangeValues _selectedAges = RangeValues(SettingsData().minAge.toDouble(), SettingsData().maxAge.toDouble());
-  bool _showInDiscovery = false;
+  bool _showInDiscovery = false; //TODO change SettingsData to support visibility
   double _maxDistance = 6.0; //TODO change SettingsData to support distance
 
   @override
@@ -283,7 +283,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     child:
                                     DropdownButtonFormFieldModified<Gender>(
                                       decoration: InputDecoration.collapsed(
-                                        hintText: 'dor Gender',
+                                        hintText: 'My Preferred Gender',
                                         hintStyle: _defaultTextStyle.copyWith(
                                           color: darkTextColor,
                                         ),
@@ -353,6 +353,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                   newRangevalues.end
                                                       .roundToDouble(),
                                                 );
+                                                SettingsData().minAge = _selectedAges.start.toInt();
+                                                SettingsData().maxAge = _selectedAges.end.toInt();
                                               },
                                             );
                                           },
