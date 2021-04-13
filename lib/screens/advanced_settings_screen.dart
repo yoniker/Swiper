@@ -318,10 +318,6 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                           crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                           children: [
-                                            Text(
-                                              '21',
-                                              style: _defaultTextStyle,
-                                            ),
                                             Expanded(
                                               child: Center(
                                                 child: RichText(
@@ -373,10 +369,6 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                            Text(
-                                              '100',
-                                              style: _defaultTextStyle,
                                             ),
                                           ],
                                         ),
@@ -451,10 +443,6 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                     crossAxisAlignment:
                                     CrossAxisAlignment.center,
                                     children: [
-                                      Text(
-                                        '21',
-                                        style: _defaultTextStyle,
-                                      ),
                                       Expanded(
                                         child: Center(
                                           child: RichText(
@@ -502,10 +490,6 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      Text(
-                                        '100',
-                                        style: _defaultTextStyle,
                                       ),
                                     ],
                                   ),
