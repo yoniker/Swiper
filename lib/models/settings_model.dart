@@ -12,6 +12,12 @@ class SettingsData extends ChangeNotifier{
   static const String FACEBOOK_PROFILE_IMAGE_URL_KEY = 'facebook_profile_image_url';
   static const String MIN_AGE_KEY = 'min_age';
   static const String MAX_AGE_KEY = 'max_age';
+  static const String AUDITION_COUNT_KEY = 'audition_count';
+  static const String FILTER_NAME_KEY = 'filter_name';
+  static const String FILTER_DISPLAY_IMAGE_URL_KEY = 'filter_display_image';
+  static const String CELEB_ID_KEY = 'celeb_id';
+  static const String TASTE_MIX_RATIO_KEY = 'taste_mix_ratio';
+  static const String RADIUS_KEY = 'radius';
   static const _debounceSettingsTime = Duration(seconds: 2); //Debounce time such that we notify listeners
   String _name;
   String _facebookId;
@@ -21,6 +27,12 @@ class SettingsData extends ChangeNotifier{
   int _maxAge;
   bool _readFromShared;
   Timer _debounce;
+  int _auditionCount;
+  String _filterName;
+  String _filterDisplayImageUrl;
+  String _celebId;
+  double _tasteMixRatio;
+  double _radius;
 
   SettingsData._privateConstructor(){
     //Fill in some "default" values which should be filled in within milliseconds of opening the App
@@ -31,6 +43,11 @@ class SettingsData extends ChangeNotifier{
     _preferredGender = 'Everyone';
     _minAge = 18;
     _maxAge = 75;
+    _auditionCount = 1;
+    _filterName = '';
+    _filterDisplayImageUrl = '';
+    _celebId = '';
+    _tasteMixRatio = 0.5;
 
     //And after that, read settings from shared
     readSettingsFromShared();
@@ -45,6 +62,11 @@ class SettingsData extends ChangeNotifier{
     _facebookProfileImageUrl = sharedPreferences.getString(FACEBOOK_PROFILE_IMAGE_URL_KEY) ?? _facebookProfileImageUrl;
     _minAge = sharedPreferences.getInt(MIN_AGE_KEY) ?? _minAge;
     _maxAge = sharedPreferences.getInt(MAX_AGE_KEY) ?? _maxAge;
+    _auditionCount = sharedPreferences.getInt(AUDITION_COUNT_KEY)?? _auditionCount;
+    _filterName = sharedPreferences.getString(FILTER_NAME_KEY) ?? _filterName;
+    _filterDisplayImageUrl = sharedPreferences.getString(FILTER_DISPLAY_IMAGE_URL_KEY) ?? _filterDisplayImageUrl;
+    _celebId = sharedPreferences.getString(CELEB_ID_KEY) ?? _celebId;
+    _tasteMixRatio = sharedPreferences.getDouble(TASTE_MIX_RATIO_KEY) ?? _tasteMixRatio;
     _readFromShared = true;
     return;
   }
@@ -60,6 +82,9 @@ class SettingsData extends ChangeNotifier{
   bool get readFromShared{
     return _readFromShared;
   }
+
+
+
 
   String get preferredGender{
     return _preferredGender;
@@ -89,6 +114,8 @@ class SettingsData extends ChangeNotifier{
     savePreferences(FACEBOOK_ID_KEY, newFacebookId);
   }
 
+
+
   String get facebookProfileImageUrl{
     return _facebookProfileImageUrl;
   }
@@ -97,7 +124,6 @@ class SettingsData extends ChangeNotifier{
     _facebookProfileImageUrl = newUrl;
     savePreferences(FACEBOOK_PROFILE_IMAGE_URL_KEY, newUrl);
   }
-
 
 
   int get minAge{
@@ -116,6 +142,60 @@ class SettingsData extends ChangeNotifier{
   set maxAge(int newMaxAge){
     _maxAge = newMaxAge;
     savePreferences(MAX_AGE_KEY, newMaxAge);
+  }
+
+  int get auditionCount{
+    return _auditionCount;
+  }
+
+  set auditionCount(int newAuditionCount){
+    _auditionCount = newAuditionCount;
+    savePreferences(AUDITION_COUNT_KEY, newAuditionCount);
+  }
+
+  String get filterName{
+    return _filterName;
+  }
+
+  set filterName(String newFilterName){
+    _filterName = newFilterName;
+    savePreferences(FILTER_NAME_KEY, newFilterName);
+  }
+
+  String get filterDisplayImageUrl{
+    return _filterDisplayImageUrl;
+  }
+
+  set filterDisplayImageUrl(String newFilterDisplayImageUrl){
+    _filterDisplayImageUrl = newFilterDisplayImageUrl;
+    savePreferences(FILTER_DISPLAY_IMAGE_URL_KEY, newFilterDisplayImageUrl);
+  }
+
+  String get celebId{
+    return _celebId;
+  }
+
+  set celebId(String newCelebId){
+    _celebId = newCelebId;
+    savePreferences(CELEB_ID_KEY, newCelebId);
+  }
+
+  double get tasteMixRatio{
+    return _tasteMixRatio;
+  }
+
+  set tasteMixRatio(double newTasteMixRatio){
+    _tasteMixRatio = newTasteMixRatio;
+    savePreferences(TASTE_MIX_RATIO_KEY, newTasteMixRatio);
+  }
+
+  double get radius{
+    return _radius;
+  }
+
+  set radius(double newRadius){
+    _radius = newRadius;
+    savePreferences(RADIUS_KEY, newRadius);
   }
 
 
@@ -140,6 +220,11 @@ class SettingsData extends ChangeNotifier{
     if (newValue is bool){
     sharedPreferences.setBool(sharedPreferencesKey, newValue);
     return;}
+
+    if (newValue is double){
+      sharedPreferences.setDouble(sharedPreferencesKey, newValue);
+      return;
+    }
 
     return;
 

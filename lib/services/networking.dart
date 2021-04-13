@@ -70,7 +70,17 @@ class NetworkHelper{
 
   postUserSettings()async{
     SettingsData settings = SettingsData();
-    Map<String,String> toSend = {'decider_facebook_id':settings.facebookId,'update_date':'8.0','decider_name':settings.name,'min_age':settings.minAge.toString(),'max_age':settings.maxAge.toString(),'gender_preferred':settings.preferredGender};
+    Map<String,String> toSend = {'decider_facebook_id':settings.facebookId,'update_date':'8.0','decider_name':settings.name,'min_age':settings.minAge.toString(),'max_age':settings.maxAge.toString(),'gender_preferred':settings.preferredGender,
+      SettingsData.FILTER_NAME_KEY:settings.filterName,
+      SettingsData.AUDITION_COUNT_KEY:settings.auditionCount.toString(),
+      SettingsData.TASTE_MIX_RATIO_KEY:settings.tasteMixRatio.toString(),
+      SettingsData.CELEB_ID_KEY:settings.celebId,
+      SettingsData.FILTER_DISPLAY_IMAGE_URL_KEY :settings.filterDisplayImageUrl,
+      SettingsData.RADIUS_KEY :settings.radius.toString()
+
+
+
+    };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri = Uri.http(SERVER_ADDR, '/settings/${settings.facebookId}');
     http.Response response = await http.post(postSettingsUri,body:encoded); //TODO something if response wasnt 200

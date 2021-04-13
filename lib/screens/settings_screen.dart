@@ -1,358 +1,469 @@
+import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/widgets/cupertino_range_slider.dart';
+import 'package:betabeta/widgets/dropdown_form_field.dart';
+import 'package:betabeta/widgets/global_widgets.dart';
+import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-//import 'package:flutter_switch/flutter_switch.dart';
+import 'package:flutter/material.dart' hide DropdownButtonFormField;
+import 'dart:math' as math;
 
-
-import 'celebrity_selection_screen.dart';
+import 'advanced_settings_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
-  static String id = 'screen1';
+  SettingsScreen({Key key}) : super(key: key);
+  static const minAge = 18;
+  static const maxAge = 100;
+
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
-enum Gender{
-  Men,
-  Women,
-  Everyone
-}
-
-extension ToDisplayString on Gender {
-  String toShortString() {
-    return this.toString().split('.').last;
-  }
-}
-
 class _SettingsScreenState extends State<SettingsScreen> {
-
-
-  static const minAge = 18;
-  static const maxAge = 75;
-
+  String _currentLocation = 'Somewhere, Earth';
+  
   Gender _currentGenderSelected = Gender.values.firstWhere((e) => e.toShortString() == SettingsData().preferredGender);
-
-  String address;
-  String groupValue = "your";
-
-  RangeValues _ages = RangeValues(SettingsData().minAge.toDouble(), SettingsData().maxAge.toDouble());
-
-  bool status = true;
-  double _currentDistanceValue = 5;
+  RangeValues _selectedAges = RangeValues(SettingsData().minAge.toDouble(), SettingsData().maxAge.toDouble());
+  bool _showInDiscovery = false; //TODO change SettingsData to support visibility
+  double _maxDistance = 6.0; //TODO change SettingsData to support distance
 
   @override
-  Widget build(BuildContext context) {
-    String agesRangeText;
-    if(_ages.start.toInt()<=minAge) {
-      if(_ages.end.toInt()>=maxAge){
-        agesRangeText = 'Any Age';
-      }
-      else{
-        agesRangeText = '${_ages.end.toInt()} And Younger';
-      }
-    }
-    else{
-      if(_ages.end.toInt()>=maxAge){
-        agesRangeText = '${_ages.start.toInt()} And Older';
-      }
-      else{
-        agesRangeText = '${_ages.start.toInt()} - ${_ages.end.toInt()}';
-      }
-    }
+  void initState() {
+    super.initState();
 
-    if(_ages.start.toInt() == _ages.end.toInt()){
-      agesRangeText = 'Exactly ${_ages.start.toInt()}';
-      if(_ages.start.toInt()==maxAge){
-        agesRangeText = '${_ages.start.toInt()} And Older';
-      }
-    }
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          backgroundColor: Colors.white,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                width: 20,
-              ),
-              Text(
-                'Settings',
-                style: TextStyle(color: Colors.black),
-              ),
-              GestureDetector(
-                onTap: (){Navigator.pop(context);},
-                child: Text(
-                  'Done',
-                  style: TextStyle(color: Colors.pink),
-                ),
-              ),
-            ],
-          ),
+    // call the `initializePreferences` method to initialize all important
+    // user configurations.
+  }
 
-        ),
-        backgroundColor: Colors.grey[300],
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 15.0,),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-                child: Text(
-                  'WHERE',
-                  style: TextStyle(color: Colors.grey[600], fontSize: 16),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 0.0, bottom: 8),
-                child: Card(
-                  margin: EdgeInsets.all(0),
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(0),
-                      bottomLeft: Radius.circular(0),
-                      topRight: Radius.circular(0),
-                      topLeft: Radius.circular(0),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Location',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            Row(
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      'My Current Location',
-                                      style: TextStyle(
-                                          color: Colors.grey[600],
-                                          fontSize: 20),
-                                    ),
-                                    Text(
-                                      'Somewhere, Earth',
-                                      style: TextStyle(
-                                          color: Colors.grey[600],
-                                          fontSize: 16),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.grey,
-                                  size: 15,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Divider(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Maximum Distance',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            Row(
-                              children: [
-                                Text(_currentDistanceValue.round().toString(), style: TextStyle(
-                                    color: Colors.grey[600], fontSize: 16),),
-                                Text(
-                                  ' km',
-                                  style: TextStyle(
-                                      color: Colors.grey[600], fontSize: 16),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        CupertinoSlider(
-                          activeColor: Colors.pink,
-                          value: _currentDistanceValue,
-                          min: 0,
-                          max: 100,
-                          divisions: 1000,
-                          onChanged: (double value) {
-                            setState(() {
-                              _currentDistanceValue = value;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8, bottom: 8),
-                child: Text(
-                  'WHO',
-                  style: TextStyle(color: Colors.grey[600], fontSize: 16),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 0.0, bottom: 8),
-                child: Card(
-                  margin: EdgeInsets.all(0),
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(0),
-                      bottomLeft: Radius.circular(0),
-                      topRight: Radius.circular(0),
-                      topLeft: Radius.circular(0),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left:8.0, right: 8, top:0, bottom: 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top:16.0),
-                              child: Text(
-                                'Gender',
-                                style: TextStyle(fontSize: 20),
-                              ),
-                            ),
-                            DropdownButton<Gender>(
-                              items: Gender.values.map((Gender dropDownStringItem) {
-                                return DropdownMenuItem<Gender>(
-                                  value: dropDownStringItem,
-                                  child: Text(dropDownStringItem.toShortString(), style: TextStyle(color: Colors.grey[600], fontSize: 16),),
-                                );
-                              }).toList(),
-                              onChanged: (Gender newValueSelected){
-                                setState(() {
-                                  SettingsData().preferredGender = newValueSelected.toShortString();
-                                  this._currentGenderSelected = newValueSelected;
-                                });
-                              },
-                              value: _currentGenderSelected,
-                            ),
-                          ],
-                        ),
-                        Divider(),
-                        Column(
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.baseline,
-                              textBaseline: TextBaseline.alphabetic,
-                              children: <Widget>[
-                                Text(
-                                  "Age",
-                                  style: TextStyle(
-                                    fontSize: 20,),
-                                ),
+  //
+  DropdownMenuItem<Gender> _buildGenderDropDownMenuItem(Gender selectedGender) {
 
-                              ],
-                            ),
-                            Text(
-                              agesRangeText,
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 16,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10.0, right: 10),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                      flex: 0,
-                                      child: Text(
-                                        _ages.start.toInt().toString(),
-                                        style: TextStyle(
-                                          color: Colors.pink,
-                                          fontSize: 15,
-                                        ),
-                                      )),
-                                  Expanded(
-                                    child: CupertinoRangeSlider(
-                                      activeColor: Colors.pink,
-                                      min: minAge.toDouble(),
-                                      max: maxAge.toDouble(),
-                                      values: _ages,
-                                      divisions: 10000,
-                                      onChanged: (value) {
-
-                                        print('START: ${value.start}, END: ${value.end}');
-                                        setState(() {
-                                          SettingsData().minAge = value.start.toInt();
-                                          SettingsData().maxAge = value.end.toInt();
-                                          _ages = value;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  Expanded(
-                                      flex: 0,
-                                      child: Text(
-                                          _ages.end.toInt()<75?_ages.end.toInt().toString():'75+',
-                                        style: TextStyle(
-                                          color: Colors.pink,
-                                          fontSize: 15,
-                                        ),
-                                      )),
-                                ],
-                              ),
-                            ),
-                            TextButton(onPressed: (){
-                              Navigator.push(context,MaterialPageRoute(builder: (context)=>ScreenCelebritySelection()));
-                            }, child: Text('Celebs'))
-
-
-
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            //TextButton(onPressed: (){}, child: Text('Update server'))
-            ],
-
-          ),
+    //
+    return DropdownMenuItem<Gender>(
+      child: Text(
+        selectedGender.toShortString(),
+        style: TextStyle(
+          fontFamily: 'Nunito',
+          fontSize: 15,
+          fontWeight: FontWeight.w500,
         ),
       ),
+      value: selectedGender,
+      onTap: () {
+        setState(() {
+          SettingsData().preferredGender = selectedGender.toShortString();
+          _currentGenderSelected = selectedGender;
+        });
+      },
     );
   }
 
-  valueChanged(e) {
-    setState(() {
-      if (e == 'your') {
-        groupValue = e;
-        address = e;
-      } else if (e == 'their') {
-        groupValue = e;
-        address = e;
-      } else if (e == 'mixture') {
-        groupValue = e;
-        address = e;
-      }
-    });
+
+
+  //
+  var _defaultTextStyle = TextStyle(
+    color: Colors.black,
+    fontFamily: 'Nunito',
+    fontSize: 15,
+    fontWeight: FontWeight.w500,
+  );
+
+  var _varryingTextStyle = TextStyle(
+    color: Colors.black,
+    fontFamily: 'Nunito',
+    fontSize: 16,
+    fontWeight: FontWeight.w700,
+  );
+
+  String _resolveAgeRangeDescriptionString(double start, double end) {
+    if (end < SettingsScreen.maxAge) {
+      return ' ${start.round()}-${end.round()} ';
+    } else {
+      return ' ${start.round()}-${SettingsScreen.maxAge}+ ';
+    }
+  }
+
+  String produceAgesRangeText(RangeValues _ages){
+    String agesRangeText;
+
+  if(_ages.start.toInt()<=SettingsScreen.minAge) {
+  if(_ages.end.toInt()>=SettingsScreen.maxAge){
+  agesRangeText = 'Any Age';
+  }
+  else{
+  agesRangeText = '${_ages.end.toInt()} or younger';
+  }
+  }
+  else{
+  if(_ages.end.toInt()>=SettingsScreen.maxAge){
+  agesRangeText = '${_ages.start.toInt()} or older';
+  }
+  else{
+  agesRangeText = 'Between ${_ages.start.toInt()} and ${_ages.end.toInt()}';
+  }
+  }
+  return agesRangeText;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding:
+        MediaQuery.of(context).padding.copyWith(left: 12.0, right: 12.0),
+        child: Stack(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 50.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    GlobalWidgets.buildSettingsBlock(
+                      title: 'Visibility'.toUpperCase(),
+                      description:
+                      'With this enabled your profile will be visible to other people using this App',
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Show me in Discovery',
+                            style: _varryingTextStyle,
+                          ),
+                          CupertinoSwitch(
+                            value: _showInDiscovery,
+                            activeColor: colorBlend01,
+                            onChanged: (value) {
+                              setState(
+                                    () {
+                                  // TODO:// Add required Function.
+                                  // Alert user to make sure he is intentionally changing his visibiliry status.
+
+                                  // set "_showInDiscovery" to the currrent switch value.
+                                  _showInDiscovery = value;
+
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    GlobalWidgets.buildSettingsBlock(
+                      title: 'Where'.toUpperCase(),
+                      description:
+                      '',
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 6.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'My Swiping Location',
+                                  style: _varryingTextStyle,
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding:
+                                    EdgeInsets.symmetric(horizontal: 12.0),
+                                    child:
+                                    TextButton(child: Text(_currentLocation),onPressed: (){},),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 6.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Max. Distance',
+                                  style: _varryingTextStyle,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Transform(
+                                      alignment: Alignment.center,
+                                      transform: Matrix4.rotationY(math.pi),
+                                      child: Icon(
+                                        Icons.directions_bike_rounded,
+                                        size: 24.0,
+                                        color: colorBlend01,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 12.0),
+                                        child: CupertinoSlider(
+                                          activeColor: colorBlend01,
+                                          value: _maxDistance,
+                                          min: 0,
+                                          max: 200,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _maxDistance = value;
+                                              // Add to the `_editionCount` variable.
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    Transform.rotate(
+                                      alignment: Alignment.center,
+                                      angle: math.pi /2,
+                                      child: Icon(
+                                        Icons.local_airport_rounded,
+                                        size: 24.0,
+                                        color: colorBlend01,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: 6.0, horizontal: 12.0),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      style: _defaultTextStyle,
+                                      children: <InlineSpan>[
+                                        TextSpan(
+                                          text:
+                                          ' ${_maxDistance.round().toString()} ',
+                                        ),
+                                        TextSpan(
+                                          text: 'km away',
+                                          style: _varryingTextStyle,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    GlobalWidgets.buildSettingsBlock(
+                      title: 'Who'.toUpperCase(),
+                      description:
+                      '',
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 6.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Gender',
+                                  style: _varryingTextStyle,
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding:
+                                    EdgeInsets.symmetric(horizontal: 12.0),
+                                    child:
+                                    DropdownButtonFormFieldModified<Gender>(
+                                      decoration: InputDecoration.collapsed(
+                                        hintText: 'My Preferred Gender',
+                                        hintStyle: _defaultTextStyle.copyWith(
+                                          color: darkTextColor,
+                                        ),
+                                      ),
+                                      isExpanded: false,
+                                      onChanged: (newGender) {
+                                        setState(() {
+                                          SettingsData().preferredGender = newGender.toShortString();
+                                          _currentGenderSelected = newGender;
+                                          
+                                        });
+                                      },
+                                      style: _defaultTextStyle,
+                                      value: _currentGenderSelected,
+                                      items: Gender.values.map(
+                                            (gender) {
+                                          return _buildGenderDropDownMenuItem(
+                                              gender);
+                                        },
+                                      ).toList(),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(vertical: 12.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Age',
+                                  style: _varryingTextStyle,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+
+                                    Transform(
+                                      alignment: Alignment.center,
+                                transform: Matrix4.rotationY(math.pi),
+                                      child: Icon(
+                                        Icons.child_friendly_outlined,
+                                        size: 24.0,
+                                        color: colorBlend01,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding:
+                                        EdgeInsets.symmetric(vertical: 6.0),
+                                        child: CupertinoRangeSlider(
+                                          activeColor: colorBlend01,
+                                          values: _selectedAges,
+                                          min: SettingsScreen.minAge.toDouble(),
+                                          max: SettingsScreen.maxAge.toDouble(),
+                                          onChanged: (newRangevalues) {
+                                            setState(
+                                                  () {
+                                                _selectedAges = RangeValues(
+                                                  newRangevalues.start
+                                                      .roundToDouble(),
+                                                  newRangevalues.end
+                                                      .roundToDouble(),
+                                                );
+                                                SettingsData().minAge = _selectedAges.start.toInt();
+                                                SettingsData().maxAge = _selectedAges.end.toInt();
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.elderly_rounded,
+                                      size: 24.0,
+                                      color: colorBlend01,
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  margin: EdgeInsets.symmetric(
+                                      vertical: 6.0, horizontal: 12.0),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      style: _defaultTextStyle,
+                                      children: <InlineSpan>[
+                                        TextSpan(
+                                          text:
+                                          produceAgesRangeText(_selectedAges),
+                                        ),
+
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    GlobalWidgets.buildSettingsBlock(
+                      title:'Advanced'.toUpperCase(),
+                      description:
+                      '',
+                      child: TextButton(
+                        onPressed: () {
+
+
+                          // Direct user to the Advanced filters Page.
+                          Navigator.of(context).push(
+                            CupertinoPageRoute(
+                              builder: (context) {
+                                return AdvancedSettingsScreen();
+                              },
+                            ),
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Row(mainAxisAlignment: MainAxisAlignment.start,
+                              children: [Text(
+                                'Artificial Intelligence Filters',
+                                style: _varryingTextStyle,
+                              ),
+                              SizedBox(width: 4.0,),
+                              Icon(Icons.psychology_outlined,
+                              color: colorBlend01,size: 34.0,),
+                              ],
+                            ),
+                            Icon(Icons.arrow_forward_ios,color: Colors.black54,size: 18,),
+
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      child: TextButton(
+                        style: ButtonStyle(
+                          overlayColor: MaterialStateProperty.all(
+                              colorBlend01.withOpacity(0.2)),
+                        ),
+                        child: Text(
+                          'Done',
+                          style: _varryingTextStyle.copyWith(
+                            color: colorBlend02,
+                          ),
+                        ),
+                        onPressed: () {
+
+                          //savePreferencesMethod();
+
+                          // Pop current context.
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: CustomAppBar(
+                title: 'Settings',
+                icon:Icon(Icons.settings),//iconURI: 'assets/images/settings_icon.png',
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

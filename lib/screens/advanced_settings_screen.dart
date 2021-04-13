@@ -1,13 +1,10 @@
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/constants/enums.dart';
-import 'package:betabeta/data_models/advanced_filter.dart';
 import 'package:betabeta/data_models/celeb.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 class AdvancedSettingsScreen extends StatefulWidget {
   AdvancedSettingsScreen({Key key}) : super(key: key);
@@ -19,9 +16,6 @@ class AdvancedSettingsScreen extends StatefulWidget {
 class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
   // Create a new instance of the SettingsService class.
 
-  // An instance of [AdvancedFilter] class.
-  AdvancedFilter _advancedFilter;
-
   //
   bool _applyFilter = false;
 
@@ -32,46 +26,10 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
   int _availableFilters = 1;
 
   //
-  Celeb _selectedCeleb;
+  Celeb _selectedCeleb=Celeb(celebName:'Dor',name:'Dor'); //TODO support Celeb fetching from SettingsData
 
   //
-  int _auditionCount = 50;
-
-  //
-  void _initializeAdvancedFilters() async {
-    // Initialize all AdvancedFilter settings into their respective
-    // state Variables. This essentially enables us to load the cached
-    // user preferences into our Advancedfilter widget.
-
-    // get the saved AdvancedFilter from persistent storage.
-    _advancedFilter = AdvancedFilter(filterIndex:1,
-        filterType:FilterType.SELECT_CELEB,
-        auditionCount:45,
-        selectedCeleb:Celeb(celebName: 'Dor'));
-    // Add a postFrameCallback to be fired. This will set the sate of this variable
-    // immediately the build is completed.
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {
-        // initialize all important configuration variables.
-        _filterIndex = _advancedFilter.filterIndex;
-        _selectedCeleb = _advancedFilter.selectedCeleb;
-        _auditionCount = _advancedFilter.auditionCount;
-
-        if (_filterIndex < 1) {
-          _availableFilters = 0;
-        }
-      });
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    // call the `_initializeAdvancedFilters` method to initialize all important
-    // user configurations.
-    _initializeAdvancedFilters();
-  }
+  int _auditionCount = 50; //TODO support audition count at SettingsData
 
   Widget _buildFilterWidget({
     String title,
