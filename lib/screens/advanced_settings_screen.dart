@@ -18,28 +18,17 @@ class AdvancedSettingsScreen extends StatefulWidget {
 }
 
 class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
-  // Create a new instance of the SettingsService class.
-
-  //
-  bool _applyFilter = false;
-
-  // The index of the selected filter.
-  int _filterIndex = 0;
-
-  //
+  
   int _availableFilters = 1;
-
-  //
   Celeb _selectedCeleb=Celeb(celebName:SettingsData().celebId,imagesUrls: [SettingsData().filterDisplayImageUrl]); //TODO support Celeb fetching from SettingsData
-
-  //
+  String _currentChosenFilterName = SettingsData().filterName;
   int _auditionCount = 50; //TODO support audition count at SettingsData
 
   Widget _buildFilterWidget({
     String title,
     String description,
     List<Widget> children,
-    int index,
+    String filterName,
   }) {
     return GlobalWidgets.buildSettingsBlock(
       leading: Column(
@@ -51,7 +40,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: (index != _filterIndex)
+                child: (filterName != _currentChosenFilterName)
                     ? Text(
                   '$title ',
                   style: _boldTextStyle,
@@ -74,15 +63,16 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child:CupertinoSwitch(
-    value: index == _filterIndex,
+    value: filterName == _currentChosenFilterName,
     activeColor: colorBlend01,
     onChanged: (value) {
       setState(() {
         if (value == true){
-        _filterIndex = index;}
+          _currentChosenFilterName = filterName;}
         else{
-          _filterIndex = -1;
+          _currentChosenFilterName='';
         }
+        SettingsData().filterName = _currentChosenFilterName;
       });
     },
               )),
@@ -92,8 +82,8 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
       ),
         child:AnimatedContainer(
         duration: Duration(milliseconds: 500),
-    height: (_filterIndex != index)?0:175,
-    child:(_filterIndex != index)
+    height: (_currentChosenFilterName != filterName)?0:175,
+    child:(_currentChosenFilterName != filterName)
     ? SizedBox.shrink()
         : Container(
     child: SingleChildScrollView(
@@ -123,7 +113,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     //
-    _filterIndex>=0 ? _availableFilters=0 : _availableFilters = 1;
+    _currentChosenFilterName.length>0 ? _availableFilters=0 : _availableFilters = 1;
     resolveIntToString() {
       if (_availableFilters == 1) {
         return 'one';
@@ -192,7 +182,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                         description:
                         'Search for people who look similar to a celebrity of your choice',
                         title: 'Celeb Look-Alike',
-                        index: 1,
+                        filterName: AdvancedSettingsScreen.CELEB_FILTER,
                         children: [
                                 TextButton(
                                       onPressed:() {
@@ -389,7 +379,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                         description:
                         ' Find Matches Based On Your Taste',
                         title: 'Learnt Taste',
-                        index: 2,
+                        filterName: AdvancedSettingsScreen.TASTE_FILTER,
                         children:[
                                 Container(
                                   padding: EdgeInsets.symmetric(
@@ -509,9 +499,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                         child: TextButton(
                           style: ButtonStyle(
                             overlayColor: MaterialStateProperty.all(
-                                (!_applyFilter)
-                                    ? Colors.grey[350]
-                                    : colorBlend01.withOpacity(0.2)),
+                                 colorBlend01.withOpacity(0.2)),
                           ),
                           child: Text(
                             'Done',

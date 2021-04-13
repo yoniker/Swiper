@@ -26,7 +26,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Gender _currentGenderSelected = Gender.values.firstWhere((e) => e.toShortString() == SettingsData().preferredGender);
   RangeValues _selectedAges = RangeValues(SettingsData().minAge.toDouble(), SettingsData().maxAge.toDouble());
   bool _showInDiscovery = false; //TODO change SettingsData to support visibility
-  double _maxDistance = 6.0; //TODO change SettingsData to support distance
+  double _maxDistance = SettingsData().radius;
 
   @override
   void initState() {
@@ -76,7 +76,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     fontWeight: FontWeight.w700,
   );
 
-  String _simpleAgeRangeString(double start, double end) {
+  String _simpleDashAgeRangeString(double start, double end) {
     if (end < SettingsScreen.maxAge) {
       return ' ${start.round()}-${end.round()} ';
     } else {
