@@ -76,7 +76,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
   Widget _buildFilterWidget({
     String title,
     String description,
-    Widget child,
+    List<Widget> children,
     int index,
   }) {
     return GlobalWidgets.buildSettingsBlock(
@@ -128,8 +128,19 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
           ),
         ],
       ),
-      child: child,
-    );
+        child:AnimatedContainer(
+        duration: Duration(milliseconds: 500),
+    height: (_filterIndex != index)?0:175,
+    child:(_filterIndex != index)
+    ? SizedBox.shrink()
+        : Container(
+    child: SingleChildScrollView(
+    child: Column(
+    mainAxisAlignment:
+    MainAxisAlignment.spaceAround,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children:children,
+    )))));
   }
 
   //
@@ -220,14 +231,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                         'Search for people who look similar to a celebrity of your choice',
                         title: 'Celeb Look-Alike',
                         index: 1,
-                        child: AnimatedContainer(
-                          duration: Duration(milliseconds: 500),
-                          height: (_filterIndex != 1)?0:175,
-                          child: (_filterIndex != 1)
-                              ? SizedBox.shrink()
-                              : SingleChildScrollView(
-                                child: Column(
-                            children: [
+                        children: [
                                 Row(
                                   mainAxisAlignment:
                                   MainAxisAlignment.spaceBetween,
@@ -428,28 +432,14 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                   ),
                                 ),
                             ],
-                          ),
-                              ),
+
                         ),
-                      ),
                       _buildFilterWidget(
                         description:
                         ' Find Matches Based On Your Taste',
                         title: 'Learnt Taste',
                         index: 2,
-                        child:
-                        AnimatedContainer(
-                          duration: Duration(milliseconds: 500),
-                          height: (_filterIndex != 2)?0:175,
-                        child:(_filterIndex != 2)
-                            ? SizedBox.shrink()
-                            : Container(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceAround,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
+                        children:[
                                 Container(
                                   padding: EdgeInsets.symmetric(
                                     horizontal: 5.0,
@@ -568,10 +558,8 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                   ),
                                 ),
                               ],
-                            ),
-                          ),
-                        ),
-                      )),
+
+                      ),
                       // build the [done] button.
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8.0),
