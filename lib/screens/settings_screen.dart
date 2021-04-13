@@ -215,6 +215,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                           onChanged: (value) {
                                             setState(() {
                                               _maxDistance = value;
+                                              SettingsData().radius = _maxDistance;
                                               // Add to the `_editionCount` variable.
                                             });
                                           },

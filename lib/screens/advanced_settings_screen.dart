@@ -1,5 +1,6 @@
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/data_models/celeb.dart';
+import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
@@ -8,6 +9,9 @@ import 'package:flutter/material.dart';
 
 class AdvancedSettingsScreen extends StatefulWidget {
   AdvancedSettingsScreen({Key key}) : super(key: key);
+  static const String CELEB_FILTER='celeb_filter';
+  static const String TASTE_FILTER='taste_filter';
+  static const String CUSTOM_FACE_FILTER='custom_face_filter';
 
   @override
   _AdvancedSettingsScreenState createState() => _AdvancedSettingsScreenState();
@@ -26,7 +30,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
   int _availableFilters = 1;
 
   //
-  Celeb _selectedCeleb=Celeb(celebName:'Dor',name:'Dor'); //TODO support Celeb fetching from SettingsData
+  Celeb _selectedCeleb=Celeb(celebName:SettingsData().celebId); //TODO support Celeb fetching from SettingsData
 
   //
   int _auditionCount = 50; //TODO support audition count at SettingsData

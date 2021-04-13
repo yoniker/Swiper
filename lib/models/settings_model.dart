@@ -46,8 +46,9 @@ class SettingsData extends ChangeNotifier{
     _auditionCount = 1;
     _filterName = '';
     _filterDisplayImageUrl = '';
-    _celebId = '';
+    _celebId = 'No celeb was selected';
     _tasteMixRatio = 0.5;
+    _radius = 20;
 
     //And after that, read settings from shared
     readSettingsFromShared();

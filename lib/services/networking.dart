@@ -12,7 +12,7 @@ class NetworkHelper{
   static const SERVER_ADDR='192.116.48.67:8081';
   static final NetworkHelper _instance = NetworkHelper._internal();
   static const MIN_MATCHES_CALL_INTERVAL = Duration(seconds: 1);
-  DateTime _lastMatchCall=DateTime(2000);
+  DateTime _lastMatchCall=DateTime(2000); //The year 2000 is when the last call happened :D
 
   factory NetworkHelper() {
     return _instance;
