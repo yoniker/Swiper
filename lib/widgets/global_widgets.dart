@@ -27,11 +27,11 @@ class GlobalWidgets {
     /// The child Widget to build as the body of the Settings block.
     @required Widget child,
 
-    /// The catch phrase for the Settings Panel or block
-    String catchPhrase,
+    /// The title for the Settings Panel or block
+    String title,
 
     /// An optional parameter to build the Title Widget.
-    Widget title,
+    Widget leading,
 
     ///
     EdgeInsetsGeometry outerPadding =
@@ -46,7 +46,7 @@ class GlobalWidgets {
   }) {
     // assertion layer
     assert(
-    title != null || description != null,
+    leading != null || description != null,
     '''One of `description` or `titleBuilder` must be specified. 
       When the two are specified, the title Widget is given Priority.''',
     );
@@ -76,17 +76,17 @@ class GlobalWidgets {
             decoration: BoxDecoration(
               color: darkCardColor,
             ),
-            child: (title != null)
-                ? title
+            child: (leading != null)
+                ? leading
                 : Text.rich(
               TextSpan(
                 children: <InlineSpan>[
-                  if (catchPhrase != null)
+                  if (title != null)
                     TextSpan(
-                      // Add a quote and a string to the catchPhrases [TextSpan] `text`.
-                      text: '$catchPhrase' + ' ',
+                      text: '$title' + ' ',
                       style: _textStyle.copyWith(
-                          fontWeight: FontWeight.w700),
+                          fontWeight: FontWeight.w700,
+                      letterSpacing: 0.2),
                     ),
                   TextSpan(
                     text: description,

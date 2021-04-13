@@ -80,7 +80,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
     int index,
   }) {
     return GlobalWidgets.buildSettingsBlock(
-      title: Column(
+      leading: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [

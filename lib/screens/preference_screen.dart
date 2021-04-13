@@ -13,6 +13,8 @@ import 'advanced_settings_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   SettingsScreen({Key key}) : super(key: key);
+  static const minAge = 18;
+  static const maxAge = 100;
 
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
@@ -57,13 +59,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  String _resolveAgeRangeDescriptionString(double start, double end) {
-    if (end < 75) {
-      return ' ${start.round()}-${end.round()} ';
-    } else {
-      return ' ${start.round()}-75+ ';
-    }
-  }
+
 
   //
   var _defaultTextStyle = TextStyle(
@@ -80,6 +76,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
     fontWeight: FontWeight.w700,
   );
 
+  String _resolveAgeRangeDescriptionString(double start, double end) {
+    if (end < SettingsScreen.maxAge) {
+      return ' ${start.round()}-${end.round()} ';
+    } else {
+      return ' ${start.round()}-${SettingsScreen.maxAge}+ ';
+    }
+  }
+
+  String produceAgesRangeText(RangeValues _ages){
+    String agesRangeText;
+
+  if(_ages.start.toInt()<=SettingsScreen.minAge) {
+  if(_ages.end.toInt()>=SettingsScreen.maxAge){
+  agesRangeText = 'Any Age';
+  }
+  else{
+  agesRangeText = '${_ages.end.toInt()} or younger';
+  }
+  }
+  else{
+  if(_ages.end.toInt()>=SettingsScreen.maxAge){
+  agesRangeText = '${_ages.start.toInt()} or older';
+  }
+  else{
+  agesRangeText = 'Between ${_ages.start.toInt()} and ${_ages.end.toInt()}';
+  }
+  }
+  return agesRangeText;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,6 +120,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: Column(
                   children: [
                     GlobalWidgets.buildSettingsBlock(
+                      title: 'Visibility'.toUpperCase(),
                       description:
                       'With this enabled your profile will be visible to other people using this App',
                       child: Row(
@@ -124,9 +151,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
                     GlobalWidgets.buildSettingsBlock(
-                      catchPhrase: 'Where',
+                      title: 'Where'.toUpperCase(),
                       description:
-                      'Your current Location. Used to find great matches that can go with your profile.',
+                      '',
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,7 +165,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Location',
+                                  'My Swiping Location',
                                   style: _varryingTextStyle,
                                 ),
                                 Expanded(
@@ -146,7 +173,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     padding:
                                     EdgeInsets.symmetric(horizontal: 12.0),
                                     child:
-                                    Text(_currentLocation),
+                                    TextButton(child: Text(_currentLocation),onPressed: (){},),
                                   ),
                                 ),
                               ],
@@ -215,7 +242,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       children: <InlineSpan>[
                                         TextSpan(
                                           text:
-                                          ' ${_maxDistance.toStringAsFixed(2)} ',
+                                          ' ${_maxDistance.round().toString()} ',
                                         ),
                                         TextSpan(
                                           text: 'km away',
@@ -232,9 +259,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
                     GlobalWidgets.buildSettingsBlock(
-                      catchPhrase: 'Who',
+                      title: 'Who'.toUpperCase(),
                       description:
-                      'Basic Filters',
+                      '',
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -290,7 +317,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Age Range',
+                                  'Age',
                                   style: _varryingTextStyle,
                                 ),
                                 Row(
@@ -315,9 +342,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         child: CupertinoRangeSlider(
                                           activeColor: colorBlend01,
                                           values: _selectedAges,
-                                          min: 18,
-                                          max: 76,
-                                          // divisions: 59,
+                                          min: SettingsScreen.minAge.toDouble(),
+                                          max: SettingsScreen.maxAge.toDouble(),
                                           onChanged: (newRangevalues) {
                                             setState(
                                                   () {
@@ -350,15 +376,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       children: <InlineSpan>[
                                         TextSpan(
                                           text:
-                                          _resolveAgeRangeDescriptionString(
-                                            _selectedAges.start,
-                                            _selectedAges.end,
-                                          ),
+                                          produceAgesRangeText(_selectedAges),
                                         ),
-                                        TextSpan(
-                                          text: 'years',
-                                          style: _varryingTextStyle,
-                                        ),
+
                                       ],
                                     ),
                                   ),
@@ -369,22 +389,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ],
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
+                    GlobalWidgets.buildSettingsBlock(
+                      title:'Advanced'.toUpperCase(),
+                      description:
+                      '',
+                      child: TextButton(
+                        onPressed: () {
 
 
-                        // Direct user to the Advanced filters Page.
-                        Navigator.of(context).push(
-                          CupertinoPageRoute(
-                            builder: (context) {
-                              return AdvancedSettingsScreen();
-                            },
-                          ),
-                        );
-                      },
-                      child: GlobalWidgets.buildSettingsBlock(
-                        description:
-                        'With this enabled your profile will be visible to other people using this App',
+                          // Direct user to the Advanced filters Page.
+                          Navigator.of(context).push(
+                            CupertinoPageRoute(
+                              builder: (context) {
+                                return AdvancedSettingsScreen();
+                              },
+                            ),
+                          );
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -399,7 +420,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               color: colorBlend01,size: 34.0,),
                               ],
                             ),
-                            Icon(Icons.arrow_forward_ios),
+                            Icon(Icons.arrow_forward_ios,color: Colors.black54,size: 18,),
 
                           ],
                         ),
