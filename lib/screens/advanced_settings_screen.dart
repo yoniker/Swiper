@@ -194,66 +194,62 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                         title: 'Celeb Look-Alike',
                         index: 1,
                         children: [
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Search Celeb',
-                                      style: _boldTextStyle,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(right: 8.0),
-                                          child: Text(
-                                            '${_selectedCeleb.celebName}',
-                                            style: _defaultTextStyle,
+                                TextButton(
+                                      onPressed:() {
+                                    // Direct user to the Celebrity Selection Page.
+                                    Navigator.of(context).push<Celeb>(
+                                      CupertinoPageRoute<Celeb>(
+                                        builder: (context) {
+                                          return ScreenCelebritySelection();
+                                        },
+                                      ),
+                                    ).then((selectedCeleb) {
+                                      setState(() {
+                                        // Set the `_selectedCeleb` variable to the newly selected
+                                        // celebrity from the [CelebritySelectionScreen] page given that it is not null.
+                                        if (selectedCeleb != null) {
+                                          _selectedCeleb = selectedCeleb;
+                                          SettingsData().celebId = _selectedCeleb.celebName;
+                                        } else {
+                                          //
+                                          print(
+                                              'No Celebrity Selected!');
+                                        }
+                                      });
+                                    });
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Search Celeb',
+                                        style: _boldTextStyle,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(right: 8.0),
+                                            child: Text(
+                                              '${_selectedCeleb.celebName}',
+                                              style: _defaultTextStyle,
+                                            ),
                                           ),
-                                        ),
-                                        TextButton(
-                                          style: ButtonStyle(
-                                            overlayColor:
-                                            MaterialStateProperty.all(
-                                                colorBlend01
-                                                    .withOpacity(0.2)),
-                                          ),
-                                          child: GlobalWidgets.imageToIcon(
-                                            'assets/images/forward_arrow.png',
-                                          ),
-                                          onPressed: () {
-                                            // Direct user to the Celebrity Selection Page.
-                                            Navigator.of(context).push<Celeb>(
-                                              CupertinoPageRoute<Celeb>(
-                                                builder: (context) {
-                                                  return ScreenCelebritySelection();
-                                                },
-                                              ),
-                                            ).then((selectedCeleb) {
-                                              //print('${selectedCeleb.celebName} was selected!');
-                                              setState(() {
-                                                // Set the `_selectedCeleb` variable to the newly selected
-                                                // celebrity from the [CelebritySelectionScreen] page given that it is not null.
-                                                if (selectedCeleb != null) {
-                                                  _selectedCeleb =
-                                                      selectedCeleb;
-                                                } else {
-                                                  //
-                                                  print(
-                                                      'No Celebrity Selected!');
-                                                }
-                                              });
-                                            });
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+
+
+                                            GlobalWidgets.imageToIcon(
+                                              'assets/images/forward_arrow.png',
+                                            ),
+
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 Divider(
                                   color: darkCardColor,
