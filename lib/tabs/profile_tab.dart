@@ -155,7 +155,7 @@ class _ProfileTabState extends State<ProfileTab>
           const SizedBox(
             height: 20.0,
           ),
-           FacebookSignInButton(text:'Facebook logout',onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>SettingsScreen()));},),
+           FacebookSignInButton(text:'Facebook logout',onPressed: (){_logout();},),
           const SizedBox(
             height: 20.0,
           ),
