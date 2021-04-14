@@ -119,31 +119,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: 'Visibility'.toUpperCase(),
                       description:
                       'With this enabled your profile will be visible to other people using this App',
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Show me in Discovery',
-                            style: _boldTextStyle,
-                          ),
-                          CupertinoSwitch(
-                            value: _showInDiscovery,
-                            activeColor: colorBlend01,
-                            onChanged: (value) {
-                              setState(
-                                    () {
-                                  // TODO:// Add required Function.
-                                  // Alert user to make sure he is intentionally changing his visibiliry status.
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Show me in Discovery',
+                              style: _boldTextStyle,
+                            ),
+                            CupertinoSwitch(
+                              value: _showInDiscovery,
+                              activeColor: colorBlend01,
+                              onChanged: (value) {
+                                setState(
+                                      () {
+                                    // TODO:// Add required Function.
+                                    // Alert user to make sure he is intentionally changing his visibiliry status.
 
-                                  // set "_showInDiscovery" to the currrent switch value.
-                                  _showInDiscovery = value;
+                                    // set "_showInDiscovery" to the currrent switch value.
+                                    _showInDiscovery = value;
 
-                                },
-                              );
-                            },
-                          ),
-                        ],
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     GlobalWidgets.buildSettingsBlock(
@@ -155,7 +158,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            margin: EdgeInsets.symmetric(vertical: 6.0),
+                            margin: EdgeInsets.symmetric(vertical: 6.0,horizontal: 8.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -169,7 +172,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.symmetric(vertical: 6.0),
+                            margin: EdgeInsets.symmetric(vertical: 6.0,horizontal: 8.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -248,133 +251,136 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: 'Who'.toUpperCase(),
                       description:
                       '',
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.symmetric(vertical: 6.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Gender',
-                                  style: _boldTextStyle,
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding:
-                                    EdgeInsets.symmetric(horizontal: 12.0),
-                                    child:
-                                    DropdownButtonFormFieldModified<Gender>(
-                                      decoration: InputDecoration.collapsed(
-                                        hintText: 'My Preferred Gender',
-                                        hintStyle: _defaultTextStyle.copyWith(
-                                          color: darkTextColor,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal:8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 6.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Gender',
+                                    style: _boldTextStyle,
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding:
+                                      EdgeInsets.symmetric(horizontal: 12.0),
+                                      child:
+                                      DropdownButtonFormFieldModified<Gender>(
+                                        decoration: InputDecoration.collapsed(
+                                          hintText: 'My Preferred Gender',
+                                          hintStyle: _defaultTextStyle.copyWith(
+                                            color: darkTextColor,
+                                          ),
                                         ),
-                                      ),
-                                      isExpanded: false,
-                                      onChanged: (newGender) {
-                                        setState(() {
-                                          SettingsData().preferredGender = newGender.toShortString();
-                                          _currentGenderSelected = newGender;
-                                          
-                                        });
-                                      },
-                                      style: _defaultTextStyle,
-                                      value: _currentGenderSelected,
-                                      items: Gender.values.map(
-                                            (gender) {
-                                          return _buildGenderDropDownMenuItem(
-                                              gender);
+                                        isExpanded: false,
+                                        onChanged: (newGender) {
+                                          setState(() {
+                                            SettingsData().preferredGender = newGender.toShortString();
+                                            _currentGenderSelected = newGender;
+
+                                          });
                                         },
-                                      ).toList(),
+                                        style: _defaultTextStyle,
+                                        value: _currentGenderSelected,
+                                        items: Gender.values.map(
+                                              (gender) {
+                                            return _buildGenderDropDownMenuItem(
+                                                gender);
+                                          },
+                                        ).toList(),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(vertical: 12.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Age',
-                                  style: _boldTextStyle,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 12.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Age',
+                                    style: _boldTextStyle,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
 
-                                    Transform(
-                                      alignment: Alignment.center,
-                                transform: Matrix4.rotationY(math.pi),
-                                      child: Icon(
-                                        Icons.child_friendly_outlined,
+                                      Transform(
+                                        alignment: Alignment.center,
+                                  transform: Matrix4.rotationY(math.pi),
+                                        child: Icon(
+                                          Icons.child_friendly_outlined,
+                                          size: 24.0,
+                                          color: colorBlend01,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding:
+                                          EdgeInsets.symmetric(vertical: 6.0),
+                                          child: CupertinoRangeSlider(
+                                            activeColor: colorBlend01,
+                                            values: _selectedAges,
+                                            min: SettingsScreen.minAge.toDouble(),
+                                            max: SettingsScreen.maxAge.toDouble(),
+                                            onChanged: (newRangevalues) {
+                                              setState(
+                                                    () {
+                                                  _selectedAges = RangeValues(
+                                                    newRangevalues.start
+                                                        .roundToDouble(),
+                                                    newRangevalues.end
+                                                        .roundToDouble(),
+                                                  );
+                                                  SettingsData().minAge = _selectedAges.start.toInt();
+                                                  SettingsData().maxAge = _selectedAges.end.toInt();
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.elderly_rounded,
                                         size: 24.0,
                                         color: colorBlend01,
                                       ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding:
-                                        EdgeInsets.symmetric(vertical: 6.0),
-                                        child: CupertinoRangeSlider(
-                                          activeColor: colorBlend01,
-                                          values: _selectedAges,
-                                          min: SettingsScreen.minAge.toDouble(),
-                                          max: SettingsScreen.maxAge.toDouble(),
-                                          onChanged: (newRangevalues) {
-                                            setState(
-                                                  () {
-                                                _selectedAges = RangeValues(
-                                                  newRangevalues.start
-                                                      .roundToDouble(),
-                                                  newRangevalues.end
-                                                      .roundToDouble(),
-                                                );
-                                                SettingsData().minAge = _selectedAges.start.toInt();
-                                                SettingsData().maxAge = _selectedAges.end.toInt();
-                                              },
-                                            );
-                                          },
-                                        ),
+                                    ],
+                                  ),
+                                  Container(
+                                    alignment: Alignment.centerRight,
+                                    margin: EdgeInsets.symmetric(
+                                        vertical: 6.0, horizontal: 12.0),
+                                    child: RichText(
+                                      text: TextSpan(
+                                        style: _defaultTextStyle,
+                                        children: <InlineSpan>[
+                                          TextSpan(
+                                            text:
+                                            produceAgesRangeText(_selectedAges),
+                                          ),
+
+                                        ],
                                       ),
                                     ),
-                                    Icon(
-                                      Icons.elderly_rounded,
-                                      size: 24.0,
-                                      color: colorBlend01,
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: 6.0, horizontal: 12.0),
-                                  child: RichText(
-                                    text: TextSpan(
-                                      style: _defaultTextStyle,
-                                      children: <InlineSpan>[
-                                        TextSpan(
-                                          text:
-                                          produceAgesRangeText(_selectedAges),
-                                        ),
-
-                                      ],
-                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     GlobalWidgets.buildSettingsBlock(
