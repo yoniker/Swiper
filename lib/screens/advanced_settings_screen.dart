@@ -336,7 +336,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                           CrossAxisAlignment.center,
                                           children: [
                                             Icon(
-                                              Icons.person_outline,
+                                              Icons.group_outlined,
                                               size: 24.0,
                                               color: colorBlend01,
                                             ),
@@ -365,13 +365,16 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                               ),
                                             ),
                                             Icon(
-                                              Icons.people_alt_outlined,
+                                              Icons.person_outline,
                                               size: 24.0,
                                               color: colorBlend01,
                                             ),
                                           ],
                                         ),
+
                                       ),
+                                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [Text('More Matches'),Text('More Accurate')],)
                                     ],
                                   ),
                                 ),
@@ -458,7 +461,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                     CrossAxisAlignment.center,
                                     children: [
                                       Icon(
-                                        Icons.person_outline,
+                                        Icons.group_outlined,
                                         size: 24.0,
                                         color: colorBlend01,
                                       ),
@@ -492,7 +495,8 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                     ],
                                   ),
                                 ),
-                              ],
+                              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [Text('More Matches'),Text('More Accurate')],)],
 
                       ),
                       // build the [done] button.
