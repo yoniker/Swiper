@@ -43,11 +43,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return DropdownMenuItem<Gender>(
       child: Text(
         selectedGender.toShortString(),
-        style: TextStyle(
-          fontFamily: 'Nunito',
-          fontSize: 15,
-          fontWeight: FontWeight.w500,
-        ),
+        style: _defaultTextStyle,
       ),
       value: selectedGender,
       onTap: () {
@@ -65,14 +61,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   var _defaultTextStyle = TextStyle(
     color: Colors.black,
     fontFamily: 'Nunito',
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: FontWeight.w500,
   );
 
-  var _varryingTextStyle = TextStyle(
+  var _boldTextStyle = TextStyle(
     color: Colors.black,
     fontFamily: 'Nunito',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: FontWeight.w700,
   );
 
@@ -129,7 +125,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         children: [
                           Text(
                             'Show me in Discovery',
-                            style: _varryingTextStyle,
+                            style: _boldTextStyle,
                           ),
                           CupertinoSwitch(
                             value: _showInDiscovery,
@@ -165,17 +161,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  'My Swiping Location',
-                                  style: _varryingTextStyle,
+                                  'Location',
+                                  style: _boldTextStyle,
                                 ),
-                                Expanded(
-                                  child: Padding(
-                                    padding:
-                                    EdgeInsets.symmetric(horizontal: 12.0),
-                                    child:
-                                    TextButton(child: Text(_currentLocation),onPressed: (){},),
-                                  ),
-                                ),
+                                TextButton(child: Row(children: [Text(_currentLocation),SizedBox(width: 4.0,),Icon(Icons.arrow_forward_ios,size:16)]),onPressed: (){},),
                               ],
                             ),
                           ),
@@ -187,7 +176,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               children: [
                                 Text(
                                   'Max. Distance',
-                                  style: _varryingTextStyle,
+                                  style: _boldTextStyle,
                                 ),
                                 Row(
                                   mainAxisAlignment:
@@ -242,12 +231,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       style: _defaultTextStyle,
                                       children: <InlineSpan>[
                                         TextSpan(
-                                          text:
-                                          ' ${_maxDistance.round().toString()} ',
-                                        ),
-                                        TextSpan(
-                                          text: 'km away',
-                                          style: _varryingTextStyle,
+                                          text: ' ${_maxDistance.round().toString()} km away',
+                                          style: _defaultTextStyle,
                                         ),
                                       ],
                                     ),
@@ -275,7 +260,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               children: [
                                 Text(
                                   'Gender',
-                                  style: _varryingTextStyle,
+                                  style: _boldTextStyle,
                                 ),
                                 Expanded(
                                   child: Padding(
@@ -319,7 +304,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               children: [
                                 Text(
                                   'Age',
-                                  style: _varryingTextStyle,
+                                  style: _boldTextStyle,
                                 ),
                                 Row(
                                   mainAxisAlignment:
@@ -416,7 +401,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             Row(mainAxisAlignment: MainAxisAlignment.start,
                               children: [Text(
                                 'Artificial Intelligence Filters',
-                                style: _varryingTextStyle,
+                                style: _boldTextStyle,
                               ),
                               SizedBox(width: 4.0,),
                               Icon(Icons.psychology_outlined,
@@ -438,7 +423,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                         child: Text(
                           'Done',
-                          style: _varryingTextStyle.copyWith(
+                          style: _boldTextStyle.copyWith(
                             color: colorBlend02,
                           ),
                         ),

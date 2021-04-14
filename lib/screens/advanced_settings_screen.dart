@@ -373,8 +373,11 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                         ),
 
                                       ),
-                                      Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [Text('More Matches'),Text('More Accurate')],)
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [Text('More Matches'),Text('More Accurate')],),
+                                      )
                                     ],
                                   ),
                                 ),
@@ -383,7 +386,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                         ),
                       _buildFilterWidget(
                         description:
-                        ' Find Matches Based On Your Taste',
+                        ' Find matches based on your taste',
                         title: 'Learnt Taste',
                         filterName: AdvancedSettingsScreen.TASTE_FILTER,
                         children:[
@@ -495,8 +498,11 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                     ],
                                   ),
                                 ),
-                              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text('More Matches'),Text('More Accurate')],)],
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [Text('More Matches'),Text('More Accurate')],),
+                              )],
 
                       ),
                       // build the [done] button.
