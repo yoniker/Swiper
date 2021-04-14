@@ -12,6 +12,8 @@ class AdvancedSettingsScreen extends StatefulWidget {
   static const String CELEB_FILTER='celeb_filter';
   static const String TASTE_FILTER='taste_filter';
   static const String CUSTOM_FACE_FILTER='custom_face_filter';
+  static const minAuditionValue = 1;
+  static const maxAuditionValue = 10001;
 
   @override
   _AdvancedSettingsScreenState createState() => _AdvancedSettingsScreenState();
@@ -22,7 +24,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
   int _availableFilters = 1;
   Celeb _selectedCeleb=Celeb(celebName:SettingsData().celebId,imagesUrls: [SettingsData().filterDisplayImageUrl]); //TODO support Celeb fetching from SettingsData
   String _currentChosenFilterName = SettingsData().filterName;
-  int _auditionCount = 50; //TODO support audition count at SettingsData
+  int _chosenAuditionCount = SettingsData().auditionCount;
 
   Widget _buildFilterWidget({
     String title,
@@ -275,7 +277,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                     children: <InlineSpan>[
                                                       TextSpan(
                                                         text:
-                                                        'Audition $_auditionCount ',
+                                                        'Choose one out of $_chosenAuditionCount ',
                                                         style:
                                                         _defaultTextStyle,
                                                       ),
@@ -344,18 +346,19 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                     horizontal: 12.0),
                                                 child: CupertinoSlider(
                                                   activeColor: colorBlend01,
-                                                  value: _auditionCount
-                                                      .roundToDouble(),
-                                                  min: 21,
-                                                  max: 100,
-                                                  divisions: 80,
+                                                  value: _chosenAuditionCount.roundToDouble(),
+                                                  min: AdvancedSettingsScreen.minAuditionValue.roundToDouble(),
+                                                  max: AdvancedSettingsScreen.maxAuditionValue.roundToDouble(),
+                                                  divisions: 100,
                                                   onChanged: (value) {
                                                     setState(() {
-                                                      _auditionCount =
+                                                      _chosenAuditionCount =
                                                           value.toInt();
+                                                      _chosenAuditionCount = _chosenAuditionCount%10==1 && _chosenAuditionCount>1? _chosenAuditionCount-1:_chosenAuditionCount;
+                                                      SettingsData().auditionCount = _chosenAuditionCount;
                                                       // print the current value of `_auditionCount` to console.
                                                       //<debug>
-                                                      print(_auditionCount);
+                                                      print(_chosenAuditionCount);
                                                     });
                                                   },
                                                 ),
@@ -400,7 +403,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                               children: <InlineSpan>[
                                                 TextSpan(
                                                   text:
-                                                  'Audition $_auditionCount ',
+                                                  'Choose one out of  $_chosenAuditionCount ',
                                                   style: _defaultTextStyle,
                                                 ),
                                                 TextSpan(
@@ -465,18 +468,17 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                               horizontal: 12.0),
                                           child: CupertinoSlider(
                                             activeColor: colorBlend01,
-                                            value: _auditionCount
+                                            value: _chosenAuditionCount
                                                 .roundToDouble(),
-                                            min: 21,
-                                            max: 100,
-                                            divisions: 80,
+                                            min: AdvancedSettingsScreen.minAuditionValue.roundToDouble(),
+                                            max: AdvancedSettingsScreen.maxAuditionValue.roundToDouble(),
+                                            divisions: 100,
                                             onChanged: (value) {
                                               setState(() {
-                                                _auditionCount =
+                                                _chosenAuditionCount =
                                                     value.toInt();
-                                                // print the current value of `_auditionCount` to console.
-                                                //<debug>
-                                                print(_auditionCount);
+                                                _chosenAuditionCount = _chosenAuditionCount%10==1 && _chosenAuditionCount>1? _chosenAuditionCount-1:_chosenAuditionCount;
+                                                SettingsData().auditionCount = _chosenAuditionCount;
                                               });
                                             },
                                           ),
