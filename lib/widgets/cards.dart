@@ -1,15 +1,15 @@
 import 'dart:math';
-import 'package:flutter/material.dart';
-import 'package:fluttery_dart2/layout.dart';
-import 'package:betabeta/models/profile.dart';
-import 'package:provider/provider.dart';
-import 'photos.dart';
-import '../models/match_engine.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import 'package:betabeta/models/profile.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttery_dart2/layout.dart';
+import 'package:provider/provider.dart';
+
+import '../models/match_engine.dart';
+import 'photos.dart';
 
 class CardStack extends StatefulWidget {
-
   CardStack();
 
   @override
@@ -25,44 +25,43 @@ class _CardStackState extends State<CardStack> {
     addCards();
   }
 
-  void addCards() async
-
-  {
-    await Provider.of<MatchEngine>(context, listen: false).getMoreMatchesFromServer();
-    setState(() {
-
-    });
-
+  void addCards() async {
+    await Provider.of<MatchEngine>(context, listen: false)
+        .getMoreMatchesFromServer();
+    setState(() {});
   }
-  Widget _buildBackCard() {
-    if (Provider.of<MatchEngine>(context, listen: false).nextMatch()!=null){
-    Widget card= Transform(
-      transform: Matrix4.identity()..scale(_nextCardScale, _nextCardScale),
-      alignment: Alignment.center,
-      child: ProfileCard(
-        profile: Provider.of<MatchEngine>(context, listen: false).nextMatch().profile,
-        clickable: false,
-      ),
-    );
-    return DraggableCard(
-      screenHeight: MediaQuery.of(context).size.height,
-      screenWidth: MediaQuery.of(context).size.width,
-      isDraggable: false,
-      card: card,
-    );
 
+  Widget _buildBackCard() {
+    if (Provider.of<MatchEngine>(context, listen: false).nextMatch() != null) {
+      Widget card = Transform(
+        transform: Matrix4.identity()..scale(_nextCardScale, _nextCardScale),
+        alignment: Alignment.center,
+        child: ProfileCard(
+          profile: Provider.of<MatchEngine>(context, listen: false)
+              .nextMatch()
+              .profile,
+          clickable: false,
+        ),
+      );
+      return DraggableCard(
+        screenHeight: MediaQuery.of(context).size.height,
+        screenWidth: MediaQuery.of(context).size.width,
+        isDraggable: false,
+        card: card,
+      );
     }
 
-    return SpinKitDoubleBounce(size:200,color:Colors.blueAccent);
+    return SpinKitDoubleBounce(size: 200, color: Colors.blueAccent);
   }
 
   Widget _buildFrontCard() {
     MatchEngine matchEngine = Provider.of<MatchEngine>(context, listen: false);
-    if(matchEngine.currentMatch()!=null) {
-
-      Widget card =  ProfileCard(
+    if (matchEngine.currentMatch() != null) {
+      Widget card = ProfileCard(
         key: Key(matchEngine.currentMatch().profile.username),
-        profile: Provider.of<MatchEngine>(context, listen: false).currentMatch().profile,
+        profile: Provider.of<MatchEngine>(context, listen: false)
+            .currentMatch()
+            .profile,
         clickable: true,
       );
 
@@ -74,13 +73,14 @@ class _CardStackState extends State<CardStack> {
         onSlideUpdate: _onSlideUpdate,
         onSlideComplete: _onSlideComplete,
       );
-
     }
-  return SpinKitDoubleBounce(size:200,color:Colors.blueAccent);
+    return SpinKitDoubleBounce(size: 200, color: Colors.blueAccent);
   }
 
   SlideDirection _desiredSlideOutDirection() {
-    switch (Provider.of<MatchEngine>(context, listen: false).currentMatch().decision) {
+    switch (Provider.of<MatchEngine>(context, listen: false)
+        .currentMatch()
+        .decision) {
       case Decision.nope:
         return SlideDirection.left;
         break;
@@ -102,7 +102,6 @@ class _CardStackState extends State<CardStack> {
   }
 
   void _onSlideComplete(SlideDirection direction) {
-
     Decision decision = Decision.indecided;
 
     switch (direction) {
@@ -117,26 +116,23 @@ class _CardStackState extends State<CardStack> {
         break;
     }
 
-    Provider.of<MatchEngine>(context, listen: false).currentMatchDecision(decision);
+    Provider.of<MatchEngine>(context, listen: false)
+        .currentMatchDecision(decision);
   }
 
   @override
   Widget build(BuildContext context) {
-    return
-    Consumer<MatchEngine>(
+    return Consumer<MatchEngine>(
       builder: (context, matchEngine, child) {
-         return Stack(
+        return Stack(
           children: <Widget>[
             _buildBackCard(),
-            _buildFrontCard()
+            _buildFrontCard(),
           ],
         );
       },
-    );}
-
-
-
-
+    );
+  }
 }
 
 enum SlideDirection {
@@ -176,8 +172,10 @@ class _DraggableCardState extends State<DraggableCard>
   Offset cardOffset = const Offset(0.0, 0.0);
   Offset dragStart;
   Offset dragPosition;
-  List<Offset> gestureOffsets; //Track if all offsets happened at the same direction
-  List<Duration> gestureTimeStamps; //Track all of the time stamps to test if it happened "fast enough"
+  List<Offset>
+      gestureOffsets; //Track if all offsets happened at the same direction
+  List<Duration>
+      gestureTimeStamps; //Track all of the time stamps to test if it happened "fast enough"
   Offset slideBackStart;
   SlideDirection slideOutDirection;
   AnimationController slideBackAnimation;
@@ -277,8 +275,6 @@ class _DraggableCardState extends State<DraggableCard>
     slideOutAnimation.forward(from: 0.0);
   }
 
-
-
   Offset _chooseRandomDragStart() {
     final cardContex = profileCardKey.currentContext;
     final cardTopLeft = (cardContex.findRenderObject() as RenderBox)
@@ -334,51 +330,61 @@ class _DraggableCardState extends State<DraggableCard>
     });
   }
 
-  FastSwipe detectFastSwipe(){
-    const int MINIMUM_GESTURE_LENGTH=40;
-    const double MINIMUM_DURATION_TIME = 1; //TODO convert it into Duration since it's more like dart than this
+  FastSwipe detectFastSwipe() {
+    const int MINIMUM_GESTURE_LENGTH = 40;
+    const double MINIMUM_DURATION_TIME =
+        1; //TODO convert it into Duration since it's more like dart than this
     const double MAXIMUM_DURATION_TIME = 1000;
 
-    if(gestureTimeStamps.length<2){return FastSwipe.notFastSwipe;}
-    final int gestureTime = (gestureTimeStamps[gestureTimeStamps.length-1]-gestureTimeStamps[0]).inMilliseconds;
-    if(gestureTime<MINIMUM_DURATION_TIME){return FastSwipe.notFastSwipe;}
-    if(gestureTime>MAXIMUM_DURATION_TIME){return FastSwipe.notFastSwipe;} //TODO again,it's important to cut the lists but for now
-    double overAllGestureSize = gestureOffsets[gestureOffsets.length-1].dx-gestureOffsets[0].dx;
-    if(overAllGestureSize.abs()<MINIMUM_GESTURE_LENGTH){return FastSwipe.notFastSwipe;}
+    if (gestureTimeStamps.length < 2) {
+      return FastSwipe.notFastSwipe;
+    }
+    final int gestureTime =
+        (gestureTimeStamps[gestureTimeStamps.length - 1] - gestureTimeStamps[0])
+            .inMilliseconds;
+    if (gestureTime < MINIMUM_DURATION_TIME) {
+      return FastSwipe.notFastSwipe;
+    }
+    if (gestureTime > MAXIMUM_DURATION_TIME) {
+      return FastSwipe.notFastSwipe;
+    } //TODO again,it's important to cut the lists but for now
+    double overAllGestureSize =
+        gestureOffsets[gestureOffsets.length - 1].dx - gestureOffsets[0].dx;
+    if (overAllGestureSize.abs() < MINIMUM_GESTURE_LENGTH) {
+      return FastSwipe.notFastSwipe;
+    }
     //TODO cut both lists such that we will observe only the very last motions eg 1/2 miliseconds
-    bool monotonic=true;
-    for(int i=1; i<gestureOffsets.length; ++i){
-      if(gestureOffsets[i].dx.abs()<gestureOffsets[i-1].dx.abs()){
+    bool monotonic = true;
+    for (int i = 1; i < gestureOffsets.length; ++i) {
+      if (gestureOffsets[i].dx.abs() < gestureOffsets[i - 1].dx.abs()) {
         monotonic = false;
         break;
       }
     }
-    if(!monotonic){return FastSwipe.notFastSwipe;}
+    if (!monotonic) {
+      return FastSwipe.notFastSwipe;
+    }
 
-    if(gestureOffsets[0].dx>gestureOffsets[1].dx){
+    if (gestureOffsets[0].dx > gestureOffsets[1].dx) {
       return FastSwipe.Left;
     }
 
     return FastSwipe.Right;
-
-
   }
 
   void _onPanEnd(DragEndDetails details) {
-
-
     final dragVector = cardOffset / cardOffset.distance;
     bool isInLeftRegion = (cardOffset.dx / context.size.width) < -0.35;
     bool isInRightRegion = (cardOffset.dx / context.size.width) > 0.35;
     final isInTopRegion = (cardOffset.dy / context.size.height) < -0.30;
     final FastSwipe fastSwipeStatus = detectFastSwipe();
 
-    isInLeftRegion|=fastSwipeStatus==FastSwipe.Left;
-    isInRightRegion|=fastSwipeStatus==FastSwipe.Right;
+    isInLeftRegion |= fastSwipeStatus == FastSwipe.Left;
+    isInRightRegion |= fastSwipeStatus == FastSwipe.Right;
 
     setState(() {
       if (isInLeftRegion || isInRightRegion) {
-        slideOutTween =  Tween(
+        slideOutTween = Tween(
             begin: cardOffset, end: dragVector * (2 * context.size.width));
 
         slideOutAnimation.forward(from: 0.0);
@@ -386,7 +392,7 @@ class _DraggableCardState extends State<DraggableCard>
         slideOutDirection =
             isInLeftRegion ? SlideDirection.left : SlideDirection.right;
       } else if (isInTopRegion) {
-        slideOutTween =  Tween(
+        slideOutTween = Tween(
             begin: cardOffset, end: dragVector * (2 * context.size.height));
         slideOutAnimation.forward(from: 0.0);
 
@@ -420,26 +426,26 @@ class _DraggableCardState extends State<DraggableCard>
 
   @override
   Widget build(BuildContext context) {
-    return  AnchoredOverlay(
+    return AnchoredOverlay(
       showOverlay: true,
-      child:  Center(),
+      child: Center(),
       overlayBuilder: (BuildContext context, Rect anchorBounds, Offset anchor) {
         return CenterAbout(
           position: anchor,
-          child:  Transform(
+          child: Transform(
             transform:
-                 Matrix4.translationValues(cardOffset.dx, cardOffset.dy, 0.0)
+                Matrix4.translationValues(cardOffset.dx, cardOffset.dy, 0.0)
                   ..rotateZ(_rotation(anchorBounds)),
             origin: _rotationOrigin(anchorBounds),
-            child:  Container(
+            child: Container(
               key: profileCardKey,
               width: anchorBounds.width,
               height: anchorBounds.height,
-              padding: const EdgeInsets.all(16.0),
-              child:  GestureDetector(
-                onPanStart: widget.isDraggable?_onPanStart:null,
-                onPanUpdate: widget.isDraggable?_onPanUpdate:null,
-                onPanEnd: widget.isDraggable?_onPanEnd:null,
+              padding: EdgeInsets.all(16.0),
+              child: GestureDetector(
+                onPanStart: widget.isDraggable ? _onPanStart : null,
+                onPanUpdate: widget.isDraggable ? _onPanUpdate : null,
+                onPanEnd: widget.isDraggable ? _onPanEnd : null,
                 child: widget.card,
               ),
             ),
@@ -454,7 +460,7 @@ class ProfileCard extends StatefulWidget {
   final Profile profile;
   final bool clickable;
 
-  ProfileCard({Key key, this.profile,this.clickable}) : super(key: key);
+  ProfileCard({Key key, this.profile, this.clickable}) : super(key: key);
 
   @override
   _ProfileCardState createState() => _ProfileCardState();
@@ -463,19 +469,18 @@ class ProfileCard extends StatefulWidget {
 class _ProfileCardState extends State<ProfileCard> {
   Widget _buildBackground() {
     return PhotoBrowser(
-      photoAssetPaths: widget.profile.imageUrls,
-      visiblePhotoIndex: 0,
-      clickable:widget.clickable
-    );
+        photoAssetPaths: widget.profile.imageUrls,
+        visiblePhotoIndex: 0,
+        clickable: widget.clickable);
   }
 
   Widget _buildProfileSynopsis() {
-    return  Positioned(
+    return Positioned(
       left: 0.0,
       right: 0.0,
       bottom: 0.0,
-      child:  Container(
-        decoration:  BoxDecoration(
+      child: Container(
+        decoration: BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -484,33 +489,38 @@ class _ProfileCardState extends State<ProfileCard> {
               Colors.black.withOpacity(0.8),
             ])),
         padding: const EdgeInsets.all(24.0),
-        child:  Row(
+        child: Row(
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-             Expanded(
-              child:  Column(
+            Expanded(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-
-
-                     widget.profile.username!=null? Text(widget.profile.username+', '+widget.profile.age.toString(),
-                        style:
-                             TextStyle(color: Colors.white, fontSize: 24.0)) : Text(''),
-
-                  widget.profile.headline!=null?Text(widget.profile.headline,
-                      style:  TextStyle(color: Colors.white, fontSize: 18.0)):Text('')
+                  widget.profile.username != null
+                      ? Text(
+                          widget.profile.username +
+                              ', ' +
+                              widget.profile.age.toString(),
+                          style: TextStyle(color: Colors.white, fontSize: 24.0))
+                      : Text(''),
+                  widget.profile.headline != null
+                      ? Text(widget.profile.headline,
+                          style: TextStyle(color: Colors.white, fontSize: 18.0))
+                      : Text('')
                 ],
               ),
             ),
-             IconButton(
-               color: Colors.transparent,
-               onPressed: (){print('Implement images slider for current profile');},
-               icon: Icon(
+            IconButton(
+              color: Colors.transparent,
+              onPressed: () {
+                print('Implement images slider for current profile');
+              },
+              icon: Icon(
                 Icons.info,
                 color: Colors.white,
-            ),
-             )
+              ),
+            )
           ],
         ),
       ),
@@ -520,19 +530,18 @@ class _ProfileCardState extends State<ProfileCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration:  BoxDecoration(
-          borderRadius:  BorderRadius.circular(10.0),
-          boxShadow: [
-             BoxShadow(
-              color: const Color(0x11000000),
-              blurRadius: 5.0,
-              spreadRadius: 2.0,
-            )
-          ]),
+      decoration:
+          BoxDecoration(borderRadius: BorderRadius.circular(10.0), boxShadow: [
+        BoxShadow(
+          color: const Color(0x11000000),
+          blurRadius: 5.0,
+          spreadRadius: 2.0,
+        )
+      ]),
       child: ClipRRect(
-        borderRadius:  BorderRadius.circular(10.0),
-        child:  Material(
-          child:  Stack(
+        borderRadius: BorderRadius.circular(10.0),
+        child: Material(
+          child: Stack(
             fit: StackFit.expand,
             children: <Widget>[
               _buildBackground(),
@@ -545,8 +554,4 @@ class _ProfileCardState extends State<ProfileCard> {
   }
 }
 
-enum FastSwipe {
-  notFastSwipe,
-  Right,
-  Left
-}
+enum FastSwipe { notFastSwipe, Right, Left }
