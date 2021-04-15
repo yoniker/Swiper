@@ -46,6 +46,16 @@ class _MatchCardState extends State<MatchCard> {
     );
   }
 
+    /// A widget to display the Description of the user.
+  /// This will be passed as a the `descriptionWidget` Parameter of the [PhotoView] widget.
+  Widget _descritionWidget() {
+
+    // 
+    var descriptionCard = Container(
+      
+    );
+  }
+
   /// A widget that displays the actions a user can make on a match.
   /// Actions such as:
   ///   "Dislike",
