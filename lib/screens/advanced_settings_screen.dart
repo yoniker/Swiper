@@ -12,8 +12,16 @@ class AdvancedSettingsScreen extends StatefulWidget {
   static const String CELEB_FILTER='celeb_filter';
   static const String TASTE_FILTER='taste_filter';
   static const String CUSTOM_FACE_FILTER='custom_face_filter';
-  static const minAuditionValue = 1;
-  static const maxAuditionValue = 10001;
+  static const minAuditionValue = 0.0;
+  static const maxAuditionValue = 4.0;
+  static const List<String> similarityDescriptions = [
+    'Remotely',
+    'Somewhat',
+    '',
+    'Very',
+    'Extremely'
+
+  ];
 
   @override
   _AdvancedSettingsScreenState createState() => _AdvancedSettingsScreenState();
@@ -277,45 +285,12 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                     children: <InlineSpan>[
                                                       TextSpan(
                                                         text:
-                                                        'Choose one out of $_chosenAuditionCount ',
+                                                        '${AdvancedSettingsScreen.similarityDescriptions[_chosenAuditionCount]} Similar',
                                                         style:
                                                         _defaultTextStyle,
                                                       ),
-                                                      TextSpan(
-                                                        text: 'People ',
-                                                        style:
-                                                        _boldTextStyle,
-                                                      ),
-                                                      WidgetSpan(
-                                                        child: GestureDetector(
-                                                          child: Text(
-                                                            "  what's this?",
-                                                            style:
-                                                            _defaultTextStyle
-                                                                .copyWith(
-                                                              color: linkColor,
-                                                            ),
-                                                          ),
-                                                          onTap: () {
-                                                            // print "what's this" to console for now.
-                                                            // TODO: Add Appropriate functionality.
 
-                                                            // What's this Functionality.
-                                                            GlobalWidgets
-                                                                .showAlertDialogue(
-                                                              context,
-                                                              title:
-                                                              'Audition Count',
-                                                              message:
-                                                              'This denotes the number of profiles to display, the highest you can select is 100',
-                                                            );
-                                                            //<debug>
-                                                            //
-                                                            print(
-                                                                "what's this");
-                                                          },
-                                                        ),
-                                                      ),
+
                                                     ],
                                                   ),
                                                 ),
@@ -349,16 +324,11 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                   value: _chosenAuditionCount.roundToDouble(),
                                                   min: AdvancedSettingsScreen.minAuditionValue.roundToDouble(),
                                                   max: AdvancedSettingsScreen.maxAuditionValue.roundToDouble(),
-                                                  divisions: 100,
+                                                  divisions: 4,
                                                   onChanged: (value) {
                                                     setState(() {
-                                                      _chosenAuditionCount =
-                                                          value.toInt();
-                                                      _chosenAuditionCount = _chosenAuditionCount%10==1 && _chosenAuditionCount>1? _chosenAuditionCount-1:_chosenAuditionCount;
+                                                      _chosenAuditionCount = value.round();
                                                       SettingsData().auditionCount = _chosenAuditionCount;
-                                                      // print the current value of `_auditionCount` to console.
-                                                      //<debug>
-                                                      print(_chosenAuditionCount);
                                                     });
                                                   },
                                                 ),
@@ -376,7 +346,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                       Padding(
                                         padding: const EdgeInsets.symmetric(horizontal: 5.0),
                                         child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [Text('More Matches'),Text('More Accurate')],),
+                                          children: [Text('More Matches'),Text('More Similar')],),
                                       )
                                     ],
                                   ),
@@ -478,12 +448,11 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                 .roundToDouble(),
                                             min: AdvancedSettingsScreen.minAuditionValue.roundToDouble(),
                                             max: AdvancedSettingsScreen.maxAuditionValue.roundToDouble(),
-                                            divisions: 100,
+                                            divisions: 5,
                                             onChanged: (value) {
                                               setState(() {
                                                 _chosenAuditionCount =
-                                                    value.toInt();
-                                                _chosenAuditionCount = _chosenAuditionCount%10==1 && _chosenAuditionCount>1? _chosenAuditionCount-1:_chosenAuditionCount;
+                                                    value.round();
                                                 SettingsData().auditionCount = _chosenAuditionCount;
                                               });
                                             },
