@@ -74,7 +74,7 @@ class MatchCardBuilder extends StatefulWidget {
 class _MatchCardBuilderState extends State<MatchCardBuilder> {
   // The stack and offset of the first Matchcard stacked at the back of the current one.
   double middleStackScale = 0.95;
-  Offset middleStackOffset = Offset(0.0, 1.6);
+  Offset middleStackOffset = Offset(0.0, 1.7);
 
   // The stack and offset of the second Match card stacked at the back of the current one.
   double bottomStackScale = 0.75;
@@ -109,8 +109,8 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
       // sort the new middle card [Scale] and [Offset] value.
       // make increment based on the distance the card has been slided.
       var middleDyIncrement = (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
-      middleStackScale = 0.85 + (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
-      middleStackOffset = Offset(0.0, 1.5 + middleDyIncrement);
+      middleStackScale = 0.87 + (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
+      middleStackOffset = Offset(0.0, 1.275 + middleDyIncrement);
 
       // sort the new middle card [Scale] and [Offset] value.
       // make increment based on the distance the card has been slided.
@@ -138,6 +138,11 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
 
     Provider.of<MatchEngine>(context, listen: false)
         .currentMatchDecision(decision);
+
+    setState(() {
+      middleStackScale = 0.95;
+  middleStackOffset = Offset(0.0, 1.6);
+    });
   }
 
   /// The Widget stacked at the bottom of the Stack of cards.
@@ -177,10 +182,13 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
         card: Transform.scale(
           scale: middleStackScale,
           alignment: Alignment(middleStackOffset.dx, middleStackOffset.dy),
-          child: MatchCard(
-            profile: nextMatch.profile,
-            showCarousel: false,
-            clickable: false,
+          child: Opacity(
+            opacity: middleStackScale.clamp(0.0, 1.0),
+            child: MatchCard(
+              profile: nextMatch.profile,
+              showCarousel: false,
+              clickable: false,
+            ),
           ),
         ),
       );
