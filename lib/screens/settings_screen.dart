@@ -177,9 +177,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Max. Distance',
-                                  style: _boldTextStyle,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [Text(
+                                    'Max. Distance',
+                                    style: _boldTextStyle,
+                                  ),
+                                    Container(
+                                      alignment: Alignment.centerRight,
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 6.0),
+                                      child: RichText(
+                                        text: TextSpan(
+                                          style: _defaultTextStyle,
+                                          children: <InlineSpan>[
+                                            TextSpan(
+                                              text: ' ${_maxDistance.round().toString()} km away',
+                                              style: _defaultTextStyle,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
                                 Row(
                                   mainAxisAlignment:
@@ -225,22 +245,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     ),
                                   ],
                                 ),
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: 6.0, horizontal: 12.0),
-                                  child: RichText(
-                                    text: TextSpan(
-                                      style: _defaultTextStyle,
-                                      children: <InlineSpan>[
-                                        TextSpan(
-                                          text: ' ${_maxDistance.round().toString()} km away',
-                                          style: _defaultTextStyle,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+
                               ],
                             ),
                           ),
@@ -267,35 +272,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     'Gender',
                                     style: _boldTextStyle,
                                   ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding:
-                                      EdgeInsets.symmetric(horizontal: 12.0),
-                                      child:
-                                      DropdownButtonFormFieldModified<Gender>(
-                                        decoration: InputDecoration.collapsed(
-                                          hintText: 'My Preferred Gender',
-                                          hintStyle: _defaultTextStyle.copyWith(
-                                            color: darkTextColor,
-                                          ),
-                                        ),
-                                        isExpanded: false,
-                                        onChanged: (newGender) {
-                                          setState(() {
-                                            SettingsData().preferredGender = newGender.toShortString();
-                                            _currentGenderSelected = newGender;
+                                  Container(
+                                    color:Colors.grey[200],
+                                    width:100,
 
-                                          });
-                                        },
-                                        style: _defaultTextStyle,
-                                        value: _currentGenderSelected,
-                                        items: Gender.values.map(
-                                              (gender) {
-                                            return _buildGenderDropDownMenuItem(
-                                                gender);
-                                          },
-                                        ).toList(),
+                                    child: DropdownButtonFormFieldModified<Gender>(
+                                      decoration: InputDecoration.collapsed(
+                                        hintText: 'My Preferred Gender',
+                                        hintStyle: _defaultTextStyle.copyWith(
+                                          color: darkTextColor,
+                                        ),
                                       ),
+                                      isExpanded: false,
+                                      onChanged: (newGender) {
+                                        setState(() {
+                                          SettingsData().preferredGender = newGender.toShortString();
+                                          _currentGenderSelected = newGender;
+
+                                        });
+                                      },
+                                      style: _defaultTextStyle,
+                                      value: _currentGenderSelected,
+                                      items: Gender.values.map(
+                                            (gender) {
+                                          return _buildGenderDropDownMenuItem(
+                                              gender);
+                                        },
+                                      ).toList(),
                                     ),
                                   ),
                                 ],
@@ -307,9 +310,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'Age',
-                                    style: _boldTextStyle,
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                      'Age',
+                                      style: _boldTextStyle,
+                                    ),
+                                      Container(
+                                        alignment: Alignment.centerRight,
+                                        margin: EdgeInsets.symmetric(
+                                            vertical: 6.0, horizontal:0.0),
+                                        child: RichText(
+                                          text: TextSpan(
+                                            style: _defaultTextStyle,
+                                            children: <InlineSpan>[
+                                              TextSpan(
+                                                text:
+                                                produceAgesRangeText(_selectedAges),
+                                              ),
+
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    ],
                                   ),
                                   Row(
                                     mainAxisAlignment:
@@ -358,23 +383,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         color: colorBlend01,
                                       ),
                                     ],
-                                  ),
-                                  Container(
-                                    alignment: Alignment.centerRight,
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: 6.0, horizontal: 12.0),
-                                    child: RichText(
-                                      text: TextSpan(
-                                        style: _defaultTextStyle,
-                                        children: <InlineSpan>[
-                                          TextSpan(
-                                            text:
-                                            produceAgesRangeText(_selectedAges),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
                                   ),
                                 ],
                               ),
