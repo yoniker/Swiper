@@ -42,7 +42,8 @@ class GlobalWidgets {
 
     //
     EdgeInsetsGeometry widgetPadding =
-    const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
+    const EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0)
+    //const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
   }) {
     // assertion layer
     assert(

@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 class CelebWidget extends StatefulWidget {
   final Celeb theCeleb;
   final CelebsInfo celebsInfo;
-  CelebWidget({this.theCeleb,this.celebsInfo});
+  final void Function() onTap;
+  CelebWidget({this.theCeleb,this.celebsInfo, this.onTap});
   @override
   _CelebWidgetState createState() => _CelebWidgetState();
 }
@@ -72,6 +73,7 @@ class _CelebWidgetState extends State<CelebWidget> {
     return GestureDetector(
       onTap: (){
         print('tapped ${widget.theCeleb.celebName}');
+        widget.onTap();
       },
       child: Container(
 
