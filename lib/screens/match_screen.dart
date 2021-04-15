@@ -109,13 +109,13 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
       // sort the new middle card [Scale] and [Offset] value.
       // make increment based on the distance the card has been slided.
       var middleDyIncrement = (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
-      middleStackScale = 0.87 + (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
+      middleStackScale = 0.87 + (0.1 * (distance / 50.0)).clamp(0.0, 0.1);
       middleStackOffset = Offset(0.0, 1.275 + middleDyIncrement);
 
       // sort the new middle card [Scale] and [Offset] value.
       // make increment based on the distance the card has been slided.
       var bottomDyIncrement = (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
-      bottomStackScale = 0.75 + (0.05 * (distance / 100.0)).clamp(0.0, 0.05);
+      bottomStackScale = 0.75 + (0.05 * (distance / 70.0)).clamp(0.0, 0.05);
       bottomStackOffset = Offset(0.0, 1.02 + bottomDyIncrement);
     });
   }
@@ -141,7 +141,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
 
     setState(() {
       middleStackScale = 0.95;
-  middleStackOffset = Offset(0.0, 1.6);
+  middleStackOffset = Offset(0.0, 1.7);
     });
   }
 

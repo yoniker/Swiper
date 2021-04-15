@@ -1,8 +1,10 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 /// A widget to paint the various information of a
 /// match unto the screen.
@@ -63,23 +65,45 @@ class _MatchCardState extends State<MatchCard> {
           children: [
             InkWell(
               borderRadius: BorderRadius.circular(15.0),
-              child: GlobalWidgets.imageToIcon(BetaIconPaths.dislikeMatchIcon, scale: 4.0),
-              onTap: () {},
+              child: GlobalWidgets.imageToIcon(BetaIconPaths.dislikeMatchIcon,
+                  scale: 4.0),
+              onTap: () {
+                // Decision.nope
+                currentMatchDecision(Decision.nope);
+              },
             ),
             InkWell(
               borderRadius: BorderRadius.circular(15.0),
-              child: GlobalWidgets.imageToIcon(BetaIconPaths.likeMatchIcon, scale: 3.75),
-              onTap: () {},
+              child: GlobalWidgets.imageToIcon(BetaIconPaths.likeMatchIcon,
+                  scale: 3.75),
+              onTap: () {
+                // Decision.like
+                currentMatchDecision(Decision.like);
+              },
             ),
             InkWell(
               borderRadius: BorderRadius.circular(15.0),
-              child: GlobalWidgets.imageToIcon(BetaIconPaths.draftMesssageIcon, scale: 4.0),
-              onTap: () {},
+              child: GlobalWidgets.imageToIcon(BetaIconPaths.draftMesssageIcon,
+                  scale: 4.0),
+              onTap: () {
+                // Call a Function to open a chat Tab to chat with the match.
+                print('MAKE A DRAFT!');
+              },
             ),
           ],
         ),
       ),
     );
+  }
+
+  /// A function to select the match Decision made on the the current match.
+  currentMatchDecision(Decision decision) {
+    if (Provider.of<MatchEngine>(context, listen: false).currentMatch() !=
+        null) {
+      Provider.of<MatchEngine>(context, listen: false)
+          .currentMatchDecision(decision);
+      Provider.of<MatchEngine>(context, listen: false).goToNextMatch();
+    }
   }
 
   @override
