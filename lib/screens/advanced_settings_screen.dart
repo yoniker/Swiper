@@ -320,7 +320,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                 padding: EdgeInsets.symmetric(
                                                     horizontal: 12.0),
                                                 child: CupertinoSlider(
-                                                  activeColor: colorBlend01,
+                                                  activeColor: CupertinoDynamicColor.resolve(CupertinoColors.systemFill, context),
                                                   value: _chosenAuditionCount.roundToDouble(),
                                                   min: AdvancedSettingsScreen.minAuditionValue.roundToDouble(),
                                                   max: AdvancedSettingsScreen.maxAuditionValue.roundToDouble(),
