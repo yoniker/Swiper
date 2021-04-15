@@ -62,15 +62,15 @@ class _MatchCardState extends State<MatchCard> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             InkWell(
-              child: GlobalWidgets.imageToIcon(BetaIconPaths.dislikeMatchIcon, scale: 3.5),
+              child: GlobalWidgets.imageToIcon(BetaIconPaths.dislikeMatchIcon, scale: 4.0),
               onTap: () {},
             ),
             InkWell(
-              child: GlobalWidgets.imageToIcon(BetaIconPaths.likeMatchIcon, scale: 3.0),
+              child: GlobalWidgets.imageToIcon(BetaIconPaths.likeMatchIcon, scale: 3.75),
               onTap: () {},
             ),
             InkWell(
-              child: GlobalWidgets.imageToIcon(BetaIconPaths.draftMesssageIcon, scale: 3.5),
+              child: GlobalWidgets.imageToIcon(BetaIconPaths.draftMesssageIcon, scale: 4.0),
               onTap: () {},
             ),
           ],

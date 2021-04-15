@@ -2,8 +2,9 @@ import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/widgets/cards.dart';
+import 'package:betabeta/widgets/custom_app_bar.dart';
+import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/match_card.dart';
-import 'package:betabeta/widgets/title_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -43,10 +44,10 @@ class _MatchScreenState extends State<MatchScreen> {
           child: Column(
             children: [
               // Create a BetaAppBar.
-              BetaAppBar(
+              CustomAppBar(
                 title: 'Discover',
                 hasBackButton: false,
-                iconURI: BetaIconPaths.profileIcon,
+                icon: GlobalWidgets.imageToIcon(BetaIconPaths.profileIcon),
               ),
 
               // create the card stack.
@@ -73,11 +74,11 @@ class MatchCardBuilder extends StatefulWidget {
 class _MatchCardBuilderState extends State<MatchCardBuilder> {
   // The stack and offset of the first Matchcard stacked at the back of the current one.
   double middleStackScale = 0.95;
-  Offset middleStackOffset = Offset(0.0, 1.5);
+  Offset middleStackOffset = Offset(0.0, 1.6);
 
   // The stack and offset of the second Match card stacked at the back of the current one.
-  double bottomStackScale = 0.8;
-  Offset bottomStackOffset = Offset(0.0, 1.15);
+  double bottomStackScale = 0.75;
+  Offset bottomStackOffset = Offset(0.0, 1.12);
 
   /// Deduce what direction to be registered for specific [Decision]s.
   ///
@@ -108,14 +109,14 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
       // sort the new middle card [Scale] and [Offset] value.
       // make increment based on the distance the card has been slided.
       var middleDyIncrement = (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
-      middleStackScale = 0.9 + (0.5 * (distance / 100.0)).clamp(0.0, 0.1);
-      middleStackOffset = Offset(0.0, 1.4 + middleDyIncrement);
+      middleStackScale = 0.85 + (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
+      middleStackOffset = Offset(0.0, 1.5 + middleDyIncrement);
 
       // sort the new middle card [Scale] and [Offset] value.
       // make increment based on the distance the card has been slided.
       var bottomDyIncrement = (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
-      bottomStackScale = 0.8 + (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
-      bottomStackOffset = Offset(0.0, 1.05 + bottomDyIncrement);
+      bottomStackScale = 0.75 + (0.05 * (distance / 100.0)).clamp(0.0, 0.05);
+      bottomStackOffset = Offset(0.0, 1.02 + bottomDyIncrement);
     });
   }
 
