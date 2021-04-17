@@ -41,19 +41,54 @@ class _MatchCardState extends State<MatchCard> {
       initialPhotoIndex: 0,
       showCarousel: widget.showCarousel,
       imageUrls: widget.profile.imageUrls,
+      descriptionWidget: _descritionWidget(),
+      descriptionAlignment: Alignment.bottomCenter,
       carouselInactiveDotColor: darkCardColor,
       carouselActiveDotColor: colorBlend02,
     );
   }
 
-    /// A widget to display the Description of the user.
+  /// A widget to display the Description of the user.
   /// This will be passed as a the `descriptionWidget` Parameter of the [PhotoView] widget.
   Widget _descritionWidget() {
-
-    // 
-    var descriptionCard = Container(
-      
+    //
+    var descriptionCard = Material(
+      color: Colors.black54,
+      borderRadius: BorderRadius.vertical(
+        bottom: Radius.circular(16.0),
+      ),
+      child: Container(
+        alignment: Alignment.centerLeft,
+        height: MediaQuery.of(context).size.height * 0.17,
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(left: 12.0),
+              child: Text(
+                '${widget.profile.username}, ${widget.profile.age}',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: boldedTextStyle.copyWith(color: Colors.white, fontSize: 24),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 12.0),
+              child: Text(
+                '${widget.profile.headline}',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: boldedTextStyle.copyWith(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
+
+    return descriptionCard;
   }
 
   /// A widget that displays the actions a user can make on a match.
@@ -119,14 +154,15 @@ class _MatchCardState extends State<MatchCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      clipBehavior: Clip.hardEdge,
+      padding: EdgeInsets.all(0.0),
       decoration: BoxDecoration(
+        color: whiteCardColor,
         borderRadius: BorderRadius.circular(18.0),
         boxShadow: <BoxShadow>[
           BoxShadow(
             color: darkCardColor,
             offset: Offset(0.0, 0.2),
-            blurRadius: 0.2,
+            blurRadius: 12.0,
           ),
         ],
       ),
@@ -135,7 +171,7 @@ class _MatchCardState extends State<MatchCard> {
           Expanded(
             child: _buildBackground(),
           ),
-          _matchControls(),
+          // _matchControls(),
         ],
       ),
     );
@@ -470,7 +506,7 @@ class _PhotoViewState extends State<PhotoView> {
     // print(carouselDots);
 
     return Align(
-      alignment: widget.descriptionAlignment.add(Alignment(0.0, -0.2)),
+      alignment: widget.descriptionAlignment.add(Alignment(0.0, -0.38)),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
         decoration: BoxDecoration(
@@ -541,24 +577,30 @@ class _PhotoViewState extends State<PhotoView> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        // declare the ImageLayer of the PhotoView.
-        _imageLayer(),
+    return ClipRRect(
+      // clips the edge of the container preventing any of its content
+      // from overflowing.
+      clipBehavior: Clip.hardEdge,
+      borderRadius: BorderRadius.circular(16.0),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          // declare the ImageLayer of the PhotoView.
+          _imageLayer(),
 
-        // declare the GestureLayer of the PhotoView.
-        if (widget.isClickable) _gestureLayer(),
+          // declare the GestureLayer of the PhotoView.
+          if (widget.isClickable) _gestureLayer(),
 
-        // declare the DescriptionLayer of the PhotoView.
-        // This is placed above the Gesture Layer to allow
-        // for Explicit Gestures.
-        if (widget.descriptionWidget != null) _descriptionLayer(),
+          // declare the DescriptionLayer of the PhotoView.
+          // This is placed above the Gesture Layer to allow
+          // for Explicit Gestures.
+          if (widget.descriptionWidget != null) _descriptionLayer(),
 
-        // declare the CarouselLayer of the PhotoView.
-        if (widget.showCarousel != null && widget.showCarousel)
-          _carouselLayer(),
-      ],
+          // declare the CarouselLayer of the PhotoView.
+          if (widget.showCarousel != null && widget.showCarousel)
+            _carouselLayer(),
+        ],
+      ),
     );
   }
 }
@@ -613,8 +655,9 @@ class CarouselDot extends StatelessWidget {
         },
         child: DecoratedBox(
           decoration: BoxDecoration(
-              color: isFocused ? activeColor : inactiveColor,
-              borderRadius: BorderRadius.circular(24.0)),
+            color: isFocused ? activeColor : inactiveColor,
+            borderRadius: BorderRadius.circular(24.0),
+          ),
         ),
       ),
     );

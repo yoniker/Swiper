@@ -61,6 +61,7 @@ flutter:
   #  - images/a_dot_ham.jpeg
 
   assets:
+    - assets/
     - assets/images/
     - assets/mobile_celebs.db
   fonts:

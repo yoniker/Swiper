@@ -1,6 +1,6 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
-import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/match_engine.dart';
+import 'package:betabeta/screens/settings_screen.dart';
 import 'package:betabeta/widgets/cards.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
@@ -18,7 +18,6 @@ class MatchScreen extends StatefulWidget {
 }
 
 class _MatchScreenState extends State<MatchScreen> {
-
   // //
   // var _defaultTextStyle = TextStyle(
   //   color: Colors.black,
@@ -40,20 +39,20 @@ class _MatchScreenState extends State<MatchScreen> {
     // super.build(context);
 
     return Padding(
-          padding: MediaQuery.of(context).padding,
-          child: Column(
-            children: [
-              // Create a BetaAppBar.
-              CustomAppBar(
-                title: 'Discover',
-                hasBackButton: false,
-                icon: GlobalWidgets.imageToIcon(BetaIconPaths.profileIcon),
-              ),
-
-              // create the card stack.
-              MatchCardBuilder(),
-            ],
+      padding: MediaQuery.of(context).padding,
+      child: Column(
+        children: [
+          // Create a BetaAppBar.
+          CustomAppBar(
+            title: 'Discover',
+            hasBackButton: false,
+            icon: GlobalWidgets.imageToIcon(BetaIconPaths.settingsBarIcon),
           ),
+
+          // create the card stack.
+          MatchCardBuilder(),
+        ],
+      ),
     );
   }
 
@@ -141,7 +140,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
 
     setState(() {
       middleStackScale = 0.95;
-  middleStackOffset = Offset(0.0, 1.7);
+      middleStackOffset = Offset(0.0, 1.7);
     });
   }
 
@@ -158,7 +157,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
         child: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: darkCardColor.withOpacity(0.6),
+            color: Colors.grey.withOpacity(0.2),
             borderRadius: BorderRadius.circular(18.0),
           ),
         ),

@@ -1,9 +1,9 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/messages_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
 import 'package:betabeta/tabs/profile_tab.dart';
-// import 'package:betabeta/widgets/cards.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -79,6 +79,8 @@ class _NavigationStackState extends State<NavigationStack> {
       body: _body(),
       resizeToAvoidBottomInset: true,
       bottomNavigationBar: BottomNavigationBar(
+        selectedLabelStyle: boldedTextStyle.copyWith(color: Colors.red),
+        selectedItemColor: Colors.red[400],
         elevation: 0.0,
         currentIndex: _selectedTabIndex,
         onTap: (index) {

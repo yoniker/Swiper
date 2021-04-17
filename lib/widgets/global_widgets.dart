@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 /// A collection of Global Widgets to be used in various parts of the App.
 class GlobalWidgets {
-  /// A global widget that is uded to render respective asset images
+  /// A global widget that is used to render respective asset images
   /// as icons.
-  static Widget imageToIcon(String imagePath, {double scale}) {
+  static Widget imageToIcon(String imagePath, {double scale = 4.0}) {
     // check if scale is null and assign it a default value of 4.0
     scale ??= 4.0;
 

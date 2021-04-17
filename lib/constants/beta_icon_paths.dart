@@ -54,4 +54,6 @@ class BetaIconPaths {
   /// The path to the Draft Message Button Icon.
   static String likeMatchIcon = 'assets/images/like_match_icon.png';
 
+  /// The path to the App's/Company's Logo.
+  static String appLogoIcon = 'assets/beta_logo_01.png';
 }

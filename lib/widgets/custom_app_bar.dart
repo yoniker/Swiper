@@ -1,3 +1,4 @@
+import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ class CustomAppBar extends StatelessWidget {
     Key key,
     @required this.title,
     @required this.icon,
+    this.showAppLogo = true,
     this.hasBackButton = true,
   })  : color = Colors.black,
         super(key: key);
@@ -17,23 +19,28 @@ class CustomAppBar extends StatelessWidget {
   /// This is the asset image path of the icons used.
   final Widget icon;
 
-  /// Determine wheter to include a back-button at
+  /// Determine whether to include a back-button at
   /// start of the tile (same as trailing icon in the original Appbar class).
   final bool hasBackButton;
 
   /// The Color of the title text. Defaults to `Colors.black`
   final Color color;
 
+  /// Whether to show the App's Logo at the center of the App Bar.
+  /// Must not be null.
+  final bool showAppLogo;
+
   @override
   Widget build(BuildContext context) {
-      return Container(
-        margin: EdgeInsets.symmetric(vertical: 12.0),
-        padding: EdgeInsets.symmetric(horizontal: 5.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 12.0),
+      padding: EdgeInsets.symmetric(horizontal: 5.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 if (hasBackButton)
@@ -62,14 +69,11 @@ class CustomAppBar extends StatelessWidget {
                 ),
               ],
             ),
-            icon,
-          ],
-        ),
-      );
-
-
-
-
-
+          ),
+          if (showAppLogo) GlobalWidgets.imageToIcon(BetaIconPaths.appLogoIcon),
+          icon,
+        ],
+      ),
+    );
   }
 }
