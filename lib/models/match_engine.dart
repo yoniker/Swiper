@@ -41,8 +41,9 @@ class MatchEngine extends ChangeNotifier {
         List newProfiles = matches.map<Profile>((match){return Profile.fromMatch(match);}).toList();
         List<Match> newPotentialMatches=newProfiles.map<Match>((profile){return Match(profile: profile);}).toList();
         if (newPotentialMatches.length>0) {
+          bool frontCardsChanged = true;//_matches.length<2; //TODO this is an ugly temporary fix-change implementation such that dragging while rebuilding is fine
           _matches.addAll(newPotentialMatches);
-          notifyListeners();
+          if(frontCardsChanged){notifyListeners();}
         }
       } finally {
         itemsBeingGotten = null;

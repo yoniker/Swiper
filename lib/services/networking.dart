@@ -9,7 +9,7 @@ import 'dart:convert';
 import 'dart:convert' as json;
 
 class NetworkHelper{
-  static const SERVER_ADDR='192.116.48.67:8081';
+  static const SERVER_ADDR='192.116.48.67:8082';
   static final NetworkHelper _instance = NetworkHelper._internal();
   static const MIN_MATCHES_CALL_INTERVAL = Duration(seconds: 1);
   DateTime _lastMatchCall=DateTime(2000); //The year 2000 is when the last call happened :D
@@ -86,32 +86,6 @@ class NetworkHelper{
     http.Response response = await http.post(postSettingsUri,body:encoded); //TODO something if response wasnt 200
 
     }
-
-  static String getQueryFromSettings(){
-    SettingsData settings = SettingsData();
-    if(!settings.readFromShared){
-      return '';
-    }
-
-    String queryGenderString;
-    switch(settings.preferredGender){
-      case 'Women':
-        queryGenderString='Female';
-        break;
-      case 'Men':
-        queryGenderString='Male';
-        break;
-      case 'Everyone':
-        queryGenderString='Everyone';
-        break;
-      default:
-        queryGenderString='Female';
-        break;
-
-
-    }
-    return '?gender=$queryGenderString';
-  }
 
 
 
