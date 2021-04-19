@@ -2,6 +2,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/data_models/celeb.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
+import 'package:betabeta/screens/image_source_selection_screen.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,8 +11,8 @@ import 'package:flutter/material.dart';
 class AdvancedSettingsScreen extends StatefulWidget {
   AdvancedSettingsScreen({Key key}) : super(key: key);
   static const String CELEB_FILTER='celeb_filter';
+  static const String CUSTOM_FACE_FILTER = 'custom_face_filter';
   static const String TASTE_FILTER='taste_filter';
-  static const String CUSTOM_FACE_FILTER='custom_face_filter';
   static const minAuditionValue = 0.0;
   static const maxAuditionValue = 4.0;
   static const List<String> similarityDescriptions = [
@@ -354,6 +355,163 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                             ],
 
                         ),
+                      _buildFilterWidget(
+                        description:
+                        'Search for people who look similar to anyone of your choice',
+                        title: 'Custom Look-Alike',
+                        filterName: AdvancedSettingsScreen.CUSTOM_FACE_FILTER,
+                        children: [
+                          TextButton(
+                            onPressed:() {
+                              // Direct user to the custom Selection Page.
+                              Navigator.of(context).push<Celeb>(
+                                CupertinoPageRoute<Celeb>(
+                                  builder: (context) {
+                                    return ImageSourceSelectionScreen(title: 'Some Title',);
+                                  },
+                                ),
+                              ).then((selectedImage) {
+
+                              });
+                            },
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Choose Image',
+                                  style: _boldTextStyle,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.start,
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(right: 8.0),
+                                      child: Text(
+                                        'Image Selection',
+                                        style: _defaultTextStyle,
+                                      ),
+                                    ),
+
+
+                                    GlobalWidgets.imageToIcon(
+                                      'assets/images/forward_arrow.png',
+                                    ),
+
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Divider(
+                            color: darkCardColor,
+                            thickness: 2.0,
+                            indent: 24.0,
+                            endIndent: 24.0,
+                          ),
+
+                          // Build the Audition count tab.
+                          Container(
+                            child: Column(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceAround,
+                              crossAxisAlignment:
+                              CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5.0,
+                                    vertical: 5.0,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: Center(
+                                          child: RichText(
+                                            text: TextSpan(
+                                              style: _defaultTextStyle,
+                                              children: <InlineSpan>[
+                                                TextSpan(
+                                                  text:
+                                                  '${AdvancedSettingsScreen.similarityDescriptions[_chosenAuditionCount]} Similar',
+                                                  style:
+                                                  _defaultTextStyle,
+                                                ),
+
+
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 5.0,
+                                    vertical: 5.0,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.group_outlined,
+                                        size: 24.0,
+                                        color: colorBlend01,
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 12.0),
+                                          child: CupertinoSlider(
+                                            activeColor: CupertinoDynamicColor.resolve(CupertinoColors.systemFill, context),
+                                            value: _chosenAuditionCount.roundToDouble(),
+                                            min: AdvancedSettingsScreen.minAuditionValue.roundToDouble(),
+                                            max: AdvancedSettingsScreen.maxAuditionValue.roundToDouble(),
+                                            divisions: 4,
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _chosenAuditionCount = value.round();
+                                                SettingsData().auditionCount = _chosenAuditionCount;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.person_outline,
+                                        size: 24.0,
+                                        color: colorBlend01,
+                                      ),
+                                    ],
+                                  ),
+
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [Text('More Matches'),Text('More Similar')],),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+
+                      ),//Filter custom face widget
+
+
                       _buildFilterWidget(
                         description:
                         ' Find matches based on your taste',

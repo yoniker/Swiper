@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:collection';
 
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/settings_model.dart';
@@ -13,6 +14,9 @@ class NetworkHelper{
   static final NetworkHelper _instance = NetworkHelper._internal();
   static const MIN_MATCHES_CALL_INTERVAL = Duration(seconds: 1);
   DateTime _lastMatchCall=DateTime(2000); //The year 2000 is when the last call happened :D
+  DateTime _lastFacesImagesCall=DateTime(2000);
+  Future<http.Response> _facesCall;
+  static const MIN_FACES_CALL_INTERVAL = Duration(milliseconds: 500);
 
   factory NetworkHelper() {
     return _instance;
@@ -86,6 +90,21 @@ class NetworkHelper{
     http.Response response = await http.post(postSettingsUri,body:encoded); //TODO something if response wasnt 200
 
     }
+
+  Future<HashMap<String,dynamic>> getFacesLinks({String imageFileName,String userId})async{
+    if(_facesCall!=null){return HashMap();}
+    Uri facesLinkUri = Uri.http(SERVER_ADDR, 'faces/$userId/$imageFileName');
+    _facesCall = http.get(facesLinkUri);
+    if(DateTime.now().difference(_lastFacesImagesCall) < MIN_FACES_CALL_INTERVAL){
+      await Future.delayed(MIN_FACES_CALL_INTERVAL - DateTime.now().difference(_lastFacesImagesCall));
+    }
+    _lastFacesImagesCall = DateTime.now();
+    http.Response response = await _facesCall; //TODO something if error
+    dynamic facesData=jsonDecode(response.body);
+    _facesCall = null;
+    return HashMap.from(facesData);
+
+  }
 
 
 

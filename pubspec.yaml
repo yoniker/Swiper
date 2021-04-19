@@ -26,7 +26,9 @@ dependencies:
 
   # fluttery: ^0.0.8
   fluttery_dart2: ^0.0.9
-  flutter_svg: 0.18.1
+  flutter_svg: ^0.21.0+1
+  image_picker: ^0.7.4
+  speech_bubble: ^0.0.5
   http: ^0.13.1
   shared_preferences: ^2.0.5
   flutter_spinkit: ^4.1.2+1
@@ -62,6 +64,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/
     - assets/mobile_celebs.db
   fonts:
     - family: RougeScript
