@@ -1,13 +1,18 @@
 
 import 'dart:async';
 import 'dart:collection';
-
+import 'dart:io';
+import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:image/image.dart' as img;
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:betabeta/models/profile.dart';
 import 'dart:convert';
 import 'dart:convert' as json;
+import 'package:http_parser/src/media_type.dart' as media;
+import 'package:tuple/tuple.dart';
 
 class NetworkHelper{
   static const SERVER_ADDR='192.116.48.67:8082';
@@ -104,6 +109,40 @@ class NetworkHelper{
     _facesCall = null;
     return HashMap.from(facesData);
 
+  }
+
+  Tuple2<img.Image, String> preparedImageFileDetails(File imageFile){
+    const MAX_IMAGE_SIZE = 800;
+
+    img.Image theImage = img.decodeImage(imageFile.readAsBytesSync());
+    if(max(theImage.height, theImage.width)>MAX_IMAGE_SIZE){
+      double resizeFactor = MAX_IMAGE_SIZE/max(theImage.height, theImage.width);
+      theImage = img.copyResize(theImage, width: (theImage.width*resizeFactor).round(),height: (theImage.height*resizeFactor).round());
+    }
+    String fileName = 'custom_face_search_${DateTime.now()}.jpg';
+    return Tuple2<img.Image, String>(theImage,fileName);
+
+  }
+
+  Future<void> postImage(Tuple2<img.Image, String> imageFileDetails)async{
+    img.Image theImage = imageFileDetails.item1;
+    String fileName = imageFileDetails.item2;
+
+
+
+    http.MultipartRequest request = http.MultipartRequest(
+      'POST',
+      Uri.http(SERVER_ADDR, '/upload/${SettingsData().facebookId}'),
+    );
+    var multipartFile = new http.MultipartFile.fromBytes(
+      'file',
+      img.encodeJpg(theImage),
+      filename: fileName,
+      contentType: media.MediaType.parse('image/jpeg'),
+    );
+    request.files.add(multipartFile);
+    var response = await request.send(); //TODO something if response wasn't 200
+    return;
   }
 
 

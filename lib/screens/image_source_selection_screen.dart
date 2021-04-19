@@ -6,16 +6,15 @@
 
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
+import 'package:betabeta/services/networking.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
-import 'package:image/image.dart' as img;
-import 'package:http_parser/src/media_type.dart' as media;
+import 'package:tuple/tuple.dart';
 
 import 'face_selection_screen.dart';
+import 'package:image/image.dart' as img;
 
 class ImageSourceSelectionScreen extends StatefulWidget {
   ImageSourceSelectionScreen({Key key, this.title}) : super(key: key);
@@ -34,32 +33,7 @@ class _ImageSourceSelectionScreenState extends State<ImageSourceSelectionScreen>
   bool isVideo = false;
 
 
-  Future<void> postImage(File imageFile)async{
-    const SERVER_ADDR='192.116.48.67:8082';
-    const MAX_IMAGE_SIZE = 800;
-    const userId = '1234567';
-    img.Image theImage = img.decodeImage(imageFile.readAsBytesSync());
-    if(max(theImage.height, theImage.width)>MAX_IMAGE_SIZE){
-      double resizeFactor = MAX_IMAGE_SIZE/max(theImage.height, theImage.width);
-      theImage = img.copyResize(theImage, width: (theImage.width*resizeFactor).round(),height: (theImage.height*resizeFactor).round());
-    }
 
-    String fileName = 'custom_face_search_${DateTime.now()}.jpg';
-    http.MultipartRequest request = http.MultipartRequest(
-      'POST',
-      Uri.http(SERVER_ADDR, '/upload/$userId'),
-    );
-    var multipartFile = new http.MultipartFile.fromBytes(
-      'file',
-      img.encodeJpg(theImage),
-      filename: fileName,
-      contentType: media.MediaType.parse('image/jpeg'),
-    );
-    request.files.add(multipartFile);
-    var response = await request.send(); //TODO something if response wasn't 200
-    Navigator.push(context,MaterialPageRoute(builder: (context)=>FaceSelectionScreen(imageFile: imageFile, imageFileName: fileName)));
-    return;
-  }
 
   Future<void> retrieveLostData() async {
     final LostData response = await _picker.getLostData();
@@ -132,7 +106,11 @@ class _ImageSourceSelectionScreenState extends State<ImageSourceSelectionScreen>
                 ),
                 _imageFile==null?Text('No Image was selected'):showImage(),
                 TextButton(onPressed: (){
-                  if(_imageFile!=null){postImage(File(_imageFile.path));}}, child: Text('Send to server')),
+                  if(_imageFile!=null){
+                    Tuple2<img.Image, String> imageFileDetails = NetworkHelper().preparedImageFileDetails(File(_imageFile.path));
+                    NetworkHelper().postImage(imageFileDetails);
+                    Navigator.push(context,MaterialPageRoute(builder: (context)=>FaceSelectionScreen(imageFile: File(_imageFile.path), imageFileName: imageFileDetails.item2)));}}
+                    , child: Text('Send to server')),
 
 
 

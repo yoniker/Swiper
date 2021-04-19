@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:io';
+import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/widgets/faces_widget.dart';
 import 'package:flutter/material.dart';
@@ -26,10 +27,10 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
 
 
   void getFacesLinks() async {
-    HashMap<String,dynamic> facesData = await NetworkHelper().getFacesLinks(imageFileName:widget.imageFileName, userId:'1234567');
+    HashMap<String,dynamic> facesData = await NetworkHelper().getFacesLinks(imageFileName:widget.imageFileName, userId:SettingsData().facebookId);
     String status = facesData['status'];
     while(status=='incomplete'){
-      facesData = await NetworkHelper().getFacesLinks(imageFileName:widget.imageFileName, userId:'1234567');
+      facesData = await NetworkHelper().getFacesLinks(imageFileName:widget.imageFileName, userId:SettingsData().facebookId);
       status = facesData['status']; //TODO make sure we don't fuck the server with lots of requests
 
     }

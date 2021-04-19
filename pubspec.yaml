@@ -41,6 +41,7 @@ dependencies:
   # flutter_switch: ^0.3.0
   fuzzy: <1.0.0
   trotter: ^1.1.0
+  tuple: ^2.0.0
 
 
 dev_dependencies:
