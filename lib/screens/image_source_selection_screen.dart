@@ -7,6 +7,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:betabeta/services/networking.dart';
+import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -17,9 +18,7 @@ import 'face_selection_screen.dart';
 import 'package:image/image.dart' as img;
 
 class ImageSourceSelectionScreen extends StatefulWidget {
-  ImageSourceSelectionScreen({Key key, this.title}) : super(key: key);
-
-  final String title;
+  ImageSourceSelectionScreen({Key key}) : super(key: key);
 
   @override
   _ImageSourceSelectionScreenState createState() => _ImageSourceSelectionScreenState();
@@ -57,6 +56,11 @@ class _ImageSourceSelectionScreenState extends State<ImageSourceSelectionScreen>
   void _onImageButtonPressed(ImageSource source) async {
     try {
       final pickedFile = await _picker.getImage(source: source);
+      if(pickedFile!=null){
+        _imageFile = pickedFile;
+        Tuple2<img.Image, String> imageFileDetails = NetworkHelper().preparedImageFileDetails(File(_imageFile.path));
+        await NetworkHelper().postImage(imageFileDetails);
+        Navigator.push(context,MaterialPageRoute(builder: (context)=>FaceSelectionScreen(imageFile: File(_imageFile.path), imageFileName: imageFileDetails.item2)));}
       setState(() {
         _imageFile = pickedFile;
       });
@@ -70,8 +74,6 @@ class _ImageSourceSelectionScreenState extends State<ImageSourceSelectionScreen>
 
 
   Widget showImage(){
-    print('dor?');
-    print('lol');
     return Image.file(File(_imageFile.path));
   }
 
@@ -79,8 +81,9 @@ class _ImageSourceSelectionScreenState extends State<ImageSourceSelectionScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
+        appBar: CustomAppBar(
+          title: 'Pick an image',
+          icon:Icon(Icons.image),//iconURI: 'assets/images/settings_icon.png',
         ),
         body: Center(
           child: SingleChildScrollView(
@@ -104,13 +107,6 @@ class _ImageSourceSelectionScreenState extends State<ImageSourceSelectionScreen>
                       fontSize: 35.0,fontWeight: FontWeight.w700,letterSpacing: 2.0
                   ),)],)
                 ),
-                _imageFile==null?Text('No Image was selected'):showImage(),
-                TextButton(onPressed: (){
-                  if(_imageFile!=null){
-                    Tuple2<img.Image, String> imageFileDetails = NetworkHelper().preparedImageFileDetails(File(_imageFile.path));
-                    NetworkHelper().postImage(imageFileDetails);
-                    Navigator.push(context,MaterialPageRoute(builder: (context)=>FaceSelectionScreen(imageFile: File(_imageFile.path), imageFileName: imageFileDetails.item2)));}}
-                    , child: Text('Send to server')),
 
 
 

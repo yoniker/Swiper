@@ -135,16 +135,16 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
 
     return Scaffold(
       backgroundColor: whiteCardColor,
+      appBar: CustomAppBar(
+        title: 'A.I. Filters',
+        icon: Icon(Icons.psychology_outlined,size:34.0),
+      ),
       body: Padding(
         padding:
         MediaQuery.of(context).padding.copyWith(left: 12.0, right: 12.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            CustomAppBar(
-              title: 'A.I. Filters',
-               icon: Icon(Icons.psychology_outlined,size:34.0),
-            ),
             Container(
               padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
               decoration: BoxDecoration(
@@ -367,7 +367,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                               Navigator.of(context).push<Celeb>(
                                 CupertinoPageRoute<Celeb>(
                                   builder: (context) {
-                                    return ImageSourceSelectionScreen(title: 'Some Title',);
+                                    return ImageSourceSelectionScreen();
                                   },
                                 ),
                               ).then((selectedImage) {

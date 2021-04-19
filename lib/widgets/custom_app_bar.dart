@@ -2,7 +2,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
 
-class CustomAppBar extends StatelessWidget {
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     Key key,
     @required this.title,
@@ -26,44 +26,49 @@ class CustomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      return Container(
-        margin: EdgeInsets.symmetric(vertical: 12.0),
-        padding: EdgeInsets.symmetric(horizontal: 5.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+      return SafeArea(
+        child: Align(
+              alignment: Alignment.topCenter,
+          child: Container(
+            margin: EdgeInsets.only(top: 5.0),
+            padding: EdgeInsets.symmetric(horizontal: 5.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (hasBackButton)
-                  InkWell(
-                    splashColor: colorBlend02.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(8.0),
-                    onTap: () {
-                      // Pop the current context.
-                      Navigator.of(context).pop();
-                    },
-                    child: GlobalWidgets.imageToIcon(
-                      'assets/images/back_arrow.png',
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    if (hasBackButton)
+                      InkWell(
+                        splashColor: colorBlend02.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(8.0),
+                        onTap: () {
+                          // Pop the current context.
+                          Navigator.of(context).pop();
+                        },
+                        child: GlobalWidgets.imageToIcon(
+                          'assets/images/back_arrow.png',
+                        ),
+                      ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                          color: color,
+                          fontSize: 22,
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ),
-                  ),
-                Padding(
-                  padding: EdgeInsets.only(left: 10.0),
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      color: color,
-                      fontSize: 22,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
+                  ],
                 ),
+                icon,
               ],
             ),
-            icon,
-          ],
+          ),
         ),
       );
 
@@ -72,4 +77,9 @@ class CustomAppBar extends StatelessWidget {
 
 
   }
-}
+
+  @override
+  Size get preferredSize {
+    return  Size.fromHeight(kToolbarHeight);
+  }
+  }

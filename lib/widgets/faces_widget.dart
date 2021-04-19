@@ -1,4 +1,5 @@
 import 'package:betabeta/services/networking.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -18,7 +19,7 @@ class _FacesWidgetState extends State<FacesWidget> {
     Widget imagesWidget;
     List<Image> facesImages=[];
     if (widget.facesUrls == null){
-      imagesWidget = Text('Loading...');
+      imagesWidget = CupertinoActivityIndicator();
     }
     else{
       for(int imageIndex = 0 ; imageIndex<widget.facesUrls.length; imageIndex++){

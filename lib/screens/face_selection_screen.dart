@@ -47,12 +47,13 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
   @override
   Widget build(BuildContext context) {
 
-    return SafeArea(
-      child: Column(
+    return Scaffold(
+      body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
 
-          Image.file(widget.imageFile,height: MediaQuery.of(context).size.height/2,width: MediaQuery.of(context).size.width,fit: BoxFit.fill,),
+          Container(height: MediaQuery.of(context).size.height/2,width: MediaQuery.of(context).size.width,
+              child: Image.file(widget.imageFile,fit: BoxFit.scaleDown,)),
           Column(
               children:[
                 SpeechBubble(
