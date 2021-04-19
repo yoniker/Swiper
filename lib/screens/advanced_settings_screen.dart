@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 
 class AdvancedSettingsScreen extends StatefulWidget {
   AdvancedSettingsScreen({Key key}) : super(key: key);
+  static const String routeName = '/advanced_settings_screen';
   static const String CELEB_FILTER='celeb_filter';
   static const String CUSTOM_FACE_FILTER = 'custom_face_filter';
   static const String TASTE_FILTER='taste_filter';
@@ -198,12 +199,8 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                 TextButton(
                                       onPressed:() {
                                     // Direct user to the Celebrity Selection Page.
-                                    Navigator.of(context).push<Celeb>(
-                                      CupertinoPageRoute<Celeb>(
-                                        builder: (context) {
-                                          return ScreenCelebritySelection();
-                                        },
-                                      ),
+                                     Navigator.pushNamed(context,
+                                      ScreenCelebritySelection.routeName
                                     ).then((selectedCeleb) {
                                       setState(() {
                                         // Set the `_selectedCeleb` variable to the newly selected
@@ -364,15 +361,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                           TextButton(
                             onPressed:() {
                               // Direct user to the custom Selection Page.
-                              Navigator.of(context).push<Celeb>(
-                                CupertinoPageRoute<Celeb>(
-                                  builder: (context) {
-                                    return ImageSourceSelectionScreen();
-                                  },
-                                ),
-                              ).then((selectedImage) {
-
-                              });
+                              Navigator.of(context).pushNamed(ImageSourceSelectionScreen.routeName);
                             },
                             child: Row(
                               mainAxisAlignment:

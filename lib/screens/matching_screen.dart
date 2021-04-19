@@ -15,6 +15,7 @@ class MatchingScreen extends StatefulWidget {
   MatchingScreen({Key key, this.title}) :
         //matchEngine = MatchEngine(userProfile: userProfile),
         super(key: key);
+  static const String routeName = '/matching_screen';
   final String title;
   @override
   _MatchingScreenState createState() => _MatchingScreenState();

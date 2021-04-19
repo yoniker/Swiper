@@ -19,6 +19,7 @@ import 'package:image/image.dart' as img;
 
 class ImageSourceSelectionScreen extends StatefulWidget {
   ImageSourceSelectionScreen({Key key}) : super(key: key);
+  static const String routeName = '/image_source_selection_screen';
 
   @override
   _ImageSourceSelectionScreenState createState() => _ImageSourceSelectionScreenState();
@@ -60,7 +61,9 @@ class _ImageSourceSelectionScreenState extends State<ImageSourceSelectionScreen>
         _imageFile = pickedFile;
         Tuple2<img.Image, String> imageFileDetails = NetworkHelper().preparedImageFileDetails(File(_imageFile.path));
         await NetworkHelper().postImage(imageFileDetails);
-        Navigator.push(context,MaterialPageRoute(builder: (context)=>FaceSelectionScreen(imageFile: File(_imageFile.path), imageFileName: imageFileDetails.item2)));}
+        Navigator.pushNamed(context,FaceSelectionScreen.routeName,arguments: FaceSelectionScreenArguments(imageFile: File(_imageFile.path), imageFileName: imageFileDetails.item2));
+        //Navigator.push(context,MaterialPageRoute(builder: (context)=>FaceSelectionScreen(imageFile: File(_imageFile.path), imageFileName: imageFileDetails.item2)));
+        }
       setState(() {
         _imageFile = pickedFile;
       });

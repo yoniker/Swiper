@@ -13,6 +13,7 @@ import 'advanced_settings_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   SettingsScreen({Key key}) : super(key: key);
+  static const String routeName = '/settings_screen';
   static const minAge = 18;
   static const maxAge = 100;
 
@@ -387,13 +388,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
 
                       // Direct user to the Advanced filters Page.
-                      Navigator.of(context).push(
-                        CupertinoPageRoute(
-                          builder: (context) {
-                            return AdvancedSettingsScreen();
-                          },
-                        ),
-                      );
+
+                      Navigator.pushNamed(context,AdvancedSettingsScreen.routeName);
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

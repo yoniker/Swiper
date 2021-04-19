@@ -1,5 +1,10 @@
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/screens/advanced_settings_screen.dart';
+import 'package:betabeta/screens/celebrity_selection_screen.dart';
+import 'package:betabeta/screens/face_selection_screen.dart';
+import 'package:betabeta/screens/image_source_selection_screen.dart';
+import 'package:betabeta/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +37,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      onGenerateRoute:_onGenerateRoute,
       title: 'Swiper MVP',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -42,6 +48,71 @@ class MyApp extends StatelessWidget {
         LoginHome(),
       //MatchingScreen(title: 'Flutter Demo Home Page'),
     );
+  }
+
+  Route _onGenerateRoute(RouteSettings settings) {
+    if (settings.name == MatchingScreen.routeName){
+      return MaterialPageRoute(
+        settings: settings,
+        builder: (context) {
+          return MatchingScreen(
+          );
+        },
+      );
+    }
+
+    if (settings.name == AdvancedSettingsScreen.routeName){
+      return MaterialPageRoute(
+          settings: settings,
+        builder: (context) {
+          return AdvancedSettingsScreen();
+
+    });}
+
+    if (settings.name == ScreenCelebritySelection.routeName){
+      return MaterialPageRoute(
+        settings: settings,
+        builder: (context) {
+          return ScreenCelebritySelection(
+          );
+        },
+      );
+    }
+
+    if (settings.name == FaceSelectionScreen.routeName){
+      final FaceSelectionScreenArguments args = settings.arguments as FaceSelectionScreenArguments;
+      return MaterialPageRoute(
+        settings: settings,
+        builder: (context) {
+          return FaceSelectionScreen(imageFile: args.imageFile,imageFileName: args.imageFileName,
+          );
+        },
+      );
+    }
+
+    if (settings.name == ImageSourceSelectionScreen.routeName){
+      return MaterialPageRoute(
+          settings: settings,
+        builder: (context) {
+          return ImageSourceSelectionScreen(
+          );
+        },
+      );
+    }
+
+    if (settings.name == SettingsScreen.routeName){
+      return MaterialPageRoute(
+        settings: settings,
+        builder: (context) {
+          return SettingsScreen(
+          );
+        },
+      );
+    }
+
+
+
+
   }
 }
 

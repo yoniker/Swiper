@@ -8,6 +8,7 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 class ScreenCelebritySelection extends StatefulWidget {
+  static const String routeName = '/celebrity_select_screen';
   @override
   _ScreenCelebritySelectionState createState() => _ScreenCelebritySelectionState();
 }

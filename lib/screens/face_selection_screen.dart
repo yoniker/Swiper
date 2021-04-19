@@ -2,12 +2,22 @@ import 'dart:collection';
 import 'dart:io';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/faces_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_bubble/speech_bubble.dart';
+
+class FaceSelectionScreenArguments {
+  final File imageFile;
+  final String imageFileName;
+
+  FaceSelectionScreenArguments({this.imageFile,this.imageFileName});
+}
+
 class FaceSelectionScreen extends StatefulWidget {
+  static const String routeName = '/face_selection_screen';
   final File imageFile;
   final String imageFileName;
   FaceSelectionScreen({this.imageFile,this.imageFileName});
@@ -81,7 +91,8 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
 
                         child:TextButton(
                           onPressed:_indexSelected == _notSelected?null: (){
-                            print(_facesLinks[_indexSelected]);
+                            SettingsData().filterDisplayImageUrl =  _facesLinks[_indexSelected];
+                            Navigator.popUntil(context, (route){print(route.settings.name); return route.settings.name == AdvancedSettingsScreen.routeName;});//ModalRoute.withName(AdvancedSettingsScreen.routeName));
                           },
                             child: Column(children: [
                               Text('Accept',style: TextStyle(color:_indexSelected==_notSelected?disabledColor: linkColor),),
