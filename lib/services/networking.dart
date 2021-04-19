@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:io';
 import 'dart:math';
-import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/settings_model.dart';

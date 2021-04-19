@@ -32,6 +32,7 @@ class _FacesWidgetState extends State<FacesWidget> {
       }
 
       imagesWidget = ListView.separated(
+        shrinkWrap: true,
         physics:BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal, itemBuilder: (BuildContext context, int index) {
         return
@@ -58,6 +59,7 @@ class _FacesWidgetState extends State<FacesWidget> {
 
     return Container(
         height: 75.0,
+        margin: EdgeInsets.symmetric(vertical: 5.0),
         child:imagesWidget
     );
   }

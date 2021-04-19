@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'dart:io';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/services/networking.dart';
+import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/faces_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:speech_bubble/speech_bubble.dart';
@@ -48,6 +49,7 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      appBar: CustomAppBar(title:'Pick a face',icon: Icon(Icons.person_pin_outlined),),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
