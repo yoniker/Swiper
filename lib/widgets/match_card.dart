@@ -36,13 +36,11 @@ class _MatchCardState extends State<MatchCard> {
   Widget _buildBackground() {
     // returns a [PhotoView] widget.
     return PhotoView(
-      // key: widget.key,
       isClickable: widget.clickable,
       initialPhotoIndex: 0,
-      showCarousel: widget.showCarousel,
       imageUrls: widget.profile.imageUrls,
+      showCarousel: widget.showCarousel,
       descriptionWidget: _descritionWidget(),
-      descriptionAlignment: Alignment.bottomCenter,
       carouselInactiveDotColor: darkCardColor,
       carouselActiveDotColor: colorBlend02,
     );
@@ -217,6 +215,7 @@ class PhotoView extends StatefulWidget {
     this.descriptionHeightFraction = 0.2,
     this.descriptionWidthFraction = 1.0,
     this.showCarousel = true,
+    this.carouselPosition = CarouselPosition.bottom,
     this.carouselDotSize = 3.5,
     this.carouselActiveDotColor = Colors.blue,
     this.carouselInactiveDotColor = Colors.lightBlueAccent,
@@ -226,7 +225,7 @@ class PhotoView extends StatefulWidget {
             initialPhotoIndex != null &&
                 initialPhotoIndex <= imageUrls.length &&
                 initialPhotoIndex.isEven,
-            'The initialPhotoIndex cannot be "null" or negative. Please supply a correct initialPhotoIndex or leave it as it is without supplying the parameter.'),
+            'The initialPhotoIndex cannot be "null" or negative. It must also be in the range of avaliable imageUrls (starting from `0`), Please supply a correct initialPhotoIndex or leave it as it is without supplying the parameter.'),
         assert(showCarousel != null,
             'The optional parameter `showCarousel` cannot be "null". Please set it to either true or false to either show the carousel widget or not.'),
         assert(isClickable != null,
@@ -234,6 +233,8 @@ class PhotoView extends StatefulWidget {
         super(key: key);
 
   /// The index of the phot to display initially.
+  /// 'The initialPhotoIndex cannot be `null` or negative. 
+  /// It must also be in the range of avaliable imageUrls (starting from `0`).
   ///
   /// Defaults to `0`.
   final int initialPhotoIndex;
@@ -281,6 +282,9 @@ class PhotoView extends StatefulWidget {
   ///
   /// This must not be `null`. It is set to true by default.
   final bool showCarousel;
+
+  /// Determines where to Align the Carousel of the [PhotoView].
+  final CarouselPosition carouselPosition;
 
   /// An optional Widget to build a description box into the PhotoView.
   final Widget descriptionWidget;
@@ -507,7 +511,6 @@ class _PhotoViewState extends State<PhotoView> {
 
   /// The space or Area meant for displaying the carousel dots.
   Widget _carouselLayer() {
-    // if (widget.showCarousel != null && widget.showCarousel) {
     // Generate a list of CarouselDots based on the length of the
     // `imageUrls` passed in the constructor body.
     var carousels = List.generate(widget.imageUrls.length, (index) {
@@ -528,10 +531,16 @@ class _PhotoViewState extends State<PhotoView> {
       );
     });
 
-    // print(carouselDots);
-
     return Align(
-      alignment: widget.descriptionAlignment.add(Alignment(0.0, -0.38)),
+      // 
+      alignment: widget.carouselPosition == CarouselPosition.bottom
+          ? widget.descriptionAlignment
+          : widget.descriptionAlignment.add(
+              Alignment(
+                0.0,
+                -0.38,
+              ),
+            ),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
         decoration: BoxDecoration(
@@ -543,10 +552,6 @@ class _PhotoViewState extends State<PhotoView> {
         ),
       ),
     );
-    // } else {
-    //   // return an empty Container if the above condition is `false`.
-    //   return Container();
-    // }
   }
 
   /// The Space or Area that is clickable by the user.
@@ -687,4 +692,14 @@ class CarouselDot extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Used to determine the position of the carousel in the description stack of the
+/// [PhotoView].
+enum CarouselPosition {
+  /// The CarouselDots will be stacked above the Description in the Description Widget.
+  top,
+
+  /// The CarouselDots will be stacked below the Description in the Description Widget.
+  bottom,
 }
