@@ -64,12 +64,12 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
                     Center(
                       child: SpeechBubble(
                           nipLocation: NipLocation.BOTTOM,
-                          color: Theme.of(context).primaryColor,
+                          color: colorBlend01,
                           child: Padding(
                             padding: EdgeInsets.all(10),
                             child: Text(
                               'Pick a face!',
-                              style: TextStyle(color: Colors.white),
+                              style: defaultTextStyle.copyWith(color: Colors.white),
                             ),
                           )),
                     ),

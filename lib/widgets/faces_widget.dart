@@ -33,7 +33,7 @@ class _FacesWidgetState extends State<FacesWidget> {
       }
 
       if(widget.facesUrls.length==0){
-        imagesWidget = Text('No face was detected!',style:boldTextStyle.copyWith(color: Colors.red));
+        imagesWidget = Center(child: Text('No face was detected!',style:boldTextStyle.copyWith(color: Colors.red)));
       } else{
 
       imagesWidget = ListView.separated(
@@ -50,7 +50,7 @@ class _FacesWidgetState extends State<FacesWidget> {
                 height: 75.0,
                 width: 75.0,
                 decoration: BoxDecoration(shape: BoxShape.circle,
-                    border: Border.all(width: 2.0,color: index==widget.selectedIndex? Colors.red:Colors.green)),
+                    border: Border.all(width: 2.0,color: index==widget.selectedIndex? colorBlend01:disabledColor)),
                 child: ClipOval(child: facesImages[index])),
           );
       },
