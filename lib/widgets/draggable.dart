@@ -1,0 +1,339 @@
+import 'dart:math';
+
+import 'package:betabeta/widgets/overlay_builder.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+
+import '../models/match_engine.dart';
+
+enum SlideDirection {
+  left,
+  right,
+  up,
+}
+
+class DraggableCard extends StatefulWidget {
+  final Widget card;
+  final bool isDraggable;
+  final SlideDirection slideTo;
+  final Function(double distance) onSlideUpdate;
+  final Function(SlideDirection direction) onSlideComplete;
+  final double screenWidth;
+  final double screenHeight;
+
+  DraggableCard({
+    Key key,
+    this.card,
+    this.isDraggable = true,
+    this.slideTo,
+    this.onSlideUpdate,
+    this.onSlideComplete,
+    this.screenWidth,
+    this.screenHeight,
+  });
+
+  @override
+  _DraggableCardState createState() => _DraggableCardState();
+}
+
+class _DraggableCardState extends State<DraggableCard>
+    with TickerProviderStateMixin {
+  Decision decision;
+  GlobalKey profileCardKey = GlobalKey(debugLabel: 'profile_card_key');
+  // This is useful in that when we want to push (Navigate to) a new [Route] over [this]
+  // the current [Route], we don't want the overlay to Obscure the New Route we are pushing to.
+  bool _showCardStack = true;
+  Offset cardOffset = const Offset(0.0, 0.0);
+  Offset dragStart;
+  Offset dragPosition;
+  List<Offset>
+      gestureOffsets; //Track if all offsets happened at the same direction
+  List<Duration>
+      gestureTimeStamps; //Track all of the time stamps to test if it happened "fast enough"
+  Offset slideBackStart;
+  SlideDirection slideOutDirection;
+  AnimationController slideBackAnimation;
+  Tween<Offset> slideOutTween;
+  AnimationController slideOutAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    slideBackAnimation = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )
+      ..addListener(() => setState(() {
+            cardOffset = Offset.lerp(slideBackStart, const Offset(0.0, 0.0),
+                Curves.elasticOut.transform(slideBackAnimation.value));
+
+            if (null != widget.onSlideUpdate) {
+              widget.onSlideUpdate(cardOffset.distance);
+            }
+          }))
+      ..addStatusListener((AnimationStatus status) {
+        if (status == AnimationStatus.completed) {
+          setState(() {
+            dragStart = null;
+            slideBackStart = null;
+            dragPosition = null;
+            gestureOffsets = null;
+            gestureTimeStamps = null;
+          });
+        }
+      });
+
+    slideOutAnimation = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    )
+      ..addListener(() => setState(() {
+            cardOffset = slideOutTween.evaluate(slideOutAnimation);
+            if (null != widget.onSlideUpdate) {
+              widget.onSlideUpdate(cardOffset.distance);
+            }
+          }))
+      ..addStatusListener((AnimationStatus status) {
+        if (status == AnimationStatus.completed) {
+          setState(() {
+            dragStart = null;
+            dragPosition = null;
+            slideOutTween = null;
+
+            if (widget.onSlideComplete != null) {
+              widget.onSlideComplete(slideOutDirection);
+            }
+          });
+        }
+      });
+  }
+
+  @override
+  void didUpdateWidget(DraggableCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.card.key != oldWidget.card.key) {
+      cardOffset = const Offset(0.0, 0.0);
+    }
+
+    if (oldWidget.slideTo == null && widget.slideTo != null) {
+      switch (widget.slideTo) {
+        case SlideDirection.left:
+          _slideLeft();
+          break;
+        case SlideDirection.right:
+          _slideRight();
+          break;
+        case SlideDirection.up:
+          _slideUp();
+          break;
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    slideBackAnimation.dispose();
+    slideOutAnimation.dispose();
+    super.dispose();
+  }
+
+  void _slideLeft() {
+    // final screenWidth = context.size.width;
+    dragStart = _chooseRandomDragStart();
+    slideOutTween = Tween(
+      begin: const Offset(0.0, 0.0),
+      end: Offset(-2 * widget.screenWidth, 0.0),
+    );
+
+    slideOutAnimation.forward(from: 0.0);
+  }
+
+  Offset _chooseRandomDragStart() {
+    final cardContex = profileCardKey.currentContext;
+    final cardTopLeft = (cardContex.findRenderObject() as RenderBox)
+        .localToGlobal(const Offset(0.0, 0.0));
+    final dragStartY =
+        widget.screenHeight * (new Random().nextDouble() < 0.5 ? 0.25 : 0.75) +
+            cardTopLeft.dy;
+
+    return Offset(widget.screenWidth / 2 + cardTopLeft.dx, dragStartY);
+  }
+
+  void _slideRight() {
+    dragStart = _chooseRandomDragStart();
+    slideOutTween = Tween(
+      begin: const Offset(0.0, 0.0),
+      end: Offset(2 * widget.screenWidth, 0.0),
+    );
+
+    slideOutAnimation.forward(from: 0.0);
+  }
+
+  void _slideUp() {
+    // final screenHeight = context.size.height;
+    dragStart = _chooseRandomDragStart();
+    slideOutTween = Tween(
+      begin: const Offset(0.0, 0.0),
+      end: Offset(0.0, -2 * widget.screenHeight),
+    );
+
+    slideOutAnimation.forward(from: 0.0);
+  }
+
+  void _onPanStart(DragStartDetails details) {
+    dragStart = details.globalPosition;
+    gestureOffsets = [];
+    gestureTimeStamps = [];
+
+    if (slideBackAnimation.isAnimating) {
+      slideBackAnimation.stop(canceled: true);
+    }
+  }
+
+  void _onPanUpdate(DragUpdateDetails details) {
+    setState(() {
+      dragPosition = details.globalPosition;
+      cardOffset = dragPosition - dragStart;
+      gestureOffsets.add(cardOffset);
+      gestureTimeStamps.add(details.sourceTimeStamp);
+
+      if (null != widget.onSlideUpdate) {
+        widget.onSlideUpdate(cardOffset.distance);
+      }
+    });
+  }
+
+  FastSwipe detectFastSwipe() {
+    const int MINIMUM_GESTURE_LENGTH = 40;
+    const double MINIMUM_DURATION_TIME =
+        1; //TODO convert it into Duration since it's more like dart than this
+    const double MAXIMUM_DURATION_TIME = 1000;
+
+    if (gestureTimeStamps.length < 2) {
+      return FastSwipe.notFastSwipe;
+    }
+    final int gestureTime =
+        (gestureTimeStamps[gestureTimeStamps.length - 1] - gestureTimeStamps[0])
+            .inMilliseconds;
+    if (gestureTime < MINIMUM_DURATION_TIME) {
+      return FastSwipe.notFastSwipe;
+    }
+    if (gestureTime > MAXIMUM_DURATION_TIME) {
+      return FastSwipe.notFastSwipe;
+    } //TODO again,it's important to cut the lists but for now
+    double overAllGestureSize =
+        gestureOffsets[gestureOffsets.length - 1].dx - gestureOffsets[0].dx;
+    if (overAllGestureSize.abs() < MINIMUM_GESTURE_LENGTH) {
+      return FastSwipe.notFastSwipe;
+    }
+    //TODO cut both lists such that we will observe only the very last motions eg 1/2 miliseconds
+    bool monotonic = true;
+    for (int i = 1; i < gestureOffsets.length; ++i) {
+      if (gestureOffsets[i].dx.abs() < gestureOffsets[i - 1].dx.abs()) {
+        monotonic = false;
+        break;
+      }
+    }
+    if (!monotonic) {
+      return FastSwipe.notFastSwipe;
+    }
+
+    if (gestureOffsets[0].dx > gestureOffsets[1].dx) {
+      return FastSwipe.Left;
+    }
+
+    return FastSwipe.Right;
+  }
+
+  void _onPanEnd(DragEndDetails details) {
+    final dragVector = cardOffset / cardOffset.distance;
+    bool isInLeftRegion = (cardOffset.dx / context.size.width) < -0.35;
+    bool isInRightRegion = (cardOffset.dx / context.size.width) > 0.35;
+    final isInTopRegion = (cardOffset.dy / context.size.height) < -0.30;
+    final FastSwipe fastSwipeStatus = detectFastSwipe();
+
+    isInLeftRegion |= fastSwipeStatus == FastSwipe.Left;
+    isInRightRegion |= fastSwipeStatus == FastSwipe.Right;
+
+    setState(() {
+      if (isInLeftRegion || isInRightRegion) {
+        slideOutTween = Tween(
+            begin: cardOffset, end: dragVector * (2 * context.size.width));
+
+        slideOutAnimation.forward(from: 0.0);
+
+        slideOutDirection =
+            isInLeftRegion ? SlideDirection.left : SlideDirection.right;
+      } else if (isInTopRegion) {
+        slideOutTween = Tween(
+            begin: cardOffset, end: dragVector * (2 * context.size.height));
+        slideOutAnimation.forward(from: 0.0);
+
+        slideOutDirection = SlideDirection.up;
+      } else {
+        slideBackStart = cardOffset;
+        slideBackAnimation.forward(from: 0.0);
+      }
+    });
+  }
+
+  double _rotation(Rect dragBounds) {
+    if (dragStart != null) {
+      final rotationCornerMultiplier =
+          dragStart.dy >= dragBounds.top + (dragBounds.height / 2) ? -1 : 1;
+      return (pi / 8) *
+          (cardOffset.dx / dragBounds.width) *
+          rotationCornerMultiplier;
+    } else {
+      return 0.0;
+    }
+  }
+
+  Offset _rotationOrigin(Rect dragBounds) {
+    if (dragStart != null) {
+      return dragStart - dragBounds.topLeft;
+    } else {
+      return const Offset(0.0, 0.0);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Wraps the widget in a Transformation and Overlay.
+    // This makes our MatchCard to float avove the AppBar and other
+    // widgets since it's is an overlay on the current context.
+    var wrapper = AnchoredOverlay(
+        showOverlay: _showCardStack,
+        child: Container(),
+        overlayBuilder:
+            (BuildContext context, Rect anchorBounds, Offset anchor) {
+          return CenterAbout(
+            position: anchor,
+            child: Transform(
+              transform:
+                  Matrix4.translationValues(cardOffset.dx, cardOffset.dy, 0.0)
+                    ..rotateZ(_rotation(anchorBounds)),
+              origin: _rotationOrigin(anchorBounds),
+              child: Container(
+                key: profileCardKey,
+                width: anchorBounds.width,
+                height: anchorBounds.height,
+                padding: EdgeInsets.all(16.0),
+                child: GestureDetector(
+                  onPanStart: widget.isDraggable ? _onPanStart : null,
+                  onPanUpdate: widget.isDraggable ? _onPanUpdate : null,
+                  onPanEnd: widget.isDraggable ? _onPanEnd : null,
+                  child: widget.card,
+                ),
+              ),
+            ),
+          );
+        });
+
+    return wrapper;
+  }
+}
+
+enum FastSwipe { notFastSwipe, Right, Left }

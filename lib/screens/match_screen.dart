@@ -1,8 +1,7 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/models/match_engine.dart';
-import 'package:betabeta/screens/settings_screen.dart';
-import 'package:betabeta/widgets/cards.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
+import 'package:betabeta/widgets/draggable.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/match_card.dart';
 import 'package:flutter/cupertino.dart';

@@ -71,7 +71,8 @@ class _MatchCardState extends State<MatchCard> {
                 '${widget.profile.username}, ${widget.profile.age}',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: boldedTextStyle.copyWith(color: Colors.white, fontSize: 24),
+                style:
+                    boldedTextStyle.copyWith(color: Colors.white, fontSize: 24),
               ),
             ),
             Padding(
@@ -141,6 +142,31 @@ class _MatchCardState extends State<MatchCard> {
     );
   }
 
+  /// The revert button placed over each MatchCard which Functions to bring back the
+  /// recently dismissied MatchCard.
+  Widget _revertButton() {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Material(
+        color: Colors.transparent,
+        child: Padding(
+          padding: EdgeInsets.all(12.0),
+          child: IconButton(
+            icon: Icon(
+              Icons.replay_rounded,
+              size: 24.0,
+              color: whiteCardColor,
+            ),
+            onPressed: () {
+              // Move to the prevoious Match Deducted by the Match Engine.
+              Provider.of<MatchEngine>(context, listen: false).goBack();
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
   /// A function to select the match Decision made on the the current match.
   currentMatchDecision(Decision decision) {
     if (Provider.of<MatchEngine>(context, listen: false).currentMatch() !=
@@ -166,12 +192,11 @@ class _MatchCardState extends State<MatchCard> {
           ),
         ],
       ),
-      child: Column(
+      child: Stack(
+        fit: StackFit.expand,
         children: [
-          Expanded(
-            child: _buildBackground(),
-          ),
-          // _matchControls(),
+          _buildBackground(),
+          _revertButton(),
         ],
       ),
     );
