@@ -1,3 +1,4 @@
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,10 @@ class _FacesWidgetState extends State<FacesWidget> {
 
       }
 
+      if(widget.facesUrls.length==0){
+        imagesWidget = Text('No face was detected!',style:boldTextStyle.copyWith(color: Colors.red));
+      } else{
+
       imagesWidget = ListView.separated(
         shrinkWrap: true,
         //physics:BouncingScrollPhysics(),
@@ -53,7 +58,7 @@ class _FacesWidgetState extends State<FacesWidget> {
         return SizedBox(width: 25.0,);
       },
 
-      );
+      );}
 
     }
 

@@ -13,6 +13,19 @@ final Color disabledColor = Colors.grey;
 //
 final Color colorBlend01 = Color(0xFFED3CB3);
 final Color colorBlend02 = Color(0xFFD118E1);
+final TextStyle defaultTextStyle = TextStyle(
+  color: Colors.black,
+  fontFamily: 'Nunito',
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+);
+
+final TextStyle boldTextStyle = TextStyle(
+  color: Colors.black,
+  fontFamily: 'Nunito',
+  fontSize: 18,
+  fontWeight: FontWeight.w700,
+);
 
 //<@SUGN> This is an optional Gradient variable to be used in conjuction with
 // the `GradientWidget` found in the {widgets} folder.

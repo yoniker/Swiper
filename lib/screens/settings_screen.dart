@@ -43,7 +43,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return DropdownMenuItem<Gender>(
       child: Text(
         selectedGender.toShortString(),
-        style: _defaultTextStyle,
+        style: defaultTextStyle,
       ),
       value: selectedGender,
       onTap: () {
@@ -58,19 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
 
   //
-  var _defaultTextStyle = TextStyle(
-    color: Colors.black,
-    fontFamily: 'Nunito',
-    fontSize: 16,
-    fontWeight: FontWeight.w500,
-  );
 
-  var _boldTextStyle = TextStyle(
-    color: Colors.black,
-    fontFamily: 'Nunito',
-    fontSize: 18,
-    fontWeight: FontWeight.w700,
-  );
 
   String _simpleDashAgeRangeString(double start, double end) {
     if (end < SettingsScreen.maxAge) {
@@ -126,7 +114,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       children: [
                         Text(
                           'Show me in Discovery',
-                          style: _boldTextStyle,
+                          style: boldTextStyle,
                         ),
                         CupertinoSwitch(
                           value: _showInDiscovery,
@@ -164,7 +152,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           children: [
                             Text(
                               'Location',
-                              style: _boldTextStyle,
+                              style: boldTextStyle,
                             ),
                             TextButton(child: Row(children: [Text(_currentLocation),SizedBox(width: 4.0,),Icon(Icons.arrow_forward_ios,size:16)]),onPressed: (){},),
                           ],
@@ -180,7 +168,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [Text(
                                 'Max. Distance',
-                                style: _boldTextStyle,
+                                style: boldTextStyle,
                               ),
                                 Container(
                                   alignment: Alignment.centerRight,
@@ -188,11 +176,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       vertical: 6.0),
                                   child: RichText(
                                     text: TextSpan(
-                                      style: _defaultTextStyle,
+                                      style: defaultTextStyle,
                                       children: <InlineSpan>[
                                         TextSpan(
                                           text: ' ${_maxDistance.round().toString()} km away',
-                                          style: _defaultTextStyle,
+                                          style: defaultTextStyle,
                                         ),
                                       ],
                                     ),
@@ -269,7 +257,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             children: [
                               Text(
                                 'Gender',
-                                style: _boldTextStyle,
+                                style: boldTextStyle,
                               ),
                               Container(
                                 color:Colors.grey[200],
@@ -278,7 +266,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 child: DropdownButtonFormFieldModified<Gender>(
                                   decoration: InputDecoration.collapsed(
                                     hintText: 'My Preferred Gender',
-                                    hintStyle: _defaultTextStyle.copyWith(
+                                    hintStyle: defaultTextStyle.copyWith(
                                       color: darkTextColor,
                                     ),
                                   ),
@@ -290,7 +278,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                                     });
                                   },
-                                  style: _defaultTextStyle,
+                                  style: defaultTextStyle,
                                   value: _currentGenderSelected,
                                   items: Gender.values.map(
                                         (gender) {
@@ -314,7 +302,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 children: [
                                   Text(
                                   'Age',
-                                  style: _boldTextStyle,
+                                  style: boldTextStyle,
                                 ),
                                   Container(
                                     alignment: Alignment.centerRight,
@@ -322,7 +310,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         vertical: 6.0, horizontal:0.0),
                                     child: RichText(
                                       text: TextSpan(
-                                        style: _defaultTextStyle,
+                                        style: defaultTextStyle,
                                         children: <InlineSpan>[
                                           TextSpan(
                                             text:
@@ -414,7 +402,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         Row(mainAxisAlignment: MainAxisAlignment.start,
                           children: [Text(
                             'Artificial Intelligence Filters',
-                            style: _boldTextStyle,
+                            style: boldTextStyle,
                           ),
                           SizedBox(width: 4.0,),
                           Icon(Icons.psychology_outlined,
@@ -436,7 +424,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     child: Text(
                       'Done',
-                      style: _boldTextStyle.copyWith(
+                      style: boldTextStyle.copyWith(
                         color: colorBlend02,
                       ),
                     ),
