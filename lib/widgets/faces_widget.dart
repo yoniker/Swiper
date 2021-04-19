@@ -24,7 +24,7 @@ class _FacesWidgetState extends State<FacesWidget> {
     }
     else{
       for(int imageIndex = 0 ; imageIndex<widget.facesUrls.length; imageIndex++){
-        String url = 'http://'+NetworkHelper.SERVER_ADDR+'/'+ widget.facesUrls[imageIndex];
+        String url = NetworkHelper.faceUrlToFullUrl(widget.facesUrls[imageIndex]);
         Image img = Image.network(url,height: 75.0,width: 75.0,fit:BoxFit.cover);
         precacheImage(img.image, context);
         facesImages.add(img);

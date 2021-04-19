@@ -3,6 +3,7 @@ import 'package:betabeta/data_models/celeb.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/image_source_selection_screen.dart';
+import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,6 +42,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
     String description,
     List<Widget> children,
     String filterName,
+    double height=175.0,
   }) {
     return GlobalWidgets.buildSettingsBlock(
       leading: Column(
@@ -94,7 +96,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
       ),
         child:AnimatedContainer(
         duration: Duration(milliseconds: 500),
-    height: (_currentChosenFilterName != filterName)?0:175,
+    height: (_currentChosenFilterName != filterName)?0:height,
     child:(_currentChosenFilterName != filterName)
     ? SizedBox.shrink()
         : Container(
@@ -133,6 +135,8 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
         return 'no';
       }
     }
+
+    bool customImageExists = SettingsData().filterDisplayImageUrl!=null && SettingsData().filterDisplayImageUrl.length>0;
 
     return Scaffold(
       backgroundColor: whiteCardColor,
@@ -353,15 +357,20 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
 
                         ),
                       _buildFilterWidget(
+                        height: customImageExists?205:175,
                         description:
                         'Search for people who look similar to anyone of your choice',
                         title: 'Custom Look-Alike',
                         filterName: AdvancedSettingsScreen.CUSTOM_FACE_FILTER,
                         children: [
+                          customImageExists? SizedBox():
                           TextButton(
-                            onPressed:() {
+                            onPressed:() async {
                               // Direct user to the custom Selection Page.
-                              Navigator.of(context).pushNamed(ImageSourceSelectionScreen.routeName);
+                              await Navigator.pushNamed(context,ImageSourceSelectionScreen.routeName);
+                              setState(() { //Make flutter rebuild the widget, as the image might have changed
+
+                              });
                             },
                             child: Row(
                               mainAxisAlignment:
@@ -396,12 +405,33 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                               ],
                             ),
                           ),
+
+                          !customImageExists?
+                              SizedBox():
+                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                            Image.network(NetworkHelper.faceUrlToFullUrl(SettingsData().filterDisplayImageUrl),height:75,width:75,fit:BoxFit.scaleDown ),
+
+                            TextButton(
+                              onPressed: (){
+                                SettingsData().filterDisplayImageUrl = '';
+                                setState(() {
+
+                                });
+                              },
+                              child: Row(children: [
+                                Text('Remove image',style:_defaultTextStyle.copyWith(color:linkColor)),
+                                Icon(Icons.close,color: Colors.red,)
+                              ],),
+                            )
+                            ],),
                           Divider(
                             color: darkCardColor,
                             thickness: 2.0,
                             indent: 24.0,
                             endIndent: 24.0,
-                          ),
+                          )
+                          ,
 
                           // Build the Audition count tab.
                           Container(

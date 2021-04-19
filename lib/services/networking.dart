@@ -40,6 +40,10 @@ class NetworkHelper{
     return [];
   }
 
+  static String faceUrlToFullUrl(String faceUrl){
+    return 'http://'+NetworkHelper.SERVER_ADDR+'/'+ faceUrl;
+  }
+
 
 
   //getMatches: Grab some matches and image links from the server
