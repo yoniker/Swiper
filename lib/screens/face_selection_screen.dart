@@ -1,5 +1,6 @@
 import 'dart:collection';
 import 'dart:io';
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
@@ -16,9 +17,9 @@ class FaceSelectionScreen extends StatefulWidget {
 }
 
 class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
-
+  static final int _notSelected = -1;
   List<String> _facesLinks;
-  int _indexSelected = -1;
+  int _indexSelected = _notSelected;
 
   @override
   void initState() {
@@ -58,16 +59,40 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
               child: Image.file(widget.imageFile,fit: BoxFit.scaleDown,)),
           Column(
               children:[
-                SpeechBubble(
-                    nipLocation: NipLocation.BOTTOM,
-                    color: Theme.of(context).primaryColor,
-                    child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        'Pick a face!',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    )),
+                Stack(
+                  children: [
+                    Center(
+                      child: SpeechBubble(
+                          nipLocation: NipLocation.BOTTOM,
+                          color: Theme.of(context).primaryColor,
+                          child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              'Pick a face!',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                          //padding: EdgeInsets.all(10),
+
+
+                        child:TextButton(
+                          onPressed:_indexSelected == _notSelected?null: (){
+                            print(_facesLinks[_indexSelected]);
+                          },
+                            child: Column(children: [
+                              Text('Accept',style: TextStyle(color:_indexSelected==_notSelected?disabledColor: linkColor),),
+                              Icon(Icons.check,color: _indexSelected ==_notSelected ? disabledColor:Colors.green,)
+                            ],),
+                          )),
+                    ),
+
+
+                  ],
+                ),
                 SizedBox(height: 30.0,),
                 FacesWidget(_facesLinks,(int indexClicked){
                   setState(() {

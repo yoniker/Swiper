@@ -8,7 +8,8 @@ final Color darkCardColor = Color(0xFFEFEFF1);
 final Color darkTextColor = Color(0xFF747474);
 final Color whiteCardColor = Color(0xFFFFFFFF);
 final Color linkColor = Color(0xFF389CEB);
-
+final Color activeColor = Colors.blue;
+final Color disabledColor = Colors.grey;
 //
 final Color colorBlend01 = Color(0xFFED3CB3);
 final Color colorBlend02 = Color(0xFFD118E1);

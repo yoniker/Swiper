@@ -33,7 +33,7 @@ class _FacesWidgetState extends State<FacesWidget> {
 
       imagesWidget = ListView.separated(
         shrinkWrap: true,
-        physics:BouncingScrollPhysics(),
+        //physics:BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal, itemBuilder: (BuildContext context, int index) {
         return
 

@@ -238,7 +238,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                             padding: EdgeInsets.only(right: 8.0),
                                             child: Text(
                                               '${_selectedCeleb.celebName}',
-                                              style: _defaultTextStyle,
+                                              style: _defaultTextStyle.copyWith(color: linkColor),
                                             ),
                                           ),
 
@@ -393,7 +393,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                       padding: EdgeInsets.only(right: 8.0),
                                       child: Text(
                                         'Image Selection',
-                                        style: _defaultTextStyle,
+                                        style: _defaultTextStyle.copyWith(color:linkColor),
                                       ),
                                     ),
 
