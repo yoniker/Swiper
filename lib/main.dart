@@ -10,7 +10,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:provider/provider.dart';
 import 'models/celebs_info_model.dart';
 import 'screens/matching_screen.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as JSON;
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
@@ -123,7 +123,7 @@ class LoginHome extends StatefulWidget {
 }}
 
 class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flutter-facebook-login/
-  final facebookLogin = FacebookLogin();
+
   bool _errorTryingToLogin;
   String _errorMessage;
 
@@ -145,36 +145,29 @@ class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flu
   }
   
   _getFBLoginInfo() async{
-    final result = await facebookLogin.logIn(['public_profile']);
+    final loginResult = await FacebookAuth.instance.login();
 
-    switch (result.status) {
-      case FacebookLoginStatus.loggedIn:
-        final token = result.accessToken.token;
-        Map<String,dynamic> fbProfileQueryParameters = {'fields':'name,picture','access_token':'$token'};
-        Uri facebookProfileUri = Uri.https('graph.facebook.com', 'v2.12/me',fbProfileQueryParameters);
-        //final graphResponse = await http.get('https://graph.facebook.com/v2.12/me?fields=name,picture&access_token=$token');
-        final graphResponse = await http.get(facebookProfileUri);
-        final profile = JSON.jsonDecode(graphResponse.body);
-        //Save name, id and picture url to settings(persistent storage), and move on to the next screen
-        SettingsData settings = SettingsData();
-        settings.name = profile['name'];
-        settings.facebookId = profile['id'];
-        Map<String,dynamic> fbImageQueryParameters={'type':'large','redirect':'0'};
-        Uri fbImageUri = Uri.https('graph.facebook.com', 'v2.12/${profile['id']}/picture',fbImageQueryParameters);
-        //final pictureResponse = await http.get('https://graph.facebook.com/v2.12/${profile['id']}/picture?type=large&redirect=0'); //'https://graph.facebook.com/v2.12/10218504761950570/picture?type=large&redirect=0'
-        final pictureResponse = await http.get(fbImageUri);
-        String reasonablePictureUrl=JSON.jsonDecode(pictureResponse.body)['data']['url'];
+
+    switch (loginResult.status) {
+      case LoginStatus.success:
+        final AccessToken accessToken =  loginResult.accessToken;
+        final userData = await FacebookAuth.instance.getUserData(
+          fields: "name,email,picture.width(200)",);
+        SettingsData().name = userData['name'];
+        SettingsData().facebookId = userData['id'];
+        SettingsData().facebookProfileImageUrl = userData['picture']['data']['url'];
+
+
         DefaultCacheManager().emptyCache();
-        DefaultCacheManager().getSingleFile(reasonablePictureUrl);
-        settings.facebookProfileImageUrl = reasonablePictureUrl;
+        DefaultCacheManager().getSingleFile(SettingsData().facebookProfileImageUrl);
         _getSettings();
         break;
 
-      case FacebookLoginStatus.cancelledByUser:
+      case LoginStatus.cancelled:
         setState(() {_errorTryingToLogin = true;  _errorMessage='User cancelled Login';});
         break;
-      case FacebookLoginStatus.error:
-        setState(()  {_errorTryingToLogin = true; _errorMessage=result.errorMessage??'Error trying to login';} );
+      case LoginStatus.failed:
+        setState(()  {_errorTryingToLogin = true; _errorMessage=loginResult.message??'Error trying to login';} );
         break;
     }
 
