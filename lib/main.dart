@@ -11,8 +11,6 @@ import 'package:provider/provider.dart';
 import 'models/celebs_info_model.dart';
 import 'screens/matching_screen.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert' as JSON;
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
 void main()  {
@@ -55,8 +53,7 @@ class MyApp extends StatelessWidget {
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {
-          return MatchingScreen(
-          );
+          return MatchingScreen();
         },
       );
     }
@@ -73,10 +70,10 @@ class MyApp extends StatelessWidget {
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {
-          return ScreenCelebritySelection(
-          );
+          return ScreenCelebritySelection();
         },
       );
+
     }
 
     if (settings.name == FaceSelectionScreen.routeName){
@@ -84,8 +81,7 @@ class MyApp extends StatelessWidget {
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {
-          return FaceSelectionScreen(imageFile: args.imageFile,imageFileName: args.imageFileName,
-          );
+          return FaceSelectionScreen(imageFile: args.imageFile,imageFileName: args.imageFileName,);
         },
       );
     }
@@ -94,8 +90,7 @@ class MyApp extends StatelessWidget {
       return MaterialPageRoute(
           settings: settings,
         builder: (context) {
-          return ImageSourceSelectionScreen(
-          );
+          return ImageSourceSelectionScreen();
         },
       );
     }
@@ -104,14 +99,18 @@ class MyApp extends StatelessWidget {
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {
-          return SettingsScreen(
-          );
+          return SettingsScreen();
         },
       );
     }
 
 
-
+    return MaterialPageRoute(
+      settings: settings,
+      builder: (context) {
+        return LoginHome();
+      },
+    );
 
   }
 }
@@ -149,6 +148,7 @@ class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flu
 
 
     switch (loginResult.status) {
+
       case LoginStatus.success:
         final AccessToken accessToken =  loginResult.accessToken;
         final userData = await FacebookAuth.instance.getUserData(
@@ -166,6 +166,7 @@ class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flu
       case LoginStatus.cancelled:
         setState(() {_errorTryingToLogin = true;  _errorMessage='User cancelled Login';});
         break;
+      case LoginStatus.operationInProgress:
       case LoginStatus.failed:
         setState(()  {_errorTryingToLogin = true; _errorMessage=loginResult.message??'Error trying to login';} );
         break;

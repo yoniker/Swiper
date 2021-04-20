@@ -120,7 +120,7 @@ class NetworkHelper{
     img.Image theImage = img.decodeImage(imageFile.readAsBytesSync());
     if(max(theImage.height, theImage.width)>MAX_IMAGE_SIZE){
       double resizeFactor = MAX_IMAGE_SIZE/max(theImage.height, theImage.width);
-      theImage = img.copyResize(theImage, width: (theImage.width*resizeFactor).round(),height: (theImage.height*resizeFactor).round());
+      theImage = img.copyResize(theImage, width: (theImage.width*resizeFactor).round());
     }
     String fileName = 'custom_face_search_${DateTime.now()}.jpg';
     return Tuple2<img.Image, String>(theImage,fileName);
