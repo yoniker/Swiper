@@ -148,7 +148,7 @@ class MatchDetailsCard extends StatefulWidget {
     Key key,
     @required this.matchprofile,
     @required this.pageController,
-    this.exitDuration = const Duration(milliseconds: 400),
+    this.exitDuration = const Duration(milliseconds: 200),
   }) : super(key: key);
 
   /// The Profile of this match from which the necessary information
@@ -193,6 +193,9 @@ class _MatchDetailsCardState extends State<MatchDetailsCard> {
       duration: widget.exitDuration,
       curve: kdefaultExitCurve,
     );
+
+    // we can also use jumpToPage but that will not animate.
+    // widget.pageController.jumpToPage(0);
   }
 
   /// A widget that displays the actions a user can make on a match.
@@ -205,10 +208,28 @@ class _MatchDetailsCardState extends State<MatchDetailsCard> {
   /// the Image Display Widget of each match.
   Widget _matchControls() {
     return Container(
-      color: Colors.white,
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-      child: Material(
+      foregroundDecoration: BoxDecoration(
+        color: Colors.transparent,
+      ),
+      decoration: BoxDecoration(
         color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: darkCardColor,
+            offset: Offset(0.0, 0.2),
+            blurRadius: 16.0,
+          ),
+        ],
+      ),
+      // A Matrial Widget is added here so as to allow the solash of the InkWell Widgets
+      // below this Widget in the tree to show.
+      //
+      // Note: Any Container Within the Widget tree will obscure the action of any InkWell Widget
+      // below such Container in the Widget tree.
+      child: Material(
+        // With this as transparent we can retain the original color of the Enclosing
+        // Decoration Widget.
+        color: Colors.transparent,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [

@@ -76,7 +76,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
 
   // The stack and offset of the second Match card stacked at the back of the current one.
   double bottomStackScale = 0.75;
-  Offset bottomStackOffset = Offset(0.0, 1.12);
+  Offset bottomStackOffset = Offset(0.0, 0.87);
 
   // The controller that controls how each match card slides when a valid Decision is made.
   var _matchPageController;
@@ -128,7 +128,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
       // make increment based on the distance the card has been slided.
       var bottomDyIncrement = (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
       bottomStackScale = 0.75 + (0.05 * (distance / 70.0)).clamp(0.0, 0.05);
-      bottomStackOffset = Offset(0.0, 1.02 + bottomDyIncrement);
+      bottomStackOffset = Offset(0.0, 0.82 + bottomDyIncrement);
     });
   }
 
@@ -191,6 +191,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
         screenHeight: MediaQuery.of(context).size.height,
         screenWidth: MediaQuery.of(context).size.width,
         isDraggable: false,
+        showDetails: false,
         card: Transform.scale(
           scale: middleStackScale,
           alignment: Alignment(middleStackOffset.dx, middleStackOffset.dy),

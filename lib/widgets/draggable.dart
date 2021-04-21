@@ -363,26 +363,34 @@ class _DraggableCardState extends State<DraggableCard>
                 child: Material(
                   clipBehavior: Clip.hardEdge,
                   borderRadius: BorderRadius.circular(16.0),
-                  child: PageView(
-                    controller: widget.controller,
-                    clipBehavior: Clip.none,
-                    physics: (widget.showDetails && widget.detailsCard != null)
-                        ? ClampingScrollPhysics()
-                        : NeverScrollableScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    children: [
-                      GestureDetector(
-                        onPanStart: widget.isDraggable ? _onPanStart : null,
-                        onPanUpdate: widget.isDraggable ? _onPanUpdate : null,
-                        onPanEnd: widget.isDraggable ? _onPanEnd : null,
-                        child: widget.card,
-                      ),
+                  child: (widget.showDetails != true || widget.detailsCard == null)
+                      // Builds the regular DraggableCard with no inclusion of the details Page
+                      // whatsoever.
+                      ? GestureDetector(
+                          onPanStart: widget.isDraggable ? _onPanStart : null,
+                          onPanUpdate: widget.isDraggable ? _onPanUpdate : null,
+                          onPanEnd: widget.isDraggable ? _onPanEnd : null,
+                          child: widget.card,
+                        )
+                      : PageView(
+                          controller: widget.controller,
+                          clipBehavior: Clip.none,
+                          physics: ClampingScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          children: [
+                            GestureDetector(
+                              onPanStart:
+                                  widget.isDraggable ? _onPanStart : null,
+                              onPanUpdate:
+                                  widget.isDraggable ? _onPanUpdate : null,
+                              onPanEnd: widget.isDraggable ? _onPanEnd : null,
+                              child: widget.card,
+                            ),
 
-                      // Build the profile description display.
-                      if (widget.showDetails && widget.detailsCard != null)
-                        widget.detailsCard,
-                    ],
-                  ),
+                            // Build the profile description display.
+                            widget.detailsCard,
+                          ],
+                        ),
                 ),
               ),
             ),
