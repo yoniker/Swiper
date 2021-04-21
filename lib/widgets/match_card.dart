@@ -90,6 +90,111 @@ class _MatchCardState extends State<MatchCard> {
     return descriptionCard;
   }
 
+  /// The revert button placed over each MatchCard which Functions to bring back the
+  /// recently dismissied MatchCard.
+  Widget _revertButton() {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Material(
+        color: Colors.transparent,
+        child: Padding(
+          padding: EdgeInsets.all(12.0),
+          child: IconButton(
+            icon: Icon(
+              Icons.replay_rounded,
+              size: 24.0,
+              color: whiteCardColor,
+            ),
+            onPressed: () {
+              // Move to the prevoious Match Deducted by the Match Engine.
+              Provider.of<MatchEngine>(context, listen: false).goBack();
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(0.0),
+      decoration: BoxDecoration(
+        color: whiteCardColor,
+        borderRadius: BorderRadius.circular(18.0),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: darkCardColor,
+            offset: Offset(0.0, 0.2),
+            blurRadius: 12.0,
+          ),
+        ],
+      ),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          _buildBackground(),
+          _revertButton(),
+        ],
+      ),
+    );
+  }
+}
+
+/// A widget to display the Details of each match which will be
+/// displayed when the MatchCard is scrolled up.
+class MatchDetailsCard extends StatefulWidget {
+  const MatchDetailsCard({
+    Key key,
+    @required this.matchprofile,
+    @required this.pageController,
+    this.exitDuration = const Duration(milliseconds: 400),
+  }) : super(key: key);
+
+  /// The Profile of this match from which the necessary information
+  /// to display is extracted.
+  final Profile matchprofile;
+
+  /// This gives us the opportunity to close the details page once a Decision
+  /// has been made regarding the current Match.
+  final PageController pageController;
+
+  /// The Time taken for the Details screen to exit the details Page when a
+  /// Decision is made.
+  final Duration exitDuration;
+
+  @override
+  _MatchDetailsCardState createState() => _MatchDetailsCardState();
+}
+
+class _MatchDetailsCardState extends State<MatchDetailsCard> {
+  // The defualt Curve with which the details Page animates out into the new Match Page.
+  final kdefaultExitCurve = Curves.fastOutSlowIn;
+
+  /// A function to select the match Decision made on the the current match.
+  currentMatchDecision(Decision decision) {
+    if (Provider.of<MatchEngine>(context, listen: false).currentMatch() !=
+        null) {
+      Provider.of<MatchEngine>(context, listen: false)
+          .currentMatchDecision(decision);
+      Provider.of<MatchEngine>(context, listen: false).goToNextMatch();
+
+      // close thr page since a valid Decision has been made.
+      closePage();
+    }
+  }
+
+  /// Close the MatchDetailsCard.
+  /// This essetially calls "moveToPage" on the pageController parameter
+  /// passed to it.
+  void closePage() {
+    widget.pageController.animateToPage(
+      0,
+      duration: widget.exitDuration,
+      curve: kdefaultExitCurve,
+    );
+  }
+
   /// A widget that displays the actions a user can make on a match.
   /// Actions such as:
   ///   "Dislike",
@@ -140,61 +245,28 @@ class _MatchCardState extends State<MatchCard> {
     );
   }
 
-  /// The revert button placed over each MatchCard which Functions to bring back the
-  /// recently dismissied MatchCard.
-  Widget _revertButton() {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: Material(
-        color: Colors.transparent,
-        child: Padding(
-          padding: EdgeInsets.all(12.0),
-          child: IconButton(
-            icon: Icon(
-              Icons.replay_rounded,
-              size: 24.0,
-              color: whiteCardColor,
-            ),
-            onPressed: () {
-              // Move to the prevoious Match Deducted by the Match Engine.
-              Provider.of<MatchEngine>(context, listen: false).goBack();
-            },
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// A function to select the match Decision made on the the current match.
-  currentMatchDecision(Decision decision) {
-    if (Provider.of<MatchEngine>(context, listen: false).currentMatch() !=
-        null) {
-      Provider.of<MatchEngine>(context, listen: false)
-          .currentMatchDecision(decision);
-      Provider.of<MatchEngine>(context, listen: false).goToNextMatch();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(0.0),
-      decoration: BoxDecoration(
-        color: whiteCardColor,
-        borderRadius: BorderRadius.circular(18.0),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: darkCardColor,
-            offset: Offset(0.0, 0.2),
-            blurRadius: 12.0,
-          ),
-        ],
-      ),
       child: Stack(
         fit: StackFit.expand,
         children: [
-          _buildBackground(),
-          _revertButton(),
+          FractionallySizedBox(
+            alignment: Alignment.topCenter,
+            heightFactor: 0.88,
+            widthFactor: 1.0,
+            child: Container(
+              color: Colors.white,
+              alignment: Alignment.center,
+              child: Text('Howdy!'),
+            ),
+          ),
+          FractionallySizedBox(
+            alignment: Alignment.bottomCenter,
+            heightFactor: 0.22,
+            widthFactor: 1.0,
+            child: _matchControls(),
+          ),
         ],
       ),
     );
@@ -233,7 +305,7 @@ class PhotoView extends StatefulWidget {
         super(key: key);
 
   /// The index of the phot to display initially.
-  /// 'The initialPhotoIndex cannot be `null` or negative. 
+  /// 'The initialPhotoIndex cannot be `null` or negative.
   /// It must also be in the range of avaliable imageUrls (starting from `0`).
   ///
   /// Defaults to `0`.
@@ -532,7 +604,7 @@ class _PhotoViewState extends State<PhotoView> {
     });
 
     return Align(
-      // 
+      //
       alignment: widget.carouselPosition == CarouselPosition.bottom
           ? widget.descriptionAlignment
           : widget.descriptionAlignment.add(

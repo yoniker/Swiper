@@ -14,6 +14,15 @@ import 'package:flutter/widgets.dart';
 /// and hidden by settings the [showOverlay] property to true or false.
 ///
 /// The [overlayBuilder] is invoked every time this Widget is rebuilt.
+
+// In essence what this mean is that, the [AnchoredOverlay] is a widget that shows or display
+// an overlay Widget which is centered above whatever child argument is passed to it.
+// This is no different than stacking a Centered Widget above the `child` except it is
+// an overlay rather than a stack.
+
+// Why we need this; this gives us the oppotunity to have our MatchCard right above all the
+// built-in Widget stack of our scaffold. Thus, when we try to drag a card over the bottom Navigation bar
+// the card goes over appearing as if we are dragging them out of the screen.
 class AnchoredOverlay extends StatelessWidget {
   final bool showOverlay;
   final Widget Function(BuildContext, Rect anchorBounds, Offset anchor)
@@ -32,9 +41,10 @@ class AnchoredOverlay extends StatelessWidget {
     return new Container(
       // This LayoutBuilder gives us the opportunity to measure the above
       // Container to calculate the "anchor" point at its center.
-      child: new LayoutBuilder(
+      child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          return new OverlayBuilder(
+          // The OverlayBuilder allows us to
+          return OverlayBuilder(
             showOverlay: showOverlay,
             overlayBuilder: (BuildContext overlayContext) {
               // To calculate the "anchor" point we grab the render box of
@@ -138,10 +148,16 @@ class _OverlayBuilderState extends State<OverlayBuilder> {
     }
   }
 
-  void addToOverlay(OverlayEntry entry) async {
+  /// This method adds the given `entry` parameter to the Existing Overlay context.
+  void addToOverlay(OverlayEntry entry) {
     Overlay.of(context).insert(entry);
   }
 
+  /// Hiding the overlay removes the overlayEntry constructed from the existing
+  /// Overlay context.
+  ///
+  /// Called whenever the `showOverlay` Constructor parameter of this [OverlayBuilder] class
+  /// is set to false.
   void hideOverlay() {
     if (overlayEntry != null) {
       overlayEntry.remove();
@@ -149,6 +165,11 @@ class _OverlayBuilderState extends State<OverlayBuilder> {
     }
   }
 
+  /// A method that is called when this Widget need to be rebuild.
+  /// Called at every re-build of this Widget.
+  ///
+  /// It checks to see if the `showOverlay` parameter has been set to null or not.
+  /// It then rebuilds the overlay or hide it depending on what the above condition yields.
   void syncWidgetAndOverlay() {
     if (isShowingOverlay() && !widget.showOverlay) {
       hideOverlay();
@@ -157,21 +178,35 @@ class _OverlayBuilderState extends State<OverlayBuilder> {
     }
   }
 
-  void buildOverlay() async {
+  /// Called at the First Initialization of this Widget.
+  ///
+  /// This essentially rebuilds the Widget by calling unto the build method
+  /// of this Stateful Widget.
+  void buildOverlay() {
     overlayEntry?.markNeedsBuild();
   }
 
   @override
   Widget build(BuildContext context) {
+    // This essentially tells the FrameWork to call the "buildOverlay" function
+    // after the drawing of this Frame has ended.
+    // This allows us to skip/escape any runtime errors that may occur when "setState()"
+    // or "markNeedsBuild()" is called during  the drawing of this Frame.
     WidgetsBinding.instance.addPostFrameCallback((_) => buildOverlay());
 
+    // Note: the child being return here is just a placeholder upon which
+    // the actual overlay is being built.
     return widget.child;
   }
 }
 
-
+/// This is a Widget that positions its child at the center of its parent [Widget]
+/// based on the Offset of its parent.
+///
+/// Note; this can also be achieved by using a Center [Widget].
+/// 
+/// * Check out Center.
 class CenterAbout extends StatelessWidget {
-
   final Offset position;
   final Widget child;
 
@@ -186,7 +221,7 @@ class CenterAbout extends StatelessWidget {
     return new Positioned(
       left: position.dx,
       top: position.dy,
-      child: new FractionalTranslation(
+      child: FractionalTranslation(
         translation: const Offset(-0.5, -0.5),
         child: child,
       ),

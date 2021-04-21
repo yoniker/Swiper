@@ -14,8 +14,32 @@ enum SlideDirection {
 }
 
 class DraggableCard extends StatefulWidget {
+  /// The Widget to build as the child of this [DragabbleCard].
   final Widget card;
+
+  /// A secondary Widget to show when the this card is being is scrolled.
+  ///
+  /// If found to be null nothing will be built as the "deatailsCard".
+  // This will contain all the Details for the match.
+  final Widget detailsCard;
+
+  /// A pageController for controlling exclusively what page is shown.
+  ///
+  /// It is this PageController the DetailsCard uses to return users back to
+  /// the Match Page once a valid Decision has been made.
+  final PageController controller;
+
+  /// Determines wether or not this Widget is Draggable.
+  ///
+  /// This is set to `true` by default
+  /// This parameter cannot be null.
   final bool isDraggable;
+
+  /// Wether or not to show the detailsCard.
+  ///
+  /// This is set to `false` by default
+  /// This parameter cannot be null.
+  final showDetails;
   final SlideDirection slideTo;
   final Function(double distance) onSlideUpdate;
   final Function(SlideDirection direction) onSlideComplete;
@@ -24,13 +48,16 @@ class DraggableCard extends StatefulWidget {
 
   DraggableCard({
     Key key,
-    this.card,
+    @required this.card,
+    this.detailsCard,
+    this.controller,
     this.isDraggable = true,
+    this.showDetails = false,
     this.slideTo,
     this.onSlideUpdate,
     this.onSlideComplete,
-    this.screenWidth,
-    this.screenHeight,
+    @required this.screenWidth,
+    @required this.screenHeight,
   });
 
   @override
@@ -249,9 +276,20 @@ class _DraggableCardState extends State<DraggableCard>
 
   void _onPanEnd(DragEndDetails details) {
     final dragVector = cardOffset / cardOffset.distance;
+
+    // This determines the point at which the Dragged Widget is considered to be
+    // at the left region.
     bool isInLeftRegion = (cardOffset.dx / context.size.width) < -0.35;
+
+    // This determines the point at which the Dragged Widget is considered to be
+    // at the right region.
     bool isInRightRegion = (cardOffset.dx / context.size.width) > 0.35;
+
+    // This determines the point at which the Dragged Widget is considered to be
+    // at the top region.
     final isInTopRegion = (cardOffset.dy / context.size.height) < -0.30;
+
+    // This helps to detect fast swipe either left or right.
     final FastSwipe fastSwipeStatus = detectFastSwipe();
 
     isInLeftRegion |= fastSwipeStatus == FastSwipe.Left;
@@ -309,8 +347,9 @@ class _DraggableCardState extends State<DraggableCard>
         child: Container(),
         overlayBuilder:
             (BuildContext context, Rect anchorBounds, Offset anchor) {
-          return CenterAbout(
-            position: anchor,
+          // Replaced the original CenterAbout [Widget] with a more precise [Widget]
+          // provided by the FrameWork, "Center".
+          return Center(
             child: Transform(
               transform:
                   Matrix4.translationValues(cardOffset.dx, cardOffset.dy, 0.0)
@@ -321,11 +360,29 @@ class _DraggableCardState extends State<DraggableCard>
                 width: anchorBounds.width,
                 height: anchorBounds.height,
                 padding: EdgeInsets.all(16.0),
-                child: GestureDetector(
-                  onPanStart: widget.isDraggable ? _onPanStart : null,
-                  onPanUpdate: widget.isDraggable ? _onPanUpdate : null,
-                  onPanEnd: widget.isDraggable ? _onPanEnd : null,
-                  child: widget.card,
+                child: Material(
+                  clipBehavior: Clip.hardEdge,
+                  borderRadius: BorderRadius.circular(16.0),
+                  child: PageView(
+                    controller: widget.controller,
+                    clipBehavior: Clip.none,
+                    physics: (widget.showDetails && widget.detailsCard != null)
+                        ? ClampingScrollPhysics()
+                        : NeverScrollableScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    children: [
+                      GestureDetector(
+                        onPanStart: widget.isDraggable ? _onPanStart : null,
+                        onPanUpdate: widget.isDraggable ? _onPanUpdate : null,
+                        onPanEnd: widget.isDraggable ? _onPanEnd : null,
+                        child: widget.card,
+                      ),
+
+                      // Build the profile description display.
+                      if (widget.showDetails && widget.detailsCard != null)
+                        widget.detailsCard,
+                    ],
+                  ),
                 ),
               ),
             ),

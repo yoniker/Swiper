@@ -78,6 +78,20 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
   double bottomStackScale = 0.75;
   Offset bottomStackOffset = Offset(0.0, 1.12);
 
+  // The controller that controls how each match card slides when a valid Decision is made.
+  var _matchPageController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // initialize the match engine.
+    _initEngine();
+
+    // Initialize the [PageController] with values.
+    _matchPageController = PageController(initialPage: 0);
+  }
+
   /// Deduce what direction to be registered for specific [Decision]s.
   ///
   /// called to determine the [SlideDirection] the MatchCard should be Dragged to.
@@ -208,12 +222,18 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
         slideTo: _desiredSlideOutDirection(),
         onSlideUpdate: _onSlideUpdate,
         onSlideComplete: _onSlideComplete,
+        controller: _matchPageController,
         isDraggable: true,
+        showDetails: true,
         card: MatchCard(
           key: Key(currentMatch.profile.username),
           profile: currentMatch.profile,
           showCarousel: true,
           clickable: true,
+        ),
+        detailsCard: MatchDetailsCard(
+          matchprofile: currentMatch.profile,
+          pageController: _matchPageController,
         ),
       );
     } else {
@@ -242,14 +262,6 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
     await Provider.of<MatchEngine>(context, listen: false)
         .getMoreMatchesFromServer();
     setState(() {});
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    // initialize the match engine.
-    _initEngine();
   }
 
   @override
