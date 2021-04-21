@@ -590,7 +590,7 @@ List<Widget> buildMatchDetails(Profile profile) {
         right: 5.0,
       ),
       child: Text(
-        profile.headline,
+        (profile.headline != null) ?  profile.headline : '',
         textAlign: TextAlign.right,
         style: defaultTextStyle,
       ),
@@ -622,7 +622,7 @@ List<Widget> buildMatchDetails(Profile profile) {
             style: boldedTextStyle.copyWith(fontSize: 24),
           ),
           TextSpan(
-            text: profile.description,
+            text: (profile.description != null) ? profile.description : 'No Description available' ,
           ),
         ]),
       ),
@@ -649,7 +649,7 @@ List<Widget> buildMatchDetails(Profile profile) {
       child: Text(
         (profile.location != null)
             ? 'Lives in ${profile.location}'
-            : 'No Location available',
+            : 'Current Location not available',
         textAlign: TextAlign.right,
         style: defaultTextStyle,
       ),
