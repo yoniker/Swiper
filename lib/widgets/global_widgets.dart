@@ -9,14 +9,24 @@ class GlobalWidgets {
     String imagePath, {
     double scale = 4.0,
 
+    /// The Padding to be applied to the outter bounds of `this`
+    /// [ImageToIcon] Widget.
+    EdgeInsets iconPad = const EdgeInsets.all(7.5),
+
     /// A callback that fires when this widget is tapped.
     void Function() onTap,
   }) {
+    // ASSERTION LAYER.
+    assert(
+      iconPad != null,
+      'The parameter "iconPad" cannot be null, please provide an acceptable value for the "iconPad" parameter',
+    );
+
     // check if scale is null and assign it a default value of 4.0
     scale ??= 4.0;
 
     var child = Padding(
-      padding: EdgeInsets.all(7.5),
+      padding: iconPad,
       child: Image.asset(
         imagePath,
         scale: scale,
@@ -176,42 +186,57 @@ class GlobalWidgets {
             borderRadius: BorderRadius.circular(15),
             elevation: 1.0,
             color: darkCardColor,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: Stack(
+              fit: StackFit.expand,
+              // mainAxisAlignment: MainAxisAlignment.spaceAround,
+              // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    style: _defaultTextStyle,
-                    children: <InlineSpan>[
-                      TextSpan(
-                        text: ' "${_resolveAlertTitle()}"\n ',
-                        style: _varryingTextStyle,
+                FractionallySizedBox(
+                  heightFactor: 0.7,
+                  widthFactor: 1.0,
+                  alignment: Alignment.topCenter,
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          style: _defaultTextStyle,
+                          children: <InlineSpan>[
+                            TextSpan(
+                              text: ' "${_resolveAlertTitle()}"\n ',
+                              style: _varryingTextStyle,
+                            ),
+                            TextSpan(
+                              text: ' $message ',
+                            ),
+                          ],
+                        ),
                       ),
-                      TextSpan(
-                        text: ' $message ',
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 8.0,
-                  ),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateColor.resolveWith(
-                          (states) => Colors.white),
-                    ),
-                    onPressed: () {
-                      // user has canceled the delete action.
-                      Navigator.of(context).pop<void>();
-                      // return false;
-                    },
-                    child: Text(
-                      'Ok',
-                      style: _varryingTextStyle.copyWith(color: colorBlend02),
+                FractionallySizedBox(
+                  heightFactor: 0.3,
+                  widthFactor: 1.0,
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateColor.resolveWith(
+                            (states) => Colors.white),
+                      ),
+                      onPressed: () {
+                        // user has canceled the delete action.
+                        Navigator.of(context).pop<void>();
+                        // return false;
+                      },
+                      child: Text(
+                        'Ok',
+                        style: _varryingTextStyle.copyWith(color: colorBlend02),
+                      ),
                     ),
                   ),
                 ),

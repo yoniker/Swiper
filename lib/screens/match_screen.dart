@@ -232,10 +232,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
           showCarousel: true,
           clickable: true,
         ),
-        detailsCard: MatchDetailsCard(
-          matchprofile: currentMatch.profile,
-          pageController: _matchPageController,
-        ),
+        mactchProfile: currentMatch.profile,
       );
     } else {
       // show a progress indicator.
