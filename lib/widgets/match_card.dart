@@ -150,233 +150,233 @@ class _MatchCardState extends State<MatchCard> {
 
 /// A widget to display the Details of each match which will be
 /// displayed when the MatchCard is scrolled up.
-class MatchDetailsCard extends StatefulWidget {
-  const MatchDetailsCard({
-    Key key,
-    @required this.matchprofile,
-    @required this.scrollController,
-    this.exitDuration = const Duration(milliseconds: 200),
-  }) : super(key: key);
+// class MatchDetailsCard extends StatefulWidget {
+//   const MatchDetailsCard({
+//     Key key,
+//     @required this.matchprofile,
+//     @required this.scrollController,
+//     this.exitDuration = const Duration(milliseconds: 200),
+//   }) : super(key: key);
 
-  /// The Profile of this match from which the necessary information
-  /// to display is extracted.
-  final Profile matchprofile;
+//   /// The Profile of this match from which the necessary information
+//   /// to display is extracted.
+//   final Profile matchprofile;
 
-  /// This gives us the opportunity to close the details page once a Decision
-  /// has been made regarding the current Match.
-  final ScrollController scrollController;
+//   /// This gives us the opportunity to close the details page once a Decision
+//   /// has been made regarding the current Match.
+//   final ScrollController scrollController;
 
-  /// The Time taken for the Details screen to exit the details Page when a
-  /// Decision is made.
-  final Duration exitDuration;
+//   /// The Time taken for the Details screen to exit the details Page when a
+//   /// Decision is made.
+//   final Duration exitDuration;
 
-  @override
-  _MatchDetailsCardState createState() => _MatchDetailsCardState();
-}
+//   @override
+//   _MatchDetailsCardState createState() => _MatchDetailsCardState();
+// }
 
-class _MatchDetailsCardState extends State<MatchDetailsCard> {
-  // Defines the ScrollController that controls the inner ScrollView.
-  ScrollController _innerScrollController;
+// class _MatchDetailsCardState extends State<MatchDetailsCard> {
+//   // Defines the ScrollController that controls the inner ScrollView.
+//   ScrollController _innerScrollController;
 
-  //  Defines the ScrollPhysics of the DetalsCard scrollView.
-  ScrollPhysics physics = ClampingScrollPhysics();
+//   //  Defines the ScrollPhysics of the DetalsCard scrollView.
+//   ScrollPhysics physics = ClampingScrollPhysics();
 
-  // The defualt Curve with which the details Page animates out into the new Match Page.
-  final kdefaultExitCurve = Curves.fastOutSlowIn;
+//   // The defualt Curve with which the details Page animates out into the new Match Page.
+//   final kdefaultExitCurve = Curves.fastOutSlowIn;
 
-  // /// A function to select the match Decision made on the the current match.
-  // currentMatchDecision(Decision decision) {
-  //   if (Provider.of<MatchEngine>(context, listen: false).currentMatch() !=
-  //       null) {
-  //     Provider.of<MatchEngine>(context, listen: false)
-  //         .currentMatchDecision(decision);
-  //     Provider.of<MatchEngine>(context, listen: false).goToNextMatch();
+//   // /// A function to select the match Decision made on the the current match.
+//   // currentMatchDecision(Decision decision) {
+//   //   if (Provider.of<MatchEngine>(context, listen: false).currentMatch() !=
+//   //       null) {
+//   //     Provider.of<MatchEngine>(context, listen: false)
+//   //         .currentMatchDecision(decision);
+//   //     Provider.of<MatchEngine>(context, listen: false).goToNextMatch();
 
-  //     // close thr page since a valid Decision has been made.
-  //     closePage();
-  //   }
-  // }
+//   //     // close thr page since a valid Decision has been made.
+//   //     closePage();
+//   //   }
+//   // }
 
-  // /// Close the MatchDetailsCard.
-  // /// This essetially calls "moveToPage" on the pageController parameter
-  // /// passed to it.
-  // void closePage() {
-  //   widget.scrollController.animateTo(
-  //     0,
-  //     duration: widget.exitDuration,
-  //     curve: kdefaultExitCurve,
-  //   );
+//   // /// Close the MatchDetailsCard.
+//   // /// This essetially calls "moveToPage" on the pageController parameter
+//   // /// passed to it.
+//   // void closePage() {
+//   //   widget.scrollController.animateTo(
+//   //     0,
+//   //     duration: widget.exitDuration,
+//   //     curve: kdefaultExitCurve,
+//   //   );
 
-  //   // we can also use jumpToPage but that will not animate.
-  //   // widget.pageController.jumpToPage(0);
-  // }
+//   //   // we can also use jumpToPage but that will not animate.
+//   //   // widget.pageController.jumpToPage(0);
+//   // }
 
-  @override
-  void initState() {
-    super.initState();
+//   @override
+//   void initState() {
+//     super.initState();
 
-    // Instantiate the _innerScrollController.
-    _innerScrollController = ScrollController();
+//     // Instantiate the _innerScrollController.
+//     _innerScrollController = ScrollController();
 
-    // Add a listener to the outter scroll controller.
-    widget.scrollController.addListener(() {
-      // check to see if the scrollView is at the end of scrolling
-      if (widget.scrollController.offset ==
-          widget.scrollController.position.maxScrollExtent) {
-        setState(() {
-          // locks the ScrollView from moving allowing the outter ScrollView
-          // to do the job.
-          physics = ClampingScrollPhysics();
-        });
-      }
-    });
+//     // Add a listener to the outter scroll controller.
+//     widget.scrollController.addListener(() {
+//       // check to see if the scrollView is at the end of scrolling
+//       if (widget.scrollController.offset ==
+//           widget.scrollController.position.maxScrollExtent) {
+//         setState(() {
+//           // locks the ScrollView from moving allowing the outter ScrollView
+//           // to do the job.
+//           physics = ClampingScrollPhysics();
+//         });
+//       }
+//     });
 
-    // Add a listener to the outter scroll controller.
-    _innerScrollController.addListener(() {
-      //
-      if (_innerScrollController.offset ==
-          _innerScrollController.position.minScrollExtent) {
-        setState(() {
-          // locks the ScrollView from moving allowing the outter ScrollView
-          // to do the job.
-          physics = NeverScrollableScrollPhysics();
-        });
-      }
-    });
-  }
+//     // Add a listener to the outter scroll controller.
+//     _innerScrollController.addListener(() {
+//       //
+//       if (_innerScrollController.offset ==
+//           _innerScrollController.position.minScrollExtent) {
+//         setState(() {
+//           // locks the ScrollView from moving allowing the outter ScrollView
+//           // to do the job.
+//           physics = NeverScrollableScrollPhysics();
+//         });
+//       }
+//     });
+//   }
 
-  // /// A widget that displays the actions a user can make on a match.
-  // /// Actions such as:
-  // ///   "Dislike",
-  // ///   "Like",
-  // ///   "Draft Message"
-  // ///
-  // /// Essentially a list of [DecisionControl] widgets to display below
-  // /// the Image Display Widget of each match.
-  // Widget _matchControls() {
-  //   return Container(
-  //     foregroundDecoration: BoxDecoration(
-  //       color: Colors.transparent,
-  //     ),
-  //     decoration: BoxDecoration(
-  //       color: Colors.white,
-  //       boxShadow: [
-  //         BoxShadow(
-  //           color: darkCardColor,
-  //           offset: Offset(0.0, 0.2),
-  //           blurRadius: 16.0,
-  //         ),
-  //       ],
-  //     ),
-  //     // A Matrial Widget is added here so as to allow the solash of the InkWell Widgets
-  //     // below this Widget in the tree to show.
-  //     //
-  //     // Note: Any Container Within the Widget tree will obscure the action of any InkWell Widget
-  //     // below such Container in the Widget tree.
-  //     child: Material(
-  //       // With this as transparent we can retain the original color of the Enclosing
-  //       // Decoration Widget.
-  //       color: Colors.transparent,
-  //       child: Row(
-  //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //         children: [
-  //           InkWell(
-  //             borderRadius: BorderRadius.circular(15.0),
-  //             child: GlobalWidgets.imageToIcon(
-  //               BetaIconPaths.dislikeMatchIcon,
-  //               scale: 4.0,
-  //             ),
-  //             onTap: () {
-  //               // Decision.nope
-  //               currentMatchDecision(Decision.nope);
-  //             },
-  //           ),
-  //           InkWell(
-  //             borderRadius: BorderRadius.circular(15.0),
-  //             child: GlobalWidgets.imageToIcon(
-  //               BetaIconPaths.likeMatchIcon,
-  //               scale: 3.75,
-  //             ),
-  //             onTap: () {
-  //               // Decision.like
-  //               currentMatchDecision(Decision.like);
-  //             },
-  //           ),
-  //           InkWell(
-  //             borderRadius: BorderRadius.circular(15.0),
-  //             child: GlobalWidgets.imageToIcon(
-  //               BetaIconPaths.draftMesssageIcon,
-  //               scale: 4.0,
-  //             ),
-  //             onTap: () {
-  //               // Call a Function to open a chat Tab to chat with the match.
-  //               print('MAKE A DRAFT!');
-  //             },
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
+//   // /// A widget that displays the actions a user can make on a match.
+//   // /// Actions such as:
+//   // ///   "Dislike",
+//   // ///   "Like",
+//   // ///   "Draft Message"
+//   // ///
+//   // /// Essentially a list of [DecisionControl] widgets to display below
+//   // /// the Image Display Widget of each match.
+//   // Widget _matchControls() {
+//   //   return Container(
+//   //     foregroundDecoration: BoxDecoration(
+//   //       color: Colors.transparent,
+//   //     ),
+//   //     decoration: BoxDecoration(
+//   //       color: Colors.white,
+//   //       boxShadow: [
+//   //         BoxShadow(
+//   //           color: darkCardColor,
+//   //           offset: Offset(0.0, 0.2),
+//   //           blurRadius: 16.0,
+//   //         ),
+//   //       ],
+//   //     ),
+//   //     // A Matrial Widget is added here so as to allow the solash of the InkWell Widgets
+//   //     // below this Widget in the tree to show.
+//   //     //
+//   //     // Note: Any Container Within the Widget tree will obscure the action of any InkWell Widget
+//   //     // below such Container in the Widget tree.
+//   //     child: Material(
+//   //       // With this as transparent we can retain the original color of the Enclosing
+//   //       // Decoration Widget.
+//   //       color: Colors.transparent,
+//   //       child: Row(
+//   //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+//   //         children: [
+//   //           InkWell(
+//   //             borderRadius: BorderRadius.circular(15.0),
+//   //             child: GlobalWidgets.imageToIcon(
+//   //               BetaIconPaths.dislikeMatchIcon,
+//   //               scale: 4.0,
+//   //             ),
+//   //             onTap: () {
+//   //               // Decision.nope
+//   //               currentMatchDecision(Decision.nope);
+//   //             },
+//   //           ),
+//   //           InkWell(
+//   //             borderRadius: BorderRadius.circular(15.0),
+//   //             child: GlobalWidgets.imageToIcon(
+//   //               BetaIconPaths.likeMatchIcon,
+//   //               scale: 3.75,
+//   //             ),
+//   //             onTap: () {
+//   //               // Decision.like
+//   //               currentMatchDecision(Decision.like);
+//   //             },
+//   //           ),
+//   //           InkWell(
+//   //             borderRadius: BorderRadius.circular(15.0),
+//   //             child: GlobalWidgets.imageToIcon(
+//   //               BetaIconPaths.draftMesssageIcon,
+//   //               scale: 4.0,
+//   //             ),
+//   //             onTap: () {
+//   //               // Call a Function to open a chat Tab to chat with the match.
+//   //               print('MAKE A DRAFT!');
+//   //             },
+//   //           ),
+//   //         ],
+//   //       ),
+//   //     ),
+//   //   );
+//   // }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          FractionallySizedBox(
-            alignment: Alignment.topCenter,
-            heightFactor: 0.78,
-            widthFactor: 1.0,
-            child: Container(
-              color: Colors.white,
-              alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: SingleChildScrollView(
-                physics: NeverScrollableScrollPhysics(),
-                primary: true,
-                child: Column(
-                  children: [
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                    Text('Howdy!'),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          // FractionallySizedBox(
-          //   alignment: Alignment.bottomCenter,
-          //   heightFactor: 0.22,
-          //   widthFactor: 1.0,
-          //   child: _matchControls(),
-          // ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       child: Stack(
+//         fit: StackFit.expand,
+//         children: [
+//           FractionallySizedBox(
+//             alignment: Alignment.topCenter,
+//             heightFactor: 0.78,
+//             widthFactor: 1.0,
+//             child: Container(
+//               color: Colors.white,
+//               alignment: Alignment.center,
+//               padding: EdgeInsets.symmetric(vertical: 16.0),
+//               child: SingleChildScrollView(
+//                 physics: NeverScrollableScrollPhysics(),
+//                 primary: true,
+//                 child: Column(
+//                   children: [
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                     Text('Howdy!'),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//           ),
+//           // FractionallySizedBox(
+//           //   alignment: Alignment.bottomCenter,
+//           //   heightFactor: 0.22,
+//           //   widthFactor: 1.0,
+//           //   child: _matchControls(),
+//           // ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 /// A Widget to display a set of images.
 /// Used by the [MatchCard] widget to display images of

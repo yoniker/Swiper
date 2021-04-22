@@ -191,7 +191,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
         screenHeight: MediaQuery.of(context).size.height,
         screenWidth: MediaQuery.of(context).size.width,
         isDraggable: false,
-        showDetails: false,
+        canScroll: false,
         card: Transform.scale(
           scale: middleStackScale,
           alignment: Alignment(middleStackOffset.dx, middleStackOffset.dy),
@@ -225,7 +225,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
         onSlideComplete: _onSlideComplete,
         controller: _matchPageController,
         isDraggable: true,
-        showDetails: true,
+        canScroll: true,
         card: MatchCard(
           key: Key(currentMatch.profile.username),
           profile: currentMatch.profile,

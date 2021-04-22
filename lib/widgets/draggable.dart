@@ -47,7 +47,7 @@ class DraggableCard extends StatefulWidget {
   ///
   /// This is set to `false` by default
   /// This parameter cannot be null.
-  final showDetails;
+  final canScroll;
 
   /// The Time taken for the Details screen to exit the details Page when a
   /// Decision is made.
@@ -65,7 +65,7 @@ class DraggableCard extends StatefulWidget {
     this.controller,
     this.mactchProfile,
     this.isDraggable = true,
-    this.showDetails = false,
+    this.canScroll = false,
     this.slideTo,
     this.onSlideUpdate,
     this.onSlideComplete,
@@ -492,7 +492,7 @@ class _DraggableCardState extends State<DraggableCard>
               child: Material(
                 clipBehavior: Clip.hardEdge,
                 borderRadius: BorderRadius.circular(16.0),
-                child: (widget.showDetails != true)
+                child: (widget.canScroll != true)
                     // Builds the regular DraggableCard with no inclusion of the details Page
                     // whatsoever.
                     ? GestureDetector(
@@ -502,50 +502,56 @@ class _DraggableCardState extends State<DraggableCard>
                         child: widget.card,
                       )
                     : SizedBox.expand(
-                        child: SingleChildScrollView(
+                        child: Scrollbar(
+                          isAlwaysShown: false,
                           controller: scrollController,
-                          clipBehavior: Clip.none,
-                          physics: ClampingScrollPhysics(),
-                          scrollDirection: Axis.vertical,
-                          child: Column(
-                            children: [
-                              // Diplays the MatchCard.
-                              // We have to explicitly pass the height parameter to the SizedBox
-                              // holding the holding the MatchCard Widget so that we can give a valid
-                              // size constraints to the MatchCard Display.
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.7,
-                                child: GestureDetector(
-                                  onPanStart:
-                                      widget.isDraggable ? _onPanStart : null,
-                                  onPanUpdate:
-                                      widget.isDraggable ? _onPanUpdate : null,
-                                  onPanEnd:
-                                      widget.isDraggable ? _onPanEnd : null,
-                                  child: widget.card,
+                          thickness: 4.0,
+                          radius: Radius.circular(8.0),
+                          child: SingleChildScrollView(
+                            controller: scrollController,
+                            clipBehavior: Clip.none,
+                            physics: ClampingScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            child: Column(
+                              children: [
+                                // Diplays the MatchCard.
+                                // We have to explicitly pass the height parameter to the SizedBox
+                                // holding the holding the MatchCard Widget so that we can give a valid
+                                // size constraints to the MatchCard Display.
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.7,
+                                  child: GestureDetector(
+                                    onPanStart:
+                                        widget.isDraggable ? _onPanStart : null,
+                                    onPanUpdate:
+                                        widget.isDraggable ? _onPanUpdate : null,
+                                    onPanEnd:
+                                        widget.isDraggable ? _onPanEnd : null,
+                                    child: widget.card,
+                                  ),
                                 ),
-                              ),
 
-                              // Here we display the DetailsCard of this Match.
-                              // The following will contain the MatchCard Implementation.
-                              // SizedBox(
-                              //   height: MediaQuery.of(context).size.height * 0.7,
-                              //   child: widget.detailsCard,
-                              // ),
+                                // Here we display the DetailsCard of this Match.
+                                // The following will contain the MatchCard Implementation.
+                                // SizedBox(
+                                //   height: MediaQuery.of(context).size.height * 0.7,
+                                //   child: widget.detailsCard,
+                                // ),
 
-                              // build the MatchCardDetails.
-                              // The tripple dots placed at the back just mean that I am appending the
-                              // below ehich is a list of Widgets to this bigger list.
-                              // removing it will cause analysis error.
-                              // 
-                              // This is just a way one can add a grouped List of Widgets within another 
-                              // super or parent list.
-                              ...buildMatchDetails(widget.mactchProfile),
+                                // build the MatchCardDetails.
+                                // The tripple dots placed at the back just mean that I am appending the
+                                // below ehich is a list of Widgets to this bigger list.
+                                // removing it will cause analysis error.
+                                // 
+                                // This is just a way one can add a grouped List of Widgets within another 
+                                // super or parent list.
+                                ...buildMatchDetails(widget.mactchProfile),
 
-                              // build the Match Control.
-                              _matchControls(),
-                            ],
+                                // build the Match Control.
+                                _matchControls(),
+                              ],
+                            ),
                           ),
                         ),
                       ),
