@@ -271,7 +271,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
           child: Stack(
             children: <Widget>[
               // The last stack at the bottom.
-              _bottomStack(),
+              // _bottomStack(),
 
               // The [MatchCard] stacked in the middle.
               _middleStack(),

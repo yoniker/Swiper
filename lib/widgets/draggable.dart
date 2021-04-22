@@ -535,6 +535,12 @@ class _DraggableCardState extends State<DraggableCard>
                               // ),
 
                               // build the MatchCardDetails.
+                              // The tripple dots placed at the back just mean that I am appending the
+                              // below ehich is a list of Widgets to this bigger list.
+                              // removing it will cause analysis error.
+                              // 
+                              // This is just a way one can add a grouped List of Widgets within another 
+                              // super or parent list.
                               ...buildMatchDetails(widget.mactchProfile),
 
                               // build the Match Control.

@@ -35,14 +35,19 @@ class _MatchCardState extends State<MatchCard> {
   /// This is typically a [PhotoView].
   Widget _buildBackground() {
     // returns a [PhotoView] widget.
-    return PhotoView(
-      isClickable: widget.clickable,
-      initialPhotoIndex: 0,
-      imageUrls: widget.profile.imageUrls,
-      showCarousel: widget.showCarousel,
-      descriptionWidget: _descritionWidget(),
-      carouselInactiveDotColor: darkCardColor,
-      carouselActiveDotColor: colorBlend02,
+    return FractionallySizedBox(
+      alignment: Alignment.bottomCenter,
+      heightFactor: 0.9,
+      widthFactor: 1.0,
+      child: PhotoView(
+        isClickable: widget.clickable,
+        initialPhotoIndex: 0,
+        imageUrls: widget.profile.imageUrls,
+        showCarousel: widget.showCarousel,
+        descriptionWidget: _descritionWidget(),
+        carouselInactiveDotColor: darkCardColor,
+        carouselActiveDotColor: colorBlend02,
+      ),
     );
   }
 
@@ -95,15 +100,17 @@ class _MatchCardState extends State<MatchCard> {
   Widget _revertButton() {
     return Align(
       alignment: Alignment.topLeft,
+      heightFactor: 0.1,
+      widthFactor: 1.0,
       child: Material(
         color: Colors.transparent,
         child: Padding(
-          padding: EdgeInsets.all(12.0),
+          padding: EdgeInsets.all(2.0),
           child: IconButton(
             icon: Icon(
               Icons.replay_rounded,
               size: 24.0,
-              color: whiteCardColor,
+              color: colorBlend01,
             ),
             onPressed: () {
               // Move to the prevoious Match Deducted by the Match Engine.
@@ -133,8 +140,8 @@ class _MatchCardState extends State<MatchCard> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          _buildBackground(),
           _revertButton(),
+          _buildBackground(),
         ],
       ),
     );
