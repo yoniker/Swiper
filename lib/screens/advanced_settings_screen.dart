@@ -12,34 +12,33 @@ class AdvancedSettingsScreen extends StatefulWidget {
   static const String CELEB_FILTER='celeb_filter';
   static const String TASTE_FILTER='taste_filter';
   static const String CUSTOM_FACE_FILTER='custom_face_filter';
+  static const minAuditionValue = 0.0;
+  static const maxAuditionValue = 4.0;
+  static const List<String> similarityDescriptions = [
+    'Remotely',
+    'Somewhat',
+    '',
+    'Very',
+    'Extremely'
+
+  ];
 
   @override
   _AdvancedSettingsScreenState createState() => _AdvancedSettingsScreenState();
 }
 
 class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
-  // Create a new instance of the SettingsService class.
-
-  //
-  bool _applyFilter = false;
-
-  // The index of the selected filter.
-  int _filterIndex = 0;
-
-  //
+  
   int _availableFilters = 1;
-
-  //
-  Celeb _selectedCeleb=Celeb(celebName:SettingsData().celebId); //TODO support Celeb fetching from SettingsData
-
-  //
-  int _auditionCount = 50; //TODO support audition count at SettingsData
+  Celeb _selectedCeleb=Celeb(celebName:SettingsData().celebId,imagesUrls: [SettingsData().filterDisplayImageUrl]); //TODO support Celeb fetching from SettingsData
+  String _currentChosenFilterName = SettingsData().filterName;
+  int _chosenAuditionCount = SettingsData().auditionCount;
 
   Widget _buildFilterWidget({
     String title,
     String description,
     List<Widget> children,
-    int index,
+    String filterName,
   }) {
     return GlobalWidgets.buildSettingsBlock(
       leading: Column(
@@ -51,7 +50,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: (index != _filterIndex)
+                child: (filterName != _currentChosenFilterName)
                     ? Text(
                   '$title ',
                   style: _boldTextStyle,
@@ -74,15 +73,16 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child:CupertinoSwitch(
-    value: index == _filterIndex,
+    value: filterName == _currentChosenFilterName,
     activeColor: colorBlend01,
     onChanged: (value) {
       setState(() {
         if (value == true){
-        _filterIndex = index;}
+          _currentChosenFilterName = filterName;}
         else{
-          _filterIndex = -1;
+          _currentChosenFilterName='';
         }
+        SettingsData().filterName = _currentChosenFilterName;
       });
     },
               )),
@@ -92,8 +92,8 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
       ),
         child:AnimatedContainer(
         duration: Duration(milliseconds: 500),
-    height: (_filterIndex != index)?0:175,
-    child:(_filterIndex != index)
+    height: (_currentChosenFilterName != filterName)?0:175,
+    child:(_currentChosenFilterName != filterName)
     ? SizedBox.shrink()
         : Container(
     child: SingleChildScrollView(
@@ -123,7 +123,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     //
-    _filterIndex>=0 ? _availableFilters=0 : _availableFilters = 1;
+    _currentChosenFilterName.length>0 ? _availableFilters=0 : _availableFilters = 1;
     resolveIntToString() {
       if (_availableFilters == 1) {
         return 'one';
@@ -192,67 +192,64 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                         description:
                         'Search for people who look similar to a celebrity of your choice',
                         title: 'Celeb Look-Alike',
-                        index: 1,
+                        filterName: AdvancedSettingsScreen.CELEB_FILTER,
                         children: [
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'Search Celeb',
-                                      style: _boldTextStyle,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(right: 8.0),
-                                          child: Text(
-                                            '${_selectedCeleb?.celebName}',
-                                            style: _defaultTextStyle,
+                                TextButton(
+                                      onPressed:() {
+                                    // Direct user to the Celebrity Selection Page.
+                                    Navigator.of(context).push<Celeb>(
+                                      CupertinoPageRoute<Celeb>(
+                                        builder: (context) {
+                                          return ScreenCelebritySelection();
+                                        },
+                                      ),
+                                    ).then((selectedCeleb) {
+                                      setState(() {
+                                        // Set the `_selectedCeleb` variable to the newly selected
+                                        // celebrity from the [CelebritySelectionScreen] page given that it is not null.
+                                        if (selectedCeleb != null) {
+                                          _selectedCeleb = selectedCeleb;
+                                          SettingsData().celebId = _selectedCeleb.celebName;
+                                        } else {
+                                          //
+                                          print(
+                                              'No Celebrity Selected!');
+                                        }
+                                      });
+                                    });
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Search Celeb',
+                                        style: _boldTextStyle,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(right: 8.0),
+                                            child: Text(
+                                              '${_selectedCeleb.celebName}',
+                                              style: _defaultTextStyle,
+                                            ),
                                           ),
-                                        ),
-                                        TextButton(
-                                          style: ButtonStyle(
-                                            overlayColor:
-                                            MaterialStateProperty.all(
-                                                colorBlend01
-                                                    .withOpacity(0.2)),
-                                          ),
-                                          child: GlobalWidgets.imageToIcon(
-                                            'assets/images/forward_arrow.png',
-                                          ),
-                                          onPressed: () {
-                                            // Direct user to the Celebrity Selection Page.
-                                            Navigator.of(context).push<Celeb>(
-                                              CupertinoPageRoute<Celeb>(
-                                                builder: (context) {
-                                                  return ScreenCelebritySelection();
-                                                },
-                                              ),
-                                            ).then((selectedCeleb) {
-                                              setState(() {
-                                                // Set the `_selectedCeleb` variable to the newly selected
-                                                // celebrity from the [CelebritySelectionScreen] page given that it is not null.
-                                                if (selectedCeleb != null) {
-                                                  _selectedCeleb =
-                                                      selectedCeleb;
-                                                } else {
-                                                  //
-                                                  print(
-                                                      'No Celebrity Selected!');
-                                                }
-                                              });
-                                            });
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+
+
+                                            GlobalWidgets.imageToIcon(
+                                              'assets/images/forward_arrow.png',
+                                            ),
+
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 Divider(
                                   color: darkCardColor,
@@ -288,45 +285,12 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                     children: <InlineSpan>[
                                                       TextSpan(
                                                         text:
-                                                        'Audition $_auditionCount ',
+                                                        '${AdvancedSettingsScreen.similarityDescriptions[_chosenAuditionCount]} Similar',
                                                         style:
                                                         _defaultTextStyle,
                                                       ),
-                                                      TextSpan(
-                                                        text: 'People ',
-                                                        style:
-                                                        _boldTextStyle,
-                                                      ),
-                                                      WidgetSpan(
-                                                        child: GestureDetector(
-                                                          child: Text(
-                                                            "  what's this?",
-                                                            style:
-                                                            _defaultTextStyle
-                                                                .copyWith(
-                                                              color: linkColor,
-                                                            ),
-                                                          ),
-                                                          onTap: () {
-                                                            // print "what's this" to console for now.
-                                                            // TODO: Add Appropriate functionality.
 
-                                                            // What's this Functionality.
-                                                            GlobalWidgets
-                                                                .showAlertDialogue(
-                                                              context,
-                                                              title:
-                                                              'Audition Count',
-                                                              message:
-                                                              'This denotes the number of profiles to display, the highest you can select is 100',
-                                                            );
-                                                            //<debug>
-                                                            //
-                                                            print(
-                                                                "what's this");
-                                                          },
-                                                        ),
-                                                      ),
+
                                                     ],
                                                   ),
                                                 ),
@@ -347,7 +311,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                           CrossAxisAlignment.center,
                                           children: [
                                             Icon(
-                                              Icons.person_outline,
+                                              Icons.group_outlined,
                                               size: 24.0,
                                               color: colorBlend01,
                                             ),
@@ -357,31 +321,33 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                     horizontal: 12.0),
                                                 child: CupertinoSlider(
                                                   activeColor: colorBlend01,
-                                                  value: _auditionCount
-                                                      .roundToDouble(),
-                                                  min: 21,
-                                                  max: 100,
-                                                  divisions: 80,
+                                                  value: _chosenAuditionCount.roundToDouble(),
+                                                  min: AdvancedSettingsScreen.minAuditionValue.roundToDouble(),
+                                                  max: AdvancedSettingsScreen.maxAuditionValue.roundToDouble(),
+                                                  divisions: 4,
                                                   onChanged: (value) {
                                                     setState(() {
-                                                      _auditionCount =
-                                                          value.toInt();
-                                                      // print the current value of `_auditionCount` to console.
-                                                      //<debug>
-                                                      print(_auditionCount);
+                                                      _chosenAuditionCount = value.round();
+                                                      SettingsData().auditionCount = _chosenAuditionCount;
                                                     });
                                                   },
                                                 ),
                                               ),
                                             ),
                                             Icon(
-                                              Icons.people_alt_outlined,
+                                              Icons.person_outline,
                                               size: 24.0,
                                               color: colorBlend01,
                                             ),
                                           ],
                                         ),
+
                                       ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [Text('More Matches'),Text('More Similar')],),
+                                      )
                                     ],
                                   ),
                                 ),
@@ -390,9 +356,9 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                         ),
                       _buildFilterWidget(
                         description:
-                        ' Find Matches Based On Your Taste',
+                        ' Find matches based on your taste',
                         title: 'Learnt Taste',
-                        index: 2,
+                        filterName: AdvancedSettingsScreen.TASTE_FILTER,
                         children:[
                                 Container(
                                   padding: EdgeInsets.symmetric(
@@ -413,7 +379,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                               children: <InlineSpan>[
                                                 TextSpan(
                                                   text:
-                                                  'Audition $_auditionCount ',
+                                                  'Choose one out of  $_chosenAuditionCount ',
                                                   style: _defaultTextStyle,
                                                 ),
                                                 TextSpan(
@@ -468,7 +434,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                     CrossAxisAlignment.center,
                                     children: [
                                       Icon(
-                                        Icons.person_outline,
+                                        Icons.group_outlined,
                                         size: 24.0,
                                         color: colorBlend01,
                                       ),
@@ -478,18 +444,16 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                               horizontal: 12.0),
                                           child: CupertinoSlider(
                                             activeColor: colorBlend01,
-                                            value: _auditionCount
+                                            value: _chosenAuditionCount
                                                 .roundToDouble(),
-                                            min: 21,
-                                            max: 100,
-                                            divisions: 80,
+                                            min: AdvancedSettingsScreen.minAuditionValue.roundToDouble(),
+                                            max: AdvancedSettingsScreen.maxAuditionValue.roundToDouble(),
+                                            divisions: 5,
                                             onChanged: (value) {
                                               setState(() {
-                                                _auditionCount =
-                                                    value.toInt();
-                                                // print the current value of `_auditionCount` to console.
-                                                //<debug>
-                                                print(_auditionCount);
+                                                _chosenAuditionCount =
+                                                    value.round();
+                                                SettingsData().auditionCount = _chosenAuditionCount;
                                               });
                                             },
                                           ),
@@ -503,7 +467,11 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                     ],
                                   ),
                                 ),
-                              ],
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [Text('More Matches'),Text('More Accurate')],),
+                              )],
 
                       ),
                       // build the [done] button.
@@ -512,9 +480,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                         child: TextButton(
                           style: ButtonStyle(
                             overlayColor: MaterialStateProperty.all(
-                                (!_applyFilter)
-                                    ? Colors.grey[350]
-                                    : colorBlend01.withOpacity(0.2)),
+                                 colorBlend01.withOpacity(0.2)),
                           ),
                           child: Text(
                             'Done',

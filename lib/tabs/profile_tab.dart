@@ -153,7 +153,7 @@ class _ProfileTabState extends State<ProfileTab>
             ),
           ),
           const SizedBox(
-            height: 20.0,
+            height: 10.0,
           ),
            FacebookSignInButton(text:'Facebook logout',onPressed: (){_logout();},),
           const SizedBox(

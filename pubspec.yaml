@@ -24,7 +24,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
 
-  # fluttery: ^0.0.8
   flutter_svg: 0.18.1
   http: ^0.13.1
   shared_preferences: ^2.0.5
@@ -60,6 +59,7 @@ flutter:
   #  - images/a_dot_ham.jpeg
 
   assets:
+    - assets/
     - assets/images/
     - assets/mobile_celebs.db
   fonts:
