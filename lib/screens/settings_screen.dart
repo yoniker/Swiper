@@ -26,7 +26,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Gender _currentGenderSelected = Gender.values.firstWhere((e) => e.toShortString() == SettingsData().preferredGender);
   RangeValues _selectedAges = RangeValues(SettingsData().minAge.toDouble(), SettingsData().maxAge.toDouble());
   bool _showInDiscovery = false; //TODO change SettingsData to support visibility
-  double _maxDistance = 6.0; //TODO change SettingsData to support distance
+  double _maxDistance = SettingsData().radius;
 
   @override
   void initState() {
@@ -43,11 +43,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return DropdownMenuItem<Gender>(
       child: Text(
         selectedGender.toShortString(),
-        style: TextStyle(
-          fontFamily: 'Nunito',
-          fontSize: 15,
-          fontWeight: FontWeight.w500,
-        ),
+        style: _defaultTextStyle,
       ),
       value: selectedGender,
       onTap: () {
@@ -65,18 +61,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
   var _defaultTextStyle = TextStyle(
     color: Colors.black,
     fontFamily: 'Nunito',
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: FontWeight.w500,
   );
 
-  var _varryingTextStyle = TextStyle(
+  var _boldTextStyle = TextStyle(
     color: Colors.black,
     fontFamily: 'Nunito',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: FontWeight.w700,
   );
 
-  String _resolveAgeRangeDescriptionString(double start, double end) {
+  String _simpleDashAgeRangeString(double start, double end) {
     if (end < SettingsScreen.maxAge) {
       return ' ${start.round()}-${end.round()} ';
     } else {
@@ -123,31 +119,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: 'Visibility'.toUpperCase(),
                       description:
                       'With this enabled your profile will be visible to other people using this App',
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Show me in Discovery',
-                            style: _varryingTextStyle,
-                          ),
-                          CupertinoSwitch(
-                            value: _showInDiscovery,
-                            activeColor: colorBlend01,
-                            onChanged: (value) {
-                              setState(
-                                    () {
-                                  // TODO:// Add required Function.
-                                  // Alert user to make sure he is intentionally changing his visibiliry status.
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Show me in Discovery',
+                              style: _boldTextStyle,
+                            ),
+                            CupertinoSwitch(
+                              value: _showInDiscovery,
+                              activeColor: colorBlend01,
+                              onChanged: (value) {
+                                setState(
+                                      () {
+                                    // TODO:// Add required Function.
+                                    // Alert user to make sure he is intentionally changing his visibiliry status.
 
-                                  // set "_showInDiscovery" to the currrent switch value.
-                                  _showInDiscovery = value;
+                                    // set "_showInDiscovery" to the currrent switch value.
+                                    _showInDiscovery = value;
 
-                                },
-                              );
-                            },
-                          ),
-                        ],
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     GlobalWidgets.buildSettingsBlock(
@@ -159,35 +158,48 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            margin: EdgeInsets.symmetric(vertical: 6.0),
+                            margin: EdgeInsets.symmetric(vertical: 6.0,horizontal: 8.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  'My Swiping Location',
-                                  style: _varryingTextStyle,
+                                  'Location',
+                                  style: _boldTextStyle,
                                 ),
-                                Expanded(
-                                  child: Padding(
-                                    padding:
-                                    EdgeInsets.symmetric(horizontal: 12.0),
-                                    child:
-                                    TextButton(child: Text(_currentLocation),onPressed: (){},),
-                                  ),
-                                ),
+                                TextButton(child: Row(children: [Text(_currentLocation),SizedBox(width: 4.0,),Icon(Icons.arrow_forward_ios,size:16)]),onPressed: (){},),
                               ],
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.symmetric(vertical: 6.0),
+                            margin: EdgeInsets.symmetric(vertical: 6.0,horizontal: 8.0),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Max. Distance',
-                                  style: _varryingTextStyle,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [Text(
+                                    'Max. Distance',
+                                    style: _boldTextStyle,
+                                  ),
+                                    Container(
+                                      alignment: Alignment.centerRight,
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 6.0),
+                                      child: RichText(
+                                        text: TextSpan(
+                                          style: _defaultTextStyle,
+                                          children: <InlineSpan>[
+                                            TextSpan(
+                                              text: ' ${_maxDistance.round().toString()} km away',
+                                              style: _defaultTextStyle,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
                                 Row(
                                   mainAxisAlignment:
@@ -233,26 +245,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     ),
                                   ],
                                 ),
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: 6.0, horizontal: 12.0),
-                                  child: RichText(
-                                    text: TextSpan(
-                                      style: _defaultTextStyle,
-                                      children: <InlineSpan>[
-                                        TextSpan(
-                                          text:
-                                          ' ${_maxDistance.round().toString()} ',
-                                        ),
-                                        TextSpan(
-                                          text: 'km away',
-                                          style: _varryingTextStyle,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+
                               ],
                             ),
                           ),
@@ -263,26 +256,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: 'Who'.toUpperCase(),
                       description:
                       '',
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.symmetric(vertical: 6.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Gender',
-                                  style: _varryingTextStyle,
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding:
-                                    EdgeInsets.symmetric(horizontal: 12.0),
-                                    child:
-                                    DropdownButtonFormFieldModified<Gender>(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal:8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 6.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Gender',
+                                    style: _boldTextStyle,
+                                  ),
+                                  Container(
+                                    color:Colors.grey[200],
+                                    width:100,
+
+                                    child: DropdownButtonFormFieldModified<Gender>(
                                       decoration: InputDecoration.collapsed(
                                         hintText: 'My Preferred Gender',
                                         hintStyle: _defaultTextStyle.copyWith(
@@ -294,7 +288,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         setState(() {
                                           SettingsData().preferredGender = newGender.toShortString();
                                           _currentGenderSelected = newGender;
-                                          
+
                                         });
                                       },
                                       style: _defaultTextStyle,
@@ -307,89 +301,94 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       ).toList(),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(vertical: 12.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Age',
-                                  style: _varryingTextStyle,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 12.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                      'Age',
+                                      style: _boldTextStyle,
+                                    ),
+                                      Container(
+                                        alignment: Alignment.centerRight,
+                                        margin: EdgeInsets.symmetric(
+                                            vertical: 6.0, horizontal:0.0),
+                                        child: RichText(
+                                          text: TextSpan(
+                                            style: _defaultTextStyle,
+                                            children: <InlineSpan>[
+                                              TextSpan(
+                                                text:
+                                                produceAgesRangeText(_selectedAges),
+                                              ),
 
-                                    Transform(
-                                      alignment: Alignment.center,
-                                transform: Matrix4.rotationY(math.pi),
-                                      child: Icon(
-                                        Icons.child_friendly_outlined,
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+
+                                      Transform(
+                                        alignment: Alignment.center,
+                                  transform: Matrix4.rotationY(math.pi),
+                                        child: Icon(
+                                          Icons.child_friendly_outlined,
+                                          size: 24.0,
+                                          color: colorBlend01,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding:
+                                          EdgeInsets.symmetric(vertical: 6.0),
+                                          child: CupertinoRangeSlider(
+                                            activeColor: colorBlend01,
+                                            values: _selectedAges,
+                                            min: SettingsScreen.minAge.toDouble(),
+                                            max: SettingsScreen.maxAge.toDouble(),
+                                            onChanged: (newRangevalues) {
+                                              setState(
+                                                    () {
+                                                  _selectedAges = RangeValues(
+                                                    newRangevalues.start
+                                                        .roundToDouble(),
+                                                    newRangevalues.end
+                                                        .roundToDouble(),
+                                                  );
+                                                  SettingsData().minAge = _selectedAges.start.toInt();
+                                                  SettingsData().maxAge = _selectedAges.end.toInt();
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.elderly_rounded,
                                         size: 24.0,
                                         color: colorBlend01,
                                       ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding:
-                                        EdgeInsets.symmetric(vertical: 6.0),
-                                        child: CupertinoRangeSlider(
-                                          activeColor: colorBlend01,
-                                          values: _selectedAges,
-                                          min: SettingsScreen.minAge.toDouble(),
-                                          max: SettingsScreen.maxAge.toDouble(),
-                                          onChanged: (newRangevalues) {
-                                            setState(
-                                                  () {
-                                                _selectedAges = RangeValues(
-                                                  newRangevalues.start
-                                                      .roundToDouble(),
-                                                  newRangevalues.end
-                                                      .roundToDouble(),
-                                                );
-                                                SettingsData().minAge = _selectedAges.start.toInt();
-                                                SettingsData().maxAge = _selectedAges.end.toInt();
-                                              },
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                    Icon(
-                                      Icons.elderly_rounded,
-                                      size: 24.0,
-                                      color: colorBlend01,
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  alignment: Alignment.centerRight,
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: 6.0, horizontal: 12.0),
-                                  child: RichText(
-                                    text: TextSpan(
-                                      style: _defaultTextStyle,
-                                      children: <InlineSpan>[
-                                        TextSpan(
-                                          text:
-                                          produceAgesRangeText(_selectedAges),
-                                        ),
-
-                                      ],
-                                    ),
+                                    ],
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     GlobalWidgets.buildSettingsBlock(
@@ -416,7 +415,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             Row(mainAxisAlignment: MainAxisAlignment.start,
                               children: [Text(
                                 'Artificial Intelligence Filters',
-                                style: _varryingTextStyle,
+                                style: _boldTextStyle,
                               ),
                               SizedBox(width: 4.0,),
                               Icon(Icons.psychology_outlined,
@@ -438,7 +437,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                         child: Text(
                           'Done',
-                          style: _varryingTextStyle.copyWith(
+                          style: _boldTextStyle.copyWith(
                             color: colorBlend02,
                           ),
                         ),

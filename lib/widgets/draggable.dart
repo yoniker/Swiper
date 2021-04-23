@@ -1,0 +1,670 @@
+import 'dart:math';
+
+import 'package:betabeta/constants/beta_icon_paths.dart';
+import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/widgets/global_widgets.dart';
+import 'package:betabeta/widgets/overlay_builder.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
+
+import '../models/match_engine.dart';
+
+enum SlideDirection {
+  left,
+  right,
+  up,
+}
+
+class DraggableCard extends StatefulWidget {
+  /// The Widget to build as the child of this [DragabbleCard].
+  final Widget card;
+
+  // /// A secondary Widget to show when the this card is being is scrolled.
+  // ///
+  // /// If found to be null nothing will be built as the "deatailsCard".
+  // // This will contain all the Details for the match.
+  // final Widget detailsCard;
+
+  /// The [Profile] of this MatchCard.
+  final Profile mactchProfile;
+
+  /// A pageController for controlling exclusively what page is shown.
+  ///
+  /// It is this PageController the DetailsCard uses to return users back to
+  /// the Match Page once a valid Decision has been made.
+  final PageController controller;
+
+  /// Determines wether or not this Widget is Draggable.
+  ///
+  /// This is set to `true` by default
+  /// This parameter cannot be null.
+  final bool isDraggable;
+
+  /// Wether or not to show the detailsCard.
+  ///
+  /// This is set to `false` by default
+  /// This parameter cannot be null.
+  final canScroll;
+
+  /// The Time taken for the Details screen to exit the details Page when a
+  /// Decision is made.
+  final Duration exitDuration;
+  final SlideDirection slideTo;
+  final Function(double distance) onSlideUpdate;
+  final Function(SlideDirection direction) onSlideComplete;
+  final double screenWidth;
+  final double screenHeight;
+
+  DraggableCard({
+    Key key,
+    @required this.card,
+    // this.detailsCard,
+    this.controller,
+    this.mactchProfile,
+    this.isDraggable = true,
+    this.canScroll = false,
+    this.slideTo,
+    this.onSlideUpdate,
+    this.onSlideComplete,
+    @required this.screenWidth,
+    @required this.screenHeight,
+    this.exitDuration = const Duration(milliseconds: 100),
+  });
+
+  @override
+  _DraggableCardState createState() => _DraggableCardState();
+}
+
+class _DraggableCardState extends State<DraggableCard>
+    with TickerProviderStateMixin {
+  Decision decision;
+  GlobalKey profileCardKey = GlobalKey(debugLabel: 'profile_card_key');
+  // This is useful in that when we want to push (Navigate to) a new [Route] over [this]
+  // the current [Route], we don't want the overlay to Obscure the New Route we are pushing to.
+  bool _showCardStack = true;
+  Offset cardOffset = const Offset(0.0, 0.0);
+  Offset dragStart;
+  Offset dragPosition;
+  List<Offset>
+      gestureOffsets; //Track if all offsets happened at the same direction
+  List<Duration>
+      gestureTimeStamps; //Track all of the time stamps to test if it happened "fast enough"
+  Offset slideBackStart;
+  SlideDirection slideOutDirection;
+  AnimationController slideBackAnimation;
+  Tween<Offset> slideOutTween;
+  AnimationController slideOutAnimation;
+
+  // Defines the ScrollController that controls the inner ScrollView.
+  ScrollController scrollController;
+
+  // The defualt Curve with which the details Page animates out into the new Match Page.
+  final kdefaultExitCurve = Curves.fastOutSlowIn;
+
+  Duration exitDuration;
+
+  @override
+  void initState() {
+    super.initState();
+    slideBackAnimation = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )
+      ..addListener(() => setState(() {
+            cardOffset = Offset.lerp(slideBackStart, const Offset(0.0, 0.0),
+                Curves.elasticOut.transform(slideBackAnimation.value));
+
+            if (null != widget.onSlideUpdate) {
+              widget.onSlideUpdate(cardOffset.distance);
+            }
+          }))
+      ..addStatusListener((AnimationStatus status) {
+        if (status == AnimationStatus.completed) {
+          setState(() {
+            dragStart = null;
+            slideBackStart = null;
+            dragPosition = null;
+            gestureOffsets = null;
+            gestureTimeStamps = null;
+          });
+        }
+      });
+
+    slideOutAnimation = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    )
+      ..addListener(() => setState(() {
+            cardOffset = slideOutTween.evaluate(slideOutAnimation);
+            if (null != widget.onSlideUpdate) {
+              widget.onSlideUpdate(cardOffset.distance);
+            }
+          }))
+      ..addStatusListener((AnimationStatus status) {
+        if (status == AnimationStatus.completed) {
+          setState(() {
+            dragStart = null;
+            dragPosition = null;
+            slideOutTween = null;
+
+            if (widget.onSlideComplete != null) {
+              widget.onSlideComplete(slideOutDirection);
+            }
+          });
+        }
+      });
+
+    // Initialize the ScrollController.
+    scrollController = ScrollController();
+
+    // Intantiate the exitDuration.
+    exitDuration = widget.exitDuration;
+  }
+
+  @override
+  void didUpdateWidget(DraggableCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.card.key != oldWidget.card.key) {
+      cardOffset = const Offset(0.0, 0.0);
+    }
+
+    if (oldWidget.slideTo == null && widget.slideTo != null) {
+      switch (widget.slideTo) {
+        case SlideDirection.left:
+          _slideLeft();
+          break;
+        case SlideDirection.right:
+          _slideRight();
+          break;
+        case SlideDirection.up:
+          _slideUp();
+          break;
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    slideBackAnimation.dispose();
+    slideOutAnimation.dispose();
+    super.dispose();
+  }
+
+  void _slideLeft() {
+    // final screenWidth = context.size.width;
+    dragStart = _chooseRandomDragStart();
+    slideOutTween = Tween(
+      begin: const Offset(0.0, 0.0),
+      end: Offset(-2 * widget.screenWidth, 0.0),
+    );
+
+    slideOutAnimation.forward(from: 0.0);
+  }
+
+  Offset _chooseRandomDragStart() {
+    final cardContex = profileCardKey.currentContext;
+    final cardTopLeft = (cardContex.findRenderObject() as RenderBox)
+        .localToGlobal(const Offset(0.0, 0.0));
+    final dragStartY =
+        widget.screenHeight * (new Random().nextDouble() < 0.5 ? 0.25 : 0.75) +
+            cardTopLeft.dy;
+
+    return Offset(widget.screenWidth / 2 + cardTopLeft.dx, dragStartY);
+  }
+
+  void _slideRight() {
+    dragStart = _chooseRandomDragStart();
+    slideOutTween = Tween(
+      begin: const Offset(0.0, 0.0),
+      end: Offset(2 * widget.screenWidth, 0.0),
+    );
+
+    slideOutAnimation.forward(from: 0.0);
+  }
+
+  void _slideUp() {
+    // final screenHeight = context.size.height;
+    dragStart = _chooseRandomDragStart();
+    slideOutTween = Tween(
+      begin: const Offset(0.0, 0.0),
+      end: Offset(0.0, -2 * widget.screenHeight),
+    );
+
+    slideOutAnimation.forward(from: 0.0);
+  }
+
+  void _onPanStart(DragStartDetails details) {
+    dragStart = details.globalPosition;
+    gestureOffsets = [];
+    gestureTimeStamps = [];
+
+    if (slideBackAnimation.isAnimating) {
+      slideBackAnimation.stop(canceled: true);
+    }
+  }
+
+  void _onPanUpdate(DragUpdateDetails details) {
+    setState(() {
+      dragPosition = details.globalPosition;
+      cardOffset = dragPosition - dragStart;
+      gestureOffsets.add(cardOffset);
+      gestureTimeStamps.add(details.sourceTimeStamp);
+
+      if (null != widget.onSlideUpdate) {
+        widget.onSlideUpdate(cardOffset.distance);
+      }
+    });
+  }
+
+  FastSwipe detectFastSwipe() {
+    const int MINIMUM_GESTURE_LENGTH = 40;
+    const double MINIMUM_DURATION_TIME =
+        1; //TODO convert it into Duration since it's more like dart than this
+    const double MAXIMUM_DURATION_TIME = 1000;
+
+    if (gestureTimeStamps.length < 2) {
+      return FastSwipe.notFastSwipe;
+    }
+    final int gestureTime =
+        (gestureTimeStamps[gestureTimeStamps.length - 1] - gestureTimeStamps[0])
+            .inMilliseconds;
+    if (gestureTime < MINIMUM_DURATION_TIME) {
+      return FastSwipe.notFastSwipe;
+    }
+    if (gestureTime > MAXIMUM_DURATION_TIME) {
+      return FastSwipe.notFastSwipe;
+    } //TODO again,it's important to cut the lists but for now
+    double overAllGestureSize =
+        gestureOffsets[gestureOffsets.length - 1].dx - gestureOffsets[0].dx;
+    if (overAllGestureSize.abs() < MINIMUM_GESTURE_LENGTH) {
+      return FastSwipe.notFastSwipe;
+    }
+    //TODO cut both lists such that we will observe only the very last motions eg 1/2 miliseconds
+    bool monotonic = true;
+    for (int i = 1; i < gestureOffsets.length; ++i) {
+      if (gestureOffsets[i].dx.abs() < gestureOffsets[i - 1].dx.abs()) {
+        monotonic = false;
+        break;
+      }
+    }
+    if (!monotonic) {
+      return FastSwipe.notFastSwipe;
+    }
+
+    if (gestureOffsets[0].dx > gestureOffsets[1].dx) {
+      return FastSwipe.Left;
+    }
+
+    return FastSwipe.Right;
+  }
+
+  void _onPanEnd(DragEndDetails details) {
+    final dragVector = cardOffset / cardOffset.distance;
+
+    // This determines the point at which the Dragged Widget is considered to be
+    // at the left region.
+    bool isInLeftRegion = (cardOffset.dx / context.size.width) < -0.35;
+
+    // This determines the point at which the Dragged Widget is considered to be
+    // at the right region.
+    bool isInRightRegion = (cardOffset.dx / context.size.width) > 0.35;
+
+    // This determines the point at which the Dragged Widget is considered to be
+    // at the top region.
+    final isInTopRegion = (cardOffset.dy / context.size.height) < -0.30;
+
+    // This helps to detect fast swipe either left or right.
+    final FastSwipe fastSwipeStatus = detectFastSwipe();
+
+    isInLeftRegion |= fastSwipeStatus == FastSwipe.Left;
+    isInRightRegion |= fastSwipeStatus == FastSwipe.Right;
+
+    setState(() {
+      if (isInLeftRegion || isInRightRegion) {
+        slideOutTween = Tween(
+            begin: cardOffset, end: dragVector * (2 * context.size.width));
+
+        slideOutAnimation.forward(from: 0.0);
+
+        slideOutDirection =
+            isInLeftRegion ? SlideDirection.left : SlideDirection.right;
+      } else if (isInTopRegion) {
+        slideOutTween = Tween(
+            begin: cardOffset, end: dragVector * (2 * context.size.height));
+        slideOutAnimation.forward(from: 0.0);
+
+        slideOutDirection = SlideDirection.up;
+      } else {
+        slideBackStart = cardOffset;
+        slideBackAnimation.forward(from: 0.0);
+      }
+    });
+  }
+
+  double _rotation(Rect dragBounds) {
+    if (dragStart != null) {
+      final rotationCornerMultiplier =
+          dragStart.dy >= dragBounds.top + (dragBounds.height / 2) ? -1 : 1;
+      return (pi / 8) *
+          (cardOffset.dx / dragBounds.width) *
+          rotationCornerMultiplier;
+    } else {
+      return 0.0;
+    }
+  }
+
+  Offset _rotationOrigin(Rect dragBounds) {
+    if (dragStart != null) {
+      return dragStart - dragBounds.topLeft;
+    } else {
+      return const Offset(0.0, 0.0);
+    }
+  }
+
+  /// A function to select the match Decision made on the the current match.
+  currentMatchDecision(Decision decision) {
+    if (Provider.of<MatchEngine>(context, listen: false).currentMatch() !=
+        null) {
+      Provider.of<MatchEngine>(context, listen: false)
+          .currentMatchDecision(decision);
+      Provider.of<MatchEngine>(context, listen: false).goToNextMatch();
+
+      // close thr page since a valid Decision has been made.
+      closePage();
+    }
+  }
+
+  /// Close the MatchDetailsCard.
+  /// This essetially calls "moveToPage" on the pageController parameter
+  /// passed to it.
+  void closePage() {
+    scrollController.animateTo(
+      0,
+      duration: exitDuration,
+      curve: kdefaultExitCurve,
+    );
+
+    // we can also use jumpToPage but that will not animate.
+    // widget.pageController.jumpToPage(0);
+  }
+
+  /// A widget that displays the actions a user can make on a match.
+  /// Actions such as:
+  ///   "Dislike",
+  ///   "Like",
+  ///   "Draft Message"
+  ///
+  /// Essentially a list of [DecisionControl] widgets to display below
+  /// the Image Display Widget of each match.
+  Widget _matchControls({EdgeInsets padding = const EdgeInsets.all(2.0)}) {
+    return Container(
+      padding: padding,
+      foregroundDecoration: BoxDecoration(
+        color: Colors.transparent,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: darkCardColor,
+            offset: Offset(0.0, 0.2),
+            blurRadius: 16.0,
+          ),
+        ],
+      ),
+      // A Matrial Widget is added here so as to allow the solash of the InkWell Widgets
+      // below this Widget in the tree to show.
+      //
+      // Note: Any Container Within the Widget tree will obscure the action of any InkWell Widget
+      // below such Container in the Widget tree.
+      child: Material(
+        // With this as transparent we can retain the original color of the Enclosing
+        // Decoration Widget.
+        color: Colors.transparent,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            InkWell(
+              borderRadius: BorderRadius.circular(15.0),
+              child: GlobalWidgets.imageToIcon(
+                BetaIconPaths.dislikeMatchIcon,
+                scale: 4.0,
+              ),
+              onTap: () {
+                // Decision.nope
+                currentMatchDecision(Decision.nope);
+              },
+            ),
+            InkWell(
+              borderRadius: BorderRadius.circular(15.0),
+              child: GlobalWidgets.imageToIcon(
+                BetaIconPaths.likeMatchIcon,
+                scale: 3.75,
+              ),
+              onTap: () {
+                // Decision.like
+                currentMatchDecision(Decision.like);
+              },
+            ),
+            InkWell(
+              borderRadius: BorderRadius.circular(15.0),
+              child: GlobalWidgets.imageToIcon(
+                BetaIconPaths.draftMesssageIcon,
+                scale: 4.0,
+              ),
+              onTap: () {
+                // Call a Function to open a chat Tab to chat with the match.
+                print('MAKE A DRAFT!');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Wraps the widget in a Transformation and Overlay.
+    // This makes our MatchCard to float avove the AppBar and other
+    // widgets since it's is an overlay on the current context.
+    var wrapper = AnchoredOverlay(
+      showOverlay: _showCardStack,
+      child: Container(),
+      overlayBuilder: (BuildContext context, Rect anchorBounds, Offset anchor) {
+        // Replaced the original CenterAbout [Widget] with a more precise [Widget]
+        // provided by the FrameWork, "Center".
+        return Center(
+          child: Transform(
+            transform:
+                Matrix4.translationValues(cardOffset.dx, cardOffset.dy, 0.0)
+                  ..rotateZ(_rotation(anchorBounds)),
+            origin: _rotationOrigin(anchorBounds),
+            child: Container(
+              key: profileCardKey,
+              width: anchorBounds.width,
+              height: anchorBounds.height,
+              padding: EdgeInsets.all(16.0),
+              child: Material(
+                clipBehavior: Clip.hardEdge,
+                borderRadius: BorderRadius.circular(16.0),
+                child: (widget.canScroll != true)
+                    // Builds the regular DraggableCard with no inclusion of the details Page
+                    // whatsoever.
+                    ? GestureDetector(
+                        onPanStart: widget.isDraggable ? _onPanStart : null,
+                        onPanUpdate: widget.isDraggable ? _onPanUpdate : null,
+                        onPanEnd: widget.isDraggable ? _onPanEnd : null,
+                        child: widget.card,
+                      )
+                    : SizedBox.expand(
+                        child: Scrollbar(
+                          isAlwaysShown: false,
+                          controller: scrollController,
+                          thickness: 4.0,
+                          radius: Radius.circular(8.0),
+                          child: SingleChildScrollView(
+                            controller: scrollController,
+                            clipBehavior: Clip.none,
+                            physics: ClampingScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            child: Column(
+                              children: [
+                                // Diplays the MatchCard.
+                                // We have to explicitly pass the height parameter to the SizedBox
+                                // holding the holding the MatchCard Widget so that we can give a valid
+                                // size constraints to the MatchCard Display.
+                                SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.7,
+                                  child: GestureDetector(
+                                    onPanStart:
+                                        widget.isDraggable ? _onPanStart : null,
+                                    onPanUpdate:
+                                        widget.isDraggable ? _onPanUpdate : null,
+                                    onPanEnd:
+                                        widget.isDraggable ? _onPanEnd : null,
+                                    child: widget.card,
+                                  ),
+                                ),
+
+                                // Here we display the DetailsCard of this Match.
+                                // The following will contain the MatchCard Implementation.
+                                // SizedBox(
+                                //   height: MediaQuery.of(context).size.height * 0.7,
+                                //   child: widget.detailsCard,
+                                // ),
+
+                                // build the MatchCardDetails.
+                                // The tripple dots placed at the back just mean that I am appending the
+                                // below ehich is a list of Widgets to this bigger list.
+                                // removing it will cause analysis error.
+                                // 
+                                // This is just a way one can add a grouped List of Widgets within another 
+                                // super or parent list.
+                                ...buildMatchDetails(widget.mactchProfile),
+
+                                // build the Match Control.
+                                _matchControls(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+
+    return wrapper;
+  }
+}
+
+enum FastSwipe { notFastSwipe, Right, Left }
+
+/// Generates a List of Items that serves as the MatchDetails.
+///
+/// We are returnig a List of Widgets so that this can be easily
+/// incorporated into the MatchCard Scroll ViewPort.
+///
+/// Also, we have to imcorporate this into the Draggable Widget since we needed it to be part
+/// of the Overlay being display/stacked on the screen which also makes it drag when we drag.swipe
+/// left or right.
+///
+List<Widget> buildMatchDetails(Profile profile) {
+  // Return a List of Widgets.
+  return [
+    Container(
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(
+        top: 16.0,
+        left: 5.0,
+        right: 5.0,
+      ),
+      child: Text(
+        'I am ${profile.username}, ${profile.age}',
+        textAlign: TextAlign.right,
+        style: boldedTextStyle.copyWith(fontSize: 18.0),
+      ),
+    ),
+    Container(
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(
+        top: 8.0,
+        bottom: 12.0,
+        left: 5.0,
+        right: 5.0,
+      ),
+      child: Text(
+        (profile.headline != null) ?  profile.headline : '',
+        textAlign: TextAlign.right,
+        style: defaultTextStyle,
+      ),
+    ),
+    Divider(
+      color: darkCardColor,
+      indent: 2.0,
+      endIndent: 2.0,
+      thickness: 2.8,
+      height: 12.5,
+    ),
+    // Note we can esily replace this implementation with Two Text Widgets
+    // aligned in a Column.
+    Container(
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(
+        top: 8.0,
+        bottom: 12.0,
+        left: 5.0,
+        right: 5.0,
+      ),
+      child: RichText(
+        textAlign: TextAlign.left,
+        text: TextSpan(style: boldedTextStyle, children: [
+          TextSpan(
+            // Note: We are using a single new line character here to allow for
+            // just the spacing we want between the [TextSpan]s.
+            text: 'Description\n',
+            style: boldedTextStyle.copyWith(fontSize: 24),
+          ),
+          TextSpan(
+            text: (profile.description != null) ? profile.description : 'No Description available' ,
+          ),
+        ]),
+      ),
+    ),
+    // Container(
+    //   alignment: Alignment.centerLeft,
+    //   padding: EdgeInsets.only(top: 8.0),
+    //   child: Text(
+    //     'Description',
+    //     style: boldedTextStyle.copyWith(fontSize: 24),
+    //   ),
+    // ),
+    // Container(
+    //   alignment: Alignment.centerLeft,
+    //   padding: EdgeInsets.only(top: 8.0, bottom: 12.0),
+    //   child: Text(
+    //     profile.description,
+    //     style: boldedTextStyle,
+    //   ),
+    // ),
+    Container(
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
+      child: Text(
+        (profile.location != null)
+            ? 'Lives in ${profile.location}'
+            : 'Current Location not available',
+        textAlign: TextAlign.right,
+        style: defaultTextStyle,
+      ),
+    ),
+  ];
+}
