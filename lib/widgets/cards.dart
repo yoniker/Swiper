@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:fluttery_dart2/layout.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:provider/provider.dart';
 import 'photos.dart';

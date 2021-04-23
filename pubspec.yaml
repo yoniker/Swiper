@@ -25,7 +25,6 @@ dependencies:
   cupertino_icons: ^0.1.2
 
   # fluttery: ^0.0.8
-  fluttery_dart2: ^0.0.9
   flutter_svg: 0.18.1
   http: ^0.13.1
   shared_preferences: ^2.0.5
