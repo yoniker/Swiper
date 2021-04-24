@@ -96,6 +96,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar:  CustomAppBar(
       title: 'Settings',
+      hasTopPadding: true,
       icon:Icon(Icons.settings),//iconURI: 'assets/images/settings_icon.png',
     ),
       body: Stack(
