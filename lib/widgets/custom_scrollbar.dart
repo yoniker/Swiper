@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 final Color kDefaultTrackColor = Colors.grey.withOpacity(0.4);
 
 /// The default Duration of the FadeOut Animation of the [CustomScrollBar].
-final Duration kFadeOutDuration = const Duration(milliseconds: 2000);
+final Duration kFadeOutDuration = const Duration(milliseconds: 3000);
 
 /// A ScrollBar Widget that can stacked above any Widget and only shows when the ScrollView is scrolled.
 /// It does not need to have any Scrollable Widget as it's child.
@@ -45,7 +45,7 @@ class CustomScrollBar extends StatefulWidget {
   /// Note: The height for the [CustomSrollBar]'s `Thumb` will be calculated from this.
   final double trackHeight;
 
-  /// The height of the Background of the [CustomSrollBar]'s Track.
+  /// The width of the [CustomSrollBar]'s Track.
   final double trackWidth;
 
   /// The padding to be applied to the outside of the Background border.

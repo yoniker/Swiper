@@ -393,7 +393,7 @@ class PhotoView extends StatefulWidget {
     this.showCarousel = true,
     this.carouselPosition = CarouselPosition.bottom,
     this.carouselDotSize = 3.5,
-    this.selectedCarouselDotSize = 4.0,
+    this.selectedCarouselDotSize = 6.0,
     this.carouselActiveDotColor = Colors.blue,
     this.carouselInactiveDotColor = Colors.lightBlueAccent,
     this.carouselBackgroundColor = Colors.transparent,
@@ -855,14 +855,14 @@ class CarouselDot extends StatelessWidget {
   final bool isFocused;
 
   /// This is equivalent to double the width and the height of the Dot.
-  /// 
+  ///
   /// This defaults to `3.5`
   final double size;
 
   /// The size of the Dot when focused.
   ///
   /// This is equivalent to double the width and the height of the Dot.
-  /// 
+  ///
   /// This defaults to `4.0`
   final double focusedSize;
 
@@ -873,7 +873,7 @@ class CarouselDot extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox.fromSize(
       // Make the Dot appear bigger than the others when in Focus.
-      size: Size.fromRadius(isFocused ? focusedSize : size), 
+      size: Size.fromRadius(isFocused ? focusedSize : size),
       child: GestureDetector(
         onTap: () {
           onTap();

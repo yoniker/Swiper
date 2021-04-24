@@ -344,6 +344,9 @@ class _DraggableCardState extends State<DraggableCard>
         slideBackAnimation.forward(from: 0.0);
       }
     });
+
+    // close the page since a Decision has been made.
+    closePage();
   }
 
   double _rotation(Rect dragBounds) {
@@ -374,7 +377,7 @@ class _DraggableCardState extends State<DraggableCard>
           .currentMatchDecision(decision);
       Provider.of<MatchEngine>(context, listen: false).goToNextMatch();
 
-      // close thr page since a valid Decision has been made.
+      // close the page since a valid Decision has been made.
       closePage();
     }
   }
@@ -534,9 +537,10 @@ class _DraggableCardState extends State<DraggableCard>
                                   // size constraints to the MatchCard Display.
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height *
-                                            0.7 -
-                                            // TODO:// come back this
-                                        (1 * pad),
+                                        0.7,
+                                    // TODO:// come back this
+                                    // -
+                                    // (1 * 0),
                                     // This is so since the padding applies to both the top and bottom of the
                                     // Draggable Card.
                                     child: GestureDetector(
@@ -581,9 +585,9 @@ class _DraggableCardState extends State<DraggableCard>
                       child: CustomScrollBar(
                         scrollController: scrollController,
                         trackHeight: 80.0,
-                        trackWidth: 2.5,
+                        trackWidth: 8.5,
                         thumbHeightfactor: 0.3,
-                        trackPadding: EdgeInsets.only(right: 12, top: 15.0),
+                        trackPadding: EdgeInsets.only(right: 8.0, top: 15.0),
                         thumbColor: Colors.white,
                         trackColor: colorBlend02.withOpacity(0.4),
                       ),
