@@ -12,8 +12,8 @@ final Color linkColor = Color(0xFF389CEB);
 final Color activeColor = Colors.blue;
 final Color disabledColor = Colors.grey;
 //
-final Color colorBlend01 = Color(0xFFED3CB3);
-final Color colorBlend02 = Color(0xFFD118E1);
+final Color colorBlend01 = Color(0xFFED3C5C);
+final Color colorBlend02 = Color(0xFFE1189D);
 
 // global textstyles
 final TextStyle defaultTextStyle = TextStyle(
