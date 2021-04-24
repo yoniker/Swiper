@@ -18,7 +18,6 @@ class MatchScreen extends StatefulWidget {
 }
 
 class _MatchScreenState extends State<MatchScreen> {
-
   @override
   Widget build(BuildContext context) {
     // call super.build() method to facilite the preservation of our state.
@@ -53,7 +52,9 @@ class _MatchScreenState extends State<MatchScreen> {
           ),
 
           // create the card stack.
-          MatchCardBuilder(),
+          Expanded(
+            child: MatchCardBuilder(),
+          ),
         ],
       ),
     );
@@ -271,19 +272,17 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
     // return a stack of cards well positioned.
     return Consumer<MatchEngine>(
       builder: (context, matchEngine, child) {
-        return Expanded(
-          child: Stack(
-            children: <Widget>[
-              // The last stack at the bottom.
-              // _bottomStack(),
+        return Stack(
+          children: <Widget>[
+            // The last stack at the bottom.
+            // _bottomStack(),
 
-              // The [MatchCard] stacked in the middle.
-              _middleStack(),
+            // The [MatchCard] stacked in the middle.
+            _middleStack(),
 
-              // The main [MatchCard] currently in Focus.
-              _topStack(),
-            ],
-          ),
+            // The main [MatchCard] currently in Focus.
+            _topStack(),
+          ],
         );
       },
     );

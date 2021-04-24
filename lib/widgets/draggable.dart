@@ -479,6 +479,9 @@ class _DraggableCardState extends State<DraggableCard>
     // height set for the Draggable Card.
     double pad = 16.0;
 
+    // Describes the height of the MatchCard and the DraggableCard as a whole.
+    final kFixedHeight = MediaQuery.of(context).size.height * 0.7;
+
     // Wraps the widget in a Transformation and Overlay.
     // This makes our MatchCard to float avove the AppBar and other
     // widgets since it's is an overlay on the current context.
@@ -523,7 +526,7 @@ class _DraggableCardState extends State<DraggableCard>
                             // We have to hardCode this since we want the PhotoView of the MacthCard to take up a
                             // specific amount of space.
                             // Without the position of the MatchCard will varry from screens device screens.
-                            height: MediaQuery.of(context).size.height * 0.7,
+                            height: kFixedHeight,
                             child: SingleChildScrollView(
                               controller: scrollController,
                               clipBehavior: Clip.none,
@@ -536,13 +539,7 @@ class _DraggableCardState extends State<DraggableCard>
                                   // holding the holding the MatchCard Widget so that we can give a valid
                                   // size constraints to the MatchCard Display.
                                   SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.7,
-                                    // TODO:// come back this
-                                    // -
-                                    // (1 * 0),
-                                    // This is so since the padding applies to both the top and bottom of the
-                                    // Draggable Card.
+                                    height: kFixedHeight - 8.0,
                                     child: GestureDetector(
                                       onPanStart: widget.isDraggable
                                           ? _onPanStart
