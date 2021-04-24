@@ -7,7 +7,10 @@
          additional functionality it is fine to subclass or reimplement
          FlutterApplication and put your custom class here. -->
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- Allow for Http connections `android:usesCleartextTraffic= "true"` -->
     <application
+        android:usesCleartextTraffic="true"
         android:label="Taste Learner"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">

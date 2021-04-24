@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/widgets/match_card.dart';
 import 'package:betabeta/widgets/overlay_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -19,6 +21,14 @@ class CardStack extends StatefulWidget {
 class _CardStackState extends State<CardStack> {
   double _nextCardScale = 0.0;
 
+  // The stack and offset of the first Matchcard stacked at the back of the current one.
+  double middleStackScale = 0.95;
+  Offset middleStackOffset = Offset(0.0, 1.5);
+
+  // The stack and offset of the second Match card stacked at the back of the current one.
+  double bottomStackScale = 0.8;
+  Offset bottomStackOffset = Offset(0.0, 1.15);
+
   @override
   void initState() {
     super.initState();
@@ -31,15 +41,63 @@ class _CardStackState extends State<CardStack> {
     setState(() {});
   }
 
+  /// The Widget stacked at the bottom of the Stack of cards.
+  Widget _bottomStack() {
+    var nextMatch =
+        Provider.of<MatchEngine>(context, listen: false).nextMatch();
+
+    if (nextMatch != null) {
+      return Transform.scale(
+        scale: bottomStackScale,
+        alignment: Alignment(bottomStackOffset.dx, bottomStackOffset.dy),
+        // transform: Matrix4.identity()..translate(bottomStackOffset.dx, bottomStackOffset.dy)..scale(bottomStackScale, bottomStackScale),
+        child: Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: darkCardColor.withOpacity(0.6),
+            borderRadius: BorderRadius.circular(18.0),
+          ),
+        ),
+      );
+    } else {
+      // show an empty container.
+      return Container();
+    }
+  }
+
+  Widget _middleStack() {
+    var nextMatch =
+        Provider.of<MatchEngine>(context, listen: false).nextMatch();
+
+    if (nextMatch != null) {
+      return Transform.scale(
+        scale: middleStackScale,
+        alignment: Alignment(middleStackOffset.dx, middleStackOffset.dy),
+        // transform: Matrix4.identity()..translate(bottomStackOffset.dx, bottomStackOffset.dy)..scale(bottomStackScale, bottomStackScale),
+        child: Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: darkCardColor.withOpacity(0.6),
+            borderRadius: BorderRadius.circular(18.0),
+          ),
+        ),
+      );
+    } else {
+      // show an empty container.
+      return Container();
+    }
+  }
+
   Widget _buildBackCard() {
-    if (Provider.of<MatchEngine>(context, listen: false).nextMatch() != null) {
-      Widget card = Transform(
-        transform: Matrix4.identity()..scale(_nextCardScale, _nextCardScale),
-        alignment: Alignment.center,
-        child: ProfileCard(
+    if (Provider.of<MatchEngine>(context, listen: true).nextMatch() != null) {
+      Widget card = Transform.scale(
+        scale: middleStackScale,
+        alignment: Alignment(middleStackOffset.dx, middleStackOffset.dy),
+        child: MatchCard(
           profile: Provider.of<MatchEngine>(context, listen: false)
               .nextMatch()
               .profile,
+          showCarousel: false,
           clickable: false,
         ),
       );
@@ -57,11 +115,12 @@ class _CardStackState extends State<CardStack> {
   Widget _buildFrontCard() {
     MatchEngine matchEngine = Provider.of<MatchEngine>(context, listen: false);
     if (matchEngine.currentMatch() != null) {
-      Widget card = ProfileCard(
+      Widget card = MatchCard(
         key: Key(matchEngine.currentMatch().profile.username),
         profile: Provider.of<MatchEngine>(context, listen: false)
             .currentMatch()
             .profile,
+        showCarousel: true,
         clickable: true,
       );
 
@@ -98,6 +157,18 @@ class _CardStackState extends State<CardStack> {
   void _onSlideUpdate(double distance) {
     setState(() {
       _nextCardScale = 0.9 + (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
+
+      // sort the new middle card [Scale] and [Offset] value.
+      // make increment based on the distance the card has been slided.
+      var middleDyIncrement = (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
+      middleStackScale = 0.9 + (0.5 * (distance / 100.0)).clamp(0.0, 0.1);
+      middleStackOffset = Offset(0.0, 1.4 + middleDyIncrement);
+
+      // sort the new middle card [Scale] and [Offset] value.
+      // make increment based on the distance the card has been slided.
+      var bottomDyIncrement = (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
+      bottomStackScale = 0.8 + (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
+      bottomStackOffset = Offset(0.0, 1.05 + bottomDyIncrement);
     });
   }
 
@@ -124,10 +195,22 @@ class _CardStackState extends State<CardStack> {
   Widget build(BuildContext context) {
     return Consumer<MatchEngine>(
       builder: (context, matchEngine, child) {
-        return Stack(
-          children: <Widget>[
-            _buildBackCard(),
-            _buildFrontCard(),
+        return Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(top: 50.0),
+                child: Stack(
+                  children: <Widget>[
+                    _bottomStack(),
+                    // _middleStack(),
+                    _buildBackCard(),
+                    _buildFrontCard(),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 75.0),
           ],
         );
       },
@@ -441,7 +524,7 @@ class _DraggableCardState extends State<DraggableCard>
               key: profileCardKey,
               width: anchorBounds.width,
               height: anchorBounds.height,
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: GestureDetector(
                 onPanStart: widget.isDraggable ? _onPanStart : null,
                 onPanUpdate: widget.isDraggable ? _onPanUpdate : null,
@@ -503,12 +586,6 @@ class _ProfileCardState extends State<ProfileCard> {
                               ', ' +
                               widget.profile.age.toString(),
                           style: TextStyle(color: Colors.white, fontSize: 24.0))
-                      : Text(''),
-                  widget.profile.distance != null
-                      ? Text(
-                          widget.profile.distance.toStringAsFixed(2),
-                          style: TextStyle(color: Colors.white, fontSize: 24.0),
-                        )
                       : Text(''),
                   widget.profile.headline != null
                       ? Text(widget.profile.headline,

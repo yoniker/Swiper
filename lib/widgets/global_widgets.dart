@@ -1,54 +1,82 @@
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 
-
 /// A collection of Global Widgets to be used in various parts of the App.
 class GlobalWidgets {
-  /// A global widget that is uded to render respective asset images
+  /// A global widget that is used to render respective asset images
   /// as icons.
-  static Widget imageToIcon(String imagePath, {double scale}) {
+  static Widget imageToIcon(
+    String imagePath, {
+    double scale = 4.0,
+
+    /// The Padding to be applied to the outter bounds of `this`
+    /// [ImageToIcon] Widget.
+    EdgeInsets iconPad = const EdgeInsets.all(7.5),
+
+    /// A callback that fires when this widget is tapped.
+    void Function() onTap,
+  }) {
+    // ASSERTION LAYER.
+    assert(
+      iconPad != null,
+      'The parameter "iconPad" cannot be null, please provide an acceptable value for the "iconPad" parameter',
+    );
+
     // check if scale is null and assign it a default value of 4.0
     scale ??= 4.0;
 
-    return Padding(
-      padding: EdgeInsets.all(7.5),
+    var child = Padding(
+      padding: iconPad,
       child: Image.asset(
         imagePath,
         scale: scale,
       ),
     );
+
+    // checks if the onTap parameter is null, this widget is returned as it is
+    // else it is wrapped in a [GestureDetector] Widget to detect taps.
+    if (onTap != null) {
+      return GestureDetector(
+        onTap: onTap,
+        child: child,
+      );
+    } else {
+      return child;
+    }
   }
 
   /// A Widget to build the block UI for each settings option.
-  static Widget buildSettingsBlock({
-    /// The description of the settings Tile.
-    String description,
+  static Widget buildSettingsBlock(
+      {
 
-    /// The child Widget to build as the body of the Settings block.
-    @required Widget child,
+      /// The description of the settings Tile.
+      String description,
 
-    /// The title for the Settings Panel or block
-    String title,
+      /// The child Widget to build as the body of the Settings block.
+      @required Widget child,
 
-    /// An optional parameter to build the Title Widget.
-    Widget leading,
+      /// The title for the Settings Panel or block
+      String title,
 
-    ///
-    EdgeInsetsGeometry outerPadding =
-    const EdgeInsets.symmetric(horizontal: 2.0, vertical: 16.0),
+      /// An optional parameter to build the Title Widget.
+      Widget leading,
 
-    //
-    EdgeInsetsGeometry titlePadding = const EdgeInsets.all(8.0),
+      ///
+      EdgeInsetsGeometry outerPadding =
+          const EdgeInsets.symmetric(horizontal: 2.0, vertical: 16.0),
 
-    //
-    EdgeInsetsGeometry widgetPadding =
-    const EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0)
-    //const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
-  }) {
+      //
+      EdgeInsetsGeometry titlePadding = const EdgeInsets.all(8.0),
+
+      //
+      EdgeInsetsGeometry widgetPadding =
+          const EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0)
+      //const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
+      }) {
     // assertion layer
     assert(
-    leading != null || description != null,
-    '''One of `description` or `titleBuilder` must be specified. 
+      leading != null || description != null,
+      '''One of `description` or `titleBuilder` must be specified. 
       When the two are specified, the title Widget is given Priority.''',
     );
 
@@ -80,22 +108,22 @@ class GlobalWidgets {
             child: (leading != null)
                 ? leading
                 : Text.rich(
-              TextSpan(
-                children: <InlineSpan>[
-                  if (title != null)
                     TextSpan(
-                      text: '$title' + ' ',
-                      style: _textStyle.copyWith(
-                          fontWeight: FontWeight.w700,
-                      letterSpacing: 0.2),
+                      children: <InlineSpan>[
+                        if (title != null)
+                          TextSpan(
+                            text: '$title' + ' ',
+                            style: _textStyle.copyWith(
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.2),
+                          ),
+                        TextSpan(
+                          text: description,
+                        ),
+                      ],
                     ),
-                  TextSpan(
-                    text: description,
+                    style: _textStyle,
                   ),
-                ],
-              ),
-              style: _textStyle,
-            ),
           ),
           Container(
             padding: widgetPadding,
@@ -111,11 +139,11 @@ class GlobalWidgets {
 
   /// A widget to show a simple Alert Dialogue.
   static void showAlertDialogue(
-      BuildContext context, {
-        @required String message,
-        String title,
-        void onTap,
-      }) async {
+    BuildContext context, {
+    @required String message,
+    String title,
+    void onTap,
+  }) async {
     //
     var _defaultTextStyle = TextStyle(
       color: Colors.black,
@@ -158,42 +186,57 @@ class GlobalWidgets {
             borderRadius: BorderRadius.circular(15),
             elevation: 1.0,
             color: darkCardColor,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: Stack(
+              fit: StackFit.expand,
+              // mainAxisAlignment: MainAxisAlignment.spaceAround,
+              // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    style: _defaultTextStyle,
-                    children: <InlineSpan>[
-                      TextSpan(
-                        text: ' "${_resolveAlertTitle()}"\n ',
-                        style: _varryingTextStyle,
+                FractionallySizedBox(
+                  heightFactor: 0.7,
+                  widthFactor: 1.0,
+                  alignment: Alignment.topCenter,
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          style: _defaultTextStyle,
+                          children: <InlineSpan>[
+                            TextSpan(
+                              text: ' "${_resolveAlertTitle()}"\n ',
+                              style: _varryingTextStyle,
+                            ),
+                            TextSpan(
+                              text: ' $message ',
+                            ),
+                          ],
+                        ),
                       ),
-                      TextSpan(
-                        text: ' $message ',
-                      ),
-                    ],
+                    ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 8.0,
-                  ),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateColor.resolveWith(
-                              (states) => Colors.white),
-                    ),
-                    onPressed: () {
-                      // user has canceled the delete action.
-                      Navigator.of(context).pop<void>();
-                      // return false;
-                    },
-                    child: Text(
-                      'Ok',
-                      style: _varryingTextStyle.copyWith(color: colorBlend02),
+                FractionallySizedBox(
+                  heightFactor: 0.3,
+                  widthFactor: 1.0,
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateColor.resolveWith(
+                            (states) => Colors.white),
+                      ),
+                      onPressed: () {
+                        // user has canceled the delete action.
+                        Navigator.of(context).pop<void>();
+                        // return false;
+                      },
+                      child: Text(
+                        'Ok',
+                        style: _varryingTextStyle.copyWith(color: colorBlend02),
+                      ),
                     ),
                   ),
                 ),

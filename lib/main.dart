@@ -5,6 +5,7 @@ import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
 import 'package:betabeta/screens/image_source_selection_screen.dart';
 import 'package:betabeta/screens/settings_screen.dart';
+import 'package:betabeta/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:provider/provider.dart';
@@ -42,8 +43,9 @@ class MyApp extends StatelessWidget {
         primaryColorBrightness: Brightness.light,
         primarySwatch: Colors.blue,
       ),
-      home:
-        LoginHome(),
+      home: NavigationStack(),
+      // MatchingScreen(title: 'Swiper MVP'),
+        // LoginHome(),
       //MatchingScreen(title: 'Flutter Demo Home Page'),
     );
   }
