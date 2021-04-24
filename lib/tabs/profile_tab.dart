@@ -35,7 +35,6 @@ class _ProfileTabState extends State<ProfileTab>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _pageChanger();
   }
@@ -95,8 +94,10 @@ class _ProfileTabState extends State<ProfileTab>
   Widget build(BuildContext context) {
     super.build(context);
     return new Scaffold(
-      body: new Stack(
-        children: <Widget>[_buildProfileInfo(), _buildSettingsBottom()],
+      body: SafeArea(
+        child: new Stack(
+          children: <Widget>[_buildProfileInfo(), _buildSettingsBottom()],
+        ),
       ),
     );
   }
@@ -323,7 +324,6 @@ class _ProfileTabState extends State<ProfileTab>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }
 

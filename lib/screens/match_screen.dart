@@ -1,4 +1,5 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/draggable.dart';
@@ -17,20 +18,6 @@ class MatchScreen extends StatefulWidget {
 }
 
 class _MatchScreenState extends State<MatchScreen> {
-  // //
-  // var _defaultTextStyle = TextStyle(
-  //   color: Colors.black,
-  //   fontFamily: 'Nunito',
-  //   fontSize: 15,
-  //   fontWeight: FontWeight.w500,
-  // );
-
-  // var _varryingTextStyle = TextStyle(
-  //   color: Colors.black,
-  //   fontFamily: 'Nunito',
-  //   fontSize: 16,
-  //   fontWeight: FontWeight.w700,
-  // );
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +28,28 @@ class _MatchScreenState extends State<MatchScreen> {
       padding: MediaQuery.of(context).padding,
       child: Column(
         children: [
-          // Create a BetaAppBar.
+          // Create a CustomAppBar.
           CustomAppBar(
             title: 'Discover',
+            showAppLogo: false,
             hasBackButton: false,
-            icon: GlobalWidgets.imageToIcon(BetaIconPaths.settingsBarIcon),
+            icon: Row(
+              children: [
+                IconButton(
+                  alignment: Alignment.center,
+                  icon: Icon(
+                    Icons.undo,
+                    size: 24.0,
+                    color: colorBlend01,
+                  ),
+                  onPressed: () {
+                    // Move to the prevoious Match Deducted by the Match Engine.
+                    Provider.of<MatchEngine>(context, listen: false).goBack();
+                  },
+                ),
+                GlobalWidgets.imageToIcon(BetaIconPaths.settingsBarIcon),
+              ],
+            ),
           ),
 
           // create the card stack.

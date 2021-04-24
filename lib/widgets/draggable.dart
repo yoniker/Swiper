@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/widgets/custom_scrollbar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/overlay_builder.dart';
 import 'package:flutter/cupertino.dart';
@@ -416,7 +417,7 @@ class _DraggableCardState extends State<DraggableCard>
           ),
         ],
       ),
-      // A Matrial Widget is added here so as to allow the solash of the InkWell Widgets
+      // A Material Widget is added here so as to allow the solash of the InkWell Widgets
       // below this Widget in the tree to show.
       //
       // Note: Any Container Within the Widget tree will obscure the action of any InkWell Widget
@@ -469,6 +470,12 @@ class _DraggableCardState extends State<DraggableCard>
 
   @override
   Widget build(BuildContext context) {
+    // The padding applied to the DraggableCard.
+    // We need to specify this here so we can take into account the
+    // amount of space eaten up by the padding and reflect this in the
+    // height set for the Draggable Card.
+    double pad = 16.0;
+
     // Wraps the widget in a Transformation and Overlay.
     // This makes our MatchCard to float avove the AppBar and other
     // widgets since it's is an overlay on the current context.
@@ -488,73 +495,100 @@ class _DraggableCardState extends State<DraggableCard>
               key: profileCardKey,
               width: anchorBounds.width,
               height: anchorBounds.height,
-              padding: EdgeInsets.all(16.0),
-              child: Material(
-                clipBehavior: Clip.hardEdge,
-                borderRadius: BorderRadius.circular(16.0),
-                child: (widget.canScroll != true)
-                    // Builds the regular DraggableCard with no inclusion of the details Page
-                    // whatsoever.
-                    ? GestureDetector(
-                        onPanStart: widget.isDraggable ? _onPanStart : null,
-                        onPanUpdate: widget.isDraggable ? _onPanUpdate : null,
-                        onPanEnd: widget.isDraggable ? _onPanEnd : null,
-                        child: widget.card,
-                      )
-                    : SizedBox.expand(
-                        child: Scrollbar(
-                          isAlwaysShown: false,
-                          controller: scrollController,
-                          thickness: 4.0,
-                          radius: Radius.circular(8.0),
-                          child: SingleChildScrollView(
-                            controller: scrollController,
-                            clipBehavior: Clip.none,
-                            physics: ClampingScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            child: Column(
-                              children: [
-                                // Diplays the MatchCard.
-                                // We have to explicitly pass the height parameter to the SizedBox
-                                // holding the holding the MatchCard Widget so that we can give a valid
-                                // size constraints to the MatchCard Display.
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.7,
-                                  child: GestureDetector(
-                                    onPanStart:
-                                        widget.isDraggable ? _onPanStart : null,
-                                    onPanUpdate:
-                                        widget.isDraggable ? _onPanUpdate : null,
-                                    onPanEnd:
-                                        widget.isDraggable ? _onPanEnd : null,
-                                    child: widget.card,
+              // We apply the pad here.
+              padding: EdgeInsets.all(pad),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Material(
+                    clipBehavior: Clip.hardEdge,
+                    borderRadius: BorderRadius.circular(16.0),
+                    child: (widget.canScroll != true)
+                        // Builds the regular DraggableCard with no inclusion of the details Page
+                        // whatsoever.
+                        ? GestureDetector(
+                            onPanStart: widget.isDraggable ? _onPanStart : null,
+                            onPanUpdate:
+                                widget.isDraggable ? _onPanUpdate : null,
+                            onPanEnd: widget.isDraggable ? _onPanEnd : null,
+                            child: widget.card,
+                          )
+                        : SizedBox(
+                            // This will make sure that the Width of th MatchCard (Display)
+                            // takes as much space as possible {Maximum Finite}.
+                            width: double.maxFinite,
+                            // We have to hardCode this since we want the PhotoView of the MacthCard to take up a
+                            // specific amount of space.
+                            // Without the position of the MatchCard will varry from screens device screens.
+                            height: MediaQuery.of(context).size.height * 0.7,
+                            child: SingleChildScrollView(
+                              controller: scrollController,
+                              clipBehavior: Clip.none,
+                              physics: ClampingScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              child: Column(
+                                children: [
+                                  // Diplays the MatchCard.
+                                  // We have to explicitly pass the height parameter to the SizedBox
+                                  // holding the holding the MatchCard Widget so that we can give a valid
+                                  // size constraints to the MatchCard Display.
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                            0.7 -
+                                            // TODO:// come back this
+                                        (1 * pad),
+                                    // This is so since the padding applies to both the top and bottom of the
+                                    // Draggable Card.
+                                    child: GestureDetector(
+                                      onPanStart: widget.isDraggable
+                                          ? _onPanStart
+                                          : null,
+                                      onPanUpdate: widget.isDraggable
+                                          ? _onPanUpdate
+                                          : null,
+                                      onPanEnd:
+                                          widget.isDraggable ? _onPanEnd : null,
+                                      child: widget.card,
+                                    ),
                                   ),
-                                ),
 
-                                // Here we display the DetailsCard of this Match.
-                                // The following will contain the MatchCard Implementation.
-                                // SizedBox(
-                                //   height: MediaQuery.of(context).size.height * 0.7,
-                                //   child: widget.detailsCard,
-                                // ),
+                                  // Here we display the DetailsCard of this Match.
+                                  // The following will contain the MatchCard Implementation.
+                                  // SizedBox(
+                                  //   height: MediaQuery.of(context).size.height * 0.7,
+                                  //   child: widget.detailsCard,
+                                  // ),
 
-                                // build the MatchCardDetails.
-                                // The tripple dots placed at the back just mean that I am appending the
-                                // below ehich is a list of Widgets to this bigger list.
-                                // removing it will cause analysis error.
-                                // 
-                                // This is just a way one can add a grouped List of Widgets within another 
-                                // super or parent list.
-                                ...buildMatchDetails(widget.mactchProfile),
+                                  // build the MatchCardDetails.
+                                  // The tripple dots placed at the back just mean that I am appending the
+                                  // below ehich is a list of Widgets to this bigger list.
+                                  // removing it will cause analysis error.
+                                  //
+                                  // This is just a way one can add a grouped List of Widgets within another
+                                  // super or parent list.
+                                  ...buildMatchDetails(widget.mactchProfile),
 
-                                // build the Match Control.
-                                _matchControls(),
-                              ],
+                                  // build the Match Control.
+                                  _matchControls(),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
+                  ),
+                  if (widget.canScroll == true)
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: CustomScrollBar(
+                        scrollController: scrollController,
+                        trackHeight: 80.0,
+                        trackWidth: 2.5,
+                        thumbHeightfactor: 0.3,
+                        trackPadding: EdgeInsets.only(right: 12, top: 15.0),
+                        thumbColor: Colors.white,
+                        trackColor: colorBlend02.withOpacity(0.4),
                       ),
+                    )
+                ],
               ),
             ),
           ),
@@ -602,7 +636,7 @@ List<Widget> buildMatchDetails(Profile profile) {
         right: 5.0,
       ),
       child: Text(
-        (profile.headline != null) ?  profile.headline : '',
+        (profile.headline != null) ? profile.headline : '',
         textAlign: TextAlign.right,
         style: defaultTextStyle,
       ),
@@ -634,7 +668,9 @@ List<Widget> buildMatchDetails(Profile profile) {
             style: boldedTextStyle.copyWith(fontSize: 24),
           ),
           TextSpan(
-            text: (profile.description != null) ? profile.description : 'No Description available' ,
+            text: (profile.description != null)
+                ? profile.description
+                : 'No Description available',
           ),
         ]),
       ),

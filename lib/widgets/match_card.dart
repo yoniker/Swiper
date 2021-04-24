@@ -1,8 +1,6 @@
-import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
-import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -36,8 +34,8 @@ class _MatchCardState extends State<MatchCard> {
   Widget _buildBackground() {
     // returns a [PhotoView] widget.
     return FractionallySizedBox(
-      alignment: Alignment.bottomCenter,
-      heightFactor: 0.9,
+      alignment: Alignment.center,
+      heightFactor: 1.0,
       widthFactor: 1.0,
       child: PhotoView(
         isClickable: widget.clickable,
@@ -140,7 +138,8 @@ class _MatchCardState extends State<MatchCard> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          _revertButton(),
+          // removed the revertButton.
+          // _revertButton(),
           _buildBackground(),
         ],
       ),
@@ -394,6 +393,7 @@ class PhotoView extends StatefulWidget {
     this.showCarousel = true,
     this.carouselPosition = CarouselPosition.bottom,
     this.carouselDotSize = 3.5,
+    this.selectedCarouselDotSize = 4.0,
     this.carouselActiveDotColor = Colors.blue,
     this.carouselInactiveDotColor = Colors.lightBlueAccent,
     this.carouselBackgroundColor = Colors.transparent,
@@ -447,12 +447,21 @@ class PhotoView extends StatefulWidget {
   final Color carouselInactiveDotColor;
 
   /// The size of the CarouselDots used to indicate the current index
-  /// of the [PhotoView].
+  /// of each image in the [PhotoView].
   ///
   /// This is equivalent to double the width and the height of the Dot.
   ///
   /// Defaults to `3.5` logical pixels.
   final double carouselDotSize;
+
+  /// The size of the CarouselDots used to indicate the current index
+  /// of the selected image in the [PhotoView].
+  ///
+  /// This is used as the radius of the CarouselDot which is equivalent to
+  /// double the width and the height of the selected Dot.
+  ///
+  /// Defaults to `4.0` logical pixels.
+  final double selectedCarouselDotSize;
 
   /// A boolean value that determines wheter the [CarouselDot]s are visible
   /// or not.
@@ -543,20 +552,20 @@ class _PhotoViewState extends State<PhotoView> {
       imagesList.add(img);
 
       // generate carousel dots.
-      carouselDots.add(
-        CarouselDot(
-          key: Key(
-            imageIndex.toString(),
-          ), // Create a Unique Key based on the index of the CarouselDots.
-          size: widget.carouselDotSize,
-          activeColor: widget.carouselActiveDotColor,
-          inactiveColor: widget.carouselInactiveDotColor,
-          isFocused: imageIndex == selectedPhotoIndex,
-          onTap: () {
-            moveToPhoto(imageIndex);
-          },
-        ),
-      );
+      // carouselDots.add(
+      //   CarouselDot(
+      //     key: Key(
+      //       imageIndex.toString(),
+      //     ), // Create a Unique Key based on the index of the CarouselDots.
+      //     size: widget.carouselDotSize,
+      //     activeColor: widget.carouselActiveDotColor,
+      //     inactiveColor: widget.carouselInactiveDotColor,
+      //     isFocused: imageIndex == selectedPhotoIndex,
+      //     onTap: () {
+      //       moveToPhoto(imageIndex);
+      //     },
+      //   ),
+      // );
     }
   }
 
@@ -699,6 +708,7 @@ class _PhotoViewState extends State<PhotoView> {
           index.toString(),
         ), // Create a Unique Key based on the index of the CarouselDots.
         size: widget.carouselDotSize,
+        focusedSize: widget.selectedCarouselDotSize,
         activeColor: widget.carouselActiveDotColor,
         inactiveColor: widget.carouselInactiveDotColor,
         isFocused: index == selectedPhotoIndex,
@@ -818,7 +828,8 @@ class CarouselDot extends StatelessWidget {
   const CarouselDot({
     Key key,
     this.onTap,
-    this.size = 2.0,
+    this.size = 3.5,
+    this.focusedSize = 4.0,
     this.shape,
     this.isFocused = false,
     this.activeColor,
@@ -844,7 +855,16 @@ class CarouselDot extends StatelessWidget {
   final bool isFocused;
 
   /// This is equivalent to double the width and the height of the Dot.
+  /// 
+  /// This defaults to `3.5`
   final double size;
+
+  /// The size of the Dot when focused.
+  ///
+  /// This is equivalent to double the width and the height of the Dot.
+  /// 
+  /// This defaults to `4.0`
+  final double focusedSize;
 
   /// The ShapeBorder to be used to draw the CarouselDot.
   final ShapeBorder shape;
@@ -852,10 +872,8 @@ class CarouselDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox.fromSize(
-      size: Size.fromRadius(size +
-          (isFocused
-              ? 1.0
-              : 0.0)), // Makes the Dot appear bigger than the others when in Focus.
+      // Make the Dot appear bigger than the others when in Focus.
+      size: Size.fromRadius(isFocused ? focusedSize : size), 
       child: GestureDetector(
         onTap: () {
           onTap();

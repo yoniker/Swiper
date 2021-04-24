@@ -16,7 +16,7 @@ class CustomAppBar extends StatelessWidget {
   /// The `title` for this tile.
   final String title;
 
-  /// This is the asset image path of the icons used.
+  /// This denotes the icon widget that is placed in the Appbar .
   final Widget icon;
 
   /// Determine whether to include a back-button at
