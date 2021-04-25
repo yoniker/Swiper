@@ -447,6 +447,7 @@ class _DraggableCardState extends State<DraggableCard>
               borderRadius: BorderRadius.circular(15.0),
               child: GlobalWidgets.imageToIcon(
                 BetaIconPaths.likeMatchIcon,
+                // The scale is kid of backwards.
                 scale: 3.75,
               ),
               onTap: () {

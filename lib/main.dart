@@ -1,42 +1,35 @@
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/navigation.dart';
 import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
 import 'package:betabeta/screens/image_source_selection_screen.dart';
 import 'package:betabeta/screens/settings_screen.dart';
-import 'package:betabeta/navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:provider/provider.dart';
+
 import 'models/celebs_info_model.dart';
 import 'screens/matching_screen.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
-void main()  {
-  runApp(
-      ChangeNotifierProvider(
-        create: (context) => MatchEngine(),
-        child:
-        ChangeNotifierProvider(//TODO put it in a lower place down the Widget tree...
-            create: (context) => CelebsInfo(),
-            child:MyApp()
-        )
-
-
-      )
-  );
-
- }
-
+void main() {
+  runApp(ChangeNotifierProvider(
+      create: (context) => MatchEngine(),
+      child: ChangeNotifierProvider(
+          //TODO put it in a lower place down the Widget tree...
+          create: (context) => CelebsInfo(),
+          child: MyApp())));
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      onGenerateRoute:_onGenerateRoute,
+      onGenerateRoute: _onGenerateRoute,
       title: 'Swiper MVP',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -45,13 +38,13 @@ class MyApp extends StatelessWidget {
       ),
       home: NavigationStack(),
       // MatchingScreen(title: 'Swiper MVP'),
-        // LoginHome(),
+      // LoginHome(),
       //MatchingScreen(title: 'Flutter Demo Home Page'),
     );
   }
 
   Route _onGenerateRoute(RouteSettings settings) {
-    if (settings.name == MatchingScreen.routeName){
+    if (settings.name == MatchingScreen.routeName) {
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {
@@ -60,44 +53,47 @@ class MyApp extends StatelessWidget {
       );
     }
 
-    if (settings.name == AdvancedSettingsScreen.routeName){
+    if (settings.name == AdvancedSettingsScreen.routeName) {
       return MaterialPageRoute(
           settings: settings,
-        builder: (context) {
-          return AdvancedSettingsScreen();
+          builder: (context) {
+            return AdvancedSettingsScreen();
+          });
+    }
 
-    });}
-
-    if (settings.name == ScreenCelebritySelection.routeName){
+    if (settings.name == ScreenCelebritySelection.routeName) {
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {
           return ScreenCelebritySelection();
         },
       );
-
     }
 
-    if (settings.name == FaceSelectionScreen.routeName){
-      final FaceSelectionScreenArguments args = settings.arguments as FaceSelectionScreenArguments;
+    if (settings.name == FaceSelectionScreen.routeName) {
+      final FaceSelectionScreenArguments args =
+          settings.arguments as FaceSelectionScreenArguments;
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {
-          return FaceSelectionScreen(imageFile: args.imageFile,imageFileName: args.imageFileName,);
+          return FaceSelectionScreen(
+            imageFile: args.imageFile,
+            imageFileName: args.imageFileName,
+          );
         },
       );
     }
 
-    if (settings.name == ImageSourceSelectionScreen.routeName){
+    if (settings.name == ImageSourceSelectionScreen.routeName) {
       return MaterialPageRoute(
-          settings: settings,
+        settings: settings,
         builder: (context) {
           return ImageSourceSelectionScreen();
         },
       );
     }
 
-    if (settings.name == SettingsScreen.routeName){
+    if (settings.name == SettingsScreen.routeName) {
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {
@@ -106,14 +102,12 @@ class MyApp extends StatelessWidget {
       );
     }
 
-
     return MaterialPageRoute(
       settings: settings,
       builder: (context) {
         return LoginHome();
       },
     );
-
   }
 }
 
@@ -121,78 +115,87 @@ class LoginHome extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _LoginHomeState();
-}}
+  }
+}
 
-class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flutter-facebook-login/
+class _LoginHomeState extends State<LoginHome> {
+  //See https://codesundar.com/flutter-facebook-login/
 
   bool _errorTryingToLogin;
   String _errorMessage;
 
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    _errorTryingToLogin=false;
+    _errorTryingToLogin = false;
     _getSettings();
   }
-  
+
   _getSettings() async {
     SettingsData settings = SettingsData();
     await settings.readSettingsFromShared();
-    if(settings.readFromShared && settings.facebookId!=''){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MatchingScreen(title: 'Swiper MVP')));
+    if (settings.readFromShared && settings.facebookId != '') {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MatchingScreen(title: 'Swiper MVP')));
     }
-    
   }
-  
-  _getFBLoginInfo() async{
+
+  _getFBLoginInfo() async {
     final loginResult = await FacebookAuth.instance.login();
 
-
     switch (loginResult.status) {
-
       case LoginStatus.success:
-        final AccessToken accessToken =  loginResult.accessToken;
+        final AccessToken accessToken = loginResult.accessToken;
         final userData = await FacebookAuth.instance.getUserData(
-          fields: "name,email,picture.width(200)",);
+          fields: "name,email,picture.width(200)",
+        );
         SettingsData().name = userData['name'];
         SettingsData().facebookId = userData['id'];
-        SettingsData().facebookProfileImageUrl = userData['picture']['data']['url'];
-
+        SettingsData().facebookProfileImageUrl =
+            userData['picture']['data']['url'];
 
         DefaultCacheManager().emptyCache();
-        DefaultCacheManager().getSingleFile(SettingsData().facebookProfileImageUrl);
+        DefaultCacheManager()
+            .getSingleFile(SettingsData().facebookProfileImageUrl);
         _getSettings();
         break;
 
       case LoginStatus.cancelled:
-        setState(() {_errorTryingToLogin = true;  _errorMessage='User cancelled Login';});
+        setState(() {
+          _errorTryingToLogin = true;
+          _errorMessage = 'User cancelled Login';
+        });
         break;
       case LoginStatus.operationInProgress:
       case LoginStatus.failed:
-        setState(()  {_errorTryingToLogin = true; _errorMessage=loginResult.message??'Error trying to login';} );
+        setState(() {
+          _errorTryingToLogin = true;
+          _errorMessage = loginResult.message ?? 'Error trying to login';
+        });
         break;
     }
-
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('D',style:TextStyle(fontSize: 55,fontFamily: 'RougeScript',fontWeight: FontWeight.bold)),
-          Container(
-              padding: const EdgeInsets.all(8.0), child: Text('MVPBeta Login'))
-        ],
-
-      )
-      ),
-        body:Center(
+        appBar: AppBar(
+            title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('D',
+                style: TextStyle(
+                    fontSize: 55,
+                    fontFamily: 'RougeScript',
+                    fontWeight: FontWeight.bold)),
+            Container(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('MVPBeta Login'))
+          ],
+        )),
+        body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -200,52 +203,63 @@ class _LoginHomeState extends State<LoginHome>{ //See https://codesundar.com/flu
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   FacebookSignInButton(
-                    onPressed: (){
+                    onPressed: () {
                       _getFBLoginInfo();
                       //Navigator.push(context, MaterialPageRoute(builder: (context) => MatchingScreen(title: 'Flutter Demo Home Page')));
                     },
                   ),
-                  _errorTryingToLogin?
-                      TextButton(
-                        child:Text('❗'),
-                        onPressed: (){
-                          showDialog(context: context,builder: (_) {
-                            return AlertDialog(
-                              title: Text("Error"),
-                              content:Text(_errorMessage??"Error when trying to login"),
-
-                            );
-                          },
-                          barrierDismissible: true);
-
-                        }
-                      )
-                      :Container()
+                  _errorTryingToLogin
+                      ? TextButton(
+                          child: Text('❗'),
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (_) {
+                                  return AlertDialog(
+                                    title: Text("Error"),
+                                    content: Text(_errorMessage ??
+                                        "Error when trying to login"),
+                                  );
+                                },
+                                barrierDismissible: true);
+                          })
+                      : Container()
                 ],
               ),
-
-              Text("Don't worry, we only ask for your public profile.",
-              style: TextStyle(color:Colors.grey,),textAlign: TextAlign.center,
-              ),
-              Text('We never post to Facebook.',style: TextStyle(color:Colors.grey,)),
-              GestureDetector(
-                child: Container(child: Text('What does public profile mean?',style:TextStyle(color:Colors.grey,fontWeight: FontWeight.bold,decoration: TextDecoration.underline)),
+              Text(
+                "Don't worry, we only ask for your public profile.",
+                style: TextStyle(
+                  color: Colors.grey,
                 ),
-                onTap: (){showDialog(context: context,builder: (_) {
-                  return AlertDialog(
-                    title: Text("Public Profile Info"),
-                    content:Text("Public Profile includes just your name and profile picture. This information is literally available to anyone in the world."),
-
-                  );
+                textAlign: TextAlign.center,
+              ),
+              Text('We never post to Facebook.',
+                  style: TextStyle(
+                    color: Colors.grey,
+                  )),
+              GestureDetector(
+                child: Container(
+                  child: Text('What does public profile mean?',
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline)),
+                ),
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (_) {
+                        return AlertDialog(
+                          title: Text("Public Profile Info"),
+                          content: Text(
+                              "Public Profile includes just your name and profile picture. This information is literally available to anyone in the world."),
+                        );
+                      },
+                      barrierDismissible: true);
                 },
-                    barrierDismissible: true);},
               )
             ],
           ),
-        )
-
-    );
+        ));
   }
-
-
 }
