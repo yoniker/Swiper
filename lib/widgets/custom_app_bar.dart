@@ -3,15 +3,26 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
 
+/// A customAppBar that can be used as a Widget outside the [Scaffold] and can also be used inside the
+/// Material [Scaffold] as an [AppBar].
+///
+/// Note: You must either provide the "title" or the "customTitleBuilder" parameter and
+/// the parameter "icon" cannot be null.
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     Key key,
-    @required this.title,
+    this.title,
     @required this.icon,
+    this.color = Colors.black,
+    this.customTitleBuilder,
     this.hasTopPadding = false,
     this.showAppLogo = true,
     this.hasBackButton = true,
-  })  : color = Colors.black,
+  })  :
+        // add necessary assertions.
+        assert(icon != null, 'The parameter "icon" cannot be null'),
+        assert((title == null) != (customTitleBuilder == null),
+            'One of "title" and "customTitleBuilder" must be null, You can only specify one of the two!'),
         super(key: key);
 
   /// The `title` for this tile.
@@ -31,6 +42,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// as the `appBar` parameter of the [Scaffold] widget.
   final bool hasTopPadding;
 
+  /// Use this to build a custom title Widget for the [CustomAppbar].
+  final Widget customTitleBuilder;
+
   /// Whether to show the App's Logo at the center of the App Bar.
   /// Must not be null.
   final bool showAppLogo;
@@ -41,7 +55,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     double topPadding = MediaQuery.of(context).viewPadding.top;
 
     return Padding(
-      padding: (hasTopPadding) ? EdgeInsets.only(top: topPadding) : EdgeInsets.zero,
+      padding:
+          (hasTopPadding) ? EdgeInsets.only(top: topPadding) : EdgeInsets.zero,
       child: Container(
         margin: EdgeInsets.only(top: 5.0),
         padding: EdgeInsets.symmetric(horizontal: 5.0),
@@ -64,18 +79,20 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       'assets/images/back_arrow.png',
                     ),
                   ),
-                Padding(
-                  padding: EdgeInsets.only(left: 10.0),
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      color: color,
-                      fontSize: 22,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
+                (customTitleBuilder != null)
+                    ? customTitleBuilder
+                    : Padding(
+                        padding: EdgeInsets.only(left: 10.0),
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            color: color,
+                            fontSize: 22,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
               ],
             ),
             // show App Logo.

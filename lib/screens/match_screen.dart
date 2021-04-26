@@ -17,11 +17,49 @@ class MatchScreen extends StatefulWidget {
   _MatchScreenState createState() => _MatchScreenState();
 }
 
-class _MatchScreenState extends State<MatchScreen> {
+class _MatchScreenState extends State<MatchScreen>
+    with SingleTickerProviderStateMixin {
+  // Todo: Add the implementation for detecting the changeCount.
+  // holds the value for the number of undos that can be made by users.
+  var undoCount = 1;
+
+  // Initialize the Animation Controller for the exposure of the revert button when a change
+  // is discovered.
+  AnimationController _animationController;
+
+  // The actual Slide Animation literal.
+  Animation<Offset> _slideAnimation;
+
+  // The actual Size Animation literal.
+  Animation<double> _sizeAnimation;
+
+  // initState Declaration.
+  @override
+  void initState() {
+    super.initState();
+
+    // Instantiate and Initialize the Animation Controller and the respective Animation.
+    _animationController = AnimationController(
+      duration: Duration(milliseconds: 400),
+      upperBound: 1.0,
+      lowerBound: 0.0,
+      vsync: this,
+    );
+
+    // Initialize the Animations.
+    _slideAnimation =
+        Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0))
+            .animate(_animationController);
+
+    _sizeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.bounceIn,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // call super.build() method to facilite the preservation of our state.
-    // super.build(context);
+    if (undoCount >= 1) _animationController.forward();
 
     return Padding(
       padding: MediaQuery.of(context).padding,
@@ -29,29 +67,53 @@ class _MatchScreenState extends State<MatchScreen> {
         children: [
           // Create a CustomAppBar.
           CustomAppBar(
-            title: 'Discover',
+            customTitleBuilder: Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SlideTransition(
+                    position: _slideAnimation,
+                    child: ScaleTransition(
+                      scale: _sizeAnimation,
+                      child: FadeTransition(
+                        opacity: _sizeAnimation,
+                        child: IconButton(
+                          alignment: Alignment.center,
+                          icon: Icon(
+                            Icons.undo,
+                            size: 24.0,
+                            color: colorBlend01,
+                          ),
+                          onPressed: () {
+                            // Move to the prevoious Match Deducted by the Match Engine.
+                            Provider.of<MatchEngine>(context, listen: false)
+                                .goBack();
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  Text(
+                    'Discover',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 22,
+                      fontFamily: 'Montserrat',
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             showAppLogo: false,
             hasBackButton: false,
-            icon: Row(
-              children: [
-                IconButton(
-                  alignment: Alignment.center,
-                  icon: Icon(
-                    Icons.undo,
-                    size: 24.0,
-                    color: colorBlend01,
-                  ),
-                  onPressed: () {
-                    // Move to the prevoious Match Deducted by the Match Engine.
-                    Provider.of<MatchEngine>(context, listen: false).goBack();
-                  },
-                ),
-                GlobalWidgets.imageToIcon(BetaIconPaths.settingsBarIcon),
-              ],
-            ),
+            icon: GlobalWidgets.imageToIcon(BetaIconPaths.settingsBarIcon),
           ),
 
           // create the card stack.
+          // Wrap in expanded to allow the card to take up the maximum
+          // possible space.
           Expanded(
             child: MatchCardBuilder(),
           ),
