@@ -24,6 +24,10 @@ class MatchEngine extends ChangeNotifier {
     notifyListeners();
     addMatchesIfNeeded();
   }
+
+  bool previousMatchExists(){
+    return _previousMatches.length>0;
+  }
   int length(){return _matches.length;}
   Match  currentMatch() {
     if(_matches.length<=0){return null;}
