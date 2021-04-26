@@ -8,6 +8,7 @@
 .buildlog/
 .history
 .svn/
+flutter_export_environment
 pubspec.lock
 .flutter-plugins-dependencies
 
