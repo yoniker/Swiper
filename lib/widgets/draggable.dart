@@ -540,7 +540,7 @@ class _DraggableCardState extends State<DraggableCard>
                                   // holding the holding the MatchCard Widget so that we can give a valid
                                   // size constraints to the MatchCard Display.
                                   SizedBox(
-                                    height: kFixedHeight - 8.0,
+                                    height: kFixedHeight + pad - 3.0,
                                     child: GestureDetector(
                                       onPanStart: widget.isDraggable
                                           ? _onPanStart

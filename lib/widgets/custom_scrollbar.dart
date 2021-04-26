@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 /// The default Track color used in painting the CustomScrollBar's Track.
@@ -27,6 +29,7 @@ class CustomScrollBar extends StatefulWidget {
     this.trackPadding = const EdgeInsets.all(5.0),
     this.fadeInDuration = const Duration(milliseconds: 400),
     this.fadeOutDuration,
+    this.fadeDelayDuration = const Duration(milliseconds: 1000),
   })  : assert(trackHeight != null, 'The track height cannot be null'),
         assert(trackWidth != null, 'The track width cannot be null'),
         assert(fadeInDuration != null,
@@ -67,11 +70,17 @@ class CustomScrollBar extends StatefulWidget {
   final Duration fadeInDuration;
 
   /// The duration of the FadeOut Animation of the [CustomScrollBar] occurs when the
-  /// ScrollView owned by the `ScrollController` passed to this [CustomScrollBar] Widget
+  /// ScrollView owned by the `ScrollController` passed to this [CustomScrollBar] widget
   /// start scrolling.
   ///
   /// If null Defaults to `kFadeOutDuration` which is `Duration(milliseconds: 1200)`.
   final Duration fadeOutDuration;
+
+  /// The time for which the CustomScrollBar must wait when the ScrollView attached to this
+  /// [CustomScrollBar] widget is no longer being scrolled. i.e is inactive.
+  ///
+  /// This defaults to `Duration(milliseconds: 1000)`, logically a second.
+  final Duration fadeDelayDuration;
 
   /// The color used in painting the Track of the [CustomScrollBar].
   ///
@@ -171,7 +180,7 @@ class _CustomScrollBarState extends State<CustomScrollBar>
     if (isScrolling) {
       // stop any active animation.
       if (_opacityAnimationController.isAnimating) {
-        _opacityAnimationController.stop();
+        _opacityAnimationController.reset();
       }
 
       // forward the animation if dismissed.
@@ -182,8 +191,14 @@ class _CustomScrollBarState extends State<CustomScrollBar>
 
     // if the ScrollView is no longer scrolling (inactive)
     else {
-      // reverse the animation. i.e [CustomScrollBar] Widget.
-      _opacityAnimationController.reverse();
+      // wait for 1000 milliseconds (1 seconds) and then
+      // reverse the animation. i.e fade out [CustomScrollBar] Widget.
+      // This timer is used to control when to fade out the [CustomScrollBar] when
+      // it is detected that the scroll is inactive. i.e The ScrollView attached to this
+      // [CustomScrollBar] is no longer being scrolled.
+      Timer(widget.fadeDelayDuration, () {
+        if (!isScrolling) _opacityAnimationController.reverse();
+      });
     }
   }
 
