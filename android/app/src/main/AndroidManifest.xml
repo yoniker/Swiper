@@ -10,7 +10,6 @@
 
     <!-- Allow for Http connections `android:usesCleartextTraffic= "true"` -->
     <application
-        android:usesCleartextTraffic="true"
         android:label="Taste Learner"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
