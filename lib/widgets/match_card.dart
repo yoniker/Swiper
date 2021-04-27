@@ -38,7 +38,7 @@ class _MatchCardState extends State<MatchCard> {
       child: PhotoView(
         isClickable: widget.clickable,
         initialPhotoIndex: 0,
-        descriptionHeightFraction: 0.24,
+        descriptionHeightFraction: 0.205,
         imageUrls: widget.profile.imageUrls,
         showCarousel: widget.showCarousel,
         descriptionWidget: _descritionWidget(),
