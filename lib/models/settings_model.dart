@@ -37,8 +37,8 @@ class SettingsData extends ChangeNotifier{
   SettingsData._privateConstructor(){
     //Fill in some "default" values which should be filled in within milliseconds of opening the App
     _readFromShared = false;
-    _name = 'dummy_user@1234';
-    _facebookId = '123456';
+    _name = '';
+    _facebookId = '';
     _facebookProfileImageUrl = 'https://lunada.co.il/wp-content/uploads/2016/04/12198090531909861341man-silhouette.svg_.hi_-300x284.png';
     _preferredGender = 'Everyone';
     _minAge = 18;

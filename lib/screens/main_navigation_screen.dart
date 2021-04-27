@@ -7,16 +7,17 @@ import 'package:betabeta/tabs/profile_tab.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
 
-class NavigationStack extends StatefulWidget {
-  NavigationStack({Key key, this.pageIndex = 0}) : super(key: key);
+class MainNavigationScreen extends StatefulWidget {
+  static const String routeName = '/navigation_screen';
+  MainNavigationScreen({Key key, this.pageIndex = 0}) : super(key: key);
 
   final int pageIndex;
 
   @override
-  _NavigationStackState createState() => _NavigationStackState();
+  _MainNavigationScreenState createState() => _MainNavigationScreenState();
 }
 
-class _NavigationStackState extends State<NavigationStack> {
+class _MainNavigationScreenState extends State<MainNavigationScreen> {
   /// holds the value of the current index form 0 to 3.
   int _selectedTabIndex = 0;
 

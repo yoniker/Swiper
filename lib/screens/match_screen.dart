@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
 class MatchScreen extends StatefulWidget {
+  static const String routeName = '/match_screen';
   MatchScreen({Key key}) : super(key: key);
 
   @override

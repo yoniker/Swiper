@@ -1,10 +1,11 @@
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/settings_model.dart';
-import 'package:betabeta/navigation.dart';
+import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
 import 'package:betabeta/screens/image_source_selection_screen.dart';
+import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
@@ -13,7 +14,6 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:provider/provider.dart';
 
 import 'models/celebs_info_model.dart';
-import 'screens/matching_screen.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         primaryColorBrightness: Brightness.light,
         primarySwatch: Colors.blue,
       ),
-      home: NavigationStack(),
+      home: MainNavigationScreen(),
       // MatchingScreen(title: 'Swiper MVP'),
       // LoginHome(),
       //MatchingScreen(title: 'Flutter Demo Home Page'),
@@ -44,11 +44,11 @@ class MyApp extends StatelessWidget {
   }
 
   Route _onGenerateRoute(RouteSettings settings) {
-    if (settings.name == MatchingScreen.routeName) {
+    if (settings.name == MainNavigationScreen.routeName) {
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {
-          return MatchingScreen();
+          return MainNavigationScreen();
         },
       );
     }
@@ -135,10 +135,10 @@ class _LoginHomeState extends State<LoginHome> {
     SettingsData settings = SettingsData();
     await settings.readSettingsFromShared();
     if (settings.readFromShared && settings.facebookId != '') {
-      Navigator.pushReplacement(
+      Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => MatchingScreen(title: 'Swiper MVP')));
+              builder: (context) => MainNavigationScreen()));
     }
   }
 
