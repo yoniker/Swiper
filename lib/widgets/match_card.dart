@@ -60,8 +60,6 @@ class _MatchCardState extends State<MatchCard> {
       ),
       child: Container(
         alignment: Alignment.centerLeft,
-        height: MediaQuery.of(context).size.height * 0.17,
-        width: double.infinity,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,30 +93,30 @@ class _MatchCardState extends State<MatchCard> {
 
   /// The revert button placed over each MatchCard which Functions to bring back the
   /// recently dismissied MatchCard.
-  Widget _revertButton() {
-    return Align(
-      alignment: Alignment.topLeft,
-      heightFactor: 0.1,
-      widthFactor: 1.0,
-      child: Material(
-        color: Colors.transparent,
-        child: Padding(
-          padding: EdgeInsets.all(2.0),
-          child: IconButton(
-            icon: Icon(
-              Icons.replay_rounded,
-              size: 24.0,
-              color: colorBlend01,
-            ),
-            onPressed: () {
-              // Move to the prevoious Match Deducted by the Match Engine.
-              Provider.of<MatchEngine>(context, listen: false).goBack();
-            },
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _revertButton() {
+  //   return Align(
+  //     alignment: Alignment.topLeft,
+  //     heightFactor: 0.1,
+  //     widthFactor: 1.0,
+  //     child: Material(
+  //       color: Colors.transparent,
+  //       child: Padding(
+  //         padding: EdgeInsets.all(2.0),
+  //         child: IconButton(
+  //           icon: Icon(
+  //             Icons.replay_rounded,
+  //             size: 24.0,
+  //             color: colorBlend01,
+  //           ),
+  //           onPressed: () {
+  //             // Move to the prevoious Match Deducted by the Match Engine.
+  //             Provider.of<MatchEngine>(context, listen: false).goBack();
+  //           },
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -135,14 +133,7 @@ class _MatchCardState extends State<MatchCard> {
           ),
         ],
       ),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // removed the revertButton.
-          // _revertButton(),
-          _buildBackground(),
-        ],
-      ),
+      child: _buildBackground(),
     );
   }
 }
@@ -682,17 +673,12 @@ class _PhotoViewState extends State<PhotoView> {
 
   /// A Space or Area for the PhotoDescription.
   Widget _descriptionLayer() {
-    // if (widget.descriptionWidget != null) {
     return Align(
-      alignment: widget.descriptionAlignment,
-      heightFactor: widget.descriptionHeightFraction,
+      alignment: Alignment.center,
+      heightFactor: 1.0,
       widthFactor: widget.descriptionWidthFraction,
       child: widget.descriptionWidget,
     );
-    // } else {
-    //   // return an empty Container if the above condition is `false`.
-    //   return Container();
-    // }
   }
 
   /// The space or Area meant for displaying the carousel dots.
@@ -721,13 +707,8 @@ class _PhotoViewState extends State<PhotoView> {
     return Align(
       //
       alignment: widget.carouselPosition == CarouselPosition.bottom
-          ? widget.descriptionAlignment
-          : widget.descriptionAlignment.add(
-              Alignment(
-                0.0,
-                -0.38,
-              ),
-            ),
+          ? Alignment.bottomCenter
+          : Alignment.topCenter,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
         decoration: BoxDecoration(
@@ -808,14 +789,29 @@ class _PhotoViewState extends State<PhotoView> {
           // declare the GestureLayer of the PhotoView.
           if (widget.isClickable) _gestureLayer(),
 
-          // declare the DescriptionLayer of the PhotoView.
-          // This is placed above the Gesture Layer to allow
-          // for Explicit Gestures.
-          if (widget.descriptionWidget != null) _descriptionLayer(),
+          // We place the Description widget and the Carousel widget into a single Stack
+          // So that we can apply similar constraints to the two.
+          //
+          // TODO: Add a more cogent explanation.
+          FractionallySizedBox(
+            alignment: widget.descriptionAlignment,
+            // We apply the height factor given to the DescriptionStack (description + carousel).
+            heightFactor: widget.descriptionHeightFraction,
+            widthFactor: 1.0,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // declare the DescriptionLayer of the PhotoView.
+                // This is placed above the Gesture Layer to allow
+                // for Explicit Gestures.
+                if (widget.descriptionWidget != null) _descriptionLayer(),
 
-          // declare the CarouselLayer of the PhotoView.
-          if (widget.showCarousel != null && widget.showCarousel)
-            _carouselLayer(),
+                // declare the CarouselLayer of the PhotoView.
+                if (widget.showCarousel != null && widget.showCarousel)
+                  _carouselLayer(),
+              ],
+            ),
+          ),
         ],
       ),
     );

@@ -172,8 +172,8 @@ class _CustomScrollBarState extends State<CustomScrollBar>
     var isScrollingNotifier =
         widget.scrollController.position.isScrollingNotifier;
     isScrollingNotifier.addListener(() {
-        toggleVisibility();
-      });
+      toggleVisibility();
+    });
   }
 
   // handles wheter to show or hide the CustomScrollBar at any point in time.
@@ -204,7 +204,14 @@ class _CustomScrollBarState extends State<CustomScrollBar>
       // it is detected that the scroll is inactive. i.e The ScrollView attached to this
       // [CustomScrollBar] is no longer being scrolled.
       Timer(widget.fadeDelayDuration, () {
-      if (!isScrolling) _opacityAnimationController.reverse();
+        if (isScrollingNotifier.value == false ) {
+          _opacityAnimationController.reverse();
+
+          //
+          print('STOPPED_SCROLLING, "isScrollingNotifier value  is: ${isScrollingNotifier.value}"');
+        } else {
+          print('SCROLLING IS UNDERWAY!, "isScrollingNotifier value  is: ${isScrollingNotifier.value}"');
+        }
       });
     }
   }

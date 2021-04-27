@@ -481,7 +481,7 @@ class _DraggableCardState extends State<DraggableCard>
     double pad = MediaQuery.of(context).size.height * 0.026;
 
     // Describes the height of the MatchCard and the DraggableCard as a whole.
-    final kFixedHeight = MediaQuery.of(context).size.height * 0.7;
+    // final kFixedHeight = MediaQuery.of(context).size.height * 0.7;
 
     // Wraps the widget in a Transformation and Overlay.
     // This makes our MatchCard to float avove the AppBar and other
@@ -490,8 +490,20 @@ class _DraggableCardState extends State<DraggableCard>
       showOverlay: _showCardStack,
       child: Container(),
       overlayBuilder: (BuildContext context, Rect anchorBounds, Offset anchor) {
+        
+        // The height available for the MatchCard to fit into.
+        // 
+        // Note: This is height when no padding has been applied.
+        final kFixedHeight = anchorBounds.height;
+
+        // The actual height is the amount of space left after padding as being applied.
+        // Since the padding is applied to all the sides i.e. EdgeInsets.all was the constructor used
+        // to get the actual Height available we have to subtract this from the original (fixed)
+        // height when no padding has been applied at all.
+        final kActualHeight = kFixedHeight - pad * 2;
+
         // Replaced the original CenterAbout [Widget] with a more precise [Widget]
-        // provided by the FrameWork, "Center".
+        // provided by the FrameWork, "Center" widget.
         return Center(
           child: Transform(
             transform:
@@ -521,13 +533,9 @@ class _DraggableCardState extends State<DraggableCard>
                             child: widget.card,
                           )
                         : SizedBox(
-                            // This will make sure that the Width of th MatchCard (Display)
-                            // takes as much space as possible {Maximum Finite}.
-                            width: double.maxFinite,
-                            // We have to hardCode this since we want the PhotoView of the MacthCard to take up a
-                            // specific amount of space.
-                            // Without the position of the MatchCard will varry from screens device screens.
-                            height: kFixedHeight,
+                            // This helps the MatchCard as a whole (including the PhotoView and the Description widget)
+                            // to know and fit with the amount of space remaining.
+                            height: kActualHeight,
                             child: SingleChildScrollView(
                               controller: scrollController,
                               clipBehavior: Clip.none,
@@ -536,11 +544,14 @@ class _DraggableCardState extends State<DraggableCard>
                               child: Column(
                                 children: [
                                   // Diplays the MatchCard.
-                                  // We have to explicitly pass the height parameter to the SizedBox
-                                  // holding the holding the MatchCard Widget so that we can give a valid
-                                  // size constraints to the MatchCard Display.
+                                  // Here we are passing the BoxConstraints of the Viewport to the
+                                  // SizedBox holding the MatchCard.
+                                  //
+                                  // What this does is that it forces the height of the Viewport on the MatchCard
+                                  // thus, this makes sure that the MatchCard fills the available space according to the
+                                  // height constraints of the ViewPort.
                                   SizedBox(
-                                    height: kFixedHeight + (1 * pad), // - 7.50,
+                                    height: kActualHeight,
                                     child: GestureDetector(
                                       onPanStart: widget.isDraggable
                                           ? _onPanStart
@@ -589,7 +600,7 @@ class _DraggableCardState extends State<DraggableCard>
                         thumbColor: Colors.white,
                         trackColor: colorBlend02.withOpacity(0.4),
                       ),
-                    )
+                    ),
                 ],
               ),
             ),
