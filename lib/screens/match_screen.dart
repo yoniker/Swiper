@@ -88,6 +88,10 @@ class _MatchScreenState extends State<MatchScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                  // We use the built in Consumer widget of the Provider package as a wrapper
+                  // around the "revert" button.
+                  // What this essentially does is that it listens for any change in the MatchEngine 
+                  // and rebuilds the "revert" button widget to relect it.
                   Consumer<MatchEngine>(
                     // We explicitly pass the "child" parameter to the Consumer widget
                     // this makes sure that everytime the Consumer Widget is being rebuilt 
@@ -112,7 +116,7 @@ class _MatchScreenState extends State<MatchScreen>
 
                     builder: (context, value, child) {
                       // Holds a boolean value that determines whether or not users can revert their Decisions
-                      // and move to the previous Match.
+                      // and move to previous Matches.
                       bool canUndo = value?.previousMatchExists();
 
                       if (canUndo) {
