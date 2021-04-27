@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'dart:math' as math;
 
 class MatchScreen extends StatefulWidget {
   MatchScreen({Key key}) : super(key: key);
@@ -83,10 +84,15 @@ class _MatchScreenState extends State<MatchScreen>
                       borderRadius: BorderRadius.circular(16.0),
                       child: Padding(
                         padding: EdgeInsets.only(right: 20.0),
-                        child: Icon(
-                          Icons.undo,
-                          size: 24.0,
-                          color: colorBlend01,
+                        child: Transform(
+                          alignment: Alignment.centerRight,
+                          transform: Matrix4.rotationY(math.pi),
+
+                          child: Icon(
+                            Icons.refresh,
+                            size: 24.0,
+                            color: colorBlend01,
+                          ),
                         ),
                       ),
                       onTap: () {
