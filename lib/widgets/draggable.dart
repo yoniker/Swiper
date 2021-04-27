@@ -478,7 +478,7 @@ class _DraggableCardState extends State<DraggableCard>
     // We need to specify this here so we can take into account the
     // amount of space eaten up by the padding and reflect this in the
     // height set for the Draggable Card.
-    double pad = 16.0;
+    double pad = MediaQuery.of(context).size.height * 0.026;
 
     // Describes the height of the MatchCard and the DraggableCard as a whole.
     final kFixedHeight = MediaQuery.of(context).size.height * 0.7;
@@ -540,7 +540,7 @@ class _DraggableCardState extends State<DraggableCard>
                                   // holding the holding the MatchCard Widget so that we can give a valid
                                   // size constraints to the MatchCard Display.
                                   SizedBox(
-                                    height: kFixedHeight + (2 * pad) - 7.50,
+                                    height: kFixedHeight + (1 * pad), // - 7.50,
                                     child: GestureDetector(
                                       onPanStart: widget.isDraggable
                                           ? _onPanStart
