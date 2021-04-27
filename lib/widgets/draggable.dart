@@ -478,7 +478,10 @@ class _DraggableCardState extends State<DraggableCard>
     // We need to specify this here so we can take into account the
     // amount of space eaten up by the padding and reflect this in the
     // height set for the Draggable Card.
-    double pad = MediaQuery.of(context).size.height * 0.026;
+    double vertPad = MediaQuery.of(context).size.height * 0.020;
+
+    // The padding applied to the horizontal axis of the DraggableCard.
+    double horizPad = MediaQuery.of(context).size.height * 0.015;
 
     // Describes the height of the MatchCard and the DraggableCard as a whole.
     // final kFixedHeight = MediaQuery.of(context).size.height * 0.7;
@@ -490,9 +493,8 @@ class _DraggableCardState extends State<DraggableCard>
       showOverlay: _showCardStack,
       child: Container(),
       overlayBuilder: (BuildContext context, Rect anchorBounds, Offset anchor) {
-        
         // The height available for the MatchCard to fit into.
-        // 
+        //
         // Note: This is height when no padding has been applied.
         final kFixedHeight = anchorBounds.height;
 
@@ -500,7 +502,7 @@ class _DraggableCardState extends State<DraggableCard>
         // Since the padding is applied to all the sides i.e. EdgeInsets.all was the constructor used
         // to get the actual Height available we have to subtract this from the original (fixed)
         // height when no padding has been applied at all.
-        final kActualHeight = kFixedHeight - pad * 2;
+        final kActualHeight = kFixedHeight - vertPad * 2;
 
         // Replaced the original CenterAbout [Widget] with a more precise [Widget]
         // provided by the FrameWork, "Center" widget.
@@ -515,7 +517,8 @@ class _DraggableCardState extends State<DraggableCard>
               width: anchorBounds.width,
               height: anchorBounds.height,
               // We apply the pad here.
-              padding: EdgeInsets.all(pad),
+              padding:
+                  EdgeInsets.symmetric(vertical: vertPad, horizontal: horizPad),
               child: Stack(
                 fit: StackFit.expand,
                 children: [

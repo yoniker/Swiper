@@ -28,10 +28,10 @@ class _MatchScreenState extends State<MatchScreen>
   AnimationController _animationController;
 
   // The actual Slide Animation literal.
-  Animation<Offset> _slideAnimation;
+  // Animation<Offset> _slideAnimation;
 
-  // The actual Size Animation literal.
-  Animation<double> _sizeAnimation;
+  // // The actual Size Animation literal.
+  // Animation<double> _sizeAnimation;
 
   // initState Declaration.
   @override
@@ -46,15 +46,6 @@ class _MatchScreenState extends State<MatchScreen>
       vsync: this,
     );
 
-    // Initialize the Animations.
-    _slideAnimation =
-        Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset(0.0, 0.0))
-            .animate(_animationController);
-
-    _sizeAnimation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.bounceIn,
-    );
   }
 
   @override
@@ -67,15 +58,6 @@ class _MatchScreenState extends State<MatchScreen>
 
   @override
   Widget build(BuildContext context) {
-    // Initialize the "canUndo" variable.
-    canUndo =
-        Provider.of<MatchEngine>(context, listen: false).previousMatchExists();
-
-    if (canUndo) {
-      _animationController.forward();
-    } else {
-      _animationController.reverse();
-    }
 
     return Padding(
       padding: MediaQuery.of(context).padding,
@@ -99,10 +81,13 @@ class _MatchScreenState extends State<MatchScreen>
                     // This thus helps us to tone up the App's performance a little.
                     child: InkWell(
                       borderRadius: BorderRadius.circular(16.0),
-                      child: Icon(
-                        Icons.undo,
-                        size: 24.0,
-                        color: colorBlend01,
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 20.0),
+                        child: Icon(
+                          Icons.undo,
+                          size: 24.0,
+                          color: colorBlend01,
+                        ),
                       ),
                       onTap: () {
                         // Move to the prevoious Match Deducted by the Match Engine.

@@ -38,6 +38,7 @@ class _MatchCardState extends State<MatchCard> {
       child: PhotoView(
         isClickable: widget.clickable,
         initialPhotoIndex: 0,
+        descriptionHeightFraction: 0.24,
         imageUrls: widget.profile.imageUrls,
         showCarousel: widget.showCarousel,
         descriptionWidget: _descritionWidget(),
@@ -55,27 +56,27 @@ class _MatchCardState extends State<MatchCard> {
     // This thus helps creates a kind of sizing effect to our text.
     double getRelativeTextSize(num baseValue) {
       // get the aspect Ratio of the Device i.e. the length dived by the breadth (something of that sort)
-      double aspectRation = MediaQuery.of(context).size.aspectRatio;
+      double multiplicativeRatio = MediaQuery.of(context).size.height / 2 ;
 
       // clamp the value to a range between "0.0" and the supplied baseValue
-      double clamppedValue = (aspectRation * 100.00).clamp(
+      double clamppedValue = (multiplicativeRatio).clamp(
         0.0,
-        baseValue.toDouble(),
-      );
+        1.0,
+      ) * baseValue.toDouble();
 
       return clamppedValue;
     }
 
     // construct the Widget.
     var descriptionCard = Material(
-      color: Colors.black54,
+      color: Colors.black45,
       borderRadius: BorderRadius.vertical(
         bottom: Radius.circular(16.0),
       ),
       child: Container(
         alignment: Alignment.centerLeft,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
@@ -95,7 +96,7 @@ class _MatchCardState extends State<MatchCard> {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: boldTextStyle.copyWith(
-                    color: Colors.white, fontSize: getRelativeTextSize(18)),
+                    color: Colors.white, fontSize: getRelativeTextSize(16)),
               ),
             ),
           ],
