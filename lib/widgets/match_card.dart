@@ -74,6 +74,7 @@ class _MatchCardState extends State<MatchCard> {
         bottom: Radius.circular(16.0),
       ),
       child: Container(
+        padding: EdgeInsets.only(top: 15.0),
         alignment: Alignment.centerLeft,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
