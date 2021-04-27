@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 /// The default Track color used in painting the CustomScrollBar's Track.
@@ -201,9 +203,9 @@ class _CustomScrollBarState extends State<CustomScrollBar>
       // This timer is used to control when to fade out the [CustomScrollBar] when
       // it is detected that the scroll is inactive. i.e The ScrollView attached to this
       // [CustomScrollBar] is no longer being scrolled.
-      // Future.delayed(widget.fadeDelayDuration, () {
+      Timer(widget.fadeDelayDuration, () {
       if (!isScrolling) _opacityAnimationController.reverse();
-      // });
+      });
     }
   }
 
