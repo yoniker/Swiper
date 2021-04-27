@@ -508,7 +508,7 @@ class _DraggableCardState extends State<DraggableCard>
                 fit: StackFit.expand,
                 children: [
                   Material(
-                    clipBehavior: Clip.hardEdge,
+                    clipBehavior: Clip.antiAlias,
                     borderRadius: BorderRadius.circular(16.0),
                     child: (widget.canScroll != true)
                         // Builds the regular DraggableCard with no inclusion of the details Page
@@ -540,7 +540,7 @@ class _DraggableCardState extends State<DraggableCard>
                                   // holding the holding the MatchCard Widget so that we can give a valid
                                   // size constraints to the MatchCard Display.
                                   SizedBox(
-                                    height: kFixedHeight + pad - 3.0,
+                                    height: kFixedHeight + (2 * pad) - 7.50,
                                     child: GestureDetector(
                                       onPanStart: widget.isDraggable
                                           ? _onPanStart

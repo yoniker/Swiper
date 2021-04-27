@@ -797,7 +797,7 @@ class _PhotoViewState extends State<PhotoView> {
     return ClipRRect(
       // clips the edge of the container preventing any of its content
       // from overflowing.
-      clipBehavior: Clip.hardEdge,
+      clipBehavior: Clip.antiAlias,
       borderRadius: BorderRadius.circular(16.0),
       child: Stack(
         fit: StackFit.expand,

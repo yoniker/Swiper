@@ -96,7 +96,7 @@ class GlobalWidgets {
         ),
         borderRadius: BorderRadius.circular(12.0),
       ),
-      clipBehavior: Clip.hardEdge,
+      clipBehavior: Clip.antiAlias,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [

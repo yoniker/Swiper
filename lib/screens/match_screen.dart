@@ -21,7 +21,7 @@ class _MatchScreenState extends State<MatchScreen>
     with SingleTickerProviderStateMixin {
   // Todo: Add the implementation for detecting the changeCount.
   // holds the value for the number of undos that can be made by users.
-  var undoCount = 1;
+  bool canUndo = false;
 
   // Initialize the Animation Controller for the exposure of the revert button when a change
   // is discovered.
@@ -58,8 +58,24 @@ class _MatchScreenState extends State<MatchScreen>
   }
 
   @override
+  void dispose() {
+    // dispose the Animation Controller instance.
+    _animationController.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (undoCount >= 1) _animationController.forward();
+    // Initialize the "canUndo" variable.
+    canUndo =
+        Provider.of<MatchEngine>(context, listen: false).previousMatchExists();
+
+    if (canUndo) {
+      _animationController.forward();
+    } else {
+      _animationController.reverse();
+    }
 
     return Padding(
       padding: MediaQuery.of(context).padding,
@@ -72,27 +88,65 @@ class _MatchScreenState extends State<MatchScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  SlideTransition(
-                    position: _slideAnimation,
-                    child: ScaleTransition(
-                      scale: _sizeAnimation,
-                      child: FadeTransition(
-                        opacity: _sizeAnimation,
-                        child: IconButton(
-                          alignment: Alignment.center,
-                          icon: Icon(
-                            Icons.undo,
-                            size: 24.0,
-                            color: colorBlend01,
-                          ),
-                          onPressed: () {
-                            // Move to the prevoious Match Deducted by the Match Engine.
-                            Provider.of<MatchEngine>(context, listen: false)
-                                .goBack();
-                          },
-                        ),
+                  Consumer<MatchEngine>(
+                    // We explicitly pass the "child" parameter to the Consumer widget
+                    // this makes sure that everytime the Consumer Widget is being rebuilt 
+                    // Flutter does not re-build this particular "child" widget.
+                    // This thus helps us to tone up the App's performance a little.
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(16.0),
+                      child: Icon(
+                        Icons.undo,
+                        size: 24.0,
+                        color: colorBlend01,
                       ),
+                      onTap: () {
+                        // Move to the prevoious Match Deducted by the Match Engine.
+                        Provider.of<MatchEngine>(
+                          context,
+                          listen: false,
+                        ).goBack();
+                      },
                     ),
+
+
+                    builder: (context, value, child) {
+                      // Holds a boolean value that determines whether or not users can revert their Decisions
+                      // and move to the previous Match.
+                      bool canUndo = value?.previousMatchExists();
+
+                      if (canUndo) {
+                        _animationController.forward();
+                      } else {
+                        _animationController.reverse();
+                      }
+
+                      //
+                      double getAnimatedValue(num value) {
+                        return _animationController.value * value;
+                      }
+
+                      return AnimatedBuilder(
+                        animation: _animationController,
+                        child: child,
+                        builder: (context, child) {
+                          return Opacity(
+                            opacity: getAnimatedValue(1.0),
+                            child: Container(
+                              // padding: EdeIN,
+                              width: getAnimatedValue(30.0),
+                              child: child,
+                              transform: Matrix4.identity()
+                                ..setTranslationRaw(
+                                  getAnimatedValue(1.0),
+                                  0.0,
+                                  0.0,
+                                ),
+                            ),
+                          );
+                        },
+                      );
+                    },
                   ),
                   Text(
                     'Discover',

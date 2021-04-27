@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 /// The default Track color used in painting the CustomScrollBar's Track.
@@ -8,7 +6,7 @@ import 'package:flutter/material.dart';
 final Color kDefaultTrackColor = Colors.grey.withOpacity(0.4);
 
 /// The default Duration of the FadeOut Animation of the [CustomScrollBar].
-final Duration kFadeOutDuration = const Duration(milliseconds: 3000);
+final Duration kFadeOutDuration = const Duration(milliseconds: 400);
 
 /// A ScrollBar Widget that can stacked above any Widget and only shows when the ScrollView is scrolled.
 /// It does not need to have any Scrollable Widget as it's child.
@@ -27,9 +25,9 @@ class CustomScrollBar extends StatefulWidget {
     this.thumbHeightfactor = 0.4,
     this.thumbPad = 1.0,
     this.trackPadding = const EdgeInsets.all(5.0),
-    this.fadeInDuration = const Duration(milliseconds: 400),
+    this.fadeInDuration = const Duration(milliseconds: 100),
     this.fadeOutDuration,
-    this.fadeDelayDuration = const Duration(milliseconds: 1000),
+    this.fadeDelayDuration = const Duration(milliseconds: 1200),
   })  : assert(trackHeight != null, 'The track height cannot be null'),
         assert(trackWidth != null, 'The track width cannot be null'),
         assert(fadeInDuration != null,
@@ -66,20 +64,20 @@ class CustomScrollBar extends StatefulWidget {
   /// ScrollView owned by the `ScrollController` passed to this [CustomScrollBar] Widget
   /// start scrolling.
   ///
-  /// This Defaults to `Duration(milliseconds: 400)`
+  /// This Defaults to `Duration(milliseconds: 100)`
   final Duration fadeInDuration;
 
   /// The duration of the FadeOut Animation of the [CustomScrollBar] occurs when the
   /// ScrollView owned by the `ScrollController` passed to this [CustomScrollBar] widget
   /// start scrolling.
   ///
-  /// If null Defaults to `kFadeOutDuration` which is `Duration(milliseconds: 1200)`.
+  /// If null Defaults to `kFadeOutDuration` which is `Duration(milliseconds: 400)`.
   final Duration fadeOutDuration;
 
   /// The time for which the CustomScrollBar must wait when the ScrollView attached to this
   /// [CustomScrollBar] widget is no longer being scrolled. i.e is inactive.
   ///
-  /// This defaults to `Duration(milliseconds: 1000)`, logically a second.
+  /// This defaults to `Duration(milliseconds: 1200)`, logically a second.
   final Duration fadeDelayDuration;
 
   /// The color used in painting the Track of the [CustomScrollBar].
@@ -142,6 +140,13 @@ class _CustomScrollBarState extends State<CustomScrollBar>
         setState(() {
           derivedPosition = originalOffset;
         });
+
+        // For the Fade animation.
+        var isScrollingNotifier =
+            widget.scrollController.position.isScrollingNotifier;
+        isScrollingNotifier.addListener(() {
+          toggleVisibility();
+        });
       }
     });
 
@@ -165,8 +170,8 @@ class _CustomScrollBarState extends State<CustomScrollBar>
     var isScrollingNotifier =
         widget.scrollController.position.isScrollingNotifier;
     isScrollingNotifier.addListener(() {
-      toggleVisibility();
-    });
+        toggleVisibility();
+      });
   }
 
   // handles wheter to show or hide the CustomScrollBar at any point in time.
@@ -190,15 +195,15 @@ class _CustomScrollBarState extends State<CustomScrollBar>
     }
 
     // if the ScrollView is no longer scrolling (inactive)
-    else {
+    else if (isScrolling == false) {
       // wait for 1000 milliseconds (1 seconds) and then
       // reverse the animation. i.e fade out [CustomScrollBar] Widget.
       // This timer is used to control when to fade out the [CustomScrollBar] when
       // it is detected that the scroll is inactive. i.e The ScrollView attached to this
       // [CustomScrollBar] is no longer being scrolled.
-      Timer(widget.fadeDelayDuration, () {
-        if (!isScrolling) _opacityAnimationController.reverse();
-      });
+      // Future.delayed(widget.fadeDelayDuration, () {
+      if (!isScrolling) _opacityAnimationController.reverse();
+      // });
     }
   }
 
