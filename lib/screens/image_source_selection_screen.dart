@@ -87,6 +87,7 @@ class _ImageSourceSelectionScreenState extends State<ImageSourceSelectionScreen>
         appBar: CustomAppBar(
           title: 'Pick an image',
           icon:Icon(Icons.image),//iconURI: 'assets/images/settings_icon.png',
+          hasTopPadding: true,
         ),
         body: Center(
           child: SingleChildScrollView(

@@ -143,6 +143,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
       appBar: CustomAppBar(
         title: 'A.I. Filters',
         icon: Icon(Icons.psychology_outlined,size:34.0),
+        hasTopPadding: true,
       ),
       body: Padding(
         padding:
