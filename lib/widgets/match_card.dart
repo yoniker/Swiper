@@ -1,8 +1,6 @@
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 /// A widget to paint the various information of a
 /// match unto the screen.
@@ -52,7 +50,23 @@ class _MatchCardState extends State<MatchCard> {
   /// A widget to display the Description of the user.
   /// This will be passed as a the `descriptionWidget` Parameter of the [PhotoView] widget.
   Widget _descritionWidget() {
+    // get the relative fontSize for each Device Screen.
     //
+    // This thus helps creates a kind of sizing effect to our text.
+    double getRelativeTextSize(num baseValue) {
+      // get the aspect Ratio of the Device i.e. the length dived by the breadth (something of that sort)
+      double aspectRation = MediaQuery.of(context).size.aspectRatio;
+
+      // clamp the value to a range between "0.0" and the supplied baseValue
+      double clamppedValue = (aspectRation * 100.00).clamp(
+        0.0,
+        baseValue.toDouble(),
+      );
+
+      return clamppedValue;
+    }
+
+    // construct the Widget.
     var descriptionCard = Material(
       color: Colors.black54,
       borderRadius: BorderRadius.vertical(
@@ -70,8 +84,8 @@ class _MatchCardState extends State<MatchCard> {
                 '${widget.profile.username}, ${widget.profile.age}',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style:
-                    boldTextStyle.copyWith(color: Colors.white, fontSize: 24),
+                style: boldTextStyle.copyWith(
+                    color: Colors.white, fontSize: getRelativeTextSize(24)),
               ),
             ),
             Padding(
@@ -80,7 +94,8 @@ class _MatchCardState extends State<MatchCard> {
                 '${widget.profile.headline}',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: boldTextStyle.copyWith(color: Colors.white),
+                style: boldTextStyle.copyWith(
+                    color: Colors.white, fontSize: getRelativeTextSize(18)),
               ),
             ),
           ],

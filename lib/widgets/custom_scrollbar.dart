@@ -79,7 +79,7 @@ class CustomScrollBar extends StatefulWidget {
   /// The time for which the CustomScrollBar must wait when the ScrollView attached to this
   /// [CustomScrollBar] widget is no longer being scrolled. i.e is inactive.
   ///
-  /// This defaults to `Duration(milliseconds: 1200)`, logically a second.
+  /// This defaults to `Duration(milliseconds: 1200)`.
   final Duration fadeDelayDuration;
 
   /// The color used in painting the Track of the [CustomScrollBar].
@@ -198,19 +198,23 @@ class _CustomScrollBarState extends State<CustomScrollBar>
 
     // if the ScrollView is no longer scrolling (inactive)
     else if (isScrolling == false) {
-      // wait for 1000 milliseconds (1 seconds) and then
+
+      // wait for 1200 milliseconds and then
       // reverse the animation. i.e fade out [CustomScrollBar] Widget.
       // This timer is used to control when to fade out the [CustomScrollBar] when
       // it is detected that the scroll is inactive. i.e The ScrollView attached to this
       // [CustomScrollBar] is no longer being scrolled.
-      Timer(widget.fadeDelayDuration, () {
-        if (isScrollingNotifier.value == false ) {
+      Future.delayed(widget.fadeDelayDuration, () {
+        // In addition to the above we also check if the Widget is mounted so we can avoid calling the
+        // delay function to reverse our non-existent Animation Controller.
+        if (isScrollingNotifier.value == false && mounted) {
           _opacityAnimationController.reverse();
 
-          //
-          print('STOPPED_SCROLLING, "isScrollingNotifier value  is: ${isScrollingNotifier.value}"');
+          //<debug>
+          // print('STOPPED_SCROLLING, "isScrollingNotifier value  is: ${isScrollingNotifier.value}"');
         } else {
-          print('SCROLLING IS UNDERWAY!, "isScrollingNotifier value  is: ${isScrollingNotifier.value}"');
+          //<debug>
+          // print('SCROLLING IS UNDERWAY!, "isScrollingNotifier value  is: ${isScrollingNotifier.value}"');
         }
       });
     }
