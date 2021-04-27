@@ -198,7 +198,6 @@ class _CustomScrollBarState extends State<CustomScrollBar>
 
     // if the ScrollView is no longer scrolling (inactive)
     else if (isScrolling == false) {
-
       // wait for 1200 milliseconds and then
       // reverse the animation. i.e fade out [CustomScrollBar] Widget.
       // This timer is used to control when to fade out the [CustomScrollBar] when
@@ -207,8 +206,18 @@ class _CustomScrollBarState extends State<CustomScrollBar>
       Future.delayed(widget.fadeDelayDuration, () {
         // In addition to the above we also check if the Widget is mounted so we can avoid calling the
         // delay function to reverse our non-existent Animation Controller.
-        if (isScrollingNotifier.value == false && mounted) {
-          _opacityAnimationController.reverse();
+        // 
+        // All
+        if (isScrollingNotifier.value == false &&
+            mounted &&
+            // makes sure that 
+            _opacityAnimationController.isCompleted == true &&
+            _opacityAnimationController.isDismissed == false) {
+          if (_opacityAnimationController.isAnimating == false) {
+            _opacityAnimationController.reverse();
+
+            
+          }
 
           //<debug>
           // print('STOPPED_SCROLLING, "isScrollingNotifier value  is: ${isScrollingNotifier.value}"');
