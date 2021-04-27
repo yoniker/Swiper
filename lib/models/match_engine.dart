@@ -1,4 +1,5 @@
 import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/models/settings_model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:betabeta/services/networking.dart';
 import 'dart:collection';
@@ -38,7 +39,8 @@ class MatchEngine extends ChangeNotifier {
 
   Future<void> getMoreMatchesFromServer() async {
     if (! (itemsBeingGotten == null && _matches.length < MINIMUM_CACHED_PROFILES)) {
-      return;} //TODO use user's cache settings rather than an arbitrary value
+      return;}
+    if(SettingsData().facebookId ==null || SettingsData().facebookId.length<=0){return;}
       try {
         itemsBeingGotten = NetworkHelper().getMatches();
         dynamic matches = await itemsBeingGotten;

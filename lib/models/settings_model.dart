@@ -204,7 +204,8 @@ class SettingsData extends ChangeNotifier{
   void savePreferences(String sharedPreferencesKey, dynamic newValue) async {
     if (_debounce?.isActive ?? false) _debounce.cancel();
     _debounce = Timer(_debounceSettingsTime, () async{
-      await NetworkHelper().postUserSettings();
+      if(_facebookId !=null && _facebookId.length>0){
+      await NetworkHelper().postUserSettings();}
       MatchEngine().clear();
     });
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
