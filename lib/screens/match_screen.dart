@@ -104,12 +104,8 @@ class _MatchScreenState extends State<MatchScreen>
                       },
                     ),
 
-                    builder: (context, value, child) {
-                      // Holds a boolean value that determines whether or not users can revert their Decisions
-                      // and move to previous Matches.
-                      bool canUndo = value?.previousMatchExists();
-
-                      if (canUndo) {
+                    builder: (context, matchEngine, child) {
+                      if (matchEngine.previousMatchExists()) {
                         _animationController.forward();
                       } else {
                         _animationController.reverse();
@@ -185,13 +181,8 @@ class MatchCardBuilder extends StatefulWidget {
 
 //
 class _MatchCardBuilderState extends State<MatchCardBuilder> {
-  // The stack and offset of the first Matchcard stacked at the back of the current one.
-  double middleStackScale = 0.95;
-  Offset middleStackOffset = Offset(0.0, 1.7);
-
-  // The stack and offset of the second Match card stacked at the back of the current one.
-  double bottomStackScale = 0.75;
-  Offset bottomStackOffset = Offset(0.0, 0.87);
+  double bottomCardScale = 0.95;
+  Offset bottomCardOffset = Offset(0.0, 1.7);
 
   // The controller that controls how each match card slides when a valid Decision is made.
   var _matchPageController;
@@ -235,15 +226,9 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
     setState(() {
       // sort the new middle card [Scale] and [Offset] value.
       // make increment based on the distance the card has been slided.
-      var middleDyIncrement = (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
-      middleStackScale = 0.87 + (0.1 * (distance / 50.0)).clamp(0.0, 0.1);
-      middleStackOffset = Offset(0.0, 1.275 + middleDyIncrement);
-
-      // sort the new middle card [Scale] and [Offset] value.
-      // make increment based on the distance the card has been slided.
       var bottomDyIncrement = (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
-      bottomStackScale = 0.75 + (0.05 * (distance / 70.0)).clamp(0.0, 0.05);
-      bottomStackOffset = Offset(0.0, 0.82 + bottomDyIncrement);
+      bottomCardScale = 0.87 + (0.1 * (distance / 50.0)).clamp(0.0, 0.1);
+      bottomCardOffset = Offset(0.0, 1.275 + bottomDyIncrement);
     });
   }
 
@@ -267,8 +252,8 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
         .currentMatchDecision(decision);
 
     setState(() {
-      middleStackScale = 0.95;
-      middleStackOffset = Offset(0.0, 1.7);
+      bottomCardScale = 0.95;
+      bottomCardOffset = Offset(0.0, 1.7);
     });
   }
 
@@ -283,10 +268,10 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
         isDraggable: false,
         canScroll: false,
         card: Transform.scale(
-          scale: middleStackScale,
-          alignment: Alignment(middleStackOffset.dx, middleStackOffset.dy),
+          scale: bottomCardScale,
+          alignment: Alignment(bottomCardOffset.dx, bottomCardOffset.dy),
           child: Opacity(
-            opacity: middleStackScale.clamp(0.0, 1.0),
+            opacity: bottomCardScale.clamp(0.0, 1.0),
             child: MatchCard(
               profile: nextMatch.profile,
               showCarousel: false,
@@ -345,13 +330,6 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
     });
   }
 
-  // Adds more Match cards to the stack.
-  void addCards() async {
-    await Provider.of<MatchEngine>(context, listen: false)
-        .getMoreMatchesFromServer();
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
     // return a stack of cards well positioned.
@@ -359,11 +337,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
       builder: (context, matchEngine, child) {
         return Stack(
           children: <Widget>[
-
-            // The [MatchCard] stacked in the middle.
             _bottomCard(),
-
-            // The main [MatchCard] currently in Focus.
             _topCard(),
           ],
         );
