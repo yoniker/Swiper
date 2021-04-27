@@ -272,32 +272,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
     });
   }
 
-  /// The Widget stacked at the bottom of the Stack of cards.
-  Widget _bottomStack() {
-    var nextMatch =
-        Provider.of<MatchEngine>(context, listen: false).nextMatch();
-
-    if (nextMatch != null) {
-      return Transform.scale(
-        scale: bottomStackScale,
-        alignment: Alignment(bottomStackOffset.dx, bottomStackOffset.dy),
-        // transform: Matrix4.identity()..translate(bottomStackOffset.dx, bottomStackOffset.dy)..scale(bottomStackScale, bottomStackScale),
-        child: Container(
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(18.0),
-          ),
-        ),
-      );
-    } else {
-      // show an empty container.
-      return Container();
-    }
-  }
-
-  // The Widget stacked in the middle of `_bottomStack` and `_topStack`.
-  Widget _middleStack() {
+  Widget _bottomCard() {
     var nextMatch =
         Provider.of<MatchEngine>(context, listen: false).nextMatch();
 
@@ -327,7 +302,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
   }
 
   // The Widget stacked at the top. This is the main Widget.
-  Widget _topStack() {
+  Widget _topCard() {
     var currentMatch =
         Provider.of<MatchEngine>(context, listen: false).currentMatch();
 
@@ -384,14 +359,12 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
       builder: (context, matchEngine, child) {
         return Stack(
           children: <Widget>[
-            // The last stack at the bottom.
-            // _bottomStack(),
 
             // The [MatchCard] stacked in the middle.
-            _middleStack(),
+            _bottomCard(),
 
             // The main [MatchCard] currently in Focus.
-            _topStack(),
+            _topCard(),
           ],
         );
       },
@@ -399,12 +372,3 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
   }
 }
 
-// Testing some concepts.
-var test = PageView();
-
-var test2 =
-    SliverFillViewport(delegate: SliverChildBuilderDelegate((context, count) {
-  return Container(
-    color: Colors.green,
-  );
-}));
