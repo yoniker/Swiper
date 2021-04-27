@@ -42,6 +42,7 @@ class MatchEngine extends ChangeNotifier {
       try {
         itemsBeingGotten = NetworkHelper().getMatches();
         dynamic matches = await itemsBeingGotten;
+        if(matches==null){return;}
         List newProfiles = matches.map<Profile>((match){return Profile.fromMatch(match);}).toList();
         List<Match> newPotentialMatches=newProfiles.map<Match>((profile){return Match(profile: profile);}).toList();
         if (newPotentialMatches.length>0) {

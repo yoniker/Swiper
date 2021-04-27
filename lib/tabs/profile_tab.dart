@@ -53,6 +53,8 @@ class _ProfileTabState extends State<ProfileTab>
     await prefs.remove('facebook_id');
     await prefs.remove('facebook_profile_image_url');
     await prefs.remove('preferredGender');
+    SettingsData().facebookId='';
+    SettingsData().name= '';
     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
         LoginHome()), (Route<dynamic> route) => false);}
 
