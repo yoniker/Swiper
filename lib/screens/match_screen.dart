@@ -148,7 +148,7 @@ class _MatchScreenState extends State<MatchScreen>
                 ],
               ),
             ),
-            showAppLogo: false,
+            showAppLogo: true,
             hasBackButton: false,
             icon: GlobalWidgets.imageToIcon(BetaIconPaths.settingsBarIcon),
           ),
