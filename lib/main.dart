@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         primaryColorBrightness: Brightness.light,
         primarySwatch: Colors.blue,
       ),
-      home: MainNavigationScreen(),
+      home: LoginHome(),
       // MatchingScreen(title: 'Swiper MVP'),
       // LoginHome(),
       //MatchingScreen(title: 'Flutter Demo Home Page'),
@@ -135,6 +135,7 @@ class _LoginHomeState extends State<LoginHome> {
     SettingsData settings = SettingsData();
     await settings.readSettingsFromShared();
     if (settings.readFromShared && settings.facebookId != '') {
+      print('get settings decided to move to main nav screen');
       Navigator.push(
           context,
           MaterialPageRoute(

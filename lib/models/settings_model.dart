@@ -43,7 +43,7 @@ class SettingsData extends ChangeNotifier{
     _preferredGender = 'Everyone';
     _minAge = 18;
     _maxAge = 75;
-    _auditionCount = 1;
+    _auditionCount = 4;
     _filterName = '';
     _filterDisplayImageUrl = '';
     _celebId = 'No celeb was selected';
