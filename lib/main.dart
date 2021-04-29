@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
@@ -15,7 +17,18 @@ import 'package:provider/provider.dart';
 
 import 'models/celebs_info_model.dart';
 
+class MyHttpOverrides extends HttpOverrides{ //TODO it's a temporary fix so we can use self signed certificates. DONT USE IN PRODUCTION
+  @override
+  HttpClient createHttpClient(SecurityContext context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+  }
+}
+
+
+
 void main() {
+  HttpOverrides.global = new MyHttpOverrides();
   runApp(ChangeNotifierProvider(
       create: (context) => MatchEngine(),
       child: ChangeNotifierProvider(

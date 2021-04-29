@@ -57,15 +57,15 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                 child: (filterName != _currentChosenFilterName)
                     ? Text(
                   '$title ',
-                  style: _boldTextStyle,
+                  style: boldTextStyle,
                 )
                     : RichText(
                   text: TextSpan(
-                    style: _defaultTextStyle,
+                    style: defaultTextStyle,
                     children: <InlineSpan>[
                       TextSpan(
                         text: '$title ',
-                        style: _boldTextStyle,
+                        style: boldTextStyle,
                       ),
                       TextSpan(
                         text: '$description ',
@@ -110,19 +110,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
   }
 
   //
-  var _defaultTextStyle = TextStyle(
-    color: Colors.black,
-    fontFamily: 'Nunito',
-    fontSize: 15,
-    fontWeight: FontWeight.w500,
-  );
 
-  var _boldTextStyle = TextStyle(
-    color: Colors.black,
-    fontFamily: 'Nunito',
-    fontSize: 16,
-    fontWeight: FontWeight.w700,
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -143,10 +131,10 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
       appBar: CustomAppBar(
         title: 'A.I. Filters',
         icon: Icon(Icons.psychology_outlined,size:34.0),
+        hasTopPadding: true,
       ),
       body: Padding(
-        padding:
-        MediaQuery.of(context).padding.copyWith(left: 12.0, right: 12.0),
+        padding:MediaQuery.of(context).padding.copyWith(left: 12.0, right: 12.0,top:10.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -164,10 +152,10 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
               ),
               child: RichText(
                 text: TextSpan(
-                  style: _defaultTextStyle,
+                  style: defaultTextStyle,
                   children: <InlineSpan>[
                     TextSpan(
-                      style: _boldTextStyle,
+                      style: boldTextStyle,
                       text: ' ${resolveIntToString()} ',
                     ),
                     TextSpan(text: 'filter(s) left'),
@@ -182,14 +170,14 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                     children: [
                       RichText(
                         text: TextSpan(
-                          style: _defaultTextStyle,
+                          style: defaultTextStyle,
                           children: <InlineSpan>[
                             TextSpan(
                               text: 'You can pick from one of these ',
                             ),
                             TextSpan(
                               text: 'A.I. filters',
-                              style: _boldTextStyle,
+                              style: boldTextStyle,
                             ),
                           ],
                         ),
@@ -227,7 +215,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                     children: [
                                       Text(
                                         'Search Celeb',
-                                        style: _boldTextStyle,
+                                        style: boldTextStyle,
                                       ),
                                       Row(
                                         mainAxisAlignment:
@@ -239,7 +227,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                             padding: EdgeInsets.only(right: 8.0),
                                             child: Text(
                                               '${_selectedCeleb.celebName}',
-                                              style: _defaultTextStyle.copyWith(color: linkColor),
+                                              style: defaultTextStyle.copyWith(color: linkColor),
                                             ),
                                           ),
 
@@ -283,13 +271,13 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                               child: Center(
                                                 child: RichText(
                                                   text: TextSpan(
-                                                    style: _defaultTextStyle,
+                                                    style: defaultTextStyle,
                                                     children: <InlineSpan>[
                                                       TextSpan(
                                                         text:
                                                         '${AdvancedSettingsScreen.similarityDescriptions[_chosenAuditionCount]} Similar',
                                                         style:
-                                                        _defaultTextStyle,
+                                                        defaultTextStyle,
                                                       ),
 
 
@@ -379,7 +367,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                               children: [
                                 Text(
                                   'Choose Image',
-                                  style: _boldTextStyle,
+                                  style: boldTextStyle,
                                 ),
                                 Row(
                                   mainAxisAlignment:
@@ -391,7 +379,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                       padding: EdgeInsets.only(right: 8.0),
                                       child: Text(
                                         'Image Selection',
-                                        style: _defaultTextStyle.copyWith(color:linkColor),
+                                        style: defaultTextStyle.copyWith(color:linkColor),
                                       ),
                                     ),
 
@@ -420,7 +408,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                 });
                               },
                               child: Row(children: [
-                                Text('Remove image',style:_defaultTextStyle.copyWith(color:linkColor)),
+                                Text('Remove image',style:defaultTextStyle.copyWith(color:linkColor)),
                                 Icon(Icons.close,color: Colors.red,)
                               ],),
                             )
@@ -456,13 +444,13 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                         child: Center(
                                           child: RichText(
                                             text: TextSpan(
-                                              style: _defaultTextStyle,
+                                              style: defaultTextStyle,
                                               children: <InlineSpan>[
                                                 TextSpan(
                                                   text:
                                                   '${AdvancedSettingsScreen.similarityDescriptions[_chosenAuditionCount]} Similar',
                                                   style:
-                                                  _defaultTextStyle,
+                                                  defaultTextStyle,
                                                 ),
 
 
@@ -552,22 +540,22 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                         child: Center(
                                           child: RichText(
                                             text: TextSpan(
-                                              style: _defaultTextStyle,
+                                              style: defaultTextStyle,
                                               children: <InlineSpan>[
                                                 TextSpan(
                                                   text:
                                                   'Choose one out of  $_chosenAuditionCount ',
-                                                  style: _defaultTextStyle,
+                                                  style: defaultTextStyle,
                                                 ),
                                                 TextSpan(
                                                   text: 'People ',
-                                                  style: _boldTextStyle,
+                                                  style: boldTextStyle,
                                                 ),
                                                 WidgetSpan(
                                                   child: GestureDetector(
                                                     child: Text(
                                                       "  what's this?",
-                                                      style: _defaultTextStyle
+                                                      style: defaultTextStyle
                                                           .copyWith(
                                                         color: linkColor,
                                                       ),
@@ -661,7 +649,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                           ),
                           child: Text(
                             'Done',
-                            style: _boldTextStyle.copyWith(
+                            style: boldTextStyle.copyWith(
                               color: colorBlend02,
                             ),
                           ),

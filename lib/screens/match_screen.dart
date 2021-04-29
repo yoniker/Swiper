@@ -1,6 +1,7 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/match_engine.dart';
+import 'package:betabeta/screens/settings_screen.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/draggable.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
@@ -12,7 +13,7 @@ import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
 class MatchScreen extends StatefulWidget {
-  static const String routeName = '/match_screen';
+  //static const String routeName = '/match_screen';
   MatchScreen({Key key}) : super(key: key);
 
   @override
@@ -153,7 +154,16 @@ class _MatchScreenState extends State<MatchScreen>
             ),
             showAppLogo: false,
             hasBackButton: false,
-            icon: GlobalWidgets.imageToIcon(BetaIconPaths.settingsBarIcon),
+            icon:
+            TextButton(
+              onPressed: (){
+                setState(() {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>SettingsScreen()));
+                });
+
+              },
+            child:GlobalWidgets.imageToIcon(BetaIconPaths.settingsBarIcon)
+            ),
           ),
 
           // create the card stack.
@@ -191,10 +201,6 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
   @override
   void initState() {
     super.initState();
-
-    // initialize the match engine.
-    _initEngine();
-
     // Initialize the [PageController] with values.
     _matchPageController = PageController(initialPage: 0);
   }
@@ -319,16 +325,6 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
         color: Colors.blue,
       );
     }
-  }
-
-  // initialize the match engine.
-  void _initEngine() async {
-    await Provider.of<MatchEngine>(context, listen: false)
-        .getMoreMatchesFromServer()
-        .then((value) {
-      // check if the Widget has been mounted to prevent state errors.
-      if (mounted) setState(() {});
-    });
   }
 
   @override

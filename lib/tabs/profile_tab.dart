@@ -95,9 +95,9 @@ class _ProfileTabState extends State<ProfileTab>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return new Scaffold(
+    return  Scaffold(
       body: SafeArea(
-        child: new Stack(
+        child: Stack(
           children: <Widget>[_buildProfileInfo(), _buildSettingsBottom()],
         ),
       ),
@@ -258,21 +258,15 @@ class _ProfileTabState extends State<ProfileTab>
 
 
   Widget _buildSettingsButtons() {
-    return new Row(
+    return  Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
-        new Column(
+         Column(
           children: <Widget>[
              RoundIconButton.large(
               icon: Icons.settings,
               iconColor: Colors.red,
-              onPressed: 
-                  /*() async {
-                var genderPreferred=await showPopup(context, 'Show me:');
-                if(userPreferences!=null){
-                  userPreferences.genderPreferred=genderPreferred;
-                }
-              }*/(){
+              onPressed: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>SettingsScreen()));
               },
             ),
@@ -336,21 +330,6 @@ class BigDPlusMessage {
 }
 
 final List<BigDPlusMessage> bigDList = [
-  /*
-  new BigDPlusMessage(
-      title: "Get BigD Plus", subTitle: "See your future family!"),
-  new BigDPlusMessage(title: "Get Matches Faster", subTitle: "You are shown to people who will be interested in you, thanks to our advanced AI"),
-  new BigDPlusMessage(
-      title: "Choose only hot people",
-      subTitle: "Our AI learns your taste,fast!"),
-  new BigDPlusMessage(
-      title: "Personalize your experience",
-      subTitle: "Our AI enables you to see only people that you will like,people who will be interested in you, or both"),
-  new BigDPlusMessage(
-      title: "Help you to choose photos",
-      subTitle: "Our AI will scan your photos, and recommend recent photos which other users will like!"),
-  new BigDPlusMessage(title: "Take a glimpse into the future",
-subTitle: "See your potential children with your match! See your future family photo!"),*/
   new BigDPlusMessage(
       title: "Meet Dor, king of the multiverse",
       subTitle: "Learn how to humble yourself!"),

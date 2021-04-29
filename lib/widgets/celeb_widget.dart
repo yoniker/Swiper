@@ -124,7 +124,7 @@ class _CelebWidgetState extends State<CelebWidget> {
     if(widget.theCeleb.imagesUrls!=null) {
       celebImages = [];
       for (int imageIndex = 0; imageIndex < widget.theCeleb.imagesUrls.length; imageIndex++) {
-        String url = 'http://'+NetworkHelper.SERVER_ADDR+ widget.theCeleb.imagesUrls[imageIndex];
+        String url = 'https://'+NetworkHelper.SERVER_ADDR+ widget.theCeleb.imagesUrls[imageIndex];
         Image img = Image.network(url,height: 150.0,width: 150.0,fit:BoxFit.cover);
         precacheImage(img.image, context);
         celebImages.add(img);

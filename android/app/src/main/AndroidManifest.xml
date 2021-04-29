@@ -11,7 +11,6 @@
     <!-- Allow for Http connections `android:usesCleartextTraffic= "true"` -->
     <application
         android:label="Taste Learner"
-        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <meta-data
             android:name="flutterEmbedding"

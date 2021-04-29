@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   static const String routeName = '/navigation_screen';
-  MainNavigationScreen({Key key, this.pageIndex = 0}) : super(key: key);
+  MainNavigationScreen({Key key, this.pageIndex = 1}) : super(key: key);
 
   final int pageIndex;
 

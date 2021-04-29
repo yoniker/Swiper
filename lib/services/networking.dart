@@ -14,7 +14,7 @@ import 'package:http_parser/src/media_type.dart' as media;
 import 'package:tuple/tuple.dart';
 
 class NetworkHelper{
-  static const SERVER_ADDR='192.116.48.67:8082';
+  static const SERVER_ADDR='192.116.48.67:8081';
   static final NetworkHelper _instance = NetworkHelper._internal();
   static const MIN_MATCHES_CALL_INTERVAL = Duration(seconds: 1);
   DateTime _lastMatchCall=DateTime(2000); //The year 2000 is when the last call happened :D
@@ -29,7 +29,7 @@ class NetworkHelper{
   NetworkHelper._internal();
 
   static Future<List<String>> getCeleblinks(String celebName)async{
-    Uri celebsLinkUri = Uri.http(SERVER_ADDR, 'celeblinks/$celebName');
+    Uri celebsLinkUri = Uri.https(SERVER_ADDR, 'celeblinks/$celebName');
     http.Response resp = await http.get(celebsLinkUri);
     if(resp.statusCode==200){ //TODO think how to handle network errors
       var parsed = json.jsonDecode(resp.body);
@@ -54,7 +54,7 @@ class NetworkHelper{
     SettingsData settings = SettingsData();
     String userName = settings.facebookId ?? 'SOMEUSER'; //TODO Login screen if the username in sharedprefs is null
     _lastMatchCall = DateTime.now();
-    Uri matchesUrl = Uri.http(SERVER_ADDR, '/matches/$userName');
+    Uri matchesUrl = Uri.https(SERVER_ADDR, '/matches/$userName');
     http.Response response=await http.get(matchesUrl); //eg /12313?gender=Male
     if (response.statusCode!=200){
       return null; //TODO error handling
@@ -74,7 +74,7 @@ class NetworkHelper{
     if(true){print('TODO fix the profile @matchEngine stuff'); return;}
     Map<String,String> toSend = {'deciderName':settings.name,'decidee':otherUserProfile.username,'decision':decision.toString().substring("Decision.".length,decision.toString().length)};
     String encoded = jsonEncode(toSend);
-    Uri postDecisionUri = Uri.http(SERVER_ADDR, '/decision/${settings.facebookId}');
+    Uri postDecisionUri = Uri.https(SERVER_ADDR, '/decision/${settings.facebookId}');
     http.Response response = await http.post(postDecisionUri,body:encoded); //TODO something if response wasnt 200
 
   }
@@ -94,14 +94,14 @@ class NetworkHelper{
 
     };
     String encoded = jsonEncode(toSend);
-    Uri postSettingsUri = Uri.http(SERVER_ADDR, '/settings/${settings.facebookId}');
+    Uri postSettingsUri = Uri.https(SERVER_ADDR, '/settings/${settings.facebookId}');
     http.Response response = await http.post(postSettingsUri,body:encoded); //TODO something if response wasnt 200
 
     }
 
   Future<HashMap<String,dynamic>> getFacesLinks({String imageFileName,String userId})async{
     if(_facesCall!=null){return HashMap();}
-    Uri facesLinkUri = Uri.http(SERVER_ADDR, 'faces/$userId/$imageFileName');
+    Uri facesLinkUri = Uri.https(SERVER_ADDR, 'faces/$userId/$imageFileName');
     _facesCall = http.get(facesLinkUri);
     if(DateTime.now().difference(_lastFacesImagesCall) < MIN_FACES_CALL_INTERVAL){
       await Future.delayed(MIN_FACES_CALL_INTERVAL - DateTime.now().difference(_lastFacesImagesCall));
@@ -135,7 +135,7 @@ class NetworkHelper{
 
     http.MultipartRequest request = http.MultipartRequest(
       'POST',
-      Uri.http(SERVER_ADDR, '/upload/${SettingsData().facebookId}'),
+      Uri.https(SERVER_ADDR, '/upload/${SettingsData().facebookId}'),
     );
     var multipartFile = new http.MultipartFile.fromBytes(
       'file',

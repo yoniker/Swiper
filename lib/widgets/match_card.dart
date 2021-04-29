@@ -553,7 +553,7 @@ class _PhotoViewState extends State<PhotoView> {
     for (int imageIndex = 0;
         imageIndex < widget.imageUrls.length;
         imageIndex++) {
-      Image img = Image.network('http://' + widget.imageUrls[imageIndex],
+      Image img = Image.network('https://' + widget.imageUrls[imageIndex],
           fit: BoxFit.cover);
       precacheImage(img.image, context);
       imagesList.add(img);
