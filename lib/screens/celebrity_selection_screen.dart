@@ -1,10 +1,13 @@
 import 'dart:async';
 
+import 'package:betabeta/constants/beta_icon_paths.dart';
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/data_models/celeb.dart';
 import 'package:betabeta/models/celebs_info_model.dart';
 import 'package:betabeta/widgets/celeb_widget.dart';
+import 'package:betabeta/widgets/custom_app_bar.dart';
+import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 class ScreenCelebritySelection extends StatefulWidget {
@@ -26,6 +29,11 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
     });
   }
 
+  // Used to determine wether or not the searchbox is focused.
+  //
+  // We need this so that we can change the color of the ""clear-button"" accordingly.
+  bool searchBoxIsFocused = false;
+
   @override
   void dispose() {
     _debounce?.cancel();
@@ -39,6 +47,12 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
+
+    // make sure we update the state of the "searchBoxIsFocused" variable
+    // when the searchBox is no longer in focus.
+    setState(() {
+      searchBoxIsFocused = false;
+    });
   }
 
   @override
@@ -50,47 +64,121 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
           _numCelebsToShow = celebInfo.entireCelebsList.length;
         }
         return Scaffold(
-          backgroundColor: Color(0xff681B17),
+          backgroundColor: whiteCardColor,
           body: SafeArea(
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Flexible(
-                      flex: 1,
-                      child: Container(
-                        margin: EdgeInsets.all(10.0),
-                        child: TextField(
-                          controller: _controller,
-                          decoration: InputDecoration(
-                              fillColor: Colors.white,
-                              filled: true,
-                              suffixIcon: IconButton(
-                                icon: Icon(Icons.close),
-                                onPressed: () {
-                                  _controller.clear();
-                                  _onSearchChanged('', celebInfo);
-                                },
-                                iconSize: 30.0,
-                              ),
-                              prefixIcon: IconButton(
-                                icon: Icon(Icons.search),
-                                onPressed: unfocus,
-                                iconSize: 30.0,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              hintText: 'Enter Celeb Name Here'),
-                          onChanged: (String newText) {
-                            _onSearchChanged(newText, celebInfo);
-                          },
+                CustomAppBar(
+                  icon: GlobalWidgets.imageToIcon(
+                    BetaIconPaths.inactiveMatchTabIconPath,
+                    onTap: unfocus,
+                  ),
+                  customTitleBuilder: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    child: Container(
+                      margin: EdgeInsets.symmetric(
+                        vertical: 12.50,
+                        horizontal: 7.5,
+                      ),
+                      child: TextField(
+                        controller: _controller,
+                        cursorColor: colorBlend02,
+                        decoration: InputDecoration(
+                          fillColor: darkCardColor,
+                          filled: true,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              Icons.close_rounded,
+                              color: searchBoxIsFocused
+                                  ? colorBlend02
+                                  : darkTextColor.withOpacity(0.5),
+                            ),
+                            onPressed: () {
+                              _controller.clear();
+                              _onSearchChanged('', celebInfo);
+                            },
+                            iconSize: 24.0,
+                          ),
+                          // prefixIcon: IconButton(
+                          //   icon: Icon(Icons.search),
+                          //   onPressed: unfocus,
+                          //   iconSize: 30.0,
+                          // ),
+                          // border: OutlineInputBorder(
+                          //   borderRadius: BorderRadius.circular(30.0),
+                          // ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(color: darkCardColor),
+                            borderRadius: BorderRadius.circular(12.5),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: darkCardColor),
+                            borderRadius: BorderRadius.circular(12.5),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: darkCardColor),
+                            borderRadius: BorderRadius.circular(12.5),
+                          ),
+                          hintText: 'Enter Celeb Name Here',
                         ),
+                        onTap: () {
+                          // here we will set "searchBoxIsFocused" to true and this will
+                          // cause the color of the "clear-button" to change to the color want.
+                          setState(() {
+                            searchBoxIsFocused = true;
+                          });
+                        },
+                        onChanged: (String newText) {
+                          _onSearchChanged(newText, celebInfo);
+                        },
+                        onEditingComplete: () {
+                          // remove focus form the Text Field.
+                          unfocus();
+                        },
                       ),
                     ),
-                  ],
+                  ),
+                  showAppLogo: false,
+                  hasTopPadding: false,
                 ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //   children: [
+                //     Flexible(
+                //       flex: 1,
+                //       child: Container(
+                //         margin: EdgeInsets.symmetric(
+                //             vertical: 6.0, horizontal: 7.5),
+                //         child: TextField(
+                //           controller: _controller,
+                //           decoration: InputDecoration(
+                //               fillColor: Colors.white,
+                //               filled: true,
+                //               suffixIcon: IconButton(
+                //                 icon: Icon(Icons.close),
+                //                 onPressed: () {
+                //                   _controller.clear();
+                //                   _onSearchChanged('', celebInfo);
+                //                 },
+                //                 iconSize: 30.0,
+                //               ),
+                //               prefixIcon: IconButton(
+                //                 icon: Icon(Icons.search),
+                //                 onPressed: unfocus,
+                //                 iconSize: 30.0,
+                //               ),
+                //               border: OutlineInputBorder(
+                //                 borderRadius: BorderRadius.circular(30.0),
+                //               ),
+                //               hintText: 'Enter Celeb Name Here'),
+                //           onChanged: (String newText) {
+                //             _onSearchChanged(newText, celebInfo);
+                //           },
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
                 Flexible(
                   flex: 1,
                   child: Container(

@@ -23,18 +23,35 @@ class MatchScreen extends StatefulWidget {
 class _MatchScreenState extends State<MatchScreen>
     with SingleTickerProviderStateMixin {
   // Todo: Add the implementation for detecting the changeCount.
-  // holds the value for the number of undos that can be made by users.
+  // holds a boolean value whether or not a user can undo his/her previous Macth Decision.
   bool canUndo = false;
 
   // Initialize the Animation Controller for the exposure of the revert button when a change
   // is discovered.
   AnimationController _animationController;
 
+  // Holds a boolean value whether or not to hide the MatchCard.
+  // Note: This option must be set to false whenever you navigate to another Route
+  // from the Match Screen, so, it is best you call the "navigateTo" method before perform any form of navigation
+  // you intend to perform as this method sets the "_matchCardIsVisible" boolean variable to false.
+  bool _matchCardIsVisible = true;
+
   // The actual Slide Animation literal.
   // Animation<Offset> _slideAnimation;
 
   // // The actual Size Animation literal.
   // Animation<double> _sizeAnimation;
+
+  /// Make the MatchCard Invisible by setting the variable "_matchCardIsVisible"
+  /// to false.
+  ///
+  /// Note: This should be called whenever you are planning to Navigate from this Screen to a new
+  /// one.
+  void setVisibility([bool visbility = false]) {
+    setState(() {
+      _matchCardIsVisible = visbility;
+    });
+  }
 
   // initState Declaration.
   @override
@@ -48,7 +65,6 @@ class _MatchScreenState extends State<MatchScreen>
       lowerBound: 0.0,
       vsync: this,
     );
-
   }
 
   @override
@@ -61,7 +77,6 @@ class _MatchScreenState extends State<MatchScreen>
 
   @override
   Widget build(BuildContext context) {
-
     return Padding(
       padding: MediaQuery.of(context).padding,
       child: Column(
@@ -152,17 +167,32 @@ class _MatchScreenState extends State<MatchScreen>
                 ],
               ),
             ),
-            showAppLogo: false,
+            showAppLogo: true,
             hasBackButton: false,
-            icon:
-            TextButton(
-              onPressed: (){
-                setState(() {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>SettingsScreen()));
-                });
 
+            icon: GlobalWidgets.imageToIcon(
+              BetaIconPaths.settingsBarIcon,
+              onTap: () {
+                // hide the overlay.
+                setVisibility(false);
+
+                // Navigate savely to the Settings screen.
+                Navigator.of(context).push(
+                  CupertinoPageRoute(builder: (context) {
+                    return SettingsScreen(
+                      onPop: () {
+                        // pop the Settings Page.
+                        Navigator.of(context).pop();
+
+                        // then show the overlay.
+                        setVisibility(true);
+
+                        print(_matchCardIsVisible);
+                      },
+                    );
+                  }),
+                );
               },
-            child:GlobalWidgets.imageToIcon(BetaIconPaths.settingsBarIcon)
             ),
           ),
 
@@ -170,16 +200,15 @@ class _MatchScreenState extends State<MatchScreen>
           // Wrap in expanded to allow the card to take up the maximum
           // possible space.
           Expanded(
-            child: MatchCardBuilder(),
+            child: Visibility(
+              visible: _matchCardIsVisible,
+              child: MatchCardBuilder(),
+            ),
           ),
         ],
       ),
     );
   }
-
-  // @override
-  // // This necessarily helps to preserve the state of our App.
-  // bool get wantKeepAlive => true;
 }
 
 /// The card Widget used to display match Information.

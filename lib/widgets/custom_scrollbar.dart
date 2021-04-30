@@ -131,7 +131,7 @@ class _CustomScrollBarState extends State<CustomScrollBar>
     super.initState();
 
     // Instantiate the scrollController.
-    widget.scrollController.addListener(() {
+    widget.scrollController?.addListener(() {
       if (widget.scrollController.hasClients) {
         var currentPos = widget.scrollController.position;
 
@@ -139,7 +139,7 @@ class _CustomScrollBarState extends State<CustomScrollBar>
         // the range "0.0 to 1.0"
         var originalOffset =
             (currentPos.pixels / currentPos.maxScrollExtent) * 1.0;
-        setState(() {
+        if (mounted) setState(() {
           derivedPosition = originalOffset;
         });
 
@@ -170,7 +170,7 @@ class _CustomScrollBarState extends State<CustomScrollBar>
 
     // For the Fade animation.
     var isScrollingNotifier =
-        widget.scrollController.position.isScrollingNotifier;
+        widget?.scrollController?.position?.isScrollingNotifier;
     isScrollingNotifier.addListener(() {
       toggleVisibility();
     });
@@ -179,7 +179,7 @@ class _CustomScrollBarState extends State<CustomScrollBar>
   // handles wheter to show or hide the CustomScrollBar at any point in time.
   toggleVisibility() {
     var isScrollingNotifier =
-        widget.scrollController.position.isScrollingNotifier;
+        widget?.scrollController?.position?.isScrollingNotifier;
 
     bool isScrolling = isScrollingNotifier.value;
 
@@ -209,6 +209,8 @@ class _CustomScrollBarState extends State<CustomScrollBar>
         // 
         // All
         if (isScrollingNotifier.value == false &&
+            // ensures that we are not calling the method that follows
+            // after it the Widget has been disposed.
             mounted &&
             // makes sure that 
             _opacityAnimationController.isCompleted == true &&
@@ -232,7 +234,7 @@ class _CustomScrollBarState extends State<CustomScrollBar>
   @override
   void dispose() {
     // dispose the Scroll Controller if not diposed by the parent Widget.
-    widget.scrollController?.dispose();
+    // widget.scrollController?.dispose();
 
     // dispose the Animation Controller
     _opacityAnimationController.dispose();

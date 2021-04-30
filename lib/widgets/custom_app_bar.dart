@@ -18,6 +18,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.hasTopPadding = false,
     this.showAppLogo = true,
     this.hasBackButton = true,
+    this.onPop,
   })  :
         // add necessary assertions.
         assert(icon != null, 'The parameter "icon" cannot be null'),
@@ -49,6 +50,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Must not be null.
   final bool showAppLogo;
 
+  /// This is an optional Callback called immediately the backbutton (if enabled) is clicked.
+  ///
+  /// You can pass in this parameter to override the default pop behavour of the backbutton
+  /// when pressed.
+  ///
+  /// Note: You will have to call the pop function yourself if you intend to pop the Current Route when
+  /// the back-Button is clicked.
+  /// 
+  /// Note: if `hasBackButton` is false or null, this function won't fire as the backbutton will
+  /// be hiddden.
+  final void Function() onPop;
+
   @override
   Widget build(BuildContext context) {
     // This holds the value for the topPadding of the AppBar.
@@ -60,46 +73,48 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: Container(
         margin: EdgeInsets.only(top: 5.0),
         padding: EdgeInsets.symmetric(horizontal: 5.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                if (hasBackButton)
-                  InkWell(
-                    splashColor: colorBlend02.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(8.0),
-                    onTap: () {
-                      // Pop the current context.
-                      Navigator.of(context).pop();
-                    },
-                    child: GlobalWidgets.imageToIcon(
-                      'assets/images/back_arrow.png',
+        child: Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  if (hasBackButton)
+                    InkWell(
+                      splashColor: colorBlend02.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(8.0),
+                      onTap: onPop ?? () {
+                        // Pop the current context.
+                        Navigator.of(context).pop();
+                      },
+                      child: GlobalWidgets.imageToIcon(
+                        'assets/images/back_arrow.png',
+                      ),
                     ),
-                  ),
-                (customTitleBuilder != null)
-                    ? customTitleBuilder
-                    : Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          title,
-                          style: TextStyle(
-                            color: color,
-                            fontSize: 22,
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w700,
+                  (customTitleBuilder != null)
+                      ? customTitleBuilder
+                      : Padding(
+                          padding: EdgeInsets.only(left: 10.0),
+                          child: Text(
+                            title,
+                            style: TextStyle(
+                              color: color,
+                              fontSize: 22,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
-                      ),
-              ],
-            ),
-            // show App Logo.
-            if (showAppLogo)
-              GlobalWidgets.imageToIcon(BetaIconPaths.appLogoIcon),
-            icon,
-          ],
+                ],
+              ),
+              if (showAppLogo)
+                GlobalWidgets.imageToIcon(BetaIconPaths.appLogoIcon),
+              icon,
+              // show App Logo.
+            ],
+          ),
         ),
       ),
     );
