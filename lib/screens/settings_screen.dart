@@ -1,13 +1,14 @@
+import 'dart:math' as math;
+
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/widgets/cupertino_range_slider.dart';
+import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/dropdown_form_field.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
-import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide DropdownButtonFormField;
-import 'dart:math' as math;
 
 import 'advanced_settings_screen.dart';
 
@@ -98,7 +99,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         hasTopPadding: true,
         icon:
             Icon(Icons.settings), //iconURI: 'assets/images/settings_icon.png',
-            onPop: widget.onPop,
+        onPop: widget.onPop ??
+            () {
+              // Pop the current Settings Route.
+              Navigator.of(context).pop();
+            },
       ),
       body: Stack(
         children: [
@@ -441,12 +446,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         color: colorBlend02,
                       ),
                     ),
-                    onPressed: () {
-                      //savePreferencesMethod();
+                    onPressed: widget.onPop ??
+                        () {
+                          //savePreferencesMethod();
 
-                      // Pop current context.
-                      Navigator.of(context).pop();
-                    },
+                          // Pop current context.
+                          Navigator.of(context).pop();
+                        },
                   ),
                 ),
               ],
