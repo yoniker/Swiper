@@ -187,7 +187,7 @@ class _MatchScreenState extends State<MatchScreen>
                         // then show the overlay.
                         setVisibility(true);
 
-                        print(_matchCardIsVisible);
+                        // removed print a statement.
                       },
                     );
                   }),

@@ -2,12 +2,11 @@ import 'dart:io';
 
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/settings_model.dart';
-import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
 import 'package:betabeta/screens/image_source_selection_screen.dart';
-import 'package:betabeta/screens/match_screen.dart';
+import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
@@ -17,15 +16,15 @@ import 'package:provider/provider.dart';
 
 import 'models/celebs_info_model.dart';
 
-class MyHttpOverrides extends HttpOverrides{ //TODO it's a temporary fix so we can use self signed certificates. DONT USE IN PRODUCTION
+class MyHttpOverrides extends HttpOverrides {
+  //TODO it's a temporary fix so we can use self signed certificates. DON'T USE IN PRODUCTION
   @override
-  HttpClient createHttpClient(SecurityContext context){
+  HttpClient createHttpClient(SecurityContext context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
-
-
 
 void main() {
   HttpOverrides.global = new MyHttpOverrides();
@@ -150,9 +149,11 @@ class _LoginHomeState extends State<LoginHome> {
     if (settings.readFromShared && settings.facebookId != '') {
       print('get settings decided to move to main nav screen');
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MainNavigationScreen()));
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainNavigationScreen(),
+        ),
+      );
     }
   }
 
