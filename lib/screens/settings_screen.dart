@@ -12,10 +12,12 @@ import 'dart:math' as math;
 import 'advanced_settings_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
-  SettingsScreen({Key key}) : super(key: key);
+  SettingsScreen({Key key, this.onPop}) : super(key: key);
   static const String routeName = '/settings_screen';
   static const minAge = 18;
   static const maxAge = 100;
+
+  final void Function() onPop;
 
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
@@ -23,10 +25,13 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   String _currentLocation = 'Somewhere, Earth';
-  
-  Gender _currentGenderSelected = Gender.values.firstWhere((e) => e.toShortString() == SettingsData().preferredGender);
-  RangeValues _selectedAges = RangeValues(SettingsData().minAge.toDouble(), SettingsData().maxAge.toDouble());
-  bool _showInDiscovery = false; //TODO change SettingsData to support visibility
+
+  Gender _currentGenderSelected = Gender.values
+      .firstWhere((e) => e.toShortString() == SettingsData().preferredGender);
+  RangeValues _selectedAges = RangeValues(
+      SettingsData().minAge.toDouble(), SettingsData().maxAge.toDouble());
+  bool _showInDiscovery =
+      false; //TODO change SettingsData to support visibility
   double _maxDistance = SettingsData().radius;
 
   @override
@@ -39,7 +44,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   //
   DropdownMenuItem<Gender> _buildGenderDropDownMenuItem(Gender selectedGender) {
-
     //
     return DropdownMenuItem<Gender>(
       child: Text(
@@ -56,10 +60,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-
-
   //
-
 
   String _simpleDashAgeRangeString(double start, double end) {
     if (end < SettingsScreen.maxAge) {
@@ -69,36 +70,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-  String produceAgesRangeText(RangeValues _ages){
+  String produceAgesRangeText(RangeValues _ages) {
     String agesRangeText;
 
-  if(_ages.start.toInt()<=SettingsScreen.minAge) {
-  if(_ages.end.toInt()>=SettingsScreen.maxAge){
-  agesRangeText = 'Any Age';
-  }
-  else{
-  agesRangeText = '${_ages.end.toInt()} or younger';
-  }
-  }
-  else{
-  if(_ages.end.toInt()>=SettingsScreen.maxAge){
-  agesRangeText = '${_ages.start.toInt()} or older';
-  }
-  else{
-  agesRangeText = 'Between ${_ages.start.toInt()} and ${_ages.end.toInt()}';
-  }
-  }
-  return agesRangeText;
+    if (_ages.start.toInt() <= SettingsScreen.minAge) {
+      if (_ages.end.toInt() >= SettingsScreen.maxAge) {
+        agesRangeText = 'Any Age';
+      } else {
+        agesRangeText = '${_ages.end.toInt()} or younger';
+      }
+    } else {
+      if (_ages.end.toInt() >= SettingsScreen.maxAge) {
+        agesRangeText = '${_ages.start.toInt()} or older';
+      } else {
+        agesRangeText =
+            'Between ${_ages.start.toInt()} and ${_ages.end.toInt()}';
+      }
+    }
+    return agesRangeText;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:  CustomAppBar(
-      title: 'Settings',
-      hasTopPadding: true,
-      icon:Icon(Icons.settings),//iconURI: 'assets/images/settings_icon.png',
-    ),
+      appBar: CustomAppBar(
+        title: 'Settings',
+        hasTopPadding: true,
+        icon:
+            Icon(Icons.settings), //iconURI: 'assets/images/settings_icon.png',
+            onPop: widget.onPop,
+      ),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -107,7 +108,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 GlobalWidgets.buildSettingsBlock(
                   title: 'Visibility'.toUpperCase(),
                   description:
-                  'With this enabled your profile will be visible to other people using this App',
+                      'With this enabled your profile will be visible to other people using this App',
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
@@ -123,13 +124,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           activeColor: colorBlend01,
                           onChanged: (value) {
                             setState(
-                                  () {
+                              () {
                                 // TODO:// Add required Function.
                                 // Alert user to make sure he is intentionally changing his visibiliry status.
 
                                 // set "_showInDiscovery" to the currrent switch value.
                                 _showInDiscovery = value;
-
                               },
                             );
                           },
@@ -140,14 +140,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 GlobalWidgets.buildSettingsBlock(
                   title: 'Where'.toUpperCase(),
-                  description:
-                  '',
+                  description: '',
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        margin: EdgeInsets.symmetric(vertical: 6.0,horizontal: 8.0),
+                        margin: EdgeInsets.symmetric(
+                            vertical: 6.0, horizontal: 8.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -156,32 +156,43 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               'Location',
                               style: boldTextStyle,
                             ),
-                            TextButton(child: Row(children: [Text(_currentLocation),SizedBox(width: 4.0,),Icon(Icons.arrow_forward_ios,size:16)]),onPressed: (){},),
+                            TextButton(
+                              child: Row(children: [
+                                Text(_currentLocation),
+                                SizedBox(
+                                  width: 4.0,
+                                ),
+                                Icon(Icons.arrow_forward_ios, size: 16)
+                              ]),
+                              onPressed: () {},
+                            ),
                           ],
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.symmetric(vertical: 6.0,horizontal: 8.0),
+                        margin: EdgeInsets.symmetric(
+                            vertical: 6.0, horizontal: 8.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(
-                                'Max. Distance',
-                                style: boldTextStyle,
-                              ),
+                              children: [
+                                Text(
+                                  'Max. Distance',
+                                  style: boldTextStyle,
+                                ),
                                 Container(
                                   alignment: Alignment.centerRight,
-                                  margin: EdgeInsets.symmetric(
-                                      vertical: 6.0),
+                                  margin: EdgeInsets.symmetric(vertical: 6.0),
                                   child: RichText(
                                     text: TextSpan(
                                       style: defaultTextStyle,
                                       children: <InlineSpan>[
                                         TextSpan(
-                                          text: ' ${_maxDistance.round().toString()} km away',
+                                          text:
+                                              ' ${_maxDistance.round().toString()} km away',
                                           style: defaultTextStyle,
                                         ),
                                       ],
@@ -191,8 +202,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ],
                             ),
                             Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceAround,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Transform(
@@ -206,8 +216,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 ),
                                 Expanded(
                                   child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 12.0),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 12.0),
                                     child: CupertinoSlider(
                                       activeColor: colorBlend01,
                                       value: _maxDistance,
@@ -225,7 +235,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 ),
                                 Transform.rotate(
                                   alignment: Alignment.center,
-                                  angle: math.pi /2,
+                                  angle: math.pi / 2,
                                   child: Icon(
                                     Icons.local_airport_rounded,
                                     size: 24.0,
@@ -234,7 +244,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 ),
                               ],
                             ),
-
                           ],
                         ),
                       ),
@@ -243,10 +252,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 GlobalWidgets.buildSettingsBlock(
                   title: 'Who'.toUpperCase(),
-                  description:
-                  '',
+                  description: '',
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal:8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -262,9 +270,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 style: boldTextStyle,
                               ),
                               Container(
-                                color:Colors.grey[200],
-                                width:100,
-
+                                color: Colors.grey[200],
+                                width: 100,
                                 child: DropdownButtonFormFieldModified<Gender>(
                                   decoration: InputDecoration.collapsed(
                                     hintText: 'My Preferred Gender',
@@ -275,15 +282,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   isExpanded: false,
                                   onChanged: (newGender) {
                                     setState(() {
-                                      SettingsData().preferredGender = newGender.toShortString();
+                                      SettingsData().preferredGender =
+                                          newGender.toShortString();
                                       _currentGenderSelected = newGender;
-
                                     });
                                   },
                                   style: defaultTextStyle,
                                   value: _currentGenderSelected,
                                   items: Gender.values.map(
-                                        (gender) {
+                                    (gender) {
                                       return _buildGenderDropDownMenuItem(
                                           gender);
                                     },
@@ -300,25 +307,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                  'Age',
-                                  style: boldTextStyle,
-                                ),
+                                    'Age',
+                                    style: boldTextStyle,
+                                  ),
                                   Container(
                                     alignment: Alignment.centerRight,
                                     margin: EdgeInsets.symmetric(
-                                        vertical: 6.0, horizontal:0.0),
+                                        vertical: 6.0, horizontal: 0.0),
                                     child: RichText(
                                       text: TextSpan(
                                         style: defaultTextStyle,
                                         children: <InlineSpan>[
                                           TextSpan(
-                                            text:
-                                            produceAgesRangeText(_selectedAges),
+                                            text: produceAgesRangeText(
+                                                _selectedAges),
                                           ),
-
                                         ],
                                       ),
                                     ),
@@ -327,13 +334,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ),
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceAround,
+                                    MainAxisAlignment.spaceAround,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-
                                   Transform(
                                     alignment: Alignment.center,
-                              transform: Matrix4.rotationY(math.pi),
+                                    transform: Matrix4.rotationY(math.pi),
                                     child: Icon(
                                       Icons.child_friendly_outlined,
                                       size: 24.0,
@@ -343,7 +349,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   Expanded(
                                     child: Padding(
                                       padding:
-                                      EdgeInsets.symmetric(vertical: 6.0),
+                                          EdgeInsets.symmetric(vertical: 6.0),
                                       child: CupertinoRangeSlider(
                                         activeColor: colorBlend01,
                                         values: _selectedAges,
@@ -351,15 +357,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         max: SettingsScreen.maxAge.toDouble(),
                                         onChanged: (newRangevalues) {
                                           setState(
-                                                () {
+                                            () {
                                               _selectedAges = RangeValues(
                                                 newRangevalues.start
                                                     .roundToDouble(),
                                                 newRangevalues.end
                                                     .roundToDouble(),
                                               );
-                                              SettingsData().minAge = _selectedAges.start.toInt();
-                                              SettingsData().maxAge = _selectedAges.end.toInt();
+                                              SettingsData().minAge =
+                                                  _selectedAges.start.toInt();
+                                              SettingsData().maxAge =
+                                                  _selectedAges.end.toInt();
                                             },
                                           );
                                         },
@@ -381,33 +389,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                 ),
                 GlobalWidgets.buildSettingsBlock(
-                  title:'Advanced'.toUpperCase(),
-                  description:
-                  '',
+                  title: 'Advanced'.toUpperCase(),
+                  description: '',
                   child: TextButton(
                     onPressed: () {
-
-
                       // Direct user to the Advanced filters Page.
 
-                      Navigator.pushNamed(context,AdvancedSettingsScreen.routeName);
+                      Navigator.pushNamed(
+                          context, AdvancedSettingsScreen.routeName);
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Row(mainAxisAlignment: MainAxisAlignment.start,
-                          children: [Text(
-                            'Artificial Intelligence Filters',
-                            style: boldTextStyle,
-                          ),
-                          SizedBox(width: 4.0,),
-                          Icon(Icons.psychology_outlined,
-                          color: colorBlend01,size: 34.0,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Artificial Intelligence Filters',
+                              style: boldTextStyle,
+                            ),
+                            SizedBox(
+                              width: 4.0,
+                            ),
+                            Icon(
+                              Icons.psychology_outlined,
+                              color: colorBlend01,
+                              size: 34.0,
+                            ),
                           ],
                         ),
-                        Icon(Icons.arrow_forward_ios,color: Colors.black54,size: 18,),
-
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.black54,
+                          size: 18,
+                        ),
                       ],
                     ),
                   ),
@@ -426,7 +442,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
                     onPressed: () {
-
                       //savePreferencesMethod();
 
                       // Pop current context.

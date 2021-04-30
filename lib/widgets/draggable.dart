@@ -192,6 +192,8 @@ class _DraggableCardState extends State<DraggableCard>
   void dispose() {
     slideBackAnimation.dispose();
     slideOutAnimation.dispose();
+
+    scrollController?.dispose();
     super.dispose();
   }
 
