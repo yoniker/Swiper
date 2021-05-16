@@ -12,7 +12,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     Key key,
     this.title,
-    @required this.icon,
+    @required this.trailing,
     this.color = Colors.black,
     this.customTitleBuilder,
     this.hasTopPadding = false,
@@ -21,16 +21,38 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onPop,
   })  :
         // add necessary assertions.
-        assert(icon != null, 'The parameter "icon" cannot be null'),
+        assert(trailing != null, 'The parameter "icon" cannot be null'),
         assert((title == null) != (customTitleBuilder == null),
             'One of "title" and "customTitleBuilder" must be null, You can only specify one of the two!'),
         super(key: key);
+
+  CustomAppBar.subPage({
+    @required String subPageTitle,
+    this.color,
+    this.hasBackButton = true,
+    this.hasTopPadding = false,
+    this.showAppLogo = true,
+    this.onPop,
+  })  : this.trailing = Padding(
+          padding: EdgeInsets.only(left: 10.0),
+          child: Text(
+            subPageTitle,
+            style: TextStyle(
+              color: color,
+              fontSize: 22,
+              fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        this.title = null,
+        this.customTitleBuilder = SizedBox.shrink();
 
   /// The `title` for this tile.
   final String title;
 
   /// This denotes the icon widget that is placed in the Appbar .
-  final Widget icon;
+  final Widget trailing;
 
   /// Determine whether to include a back-button at
   /// start of the tile (same as trailing icon in the original Appbar class).
@@ -57,7 +79,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   ///
   /// Note: You will have to call the pop function yourself if you intend to pop the Current Route when
   /// the back-Button is clicked.
-  /// 
+  ///
   /// Note: if `hasBackButton` is false or null, this function won't fire as the backbutton will
   /// be hiddden.
   final void Function() onPop;
@@ -85,10 +107,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     InkWell(
                       splashColor: colorBlend02.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8.0),
-                      onTap: onPop ?? () {
-                        // Pop the current context.
-                        Navigator.of(context).pop();
-                      },
+                      onTap: onPop ??
+                          () {
+                            // Pop the current context.
+                            Navigator.of(context).pop();
+                          },
                       child: GlobalWidgets.imageToIcon(
                         'assets/images/back_arrow.png',
                       ),
@@ -111,7 +134,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
               if (showAppLogo)
                 GlobalWidgets.imageToIcon(BetaIconPaths.appLogoIcon),
-              icon,
+              trailing,
               // show App Logo.
             ],
           ),

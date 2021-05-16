@@ -60,7 +60,7 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: CustomAppBar(title:'Pick a face',icon: Icon(Icons.person_pin_outlined),),
+      appBar: CustomAppBar(title:'Pick a face',trailing: Icon(Icons.person_pin_outlined),),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

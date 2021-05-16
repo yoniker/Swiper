@@ -170,7 +170,7 @@ class _MatchScreenState extends State<MatchScreen>
             showAppLogo: true,
             hasBackButton: false,
 
-            icon: GlobalWidgets.imageToIcon(
+            trailing: GlobalWidgets.imageToIcon(
               BetaIconPaths.settingsBarIcon,
               onTap: () {
                 // hide the overlay.

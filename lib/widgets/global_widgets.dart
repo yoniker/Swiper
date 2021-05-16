@@ -1,5 +1,7 @@
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/widgets/gradient_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 /// A collection of Global Widgets to be used in various parts of the App.
 class GlobalWidgets {
@@ -248,5 +250,212 @@ class GlobalWidgets {
     );
 
     return status;
+  }
+
+  static Future<PickedFile> showImagePickerDialogue({
+    @required BuildContext context,
+    String title = 'Select an Image source',
+
+    /// This function is called immediately after the image is picked.
+    /// Here you can make use of the [PickedFile] returned in whatever 
+    /// Network request or any other usage you may have in mind..
+    Function(PickedFile) onImagePicked,
+  }) async {
+    PickedFile _imageFile;
+    final ImagePicker _picker = ImagePicker();
+    String _retrieveDataError;
+
+    double _heightExtent = 0.355;
+
+    // Called in-case the user interupts the file-picking process such as recieving a message and so o,
+    // basically things that disturb the process in one way or the other.
+    //
+    Future<void> retrieveLostData() async {
+      final LostData response = await _picker.getLostData();
+      if (response.isEmpty) {
+        return;
+      }
+      if (response.file != null) {
+        if (response.type == RetrieveType.video) {
+          return;
+        } else if (response.type == RetrieveType.image) {
+          if (_imageFile == null) {
+            _imageFile = response.file;
+          }
+        }
+      } else {
+        _retrieveDataError = response.exception.code;
+
+        print('Error retrieving lost Data! [ERROR-CODE]: $_retrieveDataError');
+      }
+    }
+
+    void _onImageButtonPressed(ImageSource source) async {
+      // Initiate the pick Image Function.
+      try {
+        final pickedFile = await _picker.getImage(source: source);
+        // Add the retrieve lost data function.
+        retrieveLostData();
+        if (pickedFile != null) {
+          _imageFile = pickedFile;
+          if (onImagePicked != null) onImagePicked(_imageFile);
+
+          return;
+        }
+      } catch (error) {
+        // log
+        print('Error picking Image! [ERROR]: $error');
+
+        return;
+      }
+    }
+
+    //
+    // var _defaultTextStyle = TextStyle(
+    //   color: Colors.black,
+    //   fontFamily: 'Nunito',
+    //   fontSize: 15,
+    //   fontWeight: FontWeight.w500,
+    // );
+
+    // var _varryingTextStyle = TextStyle(
+    //   color: Colors.black,
+    //   fontFamily: 'Nunito',
+    //   fontSize: 16,
+    //   fontWeight: FontWeight.w700,
+    // );
+
+    String _resolveAlertTitle() {
+      if (title != null && title != '') {
+        return title;
+      } else {
+        return 'Image Selection';
+      }
+    }
+
+    Widget imageSelectionItem({
+      @required ImageSource source,
+      String sourceName,
+      @required Widget icon,
+    }) {
+      return InkWell(
+        onTap: () {
+          // Pop the dialogue and execute the image-picking Function.
+          Navigator.of(context).pop();
+
+          _onImageButtonPressed(source);
+        },
+        child: Container(
+          margin: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.all(6.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(right: 12.0),
+                child: GradientWidget(
+                  gradient: mainColorGradientList,
+                  child: icon,
+                ),
+              ),
+              RichText(
+                text: TextSpan(
+                  style: defaultTextStyle,
+                  children: [
+                    TextSpan(
+                      text: 'Pick from ',
+                    ),
+                    TextSpan(
+                      text: '${sourceName ?? source.toString()}',
+                      style: boldTextStyle,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // show the image-picker dialogue
+    await showDialog(
+      useSafeArea: true,
+      context: context,
+      builder: (context) {
+        return Container(
+          margin: EdgeInsets.symmetric(
+            vertical: MediaQuery.of(context).size.height * _heightExtent,
+            horizontal: MediaQuery.of(context).size.width * 0.1,
+          ),
+          constraints: BoxConstraints(
+            minHeight: MediaQuery.of(context).size.height * 0.375,
+            maxHeight: MediaQuery.of(context).size.height * 0.55,
+            minWidth: MediaQuery.of(context).size.width * 0.75,
+            maxWidth: MediaQuery.of(context).size.width * 0.95,
+          ),
+          child: Material(
+            borderRadius: BorderRadius.circular(15),
+            elevation: 1.0,
+            color: darkCardColor,
+            child: Stack(
+              fit: StackFit.expand,
+              // mainAxisAlignment: MainAxisAlignment.spaceAround,
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                FractionallySizedBox(
+                  heightFactor: 0.25,
+                  widthFactor: 1.0,
+                  alignment: Alignment.topCenter,
+                  child: Container(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.all(4.5),
+                    child: Text(
+                      ' "${_resolveAlertTitle()}"\n ',
+                      style: boldTextStyle,
+                    ),
+                  ),
+                ),
+                FractionallySizedBox(
+                  heightFactor: 0.75,
+                  widthFactor: 1.0,
+                  alignment: Alignment.bottomCenter,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                      children: [
+                        imageSelectionItem(
+                          source: ImageSource.camera,
+                          sourceName: 'Camera',
+                          icon: Icon(
+                            Icons.camera_alt,
+                            color: Colors.white,
+                            size: 24.0,
+                          ),
+                        ),
+                        imageSelectionItem(
+                          source: ImageSource.gallery,
+                          sourceName: 'Gallery',
+                          icon: Icon(
+                            Icons.photo_library,
+                            color: Colors.white,
+                            size: 24.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    return _imageFile;
   }
 }

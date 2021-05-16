@@ -10,10 +10,10 @@ import 'package:flutter/material.dart';
 // we should keep it since it will be used in the Match Screen
 // on the Long run.
 class GradientWidget extends StatelessWidget {
-  GradientWidget(
-      this.child,
-      this.gradient,
-      );
+  GradientWidget({
+    this.child,
+    this.gradient,
+  });
 
   final Widget child;
   final Gradient gradient;

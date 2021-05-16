@@ -97,7 +97,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: CustomAppBar(
         title: 'Settings',
         hasTopPadding: true,
-        icon:
+        trailing:
             Icon(Icons.settings), //iconURI: 'assets/images/settings_icon.png',
         onPop: widget.onPop ??
             () {
