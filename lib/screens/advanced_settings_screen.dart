@@ -4,6 +4,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/data_models/celeb.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
+import 'package:betabeta/screens/face_selection_screen.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
@@ -45,7 +46,21 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
   void postCustomImageToNetwork(PickedFile chosenImage) async {
     Tuple2<img.Image, String> imageFileDetails =
         NetworkHelper().preparedImageFileDetails(File(chosenImage.path));
+
+    // 
+    print('Here!');
+    await Navigator.pushNamed(
+      context,
+      FaceSelectionScreen.routeName,
+      arguments: FaceSelectionScreenArguments(
+        imageFile: File(chosenImage.path),
+        imageFileName: imageFileDetails.item2,
+      ),
+    );
+
+    // 
     await NetworkHelper().postImage(imageFileDetails);
+
   }
 
   Widget _buildFilterWidget({
@@ -375,7 +390,8 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                               : TextButton(
                                   onPressed: () async {
                                     // Direct user to the custom Selection Page.
-                                    // await Navigator.pushNamed(context,ImageSourceSelectionScreen.routeName);
+                                    // await Navigator.pushNamed(context,
+                                    //     ImageSourceSelectionScreen.routeName);
                                     // setState(() { //Make flutter rebuild the widget, as the image might have changed
 
                                     // });
@@ -383,10 +399,12 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                     // Display an image picker Dilaogue.
                                     await GlobalWidgets.showImagePickerDialogue(
                                       context: context,
-                                      onImagePicked: (imageFile) {
-                                        print(imageFile?.path);
-
-                                        postCustomImageToNetwork(imageFile);
+                                      onImagePicked: (imageFile) async {
+                                        print('Done!');
+                                        if (imageFile != null) {
+                                          print(imageFile?.path);
+                                          postCustomImageToNetwork(imageFile);
+                                        }
                                       },
                                     );
                                   },

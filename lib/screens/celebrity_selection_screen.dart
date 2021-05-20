@@ -92,10 +92,13 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
         }
         return Scaffold(
           backgroundColor: whiteCardColor,
-          appBar: CustomAppBar.subPage(
-            subPageTitle: 'Search Celeb',
-            showAppLogo: false,
+          appBar: CustomAppBar(
+            title: 'Search Celeb',
             hasTopPadding: true,
+            showAppLogo: false,
+            trailing: Icon(
+              Icons.photo,
+            ),
           ),
           body: Column(
             children: [
