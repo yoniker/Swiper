@@ -252,12 +252,12 @@ class GlobalWidgets {
     return status;
   }
 
-  static Future<PickedFile> showImagePickerDialogue({
+  static Future<void> showImagePickerDialogue({
     @required BuildContext context,
     String title = 'Select an Image source',
 
     /// This function is called immediately after the image is picked.
-    /// Here you can make use of the [PickedFile] returned in whatever 
+    /// Here you can make use of the [PickedFile] returned in whatever
     /// Network request or any other usage you may have in mind..
     Function(PickedFile) onImagePicked,
   }) async {
@@ -294,8 +294,10 @@ class GlobalWidgets {
       // Initiate the pick Image Function.
       try {
         final pickedFile = await _picker.getImage(source: source);
-        // Add the retrieve lost data function.
-        retrieveLostData();
+        if (pickedFile == null) {
+          // Add the retrieve lost data function.
+          retrieveLostData();
+        }
         if (pickedFile != null) {
           _imageFile = pickedFile;
           if (onImagePicked != null) onImagePicked(_imageFile);
@@ -456,6 +458,6 @@ class GlobalWidgets {
       },
     );
 
-    return _imageFile;
+    // return;
   }
 }
