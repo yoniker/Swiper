@@ -16,7 +16,7 @@ class MatchCard extends StatefulWidget {
   /// The profile of the match.
   final Profile profile;
 
-  /// Whether or not the Match card can recieve click gestures.
+  /// Whether or not the Match card can receive click gestures.
   final bool clickable;
 
   /// Whether to show the carousel or not.
@@ -38,10 +38,10 @@ class _MatchCardState extends State<MatchCard> {
       child: PhotoView(
         isClickable: widget.clickable,
         initialPhotoIndex: 0,
-        descriptionHeightFraction: 0.205,
+        descriptionHeightFraction: 0.4,
         imageUrls: widget.profile.imageUrls,
         showCarousel: widget.showCarousel,
-        descriptionWidget: _descritionWidget(),
+        descriptionWidget: _descriptionWidget(),
         carouselInactiveDotColor: darkCardColor,
         carouselActiveDotColor: colorBlend02,
       ),
@@ -50,7 +50,7 @@ class _MatchCardState extends State<MatchCard> {
 
   /// A widget to display the Description of the user.
   /// This will be passed as a the `descriptionWidget` Parameter of the [PhotoView] widget.
-  Widget _descritionWidget() {
+  Widget _descriptionWidget() {
     // get the relative fontSize for each Device Screen.
     //
     // This thus helps creates a kind of sizing effect to our text.
@@ -68,35 +68,56 @@ class _MatchCardState extends State<MatchCard> {
     }
 
     // construct the Widget.
-    var descriptionCard = Material(
-      color: Colors.black45,
-      borderRadius: BorderRadius.vertical(
-        bottom: Radius.circular(16.0),
+    return Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              //Colors.redAccent,
+              //Colors.blue
+              Colors.transparent,
+              Colors.black45,
+            ],
+          ),
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(16.0),
+          )
       ),
       child: Container(
         alignment: Alignment.centerLeft,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.only(left: 12.0),
-              child: Text(
-                '${widget.profile.username}, ${widget.profile.age}',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: boldTextStyle.copyWith(
-                    color: Colors.white, fontSize: getRelativeTextSize(24)),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 12.0),
-              child: Text(
-                '${widget.profile.headline}',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: boldTextStyle.copyWith(
-                    color: Colors.white, fontSize: getRelativeTextSize(16)),
+            Expanded(
+                flex:1,
+                child: SizedBox()),
+            Expanded(
+              flex:1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 12.0),
+                    child: Text(
+                      '${widget.profile.username}, ${widget.profile.age}',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: boldTextStyle.copyWith(
+                          color: Colors.white, fontSize: getRelativeTextSize(24)),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 12.0),
+                    child: Text(
+                      '${widget.profile.headline}',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: boldTextStyle.copyWith(
+                          color: Colors.white, fontSize: getRelativeTextSize(16)),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -104,7 +125,7 @@ class _MatchCardState extends State<MatchCard> {
       ),
     );
 
-    return descriptionCard;
+
   }
 
   /// The revert button placed over each MatchCard which Functions to bring back the
@@ -416,7 +437,7 @@ class PhotoView extends StatefulWidget {
             'The optional parameter `isClickable` cannot be "null". Please set it to either true or false to either make the PhotoView respond to touch Gestures or not.'),
         super(key: key);
 
-  /// The index of the phot to display initially.
+  /// The index of the photo to display initially.
   /// 'The initialPhotoIndex cannot be `null` or negative.
   /// It must also be in the range of avaliable imageUrls (starting from `0`).
   ///

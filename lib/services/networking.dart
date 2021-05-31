@@ -41,7 +41,7 @@ class NetworkHelper{
   }
 
   static String faceUrlToFullUrl(String faceUrl){
-    return 'http://'+NetworkHelper.SERVER_ADDR+'/'+ faceUrl;
+    return 'https://'+NetworkHelper.SERVER_ADDR+'/'+ faceUrl;
   }
 
 
