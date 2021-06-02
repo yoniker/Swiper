@@ -1,7 +1,7 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/screens/match_screen.dart';
-import 'package:betabeta/screens/messages_screen.dart';
+import 'package:betabeta/screens/main_messages_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
 import 'package:betabeta/tabs/profile_tab.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
@@ -29,7 +29,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     ProfileTab(),
     MatchScreen(key: Key('Match Screen'),),
     ViewLikesScreen(),
-    MessagesScreen(),
+    MainMessagesScreen(),
   ];
 
   /// builds the widget's body.

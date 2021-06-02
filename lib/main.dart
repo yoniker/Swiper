@@ -5,7 +5,6 @@ import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
-import 'package:betabeta/screens/image_source_selection_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
@@ -92,15 +91,6 @@ class MyApp extends StatelessWidget {
             imageFile: args.imageFile,
             imageFileName: args.imageFileName,
           );
-        },
-      );
-    }
-
-    if (settings.name == ImageSourceSelectionScreen.routeName) {
-      return MaterialPageRoute(
-        settings: settings,
-        builder: (context) {
-          return ImageSourceSelectionScreen();
         },
       );
     }

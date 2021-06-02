@@ -66,6 +66,7 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/mock_images/
     - assets/
     - assets/mobile_celebs.db
   fonts:
