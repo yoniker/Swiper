@@ -114,7 +114,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   title: 'Visibility'.toUpperCase(),
                   description:
                       'With this enabled your profile will be visible to other people using this App',
-                  child: Padding(
+                  body: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -146,7 +146,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 GlobalWidgets.buildSettingsBlock(
                   title: 'Where'.toUpperCase(),
                   description: '',
-                  child: Column(
+                  body: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -258,7 +258,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 GlobalWidgets.buildSettingsBlock(
                   title: 'Who'.toUpperCase(),
                   description: '',
-                  child: Padding(
+                  body: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -396,7 +396,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 GlobalWidgets.buildSettingsBlock(
                   title: 'Advanced'.toUpperCase(),
                   description: '',
-                  child: TextButton(
+                  body: TextButton(
                     onPressed: () {
                       // Direct user to the Advanced filters Page.
 

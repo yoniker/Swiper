@@ -56,4 +56,13 @@ class BetaIconPaths {
 
   /// The path to the App's/Company's Logo.
   static String appLogoIcon = 'assets/beta_logo_01.png';
+
+  /// The path to edit-profile-image icon in the Profile Screen.
+  static String editProfieImageIconPath = 'assets/images/edit_icon01.png';
+
+  /// The path to edit-profile-image icon in the Profile Screen.
+  static String editImageIconPath02 = 'assets/images/edit_icon02.png';
+
+  /// The path to cancel-image icon in the Profile Screen.
+  static String cancelIconPath = 'assets/images/cancel_icon01.png';
 }

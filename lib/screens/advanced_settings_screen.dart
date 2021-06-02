@@ -93,7 +93,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
     double height = 175.0,
   }) {
     return GlobalWidgets.buildSettingsBlock(
-        leading: Column(
+        top: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -142,7 +142,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
             ),
           ],
         ),
-        child: AnimatedContainer(
+        body: AnimatedContainer(
             duration: Duration(milliseconds: 500),
             height: (_currentChosenFilterName != filterName) ? 0 : height,
             child: (_currentChosenFilterName != filterName)
