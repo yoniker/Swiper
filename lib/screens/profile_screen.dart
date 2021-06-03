@@ -20,7 +20,16 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final _settingsData = SettingsData();
 
+  // --> All this information should be added to the data model.
+  // this will be pre-filled with data from the server.
   bool _showPhoto = false;
+
+  String _aboutMe;
+
+  String _jobTitle;
+
+  String _company;
+  // <--
 
   // TODO: Fill the list with actual data from the server.
   List<String> imageList = List.filled(6, null);
@@ -32,9 +41,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // set the value of the first element in the imageList to
     // the value we have in the [SettingsData].
     imageList[0] = _settingsData.facebookProfileImageUrl;
+
+    // TODO: fill the rest of the field with values from the server here.
   }
 
-  ///
+  /// builds the toggle tile.
   Widget _buildToggleTile({
     @required String title,
     @required bool value,
@@ -56,69 +67,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
     );
-  }
-
-  ///
-  Widget _buildEditTile({
-    @required String title,
-    String text,
-    String placeholder,
-    bool isOpened = false,
-    TextEditingController textEditingController,
-
-    /// This Function is fired when the block is opened or closed.
-    ///
-    /// A value of `true` is returned when the block is opened and a
-    /// value of `false` if otherwise.
-    void Function(bool) onStatusChanged,
-    void Function(String) onChanged,
-    void Function(String) onSubmitted,
-  }) {
-    if (textEditingController != null && text != null)
-      textEditingController.text = text;
-
-    return StatefulBuilder(builder: (context, setter) {
-      return GlobalWidgets.buildSettingsBlock(
-        bodyPadding: EdgeInsets.zero,
-        top: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: boldTextStyle,
-            ),
-            InkWell(
-              customBorder: CircleBorder(),
-              onTap: () {
-                setter(() {
-                  isOpened = !isOpened;
-                });
-                if (onStatusChanged != null) onStatusChanged(isOpened);
-              },
-              child: GlobalWidgets.imageToIcon(
-                BetaIconPaths.editImageIconPath02,
-                iconPad: EdgeInsets.all(12.0),
-              ),
-            ),
-          ],
-        ),
-        body: AnimatedContainer(
-          duration: Duration(milliseconds: 1200),
-          child: isOpened
-              ? CupertinoTextField.borderless(
-                  controller: textEditingController,
-                  placeholder: placeholder,
-                  placeholderStyle:
-                      boldTextStyle.copyWith(color: Colors.grey[300]),
-                  onChanged: onChanged,
-                  onSubmitted: onSubmitted,
-                  maxLines: null,
-                  style: defaultTextStyle,
-                )
-              : SizedBox.shrink(),
-        ),
-      );
-    });
   }
 
   /// A Box that Displays the currently available user profile images.
@@ -321,18 +269,164 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   });
                 },
               ),
-              _buildEditTile(
+              TextEditBlock(
                 title: 'About Me',
+                placeholder: 'About Me',
+                text: _aboutMe,
+                onCloseTile: () {
+                  // do something.
+                },
+                onChanged: (val) {
+                  // do something.
+                },
               ),
-              _buildEditTile(
+              TextEditBlock(
                 title: 'Job Title',
+                placeholder: 'Job Title',
+                maxLine: 1,
+                text: _jobTitle,
+                onCloseTile: () {
+                  // do something.
+                },
+                onChanged: (val) {
+                  // do something.
+                },
               ),
-              _buildEditTile(
+              TextEditBlock(
                 title: 'Company',
+                placeholder: 'Company',
+                maxLine: 1,
+                text: _company,
+                onCloseTile: () {
+                  // do something.
+                },
+                onChanged: (val) {
+                  // do something.
+                },
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// The TextEditBlock used in the Profile Settings page.
+class TextEditBlock extends StatefulWidget {
+  TextEditBlock({
+    Key key,
+    @required this.title,
+    this.text,
+    this.placeholder,
+    this.maxLine,
+    this.onOpen,
+    this.onCloseTile,
+    this.onStatusChanged,
+    this.onChanged,
+    this.onSubmitted,
+    this.controller,
+  }) : super(key: key);
+
+  final String title;
+  final String text;
+  final String placeholder;
+  final int maxLine;
+  final void Function() onOpen;
+  final void Function() onCloseTile;
+  final TextEditingController controller;
+
+  /// This Function is fired when the block is opened or closed.
+  ///
+  /// A value of `true` is returned when the block is opened and a
+  /// value of `false` if otherwise.
+  final void Function(bool) onStatusChanged;
+  final void Function(String) onChanged;
+  final void Function(String) onSubmitted;
+
+  @override
+  _TextEditBlockState createState() => _TextEditBlockState();
+}
+
+class _TextEditBlockState extends State<TextEditBlock> {
+  TextEditingController _resolvedTextEditingController;
+
+  bool _isOpened;
+
+  void toggle([bool force]) {
+    setState(() {
+      _isOpened = force ?? !_isOpened;
+    });
+  }
+
+  @override
+  void initState() {
+    _resolvedTextEditingController =
+        widget.controller ?? TextEditingController();
+
+    if (widget.text != null) _resolvedTextEditingController.text = widget.text;
+
+    _isOpened = widget.text != null;
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    if (widget.controller == null) _resolvedTextEditingController.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GlobalWidgets.buildSettingsBlock(
+      bodyPadding: EdgeInsets.zero,
+      top: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            widget.title,
+            style: boldTextStyle,
+          ),
+          InkWell(
+            customBorder: CircleBorder(),
+            onTap: () {
+              setState(() {
+                _isOpened = !_isOpened;
+              });
+
+              // determine whether or not the [TextEditBlock] is expanded or not.
+              if (_isOpened == true) {
+                if (widget.onOpen != null) widget.onOpen.call();
+              } else {
+                if (widget.onCloseTile != null) widget.onCloseTile.call();
+              }
+
+              if (widget.onStatusChanged != null)
+                widget.onStatusChanged(_isOpened);
+            },
+            child: GlobalWidgets.imageToIcon(
+              BetaIconPaths.editImageIconPath02,
+              iconPad: EdgeInsets.all(12.0),
+            ),
+          ),
+        ],
+      ),
+      body: AnimatedContainer(
+        duration: Duration(milliseconds: 1200),
+        child: _isOpened
+            ? CupertinoTextField.borderless(
+                controller: _resolvedTextEditingController,
+                placeholder: widget.placeholder,
+                placeholderStyle:
+                    boldTextStyle.copyWith(color: Colors.grey[300]),
+                onChanged: widget.onChanged,
+                onSubmitted: widget.onSubmitted,
+                maxLines: widget.maxLine,
+                style: defaultTextStyle,
+              )
+            : SizedBox.shrink(),
       ),
     );
   }

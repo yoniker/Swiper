@@ -225,7 +225,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
   Offset bottomCardOffset = Offset(0.0, 1.7);
 
   // The controller that controls how each match card slides when a valid Decision is made.
-  var _matchPageController;
+  PageController _matchPageController;
 
   @override
   void initState() {

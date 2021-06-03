@@ -335,20 +335,26 @@ class _DraggableCardState extends State<DraggableCard>
 
         slideOutDirection =
             isInLeftRegion ? SlideDirection.left : SlideDirection.right;
+        
+        // reset the scroll position.
+        _resetViewport();
       } else if (isInTopRegion) {
         slideOutTween = Tween(
             begin: cardOffset, end: dragVector * (2 * context.size.height));
         slideOutAnimation.forward(from: 0.0);
 
         slideOutDirection = SlideDirection.up;
+
+        // reset the scroll position.
+        _resetViewport();
       } else {
         slideBackStart = cardOffset;
         slideBackAnimation.forward(from: 0.0);
+
+        // we did not call "_resetViewport()" here since at this point the slideDirection is null
+        // indicating a false swipe.
       }
     });
-
-    // close the page since a Decision has been made.
-    closePage();
   }
 
   double _rotation(Rect dragBounds) {
@@ -379,23 +385,20 @@ class _DraggableCardState extends State<DraggableCard>
           .currentMatchDecision(decision);
       Provider.of<MatchEngine>(context, listen: false).goToNextMatch();
 
-      // close the page since a valid Decision has been made.
-      closePage();
+      // reset the scroll position.
+      _resetViewport();
     }
   }
 
-  /// Close the MatchDetailsCard.
-  /// This essetially calls "moveToPage" on the pageController parameter
-  /// passed to it.
-  void closePage() {
+  /// Reset the scroll position of the viewport.
+  /// 
+  /// This essetially calls the  "animateTo" function on the scrollController.
+  void _resetViewport() {
     scrollController.animateTo(
       0,
       duration: exitDuration,
       curve: kdefaultExitCurve,
     );
-
-    // we can also use jumpToPage but that will not animate.
-    // widget.pageController.jumpToPage(0);
   }
 
   /// A widget that displays the actions a user can make on a match.
@@ -527,71 +530,64 @@ class _DraggableCardState extends State<DraggableCard>
                   Material(
                     clipBehavior: Clip.antiAlias,
                     borderRadius: BorderRadius.circular(16.0),
-                    child: (widget.canScroll != true)
-                        // Builds the regular DraggableCard with no inclusion of the details Page
-                        // whatsoever.
-                        ? GestureDetector(
-                            onPanStart: widget.isDraggable ? _onPanStart : null,
-                            onPanUpdate:
-                                widget.isDraggable ? _onPanUpdate : null,
-                            onPanEnd: widget.isDraggable ? _onPanEnd : null,
-                            child: widget.card,
-                          )
-                        : SizedBox(
-                            // This helps the MatchCard as a whole (including the PhotoView and the Description widget)
-                            // to know and fit with the amount of space remaining.
-                            height: kActualHeight,
-                            child: SingleChildScrollView(
-                              controller: scrollController,
-                              clipBehavior: Clip.none,
-                              physics: ClampingScrollPhysics(),
-                              scrollDirection: Axis.vertical,
-                              child: Column(
-                                children: [
-                                  // Diplays the MatchCard.
-                                  // Here we are passing the BoxConstraints of the Viewport to the
-                                  // SizedBox holding the MatchCard.
-                                  //
-                                  // What this does is that it forces the height of the Viewport on the MatchCard
-                                  // thus, this makes sure that the MatchCard fills the available space according to the
-                                  // height constraints of the ViewPort.
-                                  SizedBox(
-                                    height: kActualHeight,
-                                    child: GestureDetector(
-                                      onPanStart: widget.isDraggable
-                                          ? _onPanStart
-                                          : null,
-                                      onPanUpdate: widget.isDraggable
-                                          ? _onPanUpdate
-                                          : null,
-                                      onPanEnd:
-                                          widget.isDraggable ? _onPanEnd : null,
+                    shadowColor: Colors.grey[200],
+                    elevation: 0.40,
+                    child: GestureDetector(
+                      onPanStart: widget.isDraggable ? _onPanStart : null,
+                      onPanUpdate: widget.isDraggable ? _onPanUpdate : null,
+                      onPanEnd: widget.isDraggable ? _onPanEnd : null,
+                      child: (widget.canScroll != true)
+                          // Builds the regular DraggableCard with no inclusion of the details Page
+                          // whatsoever.
+                          ? widget.card
+                          : SizedBox(
+                              // This helps the MatchCard as a whole (including the PhotoView and the Description widget)
+                              // to know and fit with the amount of space remaining.
+                              height: kActualHeight,
+                              child: SingleChildScrollView(
+                                controller: scrollController,
+                                restorationId:
+                                    '${widget.mactchProfile.username}-${DateTime.now().toString()}',
+                                clipBehavior: Clip.none,
+                                physics: ClampingScrollPhysics(),
+                                scrollDirection: Axis.vertical,
+                                child: Column(
+                                  children: [
+                                    // Diplays the MatchCard.
+                                    // Here we are passing the BoxConstraints of the Viewport to the
+                                    // SizedBox holding the MatchCard.
+                                    //
+                                    // What this does is that it forces the height of the Viewport on the MatchCard
+                                    // thus, this makes sure that the MatchCard fills the available space according to the
+                                    // height constraints of the ViewPort.
+                                    SizedBox(
+                                      height: kActualHeight,
                                       child: widget.card,
                                     ),
-                                  ),
 
-                                  // Here we display the DetailsCard of this Match.
-                                  // The following will contain the MatchCard Implementation.
-                                  // SizedBox(
-                                  //   height: MediaQuery.of(context).size.height * 0.7,
-                                  //   child: widget.detailsCard,
-                                  // ),
+                                    // Here we display the DetailsCard of this Match.
+                                    // The following will contain the MatchCard Implementation.
+                                    // SizedBox(
+                                    //   height: MediaQuery.of(context).size.height * 0.7,
+                                    //   child: widget.detailsCard,
+                                    // ),
 
-                                  // build the MatchCardDetails.
-                                  // The tripple dots placed at the back just mean that I am appending the
-                                  // below ehich is a list of Widgets to this bigger list.
-                                  // removing it will cause analysis error.
-                                  //
-                                  // This is just a way one can add a grouped List of Widgets within another
-                                  // super or parent list.
-                                  ...buildMatchDetails(widget.mactchProfile),
+                                    // build the MatchCardDetails.
+                                    // The tripple dots placed at the back just mean that I am appending the
+                                    // below ehich is a list of Widgets to this bigger list.
+                                    // removing it will cause analysis error.
+                                    //
+                                    // This is just a way one can add a grouped List of Widgets within another
+                                    // super or parent list.
+                                    ...buildMatchDetails(widget.mactchProfile),
 
-                                  // build the Match Control.
-                                  _matchControls(),
-                                ],
+                                    // build the Match Control.
+                                    _matchControls(),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
+                    ),
                   ),
                   if (widget.canScroll == true)
                     Align(
