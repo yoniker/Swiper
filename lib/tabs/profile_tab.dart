@@ -1,11 +1,14 @@
 import 'dart:async';
+
 import 'package:betabeta/main.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/popups/genderselector.dart';
 import 'package:betabeta/popups/popup.dart';
+import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/screens/settings_screen.dart';
 import 'package:betabeta/widgets/round_icon_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:page_indicator/page_indicator.dart';
@@ -25,13 +28,8 @@ class _ProfileTabState extends State<ProfileTab>
   PageController _controller = new PageController();
   Timer _pageChangeTimer;
   Timer colorTimer;
-  String name=SettingsData().name;
-  String profileImageUrl= SettingsData().facebookProfileImageUrl;
-
-
-
-
-
+  String name = SettingsData().name;
+  String profileImageUrl = SettingsData().facebookProfileImageUrl;
 
   @override
   void initState() {
@@ -46,20 +44,21 @@ class _ProfileTabState extends State<ProfileTab>
     super.dispose();
   }
 
-  _logout()async{
+  _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //Save name, id and picture url to persistent storage, and move on to the next screen
     await prefs.remove('name');
     await prefs.remove('facebook_id');
     await prefs.remove('facebook_profile_image_url');
     await prefs.remove('preferredGender');
-    SettingsData().facebookId='';
-    SettingsData().name= '';
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-        LoginHome()), (Route<dynamic> route) => false);}
+    SettingsData().facebookId = '';
+    SettingsData().name = '';
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => LoginHome()),
+        (Route<dynamic> route) => false);
+  }
 
-
-    void _pageChanger() {
+  void _pageChanger() {
     _pageChangeTimer = Timer.periodic(Duration(seconds: 2), (_) {
       if (reverse == false && currentPage < bigDList.length - 1) {
         _controller.nextPage(
@@ -95,7 +94,7 @@ class _ProfileTabState extends State<ProfileTab>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return  Scaffold(
+    return Scaffold(
       body: SafeArea(
         child: Stack(
           children: <Widget>[_buildProfileInfo(), _buildSettingsBottom()],
@@ -131,9 +130,7 @@ class _ProfileTabState extends State<ProfileTab>
             width: 110.0,
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: CachedNetworkImageProvider(
-                        profileImageUrl
-                    ),
+                    image: CachedNetworkImageProvider(profileImageUrl),
                     fit: BoxFit.cover,
                     alignment: Alignment.center),
                 shape: BoxShape.circle,
@@ -158,7 +155,12 @@ class _ProfileTabState extends State<ProfileTab>
           const SizedBox(
             height: 10.0,
           ),
-           FacebookSignInButton(text:'Facebook logout',onPressed: (){_logout();},),
+          FacebookSignInButton(
+            text: 'Facebook logout',
+            onPressed: () {
+              _logout();
+            },
+          ),
           const SizedBox(
             height: 20.0,
           ),
@@ -177,7 +179,7 @@ class _ProfileTabState extends State<ProfileTab>
           new Flexible(child: _buildBigDUI()),
           new Padding(
             padding:
-            const EdgeInsets.only(left: 50.0, right: 50.0, bottom: 25.0),
+                const EdgeInsets.only(left: 50.0, right: 50.0, bottom: 25.0),
             child: new RaisedButton(
               color: Colors.white,
               padding: const EdgeInsets.all(16.0),
@@ -242,7 +244,7 @@ class _ProfileTabState extends State<ProfileTab>
   }
 
   showPopup(BuildContext context, String title,
-      {BuildContext popupContext})async {
+      {BuildContext popupContext}) async {
     return await Navigator.push(
       context,
       PopupLayout(
@@ -250,24 +252,27 @@ class _ProfileTabState extends State<ProfileTab>
         left: 30,
         right: 30,
         bottom: 50,
-        child: GenderSelector(selectedGender:SettingsData().preferredGender),
+        child: GenderSelector(selectedGender: SettingsData().preferredGender),
       ),
     );
   }
 
-
-
   Widget _buildSettingsButtons() {
-    return  Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
-         Column(
+        Column(
           children: <Widget>[
-             RoundIconButton.large(
+            RoundIconButton.large(
               icon: Icons.settings,
               iconColor: Colors.red,
-              onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>SettingsScreen()));
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SettingsScreen(),
+                  ),
+                );
               },
             ),
             new SizedBox(
@@ -281,7 +286,7 @@ class _ProfileTabState extends State<ProfileTab>
         ),
         new Column(
           children: <Widget>[
-             RoundIconButton.small(
+            RoundIconButton.small(
               icon: Icons.camera_alt,
               iconColor: Colors.blue,
               onPressed: () {
@@ -303,7 +308,12 @@ class _ProfileTabState extends State<ProfileTab>
               icon: Icons.edit,
               iconColor: Colors.green,
               onPressed: () {
-                //TODO
+                // move to profile page
+                Navigator.of(context).push(
+                  CupertinoPageRoute(
+                    builder: (context) => ProfileScreen(),
+                  ),
+                );
               },
             ),
             const SizedBox(

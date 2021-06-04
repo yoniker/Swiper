@@ -27,7 +27,7 @@ class GlobalWidgets {
     // check if scale is null and assign it a default value of 4.0
     scale ??= 4.0;
 
-    var child = Padding(
+    Widget _child = Padding(
       padding: iconPad,
       child: Image.asset(
         imagePath,
@@ -38,13 +38,13 @@ class GlobalWidgets {
     // checks if the onTap parameter is null, this widget is returned as it is
     // else it is wrapped in a [GestureDetector] Widget to detect taps.
     if (onTap != null) {
-      return GestureDetector(
+      _child = GestureDetector(
         onTap: onTap,
-        child: child,
+        child: _child,
       );
-    } else {
-      return child;
     }
+
+    return _child;
   }
 
   /// A Widget to build the block UI for each settings option.
@@ -55,13 +55,13 @@ class GlobalWidgets {
       String description,
 
       /// The child Widget to build as the body of the Settings block.
-      @required Widget child,
+      Widget body,
 
       /// The title for the Settings Panel or block
       String title,
 
       /// An optional parameter to build the Title Widget.
-      Widget leading,
+      Widget top,
 
       ///
       EdgeInsetsGeometry outerPadding =
@@ -71,13 +71,13 @@ class GlobalWidgets {
       EdgeInsetsGeometry titlePadding = const EdgeInsets.all(8.0),
 
       //
-      EdgeInsetsGeometry widgetPadding =
+      EdgeInsetsGeometry bodyPadding =
           const EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0)
       //const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
       }) {
     // assertion layer
     assert(
-      leading != null || description != null,
+      top != null || description != null,
       '''One of `description` or `titleBuilder` must be specified. 
       When the two are specified, the title Widget is given Priority.''',
     );
@@ -104,11 +104,14 @@ class GlobalWidgets {
         children: [
           Container(
             padding: titlePadding,
+            constraints: BoxConstraints(
+              minHeight: 50.0,
+            ),
             decoration: BoxDecoration(
               color: darkCardColor,
             ),
-            child: (leading != null)
-                ? leading
+            child: (top != null)
+                ? top
                 : Text.rich(
                     TextSpan(
                       children: <InlineSpan>[
@@ -116,8 +119,9 @@ class GlobalWidgets {
                           TextSpan(
                             text: '$title' + ' ',
                             style: _textStyle.copyWith(
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 0.2),
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.2,
+                            ),
                           ),
                         TextSpan(
                           text: description,
@@ -127,13 +131,14 @@ class GlobalWidgets {
                     style: _textStyle,
                   ),
           ),
-          Container(
-            padding: widgetPadding,
-            decoration: BoxDecoration(
-              color: whiteCardColor,
+          if (body != null)
+            Container(
+              padding: bodyPadding,
+              decoration: BoxDecoration(
+                color: whiteCardColor,
+              ),
+              child: body,
             ),
-            child: child,
-          ),
         ],
       ),
     );
