@@ -364,7 +364,11 @@ class _TextEditBlockState extends State<TextEditBlock> {
     _resolvedTextEditingController =
         widget.controller ?? TextEditingController();
 
-    if (widget.text != null) _resolvedTextEditingController.text = widget.text;
+    if (widget.text != null) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _resolvedTextEditingController.text = widget.text;
+      });
+    }
 
     _isOpened = widget.text != null;
 
