@@ -1,17 +1,22 @@
+import 'dart:io';
+
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:image_picker/image_picker.dart';
 
 ///
 class ProfileScreen extends StatefulWidget {
   ProfileScreen({Key key}) : super(key: key);
+
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -28,21 +33,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _jobTitle;
 
   String _company;
-  // <--
 
-  // TODO: Fill the list with actual data from the server.
-  List<String> imageList = List.filled(6, null);
+  int _numProfileImages = 0;
 
   @override
-  void initState() {
+  initState(){
     super.initState();
-
-    // set the value of the first element in the imageList to
-    // the value we have in the [SettingsData].
-    imageList[0] = SettingsData().facebookProfileImageUrl;
-
-    // TODO: fill the rest of the field with values from the server here.
+    _syncFromServer();
   }
+
 
   /// builds the toggle tile.
   Widget _buildToggleTile({
@@ -72,24 +71,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _pictureBox({
     String imageUrl,
 
+
     /// This function is fired when an image is successfully taken from the Gallery or Camera.
-    void Function(PickedFile imageFile,String imageUrl) onImagePicked,
+    void Function(PickedFile imageFile) onImagePicked,
 
     /// A function that fires when the cancel icon on the image-box is pressed.
-    void Function(String imageUrl) onDelete,
+    void Function() onDelete,
   }) {
     Widget _child = imageUrl != null
-        ? PrecachedImage.network(
-            imageURL: imageUrl,
-            fit: BoxFit.cover,
-          )
+        ?
+    Image.network(
+      imageUrl,
+      scale: 4.0,
+        fit: BoxFit.cover
+    )
         : Center(
             child: IconButton(
               icon: Icon(Icons.add_rounded),
               onPressed: () async {
                 await GlobalWidgets.showImagePickerDialogue(
                   context: context,
-                  onImagePicked:(PickedFile imageFile) {onImagePicked(imageFile,imageUrl);},
+                  onImagePicked:onImagePicked,
                 );
               },
             ),
@@ -123,7 +125,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 shape: CircleBorder(),
                 elevation: 2.0,
                 child: InkWell(
-                  onTap: (){onDelete(imageUrl);},
+                  onTap: (){onDelete();},
                   child: Padding(
                     padding: EdgeInsets.all(2.5),
                     child: GlobalWidgets.imageToIcon(
@@ -198,78 +200,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 runSpacing: 12.0,
                 children:
 
-                List<Widget>.generate(6,(index)=>_pictureBox(
-                  imageUrl: imageList[index],
-                  onDelete: (String imageUrl){},
-                  onImagePicked: (image,imageUrl){
-                    // TODO: do something about the "image" here
-                    // like upload to the storage.
+                List<Widget>.generate(_numProfileImages+1,(index)=>_pictureBox(
+                  imageUrl: index<_numProfileImages? NetworkHelper().getProfileImageUrl(index)+'?v=${DateTime.now().millisecondsSinceEpoch}': null, //TODO the parameter v was added only because of difficulty to clear the cache. Think about a better way
+                  onDelete: (){
+                    NetworkHelper().deleteProfileImage(index).then((_){
+                      //await CachedNetworkImage.evictFromCache(NetworkHelper().getProfileImageUrl(index),scale: 4.0);
+                      //final NetworkImage provider = NetworkImage(NetworkHelper().getProfileImageUrl(index),scale: 4.0);
+                      //provider.evict().then((_)
+                      {_syncFromServer();}
+                    });
+                  },
+                  onImagePicked: (image){
+                    NetworkHelper().postProfileImage(File(image.path)).then(
+                        (_){_syncFromServer();}
+                    );
                   }
                 ))
 
-                /*[
-                  _pictureBox(
-                    imageUrl: imageList[0],
-                    onDelete: () {
-                      print('Delete was pressed');
-                      // remove the image.
-                    },
-                    onImagePicked: (image) {
-                      // TODO: do something about the "image" here
-                      // like upload to the storage.
-                    },
-                  ),
-                  _pictureBox(
-                    imageUrl: imageList[1],
-                    onDelete: () {
-                      // remove the image.
-                    },
-                    onImagePicked: (image) {
-                      // TODO: do something about the "image" here
-                      // like upload to the storage.
-                    },
-                  ),
-                  _pictureBox(
-                    imageUrl: imageList[2],
-                    onDelete: () {
-                      // remove the image.
-                    },
-                    onImagePicked: (image) {
-                      // TODO: do something about the "image" here
-                      // like upload to the storage.
-                    },
-                  ),
-                  _pictureBox(
-                    imageUrl: imageList[3],
-                    onDelete: () {
-                      // remove the image.
-                    },
-                    onImagePicked: (image) {
-                      // TODO: do something about the "image" here
-                      // like upload to the storage.
-                    },
-                  ),
-                  _pictureBox(
-                    imageUrl: imageList[4],
-                    onDelete: () {
-                      // remove the image.
-                    },
-                    onImagePicked: (image) {
-                      // TODO: do something about the "image" here
-                      // like upload to the storage.
-                    },
-                  ),
-                  _pictureBox(
-                    imageUrl: imageList[5],
-                    onDelete: () {
-                      // remove the image.
-                    },
-                    onImagePicked: (image) {
-                      // TODO: do something about the "image" here
-                      // like upload to the storage.
-                    },
-                  ),
-                ]*/
+
               ),
               _buildToggleTile(
                 title: 'Show photo',
@@ -320,6 +268,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  void _syncFromServer() {
+
+
+    NetworkHelper().countProfileImages().then((count) => {
+      setState(() {
+        _numProfileImages = count;
+
+      })
+    });
+
+
+
+
   }
 }
 
