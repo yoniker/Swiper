@@ -80,10 +80,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }) {
     Widget _child = imageUrl != null
         ?
-    Image.network(
-      imageUrl,
-      scale: 4.0,
-        fit: BoxFit.cover
+    PrecachedImage.network(
+      imageURL: imageUrl,
+      fit: BoxFit.cover,
     )
         : Center(
             child: IconButton(
