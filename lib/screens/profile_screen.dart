@@ -34,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String _company;
 
-  int _numProfileImages = 0;
+  List<String> _profileImagesUrls = [];
 
   @override
   initState(){
@@ -200,8 +200,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 runSpacing: 12.0,
                 children:
 
-                List<Widget>.generate(_numProfileImages+1,(index)=>_pictureBox(
-                  imageUrl: index<_numProfileImages? NetworkHelper().getProfileImageUrl(index)+'?v=${DateTime.now().millisecondsSinceEpoch}': null, //TODO the parameter v was added only because of difficulty to clear the cache. Think about a better way
+                List<Widget>.generate(_profileImagesUrls.length+1,(index)=>_pictureBox(
+                  imageUrl: index<_profileImagesUrls.length? NetworkHelper().getProfileImageUrl(_profileImagesUrls[index]): null,
                   onDelete: (){
                     NetworkHelper().deleteProfileImage(index).then((_){
                       //await CachedNetworkImage.evictFromCache(NetworkHelper().getProfileImageUrl(index),scale: 4.0);
@@ -273,9 +273,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _syncFromServer() {
 
 
-    NetworkHelper().countProfileImages().then((count) => {
+    NetworkHelper().getProfileImages().then((profileImagesUrls) => {
       setState(() {
-        _numProfileImages = count;
+        _profileImagesUrls = profileImagesUrls;
 
       })
     });

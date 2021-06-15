@@ -197,17 +197,19 @@ class NetworkHelper {
 
 
 
-  Future<int> countProfileImages()async{
-    Uri countUri = Uri.https(SERVER_ADDR, '/profile_images/count/${SettingsData().facebookId}/');
+  Future<List<String>> getProfileImages()async{
+    Uri countUri = Uri.https(SERVER_ADDR, '/profile_images/get_list/${SettingsData().facebookId}/');
     var response = await http.get(countUri);
     if(response.statusCode==200){
-      return int.parse(response.body.trim());
+      var parsed = json.jsonDecode(response.body);
+      List<String> imagesLinks = parsed.cast<String>();
+      return imagesLinks;
     }
 
   }
 
-  String getProfileImageUrl(int index){
-    return 'https://'+SERVER_ADDR+'/profile_images/${SettingsData().facebookId}/${index.toString()}';
+  String getProfileImageUrl(String shortUrl){
+    return 'https://'+SERVER_ADDR+'/profile_images/${SettingsData().facebookId}/$shortUrl';
   }
 
   Future<void> deleteProfileImage(int index)async{
