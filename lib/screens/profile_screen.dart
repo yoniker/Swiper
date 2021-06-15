@@ -18,7 +18,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final _settingsData = SettingsData();
 
   // --> All this information should be added to the data model.
   // this will be pre-filled with data from the server.
@@ -40,7 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     // set the value of the first element in the imageList to
     // the value we have in the [SettingsData].
-    imageList[0] = _settingsData.facebookProfileImageUrl;
+    imageList[0] = SettingsData().facebookProfileImageUrl;
 
     // TODO: fill the rest of the field with values from the server here.
   }
@@ -73,11 +72,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _pictureBox({
     String imageUrl,
 
-    /// This function is fired when an image is succesfully taken from the Gallery or Camera.
-    void Function(PickedFile) onImagePicked,
+    /// This function is fired when an image is successfully taken from the Gallery or Camera.
+    void Function(PickedFile imageFile,String imageUrl) onImagePicked,
 
     /// A function that fires when the cancel icon on the image-box is pressed.
-    void Function() onDelete,
+    void Function(String imageUrl) onDelete,
   }) {
     Widget _child = imageUrl != null
         ? PrecachedImage.network(
@@ -90,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () async {
                 await GlobalWidgets.showImagePickerDialogue(
                   context: context,
-                  onImagePicked: onImagePicked,
+                  onImagePicked:(PickedFile imageFile) {onImagePicked(imageFile,imageUrl);},
                 );
               },
             ),
@@ -124,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 shape: CircleBorder(),
                 elevation: 2.0,
                 child: InkWell(
-                  onTap: onDelete,
+                  onTap: (){onDelete(imageUrl);},
                   child: Padding(
                     padding: EdgeInsets.all(2.5),
                     child: GlobalWidgets.imageToIcon(
@@ -159,7 +158,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: CircleAvatar(
                   backgroundColor: Colors.grey[200],
                   backgroundImage: CachedNetworkImageProvider(
-                      _settingsData.facebookProfileImageUrl),
+                      SettingsData().facebookProfileImageUrl),
                   radius: 50.5,
                   child: Align(
                     alignment: Alignment.bottomRight,
@@ -197,10 +196,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 runAlignment: WrapAlignment.spaceAround,
                 spacing: 12.0,
                 runSpacing: 12.0,
-                children: [
+                children:
+
+                List<Widget>.generate(6,(index)=>_pictureBox(
+                  imageUrl: imageList[index],
+                  onDelete: (String imageUrl){},
+                  onImagePicked: (image,imageUrl){
+                    // TODO: do something about the "image" here
+                    // like upload to the storage.
+                  }
+                ))
+
+                /*[
                   _pictureBox(
                     imageUrl: imageList[0],
                     onDelete: () {
+                      print('Delete was pressed');
                       // remove the image.
                     },
                     onImagePicked: (image) {
@@ -258,7 +269,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       // like upload to the storage.
                     },
                   ),
-                ],
+                ]*/
               ),
               _buildToggleTile(
                 title: 'Show photo',

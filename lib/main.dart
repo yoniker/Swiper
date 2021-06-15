@@ -138,11 +138,9 @@ class _LoginHomeState extends State<LoginHome> {
     await settings.readSettingsFromShared();
     if (settings.readFromShared && settings.facebookId != '') {
       print('get settings decided to move to main nav screen');
-      Navigator.push(
+      Navigator.pushReplacementNamed(
         context,
-        MaterialPageRoute(
-          builder: (context) => MainNavigationScreen(),
-        ),
+        MainNavigationScreen.routeName,
       );
     }
   }
