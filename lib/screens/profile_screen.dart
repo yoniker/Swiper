@@ -10,7 +10,6 @@ import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:image_picker/image_picker.dart';
 
 ///
@@ -203,9 +202,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   imageUrl: index<_profileImagesUrls.length? NetworkHelper().getProfileImageUrl(_profileImagesUrls[index]): null,
                   onDelete: (){
                     NetworkHelper().deleteProfileImage(index).then((_){
-                      //await CachedNetworkImage.evictFromCache(NetworkHelper().getProfileImageUrl(index),scale: 4.0);
-                      //final NetworkImage provider = NetworkImage(NetworkHelper().getProfileImageUrl(index),scale: 4.0);
-                      //provider.evict().then((_)
                       {_syncFromServer();}
                     });
                   },
