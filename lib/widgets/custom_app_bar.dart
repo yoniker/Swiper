@@ -21,7 +21,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onPop,
   })  :
         // add necessary assertions.
-        assert(trailing != null, 'The parameter "icon" cannot be null'),
+        assert(trailing != null, 'The parameter trailing cannot be null'),
         assert((title == null) != (customTitleBuilder == null),
             'One of "title" and "customTitleBuilder" must be null, You can only specify one of the two!'),
         super(key: key);

@@ -42,6 +42,7 @@ class NetworkHelper {
     return [];
   }
 
+
   static String faceUrlToFullUrl(String faceUrl) {
     return 'https://' + NetworkHelper.SERVER_ADDR + '/' + faceUrl;
   }
@@ -134,8 +135,9 @@ class NetworkHelper {
     return HashMap.from(facesData);
   }
 
-  Tuple2<img.Image, String> preparedImageFileDetails(File imageFile) {
-    const MAX_IMAGE_SIZE = 800;
+  //A helper method to shrink an image if it's too large, and decode it into a workable image format
+  img.Image _prepareImage(File imageFile){
+    const MAX_IMAGE_SIZE = 800; //TODO make it  a parameter (if needed)
 
     img.Image theImage = img.decodeImage(imageFile.readAsBytesSync());
     if (max(theImage.height, theImage.width) > MAX_IMAGE_SIZE) {
@@ -144,11 +146,16 @@ class NetworkHelper {
       theImage = img.copyResize(theImage,
           width: (theImage.width * resizeFactor).round());
     }
+    return theImage;
+  }
+
+  Tuple2<img.Image, String> preparedFaceSearchImageFileDetails(File imageFile) {
+    img.Image theImage = _prepareImage(imageFile);
     String fileName = 'custom_face_search_${DateTime.now()}.jpg';
     return Tuple2<img.Image, String>(theImage, fileName);
   }
 
-  Future<void> postImage(Tuple2<img.Image, String> imageFileDetails) async {
+  Future<void> postFaceSearchImage(Tuple2<img.Image, String> imageFileDetails) async {
     img.Image theImage = imageFileDetails.item1;
     String fileName = imageFileDetails.item2;
 
@@ -164,6 +171,67 @@ class NetworkHelper {
     );
     request.files.add(multipartFile);
     var response = await request.send(); //TODO something if response wasn't 200
+    return;
+  }
+
+  Future<void> postProfileImage(File imageFile) async {
+    String fileName = '${DateTime.now().toString()}.jpg';
+    img.Image theImage = _prepareImage(imageFile);
+
+    http.MultipartRequest request = http.MultipartRequest(
+      'POST',
+      Uri.https(SERVER_ADDR, '/profile_images/${SettingsData().facebookId}'),
+    );
+    var multipartFile = new http.MultipartFile.fromBytes(
+      'file',
+      img.encodeJpg(theImage),
+      filename: fileName,
+      contentType: media.MediaType.parse('image/jpeg'),
+    );
+    request.files.add(multipartFile);
+    var response = await request.send(); //TODO something if response wasn't 200
+    print('dor');
+    return;
+  }
+
+
+
+
+  Future<List<String>> getProfileImages()async{
+    Uri countUri = Uri.https(SERVER_ADDR, '/profile_images/get_list/${SettingsData().facebookId}/');
+    var response = await http.get(countUri);
+    if(response.statusCode==200){
+      var parsed = json.jsonDecode(response.body);
+      List<String> imagesLinks = parsed.cast<String>();
+      return imagesLinks;
+    }
+
+  }
+
+  String getProfileImageUrl(String shortUrl){
+    return 'https://'+SERVER_ADDR+'/profile_images/${SettingsData().facebookId}/$shortUrl';
+  }
+
+  Future<void> deleteProfileImage(int index)async{
+    Uri deletionUri = Uri.https(SERVER_ADDR, '/profile_images/delete/${SettingsData().facebookId}/${index.toString()}');
+    var response = await http.get(deletionUri);
+    return;
+  }
+  
+  Future<void> swapProfileImages(int profileImageIndex1,int profileImageIndex2) async{
+    Map<String, int> toSend = {
+      'file1_index': profileImageIndex1,
+      'file2_index': profileImageIndex2
+    };
+
+
+    String encoded = jsonEncode(toSend);
+
+
+
+
+    Uri swapUri = Uri.https(SERVER_ADDR, '/profile_images/swap/${SettingsData().facebookId}');
+    http.Response response = await http.post(swapUri,body: encoded);
     return;
   }
 }

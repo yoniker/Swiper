@@ -5,7 +5,6 @@ import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
-import 'package:betabeta/screens/image_source_selection_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
@@ -96,15 +95,6 @@ class MyApp extends StatelessWidget {
       );
     }
 
-    if (settings.name == ImageSourceSelectionScreen.routeName) {
-      return MaterialPageRoute(
-        settings: settings,
-        builder: (context) {
-          return ImageSourceSelectionScreen();
-        },
-      );
-    }
-
     if (settings.name == SettingsScreen.routeName) {
       return MaterialPageRoute(
         settings: settings,
@@ -148,11 +138,9 @@ class _LoginHomeState extends State<LoginHome> {
     await settings.readSettingsFromShared();
     if (settings.readFromShared && settings.facebookId != '') {
       print('get settings decided to move to main nav screen');
-      Navigator.push(
+      Navigator.pushReplacementNamed(
         context,
-        MaterialPageRoute(
-          builder: (context) => MainNavigationScreen(),
-        ),
+        MainNavigationScreen.routeName,
       );
     }
   }

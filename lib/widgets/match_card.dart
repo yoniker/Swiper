@@ -16,7 +16,7 @@ class MatchCard extends StatefulWidget {
   /// The profile of the match.
   final Profile profile;
 
-  /// Whether or not the Match card can recieve click gestures.
+  /// Whether or not the Match card can receive click gestures.
   final bool clickable;
 
   /// Whether to show the carousel or not.
@@ -38,10 +38,10 @@ class _MatchCardState extends State<MatchCard> {
       child: PhotoView(
         isClickable: widget.clickable,
         initialPhotoIndex: 0,
-        descriptionHeightFraction: 0.205,
+        descriptionHeightFraction: 0.4,
         imageUrls: widget.profile.imageUrls,
         showCarousel: widget.showCarousel,
-        descriptionWidget: _descritionWidget(),
+        descriptionWidget: _descriptionWidget(),
         carouselInactiveDotColor: darkCardColor,
         carouselActiveDotColor: colorBlend02,
       ),
@@ -50,7 +50,7 @@ class _MatchCardState extends State<MatchCard> {
 
   /// A widget to display the Description of the user.
   /// This will be passed as a the `descriptionWidget` Parameter of the [PhotoView] widget.
-  Widget _descritionWidget() {
+  Widget _descriptionWidget() {
     // get the relative fontSize for each Device Screen.
     //
     // This thus helps creates a kind of sizing effect to our text.
@@ -68,35 +68,56 @@ class _MatchCardState extends State<MatchCard> {
     }
 
     // construct the Widget.
-    var descriptionCard = Material(
-      color: Colors.black45,
-      borderRadius: BorderRadius.vertical(
-        bottom: Radius.circular(16.0),
+    return Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              //Colors.redAccent, To see the actual size of the gradient box, uncomment redAccent and blue and comment out transparent and black45
+              //Colors.blue
+              Colors.transparent,
+              Colors.black45,
+            ],
+          ),
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(16.0),
+          )
       ),
       child: Container(
         alignment: Alignment.centerLeft,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.only(left: 12.0),
-              child: Text(
-                '${widget.profile.username}, ${widget.profile.age}',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: boldTextStyle.copyWith(
-                    color: Colors.white, fontSize: getRelativeTextSize(24)),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 12.0),
-              child: Text(
-                '${widget.profile.headline}',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: boldTextStyle.copyWith(
-                    color: Colors.white, fontSize: getRelativeTextSize(16)),
+            Expanded(
+                flex:1,
+                child: SizedBox()),
+            Expanded(
+              flex:1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 12.0),
+                    child: Text(
+                      '${widget.profile.username}, ${widget.profile.age}',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: boldTextStyle.copyWith(
+                          color: Colors.white, fontSize: getRelativeTextSize(24)),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 12.0),
+                    child: Text(
+                      '${widget.profile.headline}',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: boldTextStyle.copyWith(
+                          color: Colors.white, fontSize: getRelativeTextSize(16)),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -104,7 +125,7 @@ class _MatchCardState extends State<MatchCard> {
       ),
     );
 
-    return descriptionCard;
+
   }
 
   /// The revert button placed over each MatchCard which Functions to bring back the
@@ -154,235 +175,6 @@ class _MatchCardState extends State<MatchCard> {
   }
 }
 
-/// A widget to display the Details of each match which will be
-/// displayed when the MatchCard is scrolled up.
-// class MatchDetailsCard extends StatefulWidget {
-//   const MatchDetailsCard({
-//     Key key,
-//     @required this.matchprofile,
-//     @required this.scrollController,
-//     this.exitDuration = const Duration(milliseconds: 200),
-//   }) : super(key: key);
-
-//   /// The Profile of this match from which the necessary information
-//   /// to display is extracted.
-//   final Profile matchprofile;
-
-//   /// This gives us the opportunity to close the details page once a Decision
-//   /// has been made regarding the current Match.
-//   final ScrollController scrollController;
-
-//   /// The Time taken for the Details screen to exit the details Page when a
-//   /// Decision is made.
-//   final Duration exitDuration;
-
-//   @override
-//   _MatchDetailsCardState createState() => _MatchDetailsCardState();
-// }
-
-// class _MatchDetailsCardState extends State<MatchDetailsCard> {
-//   // Defines the ScrollController that controls the inner ScrollView.
-//   ScrollController _innerScrollController;
-
-//   //  Defines the ScrollPhysics of the DetalsCard scrollView.
-//   ScrollPhysics physics = ClampingScrollPhysics();
-
-//   // The defualt Curve with which the details Page animates out into the new Match Page.
-//   final kdefaultExitCurve = Curves.fastOutSlowIn;
-
-//   // /// A function to select the match Decision made on the the current match.
-//   // currentMatchDecision(Decision decision) {
-//   //   if (Provider.of<MatchEngine>(context, listen: false).currentMatch() !=
-//   //       null) {
-//   //     Provider.of<MatchEngine>(context, listen: false)
-//   //         .currentMatchDecision(decision);
-//   //     Provider.of<MatchEngine>(context, listen: false).goToNextMatch();
-
-//   //     // close thr page since a valid Decision has been made.
-//   //     closePage();
-//   //   }
-//   // }
-
-//   // /// Close the MatchDetailsCard.
-//   // /// This essetially calls "moveToPage" on the pageController parameter
-//   // /// passed to it.
-//   // void closePage() {
-//   //   widget.scrollController.animateTo(
-//   //     0,
-//   //     duration: widget.exitDuration,
-//   //     curve: kdefaultExitCurve,
-//   //   );
-
-//   //   // we can also use jumpToPage but that will not animate.
-//   //   // widget.pageController.jumpToPage(0);
-//   // }
-
-//   @override
-//   void initState() {
-//     super.initState();
-
-//     // Instantiate the _innerScrollController.
-//     _innerScrollController = ScrollController();
-
-//     // Add a listener to the outter scroll controller.
-//     widget.scrollController.addListener(() {
-//       // check to see if the scrollView is at the end of scrolling
-//       if (widget.scrollController.offset ==
-//           widget.scrollController.position.maxScrollExtent) {
-//         setState(() {
-//           // locks the ScrollView from moving allowing the outter ScrollView
-//           // to do the job.
-//           physics = ClampingScrollPhysics();
-//         });
-//       }
-//     });
-
-//     // Add a listener to the outter scroll controller.
-//     _innerScrollController.addListener(() {
-//       //
-//       if (_innerScrollController.offset ==
-//           _innerScrollController.position.minScrollExtent) {
-//         setState(() {
-//           // locks the ScrollView from moving allowing the outter ScrollView
-//           // to do the job.
-//           physics = NeverScrollableScrollPhysics();
-//         });
-//       }
-//     });
-//   }
-
-//   // /// A widget that displays the actions a user can make on a match.
-//   // /// Actions such as:
-//   // ///   "Dislike",
-//   // ///   "Like",
-//   // ///   "Draft Message"
-//   // ///
-//   // /// Essentially a list of [DecisionControl] widgets to display below
-//   // /// the Image Display Widget of each match.
-//   // Widget _matchControls() {
-//   //   return Container(
-//   //     foregroundDecoration: BoxDecoration(
-//   //       color: Colors.transparent,
-//   //     ),
-//   //     decoration: BoxDecoration(
-//   //       color: Colors.white,
-//   //       boxShadow: [
-//   //         BoxShadow(
-//   //           color: darkCardColor,
-//   //           offset: Offset(0.0, 0.2),
-//   //           blurRadius: 16.0,
-//   //         ),
-//   //       ],
-//   //     ),
-//   //     // A Matrial Widget is added here so as to allow the solash of the InkWell Widgets
-//   //     // below this Widget in the tree to show.
-//   //     //
-//   //     // Note: Any Container Within the Widget tree will obscure the action of any InkWell Widget
-//   //     // below such Container in the Widget tree.
-//   //     child: Material(
-//   //       // With this as transparent we can retain the original color of the Enclosing
-//   //       // Decoration Widget.
-//   //       color: Colors.transparent,
-//   //       child: Row(
-//   //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-//   //         children: [
-//   //           InkWell(
-//   //             borderRadius: BorderRadius.circular(15.0),
-//   //             child: GlobalWidgets.imageToIcon(
-//   //               BetaIconPaths.dislikeMatchIcon,
-//   //               scale: 4.0,
-//   //             ),
-//   //             onTap: () {
-//   //               // Decision.nope
-//   //               currentMatchDecision(Decision.nope);
-//   //             },
-//   //           ),
-//   //           InkWell(
-//   //             borderRadius: BorderRadius.circular(15.0),
-//   //             child: GlobalWidgets.imageToIcon(
-//   //               BetaIconPaths.likeMatchIcon,
-//   //               scale: 3.75,
-//   //             ),
-//   //             onTap: () {
-//   //               // Decision.like
-//   //               currentMatchDecision(Decision.like);
-//   //             },
-//   //           ),
-//   //           InkWell(
-//   //             borderRadius: BorderRadius.circular(15.0),
-//   //             child: GlobalWidgets.imageToIcon(
-//   //               BetaIconPaths.draftMesssageIcon,
-//   //               scale: 4.0,
-//   //             ),
-//   //             onTap: () {
-//   //               // Call a Function to open a chat Tab to chat with the match.
-//   //               print('MAKE A DRAFT!');
-//   //             },
-//   //           ),
-//   //         ],
-//   //       ),
-//   //     ),
-//   //   );
-//   // }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       child: Stack(
-//         fit: StackFit.expand,
-//         children: [
-//           FractionallySizedBox(
-//             alignment: Alignment.topCenter,
-//             heightFactor: 0.78,
-//             widthFactor: 1.0,
-//             child: Container(
-//               color: Colors.white,
-//               alignment: Alignment.center,
-//               padding: EdgeInsets.symmetric(vertical: 16.0),
-//               child: SingleChildScrollView(
-//                 physics: NeverScrollableScrollPhysics(),
-//                 primary: true,
-//                 child: Column(
-//                   children: [
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                     Text('Howdy!'),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ),
-//           // FractionallySizedBox(
-//           //   alignment: Alignment.bottomCenter,
-//           //   heightFactor: 0.22,
-//           //   widthFactor: 1.0,
-//           //   child: _matchControls(),
-//           // ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 
 /// A Widget to display a set of images.
 /// Used by the [MatchCard] widget to display images of
@@ -416,7 +208,7 @@ class PhotoView extends StatefulWidget {
             'The optional parameter `isClickable` cannot be "null". Please set it to either true or false to either make the PhotoView respond to touch Gestures or not.'),
         super(key: key);
 
-  /// The index of the phot to display initially.
+  /// The index of the photo to display initially.
   /// 'The initialPhotoIndex cannot be `null` or negative.
   /// It must also be in the range of avaliable imageUrls (starting from `0`).
   ///
@@ -801,10 +593,6 @@ class _PhotoViewState extends State<PhotoView> {
         children: [
           // declare the ImageLayer of the PhotoView.
           _imageLayer(),
-
-          // declare the GestureLayer of the PhotoView.
-          if (widget.isClickable) _gestureLayer(),
-
           // We place the Description widget and the Carousel widget into a single Stack
           // So that we can apply similar constraints to the two.
           //
@@ -828,6 +616,8 @@ class _PhotoViewState extends State<PhotoView> {
               ],
             ),
           ),
+          // declare the GestureLayer of the PhotoView.
+          if (widget.isClickable) _gestureLayer(),
         ],
       ),
     );
