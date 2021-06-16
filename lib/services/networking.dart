@@ -217,4 +217,21 @@ class NetworkHelper {
     var response = await http.get(deletionUri);
     return;
   }
+  
+  Future<void> swapProfileImages(int profileImageIndex1,int profileImageIndex2) async{
+    Map<String, int> toSend = {
+      'file1_index': profileImageIndex1,
+      'file2_index': profileImageIndex2
+    };
+
+
+    String encoded = jsonEncode(toSend);
+
+
+
+
+    Uri swapUri = Uri.https(SERVER_ADDR, '/profile_images/swap/${SettingsData().facebookId}');
+    http.Response response = await http.post(swapUri,body: encoded);
+    return;
+  }
 }

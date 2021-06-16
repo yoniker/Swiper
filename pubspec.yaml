@@ -42,6 +42,7 @@ dependencies:
   fuzzy: <1.0.0
   trotter: ^1.1.0
   tuple: ^2.0.0
+  reorderables: ^0.4.1
 
 
 dev_dependencies:

@@ -11,6 +11,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:reorderables/reorderables.dart';
+
 
 ///
 class ProfileScreen extends StatefulWidget {
@@ -95,12 +97,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           );
 
-    return SizedBox(
+    return Container(
       height: 125,
       width: 85,
       child: Stack(
         children: [
-          SizedBox(
+          Container(
             height: 125,
             width: 85,
             child: Material(
@@ -190,7 +192,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               SizedBox(height: 20.0),
-              Wrap(
+              ReorderableWrap(
+                needsLongPressDraggable: false,
+                onReorder: (int oldIndex,int newIndex){
+                  if(newIndex>=_profileImagesUrls.length){return;}
+                  NetworkHelper().swapProfileImages(oldIndex,newIndex); //I don't see a need to wait for the server;
+                  setState(()  {
+
+                    String temp = _profileImagesUrls[oldIndex]; //Swap the elements (I wish there was a native way to do that!)
+                    _profileImagesUrls[oldIndex] = _profileImagesUrls[newIndex];
+                    _profileImagesUrls[newIndex] = temp;
+                  });
+
+                },
                 direction: Axis.horizontal,
                 alignment: WrapAlignment.spaceAround,
                 runAlignment: WrapAlignment.spaceAround,
@@ -198,19 +212,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 runSpacing: 12.0,
                 children:
 
-                List<Widget>.generate(_profileImagesUrls.length+1,(index)=>_pictureBox(
+                List<Widget>.generate(_profileImagesUrls.length+1,(index)=>
+
+                    ReorderableWidget(
+                      reorderable: index<_profileImagesUrls.length,
+                      child: _pictureBox(
                   imageUrl: index<_profileImagesUrls.length? NetworkHelper().getProfileImageUrl(_profileImagesUrls[index]): null,
                   onDelete: (){
-                    NetworkHelper().deleteProfileImage(index).then((_){
-                      {_syncFromServer();}
-                    });
+                      NetworkHelper().deleteProfileImage(index).then((_){
+                        {_syncFromServer();}
+                      });
                   },
                   onImagePicked: (image){
-                    NetworkHelper().postProfileImage(File(image.path)).then(
-                        (_){_syncFromServer();}
-                    );
+                      NetworkHelper().postProfileImage(File(image.path)).then(
+                          (_){_syncFromServer();}
+                      );
                   }
-                ))
+                ),
+                    ))
 
 
               ),
