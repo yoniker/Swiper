@@ -7,6 +7,7 @@ import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/settings_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:provider/provider.dart';
 
 import 'models/celebs_info_model.dart';
+import 'models/details_model.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   //TODO it's a temporary fix so we can use self signed certificates. DON'T USE IN PRODUCTION
@@ -27,6 +29,15 @@ class MyHttpOverrides extends HttpOverrides {
 
 void main() {
   HttpOverrides.global = new MyHttpOverrides();
+  if (kIsWeb) {
+    // initialiaze the facebook javascript SDK
+    FacebookAuth.instance.webInitialize(
+      appId: "218658432881919",//<-- YOUR APP_ID
+      cookie: true,
+      xfbml: true,
+      version: "v9.0",
+    );
+  }
   runApp(ChangeNotifierProvider(
       create: (context) => MatchEngine(),
       child: ChangeNotifierProvider(
@@ -39,6 +50,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    DetailsData(); //Create both singletons  which read from shared preferences. TODO what's the prinicpled way to do that?
+    SettingsData();
     return MaterialApp(
       onGenerateRoute: _onGenerateRoute,
       title: 'Swiper MVP',

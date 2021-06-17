@@ -5,6 +5,7 @@ import 'dart:convert' as json;
 import 'dart:io';
 import 'dart:math';
 
+import 'package:betabeta/models/details_model.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/models/settings_model.dart';
@@ -91,6 +92,22 @@ class NetworkHelper {
         Uri.https(SERVER_ADDR, '/decision/${settings.facebookId}');
     http.Response response = await http.post(postDecisionUri,
         body: encoded); //TODO something if response wasnt 200
+  }
+
+  postUserDetails() async{
+    Map<String,String> detailsToSend={
+      'about_me':DetailsData().aboutMe,
+      'job':DetailsData().job,
+      'company':DetailsData().company,
+      'user_facebook_id':SettingsData().facebookId,
+
+    };
+
+    String encoded = jsonEncode(detailsToSend);
+    Uri postDetailsUri =
+    Uri.https(SERVER_ADDR, '/details/${SettingsData().facebookId}');
+    http.Response response = await http.post(postDetailsUri,
+        body: encoded);
   }
 
   postUserSettings() async {
