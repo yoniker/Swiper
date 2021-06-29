@@ -13,18 +13,15 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reorderables/reorderables.dart';
 
-
 ///
 class ProfileScreen extends StatefulWidget {
   ProfileScreen({Key key}) : super(key: key);
-
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
   // --> All this information should be added to the data model.
   // this will be pre-filled with data from the server.
   bool _showPhoto = false;
@@ -38,11 +35,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   List<String> _profileImagesUrls = [];
 
   @override
-  initState(){
+  initState() {
     super.initState();
     _syncFromServer();
   }
-
 
   /// builds the toggle tile.
   Widget _buildToggleTile({
@@ -72,7 +68,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _pictureBox({
     String imageUrl,
 
-
     /// This function is fired when an image is successfully taken from the Gallery or Camera.
     void Function(PickedFile imageFile) onImagePicked,
 
@@ -80,18 +75,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     void Function() onDelete,
   }) {
     Widget _child = imageUrl != null
-        ?
-    PrecachedImage.network(
-      imageURL: imageUrl,
-      fit: BoxFit.cover,
-    )
+        ? PrecachedImage.network(
+            imageURL: imageUrl,
+            fit: BoxFit.cover,
+          )
         : Center(
             child: IconButton(
               icon: Icon(Icons.add_rounded),
               onPressed: () async {
                 await GlobalWidgets.showImagePickerDialogue(
                   context: context,
-                  onImagePicked:onImagePicked,
+                  onImagePicked: onImagePicked,
                 );
               },
             ),
@@ -125,7 +119,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 shape: CircleBorder(),
                 elevation: 2.0,
                 child: InkWell(
-                  onTap: (){onDelete();},
+                  onTap: () {
+                    onDelete();
+                  },
                   child: Padding(
                     padding: EdgeInsets.all(2.5),
                     child: GlobalWidgets.imageToIcon(
@@ -194,44 +190,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(height: 20.0),
               ReorderableWrap(
                 needsLongPressDraggable: false,
-                onReorder: (int oldIndex,int newIndex){
-                  if(newIndex>=_profileImagesUrls.length){return;}
-                  NetworkHelper().swapProfileImages(oldIndex,newIndex); //I don't see a need to wait for the server;
-                  setState(()  {
-
-                    String temp = _profileImagesUrls[oldIndex]; //Swap the elements (I wish there was a native way to do that!)
+                onReorder: (int oldIndex, int newIndex) {
+                  if (newIndex >= _profileImagesUrls.length) {
+                    return;
+                  }
+                  NetworkHelper().swapProfileImages(oldIndex,
+                      newIndex); //I don't see a need to wait for the server;
+                  setState(() {
+                    String temp = _profileImagesUrls[
+                        oldIndex]; //Swap the elements (I wish there was a native way to do that!)
                     _profileImagesUrls[oldIndex] = _profileImagesUrls[newIndex];
                     _profileImagesUrls[newIndex] = temp;
                   });
-
                 },
                 direction: Axis.horizontal,
                 alignment: WrapAlignment.spaceAround,
                 runAlignment: WrapAlignment.spaceAround,
                 spacing: 12.0,
                 runSpacing: 12.0,
-                children:
-
-                List<Widget>.generate(_profileImagesUrls.length+1,(index)=>
-
-                    ReorderableWidget(
-                      reorderable: index<_profileImagesUrls.length,
-                      child: _pictureBox(
-                  imageUrl: index<_profileImagesUrls.length? NetworkHelper().getProfileImageUrl(_profileImagesUrls[index]): null,
-                  onDelete: (){
-                      NetworkHelper().deleteProfileImage(index).then((_){
-                        {_syncFromServer();}
-                      });
-                  },
-                  onImagePicked: (image){
-                      NetworkHelper().postProfileImage(File(image.path)).then(
-                          (_){_syncFromServer();}
-                      );
-                  }
+                children: List<Widget>.generate(
+                  _profileImagesUrls.length + 1,
+                  (index) => ReorderableWidget(
+                    reorderable: index < _profileImagesUrls.length,
+                    child: _pictureBox(
+                        imageUrl: index < _profileImagesUrls.length
+                            ? NetworkHelper().getProfileImageUrl(
+                                _profileImagesUrls[index],
+                              )
+                            : null,
+                        onDelete: () {
+                          NetworkHelper().deleteProfileImage(index).then((_) {
+                            _syncFromServer();
+                          });
+                        },
+                        onImagePicked: (image) {
+                          NetworkHelper()
+                              .postProfileImage(File(image.path))
+                              .then((_) {
+                            _syncFromServer();
+                          });
+                        }),
+                  ),
                 ),
-                    ))
-
-
               ),
               _buildToggleTile(
                 title: 'Show photo',
@@ -285,18 +285,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _syncFromServer() {
-
-
     NetworkHelper().getProfileImages().then((profileImagesUrls) => {
-      setState(() {
-        _profileImagesUrls = profileImagesUrls;
-
-      })
-    });
-
-
-
-
+          setState(() {
+            _profileImagesUrls = profileImagesUrls;
+          })
+        });
   }
 }
 
@@ -350,13 +343,7 @@ class _TextEditBlockState extends State<TextEditBlock> {
   @override
   void initState() {
     _resolvedTextEditingController =
-        widget.controller ?? TextEditingController();
-
-    if (widget.text != null) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _resolvedTextEditingController.text = widget.text;
-      });
-    }
+        widget.controller ?? TextEditingController(text: widget.text ?? '');
 
     _isOpened = widget.text != null;
 
