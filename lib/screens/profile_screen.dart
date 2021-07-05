@@ -229,8 +229,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         {_syncFromServer();}
                       });
                   },
-                  onImagePicked: (image){
-                      NetworkHelper().postProfileImage(File(image.path)).then(
+                  onImagePicked: (pickedImage){
+                      NetworkHelper().postProfileImage(pickedImage).then(
                           (_){_syncFromServer();}
                       );
                   }

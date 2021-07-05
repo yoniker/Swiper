@@ -12,6 +12,7 @@ import 'package:betabeta/models/settings_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/src/media_type.dart' as media;
 import 'package:image/image.dart' as img;
+import 'package:image_picker/image_picker.dart';
 import 'package:tuple/tuple.dart';
 
 class NetworkHelper {
@@ -153,10 +154,10 @@ class NetworkHelper {
   }
 
   //A helper method to shrink an image if it's too large, and decode it into a workable image format
-  img.Image _prepareImage(File imageFile){
+  Future<img.Image> _prepareImage(PickedFile pickedImageFile)async{
     const MAX_IMAGE_SIZE = 800; //TODO make it  a parameter (if needed)
 
-    img.Image theImage = img.decodeImage(imageFile.readAsBytesSync());
+    img.Image theImage = img.decodeImage(await pickedImageFile.readAsBytes());
     if (max(theImage.height, theImage.width) > MAX_IMAGE_SIZE) {
       double resizeFactor =
           MAX_IMAGE_SIZE / max(theImage.height, theImage.width);
@@ -166,8 +167,8 @@ class NetworkHelper {
     return theImage;
   }
 
-  Tuple2<img.Image, String> preparedFaceSearchImageFileDetails(File imageFile) {
-    img.Image theImage = _prepareImage(imageFile);
+  Future<Tuple2<img.Image, String>> preparedFaceSearchImageFileDetails(PickedFile imageFile) async{
+    img.Image theImage = await _prepareImage(imageFile);
     String fileName = 'custom_face_search_${DateTime.now()}.jpg';
     return Tuple2<img.Image, String>(theImage, fileName);
   }
@@ -191,9 +192,9 @@ class NetworkHelper {
     return;
   }
 
-  Future<void> postProfileImage(File imageFile) async {
+  Future<void> postProfileImage(PickedFile pickedImage) async {
     String fileName = '${DateTime.now().toString()}.jpg';
-    img.Image theImage = _prepareImage(imageFile);
+    img.Image theImage = await _prepareImage(pickedImage);
 
     http.MultipartRequest request = http.MultipartRequest(
       'POST',
