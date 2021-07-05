@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/services/networking.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,8 +38,13 @@ class SettingsData extends ChangeNotifier{
   SettingsData._privateConstructor(){
     //Fill in some "default" values which should be filled in within milliseconds of opening the App
     _readFromShared = false;
-    _name = '';
-    _facebookId = '';
+    if(kIsWeb){
+    _name = 'x1000 Investor';
+    _facebookId = '1234';} //TODO this is a small "hack" until facebook web login will be figured out
+    else{
+      _name = '';
+      _facebookId = '';
+    }
     _facebookProfileImageUrl = 'https://lunada.co.il/wp-content/uploads/2016/04/12198090531909861341man-silhouette.svg_.hi_-300x284.png';
     _preferredGender = 'Everyone';
     _minAge = 18;

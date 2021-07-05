@@ -16,7 +16,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tuple/tuple.dart';
 
 class NetworkHelper {
-  static const SERVER_ADDR = '192.116.48.67:8081';
+  static const SERVER_ADDR = 'dordating.com:8081';
   static final NetworkHelper _instance = NetworkHelper._internal();
   static const MIN_MATCHES_CALL_INTERVAL = Duration(seconds: 1);
   DateTime _lastMatchCall =
