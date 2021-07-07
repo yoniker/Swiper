@@ -1,9 +1,8 @@
 import 'dart:async';
-
-import 'package:betabeta/main.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/popups/genderselector.dart';
 import 'package:betabeta/popups/popup.dart';
+import 'package:betabeta/screens/login_screen.dart';
 import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/screens/settings_screen.dart';
 import 'package:betabeta/widgets/round_icon_button.dart';
@@ -54,7 +53,7 @@ class _ProfileTabState extends State<ProfileTab>
     SettingsData().facebookId = '';
     SettingsData().name = '';
     Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => LoginHome()),
+        MaterialPageRoute(builder: (context) => LoginScreen()),
         (Route<dynamic> route) => false);
   }
 
