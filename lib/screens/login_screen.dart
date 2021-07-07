@@ -89,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget SignInNoLoginButton(){
     return auth_button.StretchableButton(
-      buttonColor: Color(0xFF1877F2),
+      buttonColor: Colors.green,
       borderRadius: defaultBorderRadius,
       onPressed: (){_signInWithoutLogin();},
       buttonPadding: 8.0,
