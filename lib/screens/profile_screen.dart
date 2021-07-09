@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/models/details_model.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/utils/mixins.dart';
@@ -25,7 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     with MountedStateMixin<ProfileScreen> {
   // --> All this information should be added to the data model.
   // this will be pre-filled with data from the server.
-  bool _showPhoto = false;
+  bool _incognitoMode = false;
 
   String _aboutMe;
 
@@ -40,6 +41,13 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   initState() {
     super.initState();
+    _syncFromServer();
+    _aboutMe = DetailsData().aboutMe;
+    _company = DetailsData().company;
+    _jobTitle = DetailsData().job;
+    print(DetailsData().aboutMe);
+
+  
 
     // initialize the NetworkHelper instance.
     //
@@ -256,7 +264,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                           GlobalWidgets.showLoadingIndicator(context: context);
 
                           await networkHelper
-                              .postProfileImage(File(image.path));
+                              .postProfileImage(image);
                           _syncFromServer();
 
                           GlobalWidgets.hideLoadingIndicator(context);
@@ -293,11 +301,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                 // ),
               ),
               _buildToggleTile(
-                title: 'Show photo',
-                value: _showPhoto,
+                title: 'Incognito Mode',
+                value: _incognitoMode,
                 onToggle: (val) {
                   setState(() {
-                    _showPhoto = val;
+                    _incognitoMode = val;
                   });
                 },
               ),
@@ -309,7 +317,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   // do something.
                 },
                 onChanged: (val) {
-                  // do something.
+                  DetailsData().aboutMe = val;
                 },
               ),
               TextEditBlock(
@@ -321,7 +329,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   // do something.
                 },
                 onChanged: (val) {
-                  // do something.
+                  DetailsData().job = val;
                 },
               ),
               TextEditBlock(
@@ -333,7 +341,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   // do something.
                 },
                 onChanged: (val) {
-                  // do something.
+                  DetailsData().company = val;
                 },
               ),
             ],
@@ -389,7 +397,7 @@ class TextEditBlock extends StatefulWidget {
 }
 
 class _TextEditBlockState extends State<TextEditBlock> {
-  TextEditingController _resolvedTextEditingController;
+  TextEditingController _textEditingController;
 
   bool _isOpened;
 
@@ -401,17 +409,17 @@ class _TextEditBlockState extends State<TextEditBlock> {
 
   @override
   void initState() {
-    _resolvedTextEditingController =
+    _textEditingController =
         widget.controller ?? TextEditingController(text: widget.text ?? '');
 
-    _isOpened = widget.text != null;
+    _isOpened = (widget.text != null)&&(widget.text!='');
 
     super.initState();
   }
 
   @override
   void dispose() {
-    if (widget.controller == null) _resolvedTextEditingController.dispose();
+    if (widget.controller == null) _textEditingController.dispose();
 
     super.dispose();
   }
@@ -430,15 +438,19 @@ class _TextEditBlockState extends State<TextEditBlock> {
           InkWell(
             customBorder: CircleBorder(),
             onTap: () {
+              if((_textEditingController.text??'').length>0){
+                print(_textEditingController.text??'No text');
+                return;
+              }
               setState(() {
                 _isOpened = !_isOpened;
               });
 
               // determine whether or not the [TextEditBlock] is expanded or not.
               if (_isOpened == true) {
-                if (widget.onOpen != null) widget.onOpen.call();
+                if (widget.onOpen != null) widget.onOpen();
               } else {
-                if (widget.onCloseTile != null) widget.onCloseTile.call();
+                if (widget.onCloseTile != null) widget.onCloseTile();
               }
 
               if (widget.onStatusChanged != null)
@@ -455,7 +467,7 @@ class _TextEditBlockState extends State<TextEditBlock> {
         duration: Duration(milliseconds: 1200),
         child: _isOpened
             ? CupertinoTextField.borderless(
-                controller: _resolvedTextEditingController,
+                controller: _textEditingController,
                 placeholder: widget.placeholder,
                 placeholderStyle:
                     boldTextStyle.copyWith(color: Colors.grey[300]),

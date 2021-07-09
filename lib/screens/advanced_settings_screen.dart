@@ -54,7 +54,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
 
     try {
       Tuple2<img.Image, String> imageFileDetails =
-          NetworkHelper().preparedFaceSearchImageFileDetails(File(chosenImage.path));
+          await NetworkHelper().preparedFaceSearchImageFileDetails(chosenImage);
 
       //
       await NetworkHelper().postFaceSearchImage(imageFileDetails);
