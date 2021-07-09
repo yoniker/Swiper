@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 final Color darkCardColor = Color(0xFFEFEFF1);
 final Color darkTextColor = Color(0xFF747474);
+final Color blackTextColor = Color(0xFF747474);
 final Color whiteCardColor = Color(0xFFFFFFFF);
 final Color linkColor = Color(0xFF389CEB);
 // 
@@ -14,6 +15,9 @@ final Color disabledColor = Colors.grey;
 //
 final Color colorBlend01 = Color(0xFFED3C5C);
 final Color colorBlend02 = Color(0xFFE1189D);
+
+final Color blue = Color(0xFF389CEB);
+final Color yellowishOrange = Color(0xFFF99442);
 
 // global textstyles
 final TextStyle defaultTextStyle = TextStyle(
@@ -27,6 +31,49 @@ final TextStyle boldTextStyle = TextStyle(
   color: Colors.black,
   fontFamily: 'Nunito',
   fontSize: 18,
+  fontWeight: FontWeight.w700,
+);
+
+final TextStyle titleStyle = TextStyle(
+  color: Colors.black,
+  fontFamily: 'Nunito',
+  fontSize: 22,
+  fontWeight: FontWeight.w700,
+);
+
+final TextStyle subTitleStyle = TextStyle(
+  color: Colors.black,
+  fontFamily: 'Nunito',
+  fontSize: 18,
+  fontWeight: FontWeight.w700,
+);
+
+final TextStyle subHeaderStyle = TextStyle(
+  color: Colors.black,
+  fontFamily: 'Nunito',
+  fontSize: 15,
+  fontWeight: FontWeight.w500,
+);
+
+final TextStyle mediumCharStyle = TextStyle(
+  color: Colors.black,
+  fontFamily: 'Nunito',
+  fontSize: 15,
+  fontWeight: FontWeight.w500,
+);
+
+
+final TextStyle smallCharStyle = TextStyle(
+  color: Colors.black,
+  fontFamily: 'Nunito',
+  fontSize: 13,
+  fontWeight: FontWeight.w500,
+);
+
+final TextStyle headerStyle = TextStyle(
+  color: Colors.black,
+  fontFamily: 'Nunito',
+  fontSize: 24,
   fontWeight: FontWeight.w700,
 );
 

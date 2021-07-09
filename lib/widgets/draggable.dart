@@ -439,7 +439,7 @@ class _DraggableCardState extends State<DraggableCard>
           children: [
             InkWell(
               borderRadius: BorderRadius.circular(15.0),
-              child: GlobalWidgets.imageToIcon(
+              child: GlobalWidgets.assetImageToIcon(
                 BetaIconPaths.dislikeMatchIcon,
                 scale: 4.0,
               ),
@@ -450,7 +450,7 @@ class _DraggableCardState extends State<DraggableCard>
             ),
             InkWell(
               borderRadius: BorderRadius.circular(15.0),
-              child: GlobalWidgets.imageToIcon(
+              child: GlobalWidgets.assetImageToIcon(
                 BetaIconPaths.likeMatchIcon,
                 // The scale is kid of backwards.
                 scale: 3.75,
@@ -462,7 +462,7 @@ class _DraggableCardState extends State<DraggableCard>
             ),
             InkWell(
               borderRadius: BorderRadius.circular(15.0),
-              child: GlobalWidgets.imageToIcon(
+              child: GlobalWidgets.assetImageToIcon(
                 BetaIconPaths.draftMesssageIcon,
                 scale: 4.0,
               ),

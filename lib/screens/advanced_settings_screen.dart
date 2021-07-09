@@ -285,7 +285,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                 color: linkColor),
                                           ),
                                         ),
-                                        GlobalWidgets.imageToIcon(
+                                        GlobalWidgets.assetImageToIcon(
                                           'assets/images/forward_arrow.png',
                                         ),
                                       ],
@@ -469,7 +469,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                           color: linkColor),
                                                 ),
                                               ),
-                                              GlobalWidgets.imageToIcon(
+                                              GlobalWidgets.assetImageToIcon(
                                                 'assets/images/forward_arrow.png',
                                               ),
                                             ],

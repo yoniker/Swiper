@@ -1,13 +1,14 @@
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/widgets/gradient_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 
 /// A collection of Global Widgets to be used in various parts of the App.
 class GlobalWidgets {
   /// A global widget that is used to render respective asset images
   /// as icons.
-  static Widget imageToIcon(
+  static Widget assetImageToIcon(
     String imagePath, {
     double scale = 4.0,
 
@@ -464,5 +465,106 @@ class GlobalWidgets {
     );
 
     // return;
+  }
+
+  static void showLoadingIndicator({
+    @required BuildContext context,
+    String message,
+  }) async {
+    //
+    // var _defaultTextStyle = TextStyle(
+    //   color: Colors.black,
+    //   fontFamily: 'Nunito',
+    //   fontSize: 15,
+    //   fontWeight: FontWeight.w500,
+    // );
+
+    // var _varryingTextStyle = TextStyle(
+    //   color: Colors.black,
+    //   fontFamily: 'Nunito',
+    //   fontSize: 16,
+    //   fontWeight: FontWeight.w700,
+    // );
+
+    // String _resolveAlertTitle() {
+    //   if (title != null && title != '') {
+    //     return title;
+    //   } else {
+    //     return 'Image Selection';
+    //   }
+    // }
+
+    // show the image-picker dialogue
+    await showDialog(
+      useSafeArea: true,
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return Center(
+          child: Container(
+            constraints: BoxConstraints(
+                // minHeight: MediaQuery.of(context).size.height * 0.375,
+                // maxHeight: MediaQuery.of(context).size.height * 0.55,
+                // minWidth: MediaQuery.of(context).size.width * 0.75,
+                // maxWidth: MediaQuery.of(context).size.width * 0.95,
+                ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // FractionallySizedBox(
+                //   heightFactor: 0.25,
+                //   widthFactor: 1.0,
+                //   alignment: Alignment.topCenter,
+                //   child: Container(
+                //     alignment: Alignment.center,
+                //     margin: EdgeInsets.all(4.5),
+                //     child: Text(
+                //       ' "${_resolveAlertTitle()}"\n ',
+                //       style: boldTextStyle,
+                //     ),
+                //   ),
+                // ),
+                SpinKitDualRing(
+                  color: colorBlend01,
+                  size: 35.0,
+                  lineWidth: 2.40,
+                ),
+                if (message != null)
+                  Text(
+                    message,
+                    style: defaultTextStyle,
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// This method closes any opened LoadingIndicator-Dialogue by poping the Route
+  /// currently on top of the stack.
+  ///
+  /// This is equivalent to calling [Navigator.pop] from anywhere in the App.
+  static void hideLoadingIndicator(BuildContext context) {
+    Navigator.of(context).pop();
+  }
+
+  /// This funtion takes in a Function, `fn` to load, calls the showLoadingIndicator function to show
+  /// a loading indicator and closes automatically when the given `fn` is done.
+  static Future<void> indicatorIncoporatedFetch(
+    void Function() fn, {
+    @required BuildContext context,
+    String message,
+  }) async {
+    assert(context != null,
+        'The "context" provided is null! Please provide a non-null context');
+    showLoadingIndicator(context: context, message: message);
+    await Future<void>(() {
+      fn?.call();
+    });
+    hideLoadingIndicator(context);
+    return;
   }
 }

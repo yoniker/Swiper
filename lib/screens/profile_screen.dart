@@ -4,9 +4,9 @@ import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/services/networking.dart';
+import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
-import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +21,8 @@ class ProfileScreen extends StatefulWidget {
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen>
+    with MountedStateMixin<ProfileScreen> {
   // --> All this information should be added to the data model.
   // this will be pre-filled with data from the server.
   bool _showPhoto = false;
@@ -32,12 +33,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String _company;
 
+  NetworkHelper networkHelper;
+
   List<String> _profileImagesUrls = [];
 
   @override
   initState() {
     super.initState();
-    _syncFromServer();
+
+    // initialize the NetworkHelper instance.
+    //
+    // TODO(Yonikeren): You do know that whenever you work with [NetworkHelper()..do something] you are creating a
+    // new instance of the class and of-course whatever field or variable present in the class as well.
+    // that's why is always a good idea to instantiate a data-class via this form of declaration.
+    // so we don't end up with uneccessary duplicates whenever we create a new instance.
+    //
+    // also there are some FUnctions I will suggest you make static since they don't alter or make changes to
+    // any instance variable.
+    networkHelper = NetworkHelper();
+
+    // this makes sure that if the state is not yet mounted, we don't end up calling setState
+    // but instead push the function forward to the addPostFrameCallback function.
+    mountedLoader(() => _syncFromServer());
   }
 
   /// builds the toggle tile.
@@ -75,8 +92,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     void Function() onDelete,
   }) {
     Widget _child = imageUrl != null
-        ? PrecachedImage.network(
-            imageURL: imageUrl,
+        ? Image.network(
+            imageUrl,
             fit: BoxFit.cover,
           )
         : Center(
@@ -120,11 +137,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 elevation: 2.0,
                 child: InkWell(
                   onTap: () {
-                    onDelete();
+                    if (onDelete != null) onDelete();
                   },
                   child: Padding(
                     padding: EdgeInsets.all(2.5),
-                    child: GlobalWidgets.imageToIcon(
+                    child: GlobalWidgets.assetImageToIcon(
                       BetaIconPaths.cancelIconPath,
                     ),
                   ),
@@ -143,7 +160,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: 'Profile',
         hasTopPadding: true,
         showAppLogo: false,
-        trailing: GlobalWidgets.imageToIcon(
+        trailing: GlobalWidgets.assetImageToIcon(
           BetaIconPaths.inactiveProfileTabIconPath,
         ),
       ),
@@ -169,16 +186,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onTap: () async {
                           // show the imagePicker Dialogue.
                           await GlobalWidgets.showImagePickerDialogue(
-                              context: context,
-                              onImagePicked: (image) {
-                                // log
-                                print(
-                                    'The Path to the New Profile Image is: ${image.path}');
-                              });
+                            context: context,
+                            onImagePicked: (image) async {
+                              GlobalWidgets.showLoadingIndicator(context: context);
+
+                              // log
+                              print(
+                                  'The Path to the New Profile Image is: ${image.path}');
+
+                              GlobalWidgets.hideLoadingIndicator(context);
+                            },
+                          );
                         },
                         child: Padding(
                           padding: EdgeInsets.all(2.5),
-                          child: GlobalWidgets.imageToIcon(
+                          child: GlobalWidgets.assetImageToIcon(
                             BetaIconPaths.editProfieImageIconPath,
                           ),
                         ),
@@ -190,12 +212,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(height: 20.0),
               ReorderableWrap(
                 needsLongPressDraggable: false,
-                onReorder: (int oldIndex, int newIndex) {
+                onReorder: (int oldIndex, int newIndex) async {
                   if (newIndex >= _profileImagesUrls.length) {
                     return;
                   }
-                  NetworkHelper().swapProfileImages(oldIndex,
-                      newIndex); //I don't see a need to wait for the server;
+                  await NetworkHelper().swapProfileImages(
+                    oldIndex,
+                    newIndex,
+                  ); //I don't see a need to wait for the server;
                   setState(() {
                     String temp = _profileImagesUrls[
                         oldIndex]; //Swap the elements (I wish there was a native way to do that!)
@@ -209,29 +233,64 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 spacing: 12.0,
                 runSpacing: 12.0,
                 children: List<Widget>.generate(
-                  _profileImagesUrls.length + 1,
-                  (index) => ReorderableWidget(
-                    reorderable: index < _profileImagesUrls.length,
-                    child: _pictureBox(
-                        imageUrl: index < _profileImagesUrls.length
-                            ? NetworkHelper().getProfileImageUrl(
-                                _profileImagesUrls[index],
-                              )
-                            : null,
-                        onDelete: () {
-                          NetworkHelper().deleteProfileImage(index).then((_) {
-                            _syncFromServer();
-                          });
+                  6,
+                  (index) {
+                    final url = index < _profileImagesUrls.length
+                        ? networkHelper
+                            .getProfileImageUrl(_profileImagesUrls[index])
+                        : null;
+                    return ReorderableWidget(
+                      key: Key('#reorderable_profile$index'),
+                      reorderable: index < _profileImagesUrls.length,
+                      child: _pictureBox(
+                        imageUrl: url,
+                        onDelete: () async {
+                          GlobalWidgets.showLoadingIndicator(context: context);
+
+                          await networkHelper.deleteProfileImage(index);
+                          _syncFromServer();
+
+                          GlobalWidgets.hideLoadingIndicator(context);
                         },
-                        onImagePicked: (image) {
-                          NetworkHelper()
-                              .postProfileImage(File(image.path))
-                              .then((_) {
-                            _syncFromServer();
-                          });
-                        }),
-                  ),
+                        onImagePicked: (image) async {
+                          GlobalWidgets.showLoadingIndicator(context: context);
+
+                          await networkHelper
+                              .postProfileImage(File(image.path));
+                          _syncFromServer();
+
+                          GlobalWidgets.hideLoadingIndicator(context);
+                        },
+                      ),
+                    );
+                  },
                 ),
+                // children: List<Widget>.generate(
+                //   _profileImagesUrls.length + 1,
+                //   (index) {
+                //     final url = index < _profileImagesUrls.length
+                //         ? NetworkHelper()
+                //             .getProfileImageUrl(_profileImagesUrls[index])
+                //         : null;
+                //     return ReorderableWidget(
+                //       reorderable: index < _profileImagesUrls.length,
+                //       child: _pictureBox(
+                //           imageUrl: url,
+                //           onDelete: () {
+                //             NetworkHelper().deleteProfileImage(index).then((_) {
+                //               _syncFromServer();
+                //             });
+                //           },
+                //           onImagePicked: (image) {
+                //             NetworkHelper()
+                //                 .postProfileImage(File(image.path))
+                //                 .then((_) {
+                //               _syncFromServer();
+                //             });
+                //           }),
+                //     );
+                //   },
+                // ),
               ),
               _buildToggleTile(
                 title: 'Show photo',
@@ -284,12 +343,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void _syncFromServer() {
-    NetworkHelper().getProfileImages().then((profileImagesUrls) => {
-          setState(() {
-            _profileImagesUrls = profileImagesUrls;
-          })
-        });
+  void _syncFromServer() async {
+    final _resp = await networkHelper.getProfileImages();
+
+    setStateIfMounted(() {
+      _profileImagesUrls = _resp;
+    });
   }
 }
 
@@ -385,7 +444,7 @@ class _TextEditBlockState extends State<TextEditBlock> {
               if (widget.onStatusChanged != null)
                 widget.onStatusChanged(_isOpened);
             },
-            child: GlobalWidgets.imageToIcon(
+            child: GlobalWidgets.assetImageToIcon(
               BetaIconPaths.editImageIconPath02,
               iconPad: EdgeInsets.all(12.0),
             ),

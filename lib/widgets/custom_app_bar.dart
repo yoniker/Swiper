@@ -18,6 +18,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.hasTopPadding = false,
     this.showAppLogo = true,
     this.hasBackButton = true,
+    this.trailingPad = 5.0,
     this.onPop,
   })  :
         // add necessary assertions.
@@ -32,6 +33,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.hasBackButton = true,
     this.hasTopPadding = false,
     this.showAppLogo = true,
+    this.trailingPad = 5.0,
     this.onPop,
   })  : this.trailing = Padding(
           padding: EdgeInsets.only(left: 10.0),
@@ -40,7 +42,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             style: TextStyle(
               color: color,
               fontSize: 22,
-              fontFamily: 'Montserrat',
+              fontFamily: 'Nunito',
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -84,6 +86,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// be hiddden.
   final void Function() onPop;
 
+  /// This determines how much padding (in pixels) to add to the back to the trialing widget.
+  ///
+  /// The defualt is 5(px).
+  final double trailingPad;
+
   @override
   Widget build(BuildContext context) {
     // This holds the value for the topPadding of the AppBar.
@@ -112,7 +119,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             // Pop the current context.
                             Navigator.of(context).pop();
                           },
-                      child: GlobalWidgets.imageToIcon(
+                      child: GlobalWidgets.assetImageToIcon(
                         'assets/images/back_arrow.png',
                       ),
                     ),
@@ -125,7 +132,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             style: TextStyle(
                               color: color,
                               fontSize: 22,
-                              fontFamily: 'Montserrat',
+                              fontFamily: 'Nunito',
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -133,8 +140,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
               if (showAppLogo)
-                GlobalWidgets.imageToIcon(BetaIconPaths.appLogoIcon),
-              trailing,
+                GlobalWidgets.assetImageToIcon(BetaIconPaths.appLogoIcon),
+              Padding(
+                padding: EdgeInsets.only(right: trailingPad),
+                child: trailing,
+              ),
               // show App Logo.
             ],
           ),

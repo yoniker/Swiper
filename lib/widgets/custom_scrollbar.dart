@@ -126,6 +126,9 @@ class _CustomScrollBarState extends State<CustomScrollBar>
   // The Fade Animation literal itself.
   Animation<double> _fadeAnimation;
 
+  // A timer to debounce the fade out Function
+  Timer timer;
+
   @override
   void initState() {
     super.initState();
@@ -139,9 +142,10 @@ class _CustomScrollBarState extends State<CustomScrollBar>
         // the range "0.0 to 1.0"
         var originalOffset =
             (currentPos.pixels / currentPos.maxScrollExtent) * 1.0;
-        if (mounted) setState(() {
-          derivedPosition = originalOffset;
-        });
+        if (mounted)
+          setState(() {
+            derivedPosition = originalOffset;
+          });
 
         // For the Fade animation.
         var isScrollingNotifier =
@@ -198,36 +202,61 @@ class _CustomScrollBarState extends State<CustomScrollBar>
 
     // if the ScrollView is no longer scrolling (inactive)
     else if (isScrolling == false) {
+      // cancel the timer if it is still active and assign a new value to the timer.
+      if (timer?.isActive == true) {
+        timer?.cancel();
+      }
+
       // wait for 1200 milliseconds and then
       // reverse the animation. i.e fade out [CustomScrollBar] Widget.
       // This timer is used to control when to fade out the [CustomScrollBar] when
       // it is detected that the scroll is inactive. i.e The ScrollView attached to this
       // [CustomScrollBar] is no longer being scrolled.
-      Future.delayed(widget.fadeDelayDuration, () {
+      timer =
+          Timer(widget.fadeDelayDuration ?? Duration(milliseconds: 800), () {
         // In addition to the above we also check if the Widget is mounted so we can avoid calling the
         // delay function to reverse our non-existent Animation Controller.
-        // 
-        // All
-        if (isScrollingNotifier.value == false &&
+        if (
             // ensures that we are not calling the method that follows
             // after it the Widget has been disposed.
             mounted &&
-            // makes sure that 
-            _opacityAnimationController.isCompleted == true &&
-            _opacityAnimationController.isDismissed == false) {
-          if (_opacityAnimationController.isAnimating == false) {
-            _opacityAnimationController.reverse();
-
-            
-          }
-
-          //<debug>
-          // print('STOPPED_SCROLLING, "isScrollingNotifier value  is: ${isScrollingNotifier.value}"');
-        } else {
-          //<debug>
-          // print('SCROLLING IS UNDERWAY!, "isScrollingNotifier value  is: ${isScrollingNotifier.value}"');
+                isScrollingNotifier.value == false &&
+                // makes sure that
+                _opacityAnimationController.isCompleted == true &&
+                _opacityAnimationController.isDismissed == false &&
+                _opacityAnimationController.isAnimating == false) {
+          _opacityAnimationController.reverse();
         }
       });
+
+      // // wait for 1200 milliseconds and then
+      // // reverse the animation. i.e fade out [CustomScrollBar] Widget.
+      // // This timer is used to control when to fade out the [CustomScrollBar] when
+      // // it is detected that the scroll is inactive. i.e The ScrollView attached to this
+      // // [CustomScrollBar] is no longer being scrolled.
+      // Future.delayed(widget.fadeDelayDuration, () {
+      //   // In addition to the above we also check if the Widget is mounted so we can avoid calling the
+      //   // delay function to reverse our non-existent Animation Controller.
+      //   //
+      //   // All
+      //   if (isScrollingNotifier.value == false &&
+      //       // ensures that we are not calling the method that follows
+      //       // after it the Widget has been disposed.
+      //       mounted &&
+      //       // makes sure that
+      //       _opacityAnimationController.isCompleted == true &&
+      //       _opacityAnimationController.isDismissed == false) {
+      //     if (_opacityAnimationController.isAnimating == false) {
+      //       _opacityAnimationController.reverse();
+      //     }
+
+      //     //<debug>
+      //     // print('STOPPED_SCROLLING, "isScrollingNotifier value  is: ${isScrollingNotifier.value}"');
+      //   } else {
+      //     //<debug>
+      //     // print('SCROLLING IS UNDERWAY!, "isScrollingNotifier value  is: ${isScrollingNotifier.value}"');
+      //   }
+      // });
     }
   }
 

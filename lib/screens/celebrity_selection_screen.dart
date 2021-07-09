@@ -114,7 +114,7 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
                   decoration: InputDecoration(
                     fillColor: darkCardColor,
                     filled: true,
-                    prefixIcon: GlobalWidgets.imageToIcon(
+                    prefixIcon: GlobalWidgets.assetImageToIcon(
                       BetaIconPaths.inactiveMatchTabIconPath,
                       onTap: toggleFocus,
                     ),

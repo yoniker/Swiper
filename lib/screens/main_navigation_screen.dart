@@ -4,6 +4,7 @@ import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/main_messages_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
 import 'package:betabeta/tabs/profile_tab.dart';
+import 'package:betabeta/tabs/profile_tab_new.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   // List of pages.
   List<Widget> pages = <Widget>[
-    ProfileTab(),
+    // ProfileTab(),
+    ProfileTabRedo(),
     MatchScreen(key: Key('Match Screen'),),
     ViewLikesScreen(),
     MainMessagesScreen(),
@@ -92,33 +94,33 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         },
         items: [
           BottomNavigationBarItem(
-            icon: GlobalWidgets.imageToIcon(
+            icon: GlobalWidgets.assetImageToIcon(
                 BetaIconPaths.inactiveProfileTabIconPath),
-            activeIcon: GlobalWidgets.imageToIcon(
+            activeIcon: GlobalWidgets.assetImageToIcon(
                 BetaIconPaths.activeProfileTabIconPath),
             label: 'profile',
             tooltip: 'Profile',
           ),
           BottomNavigationBarItem(
-            icon: GlobalWidgets.imageToIcon(
+            icon: GlobalWidgets.assetImageToIcon(
                 BetaIconPaths.inactiveMatchTabIconPath),
             activeIcon:
-                GlobalWidgets.imageToIcon(BetaIconPaths.activeMatchTabIconPath),
+                GlobalWidgets.assetImageToIcon(BetaIconPaths.activeMatchTabIconPath),
             label: 'match',
             tooltip: 'Match',
           ),
           BottomNavigationBarItem(
-            icon: GlobalWidgets.imageToIcon(
+            icon: GlobalWidgets.assetImageToIcon(
                 BetaIconPaths.inactiveLikesTabIconPath),
             activeIcon:
-                GlobalWidgets.imageToIcon(BetaIconPaths.activeLikesTabIconPath),
+                GlobalWidgets.assetImageToIcon(BetaIconPaths.activeLikesTabIconPath),
             label: 'likes',
             tooltip: 'Likes',
           ),
           BottomNavigationBarItem(
-            icon: GlobalWidgets.imageToIcon(
+            icon: GlobalWidgets.assetImageToIcon(
                 BetaIconPaths.inactiveMessagesTabIconPath),
-            activeIcon: GlobalWidgets.imageToIcon(
+            activeIcon: GlobalWidgets.assetImageToIcon(
                 BetaIconPaths.activeMessagesTabIconPath),
             label: 'messages',
             tooltip: 'Messages',
