@@ -126,7 +126,7 @@ class CupertinoRangeSliderThumbShape extends RangeSliderThumbShape {
     );
 
     // This is where the `boxShadows` parameter is checked for being null
-    // and set to `_kSliderBoxShadows` if this is found to be true.
+    // and set to `_kSliderBoxShadows`.
     for (final BoxShadow shadow in boxShadows ?? _kSliderBoxShadows)
       canvas.drawRRect(rrect.shift(shadow.offset), shadow.toPaint());
 

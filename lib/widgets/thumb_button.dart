@@ -2,10 +2,33 @@ import 'package:flutter/material.dart';
 
 import 'clickable.dart';
 
+/// The BoxShadow list used by the Cupertino Slider.
+const List<BoxShadow> _kThumbBoxShadows = <BoxShadow>[
+  BoxShadow(
+    color: Color(0x26000000),
+    offset: Offset(0, 3),
+    blurRadius: 8.0,
+  ),
+  BoxShadow(
+    color: Color(0x29000000),
+    offset: Offset(0, 1),
+    blurRadius: 1.0,
+  ),
+  BoxShadow(
+    color: Color(0x1A000000),
+    offset: Offset(0, 3),
+    blurRadius: 1.0,
+  ),
+];
+
+/// The Color used to paint the thumbBorder.
+const Color _kThumbColor = Color(0x0AFFFFFF);
+
+/// The default box constraint applied to the thumb by default.
 const BoxConstraints _kDefaultBoxConstraints = BoxConstraints(
-  minHeight: 45.0,
-  maxHeight: 80.0,
-  minWidth: 40.0,
+  minHeight: 55.0,
+  maxHeight: 120.0,
+  minWidth: 45.0,
   maxWidth: 75.0,
 );
 
@@ -15,7 +38,9 @@ class ThumbButton extends StatelessWidget {
   const ThumbButton({
     Key key,
     this.child,
-    this.thumbColor = Colors.white,
+    this.thumbColor = _kThumbColor,
+    this.thumbConstraints = _kDefaultBoxConstraints,
+    this.boxShadows = _kThumbBoxShadows,
     this.enableFeedback = true,
     this.onTap,
   }) : super(key: key);
@@ -29,6 +54,20 @@ class ThumbButton extends StatelessWidget {
   /// The supplied widget is painted right inside the thumb.
   final Widget child;
 
+  /// The constraints set for this ThumbButton.
+  /// The constraints provided is used to compute the dimension of the thumb button.
+  ///
+  /// The default value is the one defined by the const `_kDefaultBoxConstraints`.
+  final BoxConstraints thumbConstraints;
+
+  /// A list of [BoxShadow]s to paint behind this thumb.
+  ///
+  /// This value is passed to the [ThumbPainter] and used to paint the provided
+  /// shadows behind the [ThumbButton].
+  ///
+  /// The default is `_kThumbBoxShadows`.
+  final List<BoxShadow> boxShadows;
+
   /// Whether or not to make this button clickable.
   ///
   /// Note that if this is true and onTap is null, the clickable widget will
@@ -41,23 +80,30 @@ class ThumbButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // the current screen size.
-    final Size screenSize = MediaQuery.of(context).size;
-    final double screenWidth = screenSize.width;
-    // TODO: make the Thumb re-adjust based on the size of its child.
-    final double _thumbWidth = screenWidth * 0.2;
+    // final Size screenSize = MediaQuery.of(context).size;
+    // final double screenWidth = screenSize.width;
 
     return Clickable(
       onTap: onTap,
       child: ConstrainedBox(
-        constraints: _kDefaultBoxConstraints,
+        constraints: thumbConstraints ?? _kDefaultBoxConstraints,
         child: Stack(
+          alignment: Alignment.center,
           children: [
             CustomPaint(
-              // size:
-              //     Size(_thumbWidth, (_thumbWidth * 1.2264150943396226).toDouble()),
-              painter: ThumbButtonPainter(color: thumbColor),
+              painter: ThumbButtonPainter(
+                color: thumbColor,
+                boxShadows: boxShadows,
+              ),
+              child: ConstrainedBox(
+                constraints: _kDefaultBoxConstraints,
+              ),
             ),
-            if (child != null) child,
+            if (child != null)
+              Align(
+                alignment: Alignment(0.0, -0.054),
+                child: child,
+              ),
           ],
         ),
       ),
@@ -65,17 +111,19 @@ class ThumbButton extends StatelessWidget {
   }
 }
 
-// ///
-// CustomPaint(
-//     size: Size(WIDTH, (WIDTH*1.2264150943396226).toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
-//     painter: RPSCustomPainter(),
-// )
-
+/// The CustomPainter for the [ThumbButton] widget.
 class ThumbButtonPainter extends CustomPainter {
-  ThumbButtonPainter({@required this.color});
+  ThumbButtonPainter(
+      {@required this.color, this.boxShadows = _kThumbBoxShadows});
 
   /// The color with which to paint this the thumb.
   final Color color;
+
+  /// A list of [BoxShadow]s to paint the Thumb.
+  /// This is set to [_kThumbBoxShadows] by default.
+  ///
+  /// You can override this by passing it a list of [BoxShadow] of your choice.
+  final List<BoxShadow> boxShadows;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -120,13 +168,20 @@ class ThumbButtonPainter extends CustomPainter {
         size.width * 0.5000000, 0);
     path.close();
 
+    // This is where the `boxShadows` parameter is checked for being null
+    // and set to `_kSliderBoxShadows`.
+    for (final BoxShadow shadow in boxShadows ?? _kThumbBoxShadows) {
+      // this paints the shdows behind the button.
+      canvas.drawPath(path.shift(shadow.offset), shadow.toPaint());
+    }
+
     Paint paint = Paint()..style = PaintingStyle.fill;
     paint.color = Colors.white.withOpacity(1.0);
     canvas.drawPath(path, paint);
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
+  bool shouldRepaint(ThumbButtonPainter oldDelegate) {
+    return oldDelegate.color != this.color;
   }
 }

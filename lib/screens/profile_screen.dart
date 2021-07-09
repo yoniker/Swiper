@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/details_model.dart';
@@ -36,19 +34,12 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   NetworkHelper networkHelper;
 
-  List<String> _profileImagesUrls = [];
+  List<String> _profileImagesUrls =
+      List.generate(6, (index) => null, growable: false);
 
   @override
   initState() {
     super.initState();
-    _syncFromServer();
-    _aboutMe = DetailsData().aboutMe;
-    _company = DetailsData().company;
-    _jobTitle = DetailsData().job;
-    print(DetailsData().aboutMe);
-
-  
-
     // initialize the NetworkHelper instance.
     //
     // TODO(Yonikeren): You do know that whenever you work with [NetworkHelper()..do something] you are creating a
@@ -59,6 +50,12 @@ class _ProfileScreenState extends State<ProfileScreen>
     // also there are some FUnctions I will suggest you make static since they don't alter or make changes to
     // any instance variable.
     networkHelper = NetworkHelper();
+
+    mountedLoader(_syncFromServer);
+    _aboutMe = DetailsData().aboutMe;
+    _company = DetailsData().company;
+    _jobTitle = DetailsData().job;
+    print(DetailsData().aboutMe);
 
     // this makes sure that if the state is not yet mounted, we don't end up calling setState
     // but instead push the function forward to the addPostFrameCallback function.
@@ -196,7 +193,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                           await GlobalWidgets.showImagePickerDialogue(
                             context: context,
                             onImagePicked: (image) async {
-                              GlobalWidgets.showLoadingIndicator(context: context);
+                              GlobalWidgets.showLoadingIndicator(
+                                  context: context);
 
                               // log
                               print(
@@ -224,16 +222,23 @@ class _ProfileScreenState extends State<ProfileScreen>
                   if (newIndex >= _profileImagesUrls.length) {
                     return;
                   }
+                  //I don't see a need to wait for the server;
+                  setState(() {
+                    // String temp = _profileImagesUrls[
+                    //     oldIndex]; //Swap the elements (I wish there was a native way to do that!)
+                    // _profileImagesUrls[oldIndex] = _profileImagesUrls[newIndex];
+                    // _profileImagesUrls[newIndex] = temp;
+                    final String newString = _profileImagesUrls[oldIndex];
+                    final String oldString = _profileImagesUrls[newIndex];
+
+                    _profileImagesUrls[oldIndex] = oldString;
+                    _profileImagesUrls[newIndex] = newString;
+                  });
+
                   await NetworkHelper().swapProfileImages(
                     oldIndex,
                     newIndex,
-                  ); //I don't see a need to wait for the server;
-                  setState(() {
-                    String temp = _profileImagesUrls[
-                        oldIndex]; //Swap the elements (I wish there was a native way to do that!)
-                    _profileImagesUrls[oldIndex] = _profileImagesUrls[newIndex];
-                    _profileImagesUrls[newIndex] = temp;
-                  });
+                  );
                 },
                 direction: Axis.horizontal,
                 alignment: WrapAlignment.spaceAround,
@@ -241,12 +246,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                 spacing: 12.0,
                 runSpacing: 12.0,
                 children: List<Widget>.generate(
-                  6,
+                  _profileImagesUrls.length,
                   (index) {
-                    final url = index < _profileImagesUrls.length
-                        ? networkHelper
-                            .getProfileImageUrl(_profileImagesUrls[index])
-                        : null;
+                    // final url = index < _profileImagesUrls.length
+                    //     ? networkHelper
+                    //         .getProfileImageUrl(_profileImagesUrls[index])
+                    //     : null;
+                    final url = _profileImagesUrls[index] == null
+                        ? null
+                        : networkHelper
+                            .getProfileImageUrl(_profileImagesUrls[index]);
                     return ReorderableWidget(
                       key: Key('#reorderable_profile$index'),
                       reorderable: index < _profileImagesUrls.length,
@@ -256,15 +265,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                           GlobalWidgets.showLoadingIndicator(context: context);
 
                           await networkHelper.deleteProfileImage(index);
-                          _syncFromServer();
+                          // _syncFromServer();
+                          updateListIndex(index);
 
                           GlobalWidgets.hideLoadingIndicator(context);
                         },
                         onImagePicked: (image) async {
                           GlobalWidgets.showLoadingIndicator(context: context);
 
-                          await networkHelper
-                              .postProfileImage(image);
+                          await networkHelper.postProfileImage(image);
                           _syncFromServer();
 
                           GlobalWidgets.hideLoadingIndicator(context);
@@ -353,9 +362,42 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   void _syncFromServer() async {
     final _resp = await networkHelper.getProfileImages();
+    final _list = _resp;
+    print(_list);
+
+    if (_list?.isEmpty == true) {
+      setStateIfMounted(() {
+        _profileImagesUrls.replaceRange(0, _profileImagesUrls.length, null);
+      });
+      return;
+    }
+
+    for (int i = 0; i < _list.length; i++) {
+      String value;
+
+      // check if index exists in the profile images list.
+      if (_list.length > i) {
+        value = _list[i];
+      }
+
+      setStateIfMounted(() {
+        _profileImagesUrls[i] = value;
+      });
+    }
+  }
+
+  // update the list.
+  void updateListIndex(int index) async {
+    final _resp = await networkHelper.getProfileImages();
+    String value;
+
+    // check if index exists in the profile images list.
+    if (_resp.length > index) {
+      value = _resp[index];
+    }
 
     setStateIfMounted(() {
-      _profileImagesUrls = _resp;
+      _profileImagesUrls[index] = value;
     });
   }
 }
@@ -412,7 +454,7 @@ class _TextEditBlockState extends State<TextEditBlock> {
     _textEditingController =
         widget.controller ?? TextEditingController(text: widget.text ?? '');
 
-    _isOpened = (widget.text != null)&&(widget.text!='');
+    _isOpened = (widget.text != null) && (widget.text != '');
 
     super.initState();
   }
@@ -438,8 +480,8 @@ class _TextEditBlockState extends State<TextEditBlock> {
           InkWell(
             customBorder: CircleBorder(),
             onTap: () {
-              if((_textEditingController.text??'').length>0){
-                print(_textEditingController.text??'No text');
+              if ((_textEditingController.text ?? '').length > 0) {
+                print(_textEditingController.text ?? 'No text');
                 return;
               }
               setState(() {
