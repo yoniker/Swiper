@@ -117,7 +117,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       onTap: onPop ??
                           () {
                             // Pop the current context.
-                            Navigator.of(context).pop();
+                            Navigator.of(context).maybePop();
                           },
                       child: GlobalWidgets.assetImageToIcon(
                         'assets/images/back_arrow.png',

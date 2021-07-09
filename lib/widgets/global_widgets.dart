@@ -1,8 +1,11 @@
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/widgets/gradient_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'clickable.dart';
 
 /// A collection of Global Widgets to be used in various parts of the App.
 class GlobalWidgets {
@@ -471,30 +474,7 @@ class GlobalWidgets {
     @required BuildContext context,
     String message,
   }) async {
-    //
-    // var _defaultTextStyle = TextStyle(
-    //   color: Colors.black,
-    //   fontFamily: 'Nunito',
-    //   fontSize: 15,
-    //   fontWeight: FontWeight.w500,
-    // );
-
-    // var _varryingTextStyle = TextStyle(
-    //   color: Colors.black,
-    //   fontFamily: 'Nunito',
-    //   fontSize: 16,
-    //   fontWeight: FontWeight.w700,
-    // );
-
-    // String _resolveAlertTitle() {
-    //   if (title != null && title != '') {
-    //     return title;
-    //   } else {
-    //     return 'Image Selection';
-    //   }
-    // }
-
-    // show the image-picker dialogue
+    // show the loading indicator
     await showDialog(
       useSafeArea: true,
       barrierDismissible: false,
@@ -502,29 +482,16 @@ class GlobalWidgets {
       builder: (context) {
         return Center(
           child: Container(
-            constraints: BoxConstraints(
-                // minHeight: MediaQuery.of(context).size.height * 0.375,
-                // maxHeight: MediaQuery.of(context).size.height * 0.55,
-                // minWidth: MediaQuery.of(context).size.width * 0.75,
-                // maxWidth: MediaQuery.of(context).size.width * 0.95,
-                ),
+            // constraints: BoxConstraints(
+            //     // minHeight: MediaQuery.of(context).size.height * 0.375,
+            //     // maxHeight: MediaQuery.of(context).size.height * 0.55,
+            //     // minWidth: MediaQuery.of(context).size.width * 0.75,
+            //     // maxWidth: MediaQuery.of(context).size.width * 0.95,
+            //     ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // FractionallySizedBox(
-                //   heightFactor: 0.25,
-                //   widthFactor: 1.0,
-                //   alignment: Alignment.topCenter,
-                //   child: Container(
-                //     alignment: Alignment.center,
-                //     margin: EdgeInsets.all(4.5),
-                //     child: Text(
-                //       ' "${_resolveAlertTitle()}"\n ',
-                //       style: boldTextStyle,
-                //     ),
-                //   ),
-                // ),
                 SpinKitDualRing(
                   color: colorBlend01,
                   size: 35.0,
@@ -548,7 +515,7 @@ class GlobalWidgets {
   ///
   /// This is equivalent to calling [Navigator.pop] from anywhere in the App.
   static void hideLoadingIndicator(BuildContext context) {
-    Navigator.of(context).pop();
+    Navigator.of(context).maybePop();
   }
 
   /// This funtion takes in a Function, `fn` to load, calls the showLoadingIndicator function to show
@@ -561,10 +528,140 @@ class GlobalWidgets {
     assert(context != null,
         'The "context" provided is null! Please provide a non-null context');
     showLoadingIndicator(context: context, message: message);
-    await Future<void>(() {
-      fn?.call();
-    });
+    fn?.call();
     hideLoadingIndicator(context);
     return;
+  }
+}
+
+/// A Widget that can be configured to display information. It also allows for a
+/// Label to be stacked above it.
+class DescriptionBanner extends StatelessWidget {
+  const DescriptionBanner({
+    Key key,
+    @required this.message,
+    this.trailing,
+    this.label,
+    this.textStyle,
+    this.automaticallyImplyTrailing = true,
+    this.enableFeedback = true,
+    this.borderRadius,
+    this.onTap,
+    this.onLongPressed,
+    this.overflow = TextOverflow.ellipsis,
+    this.margin = const EdgeInsets.all(6.0),
+    this.padding = const EdgeInsets.symmetric(horizontal: 6.0, vertical: 12.0),
+  }) : super(key: key);
+
+  /// The message to display in the box.
+  final String message;
+
+  /// The widget to display after the message.
+  ///
+  /// This is usually an icon button that can recieve a tap gesture.
+  final Widget trailing;
+
+  /// The widget to stacked above the card.
+  final Widget label;
+
+  /// Whether or not to display the default trailing widget if no trailing widget
+  /// is provided.
+  final bool automaticallyImplyTrailing;
+
+  /// Whether or not to enable the clicking/tapping of this widget and allow the
+  /// shrinking and unshrinking effect of the clickable widget.
+  final bool enableFeedback;
+
+  /// The callback to be fired when this item is clicked or Tapped.
+  final GestureTapCallback onTap;
+
+  /// The callback to be fired when this item is Long-pressed.
+  final GestureTapCallback onLongPressed;
+
+  /// How the text should behave when there is an overflow.
+  ///
+  /// This is set to [TextOverflow.ellipsis] by default.
+  final TextOverflow overflow;
+
+  /// The textStyle with which to draw the banner message.
+  ///
+  /// This defaults to the value [smallCharStyle] as declared in
+  /// the "color_constant.dart" file in the "/lib/constant/" directory.
+  final TextStyle textStyle;
+
+  /// The padding to apply outside this widget.
+  ///
+  /// Defaults to `EdgeInsets.all(6.0)`.
+  ///
+  /// must not be null.
+  final EdgeInsetsGeometry margin;
+
+  /// The padding to apply inside this widget.
+  ///
+  /// Defaults to `EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0)`.
+  ///
+  /// must not be null.
+  final EdgeInsetsGeometry padding;
+
+  /// The border Radius to apply to the border of this widget.
+  ///
+  /// If null defaults to `BorderRadius.circular(13.0)`
+  final BorderRadiusGeometry borderRadius;
+
+  @override
+  Widget build(BuildContext context) {
+    // If the trailing is not provided we return a default
+    // trailing "chevron_left" Icon.
+    Widget _trailing = trailing;
+
+    // If automatically imply trailing is true
+    // we set the value of _trailing to the default trailing
+    // widget.
+    if (automaticallyImplyTrailing) {
+      _trailing ??= Icon(
+        CupertinoIcons.right_chevron,
+        size: 30.0,
+        color: colorBlend02,
+      );
+    }
+
+    return Clickable(
+      onTap: onTap,
+      onLongPressed: onLongPressed,
+      enableFeedback: enableFeedback && onTap != null,
+      child: Stack(
+        children: [
+          Container(
+          margin: margin,
+            constraints: BoxConstraints(
+              minHeight: 75.0,
+              maxHeight: 90.5,
+              minWidth: 100.0,
+              maxWidth: 700.0,
+            ),
+            decoration: BoxDecoration(
+              color: darkCardColor,
+              borderRadius: borderRadius ?? BorderRadius.circular(13.0),
+            ),
+            child: Padding(
+              padding: padding,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      message,
+                      overflow: overflow,
+                      style: textStyle ?? mediumBoldedCharStyle,
+                    ),
+                  ),
+                  if (_trailing != null) _trailing,
+                ],
+              ),
+            ),
+          ),
+          if (label != null) label,
+        ],
+      ),
+    );
   }
 }

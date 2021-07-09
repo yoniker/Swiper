@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 
 final Color darkCardColor = Color(0xFFEFEFF1);
 final Color darkTextColor = Color(0xFF747474);
-final Color blackTextColor = Color(0xFF747474);
+final Color blackTextColor = Color(0xFF000000);
 final Color whiteCardColor = Color(0xFFFFFFFF);
+final Color whiteTextColor = Color(0xFFFFFFFF);
 final Color linkColor = Color(0xFF389CEB);
 // 
 final Color activeColor = Colors.blue;
@@ -68,6 +69,20 @@ final TextStyle smallCharStyle = TextStyle(
   fontFamily: 'Nunito',
   fontSize: 13,
   fontWeight: FontWeight.w500,
+);
+
+final TextStyle smallBoldedCharStyle = TextStyle(
+  color: darkTextColor,
+  fontFamily: 'Nunito',
+  fontSize: 13,
+  fontWeight: FontWeight.w700,
+);
+
+final TextStyle mediumBoldedCharStyle = TextStyle(
+  color: darkTextColor,
+  fontFamily: 'Nunito',
+  fontSize: 15,
+  fontWeight: FontWeight.w700,
 );
 
 final TextStyle headerStyle = TextStyle(

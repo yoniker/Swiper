@@ -68,6 +68,9 @@ class BetaIconPaths {
 
   // ### Miscelleneous
 
+  /// The path to the A.I banner-label in the Details screen of the Match Tab.
+  static const String aiBannerLabelPath = 'assets/images/ai_label.png';
+
   /// The path to the blue-colored notification Icon.
   static const String notificationIconFilled01 = 'assets/images/notification_icon_filled.png';
 

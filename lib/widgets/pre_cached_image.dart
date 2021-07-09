@@ -3,31 +3,40 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
+///
+const kFadeInDuration = const Duration(milliseconds: 800);
+
 /// An image Widget with caching capabilities making sure that the UI loads
 /// faster.
 class PrecachedImage extends StatelessWidget {
   const PrecachedImage({
     Key key,
     @required this.image,
+    this.fadeIn = true,
+    this.shouldPrecache = true,
     this.color,
     this.fit = BoxFit.cover,
-    this.errorWidget,
+    this.errorBuilder,
     this.height,
     this.width,
   }) : super(key: key);
 
   final ImageProvider image;
+  final bool fadeIn;
+  final bool shouldPrecache;
   final Color color;
   final BoxFit fit;
-  final Widget errorWidget;
+  final Widget Function(BuildContext) errorBuilder;
   final double height;
   final double width;
 
   PrecachedImage.asset({
     @required String imageURI,
+    this.fadeIn = true,
+    this.shouldPrecache = true,
     this.fit = BoxFit.cover,
     this.color,
-    this.errorWidget,
+    this.errorBuilder,
     this.width,
     this.height,
     double scale = 4.0,
@@ -38,9 +47,11 @@ class PrecachedImage extends StatelessWidget {
 
   PrecachedImage.network({
     @required String imageURL,
+    this.fadeIn = true,
+    this.shouldPrecache = true,
     this.fit = BoxFit.cover,
     this.color,
-    this.errorWidget,
+    this.errorBuilder,
     this.width,
     this.height,
     double scale = 4.0,
@@ -51,9 +62,11 @@ class PrecachedImage extends StatelessWidget {
 
   PrecachedImage.file({
     @required String imageURL,
+    this.fadeIn = true,
+    this.shouldPrecache = true,
     this.fit = BoxFit.cover,
     this.color,
-    this.errorWidget,
+    this.errorBuilder,
     this.width,
     this.height,
     double scale = 4.0,
@@ -62,11 +75,28 @@ class PrecachedImage extends StatelessWidget {
           scale: scale,
         ).image;
 
-  PrecachedImage.memory({
-    @required Uint8List bytes,
+  PrecachedImage.rawFile(
+    File file, {
+    this.fadeIn = true,
+    this.shouldPrecache = true,
     this.fit = BoxFit.cover,
     this.color,
-    this.errorWidget,
+    this.errorBuilder,
+    this.width,
+    this.height,
+    double scale = 4.0,
+  }) : this.image = Image.file(
+          file,
+          scale: scale,
+        ).image;
+
+  PrecachedImage.memory({
+    @required Uint8List bytes,
+    this.fadeIn = true,
+    this.shouldPrecache = true,
+    this.fit = BoxFit.cover,
+    this.color,
+    this.errorBuilder,
     this.width,
     this.height,
     double scale = 4.0,
@@ -77,10 +107,27 @@ class PrecachedImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // pre-cache image.
-    precacheImage(image, context);
+    // pre-cache image when "shouldPrecache" is set to true.
+    if (shouldPrecache) precacheImage(image, context);
 
-    return Image(
+    ImageFrameBuilder _frameBuilder;
+
+    if (fadeIn) {
+      _frameBuilder = (BuildContext context, Widget child, int frame,
+          bool wasSynchronouslyLoaded) {
+        if (wasSynchronouslyLoaded) {
+          return child;
+        }
+        return AnimatedOpacity(
+          child: child,
+          opacity: frame == null ? 0 : 1,
+          duration: kFadeInDuration,
+          curve: Curves.easeOut,
+        );
+      };
+    }
+
+    var current = Image(
       image: image,
       color: color,
       fit: fit,
@@ -88,8 +135,11 @@ class PrecachedImage extends StatelessWidget {
       width: width,
       errorBuilder: (context, error, stackTrace) {
         // return the "errorWidget"
-        return errorWidget ?? SizedBox.shrink();
+        return errorBuilder != null ? errorBuilder.call(context) : SizedBox.shrink();
       },
+      frameBuilder: _frameBuilder,
     );
+
+    return current;
   }
 }

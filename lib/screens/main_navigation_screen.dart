@@ -1,11 +1,10 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/main_messages_screen.dart';
+import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
-import 'package:betabeta/tabs/profile_tab.dart';
 import 'package:betabeta/tabs/profile_tab_new.dart';
-import 'package:betabeta/widgets/global_widgets.dart';
+import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
 
 class MainNavigationScreen extends StatefulWidget {
@@ -29,7 +28,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   List<Widget> pages = <Widget>[
     // ProfileTab(),
     ProfileTabRedo(),
-    MatchScreen(key: Key('Match Screen'),),
+    MatchScreen(
+      key: Key('Match Screen'),
+    ),
     ViewLikesScreen(),
     MainMessagesScreen(),
   ];
@@ -94,34 +95,42 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         },
         items: [
           BottomNavigationBarItem(
-            icon: GlobalWidgets.assetImageToIcon(
-                BetaIconPaths.inactiveProfileTabIconPath),
-            activeIcon: GlobalWidgets.assetImageToIcon(
-                BetaIconPaths.activeProfileTabIconPath),
+            icon: PrecachedImage.asset(
+              imageURI: BetaIconPaths.inactiveProfileTabIconPath,
+            ),
+            activeIcon: PrecachedImage.asset(
+              imageURI: BetaIconPaths.activeProfileTabIconPath,
+            ),
             label: 'profile',
             tooltip: 'Profile',
           ),
           BottomNavigationBarItem(
-            icon: GlobalWidgets.assetImageToIcon(
-                BetaIconPaths.inactiveMatchTabIconPath),
-            activeIcon:
-                GlobalWidgets.assetImageToIcon(BetaIconPaths.activeMatchTabIconPath),
+            icon: PrecachedImage.asset(
+              imageURI: BetaIconPaths.inactiveMatchTabIconPath,
+            ),
+            activeIcon: PrecachedImage.asset(
+              imageURI: BetaIconPaths.activeMatchTabIconPath,
+            ),
             label: 'match',
             tooltip: 'Match',
           ),
           BottomNavigationBarItem(
-            icon: GlobalWidgets.assetImageToIcon(
-                BetaIconPaths.inactiveLikesTabIconPath),
-            activeIcon:
-                GlobalWidgets.assetImageToIcon(BetaIconPaths.activeLikesTabIconPath),
+            icon: PrecachedImage.asset(
+              imageURI: BetaIconPaths.inactiveLikesTabIconPath,
+            ),
+            activeIcon: PrecachedImage.asset(
+              imageURI: BetaIconPaths.activeLikesTabIconPath,
+            ),
             label: 'likes',
             tooltip: 'Likes',
           ),
           BottomNavigationBarItem(
-            icon: GlobalWidgets.assetImageToIcon(
-                BetaIconPaths.inactiveMessagesTabIconPath),
-            activeIcon: GlobalWidgets.assetImageToIcon(
-                BetaIconPaths.activeMessagesTabIconPath),
+            icon: PrecachedImage.asset(
+              imageURI: BetaIconPaths.inactiveMessagesTabIconPath,
+            ),
+            activeIcon: PrecachedImage.asset(
+              imageURI: BetaIconPaths.activeMessagesTabIconPath,
+            ),
             label: 'messages',
             tooltip: 'Messages',
           ),

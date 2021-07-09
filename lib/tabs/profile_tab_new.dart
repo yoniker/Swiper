@@ -16,7 +16,8 @@ class ProfileTabRedo extends StatefulWidget {
   _ProfileTabRedoState createState() => _ProfileTabRedoState();
 }
 
-class _ProfileTabRedoState extends State<ProfileTabRedo> {
+class _ProfileTabRedoState extends State<ProfileTabRedo>
+    with AutomaticKeepAliveClientMixin {
   // builds the profile picture display.
   Widget _profilePicDisplay(String imageUrl) {
     // when the time comes we use "PrecachedImage.network" instead since we
@@ -102,6 +103,9 @@ class _ProfileTabRedoState extends State<ProfileTabRedo> {
 
   @override
   Widget build(BuildContext context) {
+    // Implementation for [AutomaticKeepAliveClientMixin].
+    super.build(context);
+
     return Scaffold(
       backgroundColor: darkCardColor,
       appBar: CustomAppBar(
@@ -243,6 +247,9 @@ class _ProfileTabRedoState extends State<ProfileTabRedo> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 ///
@@ -256,7 +263,7 @@ class NotificationBox extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
   }) : super(key: key);
 
-  /// The message to dispaly in the box.
+  /// The message to display in the box.
   final String message;
 
   /// The callback to be fired when this item is clicked or Tapped.
@@ -277,7 +284,7 @@ class NotificationBox extends StatelessWidget {
   final EdgeInsetsGeometry padding;
 
   /// The border Radius to apply to the border of this widget.
-  /// 
+  ///
   /// If null defaults to `BorderRadius.circular(13.0)`
   final BorderRadiusGeometry borderRadius;
 

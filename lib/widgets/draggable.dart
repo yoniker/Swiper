@@ -6,6 +6,7 @@ import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/widgets/custom_scrollbar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/overlay_builder.dart';
+import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -335,7 +336,7 @@ class _DraggableCardState extends State<DraggableCard>
 
         slideOutDirection =
             isInLeftRegion ? SlideDirection.left : SlideDirection.right;
-        
+
         // reset the scroll position.
         _resetViewport();
       } else if (isInTopRegion) {
@@ -391,7 +392,7 @@ class _DraggableCardState extends State<DraggableCard>
   }
 
   /// Reset the scroll position of the viewport.
-  /// 
+  ///
   /// This essetially calls the  "animateTo" function on the scrollController.
   void _resetViewport() {
     scrollController.animateTo(
@@ -579,7 +580,8 @@ class _DraggableCardState extends State<DraggableCard>
                                     //
                                     // This is just a way one can add a grouped List of Widgets within another
                                     // super or parent list.
-                                    ...buildMatchDetails(widget.mactchProfile),
+                                    ...buildMatchDetails(widget.mactchProfile,
+                                        context: context),
 
                                     // build the Match Control.
                                     _matchControls(),
@@ -593,6 +595,7 @@ class _DraggableCardState extends State<DraggableCard>
                     Align(
                       alignment: Alignment.topRight,
                       child: CustomScrollBar(
+                        key: UniqueKey(),
                         scrollController: scrollController,
                         trackHeight: 80.0,
                         trackWidth: 8.5,
@@ -625,45 +628,69 @@ enum FastSwipe { notFastSwipe, Right, Left }
 /// of the Overlay being display/stacked on the screen which also makes it drag when we drag.swipe
 /// left or right.
 ///
-List<Widget> buildMatchDetails(Profile profile) {
+List<Widget> buildMatchDetails(
+  Profile profile, {
+  @required BuildContext context,
+}) {
+  final _imageUrls = profile.imageUrls ?? <String>[];
+
+  // builds the achivement items such as loves and stars.
+  Widget _buildAchievementItem(String iconURI, String value) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 2.0),
+      child: Row(
+        children: [
+          Text(
+            value,
+            style: smallCharStyle.copyWith(color: darkTextColor),
+          ),
+          SizedBox(width: 2.0),
+          PrecachedImage.asset(
+            imageURI: iconURI,
+          ),
+        ],
+      ),
+    );
+  }
+
   // Return a List of Widgets.
   return [
-    Container(
-      alignment: Alignment.centerLeft,
-      padding: EdgeInsets.only(
-        top: 16.0,
-        left: 5.0,
-        right: 5.0,
-      ),
-      child: Text(
-        'I am ${profile.username}, ${profile.age}',
-        textAlign: TextAlign.right,
-        style: boldTextStyle.copyWith(fontSize: 18.0),
-      ),
+    SizedBox(height: 16.0),
+    Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5.0),
+            child: Text(
+              '${profile.username}, ${profile.age}',
+              textAlign: TextAlign.left,
+              // overflow: TextOverflow.ellipsis,
+              style: boldTextStyle.copyWith(fontSize: 18.0),
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 5.0),
+          child: Row(
+            children: [
+              _buildAchievementItem(BetaIconPaths.heartIconFilled01, '25k+'),
+              _buildAchievementItem(BetaIconPaths.starIconFilled01, '15k+'),
+            ],
+          ),
+        ),
+      ],
     ),
     Container(
       alignment: Alignment.centerLeft,
-      padding: EdgeInsets.only(
-        top: 8.0,
-        bottom: 12.0,
-        left: 5.0,
-        right: 5.0,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 5.0),
       child: Text(
         (profile.headline != null) ? profile.headline : '',
-        textAlign: TextAlign.right,
+        textAlign: TextAlign.left,
         style: defaultTextStyle,
       ),
     ),
-    Divider(
-      color: darkCardColor,
-      indent: 2.0,
-      endIndent: 2.0,
-      thickness: 2.8,
-      height: 12.5,
-    ),
-    // Note we can esily replace this implementation with Two Text Widgets
-    // aligned in a Column.
     Container(
       alignment: Alignment.centerLeft,
       padding: EdgeInsets.only(
@@ -672,49 +699,182 @@ List<Widget> buildMatchDetails(Profile profile) {
         left: 5.0,
         right: 5.0,
       ),
-      child: RichText(
-        textAlign: TextAlign.left,
-        text: TextSpan(style: boldTextStyle, children: [
-          TextSpan(
-            // Note: We are using a single new line character here to allow for
-            // just the spacing we want between the [TextSpan]s.
-            text: 'Description\n',
-            style: boldTextStyle.copyWith(fontSize: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Description',
+            style: subTitleStyle,
           ),
-          TextSpan(
-            text: (profile.description != null)
+          Divider(
+            color: darkCardColor,
+            indent: 2.0,
+            endIndent: 2.0,
+            thickness: 2.8,
+            height: 8.0,
+          ),
+          Text(
+            (profile.description != null)
                 ? profile.description
                 : 'No Description available',
+            style: mediumCharStyle,
           ),
-        ]),
+        ],
       ),
     ),
-    // Container(
-    //   alignment: Alignment.centerLeft,
-    //   padding: EdgeInsets.only(top: 8.0),
-    //   child: Text(
-    //     'Description',
-    //     style: boldedTextStyle.copyWith(fontSize: 24),
-    //   ),
-    // ),
-    // Container(
-    //   alignment: Alignment.centerLeft,
-    //   padding: EdgeInsets.only(top: 8.0, bottom: 12.0),
-    //   child: Text(
-    //     profile.description,
-    //     style: boldedTextStyle,
-    //   ),
-    // ),
     Container(
       alignment: Alignment.centerRight,
       padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
-      child: Text(
-        (profile.location != null)
-            ? 'Lives in ${profile.location}'
-            : 'Current Location not available',
-        textAlign: TextAlign.right,
-        style: defaultTextStyle,
+      child: Row(
+        children: [
+          PrecachedImage.asset(imageURI: BetaIconPaths.locationIconFilled01),
+          SizedBox(width: 5.6),
+          Text(
+            (profile.location != null)
+                ? 'Lives in ${profile.location}'
+                : 'Current Location not available',
+            textAlign: TextAlign.right,
+            style: defaultTextStyle,
+          ),
+        ],
+      ),
+    ),
+    Container(
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(
+        top: 8.0,
+        bottom: 12.0,
+        left: 5.0,
+        right: 5.0,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Profile Images',
+            style: subTitleStyle,
+          ),
+          Divider(
+            color: darkCardColor,
+            indent: 2.0,
+            endIndent: 2.0,
+            thickness: 2.8,
+            height: 8.0,
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.14,
+            child: !(_imageUrls.length > 0)
+                ? Center(
+                    child: Text(
+                      'No Profile image Available for match',
+                      style: mediumBoldedCharStyle,
+                    ),
+                  )
+                : ListView.separated(
+                  key: UniqueKey(),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _imageUrls.length,
+                    itemBuilder: (cntx, index) {
+                      final String _url = _baseToNetwork(_imageUrls[index]);
+                      return SizedBox(
+                        height: 80.5,
+                        width: 100.0,
+                        child: Card(
+                          margin: EdgeInsets.all(6.0),
+                          clipBehavior: Clip.antiAlias,
+                          elevation: 2.1,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          ),
+                          child: PrecachedImage.network(
+                            imageURL: _url,
+                            fadeIn: true,
+                            shouldPrecache: false,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    },
+                    separatorBuilder: (cntx, index) {
+                      return SizedBox(width: 16.0);
+                    },
+                  ),
+          ),
+        ],
+      ),
+    ),
+    Container(
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(
+        top: 8.0,
+        bottom: 12.0,
+        left: 5.0,
+        right: 5.0,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Artificial Intelligence',
+            style: subTitleStyle,
+          ),
+          Divider(
+            color: darkCardColor,
+            indent: 2.0,
+            endIndent: 2.0,
+            thickness: 2.8,
+            height: 8.0,
+          ),
+          DescriptionBanner(
+            // TODO(Backend) Add a field "gender" to the profile Interface:
+            message: 'See what a baby with her will look like',
+            overflow: null,
+            onTap: () {
+              print('GO TO VIEW PROGENY PAGE!');
+            },
+            label: Align(
+              alignment: Alignment(-1.02, -2.0),
+              child: PrecachedImage.asset(
+                imageURI: BetaIconPaths.aiBannerLabelPath,
+              ),
+            ),
+          ),
+          DescriptionBanner(
+            message: 'Say “Hi” to her',
+            overflow: null,
+            trailing: Container(
+              margin: EdgeInsets.symmetric(horizontal: 4.0),
+              padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.0),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: mainColorGradientList.colors,
+                ),
+              ),
+              child: RichText(
+                text: TextSpan(
+                  style: subHeaderStyle.copyWith(color: whiteTextColor),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: '70% ',
+                      style: subTitleStyle.copyWith(color: whiteTextColor),
+                    ),
+                    TextSpan(text: 'match'),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     ),
   ];
+}
+
+/// Returns a string with `https://` appended to the back of the `base` given.
+String _baseToNetwork(String base) {
+  final String _http = 'https://';
+  return _http + base;
 }

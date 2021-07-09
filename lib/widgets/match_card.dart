@@ -56,13 +56,14 @@ class _MatchCardState extends State<MatchCard> {
     // This thus helps creates a kind of sizing effect to our text.
     double getRelativeTextSize(num baseValue) {
       // get the aspect Ratio of the Device i.e. the length dived by the breadth (something of that sort)
-      double multiplicativeRatio = MediaQuery.of(context).size.height / 2 ;
+      double multiplicativeRatio = MediaQuery.of(context).size.height / 2;
 
       // clamp the value to a range between "0.0" and the supplied baseValue
       double clamppedValue = (multiplicativeRatio).clamp(
-        0.0,
-        1.0,
-      ) * baseValue.toDouble();
+            0.0,
+            1.0,
+          ) *
+          baseValue.toDouble();
 
       return clamppedValue;
     }
@@ -82,17 +83,14 @@ class _MatchCardState extends State<MatchCard> {
           ),
           borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(16.0),
-          )
-      ),
+          )),
       child: Container(
         alignment: Alignment.centerLeft,
         child: Column(
           children: [
+            Expanded(flex: 1, child: SizedBox()),
             Expanded(
-                flex:1,
-                child: SizedBox()),
-            Expanded(
-              flex:1,
+              flex: 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +102,9 @@ class _MatchCardState extends State<MatchCard> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: boldTextStyle.copyWith(
-                          color: Colors.white, fontSize: getRelativeTextSize(24)),
+                        color: Colors.white,
+                        fontSize: getRelativeTextSize(24),
+                      ),
                     ),
                   ),
                   Padding(
@@ -114,7 +114,9 @@ class _MatchCardState extends State<MatchCard> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: boldTextStyle.copyWith(
-                          color: Colors.white, fontSize: getRelativeTextSize(16)),
+                        color: Colors.white,
+                        fontSize: getRelativeTextSize(16),
+                      ),
                     ),
                   ),
                 ],
@@ -124,8 +126,6 @@ class _MatchCardState extends State<MatchCard> {
         ),
       ),
     );
-
-
   }
 
   /// The revert button placed over each MatchCard which Functions to bring back the
@@ -174,7 +174,6 @@ class _MatchCardState extends State<MatchCard> {
     );
   }
 }
-
 
 /// A Widget to display a set of images.
 /// Used by the [MatchCard] widget to display images of
