@@ -60,7 +60,7 @@ class PrecachedImage extends StatelessWidget {
           scale: scale,
         ).image;
 
-  PrecachedImage.file({
+  PrecachedImage.uri({
     @required String imageURL,
     this.fadeIn = true,
     this.shouldPrecache = true,
