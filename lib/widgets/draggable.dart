@@ -580,8 +580,10 @@ class _DraggableCardState extends State<DraggableCard>
                                     //
                                     // This is just a way one can add a grouped List of Widgets within another
                                     // super or parent list.
-                                    ...buildMatchDetails(widget.mactchProfile,
-                                        context: context),
+                                    ...buildMatchDetails(
+                                      widget.mactchProfile,
+                                      context: context,
+                                    ),
 
                                     // build the Match Control.
                                     _matchControls(),
@@ -771,7 +773,7 @@ List<Widget> buildMatchDetails(
                     ),
                   )
                 : ListView.separated(
-                  key: UniqueKey(),
+                    key: UniqueKey(),
                     scrollDirection: Axis.horizontal,
                     itemCount: _imageUrls.length,
                     itemBuilder: (cntx, index) {
