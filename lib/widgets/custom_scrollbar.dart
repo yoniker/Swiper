@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:betabeta/utils/mixins.dart';
 import 'package:flutter/material.dart';
 
 /// The default Track color used in painting the CustomScrollBar's Track.
@@ -116,7 +117,7 @@ class CustomScrollBar extends StatefulWidget {
 }
 
 class _CustomScrollBarState extends State<CustomScrollBar>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, MountedStateMixin<CustomScrollBar> {
   // The amount of pixes by which the scroll controller was off.
   double derivedPosition = 0.0;
 
@@ -142,10 +143,10 @@ class _CustomScrollBarState extends State<CustomScrollBar>
         // the range "0.0 to 1.0"
         var originalOffset =
             (currentPos.pixels / currentPos.maxScrollExtent) * 1.0;
-        if (mounted)
-          setState(() {
-            derivedPosition = originalOffset;
-          });
+
+        setStateIfMounted(() {
+          derivedPosition = originalOffset;
+        });
 
         // For the Fade animation.
         var isScrollingNotifier =
@@ -182,6 +183,9 @@ class _CustomScrollBarState extends State<CustomScrollBar>
 
   // handles wheter to show or hide the CustomScrollBar at any point in time.
   toggleVisibility() {
+    // return early if the state is no longer mounted.
+    if (!mounted) return;
+
     var isScrollingNotifier =
         widget?.scrollController?.position?.isScrollingNotifier;
 
@@ -190,12 +194,12 @@ class _CustomScrollBarState extends State<CustomScrollBar>
     // check if scrolling is active (under way).
     if (isScrolling) {
       // stop any active animation.
-      if (_opacityAnimationController.isAnimating) {
+      if (_opacityAnimationController.isAnimating && mounted) {
         _opacityAnimationController.reset();
       }
 
       // forward the animation if dismissed.
-      if (_opacityAnimationController.isDismissed) {
+      if (_opacityAnimationController.isDismissed && mounted) {
         _opacityAnimationController.forward();
       }
     }
@@ -203,7 +207,7 @@ class _CustomScrollBarState extends State<CustomScrollBar>
     // if the ScrollView is no longer scrolling (inactive)
     else if (isScrolling == false) {
       // cancel the timer if it is still active and assign a new value to the timer.
-      if (_fadeOutDebouncer?.isActive == true) {
+      if (_fadeOutDebouncer?.isActive == true && mounted) {
         _fadeOutDebouncer?.cancel();
       }
 
@@ -225,7 +229,9 @@ class _CustomScrollBarState extends State<CustomScrollBar>
                 _opacityAnimationController.isCompleted == true &&
                 _opacityAnimationController.isDismissed == false &&
                 _opacityAnimationController.isAnimating == false) {
-          _opacityAnimationController.reverse();
+          ifMounted(() {
+            _opacityAnimationController.reverse();
+          });
         }
       });
     }
@@ -233,9 +239,8 @@ class _CustomScrollBarState extends State<CustomScrollBar>
 
   @override
   void dispose() {
-    // dispose the Scroll Controller if not diposed by the parent Widget.
-    // widget.scrollController?.dispose();
-
+    // cancel the timer
+    _fadeOutDebouncer?.cancel();
     // dispose the Animation Controller
     _opacityAnimationController.dispose();
 

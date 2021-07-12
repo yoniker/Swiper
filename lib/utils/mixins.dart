@@ -28,4 +28,9 @@ mixin MountedStateMixin<T extends StatefulWidget> on State<T> {
       });
     }
   }
+
+  /// Runs the given function/computation if the StatefulWidget is `mounted`.
+  ifMounted(void Function() fn) {
+    if (mounted) fn.call();
+  }
 }
