@@ -4,88 +4,88 @@ import 'package:flutter/material.dart';
 // These final variables are used in making most of the
 // UI for the Settings Screen.
 
-final Color darkCardColor = Color(0xFFEFEFF1);
-final Color darkTextColor = Color(0xFF747474);
+const Color darkCardColor = Color(0xFFEFEFF1);
+const Color darkTextColor = Color(0xFF747474);
 final Color blackTextColor = Color(0xFF000000);
 final Color whiteCardColor = Color(0xFFFFFFFF);
 final Color whiteTextColor = Color(0xFFFFFFFF);
+const defaultShadowColor = Color(0x99999999);
 final Color linkColor = Color(0xFF389CEB);
-// 
+//
 final Color activeColor = Colors.blue;
 final Color disabledColor = Colors.grey;
 //
-final Color colorBlend01 = Color(0xFFED3C5C);
-final Color colorBlend02 = Color(0xFFE1189D);
+const Color colorBlend01 = Color(0xFFED3C5C);
+const Color colorBlend02 = Color(0xFFE1189D);
 
 final Color blue = Color(0xFF389CEB);
 final Color yellowishOrange = Color(0xFFF99442);
 
 // global textstyles
-final TextStyle defaultTextStyle = TextStyle(
+const TextStyle defaultTextStyle = TextStyle(
   color: Colors.black,
   fontFamily: 'Nunito',
   fontSize: 16,
   fontWeight: FontWeight.w500,
 );
 
-final TextStyle boldTextStyle = TextStyle(
+const TextStyle boldTextStyle = TextStyle(
   color: Colors.black,
   fontFamily: 'Nunito',
   fontSize: 18,
   fontWeight: FontWeight.w700,
 );
 
-final TextStyle titleStyle = TextStyle(
+const TextStyle titleStyle = TextStyle(
   color: Colors.black,
   fontFamily: 'Nunito',
   fontSize: 22,
   fontWeight: FontWeight.w700,
 );
 
-final TextStyle subTitleStyle = TextStyle(
+const TextStyle subTitleStyle = TextStyle(
   color: Colors.black,
   fontFamily: 'Nunito',
   fontSize: 18,
   fontWeight: FontWeight.w700,
 );
 
-final TextStyle subHeaderStyle = TextStyle(
+const TextStyle subHeaderStyle = TextStyle(
   color: Colors.black,
   fontFamily: 'Nunito',
   fontSize: 15,
   fontWeight: FontWeight.w500,
 );
 
-final TextStyle mediumCharStyle = TextStyle(
+const TextStyle mediumCharStyle = TextStyle(
   color: Colors.black,
   fontFamily: 'Nunito',
   fontSize: 15,
   fontWeight: FontWeight.w500,
 );
 
-
-final TextStyle smallCharStyle = TextStyle(
+const TextStyle smallCharStyle = TextStyle(
   color: Colors.black,
   fontFamily: 'Nunito',
   fontSize: 13,
   fontWeight: FontWeight.w500,
 );
 
-final TextStyle smallBoldedCharStyle = TextStyle(
+const TextStyle smallBoldedCharStyle = TextStyle(
   color: darkTextColor,
   fontFamily: 'Nunito',
   fontSize: 13,
   fontWeight: FontWeight.w700,
 );
 
-final TextStyle mediumBoldedCharStyle = TextStyle(
+const TextStyle mediumBoldedCharStyle = TextStyle(
   color: darkTextColor,
   fontFamily: 'Nunito',
   fontSize: 15,
   fontWeight: FontWeight.w700,
 );
 
-final TextStyle headerStyle = TextStyle(
+const TextStyle headerStyle = TextStyle(
   color: Colors.black,
   fontFamily: 'Nunito',
   fontSize: 24,
@@ -94,7 +94,7 @@ final TextStyle headerStyle = TextStyle(
 
 //<@SUGN> This is an optional Gradient variable to be used in conjuction with
 // the `GradientWidget` found in the {widgets} folder.
-final LinearGradient mainColorGradientList = LinearGradient(
+const LinearGradient mainColorGradientList = const LinearGradient(
   colors: <Color>[
     colorBlend01,
     colorBlend02,

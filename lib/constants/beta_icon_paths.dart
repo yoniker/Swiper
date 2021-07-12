@@ -46,7 +46,8 @@ class BetaIconPaths {
   static const String profileIcon = 'assets/images/profile_icon.png';
 
   /// The path to the Draft Message Button Icon.
-  static const String draftMesssageIcon = 'assets/images/draft_message_icon.png';
+  static const String draftMesssageIcon =
+      'assets/images/draft_message_icon.png';
 
   /// The path to the Draft Message Button Icon.
   static const String dislikeMatchIcon = 'assets/images/dislike_match_icon.png';
@@ -72,7 +73,8 @@ class BetaIconPaths {
   static const String aiBannerLabelPath = 'assets/images/ai_label.png';
 
   /// The path to the blue-colored notification Icon.
-  static const String notificationIconFilled01 = 'assets/images/notification_icon_filled.png';
+  static const String notificationIconFilled01 =
+      'assets/images/notification_icon_filled.png';
 
   /// The path to the redBlend-colored heart Icon.
   static const String heartIconFilled01 = 'assets/images/heart_icon_filled.png';
@@ -81,14 +83,20 @@ class BetaIconPaths {
   static const String likeIconFilled01 = 'assets/images/like_icon_filled.png';
 
   /// The path to the redBlend-colored location Icon.
-  static const String locationIconFilled01 = 'assets/images/location_icon_filled.png';
+  static const String locationIconFilled01 =
+      'assets/images/location_icon_filled.png';
 
   /// The path to the yellow-colored notification Icon.
-  static const String profileIconFilled01 = 'assets/images/profile_icon_filled.png';
+  static const String profileIconFilled01 =
+      'assets/images/profile_icon_filled.png';
 
   /// The path to the redBlend-colored settings Icon.
-  static const String settingsIconFilled01 = 'assets/images/settings_icon_filled.png';
+  static const String settingsIconFilled01 =
+      'assets/images/settings_icon_filled.png';
 
   /// The path to the yellow-colored star Icon.
   static const String starIconFilled01 = 'assets/images/star_icon.png';
+
+  /// The path to the facebook blue-icon logo.
+  static const String facebookLogo = 'assets/images/facebook_icon.png';
 }

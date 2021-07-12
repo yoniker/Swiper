@@ -534,6 +534,164 @@ class GlobalWidgets {
   }
 }
 
+///
+class ActionBox extends StatelessWidget {
+  const ActionBox({
+    Key key,
+    this.trailing,
+    @required this.message,
+    @required this.onTap,
+    this.backgroundColor,
+    this.shadowColor,
+    this.overflow = TextOverflow.ellipsis,
+    this.useSplash = true,
+    this.automaticallyImplyTrailing = true,
+    this.elevation = 2.1,
+    this.clipBehavior = Clip.hardEdge,
+    this.messageStyle,
+    this.borderRadius,
+    this.margin = const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+    this.padding = const EdgeInsets.symmetric(horizontal: 14.0, vertical: 16.0),
+  }) : super(key: key);
+
+  /// The message to display in the box.
+  final String message;
+
+  /// The widget to display after the message.
+  ///
+  /// This is usually an icon button that can recieve a tap gesture.
+  final Widget trailing;
+
+  /// The callback to be fired when this item is clicked or Tapped.
+  final GestureTapCallback onTap;
+
+  /// Whether or not to wrap the whole action button in an InkWell
+  /// widget to provided gesture ans splash reaction.
+  ///
+  /// Note if this is true, the default trailing widget will no longer respond to gesture taps
+  /// instead the tap callback will be invoked whenever the box it itself tapped (anywhere).
+  final bool useSplash;
+
+  /// Whether or not to display the default trailing widget if no trailing widget
+  /// is provided.
+  ///
+  /// Note that if no trailing widget is provided and this is false nothing will be
+  /// displayed as the trailing widget.
+  final bool automaticallyImplyTrailing;
+
+  /// The padding to apply outside this widget.
+  ///
+  /// Defaults to `EdgeInsets.all(6.0)`.
+  ///
+  /// must not be null.
+  final EdgeInsetsGeometry margin;
+
+  /// By how much to elevate the box.
+  ///
+  /// Defaults to `2.1`.
+  final double elevation;
+
+  /// How the text should behave when there is an overflow.
+  ///
+  /// This is set to [TextOverflow.ellipsis] by default.
+  final TextOverflow overflow;
+
+  /// How the box should be clipped.
+  final Clip clipBehavior;
+
+  /// The padding to apply inside this widget.
+  ///
+  /// Defaults to `EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0)`.
+  ///
+  /// must not be null.
+  final EdgeInsetsGeometry padding;
+
+  /// The border Radius to apply to the border of this widget.
+  ///
+  /// If null defaults to `BorderRadius.circular(13.0)`
+  final BorderRadiusGeometry borderRadius;
+
+  /// The color with which to paint the notification box background.
+  ///
+  /// Defaults to the color provided by the [darkCardColor] const in "/lib/constant/color_constants.dart".
+  final Color backgroundColor;
+
+  /// The color with which to paint the shadow behind the notification box.
+  ///
+  /// Defaults to the color provided by the [defaultShadowColor] const in "/lib/constant/color_constants.dart".
+  final Color shadowColor;
+
+  /// The [TestStyle] to assign to the message Text displayed in the box.
+  ///
+  /// Default to the TextStyle defined by the [smallCharStyle] const in "/lib/constant/color_constants.dart".
+  final TextStyle messageStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget _trailing = trailing;
+
+    if (automaticallyImplyTrailing && _trailing == null) {
+      _trailing = useSplash
+          ? Icon(
+              CupertinoIcons.right_chevron,
+              size: 30.0,
+              color: colorBlend02,
+            )
+          : IconButton(
+              icon: Icon(
+                CupertinoIcons.right_chevron,
+                size: 30.0,
+                color: colorBlend02,
+              ),
+              onPressed: onTap,
+            );
+    }
+
+    Widget current = Padding(
+      padding: padding,
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              message,
+              overflow: TextOverflow.ellipsis,
+              style: messageStyle ?? smallBoldedCharStyle,
+            ),
+          ),
+          // we make sure that if it is null (which suggest that "automaticallyImplyTrailing" is false)
+          // we exclude the widget from being rendered to avoid error.
+          if (_trailing != null) _trailing,
+        ],
+      ),
+    );
+
+    return Padding(
+      padding: margin,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: 55.0,
+          maxHeight: 80.0,
+          minWidth: 80.0,
+          maxWidth: 600.0,
+        ),
+        child: Material(
+          color: backgroundColor ?? whiteCardColor,
+          shadowColor: defaultShadowColor,
+          elevation: elevation,
+          clipBehavior: clipBehavior,
+          borderRadius: borderRadius ?? BorderRadius.circular(13.0),
+          child: useSplash
+              ? InkWell(
+                  child: current,
+                  onTap: onTap,
+                )
+              : current,
+        ),
+      ),
+    );
+  }
+}
+
 /// A Widget that can be configured to display information. It also allows for a
 /// Label to be stacked above it.
 class DescriptionBanner extends StatelessWidget {
@@ -632,7 +790,7 @@ class DescriptionBanner extends StatelessWidget {
       child: Stack(
         children: [
           Container(
-          margin: margin,
+            margin: margin,
             constraints: BoxConstraints(
               minHeight: 75.0,
               maxHeight: 90.5,
@@ -664,4 +822,31 @@ class DescriptionBanner extends StatelessWidget {
       ),
     );
   }
+}
+
+/// A Wrapper around the [ActionBox] widget that is in fact an [ActionBox] but should be used specifically
+/// as a notification box.
+class NotificationBox extends ActionBox {
+  NotificationBox({
+    Key key,
+    @required String message,
+    @required void Function() onTap,
+    Color backgroundColor = darkCardColor,
+    TextStyle messageStyle = smallCharStyle,
+    BorderRadiusGeometry borderRadius,
+    EdgeInsetsGeometry margin = const EdgeInsets.all(6.0),
+    EdgeInsetsGeometry padding =
+        const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
+  }) : super(
+          key: key,
+          message: message,
+          onTap: onTap,
+          backgroundColor: backgroundColor,
+          messageStyle: messageStyle,
+          borderRadius: borderRadius,
+          useSplash: false,
+          margin: margin,
+          elevation: 0.0,
+          padding: padding,
+        );
 }
