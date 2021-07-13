@@ -190,7 +190,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
                   backgroundColor: Colors.grey[200],
                   backgroundImage: CachedNetworkImageProvider(
                     _profileImageUrl,
-                    cacheKey: _profileImageUrl,
+                    // cacheKey: _profileImageUrl,
                     imageRenderMethodForWeb: ImageRenderMethodForWeb.HtmlImage,
                   ),
                   radius: 50.5,
