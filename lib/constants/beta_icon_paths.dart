@@ -103,4 +103,16 @@ class BetaIconPaths {
   /// The like fever symbol used in painting the LikeFever Widget in thr details screen of
   /// the Discover page.
   static const String likeFeverTherm = 'assets/images/like_fever_therm.png';
+
+  /// The like fever symbol used in painting the LikeFever Widget in thr details screen of
+  /// the Discover page.
+  static const String likeScale01 = 'assets/images/like_scale_01.png';
+
+  /// The path to the Defualt profile image.
+  static const String defaultProfileImagePath =
+      'assets/images/default_profile_icon.png';
+
+  /// The path to the "Try me" banner displayed in the MatchDetails screen.
+  static const String tryMeBanner = 'assets/images/try_me_label.png';
+
 }

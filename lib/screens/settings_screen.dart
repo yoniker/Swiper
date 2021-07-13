@@ -14,7 +14,7 @@ import 'advanced_settings_screen.dart';
 
 class SwipeSettingsScreen extends StatefulWidget {
   SwipeSettingsScreen({Key key, this.onPop}) : super(key: key);
-  static const String routeName = '/settings_screen';
+  static const String routeName = '/swipe_settings';
   static const minAge = 18;
   static const maxAge = 100;
 

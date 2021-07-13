@@ -34,6 +34,9 @@ const BoxConstraints _kDefaultBoxConstraints = BoxConstraints(
 
 /// A button that is painted to look like an inverted drop of water and uses
 /// [Clickable] as the gesture provider.
+///
+/// The child widget may appear to not be centered in the image, you can use a [Positioned]
+/// widget to center the child widget properly in the thumb or else where depending.
 class ThumbButton extends StatelessWidget {
   const ThumbButton({
     Key key,
@@ -85,27 +88,20 @@ class ThumbButton extends StatelessWidget {
 
     return Clickable(
       onTap: onTap,
-      child: ConstrainedBox(
-        constraints: thumbConstraints ?? _kDefaultBoxConstraints,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            CustomPaint(
-              painter: ThumbButtonPainter(
-                color: thumbColor,
-                boxShadows: boxShadows,
-              ),
-              child: ConstrainedBox(
-                constraints: _kDefaultBoxConstraints,
-              ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          CustomPaint(
+            painter: ThumbButtonPainter(
+              color: thumbColor,
+              boxShadows: boxShadows,
             ),
-            if (child != null)
-              Align(
-                alignment: Alignment(0.0, -0.054),
-                child: child,
-              ),
-          ],
-        ),
+            child: ConstrainedBox(
+              constraints: _kDefaultBoxConstraints,
+            ),
+          ),
+          if (child != null) child,
+        ],
       ),
     );
   }

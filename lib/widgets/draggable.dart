@@ -170,6 +170,10 @@ class _DraggableCardState extends State<DraggableCard>
   void didUpdateWidget(DraggableCard oldWidget) {
     super.didUpdateWidget(oldWidget);
 
+    scrollController = null;
+    // re-initialize the ScrollController.
+    scrollController = ScrollController();
+
     if (widget.card.key != oldWidget.card.key) {
       cardOffset = const Offset(0.0, 0.0);
     }
@@ -837,20 +841,17 @@ List<Widget> buildMatchDetails(
             label: Align(
               alignment: Alignment(-1.02, -2.0),
               child: PrecachedImage.asset(
-                imageURI: BetaIconPaths.aiBannerLabelPath,
+                imageURI: BetaIconPaths.tryMeBanner,
               ),
             ),
           ),
           DescriptionBanner(
             message: 'Like Fever Prediction',
             overflow: null,
-            // onTap: () {
-            //   print('GO TO VIEW PROGENY PAGE!');
-            // },
             trailing: LikeFeverWidget(value: 20.0),
           ),
           DescriptionBanner(
-            message: 'Say “Hi” to her',
+            message: 'Match Percentage',
             overflow: null,
             trailing: Container(
               margin: EdgeInsets.symmetric(horizontal: 4.0),
@@ -912,41 +913,38 @@ class LikeFeverWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 6.0),
-      child: Row(
-        children: [
-          ShaderMask(
-            shaderCallback: (rect) {
-              final _val = (value / 100);
-              // double _skew = _val < 0.9 ? _val + 0.1 : _val;
-              final double _skew = _val + 0.1;
+      padding: const EdgeInsets.only(right: 6.0),
+      child: ShaderMask(
+        shaderCallback: (rect) {
+          final _val = (value / 100);
+          // double _skew = _val < 0.9 ? _val + 0.1 : _val;
+          final double _skew = _val + 0.1;
 
-              final _gradient = colorGradient ??
-                  LinearGradient(
-                    colors: [
-                      colorBlend02,
-                      defaultShadowColor,
-                    ],
-                    stops: [
-                      _val,
-                      _skew,
-                    ],
-                  );
-
-              return _gradient.createShader(
-                rect,
+          final _gradient = colorGradient ??
+              LinearGradient(
+                colors: [
+                  colorBlend02,
+                  defaultShadowColor,
+                ],
+                stops: [
+                  _val,
+                  _skew,
+                ],
               );
-            },
-            child: PrecachedImage.asset(
-              imageURI: BetaIconPaths.likeFeverTherm,
-            ),
-          ),
-          SizedBox(width: 6.0),
-          PrecachedImage.asset(
-            imageURI: BetaIconPaths.heartIconFilled01,
-          ),
-        ],
+
+          return _gradient.createShader(
+            rect,
+          );
+        },
+        child: PrecachedImage.asset(
+          imageURI: BetaIconPaths.likeScale01,
+        ),
       ),
     );
   }
 }
+
+// SizedBox(width: 6.0),
+// PrecachedImage.asset(
+//   imageURI: BetaIconPaths.heartIconFilled01,
+// ),

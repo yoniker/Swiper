@@ -480,29 +480,36 @@ class GlobalWidgets {
       barrierDismissible: false,
       context: context,
       builder: (context) {
-        return Center(
-          child: Container(
-            // constraints: BoxConstraints(
-            //     // minHeight: MediaQuery.of(context).size.height * 0.375,
-            //     // maxHeight: MediaQuery.of(context).size.height * 0.55,
-            //     // minWidth: MediaQuery.of(context).size.width * 0.75,
-            //     // maxWidth: MediaQuery.of(context).size.width * 0.95,
-            //     ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SpinKitDualRing(
-                  color: colorBlend01,
-                  size: 35.0,
-                  lineWidth: 2.40,
-                ),
-                if (message != null)
-                  Text(
-                    message,
-                    style: defaultTextStyle,
+        return WillPopScope(
+          onWillPop: () async {
+            // this will prevent the pressing of the back-button on Android from 
+            // poping the Loading indicator.
+            return false;
+          },
+          child: Center(
+            child: Container(
+              // constraints: BoxConstraints(
+              //     // minHeight: MediaQuery.of(context).size.height * 0.375,
+              //     // maxHeight: MediaQuery.of(context).size.height * 0.55,
+              //     // minWidth: MediaQuery.of(context).size.width * 0.75,
+              //     // maxWidth: MediaQuery.of(context).size.width * 0.95,
+              //     ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SpinKitDualRing(
+                    color: colorBlend01,
+                    size: 35.0,
+                    lineWidth: 2.40,
                   ),
-              ],
+                  if (message != null)
+                    Text(
+                      message,
+                      style: defaultTextStyle,
+                    ),
+                ],
+              ),
             ),
           ),
         );

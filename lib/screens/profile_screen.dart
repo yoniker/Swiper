@@ -6,6 +6,7 @@ import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
+import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -163,11 +164,23 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
 
   @override
   Widget build(BuildContext context) {
-    String _profileImageUrl = settingsData.facebookProfileImageUrl;
+    String _imgUrl = settingsData.facebookProfileImageUrl;
 
-    if (_profileImagesUrls != null && _profileImagesUrls.length > 1) {
-      _profileImageUrl = _profileImagesUrls.first;
+    if (_profileImagesUrls != null && _profileImagesUrls.isNotEmpty) {
+      _imgUrl = _profileImagesUrls.first;
     }
+
+    final ImageProvider _img = _imgUrl == null
+        ? PrecachedImage.asset(
+            imageURI: BetaIconPaths.defaultProfileImagePath,
+          ).image
+        : CachedNetworkImageProvider(
+            networkHelper.getProfileImageUrl(_imgUrl),
+            // cacheKey: _profileImageUrl,
+            imageRenderMethodForWeb: ImageRenderMethodForWeb.HtmlImage,
+          );
+
+    print("Here is the Profile");
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -177,7 +190,6 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
         trailing: Icon(
           Icons.edit_outlined,
           color: blackTextColor,
-          size: 28.0,
         ),
       ),
       body: SingleChildScrollView(
@@ -188,11 +200,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
               Center(
                 child: CircleAvatar(
                   backgroundColor: Colors.grey[200],
-                  backgroundImage: CachedNetworkImageProvider(
-                    _profileImageUrl,
-                    // cacheKey: _profileImageUrl,
-                    imageRenderMethodForWeb: ImageRenderMethodForWeb.HtmlImage,
-                  ),
+                  backgroundImage: _img,
                   radius: 50.5,
                   child: Align(
                     alignment: Alignment.bottomRight,
@@ -208,7 +216,8 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
                             context: context,
                             onImagePicked: (image) async {
                               GlobalWidgets.showLoadingIndicator(
-                                  context: context);
+                                context: context,
+                              );
 
                               // log
                               print(
@@ -380,9 +389,9 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
     print(_list);
 
     if (_list?.isEmpty == true) {
-      setStateIfMounted(() {
-        _profileImagesUrls.replaceRange(0, _profileImagesUrls.length, null);
-      });
+      // setStateIfMounted(() {
+      //   _profileImagesUrls.replaceRange(0, _profileImagesUrls.length, null);
+      // });
       return;
     }
 

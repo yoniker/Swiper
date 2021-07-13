@@ -1,10 +1,10 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/screens/general_settings.dart';
+import 'package:betabeta/screens/notification_screen.dart';
 import 'package:betabeta/screens/profile_screen.dart';
-import 'package:betabeta/screens/settings_screen.dart';
 import 'package:betabeta/widgets/clickable.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
-import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:betabeta/widgets/thumb_button.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,7 +34,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
         onTap: () {
           Navigator.push(
             context,
-            CupertinoPageRoute(
+            MaterialPageRoute(
               builder: (context) => ProfileSettingsScreen(),
             ),
           );
@@ -153,101 +153,105 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                ThumbButton(
-                  thumbColor: whiteCardColor,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => SwipeSettingsScreen(),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 100,
+                    minWidth: 85,
+                  ),
+                  child: Column(
+                    children: [
+                      ThumbButton(
+                        thumbColor: whiteCardColor,
+                        onTap: () {
+                          // move to general settings screen.
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GeneralSettingsScreen(),
+                            ),
+                          );
+                        },
+                        child: Positioned(
+                          top: 12.0,
+                          child: PrecachedImage.asset(
+                            imageURI: BetaIconPaths.settingsIconFilled01,
+                          ),
+                        ),
                       ),
-                    );
-                  },
-                  child: PrecachedImage.asset(
-                    imageURI: BetaIconPaths.settingsIconFilled01,
+                      SizedBox(height: 2.0),
+                      Text(
+                        'Settings',
+                        style: smallBoldedCharStyle,
+                      ),
+                    ],
                   ),
                 ),
-                ThumbButton(
-                  thumbColor: whiteCardColor,
-                  onTap: () {
-                    // move to profile screen.
-                    Navigator.of(context).push(
-                      CupertinoPageRoute(
-                        builder: (context) => ProfileSettingsScreen(),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 100,
+                    minWidth: 85,
+                  ),
+                  child: Column(
+                    children: [
+                      ThumbButton(
+                        thumbColor: whiteCardColor,
+                        onTap: () {
+                          // move to the profile screen.
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ProfileSettingsScreen(),
+                            ),
+                          );
+                        },
+                        child: Positioned(
+                          top: 12.0,
+                          child: PrecachedImage.asset(
+                            imageURI: BetaIconPaths.profileIconFilled01,
+                          ),
+                        ),
                       ),
-                    );
-                  },
-                  child: PrecachedImage.asset(
-                    imageURI: BetaIconPaths.profileIconFilled01,
+                      SizedBox(height: 2.0),
+                      Text(
+                        'Profile',
+                        style: smallBoldedCharStyle,
+                      ),
+                    ],
                   ),
                 ),
-                ThumbButton(
-                  thumbColor: whiteCardColor,
-                  onTap: () {
-                    print('TODO: Move to notifications screen!');
-                  },
-                  child: PrecachedImage.asset(
-                    imageURI: BetaIconPaths.notificationIconFilled01,
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 100,
+                    minWidth: 85,
+                  ),
+                  child: Column(
+                    children: [
+                      ThumbButton(
+                        thumbColor: whiteCardColor,
+                        onTap: () {
+                          // move to the notification screen.
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => NotificationScreen(),
+                            ),
+                          );
+                        },
+                        child: Positioned(
+                          top: 12.0,
+                          child: PrecachedImage.asset(
+                            imageURI: BetaIconPaths.notificationIconFilled01,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 2.0),
+                      Text(
+                        'Notifications',
+                        style: smallBoldedCharStyle,
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 12.0),
-            ActionBox(
-              message: 'Swiping Preference',
-              messageStyle: smallBoldedCharStyle.copyWith(color: colorBlend02),
-              margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-              trailing: Icon(
-                Icons.settings,
-                color: colorBlend02,
-              ),
-              onTap: () {},
-            ),
-            ActionBox(
-              message: 'Facebook Logout',
-              messageStyle: smallBoldedCharStyle.copyWith(color: blue),
-              margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-              trailing: PrecachedImage.asset(
-                imageURI: BetaIconPaths.facebookLogo,
-              ),
-              onTap: () {},
-            ),
-            SizedBox(height: 12.0),
-            // Card(
-            //   margin: EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
-            //   elevation: 2.0,
-            //   shadowColor: darkCardColor,
-            //   shape: RoundedRectangleBorder(
-            //     borderRadius: BorderRadius.circular(13.0),
-            //   ),
-            //   clipBehavior: Clip.hardEdge,
-            //   child: Column(
-            //     children: [
-            //       Padding(
-            //         padding: EdgeInsets.symmetric(vertical: 12.0),
-            //         child: Text(
-            //           'Notifications',
-            //           style: subTitleStyle,
-            //         ),
-            //       ),
-            //       SizedBox(
-            //         height: MediaQuery.of(context).size.height * 0.3,
-            //         child: ListView.builder(
-            //           itemCount: 5,
-            //           physics: BouncingScrollPhysics(),
-            //           itemBuilder: (context, index) {
-            //             return NotificationBox(
-            //               message: 'This is the number $index notification!',
-            //               onTap: () {
-            //                 // TODO: Open notification.
-            //               },
-            //             );
-            //           },
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
           ],
         ),
       ),

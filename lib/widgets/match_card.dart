@@ -345,12 +345,12 @@ class _PhotoViewState extends State<PhotoView> {
     for (int imageIndex = 0;
         imageIndex < widget.imageUrls.length;
         imageIndex++) {
-      var img = PrecachedImage.network(
-        imageURL: 'https://' + widget.imageUrls[imageIndex],
+      var img = Image.network(
+        'https://' + widget.imageUrls[imageIndex],
         scale: 1.0,
         fit: BoxFit.cover,
       );
-      // precacheImage(img.image, context);
+      precacheImage(img.image, context);
       imagesList.add(img);
 
       // generate carousel dots.
