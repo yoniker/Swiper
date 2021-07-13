@@ -9,6 +9,7 @@ import 'package:flutter_auth_buttons/src/button.dart' as auth_button;
 import 'main_navigation_screen.dart';
 
 class LoginScreen extends StatefulWidget {
+  static const String routeName = '/login';
   @override
   State<StatefulWidget> createState() {
     return _LoginScreenState();

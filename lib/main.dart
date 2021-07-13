@@ -8,10 +8,9 @@ import 'package:betabeta/screens/face_selection_screen.dart';
 import 'package:betabeta/screens/login_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/settings_screen.dart';
+import 'package:betabeta/splash_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +32,7 @@ void main() {
   if (kIsWeb) {
     // initialiaze the facebook javascript SDK
     FacebookAuth.instance.webInitialize(
-      appId: "218658432881919",//<-- YOUR APP_ID
+      appId: "218658432881919", //<-- YOUR APP_ID
       cookie: true,
       xfbml: true,
       version: "v9.0",
@@ -61,7 +60,8 @@ class MyApp extends StatelessWidget {
         primaryColorBrightness: Brightness.light,
         primarySwatch: Colors.blue,
       ),
-      home: LoginScreen(),
+      initialRoute: SplashScreen.routeName,
+      // home: LoginScreen(),
       // MatchingScreen(title: 'Swiper MVP'),
       // LoginHome(),
       //MatchingScreen(title: 'Flutter Demo Home Page'),
@@ -69,33 +69,41 @@ class MyApp extends StatelessWidget {
   }
 
   Route _onGenerateRoute(RouteSettings settings) {
-    if (settings.name == MainNavigationScreen.routeName) {
+    if (settings.name == SplashScreen.routeName) {
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {
-          return MainNavigationScreen();
+          return SplashScreen();
         },
       );
-    }
-
-    if (settings.name == AdvancedSettingsScreen.routeName) {
-      return MaterialPageRoute(
-          settings: settings,
-          builder: (context) {
-            return AdvancedSettingsScreen();
-          });
-    }
-
-    if (settings.name == ScreenCelebritySelection.routeName) {
+    } else if (settings.name == LoginScreen.routeName) {
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {
           return ScreenCelebritySelection();
         },
       );
-    }
-
-    if (settings.name == FaceSelectionScreen.routeName) {
+    } else if (settings.name == MainNavigationScreen.routeName) {
+      return MaterialPageRoute(
+        settings: settings,
+        builder: (context) {
+          return MainNavigationScreen();
+        },
+      );
+    } else if (settings.name == AdvancedSettingsScreen.routeName) {
+      return MaterialPageRoute(
+          settings: settings,
+          builder: (context) {
+            return AdvancedSettingsScreen();
+          });
+    } else if (settings.name == ScreenCelebritySelection.routeName) {
+      return MaterialPageRoute(
+        settings: settings,
+        builder: (context) {
+          return ScreenCelebritySelection();
+        },
+      );
+    } else if (settings.name == FaceSelectionScreen.routeName) {
       final FaceSelectionScreenArguments args =
           settings.arguments as FaceSelectionScreenArguments;
       return MaterialPageRoute(
@@ -107,24 +115,20 @@ class MyApp extends StatelessWidget {
           );
         },
       );
-    }
-
-    if (settings.name == SwipeSettingsScreen.routeName) {
+    } else if (settings.name == SwipeSettingsScreen.routeName) {
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {
           return SwipeSettingsScreen();
         },
       );
+    } else {
+      return MaterialPageRoute(
+        settings: settings,
+        builder: (context) {
+          return LoginScreen();
+        },
+      );
     }
-
-    return MaterialPageRoute(
-      settings: settings,
-      builder: (context) {
-        return LoginScreen();
-      },
-    );
   }
 }
-
-
