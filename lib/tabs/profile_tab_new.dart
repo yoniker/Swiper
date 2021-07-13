@@ -2,6 +2,7 @@ import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/screens/settings_screen.dart';
+import 'package:betabeta/widgets/clickable.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
@@ -29,17 +30,27 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 6.0),
-      child: Material(
-        color: Colors.white,
-        elevation: 1.2,
-        shape: CircleBorder(),
-        child: Padding(
-          padding: const EdgeInsets.all(2.1),
-          child: CircleAvatar(
-            minRadius: 35.0,
-            maxRadius: 75.0,
-            backgroundImage: _image.image,
-            backgroundColor: colorBlend01,
+      child: Clickable(
+        onTap: () {
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => ProfileSettingsScreen(),
+            ),
+          );
+        },
+        child: Material(
+          color: Colors.white,
+          elevation: 1.2,
+          shape: CircleBorder(),
+          child: Padding(
+            padding: const EdgeInsets.all(2.1),
+            child: CircleAvatar(
+              minRadius: 35.0,
+              maxRadius: 75.0,
+              backgroundImage: _image.image,
+              backgroundColor: colorBlend01,
+            ),
           ),
         ),
       ),
@@ -118,24 +129,24 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _achievementLabel(
-                  label: 'Likes',
-                  iconURI: BetaIconPaths.likeIconFilled01,
-                  value: '500+',
-                  color: blue,
-                ),
+                // _achievementLabel(
+                //   label: 'Likes',
+                //   iconURI: BetaIconPaths.likeIconFilled01,
+                //   value: '500+',
+                //   color: blue,
+                // ),
                 _achievementLabel(
                   label: 'Loves',
                   iconURI: BetaIconPaths.heartIconFilled01,
                   value: '800+',
                   color: colorBlend02,
                 ),
-                _achievementLabel(
-                  label: 'Stars',
-                  iconURI: BetaIconPaths.starIconFilled01,
-                  value: '50+',
-                  color: yellowishOrange,
-                ),
+                // _achievementLabel(
+                //   label: 'Stars',
+                //   iconURI: BetaIconPaths.starIconFilled01,
+                //   value: '50+',
+                //   color: yellowishOrange,
+                // ),
               ],
             ),
             SizedBox(height: 12.0),
@@ -148,7 +159,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                     Navigator.push(
                       context,
                       CupertinoPageRoute(
-                        builder: (context) => SettingsScreen(),
+                        builder: (context) => SwipeSettingsScreen(),
                       ),
                     );
                   },
@@ -162,7 +173,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                     // move to profile screen.
                     Navigator.of(context).push(
                       CupertinoPageRoute(
-                        builder: (context) => ProfileScreen(),
+                        builder: (context) => ProfileSettingsScreen(),
                       ),
                     );
                   },

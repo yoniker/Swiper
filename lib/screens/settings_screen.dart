@@ -12,8 +12,8 @@ import 'package:flutter/material.dart' hide DropdownButtonFormField;
 
 import 'advanced_settings_screen.dart';
 
-class SettingsScreen extends StatefulWidget {
-  SettingsScreen({Key key, this.onPop}) : super(key: key);
+class SwipeSettingsScreen extends StatefulWidget {
+  SwipeSettingsScreen({Key key, this.onPop}) : super(key: key);
   static const String routeName = '/settings_screen';
   static const minAge = 18;
   static const maxAge = 100;
@@ -21,10 +21,10 @@ class SettingsScreen extends StatefulWidget {
   final void Function() onPop;
 
   @override
-  _SettingsScreenState createState() => _SettingsScreenState();
+  _SwipeSettingsScreenState createState() => _SwipeSettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
   String _currentLocation = 'Somewhere, Earth';
 
   Gender _currentGenderSelected = Gender.values
@@ -64,24 +64,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
   //
 
   String _simpleDashAgeRangeString(double start, double end) {
-    if (end < SettingsScreen.maxAge) {
+    if (end < SwipeSettingsScreen.maxAge) {
       return ' ${start.round()}-${end.round()} ';
     } else {
-      return ' ${start.round()}-${SettingsScreen.maxAge}+ ';
+      return ' ${start.round()}-${SwipeSettingsScreen.maxAge}+ ';
     }
   }
 
   String produceAgesRangeText(RangeValues _ages) {
     String agesRangeText;
 
-    if (_ages.start.toInt() <= SettingsScreen.minAge) {
-      if (_ages.end.toInt() >= SettingsScreen.maxAge) {
+    if (_ages.start.toInt() <= SwipeSettingsScreen.minAge) {
+      if (_ages.end.toInt() >= SwipeSettingsScreen.maxAge) {
         agesRangeText = 'Any Age';
       } else {
         agesRangeText = '${_ages.end.toInt()} or younger';
       }
     } else {
-      if (_ages.end.toInt() >= SettingsScreen.maxAge) {
+      if (_ages.end.toInt() >= SwipeSettingsScreen.maxAge) {
         agesRangeText = '${_ages.start.toInt()} or older';
       } else {
         agesRangeText =
@@ -358,8 +358,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       child: CupertinoRangeSlider(
                                         activeColor: colorBlend01,
                                         values: _selectedAges,
-                                        min: SettingsScreen.minAge.toDouble(),
-                                        max: SettingsScreen.maxAge.toDouble(),
+                                        min: SwipeSettingsScreen.minAge.toDouble(),
+                                        max: SwipeSettingsScreen.maxAge.toDouble(),
                                         onChanged: (newRangevalues) {
                                           setState(
                                             () {

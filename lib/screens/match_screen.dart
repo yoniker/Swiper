@@ -179,7 +179,7 @@ class _MatchScreenState extends State<MatchScreen>
                 // Navigate savely to the Settings screen.
                 Navigator.of(context).push(
                   CupertinoPageRoute(builder: (context) {
-                    return SettingsScreen(
+                    return SwipeSettingsScreen(
                       onPop: () {
                         // pop the Settings Page.
                         Navigator.of(context).pop();

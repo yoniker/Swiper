@@ -109,11 +109,11 @@ class MyApp extends StatelessWidget {
       );
     }
 
-    if (settings.name == SettingsScreen.routeName) {
+    if (settings.name == SwipeSettingsScreen.routeName) {
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {
-          return SettingsScreen();
+          return SwipeSettingsScreen();
         },
       );
     }

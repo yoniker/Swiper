@@ -368,7 +368,7 @@ class GlobalWidgets {
               Padding(
                 padding: EdgeInsets.only(right: 12.0),
                 child: GradientWidget(
-                  gradient: mainColorGradientList,
+                  gradient: mainColorGradient,
                   child: icon,
                 ),
               ),

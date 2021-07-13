@@ -13,15 +13,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:reorderables/reorderables.dart';
 
 ///
-class ProfileScreen extends StatefulWidget {
-  ProfileScreen({Key key}) : super(key: key);
+class ProfileSettingsScreen extends StatefulWidget {
+  ProfileSettingsScreen({Key key}) : super(key: key);
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  _ProfileSettingsScreenState createState() => _ProfileSettingsScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen>
-    with MountedStateMixin<ProfileScreen> {
+class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
+    with MountedStateMixin<ProfileSettingsScreen> {
   // --> All this information should be added to the data model.
   // this will be pre-filled with data from the server.
   bool _incognitoMode = false;
@@ -33,6 +33,8 @@ class _ProfileScreenState extends State<ProfileScreen>
   String _company;
 
   NetworkHelper networkHelper;
+
+  SettingsData settingsData;
 
   List<String> _profileImagesUrls =
       List.generate(6, (index) => null, growable: false);
@@ -50,6 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     // also there are some FUnctions I will suggest you make static since they don't alter or make changes to
     // any instance variable.
     networkHelper = NetworkHelper();
+    settingsData = SettingsData();
 
     mountedLoader(_syncFromServer);
     _aboutMe = DetailsData().aboutMe;
@@ -160,13 +163,21 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   @override
   Widget build(BuildContext context) {
+    String _profileImageUrl = settingsData.facebookProfileImageUrl;
+
+    if (_profileImagesUrls != null && _profileImagesUrls.length > 1) {
+      _profileImageUrl = _profileImagesUrls.first;
+    }
+
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Profile',
         hasTopPadding: true,
         showAppLogo: false,
-        trailing: GlobalWidgets.assetImageToIcon(
-          BetaIconPaths.inactiveProfileTabIconPath,
+        trailing: Icon(
+          Icons.edit_outlined,
+          color: blackTextColor,
+          size: 28.0,
         ),
       ),
       body: SingleChildScrollView(
@@ -178,7 +189,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                 child: CircleAvatar(
                   backgroundColor: Colors.grey[200],
                   backgroundImage: CachedNetworkImageProvider(
-                      SettingsData().facebookProfileImageUrl),
+                    _profileImageUrl,
+                    cacheKey: _profileImageUrl,
+                    imageRenderMethodForWeb: ImageRenderMethodForWeb.HtmlImage,
+                  ),
                   radius: 50.5,
                   child: Align(
                     alignment: Alignment.bottomRight,

@@ -673,15 +673,15 @@ List<Widget> buildMatchDetails(
             ),
           ),
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5.0),
-          child: Row(
-            children: [
-              _buildAchievementItem(BetaIconPaths.heartIconFilled01, '25k+'),
-              _buildAchievementItem(BetaIconPaths.starIconFilled01, '15k+'),
-            ],
-          ),
-        ),
+        // Padding(
+        //   padding: EdgeInsets.symmetric(horizontal: 5.0),
+        //   child: Row(
+        //     children: [
+        //       _buildAchievementItem(BetaIconPaths.heartIconFilled01, '25k+'),
+        //       _buildAchievementItem(BetaIconPaths.starIconFilled01, '15k+'),
+        //     ],
+        //   ),
+        // ),
       ],
     ),
     Container(
@@ -842,6 +842,14 @@ List<Widget> buildMatchDetails(
             ),
           ),
           DescriptionBanner(
+            message: 'Like Fever Prediction',
+            overflow: null,
+            // onTap: () {
+            //   print('GO TO VIEW PROGENY PAGE!');
+            // },
+            trailing: LikeFeverWidget(value: 20.0),
+          ),
+          DescriptionBanner(
             message: 'Say “Hi” to her',
             overflow: null,
             trailing: Container(
@@ -852,7 +860,7 @@ List<Widget> buildMatchDetails(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: mainColorGradientList.colors,
+                  colors: mainColorGradient.colors,
                 ),
               ),
               child: RichText(
@@ -879,4 +887,66 @@ List<Widget> buildMatchDetails(
 String _baseToNetwork(String base) {
   final String _http = 'https://';
   return _http + base;
+}
+
+///
+class LikeFeverWidget extends StatelessWidget {
+  const LikeFeverWidget({
+    Key key,
+    @required this.value,
+    this.colorGradient,
+  })  : assert(value >= 0.0 && value <= 100.0,
+            'The value provided must be in the range (0.0, 100.0)\n Given: $value'),
+        super(key: key);
+
+  /// The value of the like-fever.
+  ///
+  /// Note that the value provided should be in the range `(0, 100)`.
+  final double value;
+
+  /// The Gradient to use in painting this widget.
+  ///
+  /// If none is given (or a value of null is supplied) the gradient defaults to [mainColorGradient].
+  final Gradient colorGradient;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 6.0),
+      child: Row(
+        children: [
+          ShaderMask(
+            shaderCallback: (rect) {
+              final _val = (value / 100);
+              // double _skew = _val < 0.9 ? _val + 0.1 : _val;
+              final double _skew = _val + 0.1;
+
+              final _gradient = colorGradient ??
+                  LinearGradient(
+                    colors: [
+                      colorBlend02,
+                      defaultShadowColor,
+                    ],
+                    stops: [
+                      _val,
+                      _skew,
+                    ],
+                  );
+
+              return _gradient.createShader(
+                rect,
+              );
+            },
+            child: PrecachedImage.asset(
+              imageURI: BetaIconPaths.likeFeverTherm,
+            ),
+          ),
+          SizedBox(width: 6.0),
+          PrecachedImage.asset(
+            imageURI: BetaIconPaths.heartIconFilled01,
+          ),
+        ],
+      ),
+    );
+  }
 }

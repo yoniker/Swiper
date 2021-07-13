@@ -1,5 +1,6 @@
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
 
 /// A widget to paint the various information of a
@@ -344,9 +345,12 @@ class _PhotoViewState extends State<PhotoView> {
     for (int imageIndex = 0;
         imageIndex < widget.imageUrls.length;
         imageIndex++) {
-      Image img = Image.network('https://' + widget.imageUrls[imageIndex],
-          fit: BoxFit.cover);
-      precacheImage(img.image, context);
+      var img = PrecachedImage.network(
+        imageURL: 'https://' + widget.imageUrls[imageIndex],
+        scale: 1.0,
+        fit: BoxFit.cover,
+      );
+      // precacheImage(img.image, context);
       imagesList.add(img);
 
       // generate carousel dots.

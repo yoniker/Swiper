@@ -94,7 +94,7 @@ const TextStyle headerStyle = TextStyle(
 
 //<@SUGN> This is an optional Gradient variable to be used in conjuction with
 // the `GradientWidget` found in the {widgets} folder.
-const LinearGradient mainColorGradientList = const LinearGradient(
+const LinearGradient mainColorGradient = const LinearGradient(
   colors: <Color>[
     colorBlend01,
     colorBlend02,

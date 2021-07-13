@@ -269,7 +269,7 @@ class _ProfileTabState extends State<ProfileTab>
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SettingsScreen(),
+                    builder: (context) => SwipeSettingsScreen(),
                   ),
                 );
               },
@@ -310,7 +310,7 @@ class _ProfileTabState extends State<ProfileTab>
                 // move to profile page
                 Navigator.of(context).push(
                   CupertinoPageRoute(
-                    builder: (context) => ProfileScreen(),
+                    builder: (context) => ProfileSettingsScreen(),
                   ),
                 );
               },

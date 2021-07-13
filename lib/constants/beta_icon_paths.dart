@@ -99,4 +99,8 @@ class BetaIconPaths {
 
   /// The path to the facebook blue-icon logo.
   static const String facebookLogo = 'assets/images/facebook_icon.png';
+
+  /// The like fever symbol used in painting the LikeFever Widget in thr details screen of
+  /// the Discover page.
+  static const String likeFeverTherm = 'assets/images/like_fever_therm.png';
 }
