@@ -12,6 +12,6 @@ class UserId{
   final String id;
   final UserType userType;
 
-  UserId( {@required this.id,@required this.userType});
+  const UserId( {@required this.id,@required this.userType});
 
 }

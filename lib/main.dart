@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/advanced_settings_screen.dart';
-import 'package:betabeta/screens/babies_show_screen.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
 import 'package:betabeta/screens/login_screen.dart';
@@ -11,8 +10,6 @@ import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/settings_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:provider/provider.dart';
 

@@ -20,6 +20,7 @@ class NetworkHelper {
   static const SERVER_ADDR = 'dordating.com:8081';
   static final NetworkHelper _instance = NetworkHelper._internal();
   static const MIN_MATCHES_CALL_INTERVAL = Duration(seconds: 1);
+  static const ALL_USER_IMAGES = 'all_user_images';
   DateTime _lastMatchCall =
       DateTime(2000); //The year 2000 is when the last call happened :D
   DateTime _lastFacesImagesCall = DateTime(2000);
