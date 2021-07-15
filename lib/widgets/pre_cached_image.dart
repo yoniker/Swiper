@@ -54,11 +54,11 @@ class PrecachedImage extends StatelessWidget {
     this.errorBuilder,
     this.width,
     this.height,
-    double scale = 4.0,
-  }) : this.image = Image.network(
+    double scale = 1.0,
+  }) : this.image = NetworkImage(
           imageURL,
           scale: scale,
-        ).image;
+        );
 
   PrecachedImage.uri({
     @required String imageURL,
@@ -69,11 +69,11 @@ class PrecachedImage extends StatelessWidget {
     this.errorBuilder,
     this.width,
     this.height,
-    double scale = 4.0,
-  }) : this.image = Image.file(
+    double scale = 1.0,
+  }) : this.image = FileImage(
           File(imageURL),
           scale: scale,
-        ).image;
+        );
 
   PrecachedImage.rawFile(
     File file, {
@@ -84,11 +84,11 @@ class PrecachedImage extends StatelessWidget {
     this.errorBuilder,
     this.width,
     this.height,
-    double scale = 4.0,
-  }) : this.image = Image.file(
+    double scale = 1.0,
+  }) : this.image = FileImage(
           file,
           scale: scale,
-        ).image;
+        );
 
   PrecachedImage.memory({
     @required Uint8List bytes,
@@ -99,11 +99,11 @@ class PrecachedImage extends StatelessWidget {
     this.errorBuilder,
     this.width,
     this.height,
-    double scale = 4.0,
-  }) : this.image = Image.memory(
+    double scale = 1.0,
+  }) : this.image = MemoryImage(
           bytes,
           scale: scale,
-        ).image;
+        );
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +135,9 @@ class PrecachedImage extends StatelessWidget {
       width: width,
       errorBuilder: (context, error, stackTrace) {
         // return the "errorWidget"
-        return errorBuilder != null ? errorBuilder.call(context) : SizedBox.shrink();
+        return errorBuilder != null
+            ? errorBuilder.call(context)
+            : SizedBox.shrink();
       },
       frameBuilder: _frameBuilder,
     );

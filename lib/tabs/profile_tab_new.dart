@@ -82,7 +82,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
 
     if (_image == null)
       _image = PrecachedImage.asset(
-        imageURI: BetaIconPaths.defaultProfileImagePath,
+        imageURI: BetaIconPaths.defaultProfileImagePath01,
       ).image;
 
     return Padding(
@@ -114,7 +114,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
               minRadius: 35.0,
               maxRadius: 75.0,
               backgroundImage: _image,
-              backgroundColor: colorBlend01,
+              backgroundColor: darkCardColor,
             ),
           ),
         ),
@@ -280,7 +280,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                           // we want this page to stay updated so we use it this way.
                           //
                           // To avoid this we should consider using a StateManagement Library such as Provider or Bloc.
-                          _syncFromServer();
+                          _syncFromServer(true);
                         },
                         child: Positioned(
                           top: 12.0,

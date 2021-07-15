@@ -18,6 +18,7 @@ class SwipeSettingsScreen extends StatefulWidget {
   static const minAge = 18;
   static const maxAge = 100;
 
+  /// A callback that is fired when the user exists the settings screen.
   final void Function() onPop;
 
   @override
@@ -99,11 +100,13 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
         hasTopPadding: true,
         trailing:
             Icon(Icons.settings), //iconURI: 'assets/images/settings_icon.png',
-        onPop: widget.onPop ??
-            () {
-              // close the settings screen.
-              Navigator.of(context).pop();
-            },
+        onPop: () {
+          // close the settings screen.
+          Navigator.of(context).pop();
+
+          // fire the call back if provided.
+          widget.onPop?.call();
+        },
       ),
       body: Stack(
         children: [
@@ -358,8 +361,10 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                                       child: CupertinoRangeSlider(
                                         activeColor: colorBlend01,
                                         values: _selectedAges,
-                                        min: SwipeSettingsScreen.minAge.toDouble(),
-                                        max: SwipeSettingsScreen.maxAge.toDouble(),
+                                        min: SwipeSettingsScreen.minAge
+                                            .toDouble(),
+                                        max: SwipeSettingsScreen.maxAge
+                                            .toDouble(),
                                         onChanged: (newRangevalues) {
                                           setState(
                                             () {

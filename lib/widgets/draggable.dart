@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/screens/view_children_screen.dart';
 import 'package:betabeta/widgets/custom_scrollbar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/overlay_builder.dart';
@@ -59,6 +60,7 @@ class DraggableCard extends StatefulWidget {
   final Function(SlideDirection direction) onSlideComplete;
   final double screenWidth;
   final double screenHeight;
+  final void Function(bool) onNavigationCommand;
 
   DraggableCard({
     Key key,
@@ -73,6 +75,7 @@ class DraggableCard extends StatefulWidget {
     this.onSlideComplete,
     @required this.screenWidth,
     @required this.screenHeight,
+    @required this.onNavigationCommand,
     this.exitDuration = const Duration(milliseconds: 100),
   });
 
@@ -82,11 +85,12 @@ class DraggableCard extends StatefulWidget {
 
 class _DraggableCardState extends State<DraggableCard>
     with TickerProviderStateMixin {
+
   Decision decision;
   GlobalKey profileCardKey = GlobalKey(debugLabel: 'profile_card_key');
-  // This is useful in that when we want to push (Navigate to) a new [Route] over [this]
-  // the current [Route], we don't want the overlay to Obscure the New Route we are pushing to.
+
   bool _showCardStack = true;
+
   Offset cardOffset = const Offset(0.0, 0.0);
   Offset dragStart;
   Offset dragPosition;
@@ -101,12 +105,44 @@ class _DraggableCardState extends State<DraggableCard>
   AnimationController slideOutAnimation;
 
   // Defines the ScrollController that controls the inner ScrollView.
-  ScrollController scrollController;
+  final ScrollController scrollController =
+      new ScrollController(keepScrollOffset: false);
 
   // The defualt Curve with which the details Page animates out into the new Match Page.
   final kdefaultExitCurve = Curves.fastOutSlowIn;
 
   Duration exitDuration;
+
+  /// Navigates to a new screen.
+  ///
+  /// This is the only safe method to use in the Draggable class when planning to
+  /// navigate via the [Navigator] into another [Route].
+  /// With this method the value of [_atParentRoute] is set in a way to make sure that
+  /// the overlay state of the Draggable widget have no considerable effect when navigating
+  /// to another screen (Route) entirely.
+  Future<T> pushToScreen<T>(
+    BuildContext context, {
+    @required WidgetBuilder builder,
+    RouteSettings settings,
+    bool maintainState = true,
+    bool fullscreenDialog = false,
+  }) async {
+    // here we inform the MatchScreen to hide the Card Stack.
+    widget.onNavigationCommand(false);
+
+    await Navigator.of(context).push<T>(
+      MaterialPageRoute(
+        builder: builder,
+        settings: settings,
+        maintainState: maintainState,
+        fullscreenDialog: fullscreenDialog,
+      ),
+    ).then((value) {
+      // here we inform the MatchScreen to show the Card Stack.
+      widget.onNavigationCommand(true);
+    });
+
+  }
 
   @override
   void initState() {
@@ -160,7 +196,7 @@ class _DraggableCardState extends State<DraggableCard>
       });
 
     // Initialize the ScrollController.
-    scrollController = ScrollController(keepScrollOffset: false);
+    // scrollController = ScrollController(keepScrollOffset: false);
 
     // Intantiate the exitDuration.
     exitDuration = widget.exitDuration;
@@ -170,9 +206,9 @@ class _DraggableCardState extends State<DraggableCard>
   void didUpdateWidget(DraggableCard oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    scrollController = null;
-    // re-initialize the ScrollController.
-    scrollController = ScrollController();
+    // scrollController = null;
+    // // re-initialize the ScrollController.
+    // scrollController = ScrollController();
 
     if (widget.card.key != oldWidget.card.key) {
       cardOffset = const Offset(0.0, 0.0);
@@ -408,6 +444,283 @@ class _DraggableCardState extends State<DraggableCard>
     }
   }
 
+  /// Generates a List of Items that serves as the MatchDetails.
+  ///
+  /// We are returnig a List of Widgets so that this can be easily
+  /// incorporated into the MatchCard Scroll ViewPort.
+  ///
+  /// Also, we have to imcorporate this into the Draggable Widget since we needed it to be part
+  /// of the Overlay being display/stacked on the screen which also makes it drag when we drag.swipe
+  /// left or right.
+  ///
+  List<Widget> buildMatchDetails(
+    Profile profile, {
+    @required BuildContext context,
+  }) {
+    final _imageUrls = profile.imageUrls ?? <String>[];
+
+    // builds the achivement items such as loves and stars.
+    Widget _buildAchievementItem(String iconURI, String value) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 2.0),
+        child: Row(
+          children: [
+            Text(
+              value,
+              style: smallCharStyle.copyWith(color: darkTextColor),
+            ),
+            SizedBox(width: 2.0),
+            PrecachedImage.asset(
+              imageURI: iconURI,
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Return a List of Widgets.
+    return [
+      SizedBox(height: 16.0),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.0),
+              child: Text(
+                '${profile.username}, ${profile.age}',
+                textAlign: TextAlign.left,
+                // overflow: TextOverflow.ellipsis,
+                style: boldTextStyle.copyWith(fontSize: 18.0),
+              ),
+            ),
+          ),
+          // Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 5.0),
+          //   child: Row(
+          //     children: [
+          //       _buildAchievementItem(BetaIconPaths.heartIconFilled01, '25k+'),
+          //       _buildAchievementItem(BetaIconPaths.starIconFilled01, '15k+'),
+          //     ],
+          //   ),
+          // ),
+        ],
+      ),
+      Container(
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.symmetric(horizontal: 5.0),
+        child: Text(
+          (profile.headline != null) ? profile.headline : '',
+          textAlign: TextAlign.left,
+          style: defaultTextStyle,
+        ),
+      ),
+      Container(
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.only(
+          top: 8.0,
+          bottom: 12.0,
+          left: 5.0,
+          right: 5.0,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Description',
+              style: subTitleStyle,
+            ),
+            Divider(
+              color: darkCardColor,
+              indent: 2.0,
+              endIndent: 2.0,
+              thickness: 2.8,
+              height: 8.0,
+            ),
+            Text(
+              (profile.description != null)
+                  ? profile.description
+                  : 'No Description available',
+              style: mediumCharStyle,
+            ),
+          ],
+        ),
+      ),
+      Container(
+        alignment: Alignment.centerRight,
+        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
+        child: Row(
+          children: [
+            PrecachedImage.asset(imageURI: BetaIconPaths.locationIconFilled01),
+            SizedBox(width: 5.6),
+            Text(
+              (profile.location != null)
+                  ? 'Lives in ${profile.location}'
+                  : 'Current Location not available',
+              textAlign: TextAlign.right,
+              style: defaultTextStyle,
+            ),
+          ],
+        ),
+      ),
+      Container(
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.only(
+          top: 8.0,
+          bottom: 12.0,
+          left: 5.0,
+          right: 5.0,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Profile Images',
+              style: subTitleStyle,
+            ),
+            Divider(
+              color: darkCardColor,
+              indent: 2.0,
+              endIndent: 2.0,
+              thickness: 2.8,
+              height: 8.0,
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.14,
+              child: !(_imageUrls.length > 0)
+                  ? Center(
+                      child: Text(
+                        'No Profile image Available for match',
+                        style: mediumBoldedCharStyle,
+                      ),
+                    )
+                  : ListView.separated(
+                      key: UniqueKey(),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _imageUrls.length,
+                      itemBuilder: (cntx, index) {
+                        final String _url = _baseToNetwork(_imageUrls[index]);
+                        return SizedBox(
+                          height: 80.5,
+                          width: 100.0,
+                          child: Card(
+                            margin: EdgeInsets.all(6.0),
+                            clipBehavior: Clip.antiAlias,
+                            elevation: 2.1,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                            child: PrecachedImage.network(
+                              imageURL: _url,
+                              fadeIn: true,
+                              shouldPrecache: false,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (cntx, index) {
+                        return SizedBox(width: 16.0);
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
+      Container(
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.only(
+          top: 8.0,
+          bottom: 12.0,
+          left: 5.0,
+          right: 5.0,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Artificial Intelligence',
+              style: subTitleStyle,
+            ),
+            Divider(
+              color: darkCardColor,
+              indent: 2.0,
+              endIndent: 2.0,
+              thickness: 2.8,
+              height: 8.0,
+            ),
+            DescriptionBanner(
+              // TODO(Backend) Add a field "gender" to the profile Interface:
+              message: 'See what a baby with her will look like',
+              overflow: null,
+              onTap: () async {
+                // Before the new Route is pushed we set the value of
+                pushToScreen(
+                  context,
+                  builder: (context) => ViewChildrenScreen(),
+                );
+              },
+              label: Align(
+                alignment: Alignment(-1.02, -2.0),
+                child: PrecachedImage.asset(
+                  imageURI: BetaIconPaths.tryMeBanner,
+                ),
+              ),
+            ),
+            DescriptionBanner(
+              message: 'Like Fever Prediction',
+              overflow: null,
+              trailing: LikeFeverWidget(
+                value: 20.0,
+                assetURI: BetaIconPaths.likeFeverTherm02,
+                startValue: 20.0,
+              ),
+            ),
+            DescriptionBanner(
+              message: 'Match Percentage',
+              overflow: null,
+              trailing: LikeFeverWidget(
+                value: 20.0,
+                assetURI: BetaIconPaths.likeScale01,
+              ),
+              // trailing: Container(
+              //   margin: EdgeInsets.symmetric(horizontal: 4.0),
+              //   padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.5),
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(8.0),
+              //     gradient: LinearGradient(
+              //       begin: Alignment.topLeft,
+              //       end: Alignment.bottomRight,
+              //       colors: mainColorGradient.colors,
+              //     ),
+              //   ),
+              //   child: RichText(
+              //     text: TextSpan(
+              //       style: subHeaderStyle.copyWith(color: whiteTextColor),
+              //       children: <TextSpan>[
+              //         TextSpan(
+              //           text: '70% ',
+              //           style: subTitleStyle.copyWith(color: whiteTextColor),
+              //         ),
+              //         TextSpan(text: 'match'),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+            ),
+          ],
+        ),
+      ),
+    ];
+  }
+
+  /// Returns a string with `https://` appended to the back of the `base` given.
+  String _baseToNetwork(String base) {
+    final String _http = 'https://';
+    return _http + base;
+  }
+
   /// A widget that displays the actions a user can make on a match.
   /// Actions such as:
   ///   "Dislike",
@@ -502,9 +815,8 @@ class _DraggableCardState extends State<DraggableCard>
     // This makes our MatchCard to float avove the AppBar and other
     // widgets since it's is an overlay on the current context.
     var wrapper = AnchoredOverlay(
-      showOverlay: _showCardStack,
-      child: Container(),
-      overlayBuilder: (BuildContext context, Rect anchorBounds, Offset anchor) {
+      showOverlay: true,
+      overlayBuilder: (BuildContext cntx, Rect anchorBounds, Offset anchor) {
         // The height available for the MatchCard to fit into.
         //
         // Note: This is height when no padding has been applied.
@@ -529,8 +841,8 @@ class _DraggableCardState extends State<DraggableCard>
               width: anchorBounds.width,
               height: anchorBounds.height,
               // We apply the pad here.
-              padding:
-                  EdgeInsets.symmetric(vertical: vertPad, horizontal: horizPad),
+              padding: EdgeInsets.symmetric(
+                  vertical: vertPad, horizontal: horizPad),
               child: Stack(
                 fit: StackFit.expand,
                 children: [
@@ -552,9 +864,12 @@ class _DraggableCardState extends State<DraggableCard>
                               // to know and fit with the amount of space remaining.
                               height: kActualHeight,
                               child: SingleChildScrollView(
+                                // TODO: see if this helps to stop the mutation of the scrollView
+                                // when the previous Draggable Widget has been removed or dismissed.
+                                // key: UniqueKey(),
                                 controller: scrollController,
-                                restorationId:
-                                    '${widget.mactchProfile.username}-${DateTime.now().toString()}',
+                                // restorationId:
+                                //     '${widget.mactchProfile.username}-${DateTime.now().toString()}',
                                 clipBehavior: Clip.none,
                                 physics: ClampingScrollPhysics(),
                                 scrollDirection: Axis.vertical,
@@ -603,7 +918,7 @@ class _DraggableCardState extends State<DraggableCard>
                     Align(
                       alignment: Alignment.topRight,
                       child: CustomScrollBar(
-                        key: UniqueKey(),
+                        // key: UniqueKey(),
                         scrollController: scrollController,
                         trackHeight: 80.0,
                         trackWidth: 8.5,
@@ -619,6 +934,7 @@ class _DraggableCardState extends State<DraggableCard>
           ),
         );
       },
+      child: Container(),
     );
 
     return wrapper;
@@ -626,279 +942,6 @@ class _DraggableCardState extends State<DraggableCard>
 }
 
 enum FastSwipe { notFastSwipe, Right, Left }
-
-/// Generates a List of Items that serves as the MatchDetails.
-///
-/// We are returnig a List of Widgets so that this can be easily
-/// incorporated into the MatchCard Scroll ViewPort.
-///
-/// Also, we have to imcorporate this into the Draggable Widget since we needed it to be part
-/// of the Overlay being display/stacked on the screen which also makes it drag when we drag.swipe
-/// left or right.
-///
-List<Widget> buildMatchDetails(
-  Profile profile, {
-  @required BuildContext context,
-}) {
-  final _imageUrls = profile.imageUrls ?? <String>[];
-
-  // builds the achivement items such as loves and stars.
-  Widget _buildAchievementItem(String iconURI, String value) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 2.0),
-      child: Row(
-        children: [
-          Text(
-            value,
-            style: smallCharStyle.copyWith(color: darkTextColor),
-          ),
-          SizedBox(width: 2.0),
-          PrecachedImage.asset(
-            imageURI: iconURI,
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Return a List of Widgets.
-  return [
-    SizedBox(height: 16.0),
-    Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5.0),
-            child: Text(
-              '${profile.username}, ${profile.age}',
-              textAlign: TextAlign.left,
-              // overflow: TextOverflow.ellipsis,
-              style: boldTextStyle.copyWith(fontSize: 18.0),
-            ),
-          ),
-        ),
-        // Padding(
-        //   padding: EdgeInsets.symmetric(horizontal: 5.0),
-        //   child: Row(
-        //     children: [
-        //       _buildAchievementItem(BetaIconPaths.heartIconFilled01, '25k+'),
-        //       _buildAchievementItem(BetaIconPaths.starIconFilled01, '15k+'),
-        //     ],
-        //   ),
-        // ),
-      ],
-    ),
-    Container(
-      alignment: Alignment.centerLeft,
-      padding: EdgeInsets.symmetric(horizontal: 5.0),
-      child: Text(
-        (profile.headline != null) ? profile.headline : '',
-        textAlign: TextAlign.left,
-        style: defaultTextStyle,
-      ),
-    ),
-    Container(
-      alignment: Alignment.centerLeft,
-      padding: EdgeInsets.only(
-        top: 8.0,
-        bottom: 12.0,
-        left: 5.0,
-        right: 5.0,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Description',
-            style: subTitleStyle,
-          ),
-          Divider(
-            color: darkCardColor,
-            indent: 2.0,
-            endIndent: 2.0,
-            thickness: 2.8,
-            height: 8.0,
-          ),
-          Text(
-            (profile.description != null)
-                ? profile.description
-                : 'No Description available',
-            style: mediumCharStyle,
-          ),
-        ],
-      ),
-    ),
-    Container(
-      alignment: Alignment.centerRight,
-      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
-      child: Row(
-        children: [
-          PrecachedImage.asset(imageURI: BetaIconPaths.locationIconFilled01),
-          SizedBox(width: 5.6),
-          Text(
-            (profile.location != null)
-                ? 'Lives in ${profile.location}'
-                : 'Current Location not available',
-            textAlign: TextAlign.right,
-            style: defaultTextStyle,
-          ),
-        ],
-      ),
-    ),
-    Container(
-      alignment: Alignment.centerLeft,
-      padding: EdgeInsets.only(
-        top: 8.0,
-        bottom: 12.0,
-        left: 5.0,
-        right: 5.0,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Profile Images',
-            style: subTitleStyle,
-          ),
-          Divider(
-            color: darkCardColor,
-            indent: 2.0,
-            endIndent: 2.0,
-            thickness: 2.8,
-            height: 8.0,
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.14,
-            child: !(_imageUrls.length > 0)
-                ? Center(
-                    child: Text(
-                      'No Profile image Available for match',
-                      style: mediumBoldedCharStyle,
-                    ),
-                  )
-                : ListView.separated(
-                    key: UniqueKey(),
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _imageUrls.length,
-                    itemBuilder: (cntx, index) {
-                      final String _url = _baseToNetwork(_imageUrls[index]);
-                      return SizedBox(
-                        height: 80.5,
-                        width: 100.0,
-                        child: Card(
-                          margin: EdgeInsets.all(6.0),
-                          clipBehavior: Clip.antiAlias,
-                          elevation: 2.1,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18.0),
-                          ),
-                          child: PrecachedImage.network(
-                            imageURL: _url,
-                            fadeIn: true,
-                            shouldPrecache: false,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
-                    },
-                    separatorBuilder: (cntx, index) {
-                      return SizedBox(width: 16.0);
-                    },
-                  ),
-          ),
-        ],
-      ),
-    ),
-    Container(
-      alignment: Alignment.centerLeft,
-      padding: EdgeInsets.only(
-        top: 8.0,
-        bottom: 12.0,
-        left: 5.0,
-        right: 5.0,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Artificial Intelligence',
-            style: subTitleStyle,
-          ),
-          Divider(
-            color: darkCardColor,
-            indent: 2.0,
-            endIndent: 2.0,
-            thickness: 2.8,
-            height: 8.0,
-          ),
-          DescriptionBanner(
-            // TODO(Backend) Add a field "gender" to the profile Interface:
-            message: 'See what a baby with her will look like',
-            overflow: null,
-            onTap: () {
-              print('GO TO VIEW PROGENY PAGE!');
-            },
-            label: Align(
-              alignment: Alignment(-1.02, -2.0),
-              child: PrecachedImage.asset(
-                imageURI: BetaIconPaths.tryMeBanner,
-              ),
-            ),
-          ),
-          DescriptionBanner(
-            message: 'Like Fever Prediction',
-            overflow: null,
-            trailing: LikeFeverWidget(
-              value: 20.0,
-              assetURI: BetaIconPaths.likeFeverTherm02,
-              startValue: 20.0,
-            ),
-          ),
-          DescriptionBanner(
-            message: 'Match Percentage',
-            overflow: null,
-            trailing: LikeFeverWidget(
-              value: 20.0,
-              assetURI: BetaIconPaths.likeScale01,
-            ),
-            // trailing: Container(
-            //   margin: EdgeInsets.symmetric(horizontal: 4.0),
-            //   padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.5),
-            //   decoration: BoxDecoration(
-            //     borderRadius: BorderRadius.circular(8.0),
-            //     gradient: LinearGradient(
-            //       begin: Alignment.topLeft,
-            //       end: Alignment.bottomRight,
-            //       colors: mainColorGradient.colors,
-            //     ),
-            //   ),
-            //   child: RichText(
-            //     text: TextSpan(
-            //       style: subHeaderStyle.copyWith(color: whiteTextColor),
-            //       children: <TextSpan>[
-            //         TextSpan(
-            //           text: '70% ',
-            //           style: subTitleStyle.copyWith(color: whiteTextColor),
-            //         ),
-            //         TextSpan(text: 'match'),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-          ),
-        ],
-      ),
-    ),
-  ];
-}
-
-/// Returns a string with `https://` appended to the back of the `base` given.
-String _baseToNetwork(String base) {
-  final String _http = 'https://';
-  return _http + base;
-}
 
 ///
 class LikeFeverWidget extends StatelessWidget {

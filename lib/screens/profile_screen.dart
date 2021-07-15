@@ -187,15 +187,13 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
 
     final ImageProvider _img = _imgUrl == null
         ? PrecachedImage.asset(
-            imageURI: BetaIconPaths.defaultProfileImagePath,
+            imageURI: BetaIconPaths.defaultProfileImagePath01,
           ).image
         : CachedNetworkImageProvider(
             networkHelper.getProfileImageUrl(_imgUrl),
             // cacheKey: _profileImageUrl,
             imageRenderMethodForWeb: ImageRenderMethodForWeb.HtmlImage,
           );
-
-    print("Here is the Profile");
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -214,7 +212,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
             children: [
               Center(
                 child: CircleAvatar(
-                  backgroundColor: Colors.grey[200],
+                  backgroundColor: darkCardColor,
                   backgroundImage: _img,
                   radius: 50.5,
                   child: Align(

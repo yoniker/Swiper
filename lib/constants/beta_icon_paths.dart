@@ -59,13 +59,13 @@ class BetaIconPaths {
   static const String appLogoIcon = 'assets/beta_logo_01.png';
 
   /// The path to edit-profile-image icon in the Profile Screen.
-  static const String editProfieImageIconPath = 'assets/images/edit_icon01.png';
+  static const String editProfieImageIconPath = 'assets/images/edit_icon_01.png';
 
   /// The path to edit-profile-image icon in the Profile Screen.
-  static const String editImageIconPath02 = 'assets/images/edit_icon02.png';
+  static const String editImageIconPath02 = 'assets/images/edit_icon_02.png';
 
   /// The path to cancel-image icon in the Profile Screen.
-  static const String cancelIconPath = 'assets/images/cancel_icon01.png';
+  static const String cancelIconPath = 'assets/images/cancel_icon_01.png';
 
   // ### Miscelleneous
 
@@ -93,6 +93,10 @@ class BetaIconPaths {
   /// The path to the redBlend-colored settings Icon.
   static const String settingsIconFilled01 =
       'assets/images/settings_icon_filled.png';
+  
+  /// The path to the redBlended "heart&" Icon used in the view_children screen.
+  static const String heartsUnitedIconPath_01 =
+      'assets/images/heart_united_01.png';
 
   /// The path to the yellow-colored star Icon.
   static const String starIconFilled01 = 'assets/images/star_icon.png';
@@ -112,11 +116,21 @@ class BetaIconPaths {
   /// the Discover page.
   static const String likeScale01 = 'assets/images/like_scale_01.png';
 
+  /// The path to the orange message-icon used in the view-children screen.
+  static const String messageIcon = 'assets/images/message_icon_01.png';
+
   /// The path to the Defualt profile image.
-  static const String defaultProfileImagePath =
-      'assets/images/default_profile_icon.png';
+  static const String defaultProfileImagePath = 'assets/images/default_profile_icon.png';
+
+  /// The path to the Defualt profile image.
+  static const String defaultProfileImagePath01 = 'assets/images/default_profile_icon_02.png';
+
+  /// The path to the Defualt profile image.
+  static const String defaultProfileImagePath02 = 'assets/images/default_profile_icon_03.png';
 
   /// The path to the "Try me" banner displayed in the MatchDetails screen.
   static const String tryMeBanner = 'assets/images/try_me_label.png';
 
+  /// The path to the background divider ast the view-children screen.
+  static const String progeneyTreeDividerPath = 'assets/images/progeney_tree_divider.png';
 }

@@ -17,7 +17,7 @@ final Duration kFadeOutDuration = const Duration(milliseconds: 400);
 ///
 class CustomScrollBar extends StatefulWidget {
   CustomScrollBar({
-    @required Key key,
+    Key key,
     @required this.scrollController,
     this.trackColor,
     this.thumbColor = Colors.white,

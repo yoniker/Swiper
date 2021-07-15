@@ -32,16 +32,23 @@ class _MatchScreenState extends State<MatchScreen>
   AnimationController _animationController;
 
   // Holds a boolean value whether or not to hide the MatchCard.
-  // Note: This option must be set to false whenever you navigate to another Route
-  // from the Match Screen, so, it is best you call the "navigateTo" method before perform any form of navigation
-  // you intend to perform as this method sets the "_matchCardIsVisible" boolean variable to false.
+  //
+  // Note: This option must be set to false whenever you navigate to another Route (and true otherwise)
+  // from the Match Screen, so, it is best you call the "setVisiblity" method before you perform any form of navigation
+  // you intend to perform as this method sets the current value for the "_matchCardIsVisible" boolean object.
+  //
+  // This is necessary since all navigation from the Match Screen are always prevented because of the overlay concept
+  // in use in the screen.
+  //
+  // When you plan to navigate to any screen it is essential that this is set to true to make sure the overlay screen stay
+  // hidden.
+  //
+  // This is useful in that when we want to push (Navigate to) a new [Route] over [this]
+  // the current [Route], we don't want the overlay to Obscure the New Route we are pushing to.
+  //
+  // Whenever you wish to push to a new route consider using the "pushToScreen" method defined
+  // in the class below.
   bool _matchCardIsVisible = true;
-
-  // The actual Slide Animation literal.
-  // Animation<Offset> _slideAnimation;
-
-  // // The actual Size Animation literal.
-  // Animation<double> _sizeAnimation;
 
   /// Make the MatchCard Invisible by setting the variable "_matchCardIsVisible"
   /// to false.
@@ -105,7 +112,6 @@ class _MatchScreenState extends State<MatchScreen>
                         child: Transform(
                           alignment: Alignment.centerRight,
                           transform: Matrix4.rotationY(math.pi),
-
                           child: Icon(
                             Icons.refresh,
                             size: 24.0,
@@ -170,29 +176,21 @@ class _MatchScreenState extends State<MatchScreen>
             ),
             showAppLogo: true,
             hasBackButton: false,
-
             trailing: GlobalWidgets.assetImageToIcon(
               BetaIconPaths.settingsBarIcon,
-              onTap: () {
+              onTap: () async {
                 // hide the overlay.
                 setVisibility(false);
 
                 // Navigate savely to the Settings screen.
-                Navigator.of(context).push(
+                await Navigator.of(context).push(
                   CupertinoPageRoute(builder: (context) {
-                    return SwipeSettingsScreen(
-                      onPop: () {
-                        // pop the Settings Page.
-                        Navigator.of(context).pop();
-
-                        // then show the overlay.
-                        setVisibility(true);
-
-                        // removed print a statement.
-                      },
-                    );
+                    return SwipeSettingsScreen();
                   }),
-                );
+                ).then((value) {
+                  // make the match card visible.
+                  setVisibility(true);
+                });
               },
             ),
           ),
@@ -203,7 +201,11 @@ class _MatchScreenState extends State<MatchScreen>
           Expanded(
             child: Visibility(
               visible: _matchCardIsVisible,
-              child: MatchCardBuilder(),
+              child: MatchCardBuilder(
+                onNavigationCommand: (value) {
+                  setVisibility(value);
+                },
+              ),
             ),
           ),
         ],
@@ -214,7 +216,10 @@ class _MatchScreenState extends State<MatchScreen>
 
 /// The card Widget used to display match Information.
 class MatchCardBuilder extends StatefulWidget {
-  MatchCardBuilder({Key key}) : super(key: key);
+  MatchCardBuilder({Key key, @required this.onNavigationCommand})
+      : super(key: key);
+
+  final void Function(bool) onNavigationCommand;
 
   @override
   _MatchCardBuilderState createState() => _MatchCardBuilderState();
@@ -226,14 +231,14 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
   Offset bottomCardOffset = Offset(0.0, 1.7);
 
   // The controller that controls how each match card slides when a valid Decision is made.
-  ScrollController _detailsScreenController;
+  // ScrollController _detailsScreenController;
 
-  @override
-  void initState() {
-    super.initState();
+  // @override
+  // void initState() {
+  //   super.initState();
 
-    _detailsScreenController = ScrollController();
-  }
+  //   _detailsScreenController = ScrollController();
+  // }
 
   /// Deduce what direction to be registered for specific [Decision]s.
   ///
@@ -300,6 +305,10 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
 
     if (nextMatch != null) {
       return DraggableCard(
+        onNavigationCommand: (value) {
+          // this triggers the MatchScreen to hide the MatchCard stack.
+          widget.onNavigationCommand(value);
+        },
         screenHeight: MediaQuery.of(context).size.height,
         screenWidth: MediaQuery.of(context).size.width,
         isDraggable: false,
@@ -330,7 +339,10 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
 
     if (currentMatch != null) {
       return DraggableCard(
-        key: UniqueKey(),
+        onNavigationCommand: (value) {
+          // this triggers the MatchScreen to hide the MatchCard stack.
+          widget.onNavigationCommand(value);
+        },
         screenHeight: MediaQuery.of(context).size.height,
         screenWidth: MediaQuery.of(context).size.width,
         slideTo: _desiredSlideOutDirection(),
@@ -372,4 +384,3 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
     );
   }
 }
-
