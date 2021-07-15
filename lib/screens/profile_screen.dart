@@ -17,6 +17,7 @@ import 'package:reorderables/reorderables.dart';
 
 ///
 class ProfileScreen extends StatefulWidget {
+  static const String routeName = '/profile_screen';
   ProfileScreen({Key key}) : super(key: key);
 
 

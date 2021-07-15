@@ -9,6 +9,7 @@ import 'package:betabeta/models/details_model.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/models/userid.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/src/media_type.dart' as media;
 import 'package:image/image.dart' as img;
@@ -135,11 +136,11 @@ class NetworkHelper {
   }
 
   Future<HashMap<String, dynamic>> getFacesLinks(
-      {String imageFileName, String userId}) async {
+      {String imageFileName, UserId userId}) async {
     if (_facesCall != null) {
       return HashMap();
     }
-    Uri facesLinkUri = Uri.https(SERVER_ADDR, 'faces/$userId/$imageFileName');
+    Uri facesLinkUri = Uri.https(SERVER_ADDR, 'faces/${userId.id}/$imageFileName');
     _facesCall = http.get(facesLinkUri);
     if (DateTime.now().difference(_lastFacesImagesCall) <
         MIN_FACES_CALL_INTERVAL) {
