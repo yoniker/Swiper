@@ -15,7 +15,17 @@ import 'package:reorderables/reorderables.dart';
 
 ///
 class ProfileSettingsScreen extends StatefulWidget {
-  ProfileSettingsScreen({Key key}) : super(key: key);
+  ProfileSettingsScreen({Key key, this.imageUrls}) : super(key: key);
+
+  // Since we have loaded the image prior at the profile_tab
+  // we can just pass it down to the profile_screen instead of having the
+  // image display widgets wait for another fetch from the network.
+  //
+  // Note we still call the "getProfileImage" method but we get the Profile to load faster.
+  //
+  // Also, if non is provided it will just go on with its normal process of loading and waiting for the images
+  // which means this route can be pushed to satck without worrying about the "imageUrls" parameter since its optional.
+  final List<String> imageUrls;
 
   @override
   _ProfileSettingsScreenState createState() => _ProfileSettingsScreenState();
@@ -43,6 +53,13 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
   @override
   initState() {
     super.initState();
+
+    if (widget.imageUrls != null && widget.imageUrls.isNotEmpty) {
+      mountedLoader(() {
+        _profileImagesUrls = List.from(widget.imageUrls, growable: false);
+      });
+    }
+
     // initialize the NetworkHelper instance.
     //
     // TODO(Yonikeren): You do know that whenever you work with [NetworkHelper()..do something] you are creating a
@@ -55,15 +72,13 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
     networkHelper = NetworkHelper();
     settingsData = SettingsData();
 
+    // this makes sure that if the state is not yet mounted, we don't end up calling setState
+    // but instead push the function forward to the addPostFrameCallback function.
     mountedLoader(_syncFromServer);
     _aboutMe = DetailsData().aboutMe;
     _company = DetailsData().company;
     _jobTitle = DetailsData().job;
     print(DetailsData().aboutMe);
-
-    // this makes sure that if the state is not yet mounted, we don't end up calling setState
-    // but instead push the function forward to the addPostFrameCallback function.
-    mountedLoader(() => _syncFromServer());
   }
 
   /// builds the toggle tile.
@@ -403,10 +418,9 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
         value = _list[i];
       }
 
-      setStateIfMounted(() {
-        _profileImagesUrls[i] = value;
-      });
+      _profileImagesUrls[i] = value;
     }
+    setStateIfMounted(() {/**/});
   }
 
   // update the list.

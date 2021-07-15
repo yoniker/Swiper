@@ -106,6 +106,10 @@ class BetaIconPaths {
 
   /// The like fever symbol used in painting the LikeFever Widget in thr details screen of
   /// the Discover page.
+  static const String likeFeverTherm02 = 'assets/images/like_fever_therm_02.png';
+
+  /// The like fever symbol used in painting the LikeFever Widget in thr details screen of
+  /// the Discover page.
   static const String likeScale01 = 'assets/images/like_scale_01.png';
 
   /// The path to the Defualt profile image.

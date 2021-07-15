@@ -473,18 +473,23 @@ class GlobalWidgets {
   static void showLoadingIndicator({
     @required BuildContext context,
     String message,
+    
+    /// This determines whether or not the loading indicator overlay 
+    /// pops on pressing the back button.
+    bool popOnBack = true,
+    bool barrierDismissible = false,
   }) async {
     // show the loading indicator
     await showDialog(
       useSafeArea: true,
-      barrierDismissible: false,
+      barrierDismissible: barrierDismissible,
       context: context,
       builder: (context) {
         return WillPopScope(
           onWillPop: () async {
             // this will prevent the pressing of the back-button on Android from 
             // poping the Loading indicator.
-            return false;
+            return popOnBack;
           },
           child: Center(
             child: Container(

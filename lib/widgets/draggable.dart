@@ -160,7 +160,7 @@ class _DraggableCardState extends State<DraggableCard>
       });
 
     // Initialize the ScrollController.
-    scrollController = ScrollController();
+    scrollController = ScrollController(keepScrollOffset: false);
 
     // Intantiate the exitDuration.
     exitDuration = widget.exitDuration;
@@ -399,11 +399,13 @@ class _DraggableCardState extends State<DraggableCard>
   ///
   /// This essetially calls the  "animateTo" function on the scrollController.
   void _resetViewport() {
-    scrollController.animateTo(
-      0,
-      duration: exitDuration,
-      curve: kdefaultExitCurve,
-    );
+    if (scrollController.hasClients) {
+      scrollController.animateTo(
+        0,
+        duration: exitDuration,
+        curve: kdefaultExitCurve,
+      );
+    }
   }
 
   /// A widget that displays the actions a user can make on a match.
@@ -848,35 +850,43 @@ List<Widget> buildMatchDetails(
           DescriptionBanner(
             message: 'Like Fever Prediction',
             overflow: null,
-            trailing: LikeFeverWidget(value: 20.0),
+            trailing: LikeFeverWidget(
+              value: 20.0,
+              assetURI: BetaIconPaths.likeFeverTherm02,
+              startValue: 20.0,
+            ),
           ),
           DescriptionBanner(
             message: 'Match Percentage',
             overflow: null,
-            trailing: Container(
-              margin: EdgeInsets.symmetric(horizontal: 4.0),
-              padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.5),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.0),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: mainColorGradient.colors,
-                ),
-              ),
-              child: RichText(
-                text: TextSpan(
-                  style: subHeaderStyle.copyWith(color: whiteTextColor),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: '70% ',
-                      style: subTitleStyle.copyWith(color: whiteTextColor),
-                    ),
-                    TextSpan(text: 'match'),
-                  ],
-                ),
-              ),
+            trailing: LikeFeverWidget(
+              value: 20.0,
+              assetURI: BetaIconPaths.likeScale01,
             ),
+            // trailing: Container(
+            //   margin: EdgeInsets.symmetric(horizontal: 4.0),
+            //   padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.5),
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(8.0),
+            //     gradient: LinearGradient(
+            //       begin: Alignment.topLeft,
+            //       end: Alignment.bottomRight,
+            //       colors: mainColorGradient.colors,
+            //     ),
+            //   ),
+            //   child: RichText(
+            //     text: TextSpan(
+            //       style: subHeaderStyle.copyWith(color: whiteTextColor),
+            //       children: <TextSpan>[
+            //         TextSpan(
+            //           text: '70% ',
+            //           style: subTitleStyle.copyWith(color: whiteTextColor),
+            //         ),
+            //         TextSpan(text: 'match'),
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ),
         ],
       ),
@@ -895,14 +905,45 @@ class LikeFeverWidget extends StatelessWidget {
   const LikeFeverWidget({
     Key key,
     @required this.value,
+    this.startValue = 0.0,
+    this.endValue = 100.0,
+    @required String assetURI,
     this.colorGradient,
   })  : assert(value >= 0.0 && value <= 100.0,
-            'The value provided must be in the range (0.0, 100.0)\n Given: $value'),
+            'The "value" provided must be in the range (0.0, 100.0)\n Given: $value'),
+        assert(endValue > startValue,
+            'The "endValue" provided must be greater than the "startValue'),
+        assert(endValue >= 0.0 && endValue <= 100.0,
+            'The "endValue" provided must be in the range (0.0, 100.0)\n Given: $value'),
+        assert(startValue >= 0.0 && startValue <= 100.0,
+            'The "startValue" provided must be in the range (0.0, 100.0)\n Given: $value'),
+        _uri = assetURI,
         super(key: key);
+
+  // run some computation to return a valid value within range.
+  double _compute(double value) {
+    final val = value / 100;
+    final _start = startValue / 100;
+    final _end = endValue / 100;
+
+    final double _computeVal = val * (_end - _start) + _start;
+
+    return _computeVal;
+  }
+
+  /// The start value of the scale.
+  ///
+  /// Note that the provided value must be in the range `(0.0, 100.0)`, same as the `value` parameter.
+  final double startValue;
+
+  /// The end value of the scale.
+  ///
+  /// Note that the provided value must be in the range `(0.0, 100.0)`, same as the `value` parameter.
+  final double endValue;
 
   /// The value of the like-fever.
   ///
-  /// Note that the value provided should be in the range `(0, 100)`.
+  /// Note that the value provided should be in the range `(0.0, 100.0)`.
   final double value;
 
   /// The Gradient to use in painting this widget.
@@ -910,14 +951,16 @@ class LikeFeverWidget extends StatelessWidget {
   /// If none is given (or a value of null is supplied) the gradient defaults to [mainColorGradient].
   final Gradient colorGradient;
 
+  /// THe URI to the asset image for rendering the scale.
+  final String _uri;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 6.0),
       child: ShaderMask(
         shaderCallback: (rect) {
-          final _val = (value / 100);
-          // double _skew = _val < 0.9 ? _val + 0.1 : _val;
+          final _val = _compute(value);
           final double _skew = _val + 0.1;
 
           final _gradient = colorGradient ??
@@ -936,15 +979,8 @@ class LikeFeverWidget extends StatelessWidget {
             rect,
           );
         },
-        child: PrecachedImage.asset(
-          imageURI: BetaIconPaths.likeScale01,
-        ),
+        child: PrecachedImage.asset(imageURI: _uri),
       ),
     );
   }
 }
-
-// SizedBox(width: 6.0),
-// PrecachedImage.asset(
-//   imageURI: BetaIconPaths.heartIconFilled01,
-// ),

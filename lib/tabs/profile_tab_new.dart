@@ -1,12 +1,16 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/general_settings.dart';
 import 'package:betabeta/screens/notification_screen.dart';
 import 'package:betabeta/screens/profile_screen.dart';
+import 'package:betabeta/services/networking.dart';
+import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/clickable.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:betabeta/widgets/thumb_button.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -18,26 +22,87 @@ class ProfileTabRedo extends StatefulWidget {
 }
 
 class _ProfileTabRedoState extends State<ProfileTabRedo>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, MountedStateMixin<ProfileTabRedo> {
+  List<String> _profileImagesUrls =
+      List.generate(6, (index) => null, growable: false);
+
+  // create a SettingsData & a NetworkHelper instance.
+  SettingsData settingsData;
+
+  NetworkHelper networkHelper;
+
+  @override
+  void initState() {
+    super.initState();
+
+    networkHelper = NetworkHelper();
+    settingsData = SettingsData();
+
+    // this makes sure that if the state is not yet mounted, we don't end up calling setState
+    // but instead push the function forward to the addPostFrameCallback function.
+    mountedLoader(_syncFromServer);
+  }
+
+  void _syncFromServer([bool reset]) async {
+    if (reset == true) {
+      _profileImagesUrls = List.generate(6, (index) => null, growable: false);
+    }
+
+    final _resp = await networkHelper.getProfileImages();
+    final _list = _resp;
+    print(_list);
+
+    if (_list?.isEmpty == true) {
+      // setStateIfMounted(() {
+      //   _profileImagesUrls.replaceRange(0, _profileImagesUrls.length, null);
+      // });
+      return;
+    }
+
+    for (int i = 0; i < _list.length; i++) {
+      String value;
+
+      // check if index exists in the profile images list.
+      if (_list.length > i) {
+        value = _list[i];
+      }
+
+      _profileImagesUrls[i] = value;
+    }
+    setStateIfMounted(() {/**/});
+  }
+
   // builds the profile picture display.
   Widget _profilePicDisplay(String imageUrl) {
-    // when the time comes we use "PrecachedImage.network" instead since we
-    // plan to fetch the image over the network.
     //
-    final _image = PrecachedImage.asset(
-      imageURI: 'assets/mock_images/scarlet.jpg',
-    );
+    ImageProvider _image = imageUrl == null
+        ? null
+        : CachedNetworkImageProvider(
+            networkHelper.getProfileImageUrl(imageUrl));
+
+    if (_image == null)
+      _image = PrecachedImage.asset(
+        imageURI: BetaIconPaths.defaultProfileImagePath,
+      ).image;
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 6.0),
       child: Clickable(
-        onTap: () {
-          Navigator.push(
+        onTap: () async {
+          await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ProfileSettingsScreen(),
+              builder: (context) => ProfileSettingsScreen(
+                imageUrls: _profileImagesUrls,
+              ),
             ),
           );
+
+          // this is because the imageUrls might have been edited.
+          // we want this page to stay updated so we use it this way.
+          //
+          // To avoid this we should consider using a StateManagement Library such as Provider or Bloc.
+          _syncFromServer();
         },
         child: Material(
           color: Colors.white,
@@ -48,7 +113,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
             child: CircleAvatar(
               minRadius: 35.0,
               maxRadius: 75.0,
-              backgroundImage: _image.image,
+              backgroundImage: _image,
               backgroundColor: colorBlend01,
             ),
           ),
@@ -92,6 +157,12 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
     // Implementation for [AutomaticKeepAliveClientMixin].
     super.build(context);
 
+    String _imgUrl = settingsData.facebookProfileImageUrl;
+
+    if (_profileImagesUrls != null && _profileImagesUrls.isNotEmpty) {
+      _imgUrl = _profileImagesUrls.first;
+    }
+
     return Scaffold(
       backgroundColor: darkCardColor,
       appBar: CustomAppBar(
@@ -104,7 +175,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
       body: SingleChildScrollView(
         child: Column(
           children: [
-            _profilePicDisplay('TODO: Add a valid profile image!'),
+            _profilePicDisplay(_imgUrl),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
               child: Text(
@@ -195,13 +266,21 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                     children: [
                       ThumbButton(
                         thumbColor: whiteCardColor,
-                        onTap: () {
+                        onTap: () async {
                           // move to the profile screen.
-                          Navigator.of(context).push(
+                          await Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => ProfileSettingsScreen(),
+                              builder: (context) => ProfileSettingsScreen(
+                                imageUrls: _profileImagesUrls,
+                              ),
                             ),
                           );
+
+                          // this is because the imageUrls might have been edited.
+                          // we want this page to stay updated so we use it this way.
+                          //
+                          // To avoid this we should consider using a StateManagement Library such as Provider or Bloc.
+                          _syncFromServer();
                         },
                         child: Positioned(
                           top: 12.0,

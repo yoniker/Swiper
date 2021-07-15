@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/match_engine.dart';
@@ -10,7 +12,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
-import 'dart:math' as math;
 
 class MatchScreen extends StatefulWidget {
   //static const String routeName = '/match_screen';
@@ -225,13 +226,13 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
   Offset bottomCardOffset = Offset(0.0, 1.7);
 
   // The controller that controls how each match card slides when a valid Decision is made.
-  PageController _matchPageController;
+  ScrollController _detailsScreenController;
 
   @override
   void initState() {
     super.initState();
-    // Initialize the [PageController] with values.
-    _matchPageController = PageController(initialPage: 0);
+
+    _detailsScreenController = ScrollController();
   }
 
   /// Deduce what direction to be registered for specific [Decision]s.
@@ -329,12 +330,12 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
 
     if (currentMatch != null) {
       return DraggableCard(
+        key: UniqueKey(),
         screenHeight: MediaQuery.of(context).size.height,
         screenWidth: MediaQuery.of(context).size.width,
         slideTo: _desiredSlideOutDirection(),
         onSlideUpdate: _onSlideUpdate,
         onSlideComplete: _onSlideComplete,
-        controller: _matchPageController,
         isDraggable: true,
         canScroll: true,
         card: MatchCard(
