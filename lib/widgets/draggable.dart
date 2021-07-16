@@ -85,7 +85,6 @@ class DraggableCard extends StatefulWidget {
 
 class _DraggableCardState extends State<DraggableCard>
     with TickerProviderStateMixin {
-
   Decision decision;
   GlobalKey profileCardKey = GlobalKey(debugLabel: 'profile_card_key');
 
@@ -130,18 +129,23 @@ class _DraggableCardState extends State<DraggableCard>
     // here we inform the MatchScreen to hide the Card Stack.
     widget.onNavigationCommand(false);
 
-    await Navigator.of(context).push<T>(
+    await Navigator.of(context)
+        .push<T>(
       MaterialPageRoute(
         builder: builder,
         settings: settings,
         maintainState: maintainState,
         fullscreenDialog: fullscreenDialog,
       ),
-    ).then((value) {
+    )
+        .then((value) {
       // here we inform the MatchScreen to show the Card Stack.
       widget.onNavigationCommand(true);
+
+      return value;
     });
 
+    return null;
   }
 
   @override
@@ -600,7 +604,7 @@ class _DraggableCardState extends State<DraggableCard>
                       scrollDirection: Axis.horizontal,
                       itemCount: _imageUrls.length,
                       itemBuilder: (cntx, index) {
-                        final String _url = _baseToNetwork(_imageUrls[index]);
+                        final String _url = matchBaseUrlToNetwork(_imageUrls[index]);
                         return SizedBox(
                           height: 80.5,
                           width: 100.0,
@@ -658,7 +662,9 @@ class _DraggableCardState extends State<DraggableCard>
                 // Before the new Route is pushed we set the value of
                 pushToScreen(
                   context,
-                  builder: (context) => ViewChildrenScreen(),
+                  builder: (context) => ViewChildrenScreen(
+                    matchProfile: profile,
+                  ),
                 );
               },
               label: Align(
@@ -713,12 +719,6 @@ class _DraggableCardState extends State<DraggableCard>
         ),
       ),
     ];
-  }
-
-  /// Returns a string with `https://` appended to the back of the `base` given.
-  String _baseToNetwork(String base) {
-    final String _http = 'https://';
-    return _http + base;
   }
 
   /// A widget that displays the actions a user can make on a match.
@@ -841,8 +841,8 @@ class _DraggableCardState extends State<DraggableCard>
               width: anchorBounds.width,
               height: anchorBounds.height,
               // We apply the pad here.
-              padding: EdgeInsets.symmetric(
-                  vertical: vertPad, horizontal: horizPad),
+              padding:
+                  EdgeInsets.symmetric(vertical: vertPad, horizontal: horizPad),
               child: Stack(
                 fit: StackFit.expand,
                 children: [
@@ -939,6 +939,12 @@ class _DraggableCardState extends State<DraggableCard>
 
     return wrapper;
   }
+}
+
+/// Returns a string with `https://` appended to the back of the `base` given.
+String matchBaseUrlToNetwork(String base) {
+  final String _http = 'https://';
+  return _http + base;
 }
 
 enum FastSwipe { notFastSwipe, Right, Left }
