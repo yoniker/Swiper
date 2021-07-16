@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       initialRoute: SplashScreen.routeName,
-      // home: LoginScreen(),
+
       // MatchingScreen(title: 'Swiper MVP'),
       // LoginHome(),
       //MatchingScreen(title: 'Flutter Demo Home Page'),

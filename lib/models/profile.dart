@@ -1,3 +1,4 @@
+import 'package:betabeta/models/userid.dart';
 import 'package:betabeta/services/networking.dart';
 
 class Profile {
@@ -8,11 +9,27 @@ class Profile {
   final int age;
   final String location;
   final double distance;
-  Profile({  this.imageUrls, this.username, this.headline, this.description, this.age, this.location,this.distance});
+  final String jobTitle;
+  final String serverUserImagesLocation;
+  final String height;
 
-  factory Profile.fromMatch(dynamic match){
+
+  UserId userId;
+  Profile({  this.imageUrls, this.username, this.headline, this.description, this.age, this.location,this.distance,this.jobTitle,this.serverUserImagesLocation,this.height, this.userId}){
+    if (this.userId ==null){
+      this.userId =  UserId(id: this.username, userType: UserType.POF_USER);
+    }
+  }
+
+  factory Profile.fromServer(dynamic match){
     List images=match['images'];
-    List<String> imagesUrls=images.cast<String>();
-  return Profile(username: match['username'],headline: match['headline'],description: match['description'],age:match['age'],location: match['location_desc'],distance: match['distance'], imageUrls: NetworkHelper.serverImagesUrl(imagesUrls)
+    List<String> imagesUrls = images.cast<String>();
+    UserId userId = UserId(id: match['pof_id'], userType: UserType.POF_USER); //TODO change here when implementing real users profiles
+  return Profile(username: match['username'],headline: match['headline'],description: match['description'],age:match['age'],
+      location: match['location_desc'],distance: match['distance'],jobTitle: match['profession'],
+      serverUserImagesLocation: match['server_user_images_location'],
+      height: match['height'],
+      userId: userId,
+      imageUrls: NetworkHelper.serverImagesUrl(imagesUrls)
   );}
 }
