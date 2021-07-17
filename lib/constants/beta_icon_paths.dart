@@ -59,10 +59,10 @@ class BetaIconPaths {
   static const String appLogoIcon = 'assets/beta_logo_01.png';
 
   /// The path to edit-profile-image icon in the Profile Screen.
-  static const String editProfieImageIconPath = 'assets/images/edit_icon_01.png';
+  static const String editProfieIconPath = 'assets/images/edit_icon_01.png';
 
   /// The path to edit-profile-image icon in the Profile Screen.
-  static const String editImageIconPath02 = 'assets/images/edit_icon_02.png';
+  static const String editIconPath02 = 'assets/images/edit_icon_02.png';
 
   /// The path to cancel-image icon in the Profile Screen.
   static const String cancelIconPath = 'assets/images/cancel_icon_01.png';
@@ -132,5 +132,5 @@ class BetaIconPaths {
   static const String tryMeBanner = 'assets/images/try_me_label.png';
 
   /// The path to the background divider ast the view-children screen.
-  static const String progeneyTreeDividerPath = 'assets/images/progeney_tree_divider.png';
+  static const String viewChildrenBackgroundImagePath = 'assets/images/progeney_tree_divider.png';
 }

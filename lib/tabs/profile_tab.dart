@@ -1,348 +1,360 @@
-import 'dart:async';
+import 'package:betabeta/constants/beta_icon_paths.dart';
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/settings_model.dart';
-import 'package:betabeta/popups/genderselector.dart';
-import 'package:betabeta/popups/popup.dart';
-import 'package:betabeta/screens/login_screen.dart';
+import 'package:betabeta/screens/general_settings.dart';
+import 'package:betabeta/screens/notification_screen.dart';
 import 'package:betabeta/screens/profile_screen.dart';
-import 'package:betabeta/screens/settings_screen.dart';
-import 'package:betabeta/widgets/round_icon_button.dart';
+import 'package:betabeta/services/networking.dart';
+import 'package:betabeta/utils/mixins.dart';
+import 'package:betabeta/widgets/clickable.dart';
+import 'package:betabeta/widgets/custom_app_bar.dart';
+import 'package:betabeta/widgets/pre_cached_image.dart';
+import 'package:betabeta/widgets/thumb_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-import 'package:page_indicator/page_indicator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfileTab extends StatefulWidget {
-  ProfileTab();
+class ProfileTabRedo extends StatefulWidget {
+  ProfileTabRedo({Key key}) : super(key: key);
+
   @override
-  _ProfileTabState createState() => _ProfileTabState();
+  _ProfileTabRedoState createState() => _ProfileTabRedoState();
 }
 
-class _ProfileTabState extends State<ProfileTab>
-    with AutomaticKeepAliveClientMixin<ProfileTab> {
-  int currentPage = 0;
-  int currentColor = 0;
-  bool reverse = false;
-  PageController _controller = new PageController();
-  Timer _pageChangeTimer;
-  Timer colorTimer;
-  String name = SettingsData().name;
-  String profileImageUrl = SettingsData().facebookProfileImageUrl;
+class _ProfileTabRedoState extends State<ProfileTabRedo>
+    with AutomaticKeepAliveClientMixin, MountedStateMixin<ProfileTabRedo> {
+  List<String> _profileImagesUrls = [];
+
+  // create a SettingsData & a NetworkHelper instance.
+  SettingsData settingsData;
+
+  NetworkHelper networkHelper;
 
   @override
   void initState() {
     super.initState();
-    _pageChanger();
+
+    networkHelper = NetworkHelper();
+    settingsData = SettingsData();
+
+    // this makes sure that if the state is not yet mounted, we don't end up calling setState
+    // but instead push the function forward to the addPostFrameCallback function.
+    mountedLoader(_syncFromServer);
   }
 
   @override
   void dispose() {
-    _pageChangeTimer.cancel();
-    _controller.dispose();
+    // dispose off the instance.
+    // 
+    // It is essential that this is called so that we don't keep unneccessary resources in memory 
+    // which can potentially cause memory overloading.
+    // 
+    // TODO(Yoni): We need to make sure every screen that make use of this resources are duly 
+    // reviewed and restructured such that each screen has only an instance of these classes and that they
+    // are all properly disposed.
+    settingsData.dispose();
+
     super.dispose();
   }
 
-  _logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    //Save name, id and picture url to persistent storage, and move on to the next screen
-    await prefs.remove('name');
-    await prefs.remove('facebook_id');
-    await prefs.remove('facebook_profile_image_url');
-    await prefs.remove('preferredGender');
-    SettingsData().facebookId = '';
-    SettingsData().name = '';
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-        (Route<dynamic> route) => false);
+  void _syncFromServer([bool reset]) async {
+    // if (reset == true) {
+    //   _profileImagesUrls = List.generate(6, (index) => null, growable: false);
+    // }
+
+    final _resp = await networkHelper.getProfileImages();
+    final _list = _resp;
+    _profileImagesUrls = _list;
+    print(_profileImagesUrls);
+
+    // if (_list?.isEmpty == true) {
+    //   // setStateIfMounted(() {
+    //   //   _profileImagesUrls.replaceRange(0, _profileImagesUrls.length, null);
+    //   // });
+    //   return;
+    // }
+
+    // for (int i = 0; i < _list.length; i++) {
+    //   String value;
+
+    //   // check if index exists in the profile images list.
+    //   if (_list.length > i) {
+    //     value = _list[i];
+    //   }
+
+    //   _profileImagesUrls[i] = value;
+    // }
+
+    setStateIfMounted(() {/**/});
   }
 
-  void _pageChanger() {
-    _pageChangeTimer = Timer.periodic(Duration(seconds: 2), (_) {
-      if (reverse == false && currentPage < bigDList.length - 1) {
-        _controller.nextPage(
-            duration: Duration(milliseconds: 5), curve: Curves.easeIn);
-      } else if (reverse == true && currentPage <= bigDList.length - 1) {
-        _controller.previousPage(
-            duration: Duration(milliseconds: 5), curve: Curves.easeOut);
-      }
-    });
-  }
+  // builds the profile picture display.
+  Widget _profilePicDisplay(String imageUrl) {
+    //
+    ImageProvider _image = imageUrl == null
+        ? null
+        : CachedNetworkImageProvider(
+            networkHelper.getProfileImageUrl(imageUrl));
 
-  void _onPageChanged(int value) {
-    //print("$value $reverse");
-    setState(() {
-      currentPage = value;
-    });
+    if (_image == null)
+      _image = PrecachedImage.asset(
+        imageURI: BetaIconPaths.defaultProfileImagePath01,
+      ).image;
 
-    if (currentPage == bigDList.length - 1) {
-      setState(() {
-        reverse = true;
-      });
-      return;
-    }
-
-    if (currentPage == 0) {
-      setState(() {
-        reverse = false;
-      });
-      return;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: <Widget>[_buildProfileInfo(), _buildSettingsBottom()],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProfileInfo() {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.6,
-      padding: const EdgeInsets.only(
-          right: 15.0, left: 15.0, top: 20.0, bottom: 50.0),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            new BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                spreadRadius: 1.0,
-                blurRadius: 1.0)
-          ],
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.elliptical(250, 100),
-            bottomRight: Radius.elliptical(250, 100),
-          )),
-      child: new Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        //mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          new Container(
-            height: 110.0,
-            width: 110.0,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: CachedNetworkImageProvider(profileImageUrl),
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center),
-                shape: BoxShape.circle,
-                color: Colors.grey.withOpacity(0.2)),
-          ),
-          new SizedBox(
-            height: 10.0,
-          ),
-          new Text(
-            name,
-            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-          ),
-          new SizedBox(
-            height: 10.0,
-          ),
-          const Text(
-            "Some info about you will be entered here",
-            style: TextStyle(
-              fontSize: 12.0,
-            ),
-          ),
-          const SizedBox(
-            height: 10.0,
-          ),
-          FacebookSignInButton(
-            text: 'Facebook logout',
-            onPressed: () {
-              _logout();
-            },
-          ),
-          const SizedBox(
-            height: 20.0,
-          ),
-          _buildSettingsButtons()
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSettingsBottom() {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: new Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          new Flexible(child: _buildBigDUI()),
-          new Padding(
-            padding:
-                const EdgeInsets.only(left: 50.0, right: 50.0, bottom: 25.0),
-            child: new RaisedButton(
-              color: Colors.white,
-              padding: const EdgeInsets.all(16.0),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25.0)),
-              onPressed: () {},
-              child: Center(
-                child: new Text(
-                  "MY BigD PLUS",
-                  style: TextStyle(color: Colors.pink, fontSize: 16.0),
-                ),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 6.0),
+      child: Clickable(
+        onTap: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProfileScreen(
+                imageUrls: _profileImagesUrls,
               ),
             ),
-          )
-        ],
+          );
+
+          // this is because the imageUrls might have been edited.
+          // we want this page to stay updated so we use it this way.
+          //
+          // To avoid this we should consider using a StateManagement Library such as Provider or Bloc.
+          _syncFromServer();
+        },
+        child: Material(
+          color: Colors.white,
+          elevation: 1.2,
+          shape: CircleBorder(),
+          child: Padding(
+            padding: const EdgeInsets.all(2.1),
+            child: CircleAvatar(
+              minRadius: 35.0,
+              maxRadius: 75.0,
+              backgroundImage: _image,
+              backgroundColor: darkCardColor,
+            ),
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildBigDUI() {
-    return Container(
-      height: 150.0,
-      child: PageIndicatorContainer(
-          indicatorSpace: 5.0,
-          indicatorSelectorColor: Colors.blue,
-          indicatorColor: Colors.grey.withOpacity(0.5),
-          align: IndicatorAlign.bottom,
-          child: new PageView.builder(
-              controller: _controller,
-              onPageChanged: _onPageChanged,
-              itemCount: bigDList.length,
-              itemBuilder: (c, index) {
-                return new Container(
-                  padding: EdgeInsets.all(15.0),
-                  margin: EdgeInsets.only(top: 20.0),
-                  child: new Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        bigDList[index].title,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w900),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Text(
-                        bigDList[index].subTitle,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 14.0, color: Colors.black),
-                      ),
-                    ],
-                  ),
-                  width: MediaQuery.of(context).size.width,
-                );
-              }),
-          length: bigDList.length),
-    );
-  }
-
-  showPopup(BuildContext context, String title,
-      {BuildContext popupContext}) async {
-    return await Navigator.push(
-      context,
-      PopupLayout(
-        top: 30,
-        left: 30,
-        right: 30,
-        bottom: 50,
-        child: GenderSelector(selectedGender: SettingsData().preferredGender),
-      ),
-    );
-  }
-
-  Widget _buildSettingsButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-        Column(
-          children: <Widget>[
-            RoundIconButton.large(
-              icon: Icons.settings,
-              iconColor: Colors.red,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SwipeSettingsScreen(),
-                  ),
-                );
-              },
-            ),
-            new SizedBox(
-              height: 10.0,
-            ),
-            const Text(
-              "SETTINGS",
-              style: TextStyle(color: Colors.grey, fontSize: 12.0),
-            )
-          ],
+  /// builds the various achievement display such as the like display and the stars display.
+  Widget _achievementLabel({
+    @required String label,
+    @required String iconURI,
+    @required String value,
+    @required Color color,
+  }) {
+    return Column(
+      children: [
+        PrecachedImage.asset(
+          imageURI: iconURI,
         ),
-        new Column(
-          children: <Widget>[
-            RoundIconButton.small(
-              icon: Icons.camera_alt,
-              iconColor: Colors.blue,
-              onPressed: () {
-                //TODO
-              },
-            ),
-            new SizedBox(
-              height: 10.0,
-            ),
-            const Text(
-              "ADD MEDIA",
-              style: TextStyle(color: Colors.grey, fontSize: 12.0),
-            )
-          ],
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 6.0),
+          child: Text(
+            value,
+            style: titleStyle.copyWith(color: color),
+          ),
         ),
-        new Column(
-          children: <Widget>[
-            new RoundIconButton.large(
-              icon: Icons.edit,
-              iconColor: Colors.green,
-              onPressed: () {
-                // move to profile page
-                Navigator.of(context).push(
-                  CupertinoPageRoute(
-                    builder: (context) => ProfileSettingsScreen(),
-                  ),
-                );
-              },
-            ),
-            const SizedBox(
-              height: 10.0,
-            ),
-            const Text(
-              "EDIT INFO",
-              style: TextStyle(color: Colors.grey, fontSize: 12.0),
-            )
-          ],
+        Text(
+          label,
+          style: smallCharStyle.copyWith(
+            color: darkTextColor,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ],
     );
   }
 
   @override
+  Widget build(BuildContext context) {
+    // Implementation for [AutomaticKeepAliveClientMixin].
+    super.build(context);
+
+    String _imgUrl = settingsData.facebookProfileImageUrl;
+
+    if (_profileImagesUrls != null && _profileImagesUrls.isNotEmpty) {
+      _imgUrl = _profileImagesUrls.first;
+    }
+
+    return Scaffold(
+      backgroundColor: darkCardColor,
+      appBar: CustomAppBar(
+        trailing: PrecachedImage.asset(imageURI: BetaIconPaths.profileIcon),
+        hasTopPadding: true,
+        hasBackButton: false,
+        showAppLogo: false,
+        title: 'Profile',
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _profilePicDisplay(_imgUrl),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
+              child: Text(
+                'JEREMY jr., 50',
+                style: titleStyle,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                PrecachedImage.asset(
+                  imageURI: BetaIconPaths.locationIconFilled01,
+                ),
+                SizedBox(width: 4.0),
+                Text(
+                  'Alaska, U.S.A',
+                  style: subTitleStyle.copyWith(color: darkTextColor),
+                ),
+              ],
+            ),
+            SizedBox(height: 12.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                // _achievementLabel(
+                //   label: 'Likes',
+                //   iconURI: BetaIconPaths.likeIconFilled01,
+                //   value: '500+',
+                //   color: blue,
+                // ),
+                _achievementLabel(
+                  label: 'Loves',
+                  iconURI: BetaIconPaths.heartIconFilled01,
+                  value: '800+',
+                  color: colorBlend02,
+                ),
+                // _achievementLabel(
+                //   label: 'Stars',
+                //   iconURI: BetaIconPaths.starIconFilled01,
+                //   value: '50+',
+                //   color: yellowishOrange,
+                // ),
+              ],
+            ),
+            SizedBox(height: 12.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 100,
+                    minWidth: 85,
+                  ),
+                  child: Column(
+                    children: [
+                      ThumbButton(
+                        thumbColor: whiteCardColor,
+                        onTap: () {
+                          // move to general settings screen.
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GeneralSettingsScreen(),
+                            ),
+                          );
+                        },
+                        child: Positioned(
+                          top: 12.0,
+                          child: PrecachedImage.asset(
+                            imageURI: BetaIconPaths.settingsIconFilled01,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 2.0),
+                      Text(
+                        'Settings',
+                        style: smallBoldedCharStyle,
+                      ),
+                    ],
+                  ),
+                ),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 100,
+                    minWidth: 85,
+                  ),
+                  child: Column(
+                    children: [
+                      ThumbButton(
+                        thumbColor: whiteCardColor,
+                        onTap: () async {
+                          // move to the profile screen.
+                          await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ProfileScreen(
+                                imageUrls: _profileImagesUrls,
+                              ),
+                            ),
+                          );
+
+                          // this is because the imageUrls might have been edited.
+                          // we want this page to stay updated so we use it this way.
+                          //
+                          // To avoid this we should consider using a StateManagement Library such as Provider or Bloc.
+                          _syncFromServer(true);
+                        },
+                        child: Positioned(
+                          top: 12.0,
+                          child: PrecachedImage.asset(
+                            imageURI: BetaIconPaths.profileIconFilled01,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 2.0),
+                      Text(
+                        'Profile',
+                        style: smallBoldedCharStyle,
+                      ),
+                    ],
+                  ),
+                ),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 100,
+                    minWidth: 85,
+                  ),
+                  child: Column(
+                    children: [
+                      ThumbButton(
+                        thumbColor: whiteCardColor,
+                        onTap: () {
+                          // move to the notification screen.
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => NotificationScreen(),
+                            ),
+                          );
+                        },
+                        child: Positioned(
+                          top: 12.0,
+                          child: PrecachedImage.asset(
+                            imageURI: BetaIconPaths.notificationIconFilled01,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 2.0),
+                      Text(
+                        'Notifications',
+                        style: smallBoldedCharStyle,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // TODO(John & Yoni): Should we make use of KeepAlive at this page or not?
+  // Also, should we add a pull to refresh Functionality?
+  @override
   bool get wantKeepAlive => true;
 }
-
-class BigDPlusMessage {
-  final String title;
-  final String subTitle;
-  BigDPlusMessage({this.title, this.subTitle});
-}
-
-final List<BigDPlusMessage> bigDList = [
-  new BigDPlusMessage(
-      title: "Meet Dor, king of the multiverse",
-      subTitle: "Learn how to humble yourself!"),
-  new BigDPlusMessage(
-      title: "Smoke Dorgila",
-      subTitle: "Get unlimited Dorgila with BigD Plus!"),
-];

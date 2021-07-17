@@ -13,9 +13,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reorderables/reorderables.dart';
 
-///
-class ProfileSettingsScreen extends StatefulWidget {
-  ProfileSettingsScreen({Key key, this.imageUrls}) : super(key: key);
+/// The Implemntation of the Profile-screen
+class ProfileScreen extends StatefulWidget {
+  static const String routeName = '/profile_screen';
 
   // Since we have loaded the image prior at the profile_tab
   // we can just pass it down to the profile_screen instead of having the
@@ -27,12 +27,13 @@ class ProfileSettingsScreen extends StatefulWidget {
   // which means this route can be pushed to satck without worrying about the "imageUrls" parameter since its optional.
   final List<String> imageUrls;
 
+  ProfileScreen({Key key, this.imageUrls}) : super(key: key);
+
   @override
-  _ProfileSettingsScreenState createState() => _ProfileSettingsScreenState();
+  _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
-    with MountedStateMixin<ProfileSettingsScreen> {
+class _ProfileScreenState extends State<ProfileScreen> with MountedStateMixin {
   // --> All this information should be added to the data model.
   // this will be pre-filled with data from the server.
   bool _incognitoMode = false;
@@ -45,10 +46,11 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
 
   NetworkHelper networkHelper;
 
+  DetailsData detailsData;
+
   SettingsData settingsData;
 
-  List<String> _profileImagesUrls =
-      List.generate(6, (index) => null, growable: false);
+  List<String> _profileImagesUrls = [];
 
   @override
   initState() {
@@ -56,9 +58,10 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
 
     if (widget.imageUrls != null && widget.imageUrls.isNotEmpty) {
       mountedLoader(() {
-        _profileImagesUrls = List.from(widget.imageUrls, growable: false);
+        _profileImagesUrls = widget.imageUrls;
       });
     }
+    _syncFromServer();
 
     // initialize the NetworkHelper instance.
     //
@@ -71,14 +74,22 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
     // any instance variable.
     networkHelper = NetworkHelper();
     settingsData = SettingsData();
+    detailsData = DetailsData();
 
     // this makes sure that if the state is not yet mounted, we don't end up calling setState
     // but instead push the function forward to the addPostFrameCallback function.
-    mountedLoader(_syncFromServer);
-    _aboutMe = DetailsData().aboutMe;
-    _company = DetailsData().company;
-    _jobTitle = DetailsData().job;
-    print(DetailsData().aboutMe);
+    _aboutMe = detailsData.aboutMe;
+    _company = detailsData.company;
+    _jobTitle = detailsData.job;
+    print(detailsData.aboutMe);
+  }
+
+  @override
+  void dispose() {
+    // make sure this are properly disposed after use.
+    detailsData.dispose();
+    settingsData.dispose();
+    super.dispose();
   }
 
   /// builds the toggle tile.
@@ -116,8 +127,8 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
     void Function() onDelete,
   }) {
     Widget _child = imageUrl != null
-        ? Image.network(
-            imageUrl,
+        ? PrecachedImage.network(
+            imageURL: imageUrl,
             fit: BoxFit.cover,
           )
         : Center(
@@ -161,7 +172,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
                 elevation: 2.0,
                 child: InkWell(
                   onTap: () {
-                    if (onDelete != null) onDelete();
+                    onDelete();
                   },
                   child: Padding(
                     padding: EdgeInsets.all(2.5),
@@ -179,30 +190,13 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
 
   @override
   Widget build(BuildContext context) {
-    String _imgUrl = settingsData.facebookProfileImageUrl;
-
-    if (_profileImagesUrls != null && _profileImagesUrls.isNotEmpty) {
-      _imgUrl = _profileImagesUrls.first;
-    }
-
-    final ImageProvider _img = _imgUrl == null
-        ? PrecachedImage.asset(
-            imageURI: BetaIconPaths.defaultProfileImagePath01,
-          ).image
-        : CachedNetworkImageProvider(
-            networkHelper.getProfileImageUrl(_imgUrl),
-            // cacheKey: _profileImageUrl,
-            imageRenderMethodForWeb: ImageRenderMethodForWeb.HtmlImage,
-          );
-
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Profile',
         hasTopPadding: true,
         showAppLogo: false,
-        trailing: Icon(
-          Icons.edit_outlined,
-          color: blackTextColor,
+        trailing: GlobalWidgets.assetImageToIcon(
+          BetaIconPaths.inactiveProfileTabIconPath,
         ),
       ),
       body: SingleChildScrollView(
@@ -212,8 +206,9 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
             children: [
               Center(
                 child: CircleAvatar(
-                  backgroundColor: darkCardColor,
-                  backgroundImage: _img,
+                  backgroundColor: Colors.grey[200],
+                  backgroundImage: CachedNetworkImageProvider(
+                      settingsData.facebookProfileImageUrl),
                   radius: 50.5,
                   child: Align(
                     alignment: Alignment.bottomRight,
@@ -226,24 +221,17 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
                         onTap: () async {
                           // show the imagePicker Dialogue.
                           await GlobalWidgets.showImagePickerDialogue(
-                            context: context,
-                            onImagePicked: (image) async {
-                              GlobalWidgets.showLoadingIndicator(
-                                context: context,
-                              );
-
-                              // log
-                              print(
-                                  'The Path to the New Profile Image is: ${image.path}');
-
-                              GlobalWidgets.hideLoadingIndicator(context);
-                            },
-                          );
+                              context: context,
+                              onImagePicked: (image) {
+                                // log
+                                print(
+                                    'The Path to the New Profile Image is: ${image.path}');
+                              });
                         },
                         child: Padding(
                           padding: EdgeInsets.all(2.5),
                           child: GlobalWidgets.assetImageToIcon(
-                            BetaIconPaths.editProfieImageIconPath,
+                            BetaIconPaths.editProfieIconPath,
                           ),
                         ),
                       ),
@@ -253,98 +241,53 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
               ),
               SizedBox(height: 20.0),
               ReorderableWrap(
-                needsLongPressDraggable: false,
-                onReorder: (int oldIndex, int newIndex) async {
-                  if (newIndex >= _profileImagesUrls.length) {
-                    return;
-                  }
-                  //I don't see a need to wait for the server;
-                  setState(() {
-                    // String temp = _profileImagesUrls[
-                    //     oldIndex]; //Swap the elements (I wish there was a native way to do that!)
-                    // _profileImagesUrls[oldIndex] = _profileImagesUrls[newIndex];
-                    // _profileImagesUrls[newIndex] = temp;
-                    final String newString = _profileImagesUrls[oldIndex];
-                    final String oldString = _profileImagesUrls[newIndex];
-
-                    _profileImagesUrls[oldIndex] = oldString;
-                    _profileImagesUrls[newIndex] = newString;
-                  });
-
-                  await NetworkHelper().swapProfileImages(
-                    oldIndex,
-                    newIndex,
-                  );
-                },
-                direction: Axis.horizontal,
-                alignment: WrapAlignment.spaceAround,
-                runAlignment: WrapAlignment.spaceAround,
-                spacing: 12.0,
-                runSpacing: 12.0,
-                children: List<Widget>.generate(
-                  _profileImagesUrls.length,
-                  (index) {
-                    // final url = index < _profileImagesUrls.length
-                    //     ? networkHelper
-                    //         .getProfileImageUrl(_profileImagesUrls[index])
-                    //     : null;
-                    final url = _profileImagesUrls[index] == null
-                        ? null
-                        : networkHelper
-                            .getProfileImageUrl(_profileImagesUrls[index]);
-                    return ReorderableWidget(
-                      key: Key('#reorderable_profile$index'),
-                      reorderable: index < _profileImagesUrls.length,
-                      child: _pictureBox(
-                        imageUrl: url,
-                        onDelete: () async {
-                          GlobalWidgets.showLoadingIndicator(context: context);
-
-                          await networkHelper.deleteProfileImage(index);
-                          // _syncFromServer();
-                          updateListIndex(index);
-
-                          GlobalWidgets.hideLoadingIndicator(context);
-                        },
-                        onImagePicked: (image) async {
-                          GlobalWidgets.showLoadingIndicator(context: context);
-
-                          await networkHelper.postProfileImage(image);
-                          _syncFromServer();
-
-                          GlobalWidgets.hideLoadingIndicator(context);
-                        },
-                      ),
-                    );
+                  needsLongPressDraggable: false,
+                  onReorder: (int oldIndex, int newIndex) {
+                    if (newIndex >= _profileImagesUrls.length) {
+                      return;
+                    }
+                    networkHelper.swapProfileImages(oldIndex,
+                        newIndex); //I don't see a need to wait for the server;
+                    setState(() {
+                      String temp = _profileImagesUrls[
+                          oldIndex]; //Swap the elements (I wish there was a native way to do that!)
+                      _profileImagesUrls[oldIndex] =
+                          _profileImagesUrls[newIndex];
+                      _profileImagesUrls[newIndex] = temp;
+                    });
                   },
-                ),
-                // children: List<Widget>.generate(
-                //   _profileImagesUrls.length + 1,
-                //   (index) {
-                //     final url = index < _profileImagesUrls.length
-                //         ? NetworkHelper()
-                //             .getProfileImageUrl(_profileImagesUrls[index])
-                //         : null;
-                //     return ReorderableWidget(
-                //       reorderable: index < _profileImagesUrls.length,
-                //       child: _pictureBox(
-                //           imageUrl: url,
-                //           onDelete: () {
-                //             NetworkHelper().deleteProfileImage(index).then((_) {
-                //               _syncFromServer();
-                //             });
-                //           },
-                //           onImagePicked: (image) {
-                //             NetworkHelper()
-                //                 .postProfileImage(File(image.path))
-                //                 .then((_) {
-                //               _syncFromServer();
-                //             });
-                //           }),
-                //     );
-                //   },
-                // ),
-              ),
+                  direction: Axis.horizontal,
+                  alignment: WrapAlignment.spaceAround,
+                  runAlignment: WrapAlignment.spaceAround,
+                  spacing: 12.0,
+                  runSpacing: 12.0,
+                  children: List<Widget>.generate(
+                      _profileImagesUrls.length + 1,
+                      (index) => ReorderableWidget(
+                            key: Key('#profile_screen-reorderable_key'),
+                            reorderable: index < _profileImagesUrls.length,
+                            child: _pictureBox(
+                                imageUrl: index < _profileImagesUrls.length
+                                    ? networkHelper.getProfileImageUrl(
+                                        _profileImagesUrls[index])
+                                    : null,
+                                onDelete: () {
+                                  networkHelper
+                                      .deleteProfileImage(index)
+                                      .then((_) {
+                                    {
+                                      _syncFromServer();
+                                    }
+                                  });
+                                },
+                                onImagePicked: (pickedImage) {
+                                  networkHelper
+                                      .postProfileImage(pickedImage)
+                                      .then((_) {
+                                    _syncFromServer();
+                                  });
+                                }),
+                          ))),
               _buildToggleTile(
                 title: 'Incognito Mode',
                 value: _incognitoMode,
@@ -362,7 +305,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
                   // do something.
                 },
                 onChanged: (val) {
-                  DetailsData().aboutMe = val;
+                  detailsData.aboutMe = val;
                 },
               ),
               TextEditBlock(
@@ -374,7 +317,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
                   // do something.
                 },
                 onChanged: (val) {
-                  DetailsData().job = val;
+                  detailsData.job = val;
                 },
               ),
               TextEditBlock(
@@ -386,7 +329,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
                   // do something.
                 },
                 onChanged: (val) {
-                  DetailsData().company = val;
+                  detailsData.company = val;
                 },
               ),
             ],
@@ -396,43 +339,11 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
     );
   }
 
-  void _syncFromServer() async {
-    final _resp = await networkHelper.getProfileImages();
-    final _list = _resp;
-    print(_list);
-
-    if (_list?.isEmpty == true) {
-      // setStateIfMounted(() {
-      //   _profileImagesUrls.replaceRange(0, _profileImagesUrls.length, null);
-      // });
-      return;
-    }
-
-    for (int i = 0; i < _list.length; i++) {
-      String value;
-
-      // check if index exists in the profile images list.
-      if (_list.length > i) {
-        value = _list[i];
-      }
-
-      _profileImagesUrls[i] = value;
-    }
-    setStateIfMounted(() {/**/});
-  }
-
-  // update the list.
-  void updateListIndex(int index) async {
-    final _resp = await networkHelper.getProfileImages();
-    String value;
-
-    // check if index exists in the profile images list.
-    if (_resp.length > index) {
-      value = _resp[index];
-    }
-
-    setStateIfMounted(() {
-      _profileImagesUrls[index] = value;
+  void _syncFromServer() {
+    networkHelper.getProfileImages().then((profileImagesUrls) {
+      mountedLoader(() {
+        _profileImagesUrls = profileImagesUrls;
+      });
     });
   }
 }
@@ -486,8 +397,13 @@ class _TextEditBlockState extends State<TextEditBlock> {
 
   @override
   void initState() {
-    _textEditingController =
-        widget.controller ?? TextEditingController(text: widget.text ?? '');
+    _textEditingController = widget.controller ?? TextEditingController();
+
+    if (widget.text != null) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        _textEditingController.text = widget.text;
+      });
+    }
 
     _isOpened = (widget.text != null) && (widget.text != '');
 
@@ -534,7 +450,7 @@ class _TextEditBlockState extends State<TextEditBlock> {
                 widget.onStatusChanged(_isOpened);
             },
             child: GlobalWidgets.assetImageToIcon(
-              BetaIconPaths.editImageIconPath02,
+              BetaIconPaths.editIconPath02,
               iconPad: EdgeInsets.all(12.0),
             ),
           ),
@@ -558,3 +474,428 @@ class _TextEditBlockState extends State<TextEditBlock> {
     );
   }
 }
+
+// An Older Implementation.
+// ///
+// class ProfileSettingsScreen extends StatefulWidget {
+//   ProfileSettingsScreen({Key key, this.imageUrls}) : super(key: key);
+
+//   // Since we have loaded the image prior at the profile_tab
+//   // we can just pass it down to the profile_screen instead of having the
+//   // image display widgets wait for another fetch from the network.
+//   //
+//   // Note we still call the "getProfileImage" method but we get the Profile to load faster.
+//   //
+//   // Also, if non is provided it will just go on with its normal process of loading and waiting for the images
+//   // which means this route can be pushed to satck without worrying about the "imageUrls" parameter since its optional.
+//   final List<String> imageUrls;
+
+//   @override
+//   _ProfileSettingsScreenState createState() => _ProfileSettingsScreenState();
+// }
+
+// class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
+//     with MountedStateMixin<ProfileSettingsScreen> {
+//   // --> All this information should be added to the data model.
+//   // this will be pre-filled with data from the server.
+//   bool _incognitoMode = false;
+
+//   String _aboutMe;
+
+//   String _jobTitle;
+
+//   String _company;
+
+//   NetworkHelper networkHelper;
+
+//   SettingsData settingsData;
+
+//   List<String> _profileImagesUrls =
+//       List.generate(6, (index) => null, growable: false);
+
+//   @override
+//   initState() {
+//     super.initState();
+
+//     if (widget.imageUrls != null && widget.imageUrls.isNotEmpty) {
+//       mountedLoader(() {
+//         _profileImagesUrls = List.from(widget.imageUrls, growable: false);
+//       });
+//     }
+
+//     // initialize the NetworkHelper instance.
+//     //
+//     // TODO(Yonikeren): You do know that whenever you work with [networkHelper..do something] you are creating a
+//     // new instance of the class and of-course whatever field or variable present in the class as well.
+//     // that's why is always a good idea to instantiate a data-class via this form of declaration.
+//     // so we don't end up with uneccessary duplicates whenever we create a new instance.
+//     //
+//     // also there are some FUnctions I will suggest you make static since they don't alter or make changes to
+//     // any instance variable.
+//     networkHelper = networkHelper;
+//     settingsData = settingsData;
+
+//     // this makes sure that if the state is not yet mounted, we don't end up calling setState
+//     // but instead push the function forward to the addPostFrameCallback function.
+//     mountedLoader(_syncFromServer);
+//     _aboutMe = detailsData.aboutMe;
+//     _company = detailsData.company;
+//     _jobTitle = detailsData.job;
+//     print(detailsData.aboutMe);
+//   }
+
+//   /// builds the toggle tile.
+//   Widget _buildToggleTile({
+//     @required String title,
+//     @required bool value,
+//     void Function(bool) onToggle,
+//   }) {
+//     return GlobalWidgets.buildSettingsBlock(
+//       top: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//         children: [
+//           Text(
+//             title,
+//             style: boldTextStyle,
+//           ),
+//           CupertinoSwitch(
+//             value: value,
+//             activeColor: colorBlend01,
+//             onChanged: onToggle,
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   /// A Box that Displays the currently available user profile images.
+//   Widget _pictureBox({
+//     String imageUrl,
+
+//     /// This function is fired when an image is successfully taken from the Gallery or Camera.
+//     void Function(PickedFile imageFile) onImagePicked,
+
+//     /// A function that fires when the cancel icon on the image-box is pressed.
+//     void Function() onDelete,
+//   }) {
+//     Widget _child = imageUrl != null
+//         ? Image.network(
+//             imageUrl,
+//             fit: BoxFit.cover,
+//           )
+//         : Center(
+//             child: IconButton(
+//               icon: Icon(Icons.add_rounded),
+//               onPressed: () async {
+//                 await GlobalWidgets.showImagePickerDialogue(
+//                   context: context,
+//                   onImagePicked: onImagePicked,
+//                 );
+//               },
+//             ),
+//           );
+
+//     return Container(
+//       height: 125,
+//       width: 85,
+//       child: Stack(
+//         children: [
+//           Container(
+//             height: 125,
+//             width: 85,
+//             child: Material(
+//               borderRadius: BorderRadius.circular(18.0),
+//               color: Colors.white,
+//               elevation: 2.0,
+//               shadowColor: Colors.grey[200],
+//               clipBehavior: Clip.antiAlias,
+//               child: _child,
+//             ),
+//           ),
+
+//           // This is the cancel button which will appear only when an image is present.
+//           if (imageUrl != null)
+//             Align(
+//               alignment: Alignment(1.2, -1.2),
+//               child: Material(
+//                 clipBehavior: Clip.antiAlias,
+//                 color: Colors.white,
+//                 shape: CircleBorder(),
+//                 elevation: 2.0,
+//                 child: InkWell(
+//                   onTap: () {
+//                     if (onDelete != null) onDelete();
+//                   },
+//                   child: Padding(
+//                     padding: EdgeInsets.all(2.5),
+//                     child: GlobalWidgets.assetImageToIcon(
+//                       BetaIconPaths.cancelIconPath,
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//             ),
+//         ],
+//       ),
+//     );
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     String _imgUrl = settingsData.facebookProfileImageUrl;
+
+//     if (_profileImagesUrls != null && _profileImagesUrls.isNotEmpty) {
+//       _imgUrl = _profileImagesUrls.first;
+//     }
+
+//     final ImageProvider _img = _imgUrl == null
+//         ? PrecachedImage.asset(
+//             imageURI: BetaIconPaths.defaultProfileImagePath01,
+//           ).image
+//         : CachedNetworkImageProvider(
+//             networkHelper.getProfileImageUrl(_imgUrl),
+//             // cacheKey: _profileImageUrl,
+//             imageRenderMethodForWeb: ImageRenderMethodForWeb.HtmlImage,
+//           );
+
+//     return Scaffold(
+//       appBar: CustomAppBar(
+//         title: 'Profile',
+//         hasTopPadding: true,
+//         showAppLogo: false,
+//         trailing: Icon(
+//           Icons.edit_outlined,
+//           color: blackTextColor,
+//         ),
+//       ),
+//       body: SingleChildScrollView(
+//         child: Padding(
+//           padding: EdgeInsets.symmetric(horizontal: 8.0),
+//           child: Column(
+//             children: [
+//               Center(
+//                 child: CircleAvatar(
+//                   backgroundColor: darkCardColor,
+//                   backgroundImage: _img,
+//                   radius: 50.5,
+//                   child: Align(
+//                     alignment: Alignment.bottomRight,
+//                     child: Material(
+//                       clipBehavior: Clip.antiAlias,
+//                       color: Colors.white,
+//                       shape: CircleBorder(),
+//                       elevation: 2.0,
+//                       child: InkWell(
+//                         onTap: () async {
+//                           // show the imagePicker Dialogue.
+//                           await GlobalWidgets.showImagePickerDialogue(
+//                             context: context,
+//                             onImagePicked: (image) async {
+//                               GlobalWidgets.showLoadingIndicator(
+//                                 context: context,
+//                               );
+
+//                               // log
+//                               print(
+//                                   'The Path to the New Profile Image is: ${image.path}');
+
+//                               GlobalWidgets.hideLoadingIndicator(context);
+//                             },
+//                           );
+//                         },
+//                         child: Padding(
+//                           padding: EdgeInsets.all(2.5),
+//                           child: GlobalWidgets.assetImageToIcon(
+//                             BetaIconPaths.editProfieImageIconPath,
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//               SizedBox(height: 20.0),
+//               ReorderableWrap(
+//                 needsLongPressDraggable: false,
+//                 onReorder: (int oldIndex, int newIndex) async {
+//                   if (newIndex >= _profileImagesUrls.length) {
+//                     return;
+//                   }
+//                   //I don't see a need to wait for the server;
+//                   setState(() {
+//                     // String temp = _profileImagesUrls[
+//                     //     oldIndex]; //Swap the elements (I wish there was a native way to do that!)
+//                     // _profileImagesUrls[oldIndex] = _profileImagesUrls[newIndex];
+//                     // _profileImagesUrls[newIndex] = temp;
+//                     final String newString = _profileImagesUrls[oldIndex];
+//                     final String oldString = _profileImagesUrls[newIndex];
+
+//                     _profileImagesUrls[oldIndex] = oldString;
+//                     _profileImagesUrls[newIndex] = newString;
+//                   });
+
+//                   await networkHelper.swapProfileImages(
+//                     oldIndex,
+//                     newIndex,
+//                   );
+//                 },
+//                 direction: Axis.horizontal,
+//                 alignment: WrapAlignment.spaceAround,
+//                 runAlignment: WrapAlignment.spaceAround,
+//                 spacing: 12.0,
+//                 runSpacing: 12.0,
+//                 children: List<Widget>.generate(
+//                   _profileImagesUrls.length,
+//                   (index) {
+//                     // final url = index < _profileImagesUrls.length
+//                     //     ? networkHelper
+//                     //         .getProfileImageUrl(_profileImagesUrls[index])
+//                     //     : null;
+//                     final url = _profileImagesUrls[index] == null
+//                         ? null
+//                         : networkHelper
+//                             .getProfileImageUrl(_profileImagesUrls[index]);
+//                     return ReorderableWidget(
+//                       key: Key('#reorderable_profile$index'),
+//                       reorderable: index < _profileImagesUrls.length,
+//                       child: _pictureBox(
+//                         imageUrl: url,
+//                         onDelete: () async {
+//                           GlobalWidgets.showLoadingIndicator(context: context);
+
+//                           await networkHelper.deleteProfileImage(index);
+//                           // _syncFromServer();
+//                           updateListIndex(index);
+
+//                           GlobalWidgets.hideLoadingIndicator(context);
+//                         },
+//                         onImagePicked: (image) async {
+//                           GlobalWidgets.showLoadingIndicator(context: context);
+
+//                           await networkHelper.postProfileImage(image);
+//                           _syncFromServer();
+
+//                           GlobalWidgets.hideLoadingIndicator(context);
+//                         },
+//                       ),
+//                     );
+//                   },
+//                 ),
+//                 // children: List<Widget>.generate(
+//                 //   _profileImagesUrls.length + 1,
+//                 //   (index) {
+//                 //     final url = index < _profileImagesUrls.length
+//                 //         ? networkHelper
+//                 //             .getProfileImageUrl(_profileImagesUrls[index])
+//                 //         : null;
+//                 //     return ReorderableWidget(
+//                 //       reorderable: index < _profileImagesUrls.length,
+//                 //       child: _pictureBox(
+//                 //           imageUrl: url,
+//                 //           onDelete: () {
+//                 //             networkHelper.deleteProfileImage(index).then((_) {
+//                 //               _syncFromServer();
+//                 //             });
+//                 //           },
+//                 //           onImagePicked: (image) {
+//                 //             networkHelper
+//                 //                 .postProfileImage(File(image.path))
+//                 //                 .then((_) {
+//                 //               _syncFromServer();
+//                 //             });
+//                 //           }),
+//                 //     );
+//                 //   },
+//                 // ),
+//               ),
+//               _buildToggleTile(
+//                 title: 'Incognito Mode',
+//                 value: _incognitoMode,
+//                 onToggle: (val) {
+//                   setState(() {
+//                     _incognitoMode = val;
+//                   });
+//                 },
+//               ),
+//               TextEditBlock(
+//                 title: 'About Me',
+//                 placeholder: 'About Me',
+//                 text: _aboutMe,
+//                 onCloseTile: () {
+//                   // do something.
+//                 },
+//                 onChanged: (val) {
+//                   detailsData.aboutMe = val;
+//                 },
+//               ),
+//               TextEditBlock(
+//                 title: 'Job Title',
+//                 placeholder: 'Job Title',
+//                 maxLine: 1,
+//                 text: _jobTitle,
+//                 onCloseTile: () {
+//                   // do something.
+//                 },
+//                 onChanged: (val) {
+//                   detailsData.job = val;
+//                 },
+//               ),
+//               TextEditBlock(
+//                 title: 'Company',
+//                 placeholder: 'Company',
+//                 maxLine: 1,
+//                 text: _company,
+//                 onCloseTile: () {
+//                   // do something.
+//                 },
+//                 onChanged: (val) {
+//                   detailsData.company = val;
+//                 },
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   void _syncFromServer() async {
+//     final _resp = await networkHelper.getProfileImages();
+//     final _list = _resp;
+//     print(_list);
+
+//     if (_list?.isEmpty == true) {
+//       // setStateIfMounted(() {
+//       //   _profileImagesUrls.replaceRange(0, _profileImagesUrls.length, null);
+//       // });
+//       return;
+//     }
+
+//     for (int i = 0; i < _list.length; i++) {
+//       String value;
+
+//       // check if index exists in the profile images list.
+//       if (_list.length > i) {
+//         value = _list[i];
+//       }
+
+//       _profileImagesUrls[i] = value;
+//     }
+//     setStateIfMounted(() {/**/});
+//   }
+
+//   // update the list.
+//   void updateListIndex(int index) async {
+//     final _resp = await networkHelper.getProfileImages();
+//     String value;
+
+//     // check if index exists in the profile images list.
+//     if (_resp.length > index) {
+//       value = _resp[index];
+//     }
+
+//     setStateIfMounted(() {
+//       _profileImagesUrls[index] = value;
+//     });
+//   }
+// }

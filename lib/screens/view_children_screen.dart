@@ -8,7 +8,9 @@ import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/draggable.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 /// The default boxShadow List used in painting clickable items.
@@ -41,7 +43,9 @@ class ViewChildrenScreen extends StatefulWidget {
 
 class _ViewChildrenScreenState extends State<ViewChildrenScreen>
     with MountedStateMixin {
-  PageController _childrenController;
+  final GlobalKey _scrollKey = GlobalKey();
+
+  CarouselController _childrenController;
 
   ScrollController _scrollController;
 
@@ -49,10 +53,10 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
 
   int userProfileIndex = 0;
   int matchProfileIndex = 0;
-  int childrenImageIndex = 0;
+  int _childrenImageIndex = 0;
 
-  double _offset = 0;
-  double _page = 0;
+  // double _offset = 0;
+  // double _page = 0;
 
   List<String> matchProfileImages = [];
   List<String> userProfileImages = [];
@@ -71,14 +75,11 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
     super.initState();
 
     _scrollController = ScrollController();
-    _childrenController = PageController(viewportFraction: 1.0);
+    _childrenController = CarouselController();
 
-    _childrenController.addListener(() {
-      setStateIfMounted(() {
-        _page = _childrenController.page;
-        _offset = _childrenController.offset;
-      });
-    });
+    // _childrenController.addListener(() {
+    //   // _page = _childrenController.page;
+    // });
 
     _networkHelper = NetworkHelper();
     // this has to be called after initialising the "_networkHelper" variable.
@@ -88,7 +89,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
   @override
   void dispose() {
     _scrollController.dispose();
-    _childrenController.dispose();
+    // _childrenController.dispose();
 
     super.dispose();
   }
@@ -122,6 +123,10 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
   Widget build(BuildContext context) {
     // the device's screen specs.
     final Size _sizeConfig = MediaQuery.of(context).size;
+    // the absolute size of the children image.
+    final Size childrenCardSize = Size(256, 256);
+
+    final double childrenVertCardPadding = 20.0;
 
     return Scaffold(
       backgroundColor: darkCardColor,
@@ -131,13 +136,14 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
         showAppLogo: false,
       ),
       body: SingleChildScrollView(
+        key: _scrollKey,
         controller: _scrollController,
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
             SizedBox(height: 20.0),
             SizedBox(
-              height: _sizeConfig.height * 0.3,
+              height: _sizeConfig.height * 0.37,
               width: _sizeConfig.width,
               child: Stack(
                 children: [
@@ -148,7 +154,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                       // TODO: change this later to fit exactly.
                       widthFactor: 0.6,
                       child: PrecachedImage.asset(
-                        imageURI: BetaIconPaths.progeneyTreeDividerPath,
+                        imageURI: BetaIconPaths.viewChildrenBackgroundImagePath,
                       ),
                     ),
                   ),
@@ -174,27 +180,27 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                                   SizedBox(height: 2.0),
                                   Clickable(
                                     onTap: () {
-                                      setStateIfMounted(() {
-                                        final _newIndex = userProfileIndex + 1;
-                                        if (_newIndex <
-                                            userProfileImages.length) {
-                                          // add to the index if the current index does not
-                                          // exceed th imageUrls length.
-                                          userProfileIndex = _newIndex;
-                                        } else {
-                                          // otherwise set the value to zero
-                                          // therby resetting its position.
-                                          userProfileIndex = 0;
-                                        }
-                                      });
+                                      // setStateIfMounted(() {
+                                      //   final _newIndex = userProfileIndex + 1;
+                                      //   if (_newIndex <
+                                      //       userProfileImages.length) {
+                                      //     // add to the index if the current index does not
+                                      //     // exceed th imageUrls length.
+                                      //     userProfileIndex = _newIndex;
+                                      //   } else {
+                                      //     // otherwise set the value to zero
+                                      //     // therby resetting its position.
+                                      //     userProfileIndex = 0;
+                                      //   }
+                                      // });
                                     },
                                     child: PofileImageAvatar.mutable(
                                       actualImage: userProfileImages.isEmpty
                                           ? null
                                           : NetworkImage(userProfileImages[
                                               userProfileIndex]),
-                                      minRadius: 24.0,
-                                      maxRadius: 30.5,
+                                      minRadius: 28.50,
+                                      maxRadius: 35.5,
                                       placeholderImage: AssetImage(
                                         BetaIconPaths.defaultProfileImagePath01,
                                       ),
@@ -214,27 +220,27 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                                   SizedBox(height: 2.0),
                                   Clickable(
                                     onTap: () {
-                                      setStateIfMounted(() {
-                                        final _newIndex = matchProfileIndex + 1;
-                                        if (_newIndex <
-                                            matchProfileImages.length) {
-                                          // add to the index if the current index does not
-                                          // exceed th imageUrls length.
-                                          matchProfileIndex = _newIndex;
-                                        } else {
-                                          // otherwise set the value to zero
-                                          // therby resetting its position.
-                                          matchProfileIndex = 0;
-                                        }
-                                      });
+                                      // setStateIfMounted(() {
+                                      //   final _newIndex = matchProfileIndex + 1;
+                                      //   if (_newIndex <
+                                      //       matchProfileImages.length) {
+                                      //     // add to the index if the current index does not
+                                      //     // exceed th imageUrls length.
+                                      //     matchProfileIndex = _newIndex;
+                                      //   } else {
+                                      //     // otherwise set the value to zero
+                                      //     // therby resetting its position.
+                                      //     matchProfileIndex = 0;
+                                      //   }
+                                      // });
                                     },
                                     child: PofileImageAvatar.mutable(
                                       actualImage: matchProfileImages.isEmpty
                                           ? null
                                           : NetworkImage(matchProfileImages[
                                               matchProfileIndex]),
-                                      minRadius: 24.0,
-                                      maxRadius: 30.5,
+                                      minRadius: 28.50,
+                                      maxRadius: 35.5,
                                       placeholderImage: AssetImage(
                                         BetaIconPaths.defaultProfileImagePath01,
                                       ),
@@ -246,17 +252,17 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                           ),
                         ),
                         Flexible(
-                          flex: 1,
+                          flex: 2,
                           child: Container(
                             child: DecoratedBox(
                               decoration: _elevationDecoration,
                               child: PofileImageAvatar.mutable(
                                 actualImage: AssetImage(
-                                  // Todo; Change to Imgae.network when linking with backend.
-                                  mockImages[childrenImageIndex],
+                                  // Todo; Change to Image.network when linking with backend.
+                                  mockImages[_childrenImageIndex],
                                 ),
-                                minRadius: 45.0,
-                                maxRadius: 55.5,
+                                minRadius: 65.0,
+                                maxRadius: 85.5,
                                 placeholderImage: AssetImage(
                                   BetaIconPaths.defaultProfileImagePath01,
                                 ),
@@ -272,51 +278,169 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
             ),
             SizedBox(height: 20.0),
             SizedBox(
-              height: _sizeConfig.height * 0.24,
-              width: _sizeConfig.width,
-              child: PageView.builder(
-                clipBehavior: Clip.hardEdge,
-                controller: _childrenController,
+              height: childrenCardSize.height + childrenVertCardPadding,
+              child: CarouselSlider.builder(
+                carouselController: _childrenController,
+                options: CarouselOptions(
+                  autoPlay: false,
+                  enableInfiniteScroll: false,
+                  height: childrenCardSize.height,
+                  enlargeCenterPage: true,
+                  viewportFraction: 0.6,
+                  enlargeStrategy: CenterPageEnlargeStrategy.scale,
+                  onPageChanged: (index, changeReason) {
+                    setStateIfMounted(() {
+                      _childrenImageIndex = index;
+                    });
+                  },
+                ),
                 itemCount: mockImages.length,
-                onPageChanged: (page) {
-                  setStateIfMounted(() {
-                    childrenImageIndex = page;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  double _val;
+                itemBuilder: (context, _index, realIndex) {
+                  final _currentImageUrl = mockImages[realIndex];
 
-                  if (index == _page.floor()) {
-                    _val = _page - index;
-                  } else if (index == _page.floor() + 1) {
-                    _val = _page - index;
-                  } else {
-                    _val = 1;
-                  }
+                  return GestureDetector(
+                    onTap: () {
+                      _childrenController.animateToPage(
+                        realIndex,
+                        duration: Duration(milliseconds: 800),
+                        curve: Curves.decelerate,
+                      );
 
-                  final double _scale = 1.0 * _val;
-
-                  return Transform(
-                    alignment: Alignment.center,
-                    transform: Matrix4.identity()..rotateX(_scale),
-                    child: _ChildCard(
-                      imageList: mockImages,
-                      index: index,
-                      viewHeight: _sizeConfig.height * 0.2,
-                      scaleFactor: _scale,
-                      onTap: (_index) {
-                        _childrenController.animateToPage(
-                          _index,
-                          duration: const Duration(milliseconds: 800),
-                          curve: Curves.easeIn,
-                        );
-                        setStateIfMounted(() {
-                          childrenImageIndex = 1;
-                        });
-                      },
+                      setStateIfMounted(() {
+                        _childrenImageIndex = realIndex;
+                      });
+                    },
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: childrenCardSize.height,
+                        maxHeight: childrenCardSize.height,
+                        minWidth: childrenCardSize.width,
+                        maxWidth: childrenCardSize.width,
+                      ),
+                      child: Container(
+                        width: childrenCardSize.width,
+                        height: childrenCardSize.height,
+                        margin: EdgeInsets.all(6.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          boxShadow: kElevationToShadow[2],
+                          image: DecorationImage(
+                            image: AssetImage(_currentImageUrl),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                     ),
                   );
                 },
+                // items: List<Widget>.generate(mockImages.length, (i) {
+                //   final _currentImageUrl = mockImages[i];
+
+                //   return GestureDetector(
+                //     onTap: () {
+                //       _childrenController.animateToPage(
+                //         i,
+                //         duration: Duration(milliseconds: 800),
+                //         curve: Curves.decelerate,
+                //       );
+
+                //       setStateIfMounted(() {
+                //         _childrenImageIndex = i;
+                //       });
+                //     },
+                //     child: Container(
+                //       constraints: BoxConstraints(
+                //         minHeight: childrenCardSize.height,
+                //         minWidth: childrenCardSize.width,
+                //       ),
+                //       width: childrenCardSize.width,
+                //       height: childrenCardSize.height,
+                //       margin: EdgeInsets.all(6.0),
+                //       decoration: BoxDecoration(
+                //         borderRadius: BorderRadius.circular(18),
+                //         boxShadow: kElevationToShadow[2],
+                //         image: DecorationImage(
+                //           image: AssetImage(_currentImageUrl),
+                //           fit: BoxFit.cover,
+                //         ),
+                //       ),
+                //     ),
+                //   );
+                // }),
+              ),
+              // child: PageView.builder(
+              //   clipBehavior: Clip.hardEdge,
+              //   controller: _childrenController,
+              //   itemCount: mockImages.length,
+              //   onPageChanged: (page) {
+              //     setStateIfMounted(() {
+              //       _childrenImageIndex = page;
+              //     });
+              //   },
+              //   itemBuilder: (context, index) {
+              //     double _val;
+
+              //     if (index == _page.floor()) {
+              //       _val = _page - index;
+              //     } else if (index == _page.floor() + 1) {
+              //       _val = _page - index;
+              //     } else {
+              //       _val = 1;
+              //     }
+
+              //     final double _scale = 1.0 * _val;
+
+              //     print('Offset: $_val');
+
+              //     // print('scale @index: $index, scale: $_scale');
+
+              //     return Transform(
+              //       alignment: Alignment(_scale, _scale),
+              //       origin: Offset(0.0, 1.0),
+              //       transform: Matrix4.identity()
+              //         ..rotateX(_scale)
+              //         ..rotateY(_scale),
+              //       child: _ChildCard(
+              //         imageList: mockImages,
+              //         index: index,
+              //         viewHeight: _sizeConfig.height * 0.2,
+              //         scaleFactor: _scale,
+              //         onTap: (_index) {
+              //           _childrenController.animateToPage(
+              //             _index,
+              //             duration: const Duration(milliseconds: 800),
+              //             curve: Curves.easeIn,
+              //           );
+              //         },
+              //       ),
+              //     );
+              //   },
+              // ),
+            ),
+            Center(
+              child: TextButton.icon(
+                style: TextButton.styleFrom(
+                  textStyle: smallBoldedCharStyle.copyWith(
+                    color: colorBlend02,
+                    decorationColor: colorBlend02,
+                    decoration: TextDecoration.underline,
+                  ),
+                  backgroundColor: Colors.transparent,
+                ),
+                onPressed: () {/*Do something*/},
+                label: Text(
+                  'See more',
+                  style: smallBoldedCharStyle.copyWith(
+                    color: colorBlend02,
+                    decorationColor: colorBlend02,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+                icon: Icon(
+                  Icons.add_rounded,
+                  color: blue,
+                  size: 18.0,
+                ),
               ),
             ),
             SizedBox(height: 12.0),
@@ -383,109 +507,10 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
   }
 }
 
-class _ChildCard extends StatelessWidget {
-  const _ChildCard({
-    Key key,
-    this.imageList,
-    this.index,
-    this.viewHeight,
-    this.scaleFactor,
-    this.onTap,
-  }) : super(key: key);
-
-  final List<String> imageList;
-
-  final int index;
-
-  final void Function(int) onTap;
-
-  final double scaleFactor;
-
-  final double viewHeight;
-
-  @override
-  Widget build(BuildContext context) {
-    // the device's screen specs.
-    final Size _sizeConfig = MediaQuery.of(context).size;
-    bool _hasBefore = index - 1 >= 0;
-    bool _hasAfter = index + 1 < imageList.length;
-
-    // MainAxisAlignment mainAxisAlignment;
-
-    // if (_hasBefore && _hasAfter) {
-    //   mainAxisAlignment = MainAxisAlignment.spaceAround;
-    // } else if (_hasBefore && !_hasAfter) {
-    //   mainAxisAlignment = MainAxisAlignment.start;
-    // } else if (!_hasBefore && _hasAfter) {
-    //   mainAxisAlignment = MainAxisAlignment.end;
-    // } else {
-    //   mainAxisAlignment = MainAxisAlignment.spaceAround;
-    // }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 9.0),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          if (_hasBefore)
-            FractionallySizedBox(
-              alignment: Alignment.centerLeft,
-              heightFactor: 0.6,
-              widthFactor: 0.35,
-              child: Material(
-                shadowColor: defaultShadowColor,
-                elevation: 2.0,
-                borderRadius: BorderRadius.circular(18.0),
-                clipBehavior: Clip.hardEdge,
-                child: InkWell(
-                  onTap: () => onTap(index - 1),
-                  child: PrecachedImage.asset(
-                    imageURI: imageList[index - 1],
-                  ),
-                ),
-              ),
-            ),
-          //
-          if (_hasAfter)
-            FractionallySizedBox(
-              alignment: Alignment.centerRight,
-              heightFactor: 0.6,
-              widthFactor: 0.35,
-              child: Material(
-                shadowColor: defaultShadowColor,
-                elevation: 2.0,
-                borderRadius: BorderRadius.circular(18.0),
-                clipBehavior: Clip.hardEdge,
-                child: InkWell(
-                  onTap: () => onTap(index + 1),
-                  child: PrecachedImage.asset(
-                    imageURI: imageList[index + 1],
-                  ),
-                ),
-              ),
-            ),
-          //
-          FractionallySizedBox(
-            heightFactor: 0.8,
-            widthFactor: 0.6,
-            child: Material(
-              shadowColor: defaultShadowColor,
-              elevation: 2.0,
-              borderRadius: BorderRadius.circular(18.0),
-              clipBehavior: Clip.hardEdge,
-              child: PrecachedImage.asset(
-                imageURI: imageList[index],
-              ),
-            ),
-          ),
-          //
-        ],
-      ),
-    );
-  }
-}
-
-///
+/// A Widget for creating circle Profile Avatars.
+/// 
+/// The constructor [PofileImageAvatar.mutable] is specially adapted for situations where the expected image
+/// may not be available at hand.
 class PofileImageAvatar extends StatelessWidget {
   /// The default private constructor for the [PofileImageAvatar] widget.
   PofileImageAvatar({
@@ -580,13 +605,16 @@ class PofileImageAvatar extends StatelessWidget {
         super(key: key);
 
   /// A Factory constructor for creating a [PofileImageAvatar] whose imageProvider can be swpped out
-  /// depending on whether or not the [actualImage] is null or not and replaced by another placholder imageProvider,
+  /// depending on whether the [actualImage] is `null` or not and replaced by another placholder imageProvider,
   /// [placeholderImage].
+  /// 
+  /// The [placeholderImage] should be an image that is readily available like an [AssetImage] or a [MemoryImage] 
+  /// since it will be considered as a placeholder.
   ///
   /// Note that if the value [actualImageIsAvailable] is set to `false`, the [placeholderImage] will be rendered
   /// whether or not the [actualImage] is non-null.
-  /// For this cause [actualImageIsAvailable] is set to `true` by default meaning without providing the value
-  /// the [placeholderImage] will be loaded instead when and only when the [actualImage] is null.
+  /// For this cause [actualImageIsAvailable] is set to `true` by default meaning without providing the [actualImage] 
+  /// value the [placeholderImage] will be loaded instead when and only when the [actualImage] is null.
   factory PofileImageAvatar.mutable({
     @required ImageProvider actualImage,
     @required ImageProvider placeholderImage,
@@ -618,6 +646,7 @@ class PofileImageAvatar extends StatelessWidget {
 
   final ImageProvider imageProvider;
 
+  /// The widget to display above the avatar.
   final Widget child;
 
   final double radius;

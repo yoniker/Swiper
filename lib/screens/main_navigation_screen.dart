@@ -3,7 +3,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/screens/main_messages_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
-import 'package:betabeta/tabs/profile_tab_new.dart';
+import 'package:betabeta/tabs/profile_tab.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
 
