@@ -46,10 +46,6 @@ class _ProfileScreenState extends State<ProfileScreen> with MountedStateMixin {
 
   NetworkHelper networkHelper;
 
-  DetailsData detailsData;
-
-  SettingsData settingsData;
-
   List<String> _profileImagesUrls = [];
 
   @override
@@ -61,7 +57,6 @@ class _ProfileScreenState extends State<ProfileScreen> with MountedStateMixin {
         _profileImagesUrls = widget.imageUrls;
       });
     }
-    _syncFromServer();
 
     // initialize the NetworkHelper instance.
     //
@@ -73,22 +68,20 @@ class _ProfileScreenState extends State<ProfileScreen> with MountedStateMixin {
     // also there are some FUnctions I will suggest you make static since they don't alter or make changes to
     // any instance variable.
     networkHelper = NetworkHelper();
-    settingsData = SettingsData();
-    detailsData = DetailsData();
 
     // this makes sure that if the state is not yet mounted, we don't end up calling setState
     // but instead push the function forward to the addPostFrameCallback function.
-    _aboutMe = detailsData.aboutMe;
-    _company = detailsData.company;
-    _jobTitle = detailsData.job;
-    print(detailsData.aboutMe);
+    _aboutMe = DetailsData().aboutMe;
+    _company = DetailsData().company;
+    _jobTitle = DetailsData().job;
+    print(_aboutMe);
+
+    _syncFromServer();
   }
 
   @override
   void dispose() {
-    // make sure this are properly disposed after use.
-    detailsData.dispose();
-    settingsData.dispose();
+    // make sure these are properly disposed after use.
     super.dispose();
   }
 
@@ -127,8 +120,8 @@ class _ProfileScreenState extends State<ProfileScreen> with MountedStateMixin {
     void Function() onDelete,
   }) {
     Widget _child = imageUrl != null
-        ? PrecachedImage.network(
-            imageURL: imageUrl,
+        ? Image.network(
+            imageUrl,
             fit: BoxFit.cover,
           )
         : Center(
@@ -190,6 +183,21 @@ class _ProfileScreenState extends State<ProfileScreen> with MountedStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    String _imgUrl;
+
+    if (_profileImagesUrls != null && _profileImagesUrls.isNotEmpty) {
+      _imgUrl = _profileImagesUrls.first;
+    }
+
+    final ImageProvider _profileImage = _imgUrl == null
+        ? AssetImage(
+            BetaIconPaths.defaultProfileImagePath01,
+          )
+        : CachedNetworkImageProvider(
+            networkHelper.getProfileImageUrl(_imgUrl),
+            imageRenderMethodForWeb: ImageRenderMethodForWeb.HtmlImage,
+          );
+
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Profile',
@@ -207,8 +215,7 @@ class _ProfileScreenState extends State<ProfileScreen> with MountedStateMixin {
               Center(
                 child: CircleAvatar(
                   backgroundColor: Colors.grey[200],
-                  backgroundImage: CachedNetworkImageProvider(
-                      settingsData.facebookProfileImageUrl),
+                  backgroundImage: _profileImage,
                   radius: 50.5,
                   child: Align(
                     alignment: Alignment.bottomRight,
@@ -305,7 +312,7 @@ class _ProfileScreenState extends State<ProfileScreen> with MountedStateMixin {
                   // do something.
                 },
                 onChanged: (val) {
-                  detailsData.aboutMe = val;
+                  DetailsData().aboutMe = val;
                 },
               ),
               TextEditBlock(
@@ -317,7 +324,7 @@ class _ProfileScreenState extends State<ProfileScreen> with MountedStateMixin {
                   // do something.
                 },
                 onChanged: (val) {
-                  detailsData.job = val;
+                  DetailsData().job = val;
                 },
               ),
               TextEditBlock(
@@ -329,7 +336,7 @@ class _ProfileScreenState extends State<ProfileScreen> with MountedStateMixin {
                   // do something.
                 },
                 onChanged: (val) {
-                  detailsData.company = val;
+                  DetailsData().company = val;
                 },
               ),
             ],
@@ -341,7 +348,7 @@ class _ProfileScreenState extends State<ProfileScreen> with MountedStateMixin {
 
   void _syncFromServer() {
     networkHelper.getProfileImages().then((profileImagesUrls) {
-      mountedLoader(() {
+      setStateIfMounted(() {
         _profileImagesUrls = profileImagesUrls;
       });
     });
@@ -538,10 +545,10 @@ class _TextEditBlockState extends State<TextEditBlock> {
 //     // this makes sure that if the state is not yet mounted, we don't end up calling setState
 //     // but instead push the function forward to the addPostFrameCallback function.
 //     mountedLoader(_syncFromServer);
-//     _aboutMe = detailsData.aboutMe;
-//     _company = detailsData.company;
-//     _jobTitle = detailsData.job;
-//     print(detailsData.aboutMe);
+//     _aboutMe = DetailsData().aboutMe;
+//     _company = DetailsData().company;
+//     _jobTitle = DetailsData().job;
+//     print(DetailsData().aboutMe);
 //   }
 
 //   /// builds the toggle tile.
@@ -825,7 +832,7 @@ class _TextEditBlockState extends State<TextEditBlock> {
 //                   // do something.
 //                 },
 //                 onChanged: (val) {
-//                   detailsData.aboutMe = val;
+//                   DetailsData().aboutMe = val;
 //                 },
 //               ),
 //               TextEditBlock(
@@ -837,7 +844,7 @@ class _TextEditBlockState extends State<TextEditBlock> {
 //                   // do something.
 //                 },
 //                 onChanged: (val) {
-//                   detailsData.job = val;
+//                   DetailsData().job = val;
 //                 },
 //               ),
 //               TextEditBlock(
@@ -849,7 +856,7 @@ class _TextEditBlockState extends State<TextEditBlock> {
 //                   // do something.
 //                 },
 //                 onChanged: (val) {
-//                   detailsData.company = val;
+//                   DetailsData().company = val;
 //                 },
 //               ),
 //             ],

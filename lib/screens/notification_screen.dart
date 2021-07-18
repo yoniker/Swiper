@@ -25,6 +25,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         showAppLogo: false,
         trailing: PrecachedImage.asset(
           imageURI: BetaIconPaths.notificationIconFilled01,
+          scale: 5.0,
           color: Colors.black,
         ),
       ),

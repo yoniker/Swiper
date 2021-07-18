@@ -60,7 +60,7 @@ class DraggableCard extends StatefulWidget {
   final Function(SlideDirection direction) onSlideComplete;
   final double screenWidth;
   final double screenHeight;
-  final void Function(bool) onNavigationCommand;
+  final void Function(bool) onNavigationCallback;
 
   DraggableCard({
     Key key,
@@ -75,7 +75,7 @@ class DraggableCard extends StatefulWidget {
     this.onSlideComplete,
     @required this.screenWidth,
     @required this.screenHeight,
-    @required this.onNavigationCommand,
+    @required this.onNavigationCallback,
     this.exitDuration = const Duration(milliseconds: 100),
   });
 
@@ -127,7 +127,7 @@ class _DraggableCardState extends State<DraggableCard>
     bool fullscreenDialog = false,
   }) async {
     // here we inform the MatchScreen to hide the Card Stack.
-    widget.onNavigationCommand(false);
+    widget.onNavigationCallback(false);
 
     await Navigator.of(context)
         .push<T>(
@@ -140,7 +140,7 @@ class _DraggableCardState extends State<DraggableCard>
     )
         .then((value) {
       // here we inform the MatchScreen to show the Card Stack.
-      widget.onNavigationCommand(true);
+      widget.onNavigationCallback(true);
 
       return value;
     });

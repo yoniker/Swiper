@@ -45,11 +45,11 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
   @override
   void dispose() {
     // dispose off the instance.
-    // 
-    // It is essential that this is called so that we don't keep unneccessary resources in memory 
+    //
+    // It is essential that this is called so that we don't keep unneccessary resources in memory
     // which can potentially cause memory overloading.
-    // 
-    // TODO(Yoni): We need to make sure every screen that make use of this resources are duly 
+    //
+    // TODO(Yoni): We need to make sure every screen that make use of this resources are duly
     // reviewed and restructured such that each screen has only an instance of these classes and that they
     // are all properly disposed.
     settingsData.dispose();
@@ -92,14 +92,12 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
   Widget _profilePicDisplay(String imageUrl) {
     //
     ImageProvider _image = imageUrl == null
-        ? null
+        ? PrecachedImage.asset(
+            imageURI: BetaIconPaths.defaultProfileImagePath01,
+          ).image
         : CachedNetworkImageProvider(
-            networkHelper.getProfileImageUrl(imageUrl));
-
-    if (_image == null)
-      _image = PrecachedImage.asset(
-        imageURI: BetaIconPaths.defaultProfileImagePath01,
-      ).image;
+            networkHelper.getProfileImageUrl(imageUrl),
+          );
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 6.0),
