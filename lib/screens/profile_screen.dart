@@ -61,7 +61,6 @@ class _ProfileScreenState extends State<ProfileScreen> with MountedStateMixin {
         _profileImagesUrls = widget.imageUrls;
       });
     }
-    _syncFromServer();
 
     // initialize the NetworkHelper instance.
     //
@@ -82,6 +81,8 @@ class _ProfileScreenState extends State<ProfileScreen> with MountedStateMixin {
     _company = detailsData.company;
     _jobTitle = detailsData.job;
     print(detailsData.aboutMe);
+
+    _syncFromServer();
   }
 
   @override
@@ -190,6 +191,21 @@ class _ProfileScreenState extends State<ProfileScreen> with MountedStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    String _imgUrl;
+
+    if (_profileImagesUrls != null && _profileImagesUrls.isNotEmpty) {
+      _imgUrl = _profileImagesUrls.first;
+    }
+
+    final ImageProvider _profileImage = _imgUrl == null
+        ? AssetImage(
+            BetaIconPaths.defaultProfileImagePath01,
+          )
+        : CachedNetworkImageProvider(
+            networkHelper.getProfileImageUrl(_imgUrl),
+            imageRenderMethodForWeb: ImageRenderMethodForWeb.HtmlImage,
+          );
+
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Profile',
@@ -207,8 +223,7 @@ class _ProfileScreenState extends State<ProfileScreen> with MountedStateMixin {
               Center(
                 child: CircleAvatar(
                   backgroundColor: Colors.grey[200],
-                  backgroundImage: CachedNetworkImageProvider(
-                      settingsData.facebookProfileImageUrl),
+                  backgroundImage: _profileImage,
                   radius: 50.5,
                   child: Align(
                     alignment: Alignment.bottomRight,
@@ -341,7 +356,7 @@ class _ProfileScreenState extends State<ProfileScreen> with MountedStateMixin {
 
   void _syncFromServer() {
     networkHelper.getProfileImages().then((profileImagesUrls) {
-      mountedLoader(() {
+      setStateIfMounted(() {
         _profileImagesUrls = profileImagesUrls;
       });
     });

@@ -454,7 +454,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                     onPressed: widget.onPop ??
                         () {
                           // close the settings screen.
-                          Navigator.of(context).pop();
+                          Navigator.of(context).maybePop();
                         },
                   ),
                 ),
