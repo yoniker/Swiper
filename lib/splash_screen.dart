@@ -57,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.all(6.0),
-              child: PrecachedImage.asset(imageURI: BetaIconPaths.appLogoIcon),
+              child: Image.asset(BetaIconPaths.appLogoIcon),
             ),
             Text(
               'Swiper',

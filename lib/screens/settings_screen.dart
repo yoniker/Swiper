@@ -235,7 +235,6 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                                         setState(() {
                                           _maxDistance = value;
                                           SettingsData().radius = _maxDistance;
-                                          // Add to the `_editionCount` variable.
                                         });
                                       },
                                     ),
@@ -454,7 +453,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                     onPressed: widget.onPop ??
                         () {
                           // close the settings screen.
-                          Navigator.of(context).pop();
+                          Navigator.of(context).maybePop();
                         },
                   ),
                 ),

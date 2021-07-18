@@ -7,6 +7,22 @@ import 'package:image_picker/image_picker.dart';
 
 import 'clickable.dart';
 
+/// The default boxShadow List used in painting clickable items.
+const List<BoxShadow> _shadowList = [
+  BoxShadow(
+    color: defaultShadowColor,
+    offset: Offset(0.0, 2.0),
+    spreadRadius: 0.0,
+    blurRadius: 14.0,
+  ),
+];
+
+/// The default box-decoration used for decoration the [ProfieImageAvatar].
+const BoxDecoration kProfileImageAvatarDecoration = BoxDecoration(
+  shape: BoxShape.circle,
+  boxShadow: _shadowList,
+);
+
 /// A collection of Global Widgets to be used in various parts of the App.
 class GlobalWidgets {
   /// A global widget that is used to render respective asset images
@@ -473,8 +489,8 @@ class GlobalWidgets {
   static void showLoadingIndicator({
     @required BuildContext context,
     String message,
-    
-    /// This determines whether or not the loading indicator overlay 
+
+    /// This determines whether or not the loading indicator overlay
     /// pops on pressing the back button.
     bool popOnBack = true,
     bool barrierDismissible = false,
@@ -487,7 +503,7 @@ class GlobalWidgets {
       builder: (context) {
         return WillPopScope(
           onWillPop: () async {
-            // this will prevent the pressing of the back-button on Android from 
+            // this will prevent the pressing of the back-button on Android from
             // poping the Loading indicator.
             return popOnBack;
           },
@@ -861,4 +877,200 @@ class NotificationBox extends ActionBox {
           elevation: 0.0,
           padding: padding,
         );
+}
+
+/// A Widget for creating circle Profile Avatars.
+///
+/// The constructor [ProfileImageAvatar.mutable] is specially adapted for situations where the expected image
+/// may not be available at hand.
+class ProfileImageAvatar extends StatelessWidget {
+  /// The default private constructor for the [ProfileImageAvatar] widget.
+  ProfileImageAvatar({
+    Key key,
+    @required this.imageProvider,
+    this.backgroundColor = const Color(0xFFE0E0E0),
+    this.decoration,
+    this.child,
+    this.radius,
+    this.minRadius,
+    this.maxRadius,
+  })  : assert(imageProvider != null,
+            'The parameter, "imageProvider" must be provided'),
+        assert(radius == null || (minRadius == null && maxRadius == null)),
+        super(key: key);
+
+  /// Create a [ProfileImageAvatar] widget from a network source.
+  ProfileImageAvatar.network({
+    Key key,
+    @required String url,
+    this.backgroundColor = const Color(0xFFE0E0E0),
+    this.decoration,
+    this.child,
+    this.radius,
+    this.minRadius,
+    this.maxRadius,
+    BoxFit fit = BoxFit.cover,
+    double height,
+    double width,
+    double scale = 1.0,
+    Color color,
+    WidgetBuilder placholderBuilder,
+    WidgetBuilder errorBuilder,
+    void Function() onError,
+  })  : assert(url != null, 'The value of "url" cannot be null!'),
+        assert(radius == null || (minRadius == null && maxRadius == null)),
+        imageProvider = Image.network(
+          url,
+          fit: fit,
+          width: width,
+          height: height,
+          scale: scale,
+          color: color,
+          errorBuilder: errorBuilder == null
+              ? null
+              : (BuildContext context, Object object, StackTrace stackTrace) {
+                  onError();
+                  return errorBuilder(context);
+                },
+          loadingBuilder: placholderBuilder == null
+              ? null
+              : (BuildContext context, Widget child,
+                  ImageChunkEvent chunkEvent) {
+                  return placholderBuilder(context);
+                },
+        ).image,
+        super(key: key);
+
+  /// Create a [ProfileImageAvatar] widget from the asset.
+  ProfileImageAvatar.asset({
+    Key key,
+    @required String uri,
+    this.backgroundColor = const Color(0xFFE0E0E0),
+    this.decoration,
+    this.child,
+    this.radius,
+    this.minRadius,
+    this.maxRadius,
+    BoxFit fit = BoxFit.cover,
+    double height,
+    double width,
+    double scale = 1.0,
+    Color color,
+    WidgetBuilder errorBuilder,
+    void Function() onError,
+  })  : assert(uri != null, 'The value of "uri" cannot be null!'),
+        assert(radius == null || (minRadius == null && maxRadius == null)),
+        imageProvider = Image.asset(
+          uri,
+          fit: fit,
+          width: width,
+          height: height,
+          scale: scale,
+          color: color,
+          errorBuilder: errorBuilder == null
+              ? null
+              : (BuildContext context, Object object, StackTrace stackTrace) {
+                  onError();
+                  return errorBuilder(context);
+                },
+        ).image,
+        super(key: key);
+
+  /// A Factory constructor for creating a [ProfileImageAvatar] whose imageProvider can be swpped out
+  /// depending on whether the [actualImage] is `null` or not and replaced by another placholder imageProvider,
+  /// [placeholderImage].
+  ///
+  /// The [placeholderImage] should be an image that is readily available like an [AssetImage] or a [MemoryImage]
+  /// since it will be considered as a placeholder.
+  ///
+  /// Note that if the value [actualImageIsAvailable] is set to `false`, the [placeholderImage] will be rendered
+  /// whether or not the [actualImage] is non-null.
+  /// For this cause [actualImageIsAvailable] is set to `true` by default meaning without providing the [actualImage]
+  /// value the [placeholderImage] will be loaded instead when and only when the [actualImage] is null.
+  factory ProfileImageAvatar.mutable({
+    @required ImageProvider actualImage,
+    @required ImageProvider placeholderImage,
+    bool actualImageIsAvailable = true,
+    Color backgroundColor = const Color(0xFFFFFFFF),
+    Decoration decoration,
+    Widget child,
+    double radius,
+    double minRadius,
+    double maxRadius,
+  }) {
+    assert(placeholderImage != null,
+        'The parameter, "placeholderImage" must be provided!');
+    assert(radius == null || (minRadius == null && maxRadius == null));
+
+    final bool _isAvialble = actualImage != null && actualImageIsAvailable;
+    final _imageProvider = _isAvialble ? actualImage : placeholderImage;
+
+    return ProfileImageAvatar(
+      imageProvider: _imageProvider,
+      backgroundColor: backgroundColor,
+      decoration: decoration,
+      child: child,
+      radius: radius,
+      minRadius: minRadius,
+      maxRadius: maxRadius,
+    );
+  }
+
+  final ImageProvider imageProvider;
+
+  /// The widget to display above the avatar.
+  final Widget child;
+
+  final double radius;
+
+  /// The minimum size of the avatar, expressed as the radius (half the
+  /// diameter).
+  ///
+  /// If [minRadius] is specified, then [radius] must not also be specified.
+  ///
+  /// Defaults to zero.
+  ///
+  /// Constraint changes are animated, but size changes due to the environment
+  /// itself changing are not. For example, changing the [minRadius] from 10 to
+  /// 20 when the [CircleAvatar] is in an unconstrained environment will cause
+  /// the avatar to animate from a 20 pixel diameter to a 40 pixel diameter.
+  /// However, if the [minRadius] is 40 and the [CircleAvatar] has a parent
+  /// [SizedBox] whose size changes instantaneously from 20 pixels to 40 pixels,
+  /// the size will snap to 40 pixels instantly.
+  final double minRadius;
+
+  /// The maximum size of the avatar, expressed as the radius (half the
+  /// diameter).
+  ///
+  /// If [maxRadius] is specified, then [radius] must not also be specified.
+  ///
+  /// Defaults to [double.infinity].
+  ///
+  /// Constraint changes are animated, but size changes due to the environment
+  /// itself changing are not. For example, changing the [maxRadius] from 10 to
+  /// 20 when the [CircleAvatar] is in an unconstrained environment will cause
+  /// the avatar to animate from a 20 pixel diameter to a 40 pixel diameter.
+  /// However, if the [maxRadius] is 40 and the [CircleAvatar] has a parent
+  /// [SizedBox] whose size changes instantaneously from 20 pixels to 40 pixels,
+  /// the size will snap to 40 pixels instantly.
+  final double maxRadius;
+
+  final Color backgroundColor;
+
+  /// The decoration with which to decorate the [ProfileImageAvatar].
+  final Decoration decoration;
+
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: decoration ?? kProfileImageAvatarDecoration,
+      child: CircleAvatar(
+        backgroundColor: backgroundColor,
+        backgroundImage: imageProvider,
+        radius: radius,
+        minRadius: minRadius,
+        maxRadius: maxRadius,
+        child: child,
+      ),
+    );
+  }
 }

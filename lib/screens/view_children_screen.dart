@@ -8,24 +8,9 @@ import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/draggable.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-/// The default boxShadow List used in painting clickable items.
-const List<BoxShadow> _shadowList = [
-  BoxShadow(
-    color: defaultShadowColor,
-    offset: Offset(0.0, 2.0),
-    spreadRadius: 0.0,
-    blurRadius: 14.0,
-  ),
-];
-
-/// The default box-decoration used for decoration the [ProfieImageAvatar].
-const BoxDecoration _elevationDecoration = BoxDecoration(
-  shape: BoxShape.circle,
-  boxShadow: _shadowList,
-);
 
 /// The implementation for the Notification screen.
 class ViewChildrenScreen extends StatefulWidget {
@@ -41,18 +26,20 @@ class ViewChildrenScreen extends StatefulWidget {
 
 class _ViewChildrenScreenState extends State<ViewChildrenScreen>
     with MountedStateMixin {
-  PageController _childrenController;
+  final GlobalKey _scrollKey = GlobalKey();
+
+  CarouselController _carouselController;
 
   ScrollController _scrollController;
 
   NetworkHelper _networkHelper;
 
-  int userProfileIndex = 0;
-  int matchProfileIndex = 0;
-  int childrenImageIndex = 0;
+  int _userProfileIndex = 0;
+  int _matchProfileIndex = 0;
+  int _childrenImageIndex = 0;
 
-  double _offset = 0;
-  double _page = 0;
+  // double _offset = 0;
+  // double _page = 0;
 
   List<String> matchProfileImages = [];
   List<String> userProfileImages = [];
@@ -71,14 +58,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
     super.initState();
 
     _scrollController = ScrollController();
-    _childrenController = PageController(viewportFraction: 1.0);
-
-    _childrenController.addListener(() {
-      setStateIfMounted(() {
-        _page = _childrenController.page;
-        _offset = _childrenController.offset;
-      });
-    });
+    _carouselController = CarouselController();
 
     _networkHelper = NetworkHelper();
     // this has to be called after initialising the "_networkHelper" variable.
@@ -88,7 +68,6 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
   @override
   void dispose() {
     _scrollController.dispose();
-    _childrenController.dispose();
 
     super.dispose();
   }
@@ -97,7 +76,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
     // populate match image urls.
     mountedLoader(() {
       final _macthImgUrls = widget.matchProfile.imageUrls;
-      print(_macthImgUrls);
+      // print(_macthImgUrls);
       if (_macthImgUrls != null && _macthImgUrls.isNotEmpty) {
         for (int i = 0; i < _macthImgUrls.length; i++) {
           final _url = matchBaseUrlToNetwork(_macthImgUrls[i]);
@@ -108,7 +87,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
 
     var _userImgUrls = await _networkHelper.getProfileImages();
     _userImgUrls.removeWhere((u) => u == null);
-    print(_userImgUrls);
+    // print(_userImgUrls);
     if (_userImgUrls != null && _userImgUrls.isNotEmpty) {
       for (int i = 0; i < _userImgUrls.length; i++) {
         final _url = _networkHelper.getProfileImageUrl(_userImgUrls[i]);
@@ -122,6 +101,10 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
   Widget build(BuildContext context) {
     // the device's screen specs.
     final Size _sizeConfig = MediaQuery.of(context).size;
+    // the absolute size of the children image.
+    final Size childrenCardSize = Size(256, 256);
+
+    final double childrenVertCardPadding = 20.0;
 
     return Scaffold(
       backgroundColor: darkCardColor,
@@ -131,13 +114,14 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
         showAppLogo: false,
       ),
       body: SingleChildScrollView(
+        key: _scrollKey,
         controller: _scrollController,
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
             SizedBox(height: 20.0),
             SizedBox(
-              height: _sizeConfig.height * 0.3,
+              height: _sizeConfig.height * 0.37,
               width: _sizeConfig.width,
               child: Stack(
                 children: [
@@ -145,10 +129,9 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                     alignment: Alignment(0.0, 0.0),
                     child: FractionallySizedBox(
                       heightFactor: 0.6,
-                      // TODO: change this later to fit exactly.
                       widthFactor: 0.6,
                       child: PrecachedImage.asset(
-                        imageURI: BetaIconPaths.progeneyTreeDividerPath,
+                        imageURI: BetaIconPaths.viewChildrenBackgroundImagePath,
                       ),
                     ),
                   ),
@@ -174,27 +157,27 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                                   SizedBox(height: 2.0),
                                   Clickable(
                                     onTap: () {
-                                      setStateIfMounted(() {
-                                        final _newIndex = userProfileIndex + 1;
-                                        if (_newIndex <
-                                            userProfileImages.length) {
-                                          // add to the index if the current index does not
-                                          // exceed th imageUrls length.
-                                          userProfileIndex = _newIndex;
-                                        } else {
-                                          // otherwise set the value to zero
-                                          // therby resetting its position.
-                                          userProfileIndex = 0;
-                                        }
-                                      });
+                                      // setStateIfMounted(() {
+                                      //   final _newIndex = userProfileIndex + 1;
+                                      //   if (_newIndex <
+                                      //       userProfileImages.length) {
+                                      //     // add to the index if the current index does not
+                                      //     // exceed th imageUrls length.
+                                      //     userProfileIndex = _newIndex;
+                                      //   } else {
+                                      //     // otherwise set the value to zero
+                                      //     // therby resetting its position.
+                                      //     userProfileIndex = 0;
+                                      //   }
+                                      // });
                                     },
-                                    child: PofileImageAvatar.mutable(
+                                    child: ProfileImageAvatar.mutable(
                                       actualImage: userProfileImages.isEmpty
                                           ? null
                                           : NetworkImage(userProfileImages[
-                                              userProfileIndex]),
-                                      minRadius: 24.0,
-                                      maxRadius: 30.5,
+                                              _userProfileIndex]),
+                                      minRadius: 28.50,
+                                      maxRadius: 35.5,
                                       placeholderImage: AssetImage(
                                         BetaIconPaths.defaultProfileImagePath01,
                                       ),
@@ -214,27 +197,27 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                                   SizedBox(height: 2.0),
                                   Clickable(
                                     onTap: () {
-                                      setStateIfMounted(() {
-                                        final _newIndex = matchProfileIndex + 1;
-                                        if (_newIndex <
-                                            matchProfileImages.length) {
-                                          // add to the index if the current index does not
-                                          // exceed th imageUrls length.
-                                          matchProfileIndex = _newIndex;
-                                        } else {
-                                          // otherwise set the value to zero
-                                          // therby resetting its position.
-                                          matchProfileIndex = 0;
-                                        }
-                                      });
+                                      // setStateIfMounted(() {
+                                      //   final _newIndex = matchProfileIndex + 1;
+                                      //   if (_newIndex <
+                                      //       matchProfileImages.length) {
+                                      //     // add to the index if the current index does not
+                                      //     // exceed th imageUrls length.
+                                      //     matchProfileIndex = _newIndex;
+                                      //   } else {
+                                      //     // otherwise set the value to zero
+                                      //     // therby resetting its position.
+                                      //     matchProfileIndex = 0;
+                                      //   }
+                                      // });
                                     },
-                                    child: PofileImageAvatar.mutable(
+                                    child: ProfileImageAvatar.mutable(
                                       actualImage: matchProfileImages.isEmpty
                                           ? null
                                           : NetworkImage(matchProfileImages[
-                                              matchProfileIndex]),
-                                      minRadius: 24.0,
-                                      maxRadius: 30.5,
+                                              _matchProfileIndex]),
+                                      minRadius: 28.50,
+                                      maxRadius: 35.5,
                                       placeholderImage: AssetImage(
                                         BetaIconPaths.defaultProfileImagePath01,
                                       ),
@@ -246,17 +229,17 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                           ),
                         ),
                         Flexible(
-                          flex: 1,
+                          flex: 2,
                           child: Container(
                             child: DecoratedBox(
-                              decoration: _elevationDecoration,
-                              child: PofileImageAvatar.mutable(
+                              decoration: kProfileImageAvatarDecoration,
+                              child: ProfileImageAvatar.mutable(
                                 actualImage: AssetImage(
-                                  // Todo; Change to Imgae.network when linking with backend.
-                                  mockImages[childrenImageIndex],
+                                  // Todo; Change to Image.network when linking with backend.
+                                  mockImages[_childrenImageIndex],
                                 ),
-                                minRadius: 45.0,
-                                maxRadius: 55.5,
+                                minRadius: 65.0,
+                                maxRadius: 85.5,
                                 placeholderImage: AssetImage(
                                   BetaIconPaths.defaultProfileImagePath01,
                                 ),
@@ -272,51 +255,88 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
             ),
             SizedBox(height: 20.0),
             SizedBox(
-              height: _sizeConfig.height * 0.24,
-              width: _sizeConfig.width,
-              child: PageView.builder(
-                clipBehavior: Clip.hardEdge,
-                controller: _childrenController,
+              height: childrenCardSize.height + childrenVertCardPadding,
+              child: CarouselSlider.builder(
+                carouselController: _carouselController,
+                options: CarouselOptions(
+                  autoPlay: false,
+                  enableInfiniteScroll: false,
+                  height: childrenCardSize.height,
+                  enlargeCenterPage: true,
+                  viewportFraction: 0.6,
+                  enlargeStrategy: CenterPageEnlargeStrategy.scale,
+                  onPageChanged: (index, changeReason) {
+                    setStateIfMounted(() {
+                      _childrenImageIndex = index;
+                    });
+                  },
+                ),
                 itemCount: mockImages.length,
-                onPageChanged: (page) {
-                  setStateIfMounted(() {
-                    childrenImageIndex = page;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  double _val;
+                itemBuilder: (context, _index, realIndex) {
+                  final _currentImageUrl = mockImages[realIndex];
 
-                  if (index == _page.floor()) {
-                    _val = _page - index;
-                  } else if (index == _page.floor() + 1) {
-                    _val = _page - index;
-                  } else {
-                    _val = 1;
-                  }
+                  return GestureDetector(
+                    onTap: () {
+                      _carouselController.animateToPage(
+                        realIndex,
+                        duration: Duration(milliseconds: 800),
+                        curve: Curves.decelerate,
+                      );
 
-                  final double _scale = 1.0 * _val;
-
-                  return Transform(
-                    alignment: Alignment.center,
-                    transform: Matrix4.identity()..rotateX(_scale),
-                    child: _ChildCard(
-                      imageList: mockImages,
-                      index: index,
-                      viewHeight: _sizeConfig.height * 0.2,
-                      scaleFactor: _scale,
-                      onTap: (_index) {
-                        _childrenController.animateToPage(
-                          _index,
-                          duration: const Duration(milliseconds: 800),
-                          curve: Curves.easeIn,
-                        );
-                        setStateIfMounted(() {
-                          childrenImageIndex = 1;
-                        });
-                      },
+                      setStateIfMounted(() {
+                        _childrenImageIndex = realIndex;
+                      });
+                    },
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: childrenCardSize.height,
+                        maxHeight: childrenCardSize.height,
+                        minWidth: childrenCardSize.width,
+                        maxWidth: childrenCardSize.width,
+                      ),
+                      child: Container(
+                        width: childrenCardSize.width,
+                        height: childrenCardSize.height,
+                        margin: EdgeInsets.all(6.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          boxShadow: kElevationToShadow[2],
+                          image: DecorationImage(
+                            image: AssetImage(_currentImageUrl),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                     ),
                   );
                 },
+              ),
+            ),
+            Center(
+              child: TextButton.icon(
+                style: TextButton.styleFrom(
+                  textStyle: smallBoldedCharStyle.copyWith(
+                    color: colorBlend02,
+                    decorationColor: colorBlend02,
+                    decoration: TextDecoration.underline,
+                  ),
+                  primary: colorBlend02,
+                  backgroundColor: Colors.transparent,
+                ),
+                onPressed: () {/*Do something*/},
+                label: Text(
+                  'See more',
+                  style: smallBoldedCharStyle.copyWith(
+                    color: colorBlend02,
+                    decorationColor: colorBlend02,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+                icon: Icon(
+                  Icons.add_rounded,
+                  color: blue,
+                  size: 18.0,
+                ),
               ),
             ),
             SizedBox(height: 12.0),
@@ -337,6 +357,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
               margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
               trailing: PrecachedImage.asset(
                 imageURI: BetaIconPaths.dislikeMatchIcon,
+                color: blue,
               ),
               onTap: () {
                 // TODO: mark the current match as "Dislike" and close the ViewChildren screen.
@@ -378,297 +399,6 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
             SizedBox(height: 20.0),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _ChildCard extends StatelessWidget {
-  const _ChildCard({
-    Key key,
-    this.imageList,
-    this.index,
-    this.viewHeight,
-    this.scaleFactor,
-    this.onTap,
-  }) : super(key: key);
-
-  final List<String> imageList;
-
-  final int index;
-
-  final void Function(int) onTap;
-
-  final double scaleFactor;
-
-  final double viewHeight;
-
-  @override
-  Widget build(BuildContext context) {
-    // the device's screen specs.
-    final Size _sizeConfig = MediaQuery.of(context).size;
-    bool _hasBefore = index - 1 >= 0;
-    bool _hasAfter = index + 1 < imageList.length;
-
-    // MainAxisAlignment mainAxisAlignment;
-
-    // if (_hasBefore && _hasAfter) {
-    //   mainAxisAlignment = MainAxisAlignment.spaceAround;
-    // } else if (_hasBefore && !_hasAfter) {
-    //   mainAxisAlignment = MainAxisAlignment.start;
-    // } else if (!_hasBefore && _hasAfter) {
-    //   mainAxisAlignment = MainAxisAlignment.end;
-    // } else {
-    //   mainAxisAlignment = MainAxisAlignment.spaceAround;
-    // }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 9.0),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          if (_hasBefore)
-            FractionallySizedBox(
-              alignment: Alignment.centerLeft,
-              heightFactor: 0.6,
-              widthFactor: 0.35,
-              child: Material(
-                shadowColor: defaultShadowColor,
-                elevation: 2.0,
-                borderRadius: BorderRadius.circular(18.0),
-                clipBehavior: Clip.hardEdge,
-                child: InkWell(
-                  onTap: () => onTap(index - 1),
-                  child: PrecachedImage.asset(
-                    imageURI: imageList[index - 1],
-                  ),
-                ),
-              ),
-            ),
-          //
-          if (_hasAfter)
-            FractionallySizedBox(
-              alignment: Alignment.centerRight,
-              heightFactor: 0.6,
-              widthFactor: 0.35,
-              child: Material(
-                shadowColor: defaultShadowColor,
-                elevation: 2.0,
-                borderRadius: BorderRadius.circular(18.0),
-                clipBehavior: Clip.hardEdge,
-                child: InkWell(
-                  onTap: () => onTap(index + 1),
-                  child: PrecachedImage.asset(
-                    imageURI: imageList[index + 1],
-                  ),
-                ),
-              ),
-            ),
-          //
-          FractionallySizedBox(
-            heightFactor: 0.8,
-            widthFactor: 0.6,
-            child: Material(
-              shadowColor: defaultShadowColor,
-              elevation: 2.0,
-              borderRadius: BorderRadius.circular(18.0),
-              clipBehavior: Clip.hardEdge,
-              child: PrecachedImage.asset(
-                imageURI: imageList[index],
-              ),
-            ),
-          ),
-          //
-        ],
-      ),
-    );
-  }
-}
-
-///
-class PofileImageAvatar extends StatelessWidget {
-  /// The default private constructor for the [PofileImageAvatar] widget.
-  PofileImageAvatar({
-    Key key,
-    @required this.imageProvider,
-    this.backgroundColor = const Color(0xFFE0E0E0),
-    this.decoration,
-    this.child,
-    this.radius,
-    this.minRadius,
-    this.maxRadius,
-  })  : assert(imageProvider != null,
-            'The parameter, "imageProvider" must be provided'),
-        assert(radius == null || (minRadius == null && maxRadius == null)),
-        super(key: key);
-
-  /// Create a [PofileImageAvatar] widget from a network source.
-  PofileImageAvatar.network({
-    Key key,
-    @required String url,
-    this.backgroundColor = const Color(0xFFE0E0E0),
-    this.decoration,
-    this.child,
-    this.radius,
-    this.minRadius,
-    this.maxRadius,
-    BoxFit fit = BoxFit.cover,
-    double height,
-    double width,
-    double scale = 1.0,
-    Color color,
-    WidgetBuilder placholderBuilder,
-    WidgetBuilder errorBuilder,
-    void Function() onError,
-  })  : assert(url != null, 'The value of "url" cannot be null!'),
-        assert(radius == null || (minRadius == null && maxRadius == null)),
-        imageProvider = Image.network(
-          url,
-          fit: fit,
-          width: width,
-          height: height,
-          scale: scale,
-          color: color,
-          errorBuilder: errorBuilder == null
-              ? null
-              : (BuildContext context, Object object, StackTrace stackTrace) {
-                  onError();
-                  return errorBuilder(context);
-                },
-          loadingBuilder: placholderBuilder == null
-              ? null
-              : (BuildContext context, Widget child,
-                  ImageChunkEvent chunkEvent) {
-                  return placholderBuilder(context);
-                },
-        ).image,
-        super(key: key);
-
-  /// Create a [PofileImageAvatar] widget from the asset.
-  PofileImageAvatar.asset({
-    Key key,
-    @required String uri,
-    this.backgroundColor = const Color(0xFFE0E0E0),
-    this.decoration,
-    this.child,
-    this.radius,
-    this.minRadius,
-    this.maxRadius,
-    BoxFit fit = BoxFit.cover,
-    double height,
-    double width,
-    double scale = 1.0,
-    Color color,
-    WidgetBuilder errorBuilder,
-    void Function() onError,
-  })  : assert(uri != null, 'The value of "uri" cannot be null!'),
-        assert(radius == null || (minRadius == null && maxRadius == null)),
-        imageProvider = Image.asset(
-          uri,
-          fit: fit,
-          width: width,
-          height: height,
-          scale: scale,
-          color: color,
-          errorBuilder: errorBuilder == null
-              ? null
-              : (BuildContext context, Object object, StackTrace stackTrace) {
-                  onError();
-                  return errorBuilder(context);
-                },
-        ).image,
-        super(key: key);
-
-  /// A Factory constructor for creating a [PofileImageAvatar] whose imageProvider can be swpped out
-  /// depending on whether or not the [actualImage] is null or not and replaced by another placholder imageProvider,
-  /// [placeholderImage].
-  ///
-  /// Note that if the value [actualImageIsAvailable] is set to `false`, the [placeholderImage] will be rendered
-  /// whether or not the [actualImage] is non-null.
-  /// For this cause [actualImageIsAvailable] is set to `true` by default meaning without providing the value
-  /// the [placeholderImage] will be loaded instead when and only when the [actualImage] is null.
-  factory PofileImageAvatar.mutable({
-    @required ImageProvider actualImage,
-    @required ImageProvider placeholderImage,
-    bool actualImageIsAvailable = true,
-    Color backgroundColor = const Color(0xFFFFFFFF),
-    Decoration decoration,
-    Widget child,
-    double radius,
-    double minRadius,
-    double maxRadius,
-  }) {
-    assert(placeholderImage != null,
-        'The parameter, "placeholderImage" must be provided!');
-    assert(radius == null || (minRadius == null && maxRadius == null));
-
-    final bool _isAvialble = actualImage != null && actualImageIsAvailable;
-    final _imageProvider = _isAvialble ? actualImage : placeholderImage;
-
-    return PofileImageAvatar(
-      imageProvider: _imageProvider,
-      backgroundColor: backgroundColor,
-      decoration: decoration,
-      child: child,
-      radius: radius,
-      minRadius: minRadius,
-      maxRadius: maxRadius,
-    );
-  }
-
-  final ImageProvider imageProvider;
-
-  final Widget child;
-
-  final double radius;
-
-  /// The minimum size of the avatar, expressed as the radius (half the
-  /// diameter).
-  ///
-  /// If [minRadius] is specified, then [radius] must not also be specified.
-  ///
-  /// Defaults to zero.
-  ///
-  /// Constraint changes are animated, but size changes due to the environment
-  /// itself changing are not. For example, changing the [minRadius] from 10 to
-  /// 20 when the [CircleAvatar] is in an unconstrained environment will cause
-  /// the avatar to animate from a 20 pixel diameter to a 40 pixel diameter.
-  /// However, if the [minRadius] is 40 and the [CircleAvatar] has a parent
-  /// [SizedBox] whose size changes instantaneously from 20 pixels to 40 pixels,
-  /// the size will snap to 40 pixels instantly.
-  final double minRadius;
-
-  /// The maximum size of the avatar, expressed as the radius (half the
-  /// diameter).
-  ///
-  /// If [maxRadius] is specified, then [radius] must not also be specified.
-  ///
-  /// Defaults to [double.infinity].
-  ///
-  /// Constraint changes are animated, but size changes due to the environment
-  /// itself changing are not. For example, changing the [maxRadius] from 10 to
-  /// 20 when the [CircleAvatar] is in an unconstrained environment will cause
-  /// the avatar to animate from a 20 pixel diameter to a 40 pixel diameter.
-  /// However, if the [maxRadius] is 40 and the [CircleAvatar] has a parent
-  /// [SizedBox] whose size changes instantaneously from 20 pixels to 40 pixels,
-  /// the size will snap to 40 pixels instantly.
-  final double maxRadius;
-
-  final Color backgroundColor;
-
-  /// The decoration with which to decorate the [ProfileImageAvatar].
-  final Decoration decoration;
-
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: decoration ?? _elevationDecoration,
-      child: CircleAvatar(
-        backgroundColor: backgroundColor,
-        backgroundImage: imageProvider,
-        radius: radius,
-        minRadius: minRadius,
-        maxRadius: maxRadius,
-        child: child,
       ),
     );
   }
