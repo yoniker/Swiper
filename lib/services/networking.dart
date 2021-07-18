@@ -16,6 +16,9 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:tuple/tuple.dart';
 
+
+enum NetworkTaskStatus { completed, inProgress, notExist } //possible statuses for long ongoing tasks on the server
+
 class NetworkHelper {
   static const SERVER_ADDR = 'dordating.com:8081';
   static final NetworkHelper _instance = NetworkHelper._internal();
@@ -254,4 +257,64 @@ class NetworkHelper {
     http.Response response = await http.post(swapUri,body: encoded);
     return;
   }
+
+  Future<Map<String,String>> getChildrenPictures(Profile profile) async{ //Send a request to produce children images
+
+    Map<String,String> detailsToSend={
+      'match_type':profile.userId.userType.toString(),
+      'match_id':profile.userId.id,
+      'match_images_server_location':profile.serverUserImagesLocation,
+      'user_type':UserType.REAL_USER.toString(),
+      'user_id':SettingsData().facebookId,
+      'user_images_server_location':'',
+    };
+
+    String encoded = jsonEncode(detailsToSend);
+    Uri getChildrenPicsUri =
+    Uri.https(SERVER_ADDR, '/generate_children/${SettingsData().facebookId}');
+    http.Response response = await http.post(getChildrenPicsUri,
+        body: encoded);
+    if(response.statusCode==200){
+      var decodedResponse = json.jsonDecode(response.body);
+
+      String taskId = decodedResponse['task_id'];
+      String targetLocation = decodedResponse['target_location'];
+      await this.checkTaskStatus(taskId);
+      return {'taskId':taskId, 'targetLocation':targetLocation};
+
+    }
+
+    return {'taskId':'Status not 200', 'targetLocation':'NA'}; //TODO in general make the errors do sth in the UI (think what and how)
+  }
+
+  Future<NetworkTaskStatus> checkTaskStatus(String taskId) async{
+    // /task_status/<userid>/<task_id>
+    Uri getTaskStatus = Uri.https(SERVER_ADDR, '/task_status/${SettingsData().facebookId}/$taskId');
+    http.Response response = await http.get(getTaskStatus);
+    if(response.statusCode==200){
+      var decodedResponse = json.jsonDecode(response.body);
+      if (decodedResponse=='in_progress')
+      { return NetworkTaskStatus.inProgress;
+      }
+      if (decodedResponse == 'completed'){
+        return NetworkTaskStatus.completed;
+      }
+      return NetworkTaskStatus.notExist;
+
+    }
+
+
+    return NetworkTaskStatus.notExist; //TODO else what to do when status isnt 200?
+
+
+
+  }
+
+
+
+
+
+
+
+
 }

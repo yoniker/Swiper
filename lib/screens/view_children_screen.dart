@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 
 /// The implementation for the Notification screen.
 class ViewChildrenScreen extends StatefulWidget {
-  static const String routeName = '/app/view_children';
+  static const String routeName = '/view_children';
 
   ViewChildrenScreen({Key key, @required this.matchProfile}) : super(key: key);
 
@@ -56,6 +56,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
   @override
   void initState() {
     super.initState();
+    NetworkHelper().getChildrenPictures(widget.matchProfile);
 
     _scrollController = ScrollController();
     _carouselController = CarouselController();
