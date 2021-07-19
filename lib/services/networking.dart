@@ -294,11 +294,15 @@ class NetworkHelper {
         body: encoded);
     if(response.statusCode==200){
       var decodedResponse = json.jsonDecode(response.body);
-
-      String taskId = decodedResponse['task_id'];
+      String childrenTaskId = decodedResponse['children_task'];
+      String matchFacesTaskId = decodedResponse['match_faces_task'];
+      String userFacesTaskId = decodedResponse['user_faces_task'];
       String targetLocation = decodedResponse['target_location'];
-      await this.checkTaskStatus(taskId);
-      return {'taskId':taskId, 'targetLocation':targetLocation};
+      print('dor');
+      print('king');
+      return {'childrenTaskId':childrenTaskId, 'targetLocation':targetLocation,
+        'user_faces_task':userFacesTaskId,'matchFacesTaskId':matchFacesTaskId
+      };
 
     }
 
@@ -310,6 +314,7 @@ class NetworkHelper {
       await Future.delayed(MIN_TASK_STATUS_CALL_INTERVAL -
           DateTime.now().difference(_lastTaskStatusCall));
     }
+    _lastTaskStatusCall = DateTime.now();
     Uri getTaskStatus = Uri.https(SERVER_ADDR, '/task_status/${SettingsData().facebookId}/$taskId');
     http.Response response = await http.get(getTaskStatus);
     if(response.statusCode==200){

@@ -5,12 +5,13 @@ import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/clickable.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
-import 'package:betabeta/widgets/draggable.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 
 /// The implementation for the Notification screen.
 class ViewChildrenScreen extends StatefulWidget {
@@ -49,6 +50,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
   void waitUntilTaskReady() async{
     while(_currentTaskStatus!=NetworkTaskStatus.completed){
       _currentTaskStatus = await NetworkHelper().checkTaskStatus(_taskId);
+      print(_taskId);
     }
     List<String> listFacesMatch = await NetworkHelper().getFacesLinksMatch(widget.matchProfile);
     List<String> listFacesSelf = await NetworkHelper().getFacesLinkSelf();
@@ -69,7 +71,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
   void initState() {
     super.initState();
     NetworkHelper().getChildrenPictures(widget.matchProfile).then((value) {
-      _taskId = value['taskId'];
+      _taskId = value['childrenTaskId'];
       _netChildrenTargetLocation = value['targetLocation'];
       waitUntilTaskReady();
 
@@ -87,7 +89,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
   }
 
   Widget waitingAnimation(){
-    return CircularProgressIndicator();
+    return SpinKitPumpingHeart(color:colorBlend02,);
   }
 
   @override
@@ -231,7 +233,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                               child: ProfileImageAvatar.mutable(
                                 actualImage:
                                   // Todo; Change to Image.network when linking with backend.
-                                  _generatedBabiesImages[_childrenImageIndex].image,
+                                  _generatedBabiesImages[_childrenImageIndex].image, //TODO default silhouette image instead of red screen :D
                                 minRadius: 65.0,
                                 maxRadius: 85.5,
                                 placeholderImage: AssetImage(
