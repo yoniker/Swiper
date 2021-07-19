@@ -177,23 +177,11 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                                       :
                                   Clickable(
                                     onTap: () {
-                                      // setStateIfMounted(() {
-                                      //   final _newIndex = userProfileIndex + 1;
-                                      //   if (_newIndex <
-                                      //       userProfileImages.length) {
-                                      //     // add to the index if the current index does not
-                                      //     // exceed th imageUrls length.
-                                      //     userProfileIndex = _newIndex;
-                                      //   } else {
-                                      //     // otherwise set the value to zero
-                                      //     // therby resetting its position.
-                                      //     userProfileIndex = 0;
-                                      //   }
-                                      // });
+                                      //TODO overlay of FacesWidget
                                     },
                                     child: ProfileImageAvatar.mutable(
                                       actualImage: _userFacesImages.isEmpty
-                                          ? null
+                                          ? AssetImage(BetaIconPaths.silhouetteProfileImage)
                                           : _userFacesImages[0].image, //TODO change index here
                                       minRadius: 28.50,
                                       maxRadius: 35.5,
@@ -217,23 +205,11 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                                   !_matchFacesReady?waitingAnimation():
                                   Clickable(
                                     onTap: () {
-                                      // setStateIfMounted(() {
-                                      //   final _newIndex = matchProfileIndex + 1;
-                                      //   if (_newIndex <
-                                      //       matchProfileImages.length) {
-                                      //     // add to the index if the current index does not
-                                      //     // exceed th imageUrls length.
-                                      //     matchProfileIndex = _newIndex;
-                                      //   } else {
-                                      //     // otherwise set the value to zero
-                                      //     // therby resetting its position.
-                                      //     matchProfileIndex = 0;
-                                      //   }
-                                      // });
+                                      ////TODO overlay of FacesWidget
                                     },
                                     child: ProfileImageAvatar.mutable(
                                       actualImage: _matchFacesImages.isEmpty
-                                          ? null
+                                          ? AssetImage(BetaIconPaths.silhouetteProfileImage)
                                           : _matchFacesImages[0].image,
                                       minRadius: 28.50,
                                       maxRadius: 35.5,
@@ -253,8 +229,8 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                             child: !_childrenReady?waitingAnimation():DecoratedBox(
                               decoration: kProfileImageAvatarDecoration,
                               child: ProfileImageAvatar.mutable(
-                                actualImage:
-                                  // Todo; Change to Image.network when linking with backend.
+                                actualImage:_generatedBabiesImages.isEmpty?AssetImage(BetaIconPaths.silhouetteProfileImage)
+                                    :
                                   _generatedBabiesImages[_childrenImageIndex].image, //TODO default silhouette image instead of red screen :D
                                 minRadius: 65.0,
                                 maxRadius: 85.5,
@@ -274,7 +250,10 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
             SizedBox(height: 20.0),
             SizedBox(
               height: childrenCardSize.height + childrenVertCardPadding,
-              child: !_childrenReady?SizedBox(): CarouselSlider.builder(
+              child: !_childrenReady?SizedBox():
+                  _generatedBabiesImages.isEmpty?
+                  Text('No face found so cannot generate children',style: defaultTextStyle.copyWith(color: Colors.red),)
+                      : CarouselSlider.builder(
                 carouselController: _carouselController,
                 options: CarouselOptions(
                   autoPlay: false,
@@ -327,33 +306,6 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                     ),
                   );
                 },
-              ),
-            ),
-            Center(
-              child: TextButton.icon(
-                style: TextButton.styleFrom(
-                  textStyle: smallBoldedCharStyle.copyWith(
-                    color: colorBlend02,
-                    decorationColor: colorBlend02,
-                    decoration: TextDecoration.underline,
-                  ),
-                  primary: colorBlend02,
-                  backgroundColor: Colors.transparent,
-                ),
-                onPressed: () {/*Do something*/},
-                label: Text(
-                  'See more',
-                  style: smallBoldedCharStyle.copyWith(
-                    color: colorBlend02,
-                    decorationColor: colorBlend02,
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-                icon: Icon(
-                  Icons.add_rounded,
-                  color: blue,
-                  size: 18.0,
-                ),
               ),
             ),
             SizedBox(height: 12.0),
