@@ -104,17 +104,17 @@ class BetaIconPaths {
   /// The path to the facebook blue-icon logo.
   static const String facebookLogo = 'assets/images/facebook_icon.png';
 
-  /// The like fever symbol used in painting the LikeFever Widget in thr details screen of
+  /// The border of thermometer symbol used in painting the MatchPercentage Widget in the details screen of
   /// the Discover page.
-  static const String likeFeverTherm = 'assets/images/like_fever_therm.png';
+  static const String thermBorder = 'assets/images/therm_border.png';
 
-  /// The like fever symbol used in painting the LikeFever Widget in thr details screen of
+  /// The body of thermometer symbol used in painting the MatchScale Widget in the details screen of
   /// the Discover page.
-  static const String likeFeverTherm02 = 'assets/images/like_fever_therm_02.png';
+  static const String thermBody = 'assets/images/therm_body.png';
 
-  /// The like fever symbol used in painting the LikeFever Widget in thr details screen of
+  /// The like scale symbol used in painting the MatchScale Widget in the details screen of
   /// the Discover page.
-  static const String likeScale01 = 'assets/images/like_scale_01.png';
+  static const String likeScale = 'assets/images/like_scale_01.png';
 
   /// The path to the orange message-icon used in the view-children screen.
   static const String messageIcon = 'assets/images/message_icon_01.png';
