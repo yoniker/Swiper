@@ -10,6 +10,7 @@ import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/models/userid.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/src/media_type.dart' as media;
 import 'package:image/image.dart' as img;
@@ -23,10 +24,12 @@ class NetworkHelper {
   static const SERVER_ADDR = 'dordating.com:8081';
   static final NetworkHelper _instance = NetworkHelper._internal();
   static const MIN_MATCHES_CALL_INTERVAL = Duration(seconds: 1);
+  static const MIN_TASK_STATUS_CALL_INTERVAL = Duration(seconds: 1);
   static const ALL_USER_IMAGES = 'all_user_images';
   DateTime _lastMatchCall =
       DateTime(2000); //The year 2000 is when the last call happened :D
   DateTime _lastFacesImagesCall = DateTime(2000);
+  DateTime _lastTaskStatusCall = DateTime(2000);
   Future<http.Response> _facesCall;
   static const MIN_FACES_CALL_INTERVAL = Duration(milliseconds: 500);
 
@@ -53,6 +56,19 @@ class NetworkHelper {
   static String faceUrlToFullUrl(String faceUrl) {
     return 'https://' + NetworkHelper.SERVER_ADDR + '/' + faceUrl;
   }
+
+  static List<Image> serverImagesUrlsToImages(List<String> facesUrls,BuildContext context){
+    List<Image> facesImages = [];
+    for(int imageIndex = 0 ; imageIndex<facesUrls.length; imageIndex++){
+  String url = NetworkHelper.faceUrlToFullUrl(facesUrls[imageIndex]);
+  Image img = Image.network(url,fit:BoxFit.cover);
+  precacheImage(img.image, context);
+  facesImages.add(img);
+
+
+  }
+    return facesImages;
+}
 
   //getMatches: Grab some matches and image links from the server
   dynamic getMatches() async {
@@ -139,7 +155,7 @@ class NetworkHelper {
         body: encoded); //TODO something if response wasnt 200
   }
 
-  Future<HashMap<String, dynamic>> getFacesLinks(
+  Future<HashMap<String, dynamic>> getFacesCustomImageSearchLinks(
       {String imageFileName, UserId userId}) async {
     if (_facesCall != null) {
       return HashMap();
@@ -220,6 +236,8 @@ class NetworkHelper {
 
 
 
+
+
   Future<List<String>> getProfileImages()async{
     Uri countUri = Uri.https(SERVER_ADDR, '/profile_images/get_list/${SettingsData().facebookId}/');
     var response = await http.get(countUri);
@@ -288,7 +306,10 @@ class NetworkHelper {
   }
 
   Future<NetworkTaskStatus> checkTaskStatus(String taskId) async{
-    // /task_status/<userid>/<task_id>
+    if (DateTime.now().difference(_lastTaskStatusCall) < MIN_TASK_STATUS_CALL_INTERVAL) {
+      await Future.delayed(MIN_TASK_STATUS_CALL_INTERVAL -
+          DateTime.now().difference(_lastTaskStatusCall));
+    }
     Uri getTaskStatus = Uri.https(SERVER_ADDR, '/task_status/${SettingsData().facebookId}/$taskId');
     http.Response response = await http.get(getTaskStatus);
     if(response.statusCode==200){
@@ -309,6 +330,49 @@ class NetworkHelper {
 
 
   }
+
+  Future<List<String>> getFacesLinksMatch(Profile profile)async{
+    Uri getFacesUri = Uri.https(SERVER_ADDR, '/faces_analyzed/${SettingsData().facebookId}');
+    Map<String,String> detailsToSend={
+      'user_id':profile.userId.id,
+      'user_type':profile.userId.userType.toString(),
+      'user_server_location':profile.serverUserImagesLocation
+    };
+
+    String encoded = jsonEncode(detailsToSend);
+    http.Response response = await http.post(getFacesUri,
+        body: encoded);
+    if(response.statusCode==200){
+      var decodedResponse = json.jsonDecode(response.body);
+      return decodedResponse.cast<String>();
+    }
+
+
+  }
+
+  Future<List<String>> getFacesLinkSelf() async{
+    UserId selfId = UserId(id:SettingsData().facebookId,userType: UserType.REAL_USER);
+    Profile selfProfile = Profile(userId:selfId,serverUserImagesLocation:'');
+    return await getFacesLinksMatch(selfProfile);
+
+  }
+
+  // /generated_children/<username>/<children_dir>
+  Future<List<String>> getGeneratedBabiesLinks(String childrenDirLocation)async{
+    print(childrenDirLocation);
+    Uri getChildrenUri = Uri.https(SERVER_ADDR, '/generated_children/$childrenDirLocation');
+    http.Response response = await http.get(getChildrenUri);
+    if(response.statusCode==200){
+      var decodedResponse = json.jsonDecode(response.body);
+      return decodedResponse.cast<String>();
+    }
+
+    return [];
+
+
+  }
+
+
 
 
 

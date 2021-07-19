@@ -32,38 +32,51 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
 
   ScrollController _scrollController;
 
-  NetworkHelper _networkHelper;
-
-  int _userProfileIndex = 0;
-  int _matchProfileIndex = 0;
+  int _userImageIndex = 0;
+  int _matchImageIndex = 0;
   int _childrenImageIndex = 0;
+  NetworkTaskStatus _currentTaskStatus = NetworkTaskStatus.inProgress;
+  String _taskId ='';
+  String _netChildrenTargetLocation = '';
+  bool _screenReady = false;
 
   // double _offset = 0;
   // double _page = 0;
+  List<Image> _userFacesImages = [];
+  List<Image> _matchFacesImages=[];
+  List<Image> _generatedBabiesImages = [];
 
-  List<String> matchProfileImages = [];
-  List<String> userProfileImages = [];
+  void waitUntilTaskReady() async{
+    while(_currentTaskStatus!=NetworkTaskStatus.completed){
+      _currentTaskStatus = await NetworkHelper().checkTaskStatus(_taskId);
+    }
+    List<String> listFacesMatch = await NetworkHelper().getFacesLinksMatch(widget.matchProfile);
+    List<String> listFacesSelf = await NetworkHelper().getFacesLinkSelf();
+    List <String> listChildrenImages = await NetworkHelper().getGeneratedBabiesLinks(_netChildrenTargetLocation);
+    setStateIfMounted(() {
+      _matchFacesImages = NetworkHelper.serverImagesUrlsToImages(listFacesMatch,context);
+      _userFacesImages = NetworkHelper.serverImagesUrlsToImages(listFacesSelf,context);
+      _generatedBabiesImages = NetworkHelper.serverImagesUrlsToImages(listChildrenImages, context);
+      _screenReady = true;
 
-  final List<String> mockImages = [
-    'assets/mock_images/child_0.jpg',
-    'assets/mock_images/child_1.jpg',
-    'assets/mock_images/child_2.jpg',
-    'assets/mock_images/child_3.jpg',
-    'assets/mock_images/child_4.jpg',
-    'assets/mock_images/child_5.jpg',
-  ];
+    });
+
+
+    
+  }
 
   @override
   void initState() {
     super.initState();
-    NetworkHelper().getChildrenPictures(widget.matchProfile);
+    NetworkHelper().getChildrenPictures(widget.matchProfile).then((value) {
+      _taskId = value['taskId'];
+      _netChildrenTargetLocation = value['targetLocation'];
+      waitUntilTaskReady();
+
+    });
 
     _scrollController = ScrollController();
     _carouselController = CarouselController();
-
-    _networkHelper = NetworkHelper();
-    // this has to be called after initialising the "_networkHelper" variable.
-    populate();
   }
 
   @override
@@ -73,29 +86,8 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
     super.dispose();
   }
 
-  void populate() async {
-    // populate match image urls.
-    mountedLoader(() {
-      final _macthImgUrls = widget.matchProfile.imageUrls;
-      // print(_macthImgUrls);
-      if (_macthImgUrls != null && _macthImgUrls.isNotEmpty) {
-        for (int i = 0; i < _macthImgUrls.length; i++) {
-          final _url = matchBaseUrlToNetwork(_macthImgUrls[i]);
-          matchProfileImages.add(_url);
-        }
-      }
-    });
-
-    var _userImgUrls = await _networkHelper.getProfileImages();
-    _userImgUrls.removeWhere((u) => u == null);
-    // print(_userImgUrls);
-    if (_userImgUrls != null && _userImgUrls.isNotEmpty) {
-      for (int i = 0; i < _userImgUrls.length; i++) {
-        final _url = _networkHelper.getProfileImageUrl(_userImgUrls[i]);
-        userProfileImages.add(_url);
-      }
-    }
-    setStateIfMounted(() {/**/});
+  Widget waitingAnimation(){
+    return CircularProgressIndicator();
   }
 
   @override
@@ -156,6 +148,9 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                                     style: smallBoldedCharStyle,
                                   ),
                                   SizedBox(height: 2.0),
+                                  !_screenReady?
+                                      waitingAnimation()
+                                      :
                                   Clickable(
                                     onTap: () {
                                       // setStateIfMounted(() {
@@ -173,10 +168,9 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                                       // });
                                     },
                                     child: ProfileImageAvatar.mutable(
-                                      actualImage: userProfileImages.isEmpty
+                                      actualImage: _userFacesImages.isEmpty
                                           ? null
-                                          : NetworkImage(userProfileImages[
-                                              _userProfileIndex]),
+                                          : _userFacesImages[0].image, //TODO change index here
                                       minRadius: 28.50,
                                       maxRadius: 35.5,
                                       placeholderImage: AssetImage(
@@ -196,6 +190,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                                     style: smallBoldedCharStyle,
                                   ),
                                   SizedBox(height: 2.0),
+                                  !_screenReady?waitingAnimation():
                                   Clickable(
                                     onTap: () {
                                       // setStateIfMounted(() {
@@ -213,10 +208,9 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                                       // });
                                     },
                                     child: ProfileImageAvatar.mutable(
-                                      actualImage: matchProfileImages.isEmpty
+                                      actualImage: _matchFacesImages.isEmpty
                                           ? null
-                                          : NetworkImage(matchProfileImages[
-                                              _matchProfileIndex]),
+                                          : _matchFacesImages[0].image,
                                       minRadius: 28.50,
                                       maxRadius: 35.5,
                                       placeholderImage: AssetImage(
@@ -232,13 +226,12 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                         Flexible(
                           flex: 2,
                           child: Container(
-                            child: DecoratedBox(
+                            child: !_screenReady?waitingAnimation():DecoratedBox(
                               decoration: kProfileImageAvatarDecoration,
                               child: ProfileImageAvatar.mutable(
-                                actualImage: AssetImage(
+                                actualImage:
                                   // Todo; Change to Image.network when linking with backend.
-                                  mockImages[_childrenImageIndex],
-                                ),
+                                  _generatedBabiesImages[_childrenImageIndex].image,
                                 minRadius: 65.0,
                                 maxRadius: 85.5,
                                 placeholderImage: AssetImage(
@@ -257,7 +250,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
             SizedBox(height: 20.0),
             SizedBox(
               height: childrenCardSize.height + childrenVertCardPadding,
-              child: CarouselSlider.builder(
+              child: !_screenReady?SizedBox(): CarouselSlider.builder(
                 carouselController: _carouselController,
                 options: CarouselOptions(
                   autoPlay: false,
@@ -272,9 +265,8 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                     });
                   },
                 ),
-                itemCount: mockImages.length,
+                itemCount: _generatedBabiesImages.length,
                 itemBuilder: (context, _index, realIndex) {
-                  final _currentImageUrl = mockImages[realIndex];
 
                   return GestureDetector(
                     onTap: () {
@@ -303,7 +295,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                           borderRadius: BorderRadius.circular(18),
                           boxShadow: kElevationToShadow[2],
                           image: DecorationImage(
-                            image: AssetImage(_currentImageUrl),
+                            image: _generatedBabiesImages[realIndex].image,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -403,4 +395,6 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
       ),
     );
   }
+
+  
 }
