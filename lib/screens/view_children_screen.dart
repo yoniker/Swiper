@@ -86,6 +86,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
     List <String> listChildrenImages = await NetworkHelper().getGeneratedBabiesLinks(_netChildrenTargetLocation);
     setStateIfMounted(() {
       _generatedBabiesImages = NetworkHelper.serverImagesUrlsToImages(listChildrenImages, context);
+      _childrenImageIndex = (_generatedBabiesImages.length/2-1).toInt();
       _childrenReady = true;
     });
 
@@ -256,6 +257,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                       : CarouselSlider.builder(
                 carouselController: _carouselController,
                 options: CarouselOptions(
+                  initialPage: _childrenImageIndex,
                   autoPlay: false,
                   enableInfiniteScroll: false,
                   height: childrenCardSize.height,
@@ -310,7 +312,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
             ),
             SizedBox(height: 12.0),
             ActionBox(
-              message: 'Mark as Like',
+              message: 'Like',
               messageStyle: smallBoldedCharStyle.copyWith(color: colorBlend02),
               margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
               trailing: PrecachedImage.asset(
@@ -321,7 +323,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
               },
             ),
             ActionBox(
-              message: 'Mark as Dislike',
+              message: 'Dislike',
               messageStyle: smallBoldedCharStyle.copyWith(color: blue),
               margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
               trailing: PrecachedImage.asset(
