@@ -36,10 +36,10 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
   int _userImageIndex = 0;
   int _matchImageIndex = 0;
   int _childrenImageIndex = 0;
-  NetworkTaskStatus _currentTaskStatus = NetworkTaskStatus.inProgress;
-  String _taskId ='';
   String _netChildrenTargetLocation = '';
-  bool _screenReady = false;
+  bool _childrenReady = false;
+  bool _userFacesReady = false;
+  bool _matchFacesReady = false;
 
   // double _offset = 0;
   // double _page = 0;
@@ -47,22 +47,49 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
   List<Image> _matchFacesImages=[];
   List<Image> _generatedBabiesImages = [];
 
-  void waitUntilTaskReady() async{
-    while(_currentTaskStatus!=NetworkTaskStatus.completed){
-      _currentTaskStatus = await NetworkHelper().checkTaskStatus(_taskId);
-      print(_taskId);
+  Future<void> waitUntilTaskReady(taskId) async{
+    NetworkTaskStatus currentTaskStatus = NetworkTaskStatus.inProgress;
+    while(currentTaskStatus!=NetworkTaskStatus.completed){
+      currentTaskStatus = await NetworkHelper().checkTaskStatus(taskId);
     }
-    List<String> listFacesMatch = await NetworkHelper().getFacesLinksMatch(widget.matchProfile);
+    return;}
+  
+  //Get the user's faces,the match's faces and then the children faces
+  void getTasksFromServer()async{
+    Map<String,String> tasksInfo = await NetworkHelper().startChildrenTasks(widget.matchProfile);
+    _netChildrenTargetLocation = tasksInfo['targetLocation'];
+    String taskChildren = tasksInfo['childrenTaskId'];
+    String taskMatchFaces = tasksInfo['matchFacesTaskId'];
+    String taskUserFaces = tasksInfo['user_faces_task'];
+    //Actually perform tasks and update the UI accordingly
+    //1.User Images
+    await waitUntilTaskReady(taskUserFaces);
     List<String> listFacesSelf = await NetworkHelper().getFacesLinkSelf();
-    List <String> listChildrenImages = await NetworkHelper().getGeneratedBabiesLinks(_netChildrenTargetLocation);
     setStateIfMounted(() {
-      _matchFacesImages = NetworkHelper.serverImagesUrlsToImages(listFacesMatch,context);
       _userFacesImages = NetworkHelper.serverImagesUrlsToImages(listFacesSelf,context);
-      _generatedBabiesImages = NetworkHelper.serverImagesUrlsToImages(listChildrenImages, context);
-      _screenReady = true;
-
+      _userFacesReady = true;
     });
 
+
+
+
+    //2. Match Images
+    await waitUntilTaskReady(taskMatchFaces);
+    List<String> listFacesMatch = await NetworkHelper().getFacesLinksMatch(widget.matchProfile);
+    setStateIfMounted(() {
+      _matchFacesImages = NetworkHelper.serverImagesUrlsToImages(listFacesMatch,context);
+      _matchFacesReady = true;
+    });
+
+    //3.Children Images
+    await waitUntilTaskReady(taskChildren);
+    List <String> listChildrenImages = await NetworkHelper().getGeneratedBabiesLinks(_netChildrenTargetLocation);
+    setStateIfMounted(() {
+      _generatedBabiesImages = NetworkHelper.serverImagesUrlsToImages(listChildrenImages, context);
+      _childrenReady = true;
+    });
+
+    return;
 
     
   }
@@ -70,12 +97,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
   @override
   void initState() {
     super.initState();
-    NetworkHelper().getChildrenPictures(widget.matchProfile).then((value) {
-      _taskId = value['childrenTaskId'];
-      _netChildrenTargetLocation = value['targetLocation'];
-      waitUntilTaskReady();
-
-    });
+    getTasksFromServer();
 
     _scrollController = ScrollController();
     _carouselController = CarouselController();
@@ -150,7 +172,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                                     style: smallBoldedCharStyle,
                                   ),
                                   SizedBox(height: 2.0),
-                                  !_screenReady?
+                                  !_userFacesReady?
                                       waitingAnimation()
                                       :
                                   Clickable(
@@ -188,11 +210,11 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                               Column(
                                 children: [
                                   Text(
-                                    'Abbie',
+                                    widget.matchProfile.username,
                                     style: smallBoldedCharStyle,
                                   ),
                                   SizedBox(height: 2.0),
-                                  !_screenReady?waitingAnimation():
+                                  !_matchFacesReady?waitingAnimation():
                                   Clickable(
                                     onTap: () {
                                       // setStateIfMounted(() {
@@ -228,7 +250,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                         Flexible(
                           flex: 2,
                           child: Container(
-                            child: !_screenReady?waitingAnimation():DecoratedBox(
+                            child: !_childrenReady?waitingAnimation():DecoratedBox(
                               decoration: kProfileImageAvatarDecoration,
                               child: ProfileImageAvatar.mutable(
                                 actualImage:
@@ -252,7 +274,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
             SizedBox(height: 20.0),
             SizedBox(
               height: childrenCardSize.height + childrenVertCardPadding,
-              child: !_screenReady?SizedBox(): CarouselSlider.builder(
+              child: !_childrenReady?SizedBox(): CarouselSlider.builder(
                 carouselController: _carouselController,
                 options: CarouselOptions(
                   autoPlay: false,

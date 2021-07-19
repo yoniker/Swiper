@@ -276,7 +276,7 @@ class NetworkHelper {
     return;
   }
 
-  Future<Map<String,String>> getChildrenPictures(Profile profile) async{ //Send a request to produce children images
+  Future<Map<String,String>> startChildrenTasks(Profile profile) async{ //Send a request to produce 1.User's face links 2.Match's face links 3.children images
 
     Map<String,String> detailsToSend={
       'match_type':profile.userId.userType.toString(),
