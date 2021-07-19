@@ -604,7 +604,8 @@ class _DraggableCardState extends State<DraggableCard>
                       scrollDirection: Axis.horizontal,
                       itemCount: _imageUrls.length,
                       itemBuilder: (cntx, index) {
-                        final String _url = matchBaseUrlToNetwork(_imageUrls[index]);
+                        final String _url =
+                            matchBaseUrlToNetwork(_imageUrls[index]);
                         return SizedBox(
                           height: 80.5,
                           width: 100.0,
@@ -677,19 +678,15 @@ class _DraggableCardState extends State<DraggableCard>
             DescriptionBanner(
               message: 'Like Fever Prediction',
               overflow: null,
-              trailing: LikeFeverWidget(
+              trailing: MatchPercentageScale(
                 value: 20.0,
-                assetURI: BetaIconPaths.likeFeverTherm02,
                 startValue: 20.0,
               ),
             ),
             DescriptionBanner(
               message: 'Match Percentage',
               overflow: null,
-              trailing: LikeFeverWidget(
-                value: 20.0,
-                assetURI: BetaIconPaths.likeScale01,
-              ),
+              trailing: LikeScale(value: 20.0),
               // trailing: Container(
               //   margin: EdgeInsets.symmetric(horizontal: 4.0),
               //   padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.5),
@@ -950,13 +947,12 @@ String matchBaseUrlToNetwork(String base) {
 enum FastSwipe { notFastSwipe, Right, Left }
 
 ///
-class LikeFeverWidget extends StatelessWidget {
-  const LikeFeverWidget({
+class LikeScale extends StatelessWidget {
+  const LikeScale({
     Key key,
     @required this.value,
     this.startValue = 0.0,
     this.endValue = 100.0,
-    @required String assetURI,
     this.colorGradient,
   })  : assert(value >= 0.0 && value <= 100.0,
             'The "value" provided must be in the range (0.0, 100.0)\n Given: $value'),
@@ -966,7 +962,6 @@ class LikeFeverWidget extends StatelessWidget {
             'The "endValue" provided must be in the range (0.0, 100.0)\n Given: $value'),
         assert(startValue >= 0.0 && startValue <= 100.0,
             'The "startValue" provided must be in the range (0.0, 100.0)\n Given: $value'),
-        _uri = assetURI,
         super(key: key);
 
   // run some computation to return a valid value within range.
@@ -1000,9 +995,6 @@ class LikeFeverWidget extends StatelessWidget {
   /// If none is given (or a value of null is supplied) the gradient defaults to [mainColorGradient].
   final Gradient colorGradient;
 
-  /// THe URI to the asset image for rendering the scale.
-  final String _uri;
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -1028,7 +1020,98 @@ class LikeFeverWidget extends StatelessWidget {
             rect,
           );
         },
-        child: PrecachedImage.asset(imageURI: _uri),
+        child: PrecachedImage.asset(imageURI: BetaIconPaths.likeScale),
+      ),
+    );
+  }
+}
+
+///
+class MatchPercentageScale extends StatelessWidget {
+  const MatchPercentageScale({
+    Key key,
+    @required this.value,
+    this.startValue = 0.0,
+    this.endValue = 100.0,
+    this.colorGradient,
+  })  : assert(value >= 0.0 && value <= 100.0,
+            'The "value" provided must be in the range (0.0, 100.0)\n Given: $value'),
+        assert(endValue > startValue,
+            'The "endValue" provided must be greater than the "startValue'),
+        assert(endValue >= 0.0 && endValue <= 100.0,
+            'The "endValue" provided must be in the range (0.0, 100.0)\n Given: $value'),
+        assert(startValue >= 0.0 && startValue <= 100.0,
+            'The "startValue" provided must be in the range (0.0, 100.0)\n Given: $value'),
+        super(key: key);
+
+  // run some computation to return a valid value within range.
+  double _compute(double value) {
+    final val = value / 100;
+    final _start = startValue / 100;
+    final _end = endValue / 100;
+
+    final double _computeVal = val * (_end - _start) + _start;
+
+    return _computeVal;
+  }
+
+  /// The start value of the scale.
+  ///
+  /// Note that the provided value must be in the range `(0.0, 100.0)`, same as the `value` parameter.
+  final double startValue;
+
+  /// The end value of the scale.
+  ///
+  /// Note that the provided value must be in the range `(0.0, 100.0)`, same as the `value` parameter.
+  final double endValue;
+
+  /// The value of the like-fever.
+  ///
+  /// Note that the value provided should be in the range `(0.0, 100.0)`.
+  final double value;
+
+  /// The Gradient to use in painting this widget.
+  ///
+  /// If none is given (or a value of null is supplied) the gradient defaults to [mainColorGradient].
+  final Gradient colorGradient;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 6.0),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          PrecachedImage.asset(
+            imageURI: BetaIconPaths.thermBorder,
+            color: defaultShadowColor,
+          ),
+          ShaderMask(
+            shaderCallback: (rect) {
+              final _val = _compute(value);
+              final double _skew = _val + 0.1;
+
+              final _gradient = colorGradient ??
+                  LinearGradient(
+                    colors: [
+                      colorBlend02,
+                      defaultShadowColor,
+                    ],
+                    stops: [
+                      _val,
+                      _skew,
+                    ],
+                  );
+
+              return _gradient.createShader(
+                rect,
+              );
+            },
+            child: PrecachedImage.asset(
+              imageURI: BetaIconPaths.thermBody,
+            ),
+          ),
+        ],
       ),
     );
   }
