@@ -580,6 +580,7 @@ class ActionBox extends StatelessWidget {
     this.borderRadius,
     this.margin = const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
     this.padding = const EdgeInsets.symmetric(horizontal: 14.0, vertical: 16.0),
+    this.constraints,
   }) : super(key: key);
 
   /// The message to display in the box.
@@ -654,6 +655,9 @@ class ActionBox extends StatelessWidget {
   /// Default to the TextStyle defined by the [smallCharStyle] const in "/lib/constant/color_constants.dart".
   final TextStyle messageStyle;
 
+  /// The size constraints applied to the widget.
+  final BoxConstraints constraints;
+
   @override
   Widget build(BuildContext context) {
     Widget _trailing = trailing;
@@ -696,11 +700,9 @@ class ActionBox extends StatelessWidget {
     return Padding(
       padding: margin,
       child: ConstrainedBox(
-        constraints: BoxConstraints(
+        constraints: constraints ?? BoxConstraints(
           minHeight: 55.0,
           maxHeight: 80.0,
-          minWidth: 80.0,
-          maxWidth: 600.0,
         ),
         child: Material(
           color: backgroundColor ?? whiteCardColor,
@@ -737,6 +739,7 @@ class DescriptionBanner extends StatelessWidget {
     this.overflow = TextOverflow.ellipsis,
     this.margin = const EdgeInsets.all(6.0),
     this.padding = const EdgeInsets.symmetric(horizontal: 6.0, vertical: 12.0),
+    this.constraints,
   }) : super(key: key);
 
   /// The message to display in the box.
@@ -794,6 +797,9 @@ class DescriptionBanner extends StatelessWidget {
   /// If null defaults to `BorderRadius.circular(13.0)`
   final BorderRadiusGeometry borderRadius;
 
+  /// The size constraints applied to the widget.
+  final BoxConstraints constraints;
+
   @override
   Widget build(BuildContext context) {
     // If the trailing is not provided we return a default
@@ -819,11 +825,9 @@ class DescriptionBanner extends StatelessWidget {
         children: [
           Container(
             margin: margin,
-            constraints: BoxConstraints(
+            constraints: constraints ?? BoxConstraints(
               minHeight: 75.0,
               maxHeight: 90.5,
-              minWidth: 100.0,
-              maxWidth: 700.0,
             ),
             decoration: BoxDecoration(
               color: darkCardColor,
@@ -865,6 +869,7 @@ class NotificationBox extends ActionBox {
     EdgeInsetsGeometry margin = const EdgeInsets.all(6.0),
     EdgeInsetsGeometry padding =
         const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
+    BoxConstraints constraints,
   }) : super(
           key: key,
           message: message,
@@ -876,6 +881,7 @@ class NotificationBox extends ActionBox {
           margin: margin,
           elevation: 0.0,
           padding: padding,
+          constraints: constraints,
         );
 }
 

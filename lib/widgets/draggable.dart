@@ -673,6 +673,11 @@ class _DraggableCardState extends State<DraggableCard>
               // TODO(Backend) Add a field "gender" to the profile Interface:
               message: 'See what a baby with her will look like',
               overflow: null,
+              constraints: BoxConstraints(
+                minHeight: 75.0,
+                maxHeight: 90.5,
+                maxWidth: MediaQuery.of(context).size.width,
+              ),
               onTap: () async {
                 // Before the new Route is pushed we set the value of
                 pushToScreen(
@@ -692,6 +697,11 @@ class _DraggableCardState extends State<DraggableCard>
             DescriptionBanner(
               message: 'Like Fever Prediction',
               overflow: null,
+              constraints: BoxConstraints(
+                minHeight: 75.0,
+                maxHeight: 90.5,
+                maxWidth: MediaQuery.of(context).size.width,
+              ),
               trailing: MatchPercentageScale(
                 value: 20.0,
                 startValue: 20.0,
@@ -700,31 +710,12 @@ class _DraggableCardState extends State<DraggableCard>
             DescriptionBanner(
               message: 'Match Percentage',
               overflow: null,
+              constraints: BoxConstraints(
+                minHeight: 75.0,
+                maxHeight: 90.5,
+                maxWidth: MediaQuery.of(context).size.width,
+              ),
               trailing: LikeScale(value: 20.0),
-              // trailing: Container(
-              //   margin: EdgeInsets.symmetric(horizontal: 4.0),
-              //   padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.5),
-              //   decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(8.0),
-              //     gradient: LinearGradient(
-              //       begin: Alignment.topLeft,
-              //       end: Alignment.bottomRight,
-              //       colors: mainColorGradient.colors,
-              //     ),
-              //   ),
-              //   child: RichText(
-              //     text: TextSpan(
-              //       style: subHeaderStyle.copyWith(color: whiteTextColor),
-              //       children: <TextSpan>[
-              //         TextSpan(
-              //           text: '70% ',
-              //           style: subTitleStyle.copyWith(color: whiteTextColor),
-              //         ),
-              //         TextSpan(text: 'match'),
-              //       ],
-              //     ),
-              //   ),
-              // ),
             ),
           ],
         ),
