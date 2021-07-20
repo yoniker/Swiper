@@ -1,6 +1,5 @@
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/profile.dart';
-import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
 
 /// A widget to paint the various information of a
@@ -30,7 +29,9 @@ class MatchCard extends StatefulWidget {
 class _MatchCardState extends State<MatchCard> {
   /// This connotes the Widget to display as the background.
   /// This is typically a [PhotoView].
-  Widget _buildBackground() {
+  Widget _buildBackground(BuildContext context) {
+    final bool _isPotrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
     // returns a [PhotoView] widget.
     return FractionallySizedBox(
       alignment: Alignment.center,
@@ -39,7 +40,7 @@ class _MatchCardState extends State<MatchCard> {
       child: PhotoView(
         isClickable: widget.clickable,
         initialPhotoIndex: 0,
-        descriptionHeightFraction: 0.4,
+        descriptionHeightFraction: _isPotrait ? 0.2 : 0.4,
         imageUrls: widget.profile.imageUrls,
         showCarousel: widget.showCarousel,
         descriptionWidget: _descriptionWidget(),
@@ -70,57 +71,30 @@ class _MatchCardState extends State<MatchCard> {
     }
 
     // construct the Widget.
-    return Container(
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              //Colors.redAccent, To see the actual size of the gradient box, uncomment redAccent and blue and comment out transparent and black45
-              //Colors.blue
-              Colors.transparent,
-              Colors.black45,
-            ],
-          ),
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(16.0),
-          )),
-      child: Container(
-        alignment: Alignment.centerLeft,
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: EdgeInsets.only(left: 12.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(flex: 1, child: SizedBox()),
-            Expanded(
-              flex: 1,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 12.0),
-                    child: Text(
-                      '${widget.profile.username}, ${widget.profile.age}',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: boldTextStyle.copyWith(
-                        color: Colors.white,
-                        fontSize: getRelativeTextSize(24),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 12.0),
-                    child: Text(
-                      '${widget.profile.headline}',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: boldTextStyle.copyWith(
-                        color: Colors.white,
-                        fontSize: getRelativeTextSize(16),
-                      ),
-                    ),
-                  ),
-                ],
+            Text(
+              '${widget.profile.username}, ${widget.profile.age}',
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: boldTextStyle.copyWith(
+                color: Colors.white,
+                fontSize: getRelativeTextSize(18),
+              ),
+            ),
+            Text(
+              '${widget.profile.headline}',
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: boldTextStyle.copyWith(
+                color: Colors.white,
+                fontSize: getRelativeTextSize(12),
               ),
             ),
           ],
@@ -171,7 +145,7 @@ class _MatchCardState extends State<MatchCard> {
           ),
         ],
       ),
-      child: _buildBackground(),
+      child: _buildBackground(context),
     );
   }
 }
@@ -600,23 +574,93 @@ class _PhotoViewState extends State<PhotoView> {
           // So that we can apply similar constraints to the two.
           //
           // TODO: Add a more cogent explanation.
-          FractionallySizedBox(
-            alignment: widget.descriptionAlignment,
-            // We apply the height factor given to the DescriptionStack (description + carousel).
-            heightFactor: widget.descriptionHeightFraction,
-            widthFactor: 1.0,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                // declare the DescriptionLayer of the PhotoView.
-                // This is placed above the Gesture Layer to allow
-                // for Explicit Gestures.
-                if (widget.descriptionWidget != null) _descriptionLayer(),
+          // FractionallySizedBox(
+          //   alignment: widget.descriptionAlignment,
+          //   // We apply the height factor given to the DescriptionStack (description + carousel).
+          //   heightFactor: widget.descriptionHeightFraction,
+          //   widthFactor: 1.0,
+          //   child: Container(
+          //     alignment: Alignment(-1.0, 2.0),
+          //     decoration: BoxDecoration(
+          //       gradient: LinearGradient(
+          //         begin: Alignment.topCenter,
+          //         end: Alignment.bottomCenter,
+          //         colors: [
+          //           //Colors.redAccent, To see the actual size of the gradient box, uncomment redAccent and blue and comment out transparent and black45
+          //           //Colors.blue
+          //           Colors.transparent,
+          //           Colors.black45,
+          //         ],
+          //       ),
+          //       borderRadius: BorderRadius.vertical(
+          //         bottom: Radius.circular(16.0),
+          //       ),
+          //     ),
+          //     child: Column(
+          //       // fit: StackFit.expand,
+          //       mainAxisAlignment: widget.descriptionWidget == null ||
+          //               widget.showCarousel == null
+          //           ? MainAxisAlignment.center
+          //           : MainAxisAlignment.spaceBetween,
+          //       children: [
+          //         // declare the DescriptionLayer of the PhotoView.
+          //         // This is placed above the Gesture Layer to allow
+          //         // for Explicit Gestures.
+          //         if (widget.descriptionWidget != null)
+          //           Expanded(child: _descriptionLayer()),
 
-                // declare the CarouselLayer of the PhotoView.
-                if (widget.showCarousel != null && widget.showCarousel)
-                  _carouselLayer(),
-              ],
+          //         // declare the CarouselLayer of the PhotoView.
+          //         if (widget.showCarousel != null && widget.showCarousel)
+          //           _carouselLayer(),
+          //       ],
+          //     ),
+          //   ),
+          // ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: 55.0,
+                maxHeight: 75.0,
+                minWidth: 300,
+                maxWidth: MediaQuery.of(context).size.width,
+              ),
+              child: Container(
+                alignment: Alignment.bottomCenter,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      //Colors.redAccent, To see the actual size of the gradient box, uncomment redAccent and blue and comment out transparent and black45
+                      //Colors.blue
+                      Colors.transparent,
+                      Colors.black45,
+                    ],
+                  ),
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(16.0),
+                  ),
+                ),
+                child: Column(
+                  // fit: StackFit.expand,
+                  mainAxisAlignment: widget.descriptionWidget == null ||
+                          widget.showCarousel == null
+                      ? MainAxisAlignment.center
+                      : MainAxisAlignment.spaceBetween,
+                  children: [
+                    // declare the DescriptionLayer of the PhotoView.
+                    // This is placed above the Gesture Layer to allow
+                    // for Explicit Gestures.
+                    if (widget.descriptionWidget != null)
+                      Expanded(child: _descriptionLayer()),
+
+                    // declare the CarouselLayer of the PhotoView.
+                    if (widget.showCarousel != null && widget.showCarousel)
+                      _carouselLayer(),
+                  ],
+                ),
+              ),
             ),
           ),
           // declare the GestureLayer of the PhotoView.

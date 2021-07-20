@@ -12,7 +12,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-
 /// The implementation for the Notification screen.
 class ViewChildrenScreen extends StatefulWidget {
   static const String routeName = '/view_children';
@@ -44,19 +43,21 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
   // double _offset = 0;
   // double _page = 0;
   List<Image> _userFacesImages = [];
-  List<Image> _matchFacesImages=[];
+  List<Image> _matchFacesImages = [];
   List<Image> _generatedBabiesImages = [];
 
-  Future<void> waitUntilTaskReady(taskId) async{
+  Future<void> waitUntilTaskReady(taskId) async {
     NetworkTaskStatus currentTaskStatus = NetworkTaskStatus.inProgress;
-    while(currentTaskStatus!=NetworkTaskStatus.completed){
+    while (currentTaskStatus != NetworkTaskStatus.completed) {
       currentTaskStatus = await NetworkHelper().checkTaskStatus(taskId);
     }
-    return;}
-  
+    return;
+  }
+
   //Get the user's faces,the match's faces and then the children faces
-  void getTasksFromServer()async{
-    Map<String,String> tasksInfo = await NetworkHelper().startChildrenTasks(widget.matchProfile);
+  void getTasksFromServer() async {
+    Map<String, String> tasksInfo =
+        await NetworkHelper().startChildrenTasks(widget.matchProfile);
     _netChildrenTargetLocation = tasksInfo['targetLocation'];
     String taskChildren = tasksInfo['childrenTaskId'];
     String taskMatchFaces = tasksInfo['matchFacesTaskId'];
@@ -66,33 +67,33 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
     await waitUntilTaskReady(taskUserFaces);
     List<String> listFacesSelf = await NetworkHelper().getFacesLinkSelf();
     setStateIfMounted(() {
-      _userFacesImages = NetworkHelper.serverImagesUrlsToImages(listFacesSelf,context);
+      _userFacesImages =
+          NetworkHelper.serverImagesUrlsToImages(listFacesSelf, context);
       _userFacesReady = true;
     });
 
-
-
-
     //2. Match Images
     await waitUntilTaskReady(taskMatchFaces);
-    List<String> listFacesMatch = await NetworkHelper().getFacesLinksMatch(widget.matchProfile);
+    List<String> listFacesMatch =
+        await NetworkHelper().getFacesLinksMatch(widget.matchProfile);
     setStateIfMounted(() {
-      _matchFacesImages = NetworkHelper.serverImagesUrlsToImages(listFacesMatch,context);
+      _matchFacesImages =
+          NetworkHelper.serverImagesUrlsToImages(listFacesMatch, context);
       _matchFacesReady = true;
     });
 
     //3.Children Images
     await waitUntilTaskReady(taskChildren);
-    List <String> listChildrenImages = await NetworkHelper().getGeneratedBabiesLinks(_netChildrenTargetLocation);
+    List<String> listChildrenImages = await NetworkHelper()
+        .getGeneratedBabiesLinks(_netChildrenTargetLocation);
     setStateIfMounted(() {
-      _generatedBabiesImages = NetworkHelper.serverImagesUrlsToImages(listChildrenImages, context);
-      _childrenImageIndex = (_generatedBabiesImages.length/2-1).toInt();
+      _generatedBabiesImages =
+          NetworkHelper.serverImagesUrlsToImages(listChildrenImages, context);
+      _childrenImageIndex = (_generatedBabiesImages.length / 2 - 1).toInt();
       _childrenReady = true;
     });
 
     return;
-
-    
   }
 
   @override
@@ -111,8 +112,10 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
     super.dispose();
   }
 
-  Widget waitingAnimation(){
-    return SpinKitPumpingHeart(color:colorBlend02,);
+  Widget waitingAnimation() {
+    return SpinKitPumpingHeart(
+      color: colorBlend02,
+    );
   }
 
   @override
@@ -138,112 +141,125 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
         child: Column(
           children: [
             SizedBox(height: 20.0),
-            SizedBox(
-              height: _sizeConfig.height * 0.37,
-              width: _sizeConfig.width,
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: 150,
+                maxHeight: 300,
+                minWidth: 200,
+                maxWidth: _sizeConfig.width,
+              ),
               child: Stack(
                 children: [
                   Align(
-                    alignment: Alignment(0.0, 0.0),
+                    alignment: Alignment(0.0, -0.17),
                     child: FractionallySizedBox(
-                      heightFactor: 0.6,
-                      widthFactor: 0.6,
+                      heightFactor: 0.60,
+                      widthFactor: 0.60,
                       child: PrecachedImage.asset(
                         imageURI: BetaIconPaths.viewChildrenBackgroundImagePath,
                       ),
                     ),
                   ),
-                  FractionallySizedBox(
-                    heightFactor: 1.0,
-                    widthFactor: 1.0,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                children: [
-                                  Text(
-                                    'You',
-                                    style: smallBoldedCharStyle,
-                                  ),
-                                  SizedBox(height: 2.0),
-                                  !_userFacesReady?
-                                      waitingAnimation()
-                                      :
-                                  Clickable(
-                                    onTap: () {
-                                      //TODO overlay of FacesWidget
-                                    },
-                                    child: ProfileImageAvatar.mutable(
-                                      actualImage: _userFacesImages.isEmpty
-                                          ? AssetImage(BetaIconPaths.silhouetteProfileImage)
-                                          : _userFacesImages[0].image, //TODO change index here
-                                      minRadius: 28.50,
-                                      maxRadius: 35.5,
-                                      placeholderImage: AssetImage(
-                                        BetaIconPaths.defaultProfileImagePath01,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              PrecachedImage.asset(
-                                imageURI: BetaIconPaths.heartsUnitedIconPath_01,
-                              ),
-                              Column(
-                                children: [
-                                  Text(
-                                    widget.matchProfile.username,
-                                    style: smallBoldedCharStyle,
-                                  ),
-                                  SizedBox(height: 2.0),
-                                  !_matchFacesReady?waitingAnimation():
-                                  Clickable(
-                                    onTap: () {
-                                      ////TODO overlay of FacesWidget
-                                    },
-                                    child: ProfileImageAvatar.mutable(
-                                      actualImage: _matchFacesImages.isEmpty
-                                          ? AssetImage(BetaIconPaths.silhouetteProfileImage)
-                                          : _matchFacesImages[0].image,
-                                      minRadius: 28.50,
-                                      maxRadius: 35.5,
-                                      placeholderImage: AssetImage(
-                                        BetaIconPaths.defaultProfileImagePath01,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Flexible(
-                          flex: 2,
-                          child: Container(
-                            child: !_childrenReady?waitingAnimation():DecoratedBox(
-                              decoration: kProfileImageAvatarDecoration,
-                              child: ProfileImageAvatar.mutable(
-                                actualImage:_generatedBabiesImages.isEmpty?AssetImage(BetaIconPaths.silhouetteProfileImage)
-                                    :
-                                  _generatedBabiesImages[_childrenImageIndex].image, //TODO default silhouette image instead of red screen :D
-                                minRadius: 65.0,
-                                maxRadius: 85.5,
-                                placeholderImage: AssetImage(
-                                  BetaIconPaths.defaultProfileImagePath01,
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Column(
+                              children: [
+                                Text(
+                                  'You',
+                                  style: smallBoldedCharStyle,
                                 ),
-                              ),
+                                SizedBox(height: 2.0),
+                                !_userFacesReady
+                                    ? waitingAnimation()
+                                    : Clickable(
+                                        onTap: () {
+                                          //TODO overlay of FacesWidget
+                                        },
+                                        child: ProfileImageAvatar.mutable(
+                                          actualImage: _userFacesImages
+                                                  .isEmpty
+                                              ? AssetImage(BetaIconPaths
+                                                  .silhouetteProfileImage)
+                                              : _userFacesImages[0]
+                                                  .image, //TODO change index here
+                                          minRadius: 28.50,
+                                          maxRadius: 35.5,
+                                          placeholderImage: AssetImage(
+                                            BetaIconPaths
+                                                .defaultProfileImagePath01,
+                                          ),
+                                        ),
+                                      ),
+                              ],
                             ),
-                          ),
+                            PrecachedImage.asset(
+                              imageURI: BetaIconPaths.heartsUnitedIconPath_01,
+                            ),
+                            Column(
+                              children: [
+                                Text(
+                                  widget.matchProfile.username,
+                                  style: smallBoldedCharStyle,
+                                ),
+                                SizedBox(height: 2.0),
+                                !_matchFacesReady
+                                    ? waitingAnimation()
+                                    : Clickable(
+                                        onTap: () {
+                                          ////TODO overlay of FacesWidget
+                                        },
+                                        child: ProfileImageAvatar.mutable(
+                                          actualImage: _matchFacesImages
+                                                  .isEmpty
+                                              ? AssetImage(BetaIconPaths
+                                                  .silhouetteProfileImage)
+                                              : _matchFacesImages[0].image,
+                                          minRadius: 28.50,
+                                          maxRadius: 35.5,
+                                          placeholderImage: AssetImage(
+                                            BetaIconPaths
+                                                .defaultProfileImagePath01,
+                                          ),
+                                        ),
+                                      ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Flexible(
+                        flex: 2,
+                        child: Container(
+                          child: !_childrenReady
+                              ? waitingAnimation()
+                              : DecoratedBox(
+                                  decoration: kProfileImageAvatarDecoration,
+                                  child: ProfileImageAvatar.mutable(
+                                    actualImage: _generatedBabiesImages
+                                            .isEmpty
+                                        ? AssetImage(BetaIconPaths
+                                            .silhouetteProfileImage)
+                                        : _generatedBabiesImages[
+                                                _childrenImageIndex]
+                                            .image, //TODO default silhouette image instead of red screen :D
+                                    minRadius: 65.0,
+                                    maxRadius: 85.5,
+                                    placeholderImage: AssetImage(
+                                      BetaIconPaths.defaultProfileImagePath01,
+                                    ),
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -251,64 +267,68 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
             SizedBox(height: 20.0),
             SizedBox(
               height: childrenCardSize.height + childrenVertCardPadding,
-              child: !_childrenReady?SizedBox():
-                  _generatedBabiesImages.isEmpty?
-                  Text('No face found so cannot generate children',style: defaultTextStyle.copyWith(color: Colors.red),)
+              child: !_childrenReady
+                  ? SizedBox()
+                  : _generatedBabiesImages.isEmpty
+                      ? Text(
+                          'No face found so cannot generate children',
+                          style: defaultTextStyle.copyWith(color: Colors.red),
+                        )
                       : CarouselSlider.builder(
-                carouselController: _carouselController,
-                options: CarouselOptions(
-                  initialPage: _childrenImageIndex,
-                  autoPlay: false,
-                  enableInfiniteScroll: false,
-                  height: childrenCardSize.height,
-                  enlargeCenterPage: true,
-                  viewportFraction: 0.6,
-                  enlargeStrategy: CenterPageEnlargeStrategy.scale,
-                  onPageChanged: (index, changeReason) {
-                    setStateIfMounted(() {
-                      _childrenImageIndex = index;
-                    });
-                  },
-                ),
-                itemCount: _generatedBabiesImages.length,
-                itemBuilder: (context, _index, realIndex) {
-
-                  return GestureDetector(
-                    onTap: () {
-                      _carouselController.animateToPage(
-                        realIndex,
-                        duration: Duration(milliseconds: 800),
-                        curve: Curves.decelerate,
-                      );
-
-                      setStateIfMounted(() {
-                        _childrenImageIndex = realIndex;
-                      });
-                    },
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minHeight: childrenCardSize.height,
-                        maxHeight: childrenCardSize.height,
-                        minWidth: childrenCardSize.width,
-                        maxWidth: childrenCardSize.width,
-                      ),
-                      child: Container(
-                        width: childrenCardSize.width,
-                        height: childrenCardSize.height,
-                        margin: EdgeInsets.all(6.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18),
-                          boxShadow: kElevationToShadow[2],
-                          image: DecorationImage(
-                            image: _generatedBabiesImages[realIndex].image,
-                            fit: BoxFit.cover,
+                          carouselController: _carouselController,
+                          options: CarouselOptions(
+                            initialPage: _childrenImageIndex,
+                            autoPlay: false,
+                            enableInfiniteScroll: false,
+                            height: childrenCardSize.height,
+                            enlargeCenterPage: true,
+                            viewportFraction: 0.6,
+                            enlargeStrategy: CenterPageEnlargeStrategy.scale,
+                            onPageChanged: (index, changeReason) {
+                              setStateIfMounted(() {
+                                _childrenImageIndex = index;
+                              });
+                            },
                           ),
+                          itemCount: _generatedBabiesImages.length,
+                          itemBuilder: (context, _index, realIndex) {
+                            return GestureDetector(
+                              onTap: () {
+                                _carouselController.animateToPage(
+                                  realIndex,
+                                  duration: Duration(milliseconds: 800),
+                                  curve: Curves.decelerate,
+                                );
+
+                                setStateIfMounted(() {
+                                  _childrenImageIndex = realIndex;
+                                });
+                              },
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  minHeight: childrenCardSize.height,
+                                  maxHeight: childrenCardSize.height,
+                                  minWidth: childrenCardSize.width,
+                                  maxWidth: childrenCardSize.width,
+                                ),
+                                child: Container(
+                                  width: childrenCardSize.width,
+                                  height: childrenCardSize.height,
+                                  margin: EdgeInsets.all(6.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(18),
+                                    boxShadow: kElevationToShadow[2],
+                                    image: DecorationImage(
+                                      image: _generatedBabiesImages[realIndex]
+                                          .image,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                      ),
-                    ),
-                  );
-                },
-              ),
             ),
             SizedBox(height: 12.0),
             ActionBox(
@@ -373,6 +393,4 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
       ),
     );
   }
-
-  
 }

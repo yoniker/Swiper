@@ -590,8 +590,13 @@ class _DraggableCardState extends State<DraggableCard>
               thickness: 2.8,
               height: 8.0,
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.14,
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: 30.5,
+                maxHeight: 100.5,
+                minWidth: 250.0,
+                maxWidth: MediaQuery.of(context).size.width,
+              ),
               child: !(_imageUrls.length > 0)
                   ? Center(
                       child: Text(
@@ -606,21 +611,30 @@ class _DraggableCardState extends State<DraggableCard>
                       itemBuilder: (cntx, index) {
                         final String _url =
                             matchBaseUrlToNetwork(_imageUrls[index]);
-                        return SizedBox(
-                          height: 80.5,
-                          width: 100.0,
-                          child: Card(
-                            margin: EdgeInsets.all(6.0),
-                            clipBehavior: Clip.antiAlias,
-                            elevation: 2.1,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                            ),
-                            child: PrecachedImage.network(
-                              imageURL: _url,
-                              fadeIn: true,
-                              shouldPrecache: false,
-                              fit: BoxFit.cover,
+                        return ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: 30.5,
+                            maxHeight: 100.5,
+                            minWidth: 30.5,
+                            maxWidth: 100.5,
+                          ),
+                          // height: 80.5,
+                          // width: 100.0,
+                          child: AspectRatio(
+                            aspectRatio: 1 / 1,
+                            child: Card(
+                              margin: EdgeInsets.all(6.0),
+                              clipBehavior: Clip.antiAlias,
+                              elevation: 2.1,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                              ),
+                              child: PrecachedImage.network(
+                                imageURL: _url,
+                                fadeIn: true,
+                                shouldPrecache: false,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         );
