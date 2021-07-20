@@ -3,9 +3,10 @@ import 'dart:math';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
+import 'package:flutter_auth_buttons/src/button.dart' as auth_button;
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:flutter_auth_buttons/src/button.dart' as auth_button;
+
 import 'main_navigation_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -41,15 +42,13 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  _signInWithoutLogin(){
-
-      SettingsData().name = 'x1000 Investor';
-      SettingsData().facebookId = Random().nextInt(999999).toString();
-      Navigator.pushReplacementNamed(
-        context,
-        MainNavigationScreen.routeName,
-      );
-
+  _signInWithoutLogin() {
+    SettingsData().name = 'x1000 Investor';
+    SettingsData().facebookId = Random().nextInt(999999).toString();
+    Navigator.pushReplacementNamed(
+      context,
+      MainNavigationScreen.routeName,
+    );
   }
 
   _getFBLoginInfo() async {
@@ -64,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
         SettingsData().name = userData['name'];
         SettingsData().facebookId = userData['id'];
         SettingsData().facebookProfileImageUrl =
-        userData['picture']['data']['url'];
+            userData['picture']['data']['url'];
 
         DefaultCacheManager().emptyCache();
         DefaultCacheManager()
@@ -88,11 +87,13 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  Widget SignInNoLoginButton(){
+  Widget SignInNoLoginButton() {
     return auth_button.StretchableButton(
       buttonColor: Colors.green,
       borderRadius: defaultBorderRadius,
-      onPressed: (){_signInWithoutLogin();},
+      onPressed: () {
+        _signInWithoutLogin();
+      },
       buttonPadding: 8.0,
       children: <Widget>[
         // Facebook doesn't provide strict sizes, so this is a good
@@ -111,38 +112,45 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.only(left: 6.0, right: 10.0),
           child: Text(
             'Continue without login',
-            style:
-                TextStyle(
-                  // default to the application font-style
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+            style: TextStyle(
+              // default to the application font-style
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
         ),
-        Icon(Icons.arrow_forward,color: Colors.white,),
+        Icon(
+          Icons.arrow_forward,
+          color: Colors.white,
+        ),
       ],
     );
-
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('D',
-                    style: TextStyle(
-                        fontSize: 55,
-                        fontFamily: 'RougeScript',
-                        fontWeight: FontWeight.bold)),
-                Container(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('MVPBeta Login'))
-              ],
-            )),
+          automaticallyImplyLeading: false,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'D',
+                style: TextStyle(
+                  fontSize: 55,
+                  fontFamily: 'RougeScript',
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('MVPBeta Login'),
+              )
+            ],
+          ),
+        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -158,19 +166,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   _errorTryingToLogin
                       ? TextButton(
-                      child: Text('❗'),
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (_) {
-                              return AlertDialog(
-                                title: Text("Error"),
-                                content: Text(_errorMessage ??
-                                    "Error when trying to login"),
-                              );
-                            },
-                            barrierDismissible: true);
-                      })
+                          child: Text('❗'),
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (_) {
+                                  return AlertDialog(
+                                    title: Text("Error"),
+                                    content: Text(_errorMessage ??
+                                        "Error when trying to login"),
+                                  );
+                                },
+                                barrierDismissible: true);
+                          })
                       : Container()
                 ],
               ),
