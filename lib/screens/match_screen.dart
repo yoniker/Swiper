@@ -344,7 +344,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
           showCarousel: true,
           clickable: true,
         ),
-        mactchProfile: currentMatch.profile,
+        matchProfile: currentMatch.profile,
       );
     } else {
       // show a progress indicator.

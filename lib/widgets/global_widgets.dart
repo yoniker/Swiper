@@ -165,7 +165,7 @@ class GlobalWidgets {
   }
 
   /// A widget to show a simple Alert Dialogue.
-  static void showAlertDialogue(
+  static Future<void> showAlertDialogue(
     BuildContext context, {
     @required String message,
     String title,
@@ -231,7 +231,7 @@ class GlobalWidgets {
                           style: _defaultTextStyle,
                           children: <InlineSpan>[
                             TextSpan(
-                              text: ' "${_resolveAlertTitle()}"\n ',
+                              text: ' ${_resolveAlertTitle()}\n ',
                               style: _varryingTextStyle,
                             ),
                             TextSpan(
@@ -261,7 +261,7 @@ class GlobalWidgets {
                         // return false;
                       },
                       child: Text(
-                        'Ok',
+                        'OK',
                         style: _varryingTextStyle.copyWith(color: colorBlend02),
                       ),
                     ),

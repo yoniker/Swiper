@@ -168,7 +168,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
             Padding(
               padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
               child: Text(
-                'JEREMY jr., 50',
+                SettingsData().name,
                 style: titleStyle,
               ),
             ),
@@ -180,7 +180,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                 ),
                 SizedBox(width: 4.0),
                 Text(
-                  'Alaska, U.S.A',
+                  'Your city, U.S.A',
                   style: subTitleStyle.copyWith(color: darkTextColor),
                 ),
               ],
