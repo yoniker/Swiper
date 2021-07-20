@@ -5,7 +5,7 @@
 // import 'package:betabeta/popups/popup.dart';
 // import 'package:betabeta/screens/login_screen.dart';
 // import 'package:betabeta/screens/profile_screen.dart';
-// import 'package:betabeta/screens/settings_screen.dart';
+// import 'package:betabeta/screens/swipe_settings_screen.dart';
 // import 'package:betabeta/widgets/round_icon_button.dart';
 // import 'package:cached_network_image/cached_network_image.dart';
 // import 'package:flutter/cupertino.dart';

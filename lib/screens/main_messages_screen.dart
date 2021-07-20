@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 class MainMessagesScreen extends StatefulWidget {
   MainMessagesScreen({Key key}) : super(key: key);
+  static const String routeName = '/main_messages_screen';
 
   @override
   _MainMessagesScreenState createState() => _MainMessagesScreenState();

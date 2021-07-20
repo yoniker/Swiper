@@ -5,16 +5,17 @@ import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/clickable.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
-import 'package:betabeta/widgets/draggable.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 
 /// The implementation for the Notification screen.
 class ViewChildrenScreen extends StatefulWidget {
-  static const String routeName = '/app/view_children';
+  static const String routeName = '/view_children';
 
   ViewChildrenScreen({Key key, @required this.matchProfile}) : super(key: key);
 
@@ -32,37 +33,75 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
 
   ScrollController _scrollController;
 
-  NetworkHelper _networkHelper;
-
-  int _userProfileIndex = 0;
-  int _matchProfileIndex = 0;
+  int _userImageIndex = 0;
+  int _matchImageIndex = 0;
   int _childrenImageIndex = 0;
+  String _netChildrenTargetLocation = '';
+  bool _childrenReady = false;
+  bool _userFacesReady = false;
+  bool _matchFacesReady = false;
 
   // double _offset = 0;
   // double _page = 0;
+  List<Image> _userFacesImages = [];
+  List<Image> _matchFacesImages=[];
+  List<Image> _generatedBabiesImages = [];
 
-  List<String> matchProfileImages = [];
-  List<String> userProfileImages = [];
+  Future<void> waitUntilTaskReady(taskId) async{
+    NetworkTaskStatus currentTaskStatus = NetworkTaskStatus.inProgress;
+    while(currentTaskStatus!=NetworkTaskStatus.completed){
+      currentTaskStatus = await NetworkHelper().checkTaskStatus(taskId);
+    }
+    return;}
+  
+  //Get the user's faces,the match's faces and then the children faces
+  void getTasksFromServer()async{
+    Map<String,String> tasksInfo = await NetworkHelper().startChildrenTasks(widget.matchProfile);
+    _netChildrenTargetLocation = tasksInfo['targetLocation'];
+    String taskChildren = tasksInfo['childrenTaskId'];
+    String taskMatchFaces = tasksInfo['matchFacesTaskId'];
+    String taskUserFaces = tasksInfo['user_faces_task'];
+    //Actually perform tasks and update the UI accordingly
+    //1.User Images
+    await waitUntilTaskReady(taskUserFaces);
+    List<String> listFacesSelf = await NetworkHelper().getFacesLinkSelf();
+    setStateIfMounted(() {
+      _userFacesImages = NetworkHelper.serverImagesUrlsToImages(listFacesSelf,context);
+      _userFacesReady = true;
+    });
 
-  final List<String> mockImages = [
-    'assets/mock_images/child_0.jpg',
-    'assets/mock_images/child_1.jpg',
-    'assets/mock_images/child_2.jpg',
-    'assets/mock_images/child_3.jpg',
-    'assets/mock_images/child_4.jpg',
-    'assets/mock_images/child_5.jpg',
-  ];
+
+
+
+    //2. Match Images
+    await waitUntilTaskReady(taskMatchFaces);
+    List<String> listFacesMatch = await NetworkHelper().getFacesLinksMatch(widget.matchProfile);
+    setStateIfMounted(() {
+      _matchFacesImages = NetworkHelper.serverImagesUrlsToImages(listFacesMatch,context);
+      _matchFacesReady = true;
+    });
+
+    //3.Children Images
+    await waitUntilTaskReady(taskChildren);
+    List <String> listChildrenImages = await NetworkHelper().getGeneratedBabiesLinks(_netChildrenTargetLocation);
+    setStateIfMounted(() {
+      _generatedBabiesImages = NetworkHelper.serverImagesUrlsToImages(listChildrenImages, context);
+      _childrenImageIndex = (_generatedBabiesImages.length/2-1).toInt();
+      _childrenReady = true;
+    });
+
+    return;
+
+    
+  }
 
   @override
   void initState() {
     super.initState();
+    getTasksFromServer();
 
     _scrollController = ScrollController();
     _carouselController = CarouselController();
-
-    _networkHelper = NetworkHelper();
-    // this has to be called after initialising the "_networkHelper" variable.
-    populate();
   }
 
   @override
@@ -72,29 +111,8 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
     super.dispose();
   }
 
-  void populate() async {
-    // populate match image urls.
-    mountedLoader(() {
-      final _macthImgUrls = widget.matchProfile.imageUrls;
-      // print(_macthImgUrls);
-      if (_macthImgUrls != null && _macthImgUrls.isNotEmpty) {
-        for (int i = 0; i < _macthImgUrls.length; i++) {
-          final _url = matchBaseUrlToNetwork(_macthImgUrls[i]);
-          matchProfileImages.add(_url);
-        }
-      }
-    });
-
-    var _userImgUrls = await _networkHelper.getProfileImages();
-    _userImgUrls.removeWhere((u) => u == null);
-    // print(_userImgUrls);
-    if (_userImgUrls != null && _userImgUrls.isNotEmpty) {
-      for (int i = 0; i < _userImgUrls.length; i++) {
-        final _url = _networkHelper.getProfileImageUrl(_userImgUrls[i]);
-        userProfileImages.add(_url);
-      }
-    }
-    setStateIfMounted(() {/**/});
+  Widget waitingAnimation(){
+    return SpinKitPumpingHeart(color:colorBlend02,);
   }
 
   @override
@@ -155,27 +173,17 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                                     style: smallBoldedCharStyle,
                                   ),
                                   SizedBox(height: 2.0),
+                                  !_userFacesReady?
+                                      waitingAnimation()
+                                      :
                                   Clickable(
                                     onTap: () {
-                                      // setStateIfMounted(() {
-                                      //   final _newIndex = userProfileIndex + 1;
-                                      //   if (_newIndex <
-                                      //       userProfileImages.length) {
-                                      //     // add to the index if the current index does not
-                                      //     // exceed th imageUrls length.
-                                      //     userProfileIndex = _newIndex;
-                                      //   } else {
-                                      //     // otherwise set the value to zero
-                                      //     // therby resetting its position.
-                                      //     userProfileIndex = 0;
-                                      //   }
-                                      // });
+                                      //TODO overlay of FacesWidget
                                     },
                                     child: ProfileImageAvatar.mutable(
-                                      actualImage: userProfileImages.isEmpty
-                                          ? null
-                                          : NetworkImage(userProfileImages[
-                                              _userProfileIndex]),
+                                      actualImage: _userFacesImages.isEmpty
+                                          ? AssetImage(BetaIconPaths.silhouetteProfileImage)
+                                          : _userFacesImages[0].image, //TODO change index here
                                       minRadius: 28.50,
                                       maxRadius: 35.5,
                                       placeholderImage: AssetImage(
@@ -191,31 +199,19 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                               Column(
                                 children: [
                                   Text(
-                                    'Abbie',
+                                    widget.matchProfile.username,
                                     style: smallBoldedCharStyle,
                                   ),
                                   SizedBox(height: 2.0),
+                                  !_matchFacesReady?waitingAnimation():
                                   Clickable(
                                     onTap: () {
-                                      // setStateIfMounted(() {
-                                      //   final _newIndex = matchProfileIndex + 1;
-                                      //   if (_newIndex <
-                                      //       matchProfileImages.length) {
-                                      //     // add to the index if the current index does not
-                                      //     // exceed th imageUrls length.
-                                      //     matchProfileIndex = _newIndex;
-                                      //   } else {
-                                      //     // otherwise set the value to zero
-                                      //     // therby resetting its position.
-                                      //     matchProfileIndex = 0;
-                                      //   }
-                                      // });
+                                      ////TODO overlay of FacesWidget
                                     },
                                     child: ProfileImageAvatar.mutable(
-                                      actualImage: matchProfileImages.isEmpty
-                                          ? null
-                                          : NetworkImage(matchProfileImages[
-                                              _matchProfileIndex]),
+                                      actualImage: _matchFacesImages.isEmpty
+                                          ? AssetImage(BetaIconPaths.silhouetteProfileImage)
+                                          : _matchFacesImages[0].image,
                                       minRadius: 28.50,
                                       maxRadius: 35.5,
                                       placeholderImage: AssetImage(
@@ -231,13 +227,12 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                         Flexible(
                           flex: 2,
                           child: Container(
-                            child: DecoratedBox(
+                            child: !_childrenReady?waitingAnimation():DecoratedBox(
                               decoration: kProfileImageAvatarDecoration,
                               child: ProfileImageAvatar.mutable(
-                                actualImage: AssetImage(
-                                  // Todo; Change to Image.network when linking with backend.
-                                  mockImages[_childrenImageIndex],
-                                ),
+                                actualImage:_generatedBabiesImages.isEmpty?AssetImage(BetaIconPaths.silhouetteProfileImage)
+                                    :
+                                  _generatedBabiesImages[_childrenImageIndex].image, //TODO default silhouette image instead of red screen :D
                                 minRadius: 65.0,
                                 maxRadius: 85.5,
                                 placeholderImage: AssetImage(
@@ -256,9 +251,13 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
             SizedBox(height: 20.0),
             SizedBox(
               height: childrenCardSize.height + childrenVertCardPadding,
-              child: CarouselSlider.builder(
+              child: !_childrenReady?SizedBox():
+                  _generatedBabiesImages.isEmpty?
+                  Text('No face found so cannot generate children',style: defaultTextStyle.copyWith(color: Colors.red),)
+                      : CarouselSlider.builder(
                 carouselController: _carouselController,
                 options: CarouselOptions(
+                  initialPage: _childrenImageIndex,
                   autoPlay: false,
                   enableInfiniteScroll: false,
                   height: childrenCardSize.height,
@@ -271,9 +270,8 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                     });
                   },
                 ),
-                itemCount: mockImages.length,
+                itemCount: _generatedBabiesImages.length,
                 itemBuilder: (context, _index, realIndex) {
-                  final _currentImageUrl = mockImages[realIndex];
 
                   return GestureDetector(
                     onTap: () {
@@ -302,7 +300,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                           borderRadius: BorderRadius.circular(18),
                           boxShadow: kElevationToShadow[2],
                           image: DecorationImage(
-                            image: AssetImage(_currentImageUrl),
+                            image: _generatedBabiesImages[realIndex].image,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -312,36 +310,9 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                 },
               ),
             ),
-            Center(
-              child: TextButton.icon(
-                style: TextButton.styleFrom(
-                  textStyle: smallBoldedCharStyle.copyWith(
-                    color: colorBlend02,
-                    decorationColor: colorBlend02,
-                    decoration: TextDecoration.underline,
-                  ),
-                  primary: colorBlend02,
-                  backgroundColor: Colors.transparent,
-                ),
-                onPressed: () {/*Do something*/},
-                label: Text(
-                  'See more',
-                  style: smallBoldedCharStyle.copyWith(
-                    color: colorBlend02,
-                    decorationColor: colorBlend02,
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-                icon: Icon(
-                  Icons.add_rounded,
-                  color: blue,
-                  size: 18.0,
-                ),
-              ),
-            ),
             SizedBox(height: 12.0),
             ActionBox(
-              message: 'Mark as Like',
+              message: 'Like',
               messageStyle: smallBoldedCharStyle.copyWith(color: colorBlend02),
               margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
               trailing: PrecachedImage.asset(
@@ -352,7 +323,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
               },
             ),
             ActionBox(
-              message: 'Mark as Dislike',
+              message: 'Dislike',
               messageStyle: smallBoldedCharStyle.copyWith(color: blue),
               margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
               trailing: PrecachedImage.asset(
@@ -402,4 +373,6 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
       ),
     );
   }
+
+  
 }

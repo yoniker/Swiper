@@ -45,7 +45,8 @@ class MatchEngine extends ChangeNotifier {
         itemsBeingGotten = NetworkHelper().getMatches();
         dynamic matches = await itemsBeingGotten;
         if(matches==null){return;}
-        List newProfiles = matches.map<Profile>((match){return Profile.fromMatch(match);}).toList();
+        List newProfiles = matches.map<Profile>((match){return Profile.fromServer(match);}).toList();
+        print('dor');
         List<Match> newPotentialMatches=newProfiles.map<Match>((profile){return Match(profile: profile);}).toList();
         if (newPotentialMatches.length>0) {
           bool frontCardsChanged = true;//_matches.length<2; //TODO this is an ugly temporary fix-change implementation such that dragging while rebuilding is fine

@@ -122,7 +122,7 @@ class BetaIconPaths {
   /// The path to the Defualt profile image.
   static const String defaultProfileImagePath = 'assets/images/default_profile_icon.png';
 
-  /// The path to the Defualt profile image.
+  /// The path to the Defaualt profile image.
   static const String defaultProfileImagePath01 = 'assets/images/default_profile_icon_02.png';
 
   /// The path to the Defualt profile image.
@@ -133,4 +133,6 @@ class BetaIconPaths {
 
   /// The path to the background divider ast the view-children screen.
   static const String viewChildrenBackgroundImagePath = 'assets/images/progeney_tree_divider.png';
+
+  static const String silhouetteProfileImage = 'assets/images/449px-Lakeyboy_Silhouette.png';
 }

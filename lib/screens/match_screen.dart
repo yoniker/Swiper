@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/match_engine.dart';
-import 'package:betabeta/screens/settings_screen.dart';
+import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/draggable.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
@@ -14,7 +14,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
 class MatchScreen extends StatefulWidget {
-  //static const String routeName = '/match_screen';
+  static const String routeName = '/match_screen';
   MatchScreen({Key key}) : super(key: key);
 
   @override

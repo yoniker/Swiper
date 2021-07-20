@@ -4,10 +4,18 @@ import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
+import 'package:betabeta/screens/chat_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
+import 'package:betabeta/screens/general_settings.dart';
 import 'package:betabeta/screens/login_screen.dart';
+import 'package:betabeta/screens/main_messages_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
-import 'package:betabeta/screens/settings_screen.dart';
+import 'package:betabeta/screens/match_screen.dart';
+import 'package:betabeta/screens/notification_screen.dart';
+import 'package:betabeta/screens/profile_screen.dart';
+import 'package:betabeta/screens/swipe_settings_screen.dart';
+import 'package:betabeta/screens/view_children_screen.dart';
+import 'package:betabeta/screens/view_likes_screen.dart';
 import 'package:betabeta/splash_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +69,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       initialRoute: SplashScreen.routeName,
-      // home: LoginScreen(),
+
       // MatchingScreen(title: 'Swiper MVP'),
       // LoginHome(),
       //MatchingScreen(title: 'Flutter Demo Home Page'),
@@ -80,7 +88,7 @@ class MyApp extends StatelessWidget {
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {
-          return ScreenCelebritySelection();
+          return LoginScreen();
         },
       );
     } else if (settings.name == MainNavigationScreen.routeName) {
@@ -122,7 +130,78 @@ class MyApp extends StatelessWidget {
           return SwipeSettingsScreen();
         },
       );
-    } else {
+    } else if (settings.name == ChatScreen.routeName){
+      return MaterialPageRoute(
+        settings: settings,
+        builder: (context) {
+          return ChatScreen();
+        },
+      );
+
+    } else if (settings.name == GeneralSettingsScreen.routeName){
+      return MaterialPageRoute(
+        settings: settings,
+        builder: (context) {
+          return GeneralSettingsScreen();
+        },
+      );
+    } else if (settings.name == MainMessagesScreen.routeName){
+      return MaterialPageRoute(
+        settings: settings,
+        builder: (context) {
+          return MainMessagesScreen();
+        },
+      );
+
+
+    } else if (settings.name == MatchScreen.routeName){
+      return MaterialPageRoute(
+        settings: settings,
+        builder: (context) {
+          return MatchScreen();
+        },
+      );
+
+
+    } else if (settings.name == NotificationScreen.routeName){
+      return MaterialPageRoute(
+        settings: settings,
+        builder: (context) {
+          return NotificationScreen();
+        },
+      );
+
+
+    } else if (settings.name == ProfileScreen.routeName){
+      return MaterialPageRoute(
+        settings: settings,
+        builder: (context) {
+          return ProfileScreen();
+        },
+      );
+
+
+    }
+    else if (settings.name == SwipeSettingsScreen.routeName){
+      return MaterialPageRoute(
+        settings: settings,
+        builder: (context) {
+          return SwipeSettingsScreen();
+        },
+      );
+
+
+    } else if (settings.name == ViewLikesScreen.routeName){
+      return MaterialPageRoute(
+        settings: settings,
+        builder: (context) {
+          return ViewLikesScreen();
+        },
+      );
+
+
+    }
+    else {
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {

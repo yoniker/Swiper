@@ -9,19 +9,27 @@ import 'package:betabeta/models/details_model.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/models/userid.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/src/media_type.dart' as media;
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:tuple/tuple.dart';
 
+
+enum NetworkTaskStatus { completed, inProgress, notExist } //possible statuses for long ongoing tasks on the server
+
 class NetworkHelper {
   static const SERVER_ADDR = 'dordating.com:8081';
   static final NetworkHelper _instance = NetworkHelper._internal();
   static const MIN_MATCHES_CALL_INTERVAL = Duration(seconds: 1);
+  static const MIN_TASK_STATUS_CALL_INTERVAL = Duration(seconds: 1);
+  static const ALL_USER_IMAGES = 'all_user_images';
   DateTime _lastMatchCall =
       DateTime(2000); //The year 2000 is when the last call happened :D
   DateTime _lastFacesImagesCall = DateTime(2000);
+  DateTime _lastTaskStatusCall = DateTime(2000);
   Future<http.Response> _facesCall;
   static const MIN_FACES_CALL_INTERVAL = Duration(milliseconds: 500);
 
@@ -48,6 +56,19 @@ class NetworkHelper {
   static String faceUrlToFullUrl(String faceUrl) {
     return 'https://' + NetworkHelper.SERVER_ADDR + '/' + faceUrl;
   }
+
+  static List<Image> serverImagesUrlsToImages(List<String> facesUrls,BuildContext context){
+    List<Image> facesImages = [];
+    for(int imageIndex = 0 ; imageIndex<facesUrls.length; imageIndex++){
+  String url = NetworkHelper.faceUrlToFullUrl(facesUrls[imageIndex]);
+  Image img = Image.network(url,fit:BoxFit.cover);
+  precacheImage(img.image, context);
+  facesImages.add(img);
+
+
+  }
+    return facesImages;
+}
 
   //getMatches: Grab some matches and image links from the server
   dynamic getMatches() async {
@@ -134,12 +155,12 @@ class NetworkHelper {
         body: encoded); //TODO something if response wasnt 200
   }
 
-  Future<HashMap<String, dynamic>> getFacesLinks(
-      {String imageFileName, String userId}) async {
+  Future<HashMap<String, dynamic>> getFacesCustomImageSearchLinks(
+      {String imageFileName, UserId userId}) async {
     if (_facesCall != null) {
       return HashMap();
     }
-    Uri facesLinkUri = Uri.https(SERVER_ADDR, 'faces/$userId/$imageFileName');
+    Uri facesLinkUri = Uri.https(SERVER_ADDR, 'faces/${userId.id}/$imageFileName');
     _facesCall = http.get(facesLinkUri);
     if (DateTime.now().difference(_lastFacesImagesCall) <
         MIN_FACES_CALL_INTERVAL) {
@@ -215,6 +236,8 @@ class NetworkHelper {
 
 
 
+
+
   Future<List<String>> getProfileImages()async{
     Uri countUri = Uri.https(SERVER_ADDR, '/profile_images/get_list/${SettingsData().facebookId}/');
     var response = await http.get(countUri);
@@ -252,4 +275,115 @@ class NetworkHelper {
     http.Response response = await http.post(swapUri,body: encoded);
     return;
   }
+
+  Future<Map<String,String>> startChildrenTasks(Profile profile) async{ //Send a request to produce 1.User's face links 2.Match's face links 3.children images
+
+    Map<String,String> detailsToSend={
+      'match_type':profile.userId.userType.toString(),
+      'match_id':profile.userId.id,
+      'match_images_server_location':profile.serverUserImagesLocation,
+      'user_type':UserType.REAL_USER.toString(),
+      'user_id':SettingsData().facebookId,
+      'user_images_server_location':'',
+    };
+
+    String encoded = jsonEncode(detailsToSend);
+    Uri getChildrenPicsUri =
+    Uri.https(SERVER_ADDR, '/generate_children/${SettingsData().facebookId}');
+    http.Response response = await http.post(getChildrenPicsUri,
+        body: encoded);
+    if(response.statusCode==200){
+      var decodedResponse = json.jsonDecode(response.body);
+      String childrenTaskId = decodedResponse['children_task'];
+      String matchFacesTaskId = decodedResponse['match_faces_task'];
+      String userFacesTaskId = decodedResponse['user_faces_task'];
+      String targetLocation = decodedResponse['target_location'];
+      print('dor');
+      print('king');
+      return {'childrenTaskId':childrenTaskId, 'targetLocation':targetLocation,
+        'user_faces_task':userFacesTaskId,'matchFacesTaskId':matchFacesTaskId
+      };
+
+    }
+
+    return {'taskId':'Status not 200', 'targetLocation':'NA'}; //TODO in general make the errors do sth in the UI (think what and how)
+  }
+
+  Future<NetworkTaskStatus> checkTaskStatus(String taskId) async{
+    if (DateTime.now().difference(_lastTaskStatusCall) < MIN_TASK_STATUS_CALL_INTERVAL) {
+      await Future.delayed(MIN_TASK_STATUS_CALL_INTERVAL -
+          DateTime.now().difference(_lastTaskStatusCall));
+    }
+    _lastTaskStatusCall = DateTime.now();
+    Uri getTaskStatus = Uri.https(SERVER_ADDR, '/task_status/${SettingsData().facebookId}/$taskId');
+    http.Response response = await http.get(getTaskStatus);
+    if(response.statusCode==200){
+      var decodedResponse = json.jsonDecode(response.body);
+      if (decodedResponse=='in_progress')
+      { return NetworkTaskStatus.inProgress;
+      }
+      if (decodedResponse == 'completed'){
+        return NetworkTaskStatus.completed;
+      }
+      return NetworkTaskStatus.notExist;
+
+    }
+
+
+    return NetworkTaskStatus.notExist; //TODO else what to do when status isnt 200?
+
+
+
+  }
+
+  Future<List<String>> getFacesLinksMatch(Profile profile)async{
+    Uri getFacesUri = Uri.https(SERVER_ADDR, '/faces_analyzed/${SettingsData().facebookId}');
+    Map<String,String> detailsToSend={
+      'user_id':profile.userId.id,
+      'user_type':profile.userId.userType.toString(),
+      'user_server_location':profile.serverUserImagesLocation
+    };
+
+    String encoded = jsonEncode(detailsToSend);
+    http.Response response = await http.post(getFacesUri,
+        body: encoded);
+    if(response.statusCode==200){
+      var decodedResponse = json.jsonDecode(response.body);
+      return decodedResponse.cast<String>();
+    }
+
+
+  }
+
+  Future<List<String>> getFacesLinkSelf() async{
+    UserId selfId = UserId(id:SettingsData().facebookId,userType: UserType.REAL_USER);
+    Profile selfProfile = Profile(userId:selfId,serverUserImagesLocation:'');
+    return await getFacesLinksMatch(selfProfile);
+
+  }
+
+  // /generated_children/<username>/<children_dir>
+  Future<List<String>> getGeneratedBabiesLinks(String childrenDirLocation)async{
+    print(childrenDirLocation);
+    Uri getChildrenUri = Uri.https(SERVER_ADDR, '/generated_children/$childrenDirLocation');
+    http.Response response = await http.get(getChildrenUri);
+    if(response.statusCode==200){
+      var decodedResponse = json.jsonDecode(response.body);
+      return decodedResponse.cast<String>();
+    }
+
+    return [];
+
+
+  }
+
+
+
+
+
+
+
+
+
+
 }

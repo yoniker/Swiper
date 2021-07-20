@@ -39,13 +39,13 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
   }
 
   void getFacesLinks() async {
-    HashMap<String, dynamic> facesData = await NetworkHelper().getFacesLinks(
-        imageFileName: widget.imageFileName, userId: SettingsData().facebookId);
+    HashMap<String, dynamic> facesData = await NetworkHelper().getFacesCustomImageSearchLinks(
+        imageFileName: widget.imageFileName, userId: SettingsData().id);
     String status = facesData['status'];
     while (status == 'incomplete') {
-      facesData = await NetworkHelper().getFacesLinks(
+      facesData = await NetworkHelper().getFacesCustomImageSearchLinks(
           imageFileName: widget.imageFileName,
-          userId: SettingsData().facebookId);
+          userId: SettingsData().id);
       status = facesData[
           'status']; //TODO make sure we don't fuck the server with lots of requests
 
