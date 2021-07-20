@@ -59,7 +59,7 @@ class BetaIconPaths {
   static const String appLogoIcon = 'assets/beta_logo_01.png';
 
   /// The path to edit-profile-image icon in the Profile Screen.
-  static const String editProfieIconPath = 'assets/images/edit_icon_01.png';
+  static const String editProfileIconPath = 'assets/images/edit_icon_01.png';
 
   /// The path to edit-profile-image icon in the Profile Screen.
   static const String editIconPath02 = 'assets/images/edit_icon_02.png';

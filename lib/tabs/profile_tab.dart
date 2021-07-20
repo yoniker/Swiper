@@ -3,7 +3,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/general_settings.dart';
 import 'package:betabeta/screens/notification_screen.dart';
-import 'package:betabeta/screens/profile_screen.dart';
+import 'package:betabeta/screens/profile_details_screen.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/clickable.dart';
@@ -26,17 +26,10 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
   List<String> _profileImagesUrls = [];
 
   // create a SettingsData & a NetworkHelper instance.
-  SettingsData settingsData;
-
-  NetworkHelper networkHelper;
 
   @override
   void initState() {
     super.initState();
-
-    networkHelper = NetworkHelper();
-    settingsData = SettingsData();
-
     // this makes sure that if the state is not yet mounted, we don't end up calling setState
     // but instead push the function forward to the addPostFrameCallback function.
     mountedLoader(_syncFromServer);
@@ -52,7 +45,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
     // TODO(Yoni): We need to make sure every screen that make use of this resources are duly
     // reviewed and restructured such that each screen has only an instance of these classes and that they
     // are all properly disposed.
-    settingsData.dispose();
+    SettingsData().dispose();
 
     super.dispose();
   }
@@ -62,28 +55,10 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
     //   _profileImagesUrls = List.generate(6, (index) => null, growable: false);
     // }
 
-    final _resp = await networkHelper.getProfileImages();
+    final _resp = await NetworkHelper().getProfileImages();
     final _list = _resp;
     _profileImagesUrls = _list;
     print(_profileImagesUrls);
-
-    // if (_list?.isEmpty == true) {
-    //   // setStateIfMounted(() {
-    //   //   _profileImagesUrls.replaceRange(0, _profileImagesUrls.length, null);
-    //   // });
-    //   return;
-    // }
-
-    // for (int i = 0; i < _list.length; i++) {
-    //   String value;
-
-    //   // check if index exists in the profile images list.
-    //   if (_list.length > i) {
-    //     value = _list[i];
-    //   }
-
-    //   _profileImagesUrls[i] = value;
-    // }
 
     setStateIfMounted(() {/**/});
   }
@@ -96,7 +71,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
             imageURI: BetaIconPaths.defaultProfileImagePath01,
           ).image
         : CachedNetworkImageProvider(
-            networkHelper.getProfileImageUrl(imageUrl),
+            NetworkHelper().getProfileImageUrl(imageUrl),
           );
 
     return Padding(
@@ -106,7 +81,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
           await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ProfileScreen(
+              builder: (context) => ProfileDetailsScreen(
                 imageUrls: _profileImagesUrls,
               ),
             ),
@@ -171,7 +146,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
     // Implementation for [AutomaticKeepAliveClientMixin].
     super.build(context);
 
-    String _imgUrl = settingsData.facebookProfileImageUrl;
+    String _imgUrl = SettingsData().facebookProfileImageUrl;
 
     if (_profileImagesUrls != null && _profileImagesUrls.isNotEmpty) {
       _imgUrl = _profileImagesUrls.first;
@@ -284,7 +259,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                           // move to the profile screen.
                           await Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => ProfileScreen(
+                              builder: (context) => ProfileDetailsScreen(
                                 imageUrls: _profileImagesUrls,
                               ),
                             ),
