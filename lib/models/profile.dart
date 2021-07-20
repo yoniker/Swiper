@@ -25,8 +25,15 @@ class Profile {
     List images=match['images'];
     List<String> imagesUrls = images.cast<String>();
     UserId userId = UserId(id: match['pof_id'], userType: UserType.POF_USER); //TODO change here when implementing real users profiles
+    String locationDesc ='';
+    if(match['state_id']!=null){
+      locationDesc += match['state_id']+' , ';
+    }
+    if(match['city']!=null){
+      locationDesc += match['city'];
+    }
   return Profile(username: match['username'],headline: match['headline'],description: match['description'],age:match['age'],
-      location: match['location_desc'],distance: match['distance'],jobTitle: match['profession'],
+      location: locationDesc,distance: match['distance'],jobTitle: match['profession'],
       serverUserImagesLocation: match['server_user_images_location'],
       height: match['height'],
       userId: userId,

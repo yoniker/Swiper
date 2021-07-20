@@ -30,6 +30,15 @@ class AdvancedSettingsScreen extends StatefulWidget {
     'Extremely'
   ];
 
+  static const List<String> tasteDescriptions = [
+    '50',
+    '60',
+    '70',
+    '80',
+    '90'
+
+  ];
+
   @override
   _AdvancedSettingsScreenState createState() => _AdvancedSettingsScreenState();
 }
@@ -653,12 +662,8 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                             children: <InlineSpan>[
                                               TextSpan(
                                                 text:
-                                                    'Choose one out of  $_chosenAuditionCount ',
+                                                    '${AdvancedSettingsScreen.tasteDescriptions[_chosenAuditionCount]}th percentile (your taste)',
                                                 style: defaultTextStyle,
-                                              ),
-                                              TextSpan(
-                                                text: 'People ',
-                                                style: boldTextStyle,
                                               ),
                                               WidgetSpan(
                                                 child: GestureDetector(
@@ -670,16 +675,12 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                     ),
                                                   ),
                                                   onTap: () {
-                                                    // print "what's this" to console for now.
-                                                    // TODO: Add Appropriate functionality.
-
-                                                    // What's this Functionality.
                                                     GlobalWidgets
                                                         .showAlertDialogue(
                                                       context,
-                                                      title: 'Audition Count',
+                                                      title: 'Taste',
                                                       message:
-                                                          'This denotes the number of profiles to display, the highest you can select is 100',
+                                                          'Show you matches based on your personal preferences (learnt by Alex, your personal AI assistant)',
                                                     );
                                                     //<debug>
                                                     //

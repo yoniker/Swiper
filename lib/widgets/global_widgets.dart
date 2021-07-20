@@ -165,7 +165,7 @@ class GlobalWidgets {
   }
 
   /// A widget to show a simple Alert Dialogue.
-  static void showAlertDialogue(
+  static Future<void> showAlertDialogue(
     BuildContext context, {
     @required String message,
     String title,
@@ -231,7 +231,7 @@ class GlobalWidgets {
                           style: _defaultTextStyle,
                           children: <InlineSpan>[
                             TextSpan(
-                              text: ' "${_resolveAlertTitle()}"\n ',
+                              text: ' ${_resolveAlertTitle()}\n ',
                               style: _varryingTextStyle,
                             ),
                             TextSpan(
@@ -261,7 +261,7 @@ class GlobalWidgets {
                         // return false;
                       },
                       child: Text(
-                        'Ok',
+                        'OK',
                         style: _varryingTextStyle.copyWith(color: colorBlend02),
                       ),
                     ),
@@ -728,6 +728,7 @@ class DescriptionBanner extends StatelessWidget {
   const DescriptionBanner({
     Key key,
     @required this.message,
+    this.leading,
     this.trailing,
     this.label,
     this.textStyle,
@@ -746,7 +747,7 @@ class DescriptionBanner extends StatelessWidget {
   final String message;
 
   /// The widget to display after the message.
-  ///
+  final Widget leading;
   /// This is usually an icon button that can recieve a tap gesture.
   final Widget trailing;
 
@@ -838,10 +839,17 @@ class DescriptionBanner extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: Text(
-                      message,
-                      overflow: overflow,
-                      style: textStyle ?? mediumBoldedCharStyle,
+                    child: Row(
+                      children: [
+                        if(leading!=null) leading,
+                        if (leading!=null) SizedBox(width: 5.0,),
+                        Text(
+                          message,
+                          overflow: overflow,
+                          style: textStyle ?? mediumBoldedCharStyle,
+                        ),
+
+                      ],
                     ),
                   ),
                   if (_trailing != null) _trailing,

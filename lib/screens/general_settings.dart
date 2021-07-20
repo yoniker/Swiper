@@ -41,7 +41,7 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
           ),
           SizedBox(height: 12.0),
           ActionBox(
-            message: 'Swiping Preference',
+            message: 'Matching Settings',
             messageStyle: smallBoldedCharStyle.copyWith(color: colorBlend02),
             margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
             trailing: Icon(

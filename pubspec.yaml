@@ -44,6 +44,7 @@ dependencies:
   trotter: ^1.1.0
   tuple: ^2.0.0
   reorderables: ^0.4.1
+  font_awesome_flutter: ^9.1.0
 
 
 dev_dependencies:

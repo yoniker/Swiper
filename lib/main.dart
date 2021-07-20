@@ -12,7 +12,7 @@ import 'package:betabeta/screens/main_messages_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/notification_screen.dart';
-import 'package:betabeta/screens/profile_screen.dart';
+import 'package:betabeta/screens/profile_details_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/screens/view_children_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
@@ -172,11 +172,11 @@ class MyApp extends StatelessWidget {
       );
 
 
-    } else if (settings.name == ProfileScreen.routeName){
+    } else if (settings.name == ProfileDetailsScreen.routeName){
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {
-          return ProfileScreen();
+          return ProfileDetailsScreen();
         },
       );
 

@@ -12,8 +12,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-
 import '../models/match_engine.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 
 enum SlideDirection {
   left,
@@ -32,7 +33,7 @@ class DraggableCard extends StatefulWidget {
   // final Widget detailsCard;
 
   /// The [Profile] of this MatchCard.
-  final Profile mactchProfile;
+  final Profile matchProfile;
 
   /// A pageController for controlling exclusively what page is shown.
   ///
@@ -67,7 +68,7 @@ class DraggableCard extends StatefulWidget {
     @required this.card,
     // this.detailsCard,
     this.controller,
-    this.mactchProfile,
+    this.matchProfile,
     this.isDraggable = true,
     this.canScroll = false,
     this.slideTo,
@@ -671,7 +672,8 @@ class _DraggableCardState extends State<DraggableCard>
             ),
             DescriptionBanner(
               // TODO(Backend) Add a field "gender" to the profile Interface:
-              message: 'See what a baby with her will look like',
+              message: 'See your children',
+              leading: FaIcon(FontAwesomeIcons.child,color: colorBlend01,),
               overflow: null,
               constraints: BoxConstraints(
                 minHeight: 75.0,
@@ -695,7 +697,8 @@ class _DraggableCardState extends State<DraggableCard>
               ),
             ),
             DescriptionBanner(
-              message: 'Like Fever Prediction',
+                message: 'You Liking Probability',
+              leading: Icon(Icons.info,color: Colors.blue,),
               overflow: null,
               constraints: BoxConstraints(
                 minHeight: 75.0,
@@ -706,15 +709,28 @@ class _DraggableCardState extends State<DraggableCard>
                 value: 20.0,
                 startValue: 20.0,
               ),
+              onTap: ()async{
+
+                  /* //TODO John - this doesnt work
+                  await GlobalWidgets
+                    .showAlertDialogue(
+                  context,
+                  title: 'Info',
+                  message:
+                  'The probability that you will like the current profile, according to Alex,the personal AI which learnt your personal taste...',
+                );*/
+              },
             ),
             DescriptionBanner(
-              message: 'Match Percentage',
+              message: 'Match Probability',
               overflow: null,
               constraints: BoxConstraints(
                 minHeight: 75.0,
                 maxHeight: 90.5,
                 maxWidth: MediaQuery.of(context).size.width,
               ),
+
+              leading: Icon(Icons.info,color: Colors.blue,),
               trailing: LikeScale(value: 20.0),
             ),
           ],
@@ -904,7 +920,7 @@ class _DraggableCardState extends State<DraggableCard>
                                     // This is just a way one can add a grouped List of Widgets within another
                                     // super or parent list.
                                     ...buildMatchDetails(
-                                      widget.mactchProfile,
+                                      widget.matchProfile,
                                       context: context,
                                     ),
 
