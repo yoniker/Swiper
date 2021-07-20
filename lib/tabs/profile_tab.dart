@@ -180,7 +180,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
     return Scaffold(
       backgroundColor: darkCardColor,
       appBar: CustomAppBar(
-        trailing: PrecachedImage.asset(imageURI: BetaIconPaths.profileIcon),
+        trailing: PrecachedImage.asset(imageURI: BetaIconPaths.editIcon03),
         hasTopPadding: true,
         hasBackButton: false,
         showAppLogo: false,

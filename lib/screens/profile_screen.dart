@@ -239,7 +239,7 @@ class _ProfileScreenState extends State<ProfileScreen> with MountedStateMixin {
                         child: Padding(
                           padding: EdgeInsets.all(2.5),
                           child: GlobalWidgets.assetImageToIcon(
-                            BetaIconPaths.editProfieIconPath,
+                            BetaIconPaths.editProfileIconPath,
                           ),
                         ),
                       ),
@@ -458,7 +458,7 @@ class _TextEditBlockState extends State<TextEditBlock> {
                 widget.onStatusChanged(_isOpened);
             },
             child: GlobalWidgets.assetImageToIcon(
-              BetaIconPaths.editIconPath02,
+              BetaIconPaths.editIcon02,
               iconPad: EdgeInsets.all(12.0),
             ),
           ),
