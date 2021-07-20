@@ -676,7 +676,8 @@ class _DraggableCardState extends State<DraggableCard>
               ),
             ),
             DescriptionBanner(
-              message: 'Like Fever Prediction',
+                message: 'You Liking Probability',
+              leading: Icon(Icons.info,color: Colors.blue,),
               overflow: null,
               trailing: MatchPercentageScale(
                 value: 20.0,
@@ -684,8 +685,9 @@ class _DraggableCardState extends State<DraggableCard>
               ),
             ),
             DescriptionBanner(
-              message: 'Match Percentage',
+              message: 'Match Probability',
               overflow: null,
+              leading: Icon(Icons.info,color: Colors.blue,),
               trailing: LikeScale(value: 20.0),
               // trailing: Container(
               //   margin: EdgeInsets.symmetric(horizontal: 4.0),
