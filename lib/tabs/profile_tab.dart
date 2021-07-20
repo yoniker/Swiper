@@ -171,7 +171,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
     // Implementation for [AutomaticKeepAliveClientMixin].
     super.build(context);
 
-    String _imgUrl = settingsData.facebookProfileImageUrl;
+    String _imgUrl;
 
     if (_profileImagesUrls != null && _profileImagesUrls.isNotEmpty) {
       _imgUrl = _profileImagesUrls.first;
