@@ -174,8 +174,8 @@ class _MatchScreenState extends State<MatchScreen>
             ),
             showAppLogo: true,
             hasBackButton: false,
-            trailing: GlobalWidgets.assetImageToIcon(
-              BetaIconPaths.settingsBarIcon,
+            trailing: GestureDetector(
+              child: Icon(Icons.settings,size:35,color:colorBlend02),
               onTap: () async {
                 // hide the overlay.
                 setMatchCardVisibility(false);
