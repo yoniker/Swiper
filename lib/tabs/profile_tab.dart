@@ -276,6 +276,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                           top: 12.0,
                           child: PrecachedImage.asset(
                             imageURI: BetaIconPaths.editIcon03,
+                            color: yellowishOrange,
                           ),
                         ),
                       ),
