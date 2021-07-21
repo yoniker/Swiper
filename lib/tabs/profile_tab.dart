@@ -275,7 +275,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                         child: Positioned(
                           top: 12.0,
                           child: PrecachedImage.asset(
-                            imageURI: BetaIconPaths.profileIconFilled01,
+                            imageURI: BetaIconPaths.editIcon03,
                           ),
                         ),
                       ),
