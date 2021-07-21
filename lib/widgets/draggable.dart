@@ -697,7 +697,7 @@ class _DraggableCardState extends State<DraggableCard>
               ),
             ),
             DescriptionBanner(
-                message: 'You Liking Probability',
+                message: 'Personal preference score',
               leading: Icon(Icons.info,color: Colors.blue,),
               overflow: null,
               constraints: BoxConstraints(
@@ -722,7 +722,7 @@ class _DraggableCardState extends State<DraggableCard>
               },
             ),
             DescriptionBanner(
-              message: 'Match Probability',
+              message: 'Compatibility score',
               overflow: null,
               constraints: BoxConstraints(
                 minHeight: 75.0,
