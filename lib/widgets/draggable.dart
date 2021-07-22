@@ -11,10 +11,10 @@ import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:provider/provider.dart';
-import '../models/match_engine.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
+import '../models/match_engine.dart';
 
 enum SlideDirection {
   left,
@@ -61,7 +61,7 @@ class DraggableCard extends StatefulWidget {
   final Function(SlideDirection direction) onSlideComplete;
   final double screenWidth;
   final double screenHeight;
-  final void Function(bool) onNavigationCallback;
+  final void Function(bool) setMatchCardVisibility;
 
   DraggableCard({
     Key key,
@@ -76,7 +76,7 @@ class DraggableCard extends StatefulWidget {
     this.onSlideComplete,
     @required this.screenWidth,
     @required this.screenHeight,
-    @required this.onNavigationCallback,
+    @required this.setMatchCardVisibility,
     this.exitDuration = const Duration(milliseconds: 100),
   });
 
@@ -105,7 +105,7 @@ class _DraggableCardState extends State<DraggableCard>
   AnimationController slideOutAnimation;
 
   // Defines the ScrollController that controls the inner ScrollView.
-  final ScrollController scrollController =
+    final ScrollController scrollController =
       new ScrollController(keepScrollOffset: false);
 
   // The defualt Curve with which the details Page animates out into the new Match Page.
@@ -128,7 +128,7 @@ class _DraggableCardState extends State<DraggableCard>
     bool fullscreenDialog = false,
   }) async {
     // here we inform the MatchScreen to hide the Card Stack.
-    widget.onNavigationCallback(false);
+    widget.setMatchCardVisibility(false);
 
     await Navigator.of(context)
         .push<T>(
@@ -141,7 +141,7 @@ class _DraggableCardState extends State<DraggableCard>
     )
         .then((value) {
       // here we inform the MatchScreen to show the Card Stack.
-      widget.onNavigationCallback(true);
+      widget.setMatchCardVisibility(true);
 
       return value;
     });
@@ -152,6 +152,10 @@ class _DraggableCardState extends State<DraggableCard>
   @override
   void initState() {
     super.initState();
+
+    // // Initialize the ScrollController.
+    // scrollController = ScrollController(keepScrollOffset: true);
+
     slideBackAnimation = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1000),
@@ -200,9 +204,6 @@ class _DraggableCardState extends State<DraggableCard>
         }
       });
 
-    // Initialize the ScrollController.
-    // scrollController = ScrollController(keepScrollOffset: false);
-
     // Intantiate the exitDuration.
     exitDuration = widget.exitDuration;
   }
@@ -210,10 +211,6 @@ class _DraggableCardState extends State<DraggableCard>
   @override
   void didUpdateWidget(DraggableCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-
-    // scrollController = null;
-    // // re-initialize the ScrollController.
-    // scrollController = ScrollController();
 
     if (widget.card.key != oldWidget.card.key) {
       cardOffset = const Offset(0.0, 0.0);
@@ -673,7 +670,10 @@ class _DraggableCardState extends State<DraggableCard>
             DescriptionBanner(
               // TODO(Backend) Add a field "gender" to the profile Interface:
               message: 'See your children',
-              leading: FaIcon(FontAwesomeIcons.child,color: colorBlend01,),
+              leading: FaIcon(
+                FontAwesomeIcons.child,
+                color: colorBlend01,
+              ),
               overflow: null,
               constraints: BoxConstraints(
                 minHeight: 75.0,
@@ -697,8 +697,11 @@ class _DraggableCardState extends State<DraggableCard>
               ),
             ),
             DescriptionBanner(
-                message: 'You Liking Probability',
-              leading: Icon(Icons.info,color: Colors.blue,),
+              message: 'You Liking Probability',
+              leading: Icon(
+                Icons.info,
+                color: Colors.blue,
+              ),
               overflow: null,
               constraints: BoxConstraints(
                 minHeight: 75.0,
@@ -709,16 +712,29 @@ class _DraggableCardState extends State<DraggableCard>
                 value: 20.0,
                 startValue: 20.0,
               ),
-              onTap: ()async{
+              onTap: () async {
+                // // we want to save the last offset so we can scroll back to that position when the 
+                // // dialog is dismissed.
+                // final _lastOffset = scrollController.offset;
 
-                  /* //TODO John - this doesnt work
-                  await GlobalWidgets
-                    .showAlertDialogue(
+                // To show any Dialogue or do anything that involves Navigation we must first make sure
+                // that the MatchCard-overlay is hidden.
+                // And when we are done we simply set its visibility to `true` which makes sure that the
+                // MatchCard-overlay becomes visible.
+                widget.setMatchCardVisibility(false);
+
+                // TODO John - this doesnt work
+                await GlobalWidgets.showAlertDialogue(
                   context,
                   title: 'Info',
                   message:
-                  'The probability that you will like the current profile, according to Alex,the personal AI which learnt your personal taste...',
-                );*/
+                      'The probability that you will like the current profile, according to Alex,the personal AI which learnt your personal taste...',
+                );
+
+                widget.setMatchCardVisibility(true);
+
+                // // we scroll to the last knownoffset.
+                // scrollController.jumpTo(_lastOffset);
               },
             ),
             DescriptionBanner(
@@ -729,8 +745,10 @@ class _DraggableCardState extends State<DraggableCard>
                 maxHeight: 90.5,
                 maxWidth: MediaQuery.of(context).size.width,
               ),
-
-              leading: Icon(Icons.info,color: Colors.blue,),
+              leading: Icon(
+                Icons.info,
+                color: Colors.blue,
+              ),
               trailing: LikeScale(value: 20.0),
             ),
           ],
@@ -886,8 +904,7 @@ class _DraggableCardState extends State<DraggableCard>
                                 // when the previous Draggable Widget has been removed or dismissed.
                                 // key: UniqueKey(),
                                 controller: scrollController,
-                                // restorationId:
-                                //     '${widget.mactchProfile.username}-${DateTime.now().toString()}',
+                                // restorationId: '${widget.matchProfile.userId.id}',
                                 clipBehavior: Clip.none,
                                 physics: ClampingScrollPhysics(),
                                 scrollDirection: Axis.vertical,

@@ -200,7 +200,7 @@ class _MatchScreenState extends State<MatchScreen>
             child: Visibility(
               visible: _matchCardIsVisible,
               child: MatchCardBuilder(
-                onNavigationCallback: (value) {
+                setMatchCardVisibility: (value) {
                   setMatchCardVisibility(value);
                 },
               ),
@@ -214,10 +214,10 @@ class _MatchScreenState extends State<MatchScreen>
 
 /// The card Widget used to display match Information.
 class MatchCardBuilder extends StatefulWidget {
-  MatchCardBuilder({Key key, @required this.onNavigationCallback})
+  MatchCardBuilder({Key key, @required this.setMatchCardVisibility})
       : super(key: key);
 
-  final void Function(bool) onNavigationCallback;
+  final void Function(bool) setMatchCardVisibility;
 
   @override
   _MatchCardBuilderState createState() => _MatchCardBuilderState();
@@ -293,9 +293,9 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
 
     if (nextMatch != null) {
       return DraggableCard(
-        onNavigationCallback: (value) {
+        setMatchCardVisibility: (value) {
           // this triggers the MatchScreen to hide the MatchCard stack.
-          widget.onNavigationCallback(value);
+          widget.setMatchCardVisibility(value);
         },
         screenHeight: MediaQuery.of(context).size.height,
         screenWidth: MediaQuery.of(context).size.width,
@@ -327,9 +327,9 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
 
     if (currentMatch != null) {
       return DraggableCard(
-        onNavigationCallback: (value) {
+        setMatchCardVisibility: (value) {
           // this triggers the MatchScreen to hide the MatchCard stack.
-          widget.onNavigationCallback(value);
+          widget.setMatchCardVisibility(value);
         },
         screenHeight: MediaQuery.of(context).size.height,
         screenWidth: MediaQuery.of(context).size.width,
