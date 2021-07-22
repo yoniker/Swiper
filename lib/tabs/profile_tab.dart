@@ -282,7 +282,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                       ),
                       SizedBox(height: 2.0),
                       Text(
-                        'Profile',
+                        'Edit Profile',
                         style: smallBoldedCharStyle,
                       ),
                     ],
