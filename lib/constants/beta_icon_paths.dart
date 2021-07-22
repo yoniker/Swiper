@@ -141,4 +141,7 @@ class BetaIconPaths {
 
   /// The path to edit icon used in the Profile tab.
   static const String editIcon03 = 'assets/images/edit_icon_03.png';
+
+  /// The path to edit icon used in the Profile tab.
+  static const String editIconFilled01 = 'assets/images/edit_icon_filled_01.png';
 }
