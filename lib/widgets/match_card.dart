@@ -30,7 +30,8 @@ class _MatchCardState extends State<MatchCard> {
   /// This connotes the Widget to display as the background.
   /// This is typically a [PhotoView].
   Widget _buildBackground(BuildContext context) {
-    final bool _isPotrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final bool _isPotrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     // returns a [PhotoView] widget.
     return FractionallySizedBox(
@@ -88,13 +89,15 @@ class _MatchCardState extends State<MatchCard> {
                 fontSize: getRelativeTextSize(18),
               ),
             ),
-            Text(
-              '${widget.profile.headline}',
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: boldTextStyle.copyWith(
-                color: Colors.white,
-                fontSize: getRelativeTextSize(12),
+            Expanded(
+              child: Text(
+                '${widget.profile.headline}',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: boldTextStyle.copyWith(
+                  color: Colors.white,
+                  fontSize: getRelativeTextSize(12),
+                ),
               ),
             ),
           ],
@@ -621,7 +624,7 @@ class _PhotoViewState extends State<PhotoView> {
             child: ConstrainedBox(
               constraints: BoxConstraints(
                 minHeight: 55.0,
-                maxHeight: 75.0,
+                maxHeight: 90.0,
                 minWidth: 300,
                 maxWidth: MediaQuery.of(context).size.width,
               ),
