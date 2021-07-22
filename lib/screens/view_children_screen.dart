@@ -185,7 +185,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Flexible(
-                              flex: 1,
+                              flex: 2,
                               child: Column(
                                 children: [
                                   Text(
@@ -217,12 +217,15 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                                 ],
                               ),
                             ),
-                            PrecachedImage.asset(
-                              imageURI: BetaIconPaths.heartsUnitedIconPath_01,
-                              scale: 3.75,
-                            ),
                             Flexible(
                               flex: 1,
+                              child: PrecachedImage.asset(
+                                imageURI: BetaIconPaths.heartsUnitedIconPath_01,
+                                scale: 3.75,
+                              ),
+                            ),
+                            Flexible(
+                              flex: 2,
                               child: Column(
                                 children: [
                                   Text(
