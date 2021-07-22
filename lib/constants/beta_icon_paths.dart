@@ -135,7 +135,13 @@ class BetaIconPaths {
   static const String viewChildrenBackgroundImagePath = 'assets/images/progeney_tree_divider.png';
 
   static const String silhouetteProfileImage = 'assets/images/449px-Lakeyboy_Silhouette.png';
+
   // The path to edit-profile-image icon in the Profile Screen.
   static const String editIconPath02 = 'assets/images/edit_icon_02.png';
+
+  /// The path to edit icon used in the Profile tab.
   static const String editIcon03 = 'assets/images/edit_icon_03.png';
+
+  /// The path to edit icon used in the Profile tab.
+  static const String editIconFilled01 = 'assets/images/edit_icon_filled_01.png';
 }

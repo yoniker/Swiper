@@ -1,5 +1,6 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/utils/mixins.dart';
@@ -11,6 +12,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 
 /// The implementation for the Notification screen.
 class ViewChildrenScreen extends StatefulWidget {
@@ -118,6 +120,18 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
     );
   }
 
+  /// A function to select the match Decision made on the the current match.
+  currentMatchDecision(Decision decision) {
+    if (Provider.of<MatchEngine>(context, listen: false).currentMatch() !=
+        null) {
+      Provider.of<MatchEngine>(context, listen: false)
+          .currentMatchDecision(decision);
+      Provider.of<MatchEngine>(context, listen: false).goToNextMatch();
+    }
+    // close the view-children-page.
+    Navigator.of(context).maybePop();
+  }
+
   @override
   Widget build(BuildContext context) {
     // the device's screen specs.
@@ -170,67 +184,77 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Column(
-                              children: [
-                                Text(
-                                  'You',
-                                  style: smallBoldedCharStyle,
-                                ),
-                                SizedBox(height: 2.0),
-                                !_userFacesReady
-                                    ? waitingAnimation()
-                                    : Clickable(
-                                        onTap: () {
-                                          //TODO overlay of FacesWidget
-                                        },
-                                        child: ProfileImageAvatar.mutable(
-                                          actualImage: _userFacesImages
-                                                  .isEmpty
-                                              ? AssetImage(BetaIconPaths
-                                                  .silhouetteProfileImage)
-                                              : _userFacesImages[0]
-                                                  .image, //TODO change index here
-                                          minRadius: 28.50,
-                                          maxRadius: 35.5,
-                                          placeholderImage: AssetImage(
-                                            BetaIconPaths
-                                                .defaultProfileImagePath01,
+                            Flexible(
+                              flex: 2,
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'You',
+                                    style: smallBoldedCharStyle,
+                                  ),
+                                  SizedBox(height: 2.0),
+                                  !_userFacesReady
+                                      ? waitingAnimation()
+                                      : Clickable(
+                                          onTap: () {
+                                            //TODO overlay of FacesWidget
+                                          },
+                                          child: ProfileImageAvatar.mutable(
+                                            actualImage: _userFacesImages
+                                                    .isEmpty
+                                                ? AssetImage(BetaIconPaths
+                                                    .silhouetteProfileImage)
+                                                : _userFacesImages[0]
+                                                    .image, //TODO change index here
+                                            minRadius: 28.50,
+                                            maxRadius: 35.5,
+                                            placeholderImage: AssetImage(
+                                              BetaIconPaths
+                                                  .defaultProfileImagePath01,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                              ],
+                                ],
+                              ),
                             ),
-                            PrecachedImage.asset(
-                              imageURI: BetaIconPaths.heartsUnitedIconPath_01,
+                            Flexible(
+                              flex: 1,
+                              child: PrecachedImage.asset(
+                                imageURI: BetaIconPaths.heartsUnitedIconPath_01,
+                                scale: 3.75,
+                              ),
                             ),
-                            Column(
-                              children: [
-                                Text(
-                                  widget.matchProfile.username,
-                                  style: smallBoldedCharStyle,
-                                ),
-                                SizedBox(height: 2.0),
-                                !_matchFacesReady
-                                    ? waitingAnimation()
-                                    : Clickable(
-                                        onTap: () {
-                                          ////TODO overlay of FacesWidget
-                                        },
-                                        child: ProfileImageAvatar.mutable(
-                                          actualImage: _matchFacesImages
-                                                  .isEmpty
-                                              ? AssetImage(BetaIconPaths
-                                                  .silhouetteProfileImage)
-                                              : _matchFacesImages[0].image,
-                                          minRadius: 28.50,
-                                          maxRadius: 35.5,
-                                          placeholderImage: AssetImage(
-                                            BetaIconPaths
-                                                .defaultProfileImagePath01,
+                            Flexible(
+                              flex: 2,
+                              child: Column(
+                                children: [
+                                  Text(
+                                    widget.matchProfile.username,
+                                    style: smallBoldedCharStyle,
+                                  ),
+                                  SizedBox(height: 2.0),
+                                  !_matchFacesReady
+                                      ? waitingAnimation()
+                                      : Clickable(
+                                          onTap: () {
+                                            ////TODO overlay of FacesWidget
+                                          },
+                                          child: ProfileImageAvatar.mutable(
+                                            actualImage: _matchFacesImages
+                                                    .isEmpty
+                                                ? AssetImage(BetaIconPaths
+                                                    .silhouetteProfileImage)
+                                                : _matchFacesImages[0].image,
+                                            minRadius: 28.50,
+                                            maxRadius: 35.5,
+                                            placeholderImage: AssetImage(
+                                              BetaIconPaths
+                                                  .defaultProfileImagePath01,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -243,8 +267,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                               : DecoratedBox(
                                   decoration: kProfileImageAvatarDecoration,
                                   child: ProfileImageAvatar.mutable(
-                                    actualImage: _generatedBabiesImages
-                                            .isEmpty
+                                    actualImage: _generatedBabiesImages.isEmpty
                                         ? AssetImage(BetaIconPaths
                                             .silhouetteProfileImage)
                                         : _generatedBabiesImages[
@@ -336,22 +359,23 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
               messageStyle: smallBoldedCharStyle.copyWith(color: colorBlend02),
               margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
               trailing: PrecachedImage.asset(
-                imageURI: BetaIconPaths.heartIconFilled01,
+                imageURI: BetaIconPaths.likeMatchIcon,
               ),
               onTap: () {
-                // TODO: mark the current match as "Like" and close the ViewChildren screen.
+                // Decision.like
+                currentMatchDecision(Decision.like);
               },
             ),
             ActionBox(
               message: 'Dislike',
-              messageStyle: smallBoldedCharStyle.copyWith(color: blue),
+              messageStyle: smallBoldedCharStyle.copyWith(color: Colors.red),
               margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
               trailing: PrecachedImage.asset(
                 imageURI: BetaIconPaths.dislikeMatchIcon,
-                color: blue,
               ),
               onTap: () {
-                // TODO: mark the current match as "Dislike" and close the ViewChildren screen.
+                // Decision.nope
+                currentMatchDecision(Decision.nope);
               },
             ),
             SizedBox(height: 12.0),
@@ -361,10 +385,11 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                   smallBoldedCharStyle.copyWith(color: yellowishOrange),
               margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
               trailing: PrecachedImage.asset(
-                imageURI: BetaIconPaths.messageIcon,
+                imageURI: BetaIconPaths.draftMesssageIcon,
               ),
               onTap: () {
-                // TODO: open junk-message folder and close the ViewChildren screen.
+                // TODO: open the junk-message page and close the ViewChildren screen.
+                print('MAKE A DRAFT!');
               },
             ),
             SizedBox(height: 12.0),
