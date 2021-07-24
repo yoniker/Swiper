@@ -78,11 +78,11 @@ class _CelebWidgetState extends State<CelebWidget> {
             borderRadius: BorderRadius.circular(15.0),
             border: Border.all(
               width: 1.2,
-              color: darkCardColor,
+              color: lightCardColor,
             ),
             boxShadow: <BoxShadow>[
               BoxShadow(
-                color: darkCardColor,
+                color: lightCardColor,
                 blurRadius: 12.5,
                 spreadRadius: 2.5,
               ),

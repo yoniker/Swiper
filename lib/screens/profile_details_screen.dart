@@ -1,15 +1,14 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/details_model.dart';
-import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
-import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reorderables/reorderables.dart';
 
@@ -44,6 +43,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
   String _jobTitle;
 
   String _company;
+
+  bool _loadingImage = false; //Is image in the process of being uploaded? give user visual cue
 
   List<String> _profileImagesUrls = [];
 
@@ -117,13 +118,15 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
     /// A function that fires when the cancel icon on the image-box is pressed.
     void Function() onDelete,
   }) {
-    Widget _child = imageUrl != null
+    Widget _inBoxWidget = imageUrl != null
         ? Image.network(
             imageUrl,
             fit: BoxFit.cover,
           )
         : Center(
-            child: IconButton(
+            child:
+            _loadingImage == false?
+            IconButton(
               icon: Icon(Icons.add_rounded),
               onPressed: () async {
                 await GlobalWidgets.showImagePickerDialogue(
@@ -131,7 +134,10 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
                   onImagePicked: onImagePicked,
                 );
               },
-            ),
+            ):
+            SpinKitPumpingHeart(
+              color: colorBlend02,
+            )
           );
 
     return Container(
@@ -148,7 +154,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
               elevation: 2.0,
               shadowColor: Colors.grey[200],
               clipBehavior: Clip.antiAlias,
-              child: _child,
+              child: _inBoxWidget,
             ),
           ),
 
@@ -286,9 +292,15 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
                                   });
                                 },
                                 onImagePicked: (pickedImage) {
+                                  setState(() {
+                                    _loadingImage = true;
+                                  });
                                   NetworkHelper()
                                       .postProfileImage(pickedImage)
                                       .then((_) {
+                                       setState(() {
+                                         _loadingImage = false;
+                                       });
                                     _syncFromServer();
                                   });
                                 }),

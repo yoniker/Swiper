@@ -112,7 +112,7 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
                   focusNode: textFieldFocus,
                   cursorColor: colorBlend02,
                   decoration: InputDecoration(
-                    fillColor: darkCardColor,
+                    fillColor: lightCardColor,
                     filled: true,
                     prefixIcon: GlobalWidgets.assetImageToIcon(
                       BetaIconPaths.inactiveMatchTabIconPath,
@@ -132,15 +132,15 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
                       iconSize: 24.0,
                     ),
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: darkCardColor),
+                      borderSide: BorderSide(color: lightCardColor),
                       borderRadius: BorderRadius.circular(12.5),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: darkCardColor),
+                      borderSide: BorderSide(color: lightCardColor),
                       borderRadius: BorderRadius.circular(12.5),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: darkCardColor),
+                      borderSide: BorderSide(color: lightCardColor),
                       borderRadius: BorderRadius.circular(12.5),
                     ),
                     hintText: 'Enter Celeb Name Here',

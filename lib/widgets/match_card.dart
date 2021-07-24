@@ -45,8 +45,8 @@ class _MatchCardState extends State<MatchCard> {
         imageUrls: widget.profile.imageUrls,
         showCarousel: widget.showCarousel,
         descriptionWidget: _descriptionWidget(),
-        carouselInactiveDotColor: darkCardColor,
-        carouselActiveDotColor: colorBlend02,
+        carouselInactiveDotColor: inactiveDot,
+        carouselActiveDotColor: activeDot,
       ),
     );
   }
@@ -142,7 +142,7 @@ class _MatchCardState extends State<MatchCard> {
         borderRadius: BorderRadius.circular(18.0),
         boxShadow: <BoxShadow>[
           BoxShadow(
-            color: darkCardColor,
+            color: lightCardColor,
             offset: Offset(0.0, 0.2),
             blurRadius: 12.0,
           ),

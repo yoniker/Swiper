@@ -4,22 +4,24 @@ import 'package:flutter/material.dart';
 // These final variables are used in making most of the
 // UI for the Settings Screen.
 
-const Color darkCardColor = Color(0xFFEFEFF1);
+const Color lightCardColor = Color(0xFFEFEFF1);
 const Color darkTextColor = Color(0xFF747474);
-final Color blackTextColor = Color(0xFF000000);
-final Color whiteCardColor = Color(0xFFFFFFFF);
-final Color whiteTextColor = Color(0xFFFFFFFF);
+const Color blackTextColor = Color(0xFF000000);
+const Color whiteCardColor = Color(0xFFFFFFFF);
+const Color whiteTextColor = Color(0xFFFFFFFF);
 const defaultShadowColor = Color(0x99999999);
-final Color linkColor = Color(0xFF389CEB);
+const Color linkColor = Color(0xFF389CEB);
+const Color activeDot = Colors.white;
+const Color inactiveDot = Colors.grey;
 //
-final Color activeColor = Colors.blue;
-final Color disabledColor = Colors.grey;
+const Color activeColor = Colors.blue;
+const Color disabledColor = Colors.grey;
 //
 const Color colorBlend01 = Color(0xFFED3C5C);
 const Color colorBlend02 = Color(0xFFE1189D);
 
-final Color blue = Color(0xFF389CEB);
-final Color yellowishOrange = Color(0xFFF99442);
+const Color blue = Color(0xFF389CEB);
+const Color yellowishOrange = Color(0xFFF99442);
 
 // global textstyles
 const TextStyle defaultTextStyle = TextStyle(

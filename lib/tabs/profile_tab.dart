@@ -1,7 +1,7 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/settings_model.dart';
-import 'package:betabeta/screens/general_settings.dart';
+import 'package:betabeta/screens/account_settings.dart';
 import 'package:betabeta/screens/notification_screen.dart';
 import 'package:betabeta/screens/profile_details_screen.dart';
 import 'package:betabeta/services/networking.dart';
@@ -103,7 +103,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
               minRadius: 35.0,
               maxRadius: 75.0,
               backgroundImage: _image,
-              backgroundColor: darkCardColor,
+              backgroundColor: lightCardColor,
             ),
           ),
         ),
@@ -154,7 +154,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
     }
 
     return Scaffold(
-      backgroundColor: darkCardColor,
+      backgroundColor: lightCardColor,
       appBar: CustomAppBar(
         trailing: PrecachedImage.asset(imageURI: BetaIconPaths.editIcon03),
         hasTopPadding: true,
@@ -228,7 +228,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => GeneralSettingsScreen(),
+                              builder: (context) => AccountSettingsScreen(),
                             ),
                           );
                         },
@@ -282,7 +282,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                       ),
                       SizedBox(height: 2.0),
                       Text(
-                        'Profile',
+                        'Edit Profile',
                         style: smallBoldedCharStyle,
                       ),
                     ],

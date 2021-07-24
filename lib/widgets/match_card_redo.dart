@@ -54,7 +54,7 @@ class _CardStackState extends State<CardStack> {
         child: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: darkCardColor.withOpacity(0.6),
+            color: lightCardColor.withOpacity(0.6),
             borderRadius: BorderRadius.circular(18.0),
           ),
         ),
@@ -77,7 +77,7 @@ class _CardStackState extends State<CardStack> {
         child: Container(
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: darkCardColor.withOpacity(0.6),
+            color: lightCardColor.withOpacity(0.6),
             borderRadius: BorderRadius.circular(18.0),
           ),
         ),
