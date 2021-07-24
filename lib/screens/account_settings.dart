@@ -87,6 +87,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             ),
             onTap: () {
 
+              _logout();
+
 
             },
           ),
