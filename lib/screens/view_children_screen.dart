@@ -142,7 +142,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
     final double childrenVertCardPadding = 20.0;
 
     return Scaffold(
-      backgroundColor: darkCardColor,
+      backgroundColor: lightCardColor,
       appBar: CustomAppBar.subPage(
         subPageTitle: 'View Children',
         hasTopPadding: true,

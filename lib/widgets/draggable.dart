@@ -537,7 +537,7 @@ class _DraggableCardState extends State<DraggableCard>
               style: subTitleStyle,
             ),
             Divider(
-              color: darkCardColor,
+              color: lightCardColor,
               indent: 2.0,
               endIndent: 2.0,
               thickness: 2.8,
@@ -585,7 +585,7 @@ class _DraggableCardState extends State<DraggableCard>
               style: subTitleStyle,
             ),
             Divider(
-              color: darkCardColor,
+              color: lightCardColor,
               indent: 2.0,
               endIndent: 2.0,
               thickness: 2.8,
@@ -664,7 +664,7 @@ class _DraggableCardState extends State<DraggableCard>
               style: subTitleStyle,
             ),
             Divider(
-              color: darkCardColor,
+              color: lightCardColor,
               indent: 2.0,
               endIndent: 2.0,
               thickness: 2.8,
@@ -757,7 +757,7 @@ class _DraggableCardState extends State<DraggableCard>
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: darkCardColor,
+            color: lightCardColor,
             offset: Offset(0.0, 0.2),
             blurRadius: 16.0,
           ),

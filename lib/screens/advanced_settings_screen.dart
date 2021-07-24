@@ -208,7 +208,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                     borderRadius: BorderRadius.circular(24.0),
                     boxShadow: [
                       BoxShadow(
-                        color: darkCardColor,
+                        color: lightCardColor,
                         blurRadius: 12.0,
                       ),
                     ],
@@ -303,7 +303,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                 ),
                               ),
                               Divider(
-                                color: darkCardColor,
+                                color: lightCardColor,
                                 thickness: 2.0,
                                 indent: 24.0,
                                 endIndent: 24.0,
@@ -522,7 +522,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                       ],
                                     ),
                               Divider(
-                                color: darkCardColor,
+                                color: lightCardColor,
                                 thickness: 2.0,
                                 indent: 24.0,
                                 endIndent: 24.0,

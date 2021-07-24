@@ -50,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: darkCardColor,
+      color: lightCardColor,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

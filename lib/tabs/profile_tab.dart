@@ -103,7 +103,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
               minRadius: 35.0,
               maxRadius: 75.0,
               backgroundImage: _image,
-              backgroundColor: darkCardColor,
+              backgroundColor: lightCardColor,
             ),
           ),
         ),
@@ -154,7 +154,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
     }
 
     return Scaffold(
-      backgroundColor: darkCardColor,
+      backgroundColor: lightCardColor,
       appBar: CustomAppBar(
         trailing: PrecachedImage.asset(imageURI: BetaIconPaths.editIcon03),
         hasTopPadding: true,

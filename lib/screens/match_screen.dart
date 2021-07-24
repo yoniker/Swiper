@@ -172,10 +172,10 @@ class _MatchScreenState extends State<MatchScreen>
                 ],
               ),
             ),
-            showAppLogo: true,
+            showAppLogo: false,
             hasBackButton: false,
             trailing: GestureDetector(
-              child: Icon(Icons.settings,size:35,color:colorBlend02),
+              child: Icon(Icons.settings,size:35),
               onTap: () async {
                 // hide the overlay.
                 setMatchCardVisibility(false);

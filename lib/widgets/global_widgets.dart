@@ -113,7 +113,7 @@ class GlobalWidgets {
       margin: outerPadding,
       decoration: BoxDecoration(
         border: Border.all(
-          color: darkCardColor,
+          color: lightCardColor,
           width: 1.0,
         ),
         borderRadius: BorderRadius.circular(12.0),
@@ -128,7 +128,7 @@ class GlobalWidgets {
               minHeight: 50.0,
             ),
             decoration: BoxDecoration(
-              color: darkCardColor,
+              color: lightCardColor,
             ),
             child: (top != null)
                 ? top
@@ -212,7 +212,7 @@ class GlobalWidgets {
           child: Material(
             borderRadius: BorderRadius.circular(15),
             elevation: 1.0,
-            color: darkCardColor,
+            color: lightCardColor,
             child: Stack(
               fit: StackFit.expand,
               // mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -427,7 +427,7 @@ class GlobalWidgets {
           child: Material(
             borderRadius: BorderRadius.circular(15),
             elevation: 1.0,
-            color: darkCardColor,
+            color: lightCardColor,
             child: Stack(
               fit: StackFit.expand,
               // mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -642,7 +642,7 @@ class ActionBox extends StatelessWidget {
 
   /// The color with which to paint the notification box background.
   ///
-  /// Defaults to the color provided by the [darkCardColor] const in "/lib/constant/color_constants.dart".
+  /// Defaults to the color provided by the [lightCardColor] const in "/lib/constant/color_constants.dart".
   final Color backgroundColor;
 
   /// The color with which to paint the shadow behind the notification box.
@@ -831,7 +831,7 @@ class DescriptionBanner extends StatelessWidget {
               maxHeight: 90.5,
             ),
             decoration: BoxDecoration(
-              color: darkCardColor,
+              color: lightCardColor,
               borderRadius: borderRadius ?? BorderRadius.circular(13.0),
             ),
             child: Padding(
@@ -871,7 +871,7 @@ class NotificationBox extends ActionBox {
     Key key,
     @required String message,
     @required void Function() onTap,
-    Color backgroundColor = darkCardColor,
+    Color backgroundColor = lightCardColor,
     TextStyle messageStyle = smallCharStyle,
     BorderRadiusGeometry borderRadius,
     EdgeInsetsGeometry margin = const EdgeInsets.all(6.0),
