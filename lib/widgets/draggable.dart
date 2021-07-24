@@ -685,7 +685,7 @@ class _DraggableCardState extends State<DraggableCard>
             DescriptionBanner(
               // TODO(Backend) Add a field "gender" to the profile Interface:
               message: 'See your children',
-              leading: FaIcon(FontAwesomeIcons.child,color: colorBlend01,),
+              leading: Image.asset('assets/images/babies.png'),
               overflow: null,
               constraints: BoxConstraints(
                 minHeight: 75.0,
