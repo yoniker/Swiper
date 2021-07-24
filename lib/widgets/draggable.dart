@@ -566,6 +566,7 @@ class _DraggableCardState extends State<DraggableCard>
                   : 'Current Location not available',
               textAlign: TextAlign.right,
               style: defaultTextStyle,
+              overflow:TextOverflow.ellipsis,
             ),
           ],
         ),
