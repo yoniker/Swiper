@@ -180,80 +180,87 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                     children: [
                       Flexible(
                         flex: 1,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                        child: Stack(
                           children: [
-                            Flexible(
-                              flex: 2,
-                              child: Column(
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    'You',
-                                    style: smallBoldedCharStyle,
-                                  ),
-                                  SizedBox(height: 2.0),
-                                  !_userFacesReady
-                                      ? waitingAnimation()
-                                      : Clickable(
-                                          onTap: () {
-                                            //TODO overlay of FacesWidget
-                                          },
-                                          child: ProfileImageAvatar.mutable(
-                                            actualImage: _userFacesImages
-                                                    .isEmpty
-                                                ? AssetImage(BetaIconPaths
-                                                    .silhouetteProfileImage)
-                                                : _userFacesImages[0]
-                                                    .image, //TODO change index here
-                                            minRadius: 28.50,
-                                            maxRadius: 35.5,
-                                            placeholderImage: AssetImage(
-                                              BetaIconPaths
-                                                  .defaultProfileImagePath01,
-                                            ),
-                                          ),
+                                  Flexible(
+                                    flex: 1,
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          'You',
+                                          style: smallBoldedCharStyle,
                                         ),
+                                        SizedBox(height: 2.0),
+                                        !_userFacesReady
+                                            ? waitingAnimation()
+                                            : Clickable(
+                                                onTap: () {
+                                                  //TODO overlay of FacesWidget
+                                                },
+                                                child: ProfileImageAvatar.mutable(
+                                                  actualImage: _userFacesImages
+                                                          .isEmpty
+                                                      ? AssetImage(BetaIconPaths
+                                                          .silhouetteProfileImage)
+                                                      : _userFacesImages[0]
+                                                          .image, //TODO change index here
+                                                  minRadius: 28.50,
+                                                  maxRadius: 35.5,
+                                                  placeholderImage: AssetImage(
+                                                    BetaIconPaths
+                                                        .defaultProfileImagePath01,
+                                                  ),
+                                                ),
+                                              ),
+                                      ],
+                                    ),
+                                  ),
+                                  Flexible(
+                                    flex: 1,
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          widget.matchProfile.username,
+                                          style: smallBoldedCharStyle,
+                                        ),
+                                        SizedBox(height: 2.0),
+                                        !_matchFacesReady
+                                            ? waitingAnimation()
+                                            : Clickable(
+                                                onTap: () {
+                                                  ////TODO overlay of FacesWidget
+                                                },
+                                                child: ProfileImageAvatar.mutable(
+                                                  actualImage: _matchFacesImages
+                                                          .isEmpty
+                                                      ? AssetImage(BetaIconPaths
+                                                          .silhouetteProfileImage)
+                                                      : _matchFacesImages[0]
+                                                          .image,
+                                                  minRadius: 28.50,
+                                                  maxRadius: 35.5,
+                                                  placeholderImage: AssetImage(
+                                                    BetaIconPaths
+                                                        .defaultProfileImagePath01,
+                                                  ),
+                                                ),
+                                              ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                            Flexible(
-                              flex: 1,
+                            Center(
                               child: PrecachedImage.asset(
                                 imageURI: BetaIconPaths.heartsUnitedIconPath_01,
                                 scale: 3.75,
-                              ),
-                            ),
-                            Flexible(
-                              flex: 2,
-                              child: Column(
-                                children: [
-                                  Text(
-                                    widget.matchProfile.username,
-                                    style: smallBoldedCharStyle,
-                                  ),
-                                  SizedBox(height: 2.0),
-                                  !_matchFacesReady
-                                      ? waitingAnimation()
-                                      : Clickable(
-                                          onTap: () {
-                                            ////TODO overlay of FacesWidget
-                                          },
-                                          child: ProfileImageAvatar.mutable(
-                                            actualImage: _matchFacesImages
-                                                    .isEmpty
-                                                ? AssetImage(BetaIconPaths
-                                                    .silhouetteProfileImage)
-                                                : _matchFacesImages[0].image,
-                                            minRadius: 28.50,
-                                            maxRadius: 35.5,
-                                            placeholderImage: AssetImage(
-                                              BetaIconPaths
-                                                  .defaultProfileImagePath01,
-                                            ),
-                                          ),
-                                        ),
-                                ],
                               ),
                             ),
                           ],
