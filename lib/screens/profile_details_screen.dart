@@ -293,11 +293,10 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
                                     }
                                   });
                                 },
-                                onImagePicked: (pickedImage) async{
+                                onImagePicked: (pickedImage) {
                                   setState(() {
                                     _loadingImage = true;
                                   });
-                                  await Future.delayed(Duration(seconds: 3),()=>'3');//TODO remove this line,it's here to emulate slow uploading
                                   NetworkHelper()
                                       .postProfileImage(pickedImage)
                                       .then((_) {
