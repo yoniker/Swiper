@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/screens/full_image_screen.dart';
 import 'package:betabeta/screens/view_children_screen.dart';
 import 'package:betabeta/widgets/custom_scrollbar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
@@ -612,29 +613,39 @@ class _DraggableCardState extends State<DraggableCard>
                       itemBuilder: (cntx, index) {
                         final String _url =
                             matchBaseUrlToNetwork(_imageUrls[index]);
-                        return ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minHeight: 30.5,
-                            maxHeight: 100.5,
-                            minWidth: 30.5,
-                            maxWidth: 100.5,
-                          ),
-                          // height: 80.5,
-                          // width: 100.0,
-                          child: AspectRatio(
-                            aspectRatio: 1 / 1,
-                            child: Card(
-                              margin: EdgeInsets.all(6.0),
-                              clipBehavior: Clip.antiAlias,
-                              elevation: 2.1,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0),
-                              ),
-                              child: PrecachedImage.network(
-                                imageURL: _url,
-                                fadeIn: true,
-                                shouldPrecache: false,
-                                fit: BoxFit.cover,
+                        return GestureDetector(
+                          onTap: (){
+                            pushToScreen(
+                              context,
+                              builder: (context) => FullImageScreen(imageUrl:_url),
+                            );
+
+
+                          },
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: 30.5,
+                              maxHeight: 100.5,
+                              minWidth: 30.5,
+                              maxWidth: 100.5,
+                            ),
+                            // height: 80.5,
+                            // width: 100.0,
+                            child: AspectRatio(
+                              aspectRatio: 1 / 1,
+                              child: Card(
+                                margin: EdgeInsets.all(6.0),
+                                clipBehavior: Clip.antiAlias,
+                                elevation: 2.1,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                ),
+                                child: PrecachedImage.network(
+                                  imageURL: _url,
+                                  fadeIn: true,
+                                  shouldPrecache: false,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
