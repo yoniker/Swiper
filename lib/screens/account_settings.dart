@@ -1,23 +1,43 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/screens/login_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// The implementation for the Notification screen.
-class GeneralSettingsScreen extends StatefulWidget {
-  static const String routeName = '/general_settings';
+class AccountSettingsScreen extends StatefulWidget {
+  static const String routeName = '/account_settings';
 
-  GeneralSettingsScreen({Key key}) : super(key: key);
+  AccountSettingsScreen({Key key}) : super(key: key);
 
   @override
-  _GeneralSettingsScreenState createState() => _GeneralSettingsScreenState();
+  _AccountSettingsScreenState createState() => _AccountSettingsScreenState();
 }
 
-class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
+class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
+  _logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //Save name, id and picture url to persistent storage, and move on to the next screen
+    await prefs.remove('name');
+    await prefs.remove('facebook_id');
+    await prefs.remove('facebook_profile_image_url');
+    await prefs.remove('preferredGender');
+    SettingsData().facebookId = '';
+    SettingsData().name = '';
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+            (Route<dynamic> route) => false);
+  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +85,10 @@ class _GeneralSettingsScreenState extends State<GeneralSettingsScreen> {
             trailing: PrecachedImage.asset(
               imageURI: BetaIconPaths.facebookLogo,
             ),
-            onTap: () {},
+            onTap: () {
+
+
+            },
           ),
           SizedBox(height: 12.0),
         ],

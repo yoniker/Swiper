@@ -6,7 +6,7 @@ import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/chat_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
-import 'package:betabeta/screens/general_settings.dart';
+import 'package:betabeta/screens/account_settings.dart';
 import 'package:betabeta/screens/login_screen.dart';
 import 'package:betabeta/screens/main_messages_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
@@ -138,11 +138,11 @@ class MyApp extends StatelessWidget {
         },
       );
 
-    } else if (settings.name == GeneralSettingsScreen.routeName){
+    } else if (settings.name == AccountSettingsScreen.routeName){
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {
-          return GeneralSettingsScreen();
+          return AccountSettingsScreen();
         },
       );
     } else if (settings.name == MainMessagesScreen.routeName){

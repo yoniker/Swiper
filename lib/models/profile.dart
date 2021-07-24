@@ -24,7 +24,7 @@ class Profile {
   factory Profile.fromServer(dynamic match){
     List images=match['images'];
     List<String> imagesUrls = images.cast<String>();
-    UserId userId = UserId(id: match['pof_id'], userType: UserType.POF_USER); //TODO change here when implementing real users profiles
+    UserId userId = UserId(id: match['pof_id'].toString(), userType: UserType.POF_USER); //TODO change here when implementing real users profiles
     String locationDesc ='';
     if(match['state_id']!=null){
       locationDesc += match['state_id']+' , ';
