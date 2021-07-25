@@ -72,6 +72,17 @@ class AnchoredOverlay extends StatelessWidget {
   }
 }
 
+class OverlayBuilder2 extends StatelessWidget {
+  const OverlayBuilder2({Key key, @required this.builder}) : super(key: key);
+
+  final Widget Function(BuildContext) builder;
+
+  @override
+  Widget build(BuildContext context) {
+    return builder(context);
+  }
+}
+
 /// Displays an overlay Widget as constructed by the given [overlayBuilder].
 ///
 /// The overlay built by the [overlayBuilder] can be conditionally shown

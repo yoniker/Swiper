@@ -188,6 +188,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                               children: [
                                 Flexible(
                                   flex: 1,
+                                  fit: FlexFit.tight,
                                   child: Column(
                                     children: [
                                       Text(
@@ -221,6 +222,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                                 ),
                                 Flexible(
                                   flex: 1,
+                                  fit: FlexFit.tight,
                                   child: Column(
                                     children: [
                                       Text(
@@ -295,7 +297,11 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
             SizedBox(
               height: childrenCardSize.height + childrenVertCardPadding,
               child: !_childrenReady
-                  ? SizedBox()
+                  ? Center(
+                    child: SpinKitFadingFour(
+                        color: colorBlend02,
+                      ),
+                  )
                   : _generatedBabiesImages.isEmpty
                       ? Text(
                           'No face found so cannot generate children',

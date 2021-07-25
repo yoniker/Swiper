@@ -1,5 +1,11 @@
+import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/screens/full_image_screen.dart';
+import 'package:betabeta/screens/view_children_screen.dart';
+import 'package:betabeta/widgets/draggable.dart';
+import 'package:betabeta/widgets/global_widgets.dart';
+import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
 
 /// A widget to paint the various information of a
@@ -27,6 +33,8 @@ class MatchCard extends StatefulWidget {
 }
 
 class _MatchCardState extends State<MatchCard> {
+  ScrollController _scrollController;
+
   /// This connotes the Widget to display as the background.
   /// This is typically a [PhotoView].
   Widget _buildBackground(BuildContext context) {
@@ -134,21 +142,479 @@ class _MatchCardState extends State<MatchCard> {
   // }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  List<Widget> buildMatchDetails(
+    Profile profile, {
+    @required BuildContext context,
+  }) {
+    final _imageUrls = profile.imageUrls ?? <String>[];
+
+    // builds the achivement items such as loves and stars.
+    Widget _buildAchievementItem(String iconURI, String value) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 2.0),
+        child: Row(
+          children: [
+            Text(
+              value,
+              style: smallCharStyle.copyWith(color: darkTextColor),
+            ),
+            SizedBox(width: 2.0),
+            PrecachedImage.asset(
+              imageURI: iconURI,
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Return a List of Widgets.
+    return [
+      SizedBox(height: 16.0),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.0),
+              child: Text(
+                '${profile.username}, ${profile.age}',
+                textAlign: TextAlign.left,
+                // overflow: TextOverflow.ellipsis,
+                style: boldTextStyle.copyWith(fontSize: 18.0),
+              ),
+            ),
+          ),
+          // Padding(
+          //   padding: EdgeInsets.symmetric(horizontal: 5.0),
+          //   child: Row(
+          //     children: [
+          //       _buildAchievementItem(BetaIconPaths.heartIconFilled01, '25k+'),
+          //       _buildAchievementItem(BetaIconPaths.starIconFilled01, '15k+'),
+          //     ],
+          //   ),
+          // ),
+        ],
+      ),
+      Container(
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.symmetric(horizontal: 5.0),
+        child: Text(
+          (profile.headline != null) ? profile.headline : '',
+          textAlign: TextAlign.left,
+          style: defaultTextStyle,
+        ),
+      ),
+      Container(
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.only(
+          top: 8.0,
+          bottom: 12.0,
+          left: 5.0,
+          right: 5.0,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Description',
+              style: subTitleStyle,
+            ),
+            Divider(
+              color: lightCardColor,
+              indent: 2.0,
+              endIndent: 2.0,
+              thickness: 2.8,
+              height: 8.0,
+            ),
+            Text(
+              (profile.description != null)
+                  ? profile.description
+                  : 'No Description available',
+              style: mediumCharStyle,
+            ),
+          ],
+        ),
+      ),
+      Container(
+        alignment: Alignment.centerRight,
+        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
+        child: Row(
+          children: [
+            PrecachedImage.asset(imageURI: BetaIconPaths.locationIconFilled01),
+            SizedBox(width: 5.6),
+            Expanded(
+              child: Text(
+                (profile.location != null)
+                    ? 'Lives in ${profile.location}'
+                    : 'Current Location not available',
+                textAlign: TextAlign.right,
+                style: defaultTextStyle,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+      Container(
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.only(
+          top: 8.0,
+          bottom: 12.0,
+          left: 5.0,
+          right: 5.0,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Profile Images',
+              style: subTitleStyle,
+            ),
+            Divider(
+              color: lightCardColor,
+              indent: 2.0,
+              endIndent: 2.0,
+              thickness: 2.8,
+              height: 8.0,
+            ),
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: 30.5,
+                maxHeight: 100.5,
+                minWidth: 250.0,
+                maxWidth: MediaQuery.of(context).size.width,
+              ),
+              child: !(_imageUrls.length > 0)
+                  ? Center(
+                      child: Text(
+                        'No Profile image Available for match',
+                        style: mediumBoldedCharStyle,
+                      ),
+                    )
+                  : ListView.separated(
+                      key: UniqueKey(),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _imageUrls.length,
+                      itemBuilder: (cntx, index) {
+                        final String _url =
+                            matchBaseUrlToNetwork(_imageUrls[index]);
+                        return GestureDetector(
+                          onTap: () {
+                            // pushToScreen(
+                            //   context,
+                            //   builder: (context) =>
+                            //       FullImageScreen(imageUrl: _url),
+                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FullImageScreen(
+                                  imageUrl: _url,
+                                ),
+                              ),
+                            );
+                          },
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: 30.5,
+                              maxHeight: 100.5,
+                              minWidth: 30.5,
+                              maxWidth: 100.5,
+                            ),
+                            // height: 80.5,
+                            // width: 100.0,
+                            child: AspectRatio(
+                              aspectRatio: 1 / 1,
+                              child: Card(
+                                margin: EdgeInsets.all(6.0),
+                                clipBehavior: Clip.antiAlias,
+                                elevation: 2.1,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                ),
+                                child: PrecachedImage.network(
+                                  imageURL: _url,
+                                  fadeIn: true,
+                                  shouldPrecache: false,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (cntx, index) {
+                        return SizedBox(width: 16.0);
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
+      Container(
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.only(
+          top: 8.0,
+          bottom: 12.0,
+          left: 5.0,
+          right: 5.0,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Artificial Intelligence',
+              style: subTitleStyle,
+            ),
+            Divider(
+              color: lightCardColor,
+              indent: 2.0,
+              endIndent: 2.0,
+              thickness: 2.8,
+              height: 8.0,
+            ),
+            DescriptionBanner(
+              // TODO(Backend) Add a field "gender" to the profile Interface:
+              message: 'See your children',
+              leading: Image.asset('assets/images/babies.png'),
+
+              overflow: null,
+              constraints: BoxConstraints(
+                minHeight: 75.0,
+                maxHeight: 90.5,
+                maxWidth: MediaQuery.of(context).size.width,
+              ),
+              onTap: () async {
+                // Before the new Route is pushed we set the value of
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ViewChildrenScreen(
+                      matchProfile: profile,
+                    ),
+                  ),
+                );
+              },
+              label: Align(
+                alignment: Alignment(-1.02, -2.0),
+                child: PrecachedImage.asset(
+                  imageURI: BetaIconPaths.tryMeBanner,
+                ),
+              ),
+            ),
+            DescriptionBanner(
+              message: 'Personal preference score',
+              leading: Icon(
+                Icons.info,
+                color: Colors.blue,
+              ),
+              overflow: null,
+              constraints: BoxConstraints(
+                minHeight: 75.0,
+                maxHeight: 90.5,
+                maxWidth: MediaQuery.of(context).size.width,
+              ),
+              trailing: MatchPercentageScale(
+                value: 20.0,
+                startValue: 20.0,
+              ),
+              onTap: () async {
+                // // we want to save the last offset so we can scroll back to that position when the
+                // // dialog is dismissed.
+                // final _lastOffset = scrollController.offset;
+
+                // To show any Dialogue or do anything that involves Navigation we must first make sure
+                // that the MatchCard-overlay is hidden.
+                // And when we are done we simply set its visibility to `true` which makes sure that the
+                // MatchCard-overlay becomes visible.
+                // widget.setMatchCardVisibility(false);
+
+                // TODO John - this doesnt work
+                await GlobalWidgets.showAlertDialogue(
+                  context,
+                  title: 'Info',
+                  message:
+                      'The probability that you will like the current profile, according to Alex,the personal AI which learnt your personal taste...',
+                );
+
+                // widget.setMatchCardVisibility(true);
+
+                // // we scroll to the last knownoffset.
+                // scrollController.jumpTo(_lastOffset);
+              },
+            ),
+            DescriptionBanner(
+              message: 'Compatibility score',
+              overflow: null,
+              constraints: BoxConstraints(
+                minHeight: 75.0,
+                maxHeight: 90.5,
+                maxWidth: MediaQuery.of(context).size.width,
+              ),
+              leading: Icon(
+                Icons.info,
+                color: Colors.blue,
+              ),
+              trailing: LikeScale(value: 20.0),
+            ),
+          ],
+        ),
+      ),
+    ];
+  }
+
+  /// A widget that displays the actions a user can make on a match.
+  /// Actions such as:
+  ///   "Dislike",
+  ///   "Like",
+  ///   "Draft Message"
+  ///
+  /// Essentially a list of [DecisionControl] widgets to display below
+  /// the Image Display Widget of each match.
+  Widget _matchControls({EdgeInsets padding = const EdgeInsets.all(2.0)}) {
     return Container(
-      padding: EdgeInsets.all(0.0),
+      padding: padding,
+      foregroundDecoration: BoxDecoration(
+        color: Colors.transparent,
+      ),
       decoration: BoxDecoration(
-        color: whiteCardColor,
-        borderRadius: BorderRadius.circular(18.0),
-        boxShadow: <BoxShadow>[
+        color: Colors.white,
+        boxShadow: [
           BoxShadow(
             color: lightCardColor,
             offset: Offset(0.0, 0.2),
-            blurRadius: 12.0,
+            blurRadius: 16.0,
           ),
         ],
       ),
-      child: _buildBackground(context),
+      // A Material Widget is added here so as to allow the solash of the InkWell Widgets
+      // below this Widget in the tree to show.
+      //
+      // Note: Any Container Within the Widget tree will obscure the action of any InkWell Widget
+      // below such Container in the Widget tree.
+      child: Material(
+        // With this as transparent we can retain the original color of the Enclosing
+        // Decoration Widget.
+        color: Colors.transparent,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            InkWell(
+              borderRadius: BorderRadius.circular(15.0),
+              child: GlobalWidgets.assetImageToIcon(
+                BetaIconPaths.dislikeMatchIcon,
+                scale: 4.0,
+              ),
+              onTap: () {
+                // Decision.nope
+                // currentMatchDecision(Decision.nope);
+              },
+            ),
+            InkWell(
+              borderRadius: BorderRadius.circular(15.0),
+              child: GlobalWidgets.assetImageToIcon(
+                BetaIconPaths.likeMatchIcon,
+                // The scale is kid of backwards.
+                scale: 3.75,
+              ),
+              onTap: () {
+                // Decision.like
+                // currentMatchDecision(Decision.like);
+              },
+            ),
+            InkWell(
+              borderRadius: BorderRadius.circular(15.0),
+              child: GlobalWidgets.assetImageToIcon(
+                BetaIconPaths.draftMesssageIcon,
+                scale: 4.0,
+              ),
+              onTap: () {
+                // Call a Function to open a chat Tab to chat with the match.
+                print('MAKE A DRAFT!');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+          return Container(
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              color: whiteCardColor,
+              borderRadius: BorderRadius.circular(18.0),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: lightCardColor,
+                  offset: Offset(0.0, 0.2),
+                  blurRadius: 12.0,
+                ),
+              ],
+            ),
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              child: Column(
+                children: [
+                  Container(
+                    // padding: EdgeInsets.all(0.0),
+                    clipBehavior: Clip.antiAlias,
+                    constraints: constraints,
+                    decoration: BoxDecoration(
+                      color: whiteCardColor,
+                      borderRadius: BorderRadius.circular(18.0),
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: darkTextColor,
+                          offset: Offset(0.0, 0.2),
+                          blurRadius: 12.0,
+                        ),
+                      ],
+                    ),
+                    child: _buildBackground(context),
+                  ),
+                  ...buildMatchDetails(
+                    widget.profile,
+                    context: context,
+                  ),
+                  _matchControls(),
+                ],
+              ),
+            ),
+          );
+        }),
+        // Align(
+        //   alignment: Alignment.topRight,
+        //   child: CustomScrollBar(
+        //     scrollController: _scrollController,
+        //     trackHeight: 80.0,
+        //     trackWidth: 8.5,
+        //     thumbHeightfactor: 0.3,
+        //     trackPadding: EdgeInsets.only(right: 8.0, top: 15.0),
+        //     thumbColor: Colors.white,
+        //     trackColor: colorBlend02.withOpacity(0.4),
+        //   ),
+        // ),
+      ],
     );
   }
 }

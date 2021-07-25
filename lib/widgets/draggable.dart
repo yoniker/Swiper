@@ -557,13 +557,15 @@ class _DraggableCardState extends State<DraggableCard>
           children: [
             PrecachedImage.asset(imageURI: BetaIconPaths.locationIconFilled01),
             SizedBox(width: 5.6),
-            Text(
-              (profile.location != null)
-                  ? 'Lives in ${profile.location}'
-                  : 'Current Location not available',
-              textAlign: TextAlign.right,
-              style: defaultTextStyle,
-              overflow:TextOverflow.ellipsis,
+            Expanded(
+              child: Text(
+                (profile.location != null)
+                    ? 'Lives in ${profile.location}'
+                    : 'Current Location not available',
+                textAlign: TextAlign.right,
+                style: defaultTextStyle,
+                overflow:TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),

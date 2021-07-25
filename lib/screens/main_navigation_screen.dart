@@ -79,63 +79,70 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _body(),
-      resizeToAvoidBottomInset: true,
-      bottomNavigationBar: BottomNavigationBar(
-        selectedLabelStyle: boldTextStyle.copyWith(color: Colors.red),
-        selectedItemColor: Colors.red[400],
-        elevation: 0.0,
-        currentIndex: _selectedTabIndex,
-        onTap: (index) {
-          switchTab(index);
+    return Stack(
+      fit: StackFit.expand,
+      
+      children: [
+        Scaffold(
+          body: _body(),
+          extendBody: true,
+          resizeToAvoidBottomInset: true,
+          bottomNavigationBar: BottomNavigationBar(
+            selectedLabelStyle: boldTextStyle.copyWith(color: Colors.red),
+            selectedItemColor: Colors.red[400],
+            elevation: 0.0,
+            currentIndex: _selectedTabIndex,
+            onTap: (index) {
+              switchTab(index);
 
-          // then jump to the new page.
-          _pageController.jumpToPage(index);
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: PrecachedImage.asset(
-              imageURI: BetaIconPaths.inactiveProfileTabIconPath,
-            ),
-            activeIcon: PrecachedImage.asset(
-              imageURI: BetaIconPaths.activeProfileTabIconPath,
-            ),
-            label: 'profile',
-            tooltip: 'Profile',
+              // then jump to the new page.
+              _pageController.jumpToPage(index);
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon: PrecachedImage.asset(
+                  imageURI: BetaIconPaths.inactiveProfileTabIconPath,
+                ),
+                activeIcon: PrecachedImage.asset(
+                  imageURI: BetaIconPaths.activeProfileTabIconPath,
+                ),
+                label: 'profile',
+                tooltip: 'Profile',
+              ),
+              BottomNavigationBarItem(
+                icon: PrecachedImage.asset(
+                  imageURI: BetaIconPaths.inactiveMatchTabIconPath,
+                ),
+                activeIcon: PrecachedImage.asset(
+                  imageURI: BetaIconPaths.activeMatchTabIconPath,
+                ),
+                label: 'match',
+                tooltip: 'Match',
+              ),
+              BottomNavigationBarItem(
+                icon: PrecachedImage.asset(
+                  imageURI: BetaIconPaths.inactiveLikesTabIconPath,
+                ),
+                activeIcon: PrecachedImage.asset(
+                  imageURI: BetaIconPaths.activeLikesTabIconPath,
+                ),
+                label: 'likes',
+                tooltip: 'Likes',
+              ),
+              BottomNavigationBarItem(
+                icon: PrecachedImage.asset(
+                  imageURI: BetaIconPaths.inactiveMessagesTabIconPath,
+                ),
+                activeIcon: PrecachedImage.asset(
+                  imageURI: BetaIconPaths.activeMessagesTabIconPath,
+                ),
+                label: 'messages',
+                tooltip: 'Messages',
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: PrecachedImage.asset(
-              imageURI: BetaIconPaths.inactiveMatchTabIconPath,
-            ),
-            activeIcon: PrecachedImage.asset(
-              imageURI: BetaIconPaths.activeMatchTabIconPath,
-            ),
-            label: 'match',
-            tooltip: 'Match',
-          ),
-          BottomNavigationBarItem(
-            icon: PrecachedImage.asset(
-              imageURI: BetaIconPaths.inactiveLikesTabIconPath,
-            ),
-            activeIcon: PrecachedImage.asset(
-              imageURI: BetaIconPaths.activeLikesTabIconPath,
-            ),
-            label: 'likes',
-            tooltip: 'Likes',
-          ),
-          BottomNavigationBarItem(
-            icon: PrecachedImage.asset(
-              imageURI: BetaIconPaths.inactiveMessagesTabIconPath,
-            ),
-            activeIcon: PrecachedImage.asset(
-              imageURI: BetaIconPaths.activeMessagesTabIconPath,
-            ),
-            label: 'messages',
-            tooltip: 'Messages',
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

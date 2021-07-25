@@ -1,17 +1,16 @@
 import 'dart:math' as math;
 
-import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/draggable.dart';
-import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/match_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:tcard/tcard.dart';
 
 class MatchScreen extends StatefulWidget {
   static const String routeName = '/match_screen';
@@ -175,7 +174,7 @@ class _MatchScreenState extends State<MatchScreen>
             showAppLogo: false,
             hasBackButton: false,
             trailing: GestureDetector(
-              child: Icon(Icons.settings,size:35),
+              child: Icon(Icons.settings, size: 35),
               onTap: () async {
                 // hide the overlay.
                 setMatchCardVisibility(false);
@@ -227,6 +226,9 @@ class MatchCardBuilder extends StatefulWidget {
 class _MatchCardBuilderState extends State<MatchCardBuilder> {
   double bottomCardScale = 0.95;
   Offset bottomCardOffset = Offset(0.0, 1.7);
+
+  Offset _topCardOldOffset = Offset.zero;
+  Offset _topCardNewOffset = Offset.zero;
 
   /// Deduce what direction to be registered for specific [Decision]s.
   ///
@@ -357,17 +359,128 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
     }
   }
 
+  // The Widget stacked at the top. This is the main Widget.
+  Widget _topCardRedo() {
+    var currentMatch =
+        Provider.of<MatchEngine>(context, listen: false).currentMatch();
+
+    if (currentMatch != null) {
+      return MatchCard(
+        key: Key(currentMatch.profile.username),
+        profile: currentMatch.profile,
+        showCarousel: true,
+        clickable: true,
+      );
+    } else {
+      // show a progress indicator.
+      // Note: A progress indicator is shown only on the `_topStack` [Widget].
+      // when no match is yet found or the MatchEngine is still loading/initializing.
+      return SpinKitChasingDots(
+        size: 20.0,
+        color: Colors.blue,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // return a stack of cards well positioned.
     return Consumer<MatchEngine>(
       builder: (context, matchEngine, child) {
-        return Stack(
-          children: <Widget>[
-            _bottomCard(),
-            _topCard(),
-          ],
-        );
+        final List<Match> _availableMatch = [
+          if (matchEngine.currentMatch() != null) matchEngine.currentMatch(),
+          if (matchEngine.nextMatch() != null) matchEngine.nextMatch()
+        ];
+
+        // return Stack(
+        //   children: <Widget>[
+        //     _bottomCard(),
+        //     _topCard(),
+        //   ],
+        // );
+        bool isLike;
+
+        double _scaleLike = 0;
+        _scaleLike =
+            ((_topCardNewOffset.dx / _topCardOldOffset.dx) / 2).clamp(0.0, 1.0);
+
+        double _scaleDislike = 0;
+        _scaleDislike =
+            ((_topCardOldOffset.dx / _topCardNewOffset.dx) / 2).clamp(0.0, 1.0);
+
+        if (_topCardOldOffset.dx > _topCardNewOffset.dx) {
+          isLike = false;
+        } else if (_topCardOldOffset.dx < _topCardNewOffset.dx) {
+          isLike = true;
+        }
+
+        return _availableMatch.isEmpty
+            ? SpinKitChasingDots(
+                size: 20.0,
+                color: Colors.blue,
+              )
+            : Stack(
+                fit: StackFit.expand,
+                children: [
+                  TCard(
+                    cards: _availableMatch.map<Widget>((m) {
+                      return Listener(
+                        onPointerDown: (event) {
+                          setState(() {
+                            _topCardOldOffset = event.position;
+                            _topCardNewOffset = event.position;
+                          });
+                        },
+                        onPointerMove: (event) {
+                          setState(() {
+                            _topCardNewOffset = event.position;
+                          });
+                        },
+                        onPointerUp: (event) {
+                          setState(() {
+                            _topCardOldOffset = event.position;
+                            _topCardNewOffset = event.position;
+                          });
+                        },
+                        child: MatchCard(
+                          key: Key(m.profile.username),
+                          profile: m.profile,
+                          showCarousel: true,
+                          clickable: true,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  if (isLike == true)
+                    Center(
+                      child: Opacity(
+                        opacity: _scaleLike,
+                        child: Transform.scale(
+                          scale: _scaleLike,
+                          child: Icon(
+                            Icons.check_circle_rounded,
+                            size: 50.0,
+                            color: colorBlend02,
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (isLike == false)
+                    Center(
+                      child: Opacity(
+                        opacity: _scaleDislike,
+                        child: Transform.scale(
+                          scale: _scaleDislike,
+                          child: Icon(
+                            Icons.cancel_sharp,
+                            size: 50.0,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              );
       },
     );
   }
