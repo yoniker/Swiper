@@ -106,21 +106,21 @@ class _MatchCardState extends State<MatchCard> {
           children: [
             Text(
               '${widget.profile.username}, ${widget.profile.age}',
-              maxLines: 2,
+              maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: boldTextStyle.copyWith(
                 color: Colors.white,
-                fontSize: getRelativeTextSize(18),
+                fontSize: getRelativeTextSize(25),
               ),
             ),
             Expanded(
               child: Text(
                 '${widget.profile.headline}',
-                maxLines: 2,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: boldTextStyle.copyWith(
                   color: Colors.white,
-                  fontSize: getRelativeTextSize(12),
+                  fontSize: getRelativeTextSize(20),
                 ),
               ),
             ),
