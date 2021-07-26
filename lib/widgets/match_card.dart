@@ -1,12 +1,16 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/full_image_screen.dart';
 import 'package:betabeta/screens/view_children_screen.dart';
-import 'package:betabeta/widgets/draggable.dart';
+import 'package:betabeta/widgets/compatibility_scale.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
+import 'package:betabeta/widgets/like_scale.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 
 /// A widget to paint the various information of a
 /// match unto the screen.
@@ -70,13 +74,13 @@ class _MatchCardState extends State<MatchCard> {
       double multiplicativeRatio = MediaQuery.of(context).size.height / 2;
 
       // clamp the value to a range between "0.0" and the supplied baseValue
-      double clamppedValue = (multiplicativeRatio).clamp(
+      double clampedValue = (multiplicativeRatio).clamp(
             0.0,
             1.0,
           ) *
           baseValue.toDouble();
 
-      return clamppedValue;
+      return clampedValue;
     }
 
     // construct the Widget.
@@ -113,32 +117,6 @@ class _MatchCardState extends State<MatchCard> {
       ),
     );
   }
-
-  /// The revert button placed over each MatchCard which Functions to bring back the
-  /// recently dismissied MatchCard.
-  // Widget _revertButton() {
-  //   return Align(
-  //     alignment: Alignment.topLeft,
-  //     heightFactor: 0.1,
-  //     widthFactor: 1.0,
-  //     child: Material(
-  //       color: Colors.transparent,
-  //       child: Padding(
-  //         padding: EdgeInsets.all(2.0),
-  //         child: IconButton(
-  //           icon: Icon(
-  //             Icons.replay_rounded,
-  //             size: 24.0,
-  //             color: colorBlend01,
-  //           ),
-  //           onPressed: () {
-  //             // Move to the prevoious Match Deducted by the Match Engine.
-  //             Provider.of<MatchEngine>(context, listen: false).goBack();
-  //           },
-  //         ),
-  //       ),
-  //     ),
-  //   );
   // }
 
   @override
@@ -309,7 +287,7 @@ class _MatchCardState extends State<MatchCard> {
                       itemCount: _imageUrls.length,
                       itemBuilder: (cntx, index) {
                         final String _url =
-                            matchBaseUrlToNetwork(_imageUrls[index]);
+                            'https://'+_imageUrls[index];
                         return GestureDetector(
                           onTap: () {
                             // pushToScreen(
@@ -426,33 +404,17 @@ class _MatchCardState extends State<MatchCard> {
                 maxHeight: 90.5,
                 maxWidth: MediaQuery.of(context).size.width,
               ),
-              trailing: MatchPercentageScale(
+              trailing: CompatibilityScale(
                 value: 20.0,
                 startValue: 20.0,
               ),
               onTap: () async {
-                // // we want to save the last offset so we can scroll back to that position when the
-                // // dialog is dismissed.
-                // final _lastOffset = scrollController.offset;
-
-                // To show any Dialogue or do anything that involves Navigation we must first make sure
-                // that the MatchCard-overlay is hidden.
-                // And when we are done we simply set its visibility to `true` which makes sure that the
-                // MatchCard-overlay becomes visible.
-                // widget.setMatchCardVisibility(false);
-
-                // TODO John - this doesnt work
                 await GlobalWidgets.showAlertDialogue(
                   context,
                   title: 'Info',
                   message:
                       'The probability that you will like the current profile, according to Alex,the personal AI which learnt your personal taste...',
                 );
-
-                // widget.setMatchCardVisibility(true);
-
-                // // we scroll to the last knownoffset.
-                // scrollController.jumpTo(_lastOffset);
               },
             ),
             DescriptionBanner(
@@ -468,6 +430,17 @@ class _MatchCardState extends State<MatchCard> {
                 color: Colors.blue,
               ),
               trailing: LikeScale(value: 20.0),
+                onTap: () async {
+                  try {
+                    await GlobalWidgets.showAlertDialogue(
+                      context,
+                      title: 'Info',
+                      message:
+                      'The probability that you will be a good match, according to Chris. Chris is an AI which was trained on millions of successful couples!',
+                    );} catch (e, s) {
+                    print(s);
+                  }
+                }
             ),
           ],
         ),
@@ -518,8 +491,7 @@ class _MatchCardState extends State<MatchCard> {
                 scale: 4.0,
               ),
               onTap: () {
-                // Decision.nope
-                // currentMatchDecision(Decision.nope);
+                Provider.of<MatchEngine>(context, listen: false).currentMatchDecision(Decision.nope);
               },
             ),
             InkWell(
@@ -530,8 +502,7 @@ class _MatchCardState extends State<MatchCard> {
                 scale: 3.75,
               ),
               onTap: () {
-                // Decision.like
-                // currentMatchDecision(Decision.like);
+                Provider.of<MatchEngine>(context, listen: false).currentMatchDecision(Decision.like);
               },
             ),
             InkWell(
@@ -541,8 +512,7 @@ class _MatchCardState extends State<MatchCard> {
                 scale: 4.0,
               ),
               onTap: () {
-                // Call a Function to open a chat Tab to chat with the match.
-                print('MAKE A DRAFT!');
+                // Call a Function to open a chat Tab to chat with the match
               },
             ),
           ],
@@ -602,18 +572,7 @@ class _MatchCardState extends State<MatchCard> {
             ),
           );
         }),
-        // Align(
-        //   alignment: Alignment.topRight,
-        //   child: CustomScrollBar(
-        //     scrollController: _scrollController,
-        //     trackHeight: 80.0,
-        //     trackWidth: 8.5,
-        //     thumbHeightfactor: 0.3,
-        //     trackPadding: EdgeInsets.only(right: 8.0, top: 15.0),
-        //     thumbColor: Colors.white,
-        //     trackColor: colorBlend02.withOpacity(0.4),
-        //   ),
-        // ),
+
       ],
     );
   }
@@ -795,22 +754,6 @@ class _PhotoViewState extends State<PhotoView> {
       );
       precacheImage(img.image, context);
       imagesList.add(img);
-
-      // generate carousel dots.
-      // carouselDots.add(
-      //   CarouselDot(
-      //     key: Key(
-      //       imageIndex.toString(),
-      //     ), // Create a Unique Key based on the index of the CarouselDots.
-      //     size: widget.carouselDotSize,
-      //     activeColor: widget.carouselActiveDotColor,
-      //     inactiveColor: widget.carouselInactiveDotColor,
-      //     isFocused: imageIndex == selectedPhotoIndex,
-      //     onTap: () {
-      //       moveToPhoto(imageIndex);
-      //     },
-      //   ),
-      // );
     }
   }
 
@@ -819,23 +762,6 @@ class _PhotoViewState extends State<PhotoView> {
     updateImages(context);
     super.didChangeDependencies();
   }
-
-  // void _loadImage(BuildContext context) {
-  //   // The prefix part of the imageUrl. Needed for the construction of the Absolute
-  //   // path of the match's profile photos.
-  //   var prefixUrl = 'http://';
-
-  //   // Iterate through the List of imageUrl given.
-  //   imagesList = widget.imageUrls.map<Image>((url) {
-  //     Image networkImage = Image.network(prefixUrl + url, fit: BoxFit.cover);
-
-  //     // cache the image into memory.
-  //     precacheImage(networkImage.image, context);
-
-  //     // return the final [Image].
-  //     return networkImage;
-  //   }).toList();
-  // }
 
   /// A private Function to call the onChanged Callback parameter of the [PhotoView] widget
   /// whenever a change is made to the index of the [PhotoView].
@@ -848,7 +774,7 @@ class _PhotoViewState extends State<PhotoView> {
     }
   }
 
-  /// A convinient Function to change the current Image Displayed to
+  /// A convenient Function to change the current Image Displayed to
   /// the next image on the Image List.
   ///
   /// If there is no longer any next image in the List, this takes automatically
@@ -859,15 +785,11 @@ class _PhotoViewState extends State<PhotoView> {
       setState(() {
         // increase the photo index by one (1).
         selectedPhotoIndex += 1;
-
-        print('GOING to Index: $selectedPhotoIndex');
       });
     } else {
       setState(() {
         // set the photo index to zero (0).
         selectedPhotoIndex = 0;
-
-        print('GOING to Index: $selectedPhotoIndex');
       });
     }
 
@@ -940,9 +862,6 @@ class _PhotoViewState extends State<PhotoView> {
     // Generate a list of CarouselDots based on the length of the
     // `imageUrls` passed in the constructor body.
     var carousels = List.generate(widget.imageUrls.length, (index) {
-      // print "generating Carousel Dots"
-      // print('generating Carousel Dots! [INDEX]: $index');
-
       return CarouselDot(
         key: Key(
           index.toString(),
@@ -1015,10 +934,7 @@ class _PhotoViewState extends State<PhotoView> {
         ),
       ],
     );
-    // } else {
-    //   // return an empty Container if the above condition is `false`.
-    //   return Container();
-    // }
+
   }
 
   /// The Space or Area in which the image will be displayed.
@@ -1039,52 +955,6 @@ class _PhotoViewState extends State<PhotoView> {
         children: [
           // declare the ImageLayer of the PhotoView.
           _imageLayer(),
-          // We place the Description widget and the Carousel widget into a single Stack
-          // So that we can apply similar constraints to the two.
-          //
-          // TODO: Add a more cogent explanation.
-          // FractionallySizedBox(
-          //   alignment: widget.descriptionAlignment,
-          //   // We apply the height factor given to the DescriptionStack (description + carousel).
-          //   heightFactor: widget.descriptionHeightFraction,
-          //   widthFactor: 1.0,
-          //   child: Container(
-          //     alignment: Alignment(-1.0, 2.0),
-          //     decoration: BoxDecoration(
-          //       gradient: LinearGradient(
-          //         begin: Alignment.topCenter,
-          //         end: Alignment.bottomCenter,
-          //         colors: [
-          //           //Colors.redAccent, To see the actual size of the gradient box, uncomment redAccent and blue and comment out transparent and black45
-          //           //Colors.blue
-          //           Colors.transparent,
-          //           Colors.black45,
-          //         ],
-          //       ),
-          //       borderRadius: BorderRadius.vertical(
-          //         bottom: Radius.circular(16.0),
-          //       ),
-          //     ),
-          //     child: Column(
-          //       // fit: StackFit.expand,
-          //       mainAxisAlignment: widget.descriptionWidget == null ||
-          //               widget.showCarousel == null
-          //           ? MainAxisAlignment.center
-          //           : MainAxisAlignment.spaceBetween,
-          //       children: [
-          //         // declare the DescriptionLayer of the PhotoView.
-          //         // This is placed above the Gesture Layer to allow
-          //         // for Explicit Gestures.
-          //         if (widget.descriptionWidget != null)
-          //           Expanded(child: _descriptionLayer()),
-
-          //         // declare the CarouselLayer of the PhotoView.
-          //         if (widget.showCarousel != null && widget.showCarousel)
-          //           _carouselLayer(),
-          //       ],
-          //     ),
-          //   ),
-          // ),
           Align(
             alignment: Alignment.bottomCenter,
             child: ConstrainedBox(

@@ -262,7 +262,6 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
              );
            }
            if (currentJudgment == SwipeDirection.Left){
-             print('drawing no');
            return Center(
              child: Opacity(
                opacity: currentInterpolation,
