@@ -4,11 +4,13 @@ import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/full_image_screen.dart';
 import 'package:betabeta/screens/view_children_screen.dart';
+import 'package:betabeta/widgets/basic_detail.dart';
 import 'package:betabeta/widgets/compatibility_scale.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/like_scale.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 
@@ -60,6 +62,16 @@ class _MatchCardState extends State<MatchCard> {
         carouselInactiveDotColor: inactiveDot,
         carouselActiveDotColor: activeDot,
       ),
+    );
+  }
+
+  Widget _buildDivider(){
+    return Divider(
+      color: lightCardColor,
+      indent: 2.0,
+      endIndent: 2.0,
+      thickness: 2.8,
+      height: 8.0,
     );
   }
 
@@ -174,15 +186,6 @@ class _MatchCardState extends State<MatchCard> {
               ),
             ),
           ),
-          // Padding(
-          //   padding: EdgeInsets.symmetric(horizontal: 5.0),
-          //   child: Row(
-          //     children: [
-          //       _buildAchievementItem(BetaIconPaths.heartIconFilled01, '25k+'),
-          //       _buildAchievementItem(BetaIconPaths.starIconFilled01, '15k+'),
-          //     ],
-          //   ),
-          // ),
         ],
       ),
       Container(
@@ -194,6 +197,26 @@ class _MatchCardState extends State<MatchCard> {
           style: defaultTextStyle,
         ),
       ),
+      Text(
+        'About me',
+        style: subTitleStyle,
+      ),
+      _buildDivider(),
+      Text(
+        (profile.description != null)
+            ? profile.description
+            : 'No Description available',
+        style: mediumCharStyle,
+      ),
+      SizedBox(height:20),
+
+
+      Text(
+        'Profile Images',
+        style: subTitleStyle,
+      ),
+      _buildDivider(),
+
       Container(
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.only(
@@ -202,145 +225,98 @@ class _MatchCardState extends State<MatchCard> {
           left: 5.0,
           right: 5.0,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Description',
-              style: subTitleStyle,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: 30.5,
+            maxHeight: 100.5,
+            minWidth: 250.0,
+            maxWidth: MediaQuery.of(context).size.width,
+          ),
+          child: !(_imageUrls.length > 0)
+              ? Center(
+            child: Text(
+              'No Profile image Available for match',
+              style: mediumBoldedCharStyle,
             ),
-            Divider(
-              color: lightCardColor,
-              indent: 2.0,
-              endIndent: 2.0,
-              thickness: 2.8,
-              height: 8.0,
-            ),
-            Text(
-              (profile.description != null)
-                  ? profile.description
-                  : 'No Description available',
-              style: mediumCharStyle,
-            ),
-          ],
-        ),
-      ),
-      Container(
-        alignment: Alignment.centerRight,
-        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
-        child: Row(
-          children: [
-            PrecachedImage.asset(imageURI: BetaIconPaths.locationIconFilled01),
-            SizedBox(width: 5.6),
-            Expanded(
-              child: Text(
-                (profile.location != null)
-                    ? 'Lives in ${profile.location}'
-                    : 'Current Location not available',
-                textAlign: TextAlign.right,
-                style: defaultTextStyle,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-      ),
-      Container(
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(
-          top: 8.0,
-          bottom: 12.0,
-          left: 5.0,
-          right: 5.0,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Profile Images',
-              style: subTitleStyle,
-            ),
-            Divider(
-              color: lightCardColor,
-              indent: 2.0,
-              endIndent: 2.0,
-              thickness: 2.8,
-              height: 8.0,
-            ),
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: 30.5,
-                maxHeight: 100.5,
-                minWidth: 250.0,
-                maxWidth: MediaQuery.of(context).size.width,
-              ),
-              child: !(_imageUrls.length > 0)
-                  ? Center(
-                      child: Text(
-                        'No Profile image Available for match',
-                        style: mediumBoldedCharStyle,
+          )
+              : ListView.separated(
+            key: UniqueKey(),
+            scrollDirection: Axis.horizontal,
+            itemCount: _imageUrls.length,
+            itemBuilder: (cntx, index) {
+              final String _url =
+                  'https://'+_imageUrls[index];
+              return GestureDetector(
+                onTap: () {
+                  // pushToScreen(
+                  //   context,
+                  //   builder: (context) =>
+                  //       FullImageScreen(imageUrl: _url),
+                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FullImageScreen(
+                        imageUrl: _url,
                       ),
-                    )
-                  : ListView.separated(
-                      key: UniqueKey(),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: _imageUrls.length,
-                      itemBuilder: (cntx, index) {
-                        final String _url =
-                            'https://'+_imageUrls[index];
-                        return GestureDetector(
-                          onTap: () {
-                            // pushToScreen(
-                            //   context,
-                            //   builder: (context) =>
-                            //       FullImageScreen(imageUrl: _url),
-                            // );
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FullImageScreen(
-                                  imageUrl: _url,
-                                ),
-                              ),
-                            );
-                          },
-                          child: ConstrainedBox(
-                            constraints: BoxConstraints(
-                              minHeight: 30.5,
-                              maxHeight: 100.5,
-                              minWidth: 30.5,
-                              maxWidth: 100.5,
-                            ),
-                            // height: 80.5,
-                            // width: 100.0,
-                            child: AspectRatio(
-                              aspectRatio: 1 / 1,
-                              child: Card(
-                                margin: EdgeInsets.all(6.0),
-                                clipBehavior: Clip.antiAlias,
-                                elevation: 2.1,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                ),
-                                child: PrecachedImage.network(
-                                  imageURL: _url,
-                                  fadeIn: true,
-                                  shouldPrecache: false,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                      separatorBuilder: (cntx, index) {
-                        return SizedBox(width: 16.0);
-                      },
                     ),
-            ),
-          ],
+                  );
+                },
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: 30.5,
+                    maxHeight: 100.5,
+                    minWidth: 30.5,
+                    maxWidth: 100.5,
+                  ),
+                  // height: 80.5,
+                  // width: 100.0,
+                  child: AspectRatio(
+                    aspectRatio: 1 / 1,
+                    child: Card(
+                      margin: EdgeInsets.all(6.0),
+                      clipBehavior: Clip.antiAlias,
+                      elevation: 2.1,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                      child: PrecachedImage.network(
+                        imageURL: _url,
+                        fadeIn: true,
+                        shouldPrecache: false,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+            separatorBuilder: (cntx, index) {
+              return SizedBox(width: 16.0);
+            },
+          ),
         ),
       ),
+
+
+      Text(
+        'Basic Info',
+        style: subTitleStyle,
+      ),
+      _buildDivider(),
+      if (profile.location!=null)
+        BasicDetail(detailText: 'Lives in : ${profile.location}',
+          detailIcon: FaIcon(FontAwesomeIcons.mapMarkedAlt,color: Colors.red,)),
+      if(profile.height!=null)
+        BasicDetail(detailText: 'Height : ${profile.height}',detailIcon: FaIcon(FontAwesomeIcons.ruler,color: Colors.yellow[700],),),
+      if(profile.jobTitle!=null)
+        BasicDetail(detailText: 'Job : ${profile.jobTitle}',detailIcon: FaIcon(FontAwesomeIcons.userTie,color:Colors.black),),
+
+      Text(
+        'Artificial Intelligence',
+        style: subTitleStyle,
+      ),
+      _buildDivider(),
       Container(
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.only(
@@ -352,17 +328,6 @@ class _MatchCardState extends State<MatchCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Artificial Intelligence',
-              style: subTitleStyle,
-            ),
-            Divider(
-              color: lightCardColor,
-              indent: 2.0,
-              endIndent: 2.0,
-              thickness: 2.8,
-              height: 8.0,
-            ),
             DescriptionBanner(
               // TODO(Backend) Add a field "gender" to the profile Interface:
               message: 'See your children',

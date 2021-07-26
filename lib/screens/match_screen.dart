@@ -117,7 +117,6 @@ class _MatchScreenState extends State<MatchScreen>
                         ),
                       ),
                       onTap: () {
-                        // Move to the prevoious Match Deducted by the Match Engine.
                         Provider.of<MatchEngine>(
                           context,
                           listen: false,
