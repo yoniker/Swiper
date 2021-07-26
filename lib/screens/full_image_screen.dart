@@ -10,14 +10,16 @@ class FullImageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return GestureDetector(
-      onTap: (){
-        Navigator.pop(context);
-      },
-      child: Container(
-          child: PhotoView(
-          imageProvider: NetworkImage(imageUrl),
-      )
+    return SafeArea(
+      child: GestureDetector(
+        onTap: (){
+          Navigator.pop(context);
+        },
+        child: Container(
+            child: PhotoView(
+            imageProvider: NetworkImage(imageUrl),
+        )
+        ),
       ),
     );
   }

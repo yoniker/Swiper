@@ -229,7 +229,6 @@ class NetworkHelper {
     );
     request.files.add(multipartFile);
     var response = await request.send(); //TODO something if response wasn't 200
-    print('dor');
     return;
   }
 
@@ -298,8 +297,6 @@ class NetworkHelper {
       String matchFacesTaskId = decodedResponse['match_faces_task'];
       String userFacesTaskId = decodedResponse['user_faces_task'];
       String targetLocation = decodedResponse['target_location'];
-      print('dor');
-      print('king');
       return {'childrenTaskId':childrenTaskId, 'targetLocation':targetLocation,
         'user_faces_task':userFacesTaskId,'matchFacesTaskId':matchFacesTaskId
       };
@@ -364,7 +361,6 @@ class NetworkHelper {
 
   // /generated_children/<username>/<children_dir>
   Future<List<String>> getGeneratedBabiesLinks(String childrenDirLocation)async{
-    print(childrenDirLocation);
     Uri getChildrenUri = Uri.https(SERVER_ADDR, '/generated_children/$childrenDirLocation');
     http.Response response = await http.get(getChildrenUri);
     if(response.statusCode==200){
