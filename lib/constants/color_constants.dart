@@ -12,7 +12,8 @@ const Color whiteTextColor = Color(0xFFFFFFFF);
 const defaultShadowColor = Color(0x99999999);
 const Color linkColor = Color(0xFF389CEB);
 const Color activeDot = Colors.white;
-const Color inactiveDot = Colors.grey;
+const Color inactiveDot = Color(0xFFBDBDBD);
+
 //
 const Color activeColor = Colors.blue;
 const Color disabledColor = Colors.grey;

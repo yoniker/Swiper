@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
-import 'package:betabeta/widgets/cards.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/match_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -245,15 +244,8 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
           if (matchEngine.currentMatch() != null) matchEngine.currentMatch(),
           if (matchEngine.nextMatch() != null) matchEngine.nextMatch()
         ];
-         if(topEngineMatches.isNotEmpty){
-         print('when building front user is ${topEngineMatches[0].profile.username}');
-         print(topEngineMatches.length);
-         if(topEngineMatches.length>1){print('Next user is ${topEngineMatches[1].profile.username}');}
-         }
 
          Widget _buildThumbIcon() {
-           print('current judgment at buildthumb is $currentJudgment');
-           print('current interpolation at buildthumb is $currentInterpolation');
            if (currentJudgment == SwipeDirection.Right){
              return Center(
                child: Opacity(
@@ -313,7 +305,6 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
                      },
                      delaySlideFor: 0,
                     onForward: (int index,SwipeInfo info){
-                      print('index is $index swipe info is ${info.direction.toString()}');
                       if (index ==0){ //TODO index>0 should be impossible
                         if(info.direction == SwipeDirection.Left){
                           matchEngine.currentMatchDecision(Decision.nope);
