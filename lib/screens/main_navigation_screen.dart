@@ -92,7 +92,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               color: darkTextColor,
               fontSize: 13.0,
             ),
-            selectedItemColor: Colors.red[400],
+            selectedItemColor: colorBlend02,
             unselectedItemColor: darkTextColor,
             showUnselectedLabels: true,
             elevation: 0.0,
