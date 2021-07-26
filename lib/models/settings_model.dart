@@ -44,7 +44,7 @@ class SettingsData extends ChangeNotifier{
     _facebookProfileImageUrl = 'https://lunada.co.il/wp-content/uploads/2016/04/12198090531909861341man-silhouette.svg_.hi_-300x284.png';
     _preferredGender = 'Everyone';
     _minAge = 18;
-    _maxAge = 75;
+    _maxAge = 24;
     _auditionCount = 4;
     _filterName = '';
     _filterDisplayImageUrl = '';

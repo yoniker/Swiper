@@ -3,8 +3,8 @@ import 'dart:math' as math;
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
+import 'package:betabeta/widgets/cards.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
-import 'package:betabeta/widgets/draggable.dart';
 import 'package:betabeta/widgets/match_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +23,7 @@ class MatchScreen extends StatefulWidget {
 class _MatchScreenState extends State<MatchScreen>
     with SingleTickerProviderStateMixin {
   // Todo: Add the implementation for detecting the changeCount.
-  // holds a boolean value whether or not a user can undo his/her previous Macth Decision.
+  // holds a boolean value whether or not a user can undo his/her previous Match Decision.
   bool canUndo = false;
 
   // Initialize the Animation Controller for the exposure of the revert button when a change
@@ -54,9 +54,9 @@ class _MatchScreenState extends State<MatchScreen>
   ///
   /// Note: This should be called whenever you are planning to Navigate from this Screen to a new
   /// one.
-  void setMatchCardVisibility([bool visbility = false]) {
+  void setMatchCardVisibility([bool visibility = false]) {
     setState(() {
-      _matchCardIsVisible = visbility;
+      _matchCardIsVisible = visibility;
     });
   }
 
@@ -226,195 +226,72 @@ class MatchCardBuilder extends StatefulWidget {
 class _MatchCardBuilderState extends State<MatchCardBuilder> {
   double bottomCardScale = 0.95;
   Offset bottomCardOffset = Offset(0.0, 1.7);
+  SwipeDirection currentJudgment;
+  double currentInterpolation;
 
-  Offset _topCardOldOffset = Offset.zero;
-  Offset _topCardNewOffset = Offset.zero;
-
-  /// Deduce what direction to be registered for specific [Decision]s.
-  ///
-  /// called to determine the [SlideDirection] the MatchCard should be Dragged to.
-  SlideDirection _desiredSlideOutDirection() {
-    switch (Provider.of<MatchEngine>(context, listen: false)
-        .currentMatch()
-        .decision) {
-      case Decision.nope:
-        return SlideDirection.left;
-        break;
-      case Decision.like:
-        return SlideDirection.right;
-        break;
-      case Decision.superLike:
-        return SlideDirection.up;
-        break;
-      default:
-        return null;
-    }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 
-  /// Called whenever you start to Drag the [MatchCard].
-  ///
-  /// Used to update the UI accordingly.
-  void _onSlideUpdate(double distance) {
-    setState(() {
-      // sort the new middle card [Scale] and [Offset] value.
-      // make increment based on the distance the card has been slided.
-      var bottomDyIncrement = (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
-      bottomCardScale = 0.87 + (0.1 * (distance / 50.0)).clamp(0.0, 0.1);
-      bottomCardOffset = Offset(0.0, 1.275 + bottomDyIncrement);
-    });
-  }
-
-  /// Called whenever you stop Dragging the [MatchCard].
-  void _onSlideComplete(SlideDirection direction) {
-    Decision decision = Decision.indecided;
-
-    switch (direction) {
-      case SlideDirection.left:
-        decision = Decision.nope;
-        break;
-      case SlideDirection.right:
-        decision = Decision.like;
-        break;
-      case SlideDirection.up:
-        decision = Decision.superLike;
-        break;
-    }
-
-    Provider.of<MatchEngine>(context, listen: false)
-        .currentMatchDecision(decision);
-
-    setState(() {
-      bottomCardScale = 0.95;
-      bottomCardOffset = Offset(0.0, 1.7);
-    });
-  }
-
-  Widget _bottomCard() {
-    var nextMatch =
-        Provider.of<MatchEngine>(context, listen: false).nextMatch();
-
-    if (nextMatch != null) {
-      return DraggableCard(
-        setMatchCardVisibility: (value) {
-          // this triggers the MatchScreen to hide the MatchCard stack.
-          widget.setMatchCardVisibility(value);
-        },
-        screenHeight: MediaQuery.of(context).size.height,
-        screenWidth: MediaQuery.of(context).size.width,
-        isDraggable: false,
-        canScroll: false,
-        card: Transform.scale(
-          scale: bottomCardScale,
-          alignment: Alignment(bottomCardOffset.dx, bottomCardOffset.dy),
-          child: Opacity(
-            opacity: bottomCardScale.clamp(0.0, 1.0),
-            child: MatchCard(
-              profile: nextMatch.profile,
-              showCarousel: false,
-              clickable: false,
-            ),
-          ),
-        ),
-      );
-    } else {
-      // show an empty container.
-      return SizedBox.shrink();
-    }
-  }
-
-  // The Widget stacked at the top. This is the main Widget.
-  Widget _topCard() {
-    var currentMatch =
-        Provider.of<MatchEngine>(context, listen: false).currentMatch();
-
-    if (currentMatch != null) {
-      return DraggableCard(
-        setMatchCardVisibility: (value) {
-          // this triggers the MatchScreen to hide the MatchCard stack.
-          widget.setMatchCardVisibility(value);
-        },
-        screenHeight: MediaQuery.of(context).size.height,
-        screenWidth: MediaQuery.of(context).size.width,
-        slideTo: _desiredSlideOutDirection(),
-        onSlideUpdate: _onSlideUpdate,
-        onSlideComplete: _onSlideComplete,
-        isDraggable: true,
-        canScroll: true,
-        card: MatchCard(
-          key: Key(currentMatch.profile.username),
-          profile: currentMatch.profile,
-          showCarousel: true,
-          clickable: true,
-        ),
-        matchProfile: currentMatch.profile,
-      );
-    } else {
-      // show a progress indicator.
-      // Note: A progress indicator is shown only on the `_topStack` [Widget].
-      // when no match is yet found or the MatchEngine is still loading/initializing.
-      return SpinKitChasingDots(
-        size: 20.0,
-        color: Colors.blue,
-      );
-    }
-  }
-
-  // The Widget stacked at the top. This is the main Widget.
-  Widget _topCardRedo() {
-    var currentMatch =
-        Provider.of<MatchEngine>(context, listen: false).currentMatch();
-
-    if (currentMatch != null) {
-      return MatchCard(
-        key: Key(currentMatch.profile.username),
-        profile: currentMatch.profile,
-        showCarousel: true,
-        clickable: true,
-      );
-    } else {
-      // show a progress indicator.
-      // Note: A progress indicator is shown only on the `_topStack` [Widget].
-      // when no match is yet found or the MatchEngine is still loading/initializing.
-      return SpinKitChasingDots(
-        size: 20.0,
-        color: Colors.blue,
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     // return a stack of cards well positioned.
     return Consumer<MatchEngine>(
-      builder: (context, matchEngine, child) {
-        final List<Match> _availableMatch = [
+      builder: (context, matchEngine, unusedChild) {
+         List<Match> topEngineMatches = [
           if (matchEngine.currentMatch() != null) matchEngine.currentMatch(),
           if (matchEngine.nextMatch() != null) matchEngine.nextMatch()
         ];
+         if(topEngineMatches.isNotEmpty){
+         print('when building front user is ${topEngineMatches[0].profile.username}');
+         print(topEngineMatches.length);
+         if(topEngineMatches.length>1){print('Next user is ${topEngineMatches[1].profile.username}');}
+         }
 
-        // return Stack(
-        //   children: <Widget>[
-        //     _bottomCard(),
-        //     _topCard(),
-        //   ],
-        // );
-        bool isLike;
+         Widget _buildThumbIcon() {
+           print('current judgment at buildthumb is $currentJudgment');
+           print('current interpolation at buildthumb is $currentInterpolation');
+           if (currentJudgment == SwipeDirection.Right){
+             return Center(
+               child: Opacity(
+                 opacity: currentInterpolation,
+                 child: Transform.scale(
+                   scale: currentInterpolation,
+                   child: Icon(
+                     Icons.thumb_up,
+                     size: 100.0,
+                     color: Colors.green,
+                   ),
+                 ),
+               ),
+             );
+           }
+           if (currentJudgment == SwipeDirection.Left){
+             print('drawing no');
+           return Center(
+             child: Opacity(
+               opacity: currentInterpolation,
+               child: Transform.scale(
+                 scale: currentInterpolation,
+                 child: Icon(
+                   Icons.thumb_down,
+                   size: 100.0,
+                   color: Colors.red,
+                 ),
+               ),
+             ),
+           );}
 
-        double _scaleLike = 0;
-        _scaleLike =
-            ((_topCardNewOffset.dx / _topCardOldOffset.dx) / 2).clamp(0.0, 1.0);
 
-        double _scaleDislike = 0;
-        _scaleDislike =
-            ((_topCardOldOffset.dx / _topCardNewOffset.dx) / 2).clamp(0.0, 1.0);
 
-        if (_topCardOldOffset.dx > _topCardNewOffset.dx) {
-          isLike = false;
-        } else if (_topCardOldOffset.dx < _topCardNewOffset.dx) {
-          isLike = true;
-        }
+           return SizedBox.shrink();
 
-        return _availableMatch.isEmpty
+         }
+
+        return topEngineMatches.isEmpty
             ? SpinKitChasingDots(
                 size: 20.0,
                 color: Colors.blue,
@@ -422,63 +299,46 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
             : Stack(
                 fit: StackFit.expand,
                 children: [
-                  TCard(
-                    cards: _availableMatch.map<Widget>((m) {
-                      return Listener(
-                        onPointerDown: (event) {
-                          setState(() {
-                            _topCardOldOffset = event.position;
-                            _topCardNewOffset = event.position;
-                          });
-                        },
-                        onPointerMove: (event) {
-                          setState(() {
-                            _topCardNewOffset = event.position;
-                          });
-                        },
-                        onPointerUp: (event) {
-                          setState(() {
-                            _topCardOldOffset = event.position;
-                            _topCardNewOffset = event.position;
-                          });
-                        },
-                        child: MatchCard(
-                          key: Key(m.profile.username),
-                          profile: m.profile,
+                   TCard(
+
+                     onDragCard: (double interpolation,SwipeDirection direction){
+                       setState(() {
+
+
+                       currentInterpolation = interpolation;
+                       currentJudgment = direction;
+                       });
+                       return;
+
+                     },
+                     delaySlideFor: 0,
+                    onForward: (int index,SwipeInfo info){
+                      print('index is $index swipe info is ${info.direction.toString()}');
+                      if (index ==0){ //TODO index>0 should be impossible
+                        if(info.direction == SwipeDirection.Left){
+                          matchEngine.currentMatchDecision(Decision.nope);
+                        }
+                        else if (info.direction == SwipeDirection.Right){
+                          matchEngine.currentMatchDecision(Decision.like);
+                        }
+                      }
+                    },
+
+
+
+
+                    cards: topEngineMatches.map<Widget>((match) {
+                      return
+                         MatchCard(
+                          key: Key(match.profile.userId.id),
+                          profile: match.profile,
                           showCarousel: true,
                           clickable: true,
-                        ),
-                      );
+                        );
+
                     }).toList(),
                   ),
-                  if (isLike == true)
-                    Center(
-                      child: Opacity(
-                        opacity: _scaleLike,
-                        child: Transform.scale(
-                          scale: _scaleLike,
-                          child: Icon(
-                            Icons.check_circle_rounded,
-                            size: 50.0,
-                            color: colorBlend02,
-                          ),
-                        ),
-                      ),
-                    ),
-                  if (isLike == false)
-                    Center(
-                      child: Opacity(
-                        opacity: _scaleDislike,
-                        child: Transform.scale(
-                          scale: _scaleDislike,
-                          child: Icon(
-                            Icons.cancel_sharp,
-                            size: 50.0,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ),
+                  _buildThumbIcon(),
                 ],
               );
       },
