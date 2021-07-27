@@ -81,7 +81,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   Widget build(BuildContext context) {
     return Stack(
       fit: StackFit.expand,
-      
       children: [
         Scaffold(
           body: _body(),
@@ -89,7 +88,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           resizeToAvoidBottomInset: true,
           bottomNavigationBar: BottomNavigationBar(
             selectedLabelStyle: boldTextStyle.copyWith(color: Colors.red),
-            selectedItemColor: Colors.red[400],
+            unselectedLabelStyle: boldTextStyle.copyWith(
+              color: darkTextColor,
+              fontSize: 13.0,
+            ),
+            selectedItemColor: colorBlend02,
+            unselectedItemColor: darkTextColor,
+            showUnselectedLabels: true,
             elevation: 0.0,
             currentIndex: _selectedTabIndex,
             onTap: (index) {
