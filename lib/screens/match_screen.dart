@@ -215,6 +215,7 @@ class MatchCardBuilder extends StatefulWidget {
       : super(key: key);
 
   final void Function(bool) setMatchCardVisibility;
+  final maxThumbOpacity = 0.7; // Max opacity of the thumbs feedback (when swiping left/right)
 
   @override
   _MatchCardBuilderState createState() => _MatchCardBuilderState();
@@ -248,7 +249,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
            if (currentJudgment == SwipeDirection.Right){
              return Center(
                child: Opacity(
-                 opacity: currentInterpolation,
+                 opacity: currentInterpolation*widget.maxThumbOpacity,
                  child: Transform.scale(
                    scale: currentInterpolation,
                    child: Icon(
@@ -263,7 +264,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
            if (currentJudgment == SwipeDirection.Left){
            return Center(
              child: Opacity(
-               opacity: currentInterpolation,
+               opacity: currentInterpolation*widget.maxThumbOpacity,
                child: Transform.scale(
                  scale: currentInterpolation,
                  child: Icon(

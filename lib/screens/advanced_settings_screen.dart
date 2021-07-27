@@ -19,7 +19,8 @@ class AdvancedSettingsScreen extends StatefulWidget {
   static const String routeName = '/advanced_settings_screen';
   static const String CELEB_FILTER = 'celeb_filter';
   static const String CUSTOM_FACE_FILTER = 'custom_face_filter';
-  static const String TASTE_FILTER = 'taste_filter';
+  static const String USER_TASTE_FILTER = 'user_taste_filter';
+  static const String MATCH_TASTE_FILTER = 'match_taste_filter';
   static const minAuditionValue = 0.0;
   static const maxAuditionValue = 4.0;
   static const List<String> similarityDescriptions = [
@@ -642,7 +643,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                           _buildFilterWidget(
                             description: ' Find matches based on your taste',
                             title: 'Learnt Taste',
-                            filterName: AdvancedSettingsScreen.TASTE_FILTER,
+                            filterName: AdvancedSettingsScreen.USER_TASTE_FILTER,
                             children: [
                               Container(
                                 padding: EdgeInsets.symmetric(
@@ -759,6 +760,130 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                               )
                             ],
                           ),
+
+
+                          _buildFilterWidget(
+                            description: ' Find matches based on matches\' taste',
+                            title: 'Matches\' Taste',
+                            filterName: AdvancedSettingsScreen.MATCH_TASTE_FILTER,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 5.0,
+                                  vertical: 5.0,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Center(
+                                        child: RichText(
+                                          text: TextSpan(
+                                            style: defaultTextStyle,
+                                            children: <InlineSpan>[
+                                              TextSpan(
+                                                text:
+                                                '${AdvancedSettingsScreen.tasteDescriptions[_chosenAuditionCount]}th percentile (their taste)',
+                                                style: defaultTextStyle,
+                                              ),
+                                              WidgetSpan(
+                                                child: GestureDetector(
+                                                  child: Text(
+                                                    "  what's this?",
+                                                    style: defaultTextStyle
+                                                        .copyWith(
+                                                      color: linkColor,
+                                                    ),
+                                                  ),
+                                                  onTap: () {
+                                                    GlobalWidgets
+                                                        .showAlertDialogue(
+                                                      context,
+                                                      title: 'Taste',
+                                                      message:
+                                                      'Show you matches based on the matches\' personal preferences (learnt by Alex, their personal AI assistant)',
+                                                    );
+                                                    //<debug>
+                                                    //
+                                                    print("what's this");
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 5.0,
+                                  vertical: 5.0,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.group_outlined,
+                                      size: 24.0,
+                                      color: colorBlend01,
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 12.0),
+                                        child: CupertinoSlider(
+                                          activeColor: colorBlend01,
+                                          value: _chosenAuditionCount
+                                              .roundToDouble(),
+                                          min: AdvancedSettingsScreen
+                                              .minAuditionValue
+                                              .roundToDouble(),
+                                          max: AdvancedSettingsScreen
+                                              .maxAuditionValue
+                                              .roundToDouble(),
+                                          divisions: 5,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _chosenAuditionCount =
+                                                  value.round();
+                                              SettingsData().auditionCount =
+                                                  _chosenAuditionCount;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    Icon(
+                                      Icons.person_outline,
+                                      size: 24.0,
+                                      color: colorBlend01,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                const EdgeInsets.symmetric(horizontal: 5.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('More Matches'),
+                                    Text('More Accurate')
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                          
+                          
                           // build the [done] button.
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 8.0),

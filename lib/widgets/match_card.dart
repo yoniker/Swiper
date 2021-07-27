@@ -305,12 +305,12 @@ class _MatchCardState extends State<MatchCard> {
       ),
       _buildDivider(),
       if (profile.location!=null)
-        BasicDetail(detailText: 'Lives in : ${profile.location}',
+        BasicDetail(detailText: '${profile.location}',
           detailIcon: FaIcon(FontAwesomeIcons.mapMarkedAlt,color: Colors.red,)),
       if(profile.height!=null)
-        BasicDetail(detailText: 'Height : ${profile.height}',detailIcon: FaIcon(FontAwesomeIcons.ruler,color: Colors.yellow[700],),),
+        BasicDetail(detailText: '${profile.height}',detailIcon: FaIcon(FontAwesomeIcons.ruler,color: Colors.yellow[700],),),
       if(profile.jobTitle!=null)
-        BasicDetail(detailText: 'Job : ${profile.jobTitle}',detailIcon: FaIcon(FontAwesomeIcons.userTie,color:Colors.black),),
+        BasicDetail(detailText: '${profile.jobTitle}',detailIcon: FaIcon(FontAwesomeIcons.userTie,color:Colors.black),),
 
       Text(
         'Artificial Intelligence',
