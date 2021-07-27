@@ -370,7 +370,7 @@ class _MatchCardState extends State<MatchCard> {
                 maxWidth: MediaQuery.of(context).size.width,
               ),
               trailing: CompatibilityScale(
-                value: 20.0,
+                value: profile.compatibilityScore,
                 startValue: 20.0,
               ),
               onTap: () async {
@@ -394,7 +394,7 @@ class _MatchCardState extends State<MatchCard> {
                 Icons.info,
                 color: Colors.blue,
               ),
-              trailing: LikeScale(value: 20.0),
+              trailing: LikeScale(value: profile.hotnessScore),
                 onTap: () async {
                   try {
                     await GlobalWidgets.showAlertDialogue(

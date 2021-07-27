@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:betabeta/models/userid.dart';
 import 'package:betabeta/services/networking.dart';
 
@@ -12,10 +14,12 @@ class Profile {
   final String jobTitle;
   final String serverUserImagesLocation;
   final String height;
+  final double compatibilityScore;
+  final double hotnessScore;
 
 
   UserId userId;
-  Profile({  this.imageUrls, this.username, this.headline, this.description, this.age, this.location,this.distance,this.jobTitle,this.serverUserImagesLocation,this.height, this.userId}){
+  Profile( { this.compatibilityScore, this.hotnessScore, this.imageUrls, this.username, this.headline, this.description, this.age, this.location,this.distance,this.jobTitle,this.serverUserImagesLocation,this.height, this.userId}){
     if (this.userId ==null){
       this.userId =  UserId(id: this.username, userType: UserType.POF_USER);
     }
@@ -37,6 +41,8 @@ class Profile {
       serverUserImagesLocation: match['server_user_images_location'],
       height: match['height'],
       userId: userId,
+      hotnessScore: match['hotness'] * 100,
+      compatibilityScore: match['compatibility'] * 100 ,
       imageUrls: NetworkHelper.serverImagesUrl(imagesUrls)
   );}
 }
