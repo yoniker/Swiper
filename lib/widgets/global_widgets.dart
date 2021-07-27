@@ -841,12 +841,14 @@ class DescriptionBanner extends StatelessWidget {
                   Expanded(
                     child: Row(
                       children: [
-                        if(leading!=null) leading,
-                        if (leading!=null) SizedBox(width: 5.0,),
-                        Text(
-                          message,
-                          overflow: overflow,
-                          style: textStyle ?? mediumBoldedCharStyle,
+                        if(leading != null) leading,
+                        if (leading != null) SizedBox(width: 5.0),
+                        Expanded(
+                          child: Text(
+                            message,
+                            overflow: overflow,
+                            style: textStyle ?? mediumBoldedCharStyle,
+                          ),
                         ),
 
                       ],
