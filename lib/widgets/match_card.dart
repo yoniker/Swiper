@@ -115,7 +115,7 @@ class _MatchCardState extends State<MatchCard> {
             ),
             Expanded(
               child: Text(
-                widget.profile.headline ?? 'No healiine available',
+                widget.profile.headline ?? '',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: boldTextStyle.copyWith(
