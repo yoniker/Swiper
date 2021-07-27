@@ -111,7 +111,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 activeIcon: PrecachedImage.asset(
                   imageURI: BetaIconPaths.activeProfileTabIconPath,
                 ),
-                label: 'profile',
+                label: 'Profile',
                 tooltip: 'Profile',
               ),
               BottomNavigationBarItem(
@@ -121,7 +121,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 activeIcon: PrecachedImage.asset(
                   imageURI: BetaIconPaths.activeMatchTabIconPath,
                 ),
-                label: 'match',
+                label: 'Match',
                 tooltip: 'Match',
               ),
               BottomNavigationBarItem(
@@ -131,7 +131,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 activeIcon: PrecachedImage.asset(
                   imageURI: BetaIconPaths.activeLikesTabIconPath,
                 ),
-                label: 'likes',
+                label: 'Likes',
                 tooltip: 'Likes',
               ),
               BottomNavigationBarItem(
@@ -141,8 +141,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 activeIcon: PrecachedImage.asset(
                   imageURI: BetaIconPaths.activeMessagesTabIconPath,
                 ),
-                label: 'messages',
-                tooltip: 'Messages',
+                label: 'Chat',
+                tooltip: 'Chat',
               ),
             ],
           ),
