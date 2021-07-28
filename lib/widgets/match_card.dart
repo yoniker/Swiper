@@ -359,7 +359,7 @@ class _MatchCardState extends State<MatchCard> {
               ),
             ),
             DescriptionBanner(
-              message: 'Personal preference score',
+              message: 'Personal preference',
               leading: Icon(
                 Icons.info,
                 color: Colors.blue,
@@ -384,7 +384,7 @@ class _MatchCardState extends State<MatchCard> {
               },
             ),
             DescriptionBanner(
-              message: 'Compatibility score',
+              message: 'Compatibility',
               overflow: null,
               constraints: BoxConstraints(
                 minHeight: 75.0,
