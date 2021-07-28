@@ -14,7 +14,7 @@ class CelebsInfo extends ChangeNotifier {
   int _numCelebsUrlsToGet = 0; //TODO this relies on the fact that dart is single threaded, look for a better way if needed
   List<Celeb> _celebsInfo;
   Future<void> getCelebsFromDatabase() async {
-    _celebsInfo = await DatabaseHelper.instance.getCelebs();
+    _celebsInfo = await DatabaseHelper().getCelebs();
     _infoLoadedFromDatabase = true;
     notifyListeners();
   }
