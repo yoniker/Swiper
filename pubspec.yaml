@@ -83,7 +83,7 @@ flutter:
     - assets/images/
     - assets/mock_images/
     - assets/
-    - assets/mobile_celebs.db
+    - assets/celebs_hive.hive
   fonts:
     - family: RougeScript
       fonts:
