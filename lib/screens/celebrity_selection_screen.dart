@@ -8,10 +8,12 @@ import 'package:betabeta/widgets/celeb_widget.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class ScreenCelebritySelection extends StatefulWidget {
   static const String routeName = '/celebrity_select_screen';
+  final int msCelebsDebounce = 200;
   @override
   _ScreenCelebritySelectionState createState() =>
       _ScreenCelebritySelectionState();
@@ -24,7 +26,7 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
 
   _onSearchChanged(String query, CelebsInfo celebInfo) {
     if (_debounce?.isActive ?? false) _debounce.cancel();
-    _debounce = Timer(const Duration(milliseconds: 200), () {
+    _debounce = Timer( Duration(milliseconds: widget.msCelebsDebounce), () {
       celebInfo.sortListByKeywords(query);
     });
   }
@@ -35,11 +37,13 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
   //
   // We need this so that we can change the color of the ""clear-button"" accordingly.
   bool searchBoxIsFocused = false;
+  ScrollController _listController = ScrollController();
+  DateTime _lastCelebInfoChange = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-
+    _lastCelebInfoChange = DateTime.now();
     textFieldFocus = FocusNode();
   }
 
@@ -47,6 +51,7 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
   void dispose() {
     _debounce?.cancel();
     textFieldFocus.dispose();
+    _listController.dispose();
     super.dispose();
   }
 
@@ -90,15 +95,20 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
         if (celebInfo.infoLoadedFromDatabase()) {
           _numCelebsToShow = celebInfo.entireCelebsList.length;
         }
+
+        if (_listController.hasClients && celebInfo.lastChangeTime.difference(_lastCelebInfoChange)>Duration(milliseconds: 0))
+        {
+          _listController.jumpTo(0);
+          print(celebInfo.lastChangeTime);
+          _lastCelebInfoChange = celebInfo.lastChangeTime;
+        }
         return Scaffold(
           backgroundColor: whiteCardColor,
           appBar: CustomAppBar(
             title: 'Search Celeb',
             hasTopPadding: true,
             showAppLogo: false,
-            trailing: Icon(
-              Icons.photo,
-            ),
+            trailing: FaIcon(FontAwesomeIcons.addressCard),
           ),
           body: Column(
             children: [
@@ -167,6 +177,7 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
                   margin: EdgeInsets.all(8.0),
                   child: ListView.separated(
                     physics: BouncingScrollPhysics(),
+                    controller: _listController,
                     separatorBuilder: (BuildContext context, int index) {
                       return SizedBox(height: 15.0);
                     },
@@ -176,9 +187,8 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
                       return CelebWidget(
                         theCeleb: currentCeleb,
                         celebsInfo: celebInfo,
+                        celebIndex : index,
                         onTap: () {
-                          print(
-                              'Main celeb widget got ${currentCeleb.celebName}');
                           Navigator.pop(context, currentCeleb);
                         },
                       );

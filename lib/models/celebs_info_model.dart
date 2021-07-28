@@ -13,13 +13,19 @@ class CelebsInfo extends ChangeNotifier {
   bool _infoLoadedFromDatabase; //TODO change this to enum with more complicated completion states
   int _numCelebsUrlsToGet = 0; //TODO this relies on the fact that dart is single threaded, look for a better way if needed
   List<Celeb> _celebsInfo;
+  DateTime _lastChangeTime;
+
+  DateTime get lastChangeTime => _lastChangeTime;
+
   Future<void> getCelebsFromDatabase() async {
     _celebsInfo = await DatabaseHelper().getCelebs();
     _infoLoadedFromDatabase = true;
+    _lastChangeTime = DateTime.now();
     notifyListeners();
   }
 
   CelebsInfo(){
+    _lastChangeTime = DateTime.now();
     _infoLoadedFromDatabase = false;
     getCelebsFromDatabase();
 
@@ -91,6 +97,7 @@ class CelebsInfo extends ChangeNotifier {
     List<Celeb> celebsInfoCopy =  List<Celeb>.from(_celebsInfo);
     celebsInfoCopy.sort((celebA, celebB) => celebScores[celebA].compareTo(celebScores[celebB]));
     _celebsInfo = celebsInfoCopy;
+    _lastChangeTime = DateTime.now();
     notifyListeners();
 
 

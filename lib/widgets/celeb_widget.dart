@@ -10,7 +10,8 @@ class CelebWidget extends StatefulWidget {
   final Celeb theCeleb;
   final CelebsInfo celebsInfo;
   final void Function() onTap;
-  CelebWidget({this.theCeleb, this.celebsInfo, this.onTap});
+  final int celebIndex;
+  CelebWidget({this.theCeleb, this.celebsInfo, this.onTap,this.celebIndex});
   @override
   _CelebWidgetState createState() => _CelebWidgetState();
 }
@@ -92,7 +93,7 @@ class _CelebWidgetState extends State<CelebWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Text(
-                widget.theCeleb.celebName,
+              (widget.celebIndex+1).toString()+'.'+ widget.theCeleb.celebName,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
