@@ -331,7 +331,8 @@ class _MatchCardState extends State<MatchCard> {
             DescriptionBanner(
               // TODO(Backend) Add a field "gender" to the profile Interface:
               message: 'See your children',
-              leading: Image.asset('assets/images/babies.png'),
+
+              leading: PrecachedImage.asset(imageURI: 'assets/images/babies.png'),//Image.asset('assets/images/babies.png'),
 
               overflow: null,
               constraints: BoxConstraints(
@@ -378,7 +379,7 @@ class _MatchCardState extends State<MatchCard> {
                   context,
                   title: 'Info',
                   message:
-                      'The probability that you will like the current profile, according to Alex,the personal AI which learnt your personal taste...',
+                      'The probability that you will like the current profile, according to Alex,your AI which learnt your personal taste.',
                 );
               },
             ),
