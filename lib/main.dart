@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
         primaryColorBrightness: Brightness.light,
         primarySwatch: Colors.blue,
       ),
-      initialRoute: SplashScreen.routeName,
+      initialRoute: ScreenCelebritySelection.routeName,//SplashScreen.routeName,
 
       // MatchingScreen(title: 'Swiper MVP'),
       // LoginHome(),

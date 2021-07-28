@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:core';
 import 'dart:io' show Directory, File;
 import 'dart:typed_data';
 import 'package:betabeta/data_models/celeb.dart';
 import 'package:betabeta/services/celeb_hive.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -54,9 +56,33 @@ class DatabaseHelper {
   }
 
   Future<List<Celeb>> getCelebs() async {
+
+     if(true) { //TODO for now until we'll figure out if to always use json (fast enough?) or hive if it's mobile
+       List<Celeb> allCelebs = [];
+       String jsonString = await rootBundle.loadString('assets/celebs.json');
+       final celebsFromJson = json.decode(jsonString);
+       for (var celeb in celebsFromJson) {
+         var aliases = celeb['aliases'].split('@');
+         aliases.add(celeb['celeb_name'] ?? '');
+         Celeb currentCeleb = Celeb(
+           celebName: celeb['celeb_name'] ?? '',
+           name: celeb['name'] ?? '',
+           aliases: aliases,
+           birthday: celeb['birthday'],
+           description: celeb['description'],
+           country: celeb['country'],
+         );
+         allCelebs.add(currentCeleb);
+       }
+
+       return allCelebs;
+     }
+
+
     if(!_loadedDb){
       await Hive.initFlutter();
       await _loadCelebsBox();
+
     }
 
     List<Celeb> allCelebs = [];
