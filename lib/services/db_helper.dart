@@ -62,11 +62,11 @@ class DatabaseHelper {
     List<Celeb> allCelebs = [];
     _celebsBox.keys.forEach((key) {
       CelebHive celebHive= _celebsBox.get(key);
-      Celeb celeb = Celeb(celebName: celebHive.celeb_name,name:celebHive.name,aliases: celebHive.aliases,birthday: celebHive.birthday,description: celebHive.description,country: celebHive.country);
+      List<String> aliases = celebHive.aliases;
+      aliases.add(celebHive.celeb_name);
+      Celeb celeb = Celeb(celebName: celebHive.celeb_name,name:celebHive.name,aliases: aliases,birthday: celebHive.birthday,description: celebHive.description,country: celebHive.country);
       allCelebs.add(celeb);
     });
-    print('dor');
-    print('king');
     return allCelebs;
   }
 
