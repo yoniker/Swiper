@@ -164,13 +164,14 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
               ),
               child: Stack(
                 children: [
-                  Align(
-                    alignment: Alignment(0.0, -0.17),
+                  Center(
                     child: FractionallySizedBox(
+                      alignment: Alignment.center,
                       heightFactor: 0.60,
                       widthFactor: 0.60,
                       child: PrecachedImage.asset(
                         imageURI: BetaIconPaths.viewChildrenBackgroundImagePath,
+                        fit: BoxFit.fill,
                       ),
                     ),
                   ),
@@ -298,10 +299,10 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
               height: childrenCardSize.height + childrenVertCardPadding,
               child: !_childrenReady
                   ? Center(
-                    child: SpinKitFadingFour(
+                      child: SpinKitFadingFour(
                         color: colorBlend02,
                       ),
-                  )
+                    )
                   : _generatedBabiesImages.isEmpty
                       ? Text(
                           'No face found so cannot generate children',
