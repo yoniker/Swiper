@@ -41,9 +41,6 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
   bool _childrenReady = false;
   bool _userFacesReady = false;
   bool _matchFacesReady = false;
-
-  // double _offset = 0;
-  // double _page = 0;
   List<Image> _userFacesImages = [];
   List<Image> _matchFacesImages = [];
   List<Image> _generatedBabiesImages = [];
@@ -135,9 +132,11 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
   @override
   Widget build(BuildContext context) {
     // the device's screen specs.
-    final Size _sizeConfig = MediaQuery.of(context).size;
+    final Size screenSize = MediaQuery.of(context).size;
     // the absolute size of the children image.
     final Size childrenCardSize = Size(256, 256);
+
+    double viewPortSize = childrenCardSize.width/screenSize.width;
 
     final double childrenVertCardPadding = 20.0;
 
@@ -160,7 +159,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                 minHeight: 150,
                 maxHeight: 300,
                 minWidth: 200,
-                maxWidth: _sizeConfig.width,
+                maxWidth: screenSize.width,
               ),
               child: Stack(
                 children: [
@@ -316,7 +315,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                             enableInfiniteScroll: false,
                             height: childrenCardSize.height,
                             enlargeCenterPage: true,
-                            viewportFraction: 0.6,
+                            viewportFraction: viewPortSize,
                             enlargeStrategy: CenterPageEnlargeStrategy.scale,
                             onPageChanged: (index, changeReason) {
                               setStateIfMounted(() {
