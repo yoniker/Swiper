@@ -1,121 +1,107 @@
-import 'package:betabeta/models/chat_message_model.dart';
+import 'package:betabeta/models/chatData.dart';
+import 'package:betabeta/models/infoMessage.dart';
+import 'package:betabeta/models/infoUser.dart';
+import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/services/app_state_info.dart';
+import 'package:betabeta/utils/mixins.dart';
+import 'package:betabeta/widgets/chat_profile_display_widget.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'dart:convert';
 
-class ChatScreen extends StatefulWidget{
+import 'package:get/get.dart';
+
+class ChatScreen extends StatefulWidget {
+  ChatScreen({Key? key}) :theUser=Get.arguments, conversationId='',super(key: key){
+
+    conversationId =  ChatData().calculateConversationId(theUser.facebookId);
+  }
   static const String routeName = '/chat_screen';
+  String conversationId ;
+
+
+
+  final InfoUser theUser;
+
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
+  List<types.Message> _messages = <types.Message>[];
+
+
+  void updateChatData() {
+    List<InfoMessage> currentChatMessages = ChatData().messagesInConversation(
+        widget.conversationId);
+    _messages = currentChatMessages.map((message) => message.toUiMessage()).toList();
+    print('Finished updating Chat Data');
+
+  }
+
+  void listenConversation()async{
+    setStateIfMounted((){
+      print('updating chat info...');
+      updateChatData();
+
+    });
+
+    if(AppStateInfo.instance.appState==AppLifecycleState.resumed){
+      await ChatData().markConversationAsRead(widget.conversationId);}
+  }
+
+
+
+  @override
+  void initState() {
+    print('going to listen to conversation ${widget.conversationId}');
+    ChatData().markConversationAsRead(widget.conversationId).then((_)
+    {ChatData().listenConversation(widget.conversationId,listenConversation);
+    AppStateInfo.instance.addListener(listenConversation);
+
+    }
+
+    );
+    updateChatData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-        appBar: CustomAppBar(
-          trailing: Icon(Icons.settings,color: Colors.black54,),
-          customTitleBuilder:
-              Container(
-                width: 200,
-                child: Row(children: [
-                  CircleAvatar(
-                    backgroundImage: NetworkImage("https://randomuser.me/api/portraits/men/5.jpg"),
-                    maxRadius: 20,
-                  ),
-                  SizedBox(width: 12,),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text("Kriss Benwat",style: TextStyle( fontSize: 16 ,fontWeight: FontWeight.w600),),
-                        SizedBox(height: 6,),
-                        Text("Online",style: TextStyle(color: Colors.grey.shade600, fontSize: 13),),
-                      ],
-                    ),
-                  ),
-
-                ],
-                ),
-              ),
-          hasTopPadding:true,
-        ),
-        body: Stack(
-    children: <Widget>[
-      Container(
-        margin: EdgeInsets.only(bottom: 45.0),
-        child: ListView.builder(
-          itemCount: ChatMessage.mockMessages.length,
-          shrinkWrap: true,
-          padding: EdgeInsets.only(top: 10,bottom: 10),
-          physics: BouncingScrollPhysics(),
-          itemBuilder: (context, index){
-            return Container(
-              padding: EdgeInsets.only(left: 14,right: 14,top: 10,bottom: 10),
-              child: Align(
-                alignment: (ChatMessage.mockMessages[index].messageType == "receiver"?Alignment.topLeft:Alignment.topRight),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: (ChatMessage.mockMessages[index].messageType  == "receiver"?Colors.grey.shade200:Colors.blue[200]),
-                  ),
-                  padding: EdgeInsets.all(16),
-                  child: Text(ChatMessage.mockMessages[index].messageContent, style: TextStyle(fontSize: 15),),
-                ),
-              ),
-            );
-          },
-        ),
+      appBar: CustomAppBar(
+        hasTopPadding: true,
+        hasBackButton: true,
+        customTitle: ProfileDisplay(widget.theUser,minRadius: 10,maxRadius: 20,direction: Axis.horizontal,),
       ),
+      body: Chat(
+        user: types.User(id: SettingsData().facebookId),
+        showUserAvatars:true,
+        onSendPressed: (text){
+          ChatData().sendMessage(widget.theUser.facebookId,
+              jsonEncode({"type":"text","content":"${text.text}"}));
+        },
+        messages: _messages,
+        onMessageTap: (message){
+          ChatData().resendMessageIfError(widget.conversationId, message.id);
+
+        },
+        onMessageLongPress: (message){
+          ChatData().resendMessageIfError(widget.conversationId, message.id);
+        },
 
 
-    Align(
-      alignment: Alignment.bottomLeft,
-      child: Container(
-        padding: EdgeInsets.only(left: 10,bottom: 10,top: 10),
-        height: 60,
-        width: double.infinity,
-        color: Colors.white,
-        child: Row(
-          children: <Widget>[
-            GestureDetector(
-              onTap: (){
-              },
-              child: Container(
-                height: 30,
-                width: 30,
-                decoration: BoxDecoration(
-                  color: Colors.lightBlue,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Icon(Icons.add, color: Colors.white, size: 20, ),
-              ),
-            ),
-            SizedBox(width: 15,),
-            Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                    hintText: "Write message...",
-                    hintStyle: TextStyle(color: Colors.black54),
-                    border: InputBorder.none
-                ),
-              ),
-            ),
-            SizedBox(width: 15,),
-            FloatingActionButton(
-              onPressed: (){},
-              child: Icon(Icons.send,color: Colors.white,size: 18,),
-              backgroundColor: Colors.blue,
-              elevation: 0,
-            ),
-          ],
-
-        ),
       ),
-    ),
-    ],
-    ),
     );
+  }
+
+  @override
+  void dispose() {
+    ChatData().removeListenerConversation(widget.conversationId,listenConversation);
+    AppStateInfo.instance.removeListener(listenConversation);
+    super.dispose();
   }
 }

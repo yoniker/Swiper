@@ -4,10 +4,8 @@ import 'dart:io' show Directory, File;
 import 'dart:typed_data';
 import 'package:betabeta/data_models/celeb.dart';
 import 'package:betabeta/services/celeb_hive.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart' as path;
 import 'package:hive_flutter/hive_flutter.dart';
 class DatabaseHelper {
@@ -77,23 +75,6 @@ class DatabaseHelper {
 
        return allCelebs;
      }
-
-
-    if(!_loadedDb){
-      await Hive.initFlutter();
-      await _loadCelebsBox();
-
-    }
-
-    List<Celeb> allCelebs = [];
-    _celebsBox.keys.forEach((key) {
-      CelebHive celebHive= _celebsBox.get(key)!;
-      List<String?> aliases = celebHive.aliases!;
-      aliases.add(celebHive.celebName);
-      Celeb celeb = Celeb(celebName: celebHive.celebName,name:celebHive.name,aliases: aliases,birthday: celebHive.birthday,description: celebHive.description,country: celebHive.country);
-      allCelebs.add(celeb);
-    });
-    return allCelebs;
   }
 
 

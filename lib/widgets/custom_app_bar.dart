@@ -1,4 +1,4 @@
-import 'package:betabeta/constants/beta_icon_paths.dart';
+
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
@@ -12,63 +12,63 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
     Key? key,
     this.title,
-    required this.trailing,
+    this.trailing,
     this.color = Colors.black,
-    this.customTitleBuilder,
+    this.customTitle,
     this.hasTopPadding = false,
     this.showAppLogo = false,
     this.hasBackButton = true,
     this.trailingPad = 5.0,
     this.onPop,
   })  :
-        // add necessary assertions.
-        assert(trailing != null, 'The parameter trailing cannot be null'),
-        assert((title == null) != (customTitleBuilder == null),
-            'One of "title" and "customTitleBuilder" must be null, You can only specify one of the two!'),
+  // add necessary assertions.
+  //assert(trailing != null, 'The parameter trailing cannot be null'),
+        assert((title == null) != (customTitle == null),
+        'One of "title" and "customTitleBuilder" must be null, You can only specify one of the two!'),
         super(key: key);
 
   CustomAppBar.subPage({
     required String subPageTitle,
-    this.color,
+    this.color=Colors.blue,
     this.hasBackButton = true,
     this.hasTopPadding = false,
     this.showAppLogo = true,
     this.trailingPad = 5.0,
     this.onPop,
   })  : this.trailing = Padding(
-          padding: EdgeInsets.only(left: 10.0),
-          child: Text(
-            subPageTitle,
-            style: TextStyle(
-              color: color,
-              fontSize: 22,
-              fontFamily: 'Nunito',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-        this.title = null,
-        this.customTitleBuilder = SizedBox.shrink();
+    padding: EdgeInsets.only(left: 10.0),
+    child: Text(
+      subPageTitle,
+      style: TextStyle(
+        color: color,
+        fontSize: 22,
+        fontFamily: 'Nunito',
+        fontWeight: FontWeight.w700,
+      ),
+    ),
+  ),
+        this.title = '',
+        this.customTitle = SizedBox.shrink();
 
   /// The `title` for this tile.
   final String? title;
 
   /// This denotes the icon widget that is placed in the Appbar .
-  final Widget trailing;
+  final Widget? trailing;
 
   /// Determine whether to include a back-button at
   /// start of the tile (same as trailing icon in the original Appbar class).
   final bool hasBackButton;
 
   /// The Color of the title text. Defaults to `Colors.black`
-  final Color? color;
+  final Color color;
 
   /// Determines whether to add a Padding to the Top of the AppBar in a case where it is used
   /// as the `appBar` parameter of the [Scaffold] widget.
   final bool hasTopPadding;
 
   /// Use this to build a custom title Widget for the [CustomAppbar].
-  final Widget? customTitleBuilder;
+  final Widget? customTitle;
 
   /// Whether to show the App's Logo at the center of the App Bar.
   /// Must not be null.
@@ -98,7 +98,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return Padding(
       padding:
-          (hasTopPadding) ? EdgeInsets.only(top: topPadding) : EdgeInsets.zero,
+      (hasTopPadding) ? EdgeInsets.only(top: topPadding) : EdgeInsets.zero,
       child: Container(
         margin: EdgeInsets.only(top: 5.0),
         padding: EdgeInsets.symmetric(horizontal: 5.0),
@@ -115,7 +115,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       splashColor: colorBlend02.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8.0),
                       onTap: onPop ??
-                          () {
+                              () {
                             // Pop the current context.
                             Navigator.of(context).maybePop();
                           },
@@ -123,24 +123,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         'assets/images/back_arrow.png',
                       ),
                     ),
-                  (customTitleBuilder != null)
-                      ? customTitleBuilder!
-                      : Padding(
-                          padding: EdgeInsets.only(left: 10.0),
-                          child: Text(
-                            title!,
-                            style: TextStyle(
-                              color: color,
-                              fontSize: 22,
-                              fontFamily: 'Nunito',
-                              fontWeight: FontWeight.w700,
-                            ),
+                  customTitle??
+                      Padding(
+                        padding: EdgeInsets.only(left: 10.0),
+                        child: Text(
+                          title!,
+                          style: TextStyle(
+                            color: color,
+                            fontSize: 22,
+                            fontFamily: 'Nunito',
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
+                      ),
                 ],
               ),
               if (showAppLogo)
-                GlobalWidgets.assetImageToIcon(BetaIconPaths.appLogoIcon),
+                GlobalWidgets.assetImageToIcon('https://picsum.photos/200/300'),
               Padding(
                 padding: EdgeInsets.only(right: trailingPad),
                 child: trailing,

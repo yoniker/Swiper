@@ -20,37 +20,30 @@ class SettingsData extends ChangeNotifier{
   static const String CELEB_ID_KEY = 'celeb_id';
   static const String TASTE_MIX_RATIO_KEY = 'taste_mix_ratio';
   static const String RADIUS_KEY = 'radius';
+  static const String LAST_SYNC_KEY = 'last_sync';
+  static const String FCM_TOKEN_KEY = 'fcm_token';
+  static const String REGISTERED_KEY = 'is_registered';
+
   static const _debounceSettingsTime = Duration(seconds: 2); //Debounce time such that we notify listeners
-  String? _name;
-  String? _facebookId;
-  String? _facebookProfileImageUrl;
-  String? _preferredGender;
-  int? _minAge;
-  int? _maxAge;
-  bool? _readFromShared;
+  String _name = '';
+  String _facebookId = '';
+  String _facebookProfileImageUrl = 'https://lunada.co.il/wp-content/uploads/2016/04/12198090531909861341man-silhouette.svg_.hi_-300x284.png';
+  String _preferredGender = 'Everyone';
+  int _minAge = 24;
+  int _maxAge = 34;
+  bool _readFromShared = false;
   Timer? _debounce;
-  int? _auditionCount;
-  String? _filterName;
-  String? _filterDisplayImageUrl;
-  String? _celebId;
-  double? _tasteMixRatio;
-  double? _radius;
+  int _auditionCount = 4;
+  String _filterName = '';
+  String _filterDisplayImageUrl = '';
+  String _celebId = 'No celeb was selected';
+  double _tasteMixRatio = 0.5;
+  double _radius = 20;
+  double _lastSync = 0;
+  String _fcmToken = '';
+  bool _registered = false;
 
   SettingsData._privateConstructor(){
-    //Fill in some "default" values which should be filled in within milliseconds of opening the App
-    _readFromShared = false;
-    _name = '';
-    _facebookId = '';
-    _facebookProfileImageUrl = 'https://lunada.co.il/wp-content/uploads/2016/04/12198090531909861341man-silhouette.svg_.hi_-300x284.png';
-    _preferredGender = 'Everyone';
-    _minAge = 18;
-    _maxAge = 24;
-    _auditionCount = 4;
-    _filterName = '';
-    _filterDisplayImageUrl = '';
-    _celebId = 'No celeb was selected';
-    _tasteMixRatio = 0.5;
-    _radius = 20;
 
     //And after that, read settings from shared
     readSettingsFromShared();
@@ -70,7 +63,11 @@ class SettingsData extends ChangeNotifier{
     _filterDisplayImageUrl = sharedPreferences.getString(FILTER_DISPLAY_IMAGE_URL_KEY) ?? _filterDisplayImageUrl;
     _celebId = sharedPreferences.getString(CELEB_ID_KEY) ?? _celebId;
     _tasteMixRatio = sharedPreferences.getDouble(TASTE_MIX_RATIO_KEY) ?? _tasteMixRatio;
+    _lastSync =sharedPreferences.getDouble(LAST_SYNC_KEY) ?? _lastSync;
+    _fcmToken = sharedPreferences.getString(FCM_TOKEN_KEY) ?? _fcmToken;
+    _registered = sharedPreferences.getBool(REGISTERED_KEY) ?? _registered;
     _readFromShared = true;
+
     return;
   }
 
@@ -89,131 +86,160 @@ class SettingsData extends ChangeNotifier{
 
 
 
-  String? get preferredGender{
+  String get preferredGender{
     return _preferredGender;
   }
 
-  set preferredGender(String? newPreferredGender){
+  set preferredGender(String newPreferredGender){
     _preferredGender = newPreferredGender;
     savePreferences(PREFERRED_GENDER_KEY, newPreferredGender);
   }
 
-  String? get name{
+  String get name{
     return _name;
   }
 
-  set name(String? newName){
+  set name(String newName){
     _name = newName;
     savePreferences(NAME_KEY, newName);
   }
 
 
-  String? get facebookId{
+  String get facebookId{
     return _facebookId;
   }
 
-  set facebookId(String? newFacebookId){
+  set facebookId(String newFacebookId){
     _facebookId = newFacebookId;
     savePreferences(FACEBOOK_ID_KEY, newFacebookId);
   }
 
 
 
-  String? get facebookProfileImageUrl{
+  String get facebookProfileImageUrl{
     return _facebookProfileImageUrl;
   }
 
-  set facebookProfileImageUrl(String? newUrl){
+  set facebookProfileImageUrl(String newUrl){
     _facebookProfileImageUrl = newUrl;
     savePreferences(FACEBOOK_PROFILE_IMAGE_URL_KEY, newUrl);
   }
 
 
-  int? get minAge{
+  int get minAge{
     return _minAge;
   }
 
-   set minAge(int? newMinAge){
+   set minAge(int newMinAge){
     _minAge = newMinAge;
     savePreferences(MIN_AGE_KEY,newMinAge);
   }
 
-  int? get maxAge{
+  int get maxAge{
     return _maxAge;
   }
 
-  set maxAge(int? newMaxAge){
+  set maxAge(int newMaxAge){
     _maxAge = newMaxAge;
     savePreferences(MAX_AGE_KEY, newMaxAge);
   }
 
-  int? get auditionCount{
+  int get auditionCount{
     return _auditionCount;
   }
 
-  set auditionCount(int? newAuditionCount){
+  set auditionCount(int newAuditionCount){
     _auditionCount = newAuditionCount;
     savePreferences(AUDITION_COUNT_KEY, newAuditionCount);
   }
 
-  String? get filterName{
+  String get filterName{
     return _filterName;
   }
 
-  set filterName(String? newFilterName){
+  set filterName(String newFilterName){
     _filterName = newFilterName;
     savePreferences(FILTER_NAME_KEY, newFilterName);
   }
 
-  String? get filterDisplayImageUrl{
+  String get filterDisplayImageUrl{
     return _filterDisplayImageUrl;
   }
 
-  set filterDisplayImageUrl(String? newFilterDisplayImageUrl){
+  set filterDisplayImageUrl(String newFilterDisplayImageUrl){
     _filterDisplayImageUrl = newFilterDisplayImageUrl;
     savePreferences(FILTER_DISPLAY_IMAGE_URL_KEY, newFilterDisplayImageUrl);
   }
 
-  String? get celebId{
+  String get celebId{
     return _celebId;
   }
 
-  set celebId(String? newCelebId){
+  set celebId(String newCelebId){
     _celebId = newCelebId;
     savePreferences(CELEB_ID_KEY, newCelebId);
   }
 
-  double? get tasteMixRatio{
+  double get tasteMixRatio{
     return _tasteMixRatio;
   }
 
-  set tasteMixRatio(double? newTasteMixRatio){
+  set tasteMixRatio(double newTasteMixRatio){
     _tasteMixRatio = newTasteMixRatio;
     savePreferences(TASTE_MIX_RATIO_KEY, newTasteMixRatio);
   }
 
-  double? get radius{
+  double get radius{
     return _radius;
   }
 
-  set radius(double? newRadius){
+  set radius(double newRadius){
     _radius = newRadius;
     savePreferences(RADIUS_KEY, newRadius);
+  }
+
+  double get lastSync{
+    return _lastSync;
+  }
+
+  set lastSync(double newLastSync){
+    _lastSync = newLastSync;
+    savePreferences(LAST_SYNC_KEY, newLastSync,sendServer: false);
   }
   
   UserId get id{
     return UserId(id: _facebookId, userType: UserType.REAL_USER);
   }
 
+  String get fcmToken{
+    return _fcmToken;
+  }
+
+  set fcmToken(String newToken){
+    _fcmToken = newToken;
+    savePreferences(FCM_TOKEN_KEY, newToken);
+  }
+
+  bool get registered{
+    return _registered;
+  }
+
+  set registered(bool newRegistered){
+    _registered = newRegistered;
+    savePreferences(REGISTERED_KEY, newRegistered,sendServer: false);
+  }
 
 
-  void savePreferences(String sharedPreferencesKey, dynamic newValue) async {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(_debounceSettingsTime, () async{
-      if(_facebookId !=null && _facebookId!.length>0){
-      await NetworkHelper().postUserSettings();}
-      MatchEngine().clear();
-    });
+
+  void savePreferences(String sharedPreferencesKey, dynamic newValue,{bool sendServer = true}) async {
+    if(sendServer){
+      if (_debounce?.isActive ?? false) {_debounce!.cancel();}
+      _debounce = Timer(_debounceSettingsTime, () async{
+        if(_facebookId !=null && _facebookId.length>0){
+        await NetworkHelper().postUserSettings();}
+        MatchEngine().clear();
+      });
+    }
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if(newValue is int) {
       sharedPreferences.setInt(sharedPreferencesKey, newValue);

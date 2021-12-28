@@ -88,7 +88,7 @@ class _MatchScreenState extends State<MatchScreen>
       child: Column(
         children: [
           CustomAppBar(
-            customTitleBuilder: Container(
+            customTitle: Container(
               padding: EdgeInsets.symmetric(horizontal: 10.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

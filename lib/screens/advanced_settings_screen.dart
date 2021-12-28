@@ -49,8 +49,8 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
   Celeb _selectedCeleb = Celeb(celebName: SettingsData().celebId, imagesUrls: [
     SettingsData().filterDisplayImageUrl
   ]); //TODO support Celeb fetching from SettingsData
-  String? _currentChosenFilterName = SettingsData().filterName;
-  int? _chosenAuditionCount = SettingsData().auditionCount;
+  String _currentChosenFilterName = SettingsData().filterName;
+  int _chosenAuditionCount = SettingsData().auditionCount;
 
   // THis enables us to block the UI why a process that demands that is going on.
   bool isLoading = false;
@@ -99,7 +99,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
     String? title,
     String? description,
     List<Widget>? children,
-    String? filterName,
+    required String filterName,
     double height = 175.0,
   }) {
     return GlobalWidgets.buildSettingsBlock(
@@ -171,7 +171,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     //
-    _currentChosenFilterName!.length > 0
+    _currentChosenFilterName.length > 0
         ? _availableFilters = 0
         : _availableFilters = 1;
     resolveIntToString() {
@@ -183,7 +183,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
     }
 
     bool customImageExists = SettingsData().filterDisplayImageUrl != null &&
-        SettingsData().filterDisplayImageUrl!.length > 0;
+        SettingsData().filterDisplayImageUrl.length > 0;
 
     return Stack(
       children: [

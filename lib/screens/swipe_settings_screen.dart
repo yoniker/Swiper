@@ -34,7 +34,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
       SettingsData().minAge!.toDouble(), SettingsData().maxAge!.toDouble());
   bool _showInDiscovery =
       false; //TODO change SettingsData to support visibility
-  double? _maxDistance = SettingsData().radius;
+  double _maxDistance = SettingsData().radius;
 
   @override
   void initState() {

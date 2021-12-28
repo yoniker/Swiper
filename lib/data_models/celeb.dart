@@ -1,5 +1,5 @@
 class Celeb {
-  final String? celebName;
+  final String celebName;
   final String? name;
   final List<String?>? aliases;
   final String? birthday;
@@ -8,7 +8,7 @@ class Celeb {
   List<String?>? imagesUrls;
 
   Celeb({
-    this.celebName,
+    required this.celebName,
     this.name,
     this.aliases,
     this.birthday,

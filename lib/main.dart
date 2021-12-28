@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/advanced_settings_screen.dart';
@@ -15,11 +16,15 @@ import 'package:betabeta/screens/notification_screen.dart';
 import 'package:betabeta/screens/profile_details_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
+import 'package:betabeta/services/notifications_controller.dart';
 import 'package:betabeta/splash_screen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 import 'models/celebs_info_model.dart';
 import 'models/details_model.dart';
@@ -34,7 +39,7 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-void main() {
+void main() async {
   HttpOverrides.global = new MyHttpOverrides();
   if (kIsWeb) {
     // initialiaze the facebook javascript SDK
@@ -45,6 +50,11 @@ void main() {
       version: "v9.0",
     );
   }
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(ChangeNotifierProvider(
       create: (context) => MatchEngine(),
       child: ChangeNotifierProvider(
@@ -53,8 +63,52 @@ void main() {
           child: MyApp())));
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+
+
+
+
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  Future<void> _initializeApp() async{ //TODO support error states
+    await NotificationsController.instance.initialize();
+    await ChatData.initDB();
+    await SettingsData().readSettingsFromShared();
+    updateFcmToken();
+
+    //bool navigatingToChatScreen = await NotificationsController.instance.navigateChatOnBackgroundNotification();
+    //if(!navigatingToChatScreen) {Navigator.pushReplacementNamed(context, SignInScreen.routeName);}
+  }
+
+  Future<void> updateFcmToken()async{
+
+    while(true) {
+      try{
+        String? token = await FirebaseMessaging.instance.getToken();
+        print('Got the token $token');
+        if (token != null) {
+          await SettingsData().readSettingsFromShared();
+          if (SettingsData().fcmToken != token) {
+            print('updating fcm token..');
+            SettingsData().fcmToken = token;
+          }
+          return;
+        }
+      }
+      catch(val){
+        print('caught $val');
+      }
+    }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     DetailsData(); //Create both singletons  which read from shared preferences. TODO what's the prinicpled way to do that?
