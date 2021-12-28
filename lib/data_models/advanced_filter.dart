@@ -17,19 +17,19 @@ class AdvancedFilter {
   /// The index of the [AdvancedFilter] instance
   ///
   /// This is `1` for [FilterType.SELECT_CELEB], `2` for [FilterType.USE_TASTE] and `0` (zero) for [FilterType.NONE].
-  int filterIndex;
+  int? filterIndex;
 
   /// The type of the Advanced filters chosen.
   /// This can either be `FilterType.SELECT_CELEB`, `FilterType.USE_TASTE` or `FilterType.NONE`.
-  FilterType filterType;
+  FilterType? filterType;
 
   /// The number of People to Audition.
-  int auditionCount;
+  int? auditionCount;
 
   /// The Profile of the Celebrity chosen.
   ///
   /// NOTE: This should never be null when the `filterIndex` is (1) one.
-  Celeb selectedCeleb;
+  Celeb? selectedCeleb;
 
   /// ### FACTORY CONSTRUCTOR
   ///
@@ -39,7 +39,7 @@ class AdvancedFilter {
 
     return AdvancedFilter(
       filterIndex: json['filter_index'] ?? 0,
-      filterType: filterTypeFromString(json['filter_type']) ?? FilterType.NONE,
+      filterType: filterTypeFromString(json['filter_type']),
       auditionCount: json['audition_count'] ?? 50,
       // The null case is taken care of by the [Celeb] class.
       selectedCeleb: Celeb.fromJson(json['celeb']),
@@ -83,10 +83,10 @@ class AdvancedFilter {
   /// If the new Provided parameters are found to be null,
   /// the old properties of [this] are used instead.
   AdvancedFilter copyWith({
-    int filterIndex,
-    FilterType filterType,
-    int auditonCount,
-    Celeb selectedCeleb,
+    int? filterIndex,
+    FilterType? filterType,
+    int? auditonCount,
+    Celeb? selectedCeleb,
   }) {
     //
     return AdvancedFilter(
@@ -105,7 +105,7 @@ class AdvancedFilter {
       'filter_index': filterIndex,
       'filter_type': filterTypeToString(filterType),
       'audition_count': auditionCount,
-      'celeb': selectedCeleb.toJson(),
+      'celeb': selectedCeleb!.toJson(),
     };
   }
 

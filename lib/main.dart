@@ -14,7 +14,6 @@ import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/notification_screen.dart';
 import 'package:betabeta/screens/profile_details_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
-import 'package:betabeta/screens/view_children_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
 import 'package:betabeta/splash_screen.dart';
 import 'package:flutter/foundation.dart';
@@ -28,7 +27,7 @@ import 'models/details_model.dart';
 class MyHttpOverrides extends HttpOverrides {
   //TODO it's a temporary fix so we can use self signed certificates. DON'T USE IN PRODUCTION
   @override
-  HttpClient createHttpClient(SecurityContext context) {
+  HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
       ..badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
@@ -112,13 +111,13 @@ class MyApp extends StatelessWidget {
         },
       );
     } else if (settings.name == FaceSelectionScreen.routeName) {
-      final FaceSelectionScreenArguments args =
-          settings.arguments as FaceSelectionScreenArguments;
+      final FaceSelectionScreenArguments? args =
+          settings.arguments as FaceSelectionScreenArguments?;
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {
           return FaceSelectionScreen(
-            imageFile: args.imageFile,
+            imageFile: args!.imageFile,
             imageFileName: args.imageFileName,
           );
         },

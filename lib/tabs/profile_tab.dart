@@ -15,7 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ProfileTabRedo extends StatefulWidget {
-  ProfileTabRedo({Key key}) : super(key: key);
+  ProfileTabRedo({Key? key}) : super(key: key);
 
   @override
   _ProfileTabRedoState createState() => _ProfileTabRedoState();
@@ -23,7 +23,7 @@ class ProfileTabRedo extends StatefulWidget {
 
 class _ProfileTabRedoState extends State<ProfileTabRedo>
     with AutomaticKeepAliveClientMixin, MountedStateMixin<ProfileTabRedo> {
-  List<String> _profileImagesUrls = [];
+  List<String>? _profileImagesUrls = [];
 
   // create a SettingsData & a NetworkHelper instance.
 
@@ -50,7 +50,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
     super.dispose();
   }
 
-  void _syncFromServer([bool reset]) async {
+  void _syncFromServer([bool? reset]) async {
     // if (reset == true) {
     //   _profileImagesUrls = List.generate(6, (index) => null, growable: false);
     // }
@@ -64,7 +64,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
   }
 
   // builds the profile picture display.
-  Widget _profilePicDisplay(String imageUrl) {
+  Widget _profilePicDisplay(String? imageUrl) {
     //
     ImageProvider _image = imageUrl == null
         ? PrecachedImage.asset(
@@ -113,10 +113,10 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
 
   /// builds the various achievement display such as the like display and the stars display.
   Widget _achievementLabel({
-    @required String label,
-    @required String iconURI,
-    @required String value,
-    @required Color color,
+    required String label,
+    required String iconURI,
+    required String value,
+    required Color color,
   }) {
     return Column(
       children: [
@@ -146,11 +146,11 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
     // Implementation for [AutomaticKeepAliveClientMixin].
     super.build(context);
 
-    String _imgUrl;
+    String? _imgUrl;
 
 
-    if (_profileImagesUrls != null && _profileImagesUrls.isNotEmpty) {
-      _imgUrl = _profileImagesUrls.first;
+    if (_profileImagesUrls != null && _profileImagesUrls!.isNotEmpty) {
+      _imgUrl = _profileImagesUrls!.first;
     }
 
     return Scaffold(
@@ -169,7 +169,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
             Padding(
               padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
               child: Text(
-                SettingsData().name,
+                SettingsData().name!,
                 style: titleStyle,
               ),
             ),

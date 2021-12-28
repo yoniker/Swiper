@@ -95,7 +95,7 @@ class _CardStackState extends State<CardStack> {
         alignment: Alignment(middleStackOffset.dx, middleStackOffset.dy),
         child: MatchCard(
           profile: Provider.of<MatchEngine>(context, listen: false)
-              .nextMatch()
+              .nextMatch()!
               .profile,
           showCarousel: false,
           clickable: false,
@@ -116,9 +116,9 @@ class _CardStackState extends State<CardStack> {
     MatchEngine matchEngine = Provider.of<MatchEngine>(context, listen: false);
     if (matchEngine.currentMatch() != null) {
       Widget card = MatchCard(
-        key: Key(matchEngine.currentMatch().profile.username),
+        key: Key(matchEngine.currentMatch()!.profile!.username!),
         profile: Provider.of<MatchEngine>(context, listen: false)
-            .currentMatch()
+            .currentMatch()!
             .profile,
         showCarousel: true,
         clickable: true,
@@ -136,9 +136,9 @@ class _CardStackState extends State<CardStack> {
     return SpinKitDoubleBounce(size: 200, color: Colors.blueAccent);
   }
 
-  SlideDirection _desiredSlideOutDirection() {
+  SlideDirection? _desiredSlideOutDirection() {
     switch (Provider.of<MatchEngine>(context, listen: false)
-        .currentMatch()
+        .currentMatch()!
         .decision) {
       case Decision.nope:
         return SlideDirection.left;
@@ -160,19 +160,19 @@ class _CardStackState extends State<CardStack> {
 
       // sort the new middle card [Scale] and [Offset] value.
       // make increment based on the distance the card has been slided.
-      var middleDyIncrement = (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
+      num middleDyIncrement = (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
       middleStackScale = 0.9 + (0.5 * (distance / 100.0)).clamp(0.0, 0.1);
       middleStackOffset = Offset(0.0, 1.4 + middleDyIncrement);
 
       // sort the new middle card [Scale] and [Offset] value.
       // make increment based on the distance the card has been slided.
-      var bottomDyIncrement = (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
+      num bottomDyIncrement = (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
       bottomStackScale = 0.8 + (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
       bottomStackOffset = Offset(0.0, 1.05 + bottomDyIncrement);
     });
   }
 
-  void _onSlideComplete(SlideDirection direction) {
+  void _onSlideComplete(SlideDirection? direction) {
     Decision decision = Decision.indecided;
 
     switch (direction) {
@@ -185,6 +185,7 @@ class _CardStackState extends State<CardStack> {
       case SlideDirection.up:
         decision = Decision.superLike;
         break;
+      default: decision = Decision.indecided;
     }
 
     Provider.of<MatchEngine>(context, listen: false)
@@ -225,16 +226,16 @@ enum SlideDirection {
 }
 
 class DraggableCard extends StatefulWidget {
-  final Widget card;
+  final Widget? card;
   final bool isDraggable;
-  final SlideDirection slideTo;
-  final Function(double distance) onSlideUpdate;
-  final Function(SlideDirection direction) onSlideComplete;
-  final double screenWidth;
-  final double screenHeight;
+  final SlideDirection? slideTo;
+  final Function(double distance)? onSlideUpdate;
+  final Function(SlideDirection? direction)? onSlideComplete;
+  final double? screenWidth;
+  final double? screenHeight;
 
   DraggableCard({
-    Key key,
+    Key? key,
     this.card,
     this.isDraggable = true,
     this.slideTo,
@@ -250,20 +251,20 @@ class DraggableCard extends StatefulWidget {
 
 class _DraggableCardState extends State<DraggableCard>
     with TickerProviderStateMixin {
-  Decision decision;
+  Decision? decision;
   GlobalKey profileCardKey = GlobalKey(debugLabel: 'profile_card_key');
-  Offset cardOffset = const Offset(0.0, 0.0);
-  Offset dragStart;
-  Offset dragPosition;
-  List<Offset>
+  Offset? cardOffset = const Offset(0.0, 0.0);
+  Offset? dragStart;
+  Offset? dragPosition;
+  List<Offset?>?
       gestureOffsets; //Track if all offsets happened at the same direction
-  List<Duration>
+  List<Duration?>?
       gestureTimeStamps; //Track all of the time stamps to test if it happened "fast enough"
-  Offset slideBackStart;
-  SlideDirection slideOutDirection;
-  AnimationController slideBackAnimation;
-  Tween<Offset> slideOutTween;
-  AnimationController slideOutAnimation;
+  Offset? slideBackStart;
+  SlideDirection? slideOutDirection;
+  late AnimationController slideBackAnimation;
+  Tween<Offset>? slideOutTween;
+  late AnimationController slideOutAnimation;
 
   @override
   void initState() {
@@ -277,7 +278,7 @@ class _DraggableCardState extends State<DraggableCard>
                 Curves.elasticOut.transform(slideBackAnimation.value));
 
             if (null != widget.onSlideUpdate) {
-              widget.onSlideUpdate(cardOffset.distance);
+              widget.onSlideUpdate!(cardOffset!.distance);
             }
           }))
       ..addStatusListener((AnimationStatus status) {
@@ -297,9 +298,9 @@ class _DraggableCardState extends State<DraggableCard>
       duration: const Duration(milliseconds: 200),
     )
       ..addListener(() => setState(() {
-            cardOffset = slideOutTween.evaluate(slideOutAnimation);
+            cardOffset = slideOutTween!.evaluate(slideOutAnimation);
             if (null != widget.onSlideUpdate) {
-              widget.onSlideUpdate(cardOffset.distance);
+              widget.onSlideUpdate!(cardOffset!.distance);
             }
           }))
       ..addStatusListener((AnimationStatus status) {
@@ -310,7 +311,7 @@ class _DraggableCardState extends State<DraggableCard>
             slideOutTween = null;
 
             if (widget.onSlideComplete != null) {
-              widget.onSlideComplete(slideOutDirection);
+              widget.onSlideComplete!(slideOutDirection);
             }
           });
         }
@@ -321,7 +322,7 @@ class _DraggableCardState extends State<DraggableCard>
   void didUpdateWidget(DraggableCard oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.card.key != oldWidget.card.key) {
+    if (widget.card!.key != oldWidget.card!.key) {
       cardOffset = const Offset(0.0, 0.0);
     }
 
@@ -352,28 +353,28 @@ class _DraggableCardState extends State<DraggableCard>
     dragStart = _chooseRandomDragStart();
     slideOutTween = Tween(
       begin: const Offset(0.0, 0.0),
-      end: Offset(-2 * widget.screenWidth, 0.0),
+      end: Offset(-2 * widget.screenWidth!, 0.0),
     );
 
     slideOutAnimation.forward(from: 0.0);
   }
 
   Offset _chooseRandomDragStart() {
-    final cardContex = profileCardKey.currentContext;
+    final cardContex = profileCardKey.currentContext!;
     final cardTopLeft = (cardContex.findRenderObject() as RenderBox)
         .localToGlobal(const Offset(0.0, 0.0));
     final dragStartY =
-        widget.screenHeight * (new Random().nextDouble() < 0.5 ? 0.25 : 0.75) +
+        widget.screenHeight! * (new Random().nextDouble() < 0.5 ? 0.25 : 0.75) +
             cardTopLeft.dy;
 
-    return Offset(widget.screenWidth / 2 + cardTopLeft.dx, dragStartY);
+    return Offset(widget.screenWidth! / 2 + cardTopLeft.dx, dragStartY);
   }
 
   void _slideRight() {
     dragStart = _chooseRandomDragStart();
     slideOutTween = Tween(
       begin: const Offset(0.0, 0.0),
-      end: Offset(2 * widget.screenWidth, 0.0),
+      end: Offset(2 * widget.screenWidth!, 0.0),
     );
 
     slideOutAnimation.forward(from: 0.0);
@@ -384,7 +385,7 @@ class _DraggableCardState extends State<DraggableCard>
     dragStart = _chooseRandomDragStart();
     slideOutTween = Tween(
       begin: const Offset(0.0, 0.0),
-      end: Offset(0.0, -2 * widget.screenHeight),
+      end: Offset(0.0, -2 * widget.screenHeight!),
     );
 
     slideOutAnimation.forward(from: 0.0);
@@ -403,12 +404,12 @@ class _DraggableCardState extends State<DraggableCard>
   void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
       dragPosition = details.globalPosition;
-      cardOffset = dragPosition - dragStart;
-      gestureOffsets.add(cardOffset);
-      gestureTimeStamps.add(details.sourceTimeStamp);
+      cardOffset = dragPosition! - dragStart!;
+      gestureOffsets!.add(cardOffset);
+      gestureTimeStamps!.add(details.sourceTimeStamp);
 
       if (null != widget.onSlideUpdate) {
-        widget.onSlideUpdate(cardOffset.distance);
+        widget.onSlideUpdate!(cardOffset!.distance);
       }
     });
   }
@@ -419,11 +420,11 @@ class _DraggableCardState extends State<DraggableCard>
         1; //TODO convert it into Duration since it's more like dart than this
     const double MAXIMUM_DURATION_TIME = 1000;
 
-    if (gestureTimeStamps.length < 2) {
+    if (gestureTimeStamps!.length < 2) {
       return FastSwipe.notFastSwipe;
     }
     final int gestureTime =
-        (gestureTimeStamps[gestureTimeStamps.length - 1] - gestureTimeStamps[0])
+        (gestureTimeStamps![gestureTimeStamps!.length - 1]! - gestureTimeStamps![0]!)
             .inMilliseconds;
     if (gestureTime < MINIMUM_DURATION_TIME) {
       return FastSwipe.notFastSwipe;
@@ -432,14 +433,14 @@ class _DraggableCardState extends State<DraggableCard>
       return FastSwipe.notFastSwipe;
     } //TODO again,it's important to cut the lists but for now
     double overAllGestureSize =
-        gestureOffsets[gestureOffsets.length - 1].dx - gestureOffsets[0].dx;
+        gestureOffsets![gestureOffsets!.length - 1]!.dx - gestureOffsets![0]!.dx;
     if (overAllGestureSize.abs() < MINIMUM_GESTURE_LENGTH) {
       return FastSwipe.notFastSwipe;
     }
     //TODO cut both lists such that we will observe only the very last motions eg 1/2 miliseconds
     bool monotonic = true;
-    for (int i = 1; i < gestureOffsets.length; ++i) {
-      if (gestureOffsets[i].dx.abs() < gestureOffsets[i - 1].dx.abs()) {
+    for (int i = 1; i < gestureOffsets!.length; ++i) {
+      if (gestureOffsets![i]!.dx.abs() < gestureOffsets![i - 1]!.dx.abs()) {
         monotonic = false;
         break;
       }
@@ -448,7 +449,7 @@ class _DraggableCardState extends State<DraggableCard>
       return FastSwipe.notFastSwipe;
     }
 
-    if (gestureOffsets[0].dx > gestureOffsets[1].dx) {
+    if (gestureOffsets![0]!.dx > gestureOffsets![1]!.dx) {
       return FastSwipe.Left;
     }
 
@@ -456,10 +457,10 @@ class _DraggableCardState extends State<DraggableCard>
   }
 
   void _onPanEnd(DragEndDetails details) {
-    final dragVector = cardOffset / cardOffset.distance;
-    bool isInLeftRegion = (cardOffset.dx / context.size.width) < -0.35;
-    bool isInRightRegion = (cardOffset.dx / context.size.width) > 0.35;
-    final isInTopRegion = (cardOffset.dy / context.size.height) < -0.30;
+    final dragVector = cardOffset! / cardOffset!.distance;
+    bool isInLeftRegion = (cardOffset!.dx / context.size!.width) < -0.35;
+    bool isInRightRegion = (cardOffset!.dx / context.size!.width) > 0.35;
+    final isInTopRegion = (cardOffset!.dy / context.size!.height) < -0.30;
     final FastSwipe fastSwipeStatus = detectFastSwipe();
 
     isInLeftRegion |= fastSwipeStatus == FastSwipe.Left;
@@ -468,7 +469,7 @@ class _DraggableCardState extends State<DraggableCard>
     setState(() {
       if (isInLeftRegion || isInRightRegion) {
         slideOutTween = Tween(
-            begin: cardOffset, end: dragVector * (2 * context.size.width));
+            begin: cardOffset, end: dragVector * (2 * context.size!.width));
 
         slideOutAnimation.forward(from: 0.0);
 
@@ -476,7 +477,7 @@ class _DraggableCardState extends State<DraggableCard>
             isInLeftRegion ? SlideDirection.left : SlideDirection.right;
       } else if (isInTopRegion) {
         slideOutTween = Tween(
-            begin: cardOffset, end: dragVector * (2 * context.size.height));
+            begin: cardOffset, end: dragVector * (2 * context.size!.height));
         slideOutAnimation.forward(from: 0.0);
 
         slideOutDirection = SlideDirection.up;
@@ -490,9 +491,9 @@ class _DraggableCardState extends State<DraggableCard>
   double _rotation(Rect dragBounds) {
     if (dragStart != null) {
       final rotationCornerMultiplier =
-          dragStart.dy >= dragBounds.top + (dragBounds.height / 2) ? -1 : 1;
+          dragStart!.dy >= dragBounds.top + (dragBounds.height / 2) ? -1 : 1;
       return (pi / 8) *
-          (cardOffset.dx / dragBounds.width) *
+          (cardOffset!.dx / dragBounds.width) *
           rotationCornerMultiplier;
     } else {
       return 0.0;
@@ -501,7 +502,7 @@ class _DraggableCardState extends State<DraggableCard>
 
   Offset _rotationOrigin(Rect dragBounds) {
     if (dragStart != null) {
-      return dragStart - dragBounds.topLeft;
+      return dragStart! - dragBounds.topLeft;
     } else {
       return const Offset(0.0, 0.0);
     }
@@ -517,7 +518,7 @@ class _DraggableCardState extends State<DraggableCard>
           position: anchor,
           child: Transform(
             transform:
-                Matrix4.translationValues(cardOffset.dx, cardOffset.dy, 0.0)
+                Matrix4.translationValues(cardOffset!.dx, cardOffset!.dy, 0.0)
                   ..rotateZ(_rotation(anchorBounds)),
             origin: _rotationOrigin(anchorBounds),
             child: Container(
@@ -540,10 +541,10 @@ class _DraggableCardState extends State<DraggableCard>
 }
 
 class ProfileCard extends StatefulWidget {
-  final Profile profile;
-  final bool clickable;
+  final Profile? profile;
+  final bool? clickable;
 
-  ProfileCard({Key key, this.profile, this.clickable}) : super(key: key);
+  ProfileCard({Key? key, this.profile, this.clickable}) : super(key: key);
 
   @override
   _ProfileCardState createState() => _ProfileCardState();
@@ -552,7 +553,7 @@ class ProfileCard extends StatefulWidget {
 class _ProfileCardState extends State<ProfileCard> {
   Widget _buildBackground() {
     return PhotoBrowser(
-        photoAssetPaths: widget.profile.imageUrls,
+        photoAssetPaths: widget.profile!.imageUrls,
         visiblePhotoIndex: 0,
         clickable: widget.clickable);
   }
@@ -580,15 +581,15 @@ class _ProfileCardState extends State<ProfileCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  widget.profile.username != null
+                  widget.profile!.username != null
                       ? Text(
-                          widget.profile.username +
+                          widget.profile!.username! +
                               ', ' +
-                              widget.profile.age.toString(),
+                              widget.profile!.age.toString(),
                           style: TextStyle(color: Colors.white, fontSize: 24.0))
                       : Text(''),
-                  widget.profile.headline != null
-                      ? Text(widget.profile.headline,
+                  widget.profile!.headline != null
+                      ? Text(widget.profile!.headline!,
                           style: TextStyle(color: Colors.white, fontSize: 18.0))
                       : Text('')
                 ],

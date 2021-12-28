@@ -30,7 +30,7 @@ class NetworkHelper {
       DateTime(2000); //The year 2000 is when the last call happened :D
   DateTime _lastFacesImagesCall = DateTime(2000);
   DateTime _lastTaskStatusCall = DateTime(2000);
-  Future<http.Response> _facesCall;
+  Future<http.Response>? _facesCall;
   static const MIN_FACES_CALL_INTERVAL = Duration(milliseconds: 500);
 
   factory NetworkHelper() {
@@ -39,13 +39,13 @@ class NetworkHelper {
 
   NetworkHelper._internal();
 
-  static Future<List<String>> getCeleblinks(String celebName) async {
+  static Future<List<String>?> getCeleblinks(String? celebName) async {
     Uri celebsLinkUri = Uri.https(SERVER_ADDR, 'celeblinks/$celebName');
     http.Response resp = await http.get(celebsLinkUri);
     if (resp.statusCode == 200) {
       //TODO think how to handle network errors
       var parsed = json.jsonDecode(resp.body);
-      List<String> imagesLinks = parsed.cast<String>();
+      List<String>? imagesLinks = parsed.cast<String>();
       return imagesLinks;
     }
 
@@ -96,15 +96,15 @@ class NetworkHelper {
     }).toList();
   }
 
-  postUserDecision({Decision decision, Profile otherUserProfile}) async {
+  postUserDecision({Decision? decision, Profile? otherUserProfile}) async {
     SettingsData settings = SettingsData();
     if (true) {
       print('TODO fix the profile @matchEngine stuff');
       return;
     }
-    Map<String, String> toSend = {
+    Map<String, String?> toSend = {
       'deciderName': settings.name,
-      'decidee': otherUserProfile.username,
+      'decidee': otherUserProfile!.username,
       'decision': decision
           .toString()
           .substring("Decision.".length, decision.toString().length)
@@ -117,7 +117,7 @@ class NetworkHelper {
   }
 
   postUserDetails() async{
-    Map<String,String> detailsToSend={
+    Map<String,String?> detailsToSend={
       'about_me':DetailsData().aboutMe,
       'job':DetailsData().job,
       'company':DetailsData().company,
@@ -134,7 +134,7 @@ class NetworkHelper {
 
   postUserSettings() async {
     SettingsData settings = SettingsData();
-    Map<String, String> toSend = {
+    Map<String, String?> toSend = {
       'decider_facebook_id': settings.facebookId,
       'update_date': '8.0',
       'decider_name': settings.name,
@@ -156,11 +156,11 @@ class NetworkHelper {
   }
 
   Future<HashMap<String, dynamic>> getFacesCustomImageSearchLinks(
-      {String imageFileName, UserId userId}) async {
+      {String? imageFileName, UserId? userId}) async {
     if (_facesCall != null) {
       return HashMap();
     }
-    Uri facesLinkUri = Uri.https(SERVER_ADDR, 'faces/${userId.id}/$imageFileName');
+    Uri facesLinkUri = Uri.https(SERVER_ADDR, 'faces/${userId!.id}/$imageFileName');
     _facesCall = http.get(facesLinkUri);
     if (DateTime.now().difference(_lastFacesImagesCall) <
         MIN_FACES_CALL_INTERVAL) {
@@ -168,7 +168,7 @@ class NetworkHelper {
           DateTime.now().difference(_lastFacesImagesCall));
     }
     _lastFacesImagesCall = DateTime.now();
-    http.Response response = await _facesCall; //TODO something if error
+    http.Response response = await _facesCall!; //TODO something if error
     dynamic facesData = jsonDecode(response.body);
     _facesCall = null;
     return HashMap.from(facesData);
@@ -178,7 +178,7 @@ class NetworkHelper {
   Future<img.Image> _prepareImage(PickedFile pickedImageFile)async{
     const MAX_IMAGE_SIZE = 800; //TODO make it  a parameter (if needed)
 
-    img.Image theImage = img.decodeImage(await pickedImageFile.readAsBytes());
+    img.Image theImage = img.decodeImage(await pickedImageFile.readAsBytes())!;
     if (max(theImage.height, theImage.width) > MAX_IMAGE_SIZE) {
       double resizeFactor =
           MAX_IMAGE_SIZE / max(theImage.height, theImage.width);
@@ -237,12 +237,12 @@ class NetworkHelper {
 
 
 
-  Future<List<String>> getProfileImages()async{
+  Future<List<String>?> getProfileImages()async{
     Uri countUri = Uri.https(SERVER_ADDR, '/profile_images/get_list/${SettingsData().facebookId}/');
     var response = await http.get(countUri);
     if(response.statusCode==200){
       var parsed = json.jsonDecode(response.body);
-      List<String> imagesLinks = parsed.cast<String>();
+      List<String>? imagesLinks = parsed.cast<String>();
       return imagesLinks;
     }
 
@@ -275,11 +275,11 @@ class NetworkHelper {
     return;
   }
 
-  Future<Map<String,String>> startChildrenTasks(Profile profile) async{ //Send a request to produce 1.User's face links 2.Match's face links 3.children images
+  Future<Map<String,String?>> startChildrenTasks(Profile profile) async{ //Send a request to produce 1.User's face links 2.Match's face links 3.children images
 
-    Map<String,String> detailsToSend={
-      'match_type':profile.userId.userType.toString(),
-      'match_id':profile.userId.id,
+    Map<String,String?> detailsToSend={
+      'match_type':profile.userId!.userType.toString(),
+      'match_id':profile.userId!.id,
       'match_images_server_location':profile.serverUserImagesLocation,
       'user_type':UserType.REAL_USER.toString(),
       'user_id':SettingsData().facebookId,
@@ -293,10 +293,10 @@ class NetworkHelper {
         body: encoded);
     if(response.statusCode==200){
       var decodedResponse = json.jsonDecode(response.body);
-      String childrenTaskId = decodedResponse['children_task'];
-      String matchFacesTaskId = decodedResponse['match_faces_task'];
-      String userFacesTaskId = decodedResponse['user_faces_task'];
-      String targetLocation = decodedResponse['target_location'];
+      String? childrenTaskId = decodedResponse['children_task'];
+      String? matchFacesTaskId = decodedResponse['match_faces_task'];
+      String? userFacesTaskId = decodedResponse['user_faces_task'];
+      String? targetLocation = decodedResponse['target_location'];
       return {'childrenTaskId':childrenTaskId, 'targetLocation':targetLocation,
         'user_faces_task':userFacesTaskId,'matchFacesTaskId':matchFacesTaskId
       };
@@ -306,7 +306,7 @@ class NetworkHelper {
     return {'taskId':'Status not 200', 'targetLocation':'NA'}; //TODO in general make the errors do sth in the UI (think what and how)
   }
 
-  Future<NetworkTaskStatus> checkTaskStatus(String taskId) async{
+  Future<NetworkTaskStatus> checkTaskStatus(String? taskId) async{
     if (DateTime.now().difference(_lastTaskStatusCall) < MIN_TASK_STATUS_CALL_INTERVAL) {
       await Future.delayed(MIN_TASK_STATUS_CALL_INTERVAL -
           DateTime.now().difference(_lastTaskStatusCall));
@@ -333,11 +333,11 @@ class NetworkHelper {
 
   }
 
-  Future<List<String>> getFacesLinksMatch(Profile profile)async{
+  Future<List<String>?> getFacesLinksMatch(Profile profile)async{
     Uri getFacesUri = Uri.https(SERVER_ADDR, '/faces_analyzed/${SettingsData().facebookId}');
-    Map<String,String> detailsToSend={
-      'user_id':profile.userId.id,
-      'user_type':profile.userId.userType.toString(),
+    Map<String,String?> detailsToSend={
+      'user_id':profile.userId!.id,
+      'user_type':profile.userId!.userType.toString(),
       'user_server_location':profile.serverUserImagesLocation
     };
 
@@ -352,7 +352,7 @@ class NetworkHelper {
 
   }
 
-  Future<List<String>> getFacesLinkSelf() async{
+  Future<List<String>?> getFacesLinkSelf() async{
     UserId selfId = UserId(id:SettingsData().facebookId,userType: UserType.REAL_USER);
     Profile selfProfile = Profile(userId:selfId,serverUserImagesLocation:'');
     return await getFacesLinksMatch(selfProfile);
@@ -360,7 +360,7 @@ class NetworkHelper {
   }
 
   // /generated_children/<username>/<children_dir>
-  Future<List<String>> getGeneratedBabiesLinks(String childrenDirLocation)async{
+  Future<List<String>?> getGeneratedBabiesLinks(String? childrenDirLocation)async{
     Uri getChildrenUri = Uri.https(SERVER_ADDR, '/generated_children/$childrenDirLocation');
     http.Response response = await http.get(getChildrenUri);
     if(response.statusCode==200){

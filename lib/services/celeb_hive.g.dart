@@ -17,16 +17,16 @@ class CelebAdapter extends TypeAdapter<CelebHive> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return CelebHive(
-      celeb_name: fields[0] as String,
-      name: fields[1] as String,
+      celebName: fields[0] as String?,
+      name: fields[1] as String?,
       aliases: (fields[2] as List).cast<String>(),
-      birthday: fields[3] as String,
-      description: fields[4] as String,
-      country: fields[5] as String,
-      gender: fields[6] as String,
-      code: fields[7] as String,
-      famous_name: fields[8] as String,
-      title: fields[9] as String,
+      birthday: fields[3] as String?,
+      description: fields[4] as String?,
+      country: fields[5] as String?,
+      gender: fields[6] as String?,
+      code: fields[7] as String?,
+      famousName: fields[8] as String?,
+      title: fields[9] as String?,
     );
   }
 
@@ -35,7 +35,7 @@ class CelebAdapter extends TypeAdapter<CelebHive> {
     writer
       ..writeByte(10)
       ..writeByte(0)
-      ..write(obj.celeb_name)
+      ..write(obj.celebName)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
@@ -51,7 +51,7 @@ class CelebAdapter extends TypeAdapter<CelebHive> {
       ..writeByte(7)
       ..write(obj.code)
       ..writeByte(8)
-      ..write(obj.famous_name)
+      ..write(obj.famousName)
       ..writeByte(9)
       ..write(obj.title);
   }

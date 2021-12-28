@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   static const String routeName = '/navigation_screen';
-  MainNavigationScreen({Key key, this.pageIndex = 1}) : super(key: key);
+  MainNavigationScreen({Key? key, this.pageIndex = 1}) : super(key: key);
 
   final int pageIndex;
 
@@ -22,7 +22,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _selectedTabIndex = 0;
 
   // create a pageController variable to control the varoius pages
-  PageController _pageController;
+  PageController? _pageController;
 
   // List of pages.
   List<Widget> pages = <Widget>[
@@ -73,7 +73,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   void dispose() {
     // dispose off the pageController we created for our pages
-    _pageController.dispose();
+    _pageController!.dispose();
     super.dispose();
   }
 
@@ -101,7 +101,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               switchTab(index);
 
               // then jump to the new page.
-              _pageController.jumpToPage(index);
+              _pageController!.jumpToPage(index);
             },
             items: [
               BottomNavigationBarItem(

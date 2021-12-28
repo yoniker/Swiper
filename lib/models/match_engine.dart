@@ -8,8 +8,8 @@ class MatchEngine extends ChangeNotifier {
   static const MINIMUM_CACHED_PROFILES=15; //TODO get it from shared preferences rather than hardcoded
   Queue<Match> _previousMatches; //This will be a stack
   Queue<Match> _matches;
-  bool addedMoreProfiles;
-  Future itemsBeingGotten; //See https://stackoverflow.com/questions/63402499/flutter-how-not-to-call-the-same-service-over-and-over/63402620?noredirect=1#comment112113319_63402620
+  bool? addedMoreProfiles;
+  Future? itemsBeingGotten; //See https://stackoverflow.com/questions/63402499/flutter-how-not-to-call-the-same-service-over-and-over/63402620?noredirect=1#comment112113319_63402620
 
   MatchEngine._privateConstructor():_matches=Queue<Match>(),_previousMatches=Queue<Match>(){
         addMatchesIfNeeded();
@@ -30,17 +30,17 @@ class MatchEngine extends ChangeNotifier {
     return _previousMatches.length>0;
   }
   int length(){return _matches.length;}
-  Match  currentMatch() {
+  Match?  currentMatch() {
     if(_matches.length<=0){return null;}
     return _matches.elementAt(0);}
-  Match nextMatch()  {
+  Match? nextMatch()  {
     if(_matches.length<=1){return null;}
     return _matches.elementAt(1);}
 
   Future<void> getMoreMatchesFromServer() async {
     if (! (itemsBeingGotten == null && _matches.length < MINIMUM_CACHED_PROFILES)) {
       return;}
-    if(SettingsData().facebookId ==null || SettingsData().facebookId.length<=0){return;}
+    if(SettingsData().facebookId ==null || SettingsData().facebookId!.length<=0){return;}
       try {
         itemsBeingGotten = NetworkHelper().getMatches();
         dynamic matches = await itemsBeingGotten;
@@ -67,7 +67,7 @@ class MatchEngine extends ChangeNotifier {
   }
 
   void goToNextMatch() {
-    if (currentMatch().decision != Decision.indecided) {
+    if (currentMatch()!.decision != Decision.indecided) {
       _previousMatches.addLast(_matches.removeFirst());
       notifyListeners();
       addMatchesIfNeeded();
@@ -88,13 +88,13 @@ class MatchEngine extends ChangeNotifier {
   void printMatches(){
     if(length()>=3){
       for(int i=0; i<3; ++i){
-        print(_matches.elementAt(i).profile.username);
+        print(_matches.elementAt(i).profile!.username);
       }
     }
   }
 
   currentMatchDecision(Decision decision,{bool nextMatch:true}){
-    Match currentMatch=this.currentMatch();
+    Match currentMatch=this.currentMatch()!;
     if(currentMatch!=null && currentMatch.decision == Decision.indecided){
       currentMatch.decision = decision;}
     if(nextMatch){
@@ -109,7 +109,7 @@ class MatchEngine extends ChangeNotifier {
 
 class Match extends ChangeNotifier {
 
-  final Profile profile;
+  final Profile? profile;
   Decision decision = Decision.indecided;
 
   Match({this.profile});

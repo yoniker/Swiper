@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class PhotoBrowser extends StatefulWidget {
-  final List<String> photoAssetPaths;
-  final int visiblePhotoIndex;
-  final bool clickable;
+  final List<String>? photoAssetPaths;
+  final int? visiblePhotoIndex;
+  final bool? clickable;
   PhotoBrowser({this.photoAssetPaths, this.visiblePhotoIndex,this.clickable});
 
   @override
@@ -11,8 +11,8 @@ class PhotoBrowser extends StatefulWidget {
 }
 
 class _PhotoBrowserState extends State<PhotoBrowser> {
-  int visiblePhotoIndex;
-  List<Image> images;
+  int? visiblePhotoIndex;
+  late List<Image> images;
 
   @override
   void initState() {
@@ -33,8 +33,8 @@ class _PhotoBrowserState extends State<PhotoBrowser> {
 
   void updateImages(context){
     images = [];
-    for(int imageIndex=0; imageIndex<widget.photoAssetPaths.length; imageIndex++){
-      Image img = Image.network('https://'+widget.photoAssetPaths[imageIndex],fit:BoxFit.cover);
+    for(int imageIndex=0; imageIndex<widget.photoAssetPaths!.length; imageIndex++){
+      Image img = Image.network('https://'+widget.photoAssetPaths![imageIndex],fit:BoxFit.cover);
       precacheImage(img.image, context);
       images.add(img);
 
@@ -48,14 +48,14 @@ class _PhotoBrowserState extends State<PhotoBrowser> {
 
   void _prevImage() {
     setState(() {
-      visiblePhotoIndex = visiblePhotoIndex > 0 ? visiblePhotoIndex - 1 : 0;
+      visiblePhotoIndex = visiblePhotoIndex! > 0 ? visiblePhotoIndex! - 1 : 0;
     });
   }
 
   void _nextImage() {
     setState(() {
-      visiblePhotoIndex = visiblePhotoIndex < widget.photoAssetPaths.length - 1
-          ? visiblePhotoIndex + 1
+      visiblePhotoIndex = visiblePhotoIndex! < widget.photoAssetPaths!.length - 1
+          ? visiblePhotoIndex! + 1
           : visiblePhotoIndex;
     });
   }
@@ -65,7 +65,7 @@ class _PhotoBrowserState extends State<PhotoBrowser> {
       fit: StackFit.expand,
       children: <Widget>[
         new GestureDetector(
-          onTap: widget.clickable? _prevImage:(){},
+          onTap: widget.clickable!? _prevImage:(){},
           child: new FractionallySizedBox(
             widthFactor: 0.5,
             heightFactor: 1.0,
@@ -76,7 +76,7 @@ class _PhotoBrowserState extends State<PhotoBrowser> {
           ),
         ),
         new GestureDetector(
-          onTap: widget.clickable?_nextImage:(){},
+          onTap: widget.clickable!?_nextImage:(){},
           child: new FractionallySizedBox(
             widthFactor: 0.5,
             heightFactor: 1.0,
@@ -96,7 +96,7 @@ class _PhotoBrowserState extends State<PhotoBrowser> {
       fit: StackFit.expand,
       children: <Widget>[
         // Photo
-        images[visiblePhotoIndex],
+        images[visiblePhotoIndex!],
         /*CachedNetworkImage(
           placeholder: (context, url) => CircularProgressIndicator(),
           imageUrl:
@@ -109,7 +109,7 @@ class _PhotoBrowserState extends State<PhotoBrowser> {
           left: 0.0,
           right: 0.0,
           child: SelectedPhotoIndicator(
-            photoCount: widget.photoAssetPaths.length,
+            photoCount: widget.photoAssetPaths!.length,
             visiblePhotoIndex: visiblePhotoIndex,
           ),
         ),
@@ -121,8 +121,8 @@ class _PhotoBrowserState extends State<PhotoBrowser> {
 }
 
 class SelectedPhotoIndicator extends StatelessWidget {
-  final int photoCount;
-  final int visiblePhotoIndex;
+  final int? photoCount;
+  final int? visiblePhotoIndex;
 
   SelectedPhotoIndicator({this.visiblePhotoIndex, this.photoCount});
 
@@ -163,7 +163,7 @@ class SelectedPhotoIndicator extends StatelessWidget {
 
   List<Widget> _buildIndicators() {
     List<Widget> indicators = [];
-    for (int i = 0; i < photoCount; i++) {
+    for (int i = 0; i < photoCount!; i++) {
       indicators.add(i == visiblePhotoIndex
           ? _buildActiveIndicator()
           : _buildInactiveIndicator());

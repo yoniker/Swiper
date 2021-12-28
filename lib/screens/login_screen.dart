@@ -1,9 +1,6 @@
-import 'dart:math';
-
+import 'package:auth_buttons/auth_buttons.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-import 'package:flutter_auth_buttons/src/button.dart' as auth_button;
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
@@ -20,8 +17,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   //See https://codesundar.com/flutter-facebook-login/
 
-  bool _errorTryingToLogin;
-  String _errorMessage;
+  late bool _errorTryingToLogin;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -33,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
   _getSettings() async {
     SettingsData settings = SettingsData();
     await settings.readSettingsFromShared();
-    if (settings.readFromShared && settings.facebookId != '') {
+    if (settings.readFromShared! && settings.facebookId != '') {
       print('get settings decided to move to main nav screen');
       Navigator.pushReplacementNamed(
         context,
@@ -42,21 +39,12 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  _signInWithoutLogin() {
-    SettingsData().name = 'x1000 Investor';
-    SettingsData().facebookId = Random().nextInt(999999).toString();
-    Navigator.pushReplacementNamed(
-      context,
-      MainNavigationScreen.routeName,
-    );
-  }
-
   _getFBLoginInfo() async {
     final loginResult = await FacebookAuth.instance.login();
 
     switch (loginResult.status) {
       case LoginStatus.success:
-        final AccessToken accessToken = loginResult.accessToken;
+        final AccessToken? accessToken = loginResult.accessToken;
         final userData = await FacebookAuth.instance.getUserData(
           fields: "name,email,picture.width(200)",
         );
@@ -67,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         DefaultCacheManager().emptyCache();
         DefaultCacheManager()
-            .getSingleFile(SettingsData().facebookProfileImageUrl);
+            .getSingleFile(SettingsData().facebookProfileImageUrl!);
         _getSettings();
         break;
 
@@ -85,47 +73,6 @@ class _LoginScreenState extends State<LoginScreen> {
         });
         break;
     }
-  }
-
-  Widget SignInNoLoginButton() {
-    return auth_button.StretchableButton(
-      buttonColor: Colors.green,
-      borderRadius: defaultBorderRadius,
-      onPressed: () {
-        _signInWithoutLogin();
-      },
-      buttonPadding: 8.0,
-      children: <Widget>[
-        // Facebook doesn't provide strict sizes, so this is a good
-        // estimate of their examples within documentation.
-        /*
-        Image(
-          image: AssetImage(
-            "graphics/flogo-HexRBG-Wht-100.png",
-            package: "flutter_auth_buttons",
-          ),
-          height: 24.0,
-          width: 24.0,
-        ),*/
-
-        Padding(
-          padding: const EdgeInsets.only(left: 6.0, right: 10.0),
-          child: Text(
-            'Continue without login',
-            style: TextStyle(
-              // default to the application font-style
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-        ),
-        Icon(
-          Icons.arrow_forward,
-          color: Colors.white,
-        ),
-      ],
-    );
   }
 
   @override
@@ -158,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  FacebookSignInButton(
+                  FacebookAuthButton(
                     onPressed: () {
                       _getFBLoginInfo();
                       //Navigator.push(context, MaterialPageRoute(builder: (context) => MatchingScreen(title: 'Flutter Demo Home Page')));
@@ -214,7 +161,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       barrierDismissible: true);
                 },
               ),
-              SignInNoLoginButton(),
             ],
           ),
         ));

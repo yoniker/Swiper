@@ -17,8 +17,8 @@ final Duration kFadeOutDuration = const Duration(milliseconds: 400);
 ///
 class CustomScrollBar extends StatefulWidget {
   CustomScrollBar({
-    Key key,
-    @required this.scrollController,
+    Key? key,
+    required this.scrollController,
     this.trackColor,
     this.thumbColor = Colors.white,
     this.trackHeight = 45,
@@ -75,7 +75,7 @@ class CustomScrollBar extends StatefulWidget {
   /// start scrolling.
   ///
   /// If null Defaults to `kFadeOutDuration` which is `Duration(milliseconds: 400)`.
-  final Duration fadeOutDuration;
+  final Duration? fadeOutDuration;
 
   /// The time for which the CustomScrollBar must wait when the ScrollView attached to this
   /// [CustomScrollBar] widget is no longer being scrolled. i.e is inactive.
@@ -87,7 +87,7 @@ class CustomScrollBar extends StatefulWidget {
   ///
   /// The default is [kDefaultTrackColor] defined in the [CustomScrollBar]'s Library
   /// which is grey with an opacity of 0.4
-  final Color trackColor;
+  final Color? trackColor;
 
   /// The color used to paint the `Thumb` of the [CustomScrollBar].
   ///
@@ -122,13 +122,13 @@ class _CustomScrollBarState extends State<CustomScrollBar>
   double derivedPosition = 0.0;
 
   // The controller for the fadding Animation of the CustomScrollBar.
-  AnimationController _opacityAnimationController;
+  late AnimationController _opacityAnimationController;
 
   // The Fade Animation literal itself.
-  Animation<double> _fadeAnimation;
+  late Animation<double> _fadeAnimation;
 
   // A timer to debounce the fade out Function
-  Timer _fadeOutDebouncer;
+  Timer? _fadeOutDebouncer;
 
   @override
   void initState() {
@@ -176,7 +176,7 @@ class _CustomScrollBarState extends State<CustomScrollBar>
     // For the Fade animation.
     var isScrollingNotifier =
         widget?.scrollController?.position?.isScrollingNotifier;
-    isScrollingNotifier.addListener(() {
+    isScrollingNotifier?.addListener(() {
       toggleVisibility();
     });
   }
@@ -189,10 +189,10 @@ class _CustomScrollBarState extends State<CustomScrollBar>
     var isScrollingNotifier =
         widget?.scrollController?.position?.isScrollingNotifier;
 
-    bool isScrolling = isScrollingNotifier.value;
+    bool? isScrolling = isScrollingNotifier?.value;
 
     // check if scrolling is active (under way).
-    if (isScrolling) {
+    if (isScrolling??false) {
       // stop any active animation.
       if (_opacityAnimationController.isAnimating && mounted) {
         _opacityAnimationController.reset();
@@ -224,7 +224,7 @@ class _CustomScrollBarState extends State<CustomScrollBar>
             // ensures that we are not calling the method that follows
             // after it the Widget has been disposed.
             mounted &&
-                isScrollingNotifier.value == false &&
+                (isScrollingNotifier?.value??true) == false &&
                 // makes sure that
                 _opacityAnimationController.isCompleted == true &&
                 _opacityAnimationController.isDismissed == false &&

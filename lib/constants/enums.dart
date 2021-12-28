@@ -18,7 +18,7 @@ enum FilterType {
 }
 
 /// CONVERT from String to FilterType.
-FilterType filterTypeFromString(String filter) {
+FilterType filterTypeFromString(String? filter) {
   switch (filter) {
     case 'select_celeb':
       return FilterType.SELECT_CELEB;
@@ -37,7 +37,7 @@ FilterType filterTypeFromString(String filter) {
 
 
 /// CONVERT from FilterType to String.
-String filterTypeToString(FilterType filterType) {
+String filterTypeToString(FilterType? filterType) {
   switch (filterType) {
     case FilterType.SELECT_CELEB:
       return 'select_celeb';

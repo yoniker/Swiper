@@ -36,7 +36,7 @@ class GlobalWidgets {
     EdgeInsets iconPad = const EdgeInsets.all(7.5),
 
     /// A callback that fires when this widget is tapped.
-    void Function() onTap,
+    void Function()? onTap,
   }) {
     // ASSERTION LAYER.
     assert(
@@ -72,16 +72,16 @@ class GlobalWidgets {
       {
 
       /// The description of the settings Tile.
-      String description,
+      String? description,
 
       /// The child Widget to build as the body of the Settings block.
-      Widget body,
+      Widget? body,
 
       /// The title for the Settings Panel or block
-      String title,
+      String? title,
 
       /// An optional parameter to build the Title Widget.
-      Widget top,
+      Widget? top,
 
       ///
       EdgeInsetsGeometry outerPadding =
@@ -167,8 +167,8 @@ class GlobalWidgets {
   /// A widget to show a simple Alert Dialogue.
   static Future<void> showAlertDialogue(
     BuildContext context, {
-    @required String message,
-    String title,
+    required String message,
+    String? title,
     void onTap,
   }) async {
     //
@@ -278,15 +278,15 @@ class GlobalWidgets {
   }
 
   static Future<void> showImagePickerDialogue({
-    @required BuildContext context,
+    required BuildContext context,
     String title = 'Select an Image source',
 
     /// This function is called immediately after the image is picked.
     /// Here you can make use of the [PickedFile] returned in whatever
     /// Network request or any other usage you may have in mind..
-    Function(PickedFile) onImagePicked,
+    Function(PickedFile?)? onImagePicked,
   }) async {
-    PickedFile _imageFile;
+    PickedFile? _imageFile;
     final ImagePicker _picker = ImagePicker();
     String _retrieveDataError;
 
@@ -309,7 +309,7 @@ class GlobalWidgets {
           }
         }
       } else {
-        _retrieveDataError = response.exception.code;
+        _retrieveDataError = response.exception!.code;
 
         print('Error retrieving lost Data! [ERROR-CODE]: $_retrieveDataError');
       }
@@ -361,9 +361,9 @@ class GlobalWidgets {
     }
 
     Widget imageSelectionItem({
-      @required ImageSource source,
-      String sourceName,
-      @required Widget icon,
+      required ImageSource source,
+      String? sourceName,
+      required Widget icon,
     }) {
       return InkWell(
         onTap: () {
@@ -487,8 +487,8 @@ class GlobalWidgets {
   }
 
   static void showLoadingIndicator({
-    @required BuildContext context,
-    String message,
+    required BuildContext context,
+    String? message,
 
     /// This determines whether or not the loading indicator overlay
     /// pops on pressing the back button.
@@ -550,8 +550,8 @@ class GlobalWidgets {
   /// a loading indicator and closes automatically when the given `fn` is done.
   static Future<void> indicatorIncoporatedFetch(
     void Function() fn, {
-    @required BuildContext context,
-    String message,
+    required BuildContext context,
+    String? message,
   }) async {
     assert(context != null,
         'The "context" provided is null! Please provide a non-null context');
@@ -565,10 +565,10 @@ class GlobalWidgets {
 ///
 class ActionBox extends StatelessWidget {
   const ActionBox({
-    Key key,
+    Key? key,
     this.trailing,
-    @required this.message,
-    @required this.onTap,
+    required this.message,
+    required this.onTap,
     this.backgroundColor,
     this.shadowColor,
     this.overflow = TextOverflow.ellipsis,
@@ -589,7 +589,7 @@ class ActionBox extends StatelessWidget {
   /// The widget to display after the message.
   ///
   /// This is usually an icon button that can recieve a tap gesture.
-  final Widget trailing;
+  final Widget? trailing;
 
   /// The callback to be fired when this item is clicked or Tapped.
   final GestureTapCallback onTap;
@@ -638,29 +638,29 @@ class ActionBox extends StatelessWidget {
   /// The border Radius to apply to the border of this widget.
   ///
   /// If null defaults to `BorderRadius.circular(13.0)`
-  final BorderRadiusGeometry borderRadius;
+  final BorderRadiusGeometry? borderRadius;
 
   /// The color with which to paint the notification box background.
   ///
   /// Defaults to the color provided by the [lightCardColor] const in "/lib/constant/color_constants.dart".
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   /// The color with which to paint the shadow behind the notification box.
   ///
   /// Defaults to the color provided by the [defaultShadowColor] const in "/lib/constant/color_constants.dart".
-  final Color shadowColor;
+  final Color? shadowColor;
 
   /// The [TestStyle] to assign to the message Text displayed in the box.
   ///
   /// Default to the TextStyle defined by the [smallCharStyle] const in "/lib/constant/color_constants.dart".
-  final TextStyle messageStyle;
+  final TextStyle? messageStyle;
 
   /// The size constraints applied to the widget.
-  final BoxConstraints constraints;
+  final BoxConstraints? constraints;
 
   @override
   Widget build(BuildContext context) {
-    Widget _trailing = trailing;
+    Widget? _trailing = trailing;
 
     if (automaticallyImplyTrailing && _trailing == null) {
       _trailing = useSplash
@@ -726,8 +726,8 @@ class ActionBox extends StatelessWidget {
 /// Label to be stacked above it.
 class DescriptionBanner extends StatelessWidget {
   const DescriptionBanner({
-    Key key,
-    @required this.message,
+    Key? key,
+    required this.message,
     this.leading,
     this.trailing,
     this.label,
@@ -747,12 +747,12 @@ class DescriptionBanner extends StatelessWidget {
   final String message;
 
   /// The widget to display after the message.
-  final Widget leading;
+  final Widget? leading;
   /// This is usually an icon button that can recieve a tap gesture.
-  final Widget trailing;
+  final Widget? trailing;
 
   /// The widget to stacked above the card.
-  final Widget label;
+  final Widget? label;
 
   /// Whether or not to display the default trailing widget if no trailing widget
   /// is provided.
@@ -763,21 +763,21 @@ class DescriptionBanner extends StatelessWidget {
   final bool enableFeedback;
 
   /// The callback to be fired when this item is clicked or Tapped.
-  final GestureTapCallback onTap;
+  final GestureTapCallback? onTap;
 
   /// The callback to be fired when this item is Long-pressed.
-  final GestureTapCallback onLongPressed;
+  final GestureTapCallback? onLongPressed;
 
   /// How the text should behave when there is an overflow.
   ///
   /// This is set to [TextOverflow.ellipsis] by default.
-  final TextOverflow overflow;
+  final TextOverflow? overflow;
 
   /// The textStyle with which to draw the banner message.
   ///
   /// This defaults to the value [smallCharStyle] as declared in
   /// the "color_constant.dart" file in the "/lib/constant/" directory.
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
 
   /// The padding to apply outside this widget.
   ///
@@ -796,16 +796,16 @@ class DescriptionBanner extends StatelessWidget {
   /// The border Radius to apply to the border of this widget.
   ///
   /// If null defaults to `BorderRadius.circular(13.0)`
-  final BorderRadiusGeometry borderRadius;
+  final BorderRadiusGeometry? borderRadius;
 
   /// The size constraints applied to the widget.
-  final BoxConstraints constraints;
+  final BoxConstraints? constraints;
 
   @override
   Widget build(BuildContext context) {
     // If the trailing is not provided we return a default
     // trailing "chevron_left" Icon.
-    Widget _trailing = trailing;
+    Widget? _trailing = trailing;
 
     // If automatically imply trailing is true
     // we set the value of _trailing to the default trailing
@@ -841,7 +841,7 @@ class DescriptionBanner extends StatelessWidget {
                   Expanded(
                     child: Row(
                       children: [
-                        if(leading != null) leading,
+                        if(leading != null) leading!,
                         if (leading != null) SizedBox(width: 5.0),
                         Expanded(
                           child: Text(
@@ -859,7 +859,7 @@ class DescriptionBanner extends StatelessWidget {
               ),
             ),
           ),
-          if (label != null) label,
+          if (label != null) label!,
         ],
       ),
     );
@@ -870,16 +870,16 @@ class DescriptionBanner extends StatelessWidget {
 /// as a notification box.
 class NotificationBox extends ActionBox {
   NotificationBox({
-    Key key,
-    @required String message,
-    @required void Function() onTap,
+    Key? key,
+    required String message,
+    required void Function() onTap,
     Color backgroundColor = lightCardColor,
     TextStyle messageStyle = smallCharStyle,
-    BorderRadiusGeometry borderRadius,
+    BorderRadiusGeometry? borderRadius,
     EdgeInsetsGeometry margin = const EdgeInsets.all(6.0),
     EdgeInsetsGeometry padding =
         const EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
-    BoxConstraints constraints,
+    BoxConstraints? constraints,
   }) : super(
           key: key,
           message: message,
@@ -902,8 +902,8 @@ class NotificationBox extends ActionBox {
 class ProfileImageAvatar extends StatelessWidget {
   /// The default private constructor for the [ProfileImageAvatar] widget.
   ProfileImageAvatar({
-    Key key,
-    @required this.imageProvider,
+    Key? key,
+    required this.imageProvider,
     this.backgroundColor = const Color(0xFFE0E0E0),
     this.decoration,
     this.child,
@@ -917,8 +917,8 @@ class ProfileImageAvatar extends StatelessWidget {
 
   /// Create a [ProfileImageAvatar] widget from a network source.
   ProfileImageAvatar.network({
-    Key key,
-    @required String url,
+    Key? key,
+    required String url,
     this.backgroundColor = const Color(0xFFE0E0E0),
     this.decoration,
     this.child,
@@ -926,13 +926,13 @@ class ProfileImageAvatar extends StatelessWidget {
     this.minRadius,
     this.maxRadius,
     BoxFit fit = BoxFit.cover,
-    double height,
-    double width,
+    double? height,
+    double? width,
     double scale = 1.0,
-    Color color,
-    WidgetBuilder placholderBuilder,
-    WidgetBuilder errorBuilder,
-    void Function() onError,
+    Color? color,
+    WidgetBuilder? placholderBuilder,
+    WidgetBuilder? errorBuilder,
+    void Function()? onError,
   })  : assert(url != null, 'The value of "url" cannot be null!'),
         assert(radius == null || (minRadius == null && maxRadius == null)),
         imageProvider = Image.network(
@@ -944,14 +944,14 @@ class ProfileImageAvatar extends StatelessWidget {
           color: color,
           errorBuilder: errorBuilder == null
               ? null
-              : (BuildContext context, Object object, StackTrace stackTrace) {
-                  onError();
+              : (BuildContext context, Object object, StackTrace? stackTrace) {
+                  onError!();
                   return errorBuilder(context);
                 },
           loadingBuilder: placholderBuilder == null
               ? null
               : (BuildContext context, Widget child,
-                  ImageChunkEvent chunkEvent) {
+                  ImageChunkEvent? chunkEvent) {
                   return placholderBuilder(context);
                 },
         ).image,
@@ -959,8 +959,8 @@ class ProfileImageAvatar extends StatelessWidget {
 
   /// Create a [ProfileImageAvatar] widget from the asset.
   ProfileImageAvatar.asset({
-    Key key,
-    @required String uri,
+    Key? key,
+    required String uri,
     this.backgroundColor = const Color(0xFFE0E0E0),
     this.decoration,
     this.child,
@@ -968,12 +968,12 @@ class ProfileImageAvatar extends StatelessWidget {
     this.minRadius,
     this.maxRadius,
     BoxFit fit = BoxFit.cover,
-    double height,
-    double width,
+    double? height,
+    double? width,
     double scale = 1.0,
-    Color color,
-    WidgetBuilder errorBuilder,
-    void Function() onError,
+    Color? color,
+    WidgetBuilder? errorBuilder,
+    void Function()? onError,
   })  : assert(uri != null, 'The value of "uri" cannot be null!'),
         assert(radius == null || (minRadius == null && maxRadius == null)),
         imageProvider = Image.asset(
@@ -985,8 +985,8 @@ class ProfileImageAvatar extends StatelessWidget {
           color: color,
           errorBuilder: errorBuilder == null
               ? null
-              : (BuildContext context, Object object, StackTrace stackTrace) {
-                  onError();
+              : (BuildContext context, Object object, StackTrace? stackTrace) {
+                  onError!();
                   return errorBuilder(context);
                 },
         ).image,
@@ -1004,15 +1004,15 @@ class ProfileImageAvatar extends StatelessWidget {
   /// For this cause [actualImageIsAvailable] is set to `true` by default meaning without providing the [actualImage]
   /// value the [placeholderImage] will be loaded instead when and only when the [actualImage] is null.
   factory ProfileImageAvatar.mutable({
-    @required ImageProvider actualImage,
-    @required ImageProvider placeholderImage,
+    required ImageProvider actualImage,
+    required ImageProvider placeholderImage,
     bool actualImageIsAvailable = true,
     Color backgroundColor = const Color(0xFFFFFFFF),
-    Decoration decoration,
-    Widget child,
-    double radius,
-    double minRadius,
-    double maxRadius,
+    Decoration? decoration,
+    Widget? child,
+    double? radius,
+    double? minRadius,
+    double? maxRadius,
   }) {
     assert(placeholderImage != null,
         'The parameter, "placeholderImage" must be provided!');
@@ -1035,9 +1035,9 @@ class ProfileImageAvatar extends StatelessWidget {
   final ImageProvider imageProvider;
 
   /// The widget to display above the avatar.
-  final Widget child;
+  final Widget? child;
 
-  final double radius;
+  final double? radius;
 
   /// The minimum size of the avatar, expressed as the radius (half the
   /// diameter).
@@ -1053,7 +1053,7 @@ class ProfileImageAvatar extends StatelessWidget {
   /// However, if the [minRadius] is 40 and the [CircleAvatar] has a parent
   /// [SizedBox] whose size changes instantaneously from 20 pixels to 40 pixels,
   /// the size will snap to 40 pixels instantly.
-  final double minRadius;
+  final double? minRadius;
 
   /// The maximum size of the avatar, expressed as the radius (half the
   /// diameter).
@@ -1069,12 +1069,12 @@ class ProfileImageAvatar extends StatelessWidget {
   /// However, if the [maxRadius] is 40 and the [CircleAvatar] has a parent
   /// [SizedBox] whose size changes instantaneously from 20 pixels to 40 pixels,
   /// the size will snap to 40 pixels instantly.
-  final double maxRadius;
+  final double? maxRadius;
 
   final Color backgroundColor;
 
   /// The decoration with which to decorate the [ProfileImageAvatar].
-  final Decoration decoration;
+  final Decoration? decoration;
 
   Widget build(BuildContext context) {
     return DecoratedBox(

@@ -13,13 +13,13 @@ import 'package:flutter/material.dart' hide DropdownButtonFormField;
 import 'advanced_settings_screen.dart';
 
 class SwipeSettingsScreen extends StatefulWidget {
-  SwipeSettingsScreen({Key key, this.onPop}) : super(key: key);
+  SwipeSettingsScreen({Key? key, this.onPop}) : super(key: key);
   static const String routeName = '/swipe_settings';
   static const minAge = 18;
   static const maxAge = 100;
 
   /// A callback that is fired when the user exists the settings screen.
-  final void Function() onPop;
+  final void Function()? onPop;
 
   @override
   _SwipeSettingsScreenState createState() => _SwipeSettingsScreenState();
@@ -31,10 +31,10 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
   Gender _currentGenderSelected = Gender.values
       .firstWhere((e) => e.toShortString() == SettingsData().preferredGender);
   RangeValues _selectedAges = RangeValues(
-      SettingsData().minAge.toDouble(), SettingsData().maxAge.toDouble());
+      SettingsData().minAge!.toDouble(), SettingsData().maxAge!.toDouble());
   bool _showInDiscovery =
       false; //TODO change SettingsData to support visibility
-  double _maxDistance = SettingsData().radius;
+  double? _maxDistance = SettingsData().radius;
 
   @override
   void initState() {
@@ -63,14 +63,6 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
   }
 
   //
-
-  String _simpleDashAgeRangeString(double start, double end) {
-    if (end < SwipeSettingsScreen.maxAge) {
-      return ' ${start.round()}-${end.round()} ';
-    } else {
-      return ' ${start.round()}-${SwipeSettingsScreen.maxAge}+ ';
-    }
-  }
 
   String produceAgesRangeText(RangeValues _ages) {
     String agesRangeText;
@@ -200,7 +192,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                                       children: <InlineSpan>[
                                         TextSpan(
                                           text:
-                                              ' ${_maxDistance.round().toString()} km away',
+                                              ' ${_maxDistance!.round().toString()} km away',
                                           style: defaultTextStyle,
                                         ),
                                       ],
@@ -228,7 +220,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                                         EdgeInsets.symmetric(horizontal: 12.0),
                                     child: CupertinoSlider(
                                       activeColor: colorBlend01,
-                                      value: _maxDistance,
+                                      value: _maxDistance!,
                                       min: 0,
                                       max: 200,
                                       onChanged: (value) {

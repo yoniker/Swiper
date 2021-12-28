@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class RoundIconButton extends StatelessWidget {
-  final IconData icon;
-  final Color iconColor;
-  final double size;
-  final VoidCallback onPressed;
+  final IconData? icon;
+  final Color? iconColor;
+  final double? size;
+  final VoidCallback? onPressed;
 
   RoundIconButton.large({
     this.icon,
@@ -58,9 +58,9 @@ class RoundIconButton extends StatelessWidget {
 
 
 class RoundButton extends StatelessWidget {
-  final Widget child;
-  final double size;
-  final VoidCallback onPressed;
+  final Widget? child;
+  final double? size;
+  final VoidCallback? onPressed;
 
   RoundButton.large({
     this.child,

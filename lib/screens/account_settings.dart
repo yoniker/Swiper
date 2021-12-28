@@ -6,7 +6,6 @@ import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AccountSettingsScreen extends StatefulWidget {
   static const String routeName = '/account_settings';
 
-  AccountSettingsScreen({Key key}) : super(key: key);
+  AccountSettingsScreen({Key? key}) : super(key: key);
 
   @override
   _AccountSettingsScreenState createState() => _AccountSettingsScreenState();

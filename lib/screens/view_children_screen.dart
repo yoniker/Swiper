@@ -9,7 +9,6 @@ import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +17,7 @@ import 'package:provider/provider.dart';
 class ViewChildrenScreen extends StatefulWidget {
   static const String routeName = '/view_children';
 
-  ViewChildrenScreen({Key key, @required this.matchProfile}) : super(key: key);
+  ViewChildrenScreen({Key? key, required this.matchProfile}) : super(key: key);
 
   final Profile matchProfile;
 
@@ -30,14 +29,12 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
     with MountedStateMixin {
   final GlobalKey _scrollKey = GlobalKey();
 
-  CarouselController _carouselController;
+  CarouselController? _carouselController;
 
-  ScrollController _scrollController;
+  ScrollController? _scrollController;
 
-  int _userImageIndex = 0;
-  int _matchImageIndex = 0;
   int _childrenImageIndex = 0;
-  String _netChildrenTargetLocation = '';
+  String? _netChildrenTargetLocation = '';
   bool _childrenReady = false;
   bool _userFacesReady = false;
   bool _matchFacesReady = false;
@@ -55,39 +52,39 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
 
   //Get the user's faces,the match's faces and then the children faces
   void getTasksFromServer() async {
-    Map<String, String> tasksInfo =
+    Map<String, String?> tasksInfo =
         await NetworkHelper().startChildrenTasks(widget.matchProfile);
     _netChildrenTargetLocation = tasksInfo['targetLocation'];
-    String taskChildren = tasksInfo['childrenTaskId'];
-    String taskMatchFaces = tasksInfo['matchFacesTaskId'];
-    String taskUserFaces = tasksInfo['user_faces_task'];
+    String? taskChildren = tasksInfo['childrenTaskId'];
+    String? taskMatchFaces = tasksInfo['matchFacesTaskId'];
+    String? taskUserFaces = tasksInfo['user_faces_task'];
     //Actually perform tasks and update the UI accordingly
     //1.User Images
     await waitUntilTaskReady(taskUserFaces);
-    List<String> listFacesSelf = await NetworkHelper().getFacesLinkSelf();
+    List<String>? listFacesSelf = await NetworkHelper().getFacesLinkSelf();
     setStateIfMounted(() {
       _userFacesImages =
-          NetworkHelper.serverImagesUrlsToImages(listFacesSelf, context);
+          NetworkHelper.serverImagesUrlsToImages(listFacesSelf!, context);
       _userFacesReady = true;
     });
 
     //2. Match Images
     await waitUntilTaskReady(taskMatchFaces);
-    List<String> listFacesMatch =
+    List<String>? listFacesMatch =
         await NetworkHelper().getFacesLinksMatch(widget.matchProfile);
     setStateIfMounted(() {
       _matchFacesImages =
-          NetworkHelper.serverImagesUrlsToImages(listFacesMatch, context);
+          NetworkHelper.serverImagesUrlsToImages(listFacesMatch!, context);
       _matchFacesReady = true;
     });
 
     //3.Children Images
     await waitUntilTaskReady(taskChildren);
-    List<String> listChildrenImages = await NetworkHelper()
+    List<String>? listChildrenImages = await NetworkHelper()
         .getGeneratedBabiesLinks(_netChildrenTargetLocation);
     setStateIfMounted(() {
       _generatedBabiesImages =
-          NetworkHelper.serverImagesUrlsToImages(listChildrenImages, context);
+          NetworkHelper.serverImagesUrlsToImages(listChildrenImages!, context);
       _childrenImageIndex = (_generatedBabiesImages.length / 2 - 1).toInt();
       _childrenReady = true;
     });
@@ -106,7 +103,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    _scrollController!.dispose();
 
     super.dispose();
   }
@@ -226,7 +223,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                                   child: Column(
                                     children: [
                                       Text(
-                                        widget.matchProfile.username,
+                                        widget.matchProfile.username!,
                                         style: smallBoldedCharStyle,
                                       ),
                                       SizedBox(height: 2.0),
@@ -327,7 +324,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                           itemBuilder: (context, _index, realIndex) {
                             return GestureDetector(
                               onTap: () {
-                                _carouselController.animateToPage(
+                                _carouselController!.animateToPage(
                                   realIndex,
                                   duration: Duration(milliseconds: 800),
                                   curve: Curves.decelerate,

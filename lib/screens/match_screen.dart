@@ -13,7 +13,7 @@ import 'package:tcard/tcard.dart';
 
 class MatchScreen extends StatefulWidget {
   static const String routeName = '/match_screen';
-  MatchScreen({Key key}) : super(key: key);
+  MatchScreen({Key? key}) : super(key: key);
 
   @override
   _MatchScreenState createState() => _MatchScreenState();
@@ -27,7 +27,7 @@ class _MatchScreenState extends State<MatchScreen>
 
   // Initialize the Animation Controller for the exposure of the revert button when a change
   // is discovered.
-  AnimationController _animationController;
+  late AnimationController _animationController;
 
   // Holds a boolean value whether or not to hide the MatchCard.
   //
@@ -211,7 +211,7 @@ class _MatchScreenState extends State<MatchScreen>
 
 /// The card Widget used to display match Information.
 class MatchCardBuilder extends StatefulWidget {
-  MatchCardBuilder({Key key, @required this.setMatchCardVisibility})
+  MatchCardBuilder({Key? key, required this.setMatchCardVisibility})
       : super(key: key);
 
   final void Function(bool) setMatchCardVisibility;
@@ -225,8 +225,8 @@ class MatchCardBuilder extends StatefulWidget {
 class _MatchCardBuilderState extends State<MatchCardBuilder> {
   double bottomCardScale = 0.95;
   Offset bottomCardOffset = Offset(0.0, 1.7);
-  SwipeDirection currentJudgment;
-  double currentInterpolation;
+  SwipeDirection? currentJudgment;
+  late double currentInterpolation;
 
   @override
   void initState() {
@@ -240,7 +240,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
     // return a stack of cards well positioned.
     return Consumer<MatchEngine>(
       builder: (context, matchEngine, unusedChild) {
-         List<Match> topEngineMatches = [
+         List<Match?> topEngineMatches = [
           if (matchEngine.currentMatch() != null) matchEngine.currentMatch(),
           if (matchEngine.nextMatch() != null) matchEngine.nextMatch()
         ];
@@ -320,7 +320,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
                     cards: topEngineMatches.map<Widget>((match) {
                       return
                          MatchCard(
-                          key: Key(match.profile.userId.id),
+                          key: Key(match!.profile!.userId!.id!),
                           profile: match.profile,
                           showCarousel: true,
                           clickable: true,

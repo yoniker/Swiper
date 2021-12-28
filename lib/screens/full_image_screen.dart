@@ -4,9 +4,9 @@ import 'package:photo_view/photo_view.dart';
 
 class FullImageScreen extends StatelessWidget {
   static const String routeName = '/main_messages_screen';
-  final String imageUrl;
+  final String? imageUrl;
 
-  const FullImageScreen({Key key, this.imageUrl}) : super(key: key);
+  const FullImageScreen({Key? key, this.imageUrl}) : super(key: key);
   @override
   Widget build(BuildContext context) {
 
@@ -17,7 +17,7 @@ class FullImageScreen extends StatelessWidget {
         },
         child: Container(
             child: PhotoView(
-            imageProvider: NetworkImage(imageUrl),
+            imageProvider: NetworkImage(imageUrl!),
         )
         ),
       ),

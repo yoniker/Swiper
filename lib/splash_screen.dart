@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 class SplashScreen extends StatefulWidget {
   static const String routeName = '/splash';
 
-  SplashScreen({Key key}) : super(key: key);
+  SplashScreen({Key? key}) : super(key: key);
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -31,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // we move to the Main-navigation screen otherwise we move to the LoginScreen.
     //
     // This is the standard way of creating a splash-screen for an Application.
-    if (settings.readFromShared && settings.facebookId != '') {
+    if (settings.readFromShared! && settings.facebookId != '') {
       return MainNavigationScreen.routeName;
     } else {
       return LoginScreen.routeName;
@@ -42,7 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void _load() async {
     final routeTo = await _routeTo();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance!.addPostFrameCallback((_) async {
       await Navigator.of(context).pushReplacementNamed(routeTo);
     });
   }

@@ -15,7 +15,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tuple/tuple.dart';
 
 class AdvancedSettingsScreen extends StatefulWidget {
-  AdvancedSettingsScreen({Key key}) : super(key: key);
+  AdvancedSettingsScreen({Key? key}) : super(key: key);
   static const String routeName = '/advanced_settings_screen';
   static const String CELEB_FILTER = 'celeb_filter';
   static const String CUSTOM_FACE_FILTER = 'custom_face_filter';
@@ -49,8 +49,8 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
   Celeb _selectedCeleb = Celeb(celebName: SettingsData().celebId, imagesUrls: [
     SettingsData().filterDisplayImageUrl
   ]); //TODO support Celeb fetching from SettingsData
-  String _currentChosenFilterName = SettingsData().filterName;
-  int _chosenAuditionCount = SettingsData().auditionCount;
+  String? _currentChosenFilterName = SettingsData().filterName;
+  int? _chosenAuditionCount = SettingsData().auditionCount;
 
   // THis enables us to block the UI why a process that demands that is going on.
   bool isLoading = false;
@@ -96,10 +96,10 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
   }
 
   Widget _buildFilterWidget({
-    String title,
-    String description,
-    List<Widget> children,
-    String filterName,
+    String? title,
+    String? description,
+    List<Widget>? children,
+    String? filterName,
     double height = 175.0,
   }) {
     return GlobalWidgets.buildSettingsBlock(
@@ -162,7 +162,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                         child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: children,
+                    children: children!,
                   )))));
   }
 
@@ -171,7 +171,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     //
-    _currentChosenFilterName.length > 0
+    _currentChosenFilterName!.length > 0
         ? _availableFilters = 0
         : _availableFilters = 1;
     resolveIntToString() {
@@ -183,7 +183,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
     }
 
     bool customImageExists = SettingsData().filterDisplayImageUrl != null &&
-        SettingsData().filterDisplayImageUrl.length > 0;
+        SettingsData().filterDisplayImageUrl!.length > 0;
 
     return Stack(
       children: [
@@ -262,7 +262,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                       // Set the `_selectedCeleb` variable to the newly selected
                                       // celebrity from the [CelebritySelectionScreen] page given that it is not null.
                                       if (selectedCeleb != null) {
-                                        _selectedCeleb = selectedCeleb;
+                                        _selectedCeleb = selectedCeleb as Celeb;
                                         SettingsData().celebId =
                                             _selectedCeleb.celebName;
                                       } else {
@@ -336,7 +336,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                   children: <InlineSpan>[
                                                     TextSpan(
                                                       text:
-                                                          '${AdvancedSettingsScreen.similarityDescriptions[_chosenAuditionCount]} Similar',
+                                                          '${AdvancedSettingsScreen.similarityDescriptions[_chosenAuditionCount!]} Similar',
                                                       style: defaultTextStyle,
                                                     ),
                                                   ],
@@ -374,7 +374,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                             CupertinoColors
                                                                 .systemFill,
                                                             context),
-                                                value: _chosenAuditionCount
+                                                value: _chosenAuditionCount!
                                                     .roundToDouble(),
                                                 min: AdvancedSettingsScreen
                                                     .minAuditionValue
@@ -446,7 +446,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                           onImagePicked: (imageFile) async {
                                             print('Done!');
                                             if (imageFile != null) {
-                                              print(imageFile?.path);
+                                              print(imageFile.path);
                                               postCustomImageToNetwork(
                                                   imageFile);
                                             }
@@ -497,7 +497,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                         Image.network(
                                             NetworkHelper.faceUrlToFullUrl(
                                                 SettingsData()
-                                                    .filterDisplayImageUrl),
+                                                    .filterDisplayImageUrl!),
                                             height: 75,
                                             width: 75,
                                             fit: BoxFit.scaleDown),
@@ -555,7 +555,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                   children: <InlineSpan>[
                                                     TextSpan(
                                                       text:
-                                                          '${AdvancedSettingsScreen.similarityDescriptions[_chosenAuditionCount]} Similar',
+                                                          '${AdvancedSettingsScreen.similarityDescriptions[_chosenAuditionCount!]} Similar',
                                                       style: defaultTextStyle,
                                                     ),
                                                   ],
@@ -593,7 +593,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                             CupertinoColors
                                                                 .systemFill,
                                                             context),
-                                                value: _chosenAuditionCount
+                                                value: _chosenAuditionCount!
                                                     .roundToDouble(),
                                                 min: AdvancedSettingsScreen
                                                     .minAuditionValue
@@ -663,7 +663,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                             children: <InlineSpan>[
                                               TextSpan(
                                                 text:
-                                                    '${AdvancedSettingsScreen.tasteDescriptions[_chosenAuditionCount]}th percentile (your taste)',
+                                                    '${AdvancedSettingsScreen.tasteDescriptions[_chosenAuditionCount!]}th percentile (your taste)',
                                                 style: defaultTextStyle,
                                               ),
                                               WidgetSpan(
@@ -718,7 +718,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                             horizontal: 12.0),
                                         child: CupertinoSlider(
                                           activeColor: colorBlend01,
-                                          value: _chosenAuditionCount
+                                          value: _chosenAuditionCount!
                                               .roundToDouble(),
                                           min: AdvancedSettingsScreen
                                               .minAuditionValue
@@ -785,7 +785,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                             children: <InlineSpan>[
                                               TextSpan(
                                                 text:
-                                                '${AdvancedSettingsScreen.tasteDescriptions[_chosenAuditionCount]}th percentile (their taste)',
+                                                '${AdvancedSettingsScreen.tasteDescriptions[_chosenAuditionCount!]}th percentile (their taste)',
                                                 style: defaultTextStyle,
                                               ),
                                               WidgetSpan(
@@ -840,7 +840,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                             horizontal: 12.0),
                                         child: CupertinoSlider(
                                           activeColor: colorBlend01,
-                                          value: _chosenAuditionCount
+                                          value: _chosenAuditionCount!
                                               .roundToDouble(),
                                           min: AdvancedSettingsScreen
                                               .minAuditionValue

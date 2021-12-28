@@ -4,37 +4,37 @@ part 'celeb_hive.g.dart';
 @HiveType(typeId: 1)
 class CelebHive {
   CelebHive(
-      {this.celeb_name, this.name, this.aliases, this.birthday, this.description, this.country, this.gender, this.code, this.famous_name, this.title});
+      {this.celebName, this.name, this.aliases, this.birthday, this.description, this.country, this.gender, this.code, this.famousName, this.title});
 
   @HiveField(0)
-  String celeb_name;
+  String? celebName;
 
   @HiveField(1)
-  String name;
+  String? name;
 
   @HiveField(2)
-  List<String> aliases;
+  List<String?>? aliases;
 
   @HiveField(3)
-  String birthday;
+  String? birthday;
 
   @HiveField(4)
-  String description;
+  String? description;
 
   @HiveField(5)
-  String country;
+  String? country;
 
   @HiveField(6)
-  String gender;
+  String? gender;
 
   @HiveField(7)
-  String code;
+  String? code;
 
   @HiveField(8)
-  String famous_name;
+  String? famousName;
 
   @HiveField(9)
-  String title;
+  String? title;
 
 
   @override

@@ -6,7 +6,7 @@ class ChatProfile extends StatefulWidget{
   final String imageUrl;
   final String time;
   final bool isMessageRead;
-  ChatProfile({@required this.name,@required this.messageText,@required this.imageUrl,@required this.time,@required this.isMessageRead});
+  ChatProfile({required this.name,required this.messageText,required this.imageUrl,required this.time,required this.isMessageRead});
   @override
   _ChatProfileState createState() => _ChatProfileState();
 }

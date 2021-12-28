@@ -1,11 +1,11 @@
 class Celeb {
-  final String celebName;
-  final String name;
-  final List<String> aliases;
-  final String birthday;
-  final String description;
-  final String country;
-  List<String> imagesUrls;
+  final String? celebName;
+  final String? name;
+  final List<String?>? aliases;
+  final String? birthday;
+  final String? description;
+  final String? country;
+  List<String?>? imagesUrls;
 
   Celeb({
     this.celebName,
@@ -22,11 +22,11 @@ class Celeb {
     return Celeb(
       celebName: json['celeb_name'] ?? null,
       name: json['name'],
-      aliases: List<String>.from(json['aliases'].map((x) => x)) ?? <String>[],
+      aliases: List<String>.from(json['aliases'].map((x) => x)),
       birthday: json['birthday'] ?? null,
       description: json['description'],
       country: json['country'],
-      imagesUrls: List<String>.from(json['image_urls'].map((x) => x)) ?? <String>[],
+      imagesUrls: List<String>.from(json['image_urls'].map((x) => x)),
     );
   }
 

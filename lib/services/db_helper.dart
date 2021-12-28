@@ -14,7 +14,7 @@ class DatabaseHelper {
   static final boxName = 'celebs_hive';
   static final _filename = 'celebs_hive.hive';
   static final DatabaseHelper _instance = DatabaseHelper._privateConstructor();
-  Box<CelebHive> _celebsBox;
+  late Box<CelebHive> _celebsBox;
   bool _loadedDb = false;
   // make this a singleton class
   DatabaseHelper._privateConstructor();
@@ -87,10 +87,10 @@ class DatabaseHelper {
 
     List<Celeb> allCelebs = [];
     _celebsBox.keys.forEach((key) {
-      CelebHive celebHive= _celebsBox.get(key);
-      List<String> aliases = celebHive.aliases;
-      aliases.add(celebHive.celeb_name);
-      Celeb celeb = Celeb(celebName: celebHive.celeb_name,name:celebHive.name,aliases: aliases,birthday: celebHive.birthday,description: celebHive.description,country: celebHive.country);
+      CelebHive celebHive= _celebsBox.get(key)!;
+      List<String?> aliases = celebHive.aliases!;
+      aliases.add(celebHive.celebName);
+      Celeb celeb = Celeb(celebName: celebHive.celebName,name:celebHive.name,aliases: aliases,birthday: celebHive.birthday,description: celebHive.description,country: celebHive.country);
       allCelebs.add(celeb);
     });
     return allCelebs;

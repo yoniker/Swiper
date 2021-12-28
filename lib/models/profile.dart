@@ -1,24 +1,22 @@
-import 'dart:math';
-
 import 'package:betabeta/models/userid.dart';
 import 'package:betabeta/services/networking.dart';
 
 class Profile {
-  final List<String> imageUrls;
-  final String username;
-  final String headline;
-  final String description;
-  final int age;
-  final String location;
-  final double distance;
-  final String jobTitle;
-  final String serverUserImagesLocation;
-  final String height;
-  final double compatibilityScore;
-  final double hotnessScore;
+  final List<String>? imageUrls;
+  final String? username;
+  final String? headline;
+  final String? description;
+  final int? age;
+  final String? location;
+  final double? distance;
+  final String? jobTitle;
+  final String? serverUserImagesLocation;
+  final String? height;
+  final double? compatibilityScore;
+  final double? hotnessScore;
 
 
-  UserId userId;
+  UserId? userId;
   Profile( { this.compatibilityScore, this.hotnessScore, this.imageUrls, this.username, this.headline, this.description, this.age, this.location,this.distance,this.jobTitle,this.serverUserImagesLocation,this.height, this.userId}){
     if (this.userId ==null){
       this.userId =  UserId(id: this.username, userType: UserType.POF_USER);

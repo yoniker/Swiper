@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 
 class CompatibilityScale extends StatelessWidget {
   const CompatibilityScale({
-    Key key,
-    @required this.value,
+    Key? key,
+    required this.value,
     this.startValue = 0.0,
     this.endValue = 100.0,
     this.colorGradient,
@@ -49,7 +49,7 @@ class CompatibilityScale extends StatelessWidget {
   /// The Gradient to use in painting this widget.
   ///
   /// If none is given (or a value of null is supplied) the gradient defaults to [mainColorGradient].
-  final Gradient colorGradient;
+  final Gradient? colorGradient;
 
   @override
   Widget build(BuildContext context) {

@@ -2,14 +2,13 @@ import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// The implementation for the Notification screen.
 class NotificationScreen extends StatefulWidget {
   static const String routeName = '/notifications';
 
-  NotificationScreen({Key key}) : super(key: key);
+  NotificationScreen({Key? key}) : super(key: key);
 
   @override
   _NotificationScreenState createState() => _NotificationScreenState();

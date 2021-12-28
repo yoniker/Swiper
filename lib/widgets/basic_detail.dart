@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 
 class BasicDetail extends StatelessWidget {
 
-  final String detailText;
-  final Widget detailIcon;
+  final String? detailText;
+  final Widget? detailIcon;
 
-  const BasicDetail({Key key, this.detailText,this.detailIcon}) : super(key: key);
+  const BasicDetail({Key? key, this.detailText,this.detailIcon}) : super(key: key);
 
 
   @override
@@ -29,7 +29,7 @@ class BasicDetail extends StatelessWidget {
               child: detailIcon),
           SizedBox(width: 5.6),
           Expanded(
-            child: Text(detailText,
+            child: Text(detailText!,
               style: defaultTextStyle,
               overflow: TextOverflow.ellipsis,
             ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ViewLikesScreen extends StatefulWidget {
-  ViewLikesScreen({Key key}) : super(key: key);
+  ViewLikesScreen({Key? key}) : super(key: key);
   static const String routeName = '/view_likes';
 
   @override

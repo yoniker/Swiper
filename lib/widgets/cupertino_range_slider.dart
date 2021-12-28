@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 
 class CupertinoRangeSlider extends StatelessWidget {
   CupertinoRangeSlider({
-    Key key,
-    @required this.values,
-    @required this.onChanged,
+    Key? key,
+    required this.values,
+    required this.onChanged,
     this.onChangeStart,
     this.onChangeEnd,
     this.min = 0.0,
@@ -38,7 +38,7 @@ class CupertinoRangeSlider extends StatelessWidget {
   /// This Defaults to the `activeColor` of the [CupertinoRangeSlider].
   /// If this is `null` it is set to the current `PrimaryColor`
   /// of the current [Theme].
-  final Color valueIndicatorColor;
+  final Color? valueIndicatorColor;
 
   /// The color to be used to paint the [Thumb].
   /// Defaults to `Colors.white`.
@@ -46,15 +46,15 @@ class CupertinoRangeSlider extends StatelessWidget {
 
   /// The color to be used to paint the [Thumb].
   /// Defaults to `Colors.grey[300]`.
-  final Color disabledThumbColor;
+  final Color? disabledThumbColor;
 
   /// The color to be used to paint the inactiveTicMarks.
   /// Defaults to `Colors.grey`.
-  final Color inactiveTickMarkColor;
+  final Color? inactiveTickMarkColor;
 
   /// The color to be used to paint the activeTicMarks.
   /// Defaults to the `colorScheme.onPrimary` of the current theme.
-  final Color activeTickMarkColor;
+  final Color? activeTickMarkColor;
 
   /// The radius of the [Thumb] (The white button that is slided over the track)
   /// for this slider. Defaults to 13.8.
@@ -65,7 +65,7 @@ class CupertinoRangeSlider extends StatelessWidget {
   ///
   /// The default value is the one set in the [CupertinoRangeSliderThumbShape] class.
   /// which is the default value used by the [CupertinoSlider] Widget.
-  final List<BoxShadow> thumbShadows;
+  final List<BoxShadow>? thumbShadows;
 
   /// The height of the slider's track.
   /// Defaults to 1.8.
@@ -147,7 +147,7 @@ class CupertinoRangeSlider extends StatelessWidget {
   ///
   ///  * [onChangeEnd] for a callback that is called when the value change is
   ///    complete.
-  final ValueChanged<RangeValues> onChangeStart;
+  final ValueChanged<RangeValues>? onChangeStart;
 
   /// Called when the user is done selecting new values for the slider.
   ///
@@ -182,7 +182,7 @@ class CupertinoRangeSlider extends StatelessWidget {
   ///
   ///  * [onChangeStart] for a callback that is called when a value change
   ///    begins.
-  final ValueChanged<RangeValues> onChangeEnd;
+  final ValueChanged<RangeValues>? onChangeEnd;
 
   /// The minimum value the user can select.
   ///
@@ -203,7 +203,7 @@ class CupertinoRangeSlider extends StatelessWidget {
   /// Typically used with [labels] to show the current discrete values.
   ///
   /// If null, the slider is continuous.
-  final int divisions;
+  final int? divisions;
 
   /// Labels to show as text in the [SliderThemeData.rangeValueIndicatorShape].
   ///
@@ -220,20 +220,20 @@ class CupertinoRangeSlider extends StatelessWidget {
   ///
   ///  * [RangeSliderValueIndicatorShape] for how to create a custom value
   ///    indicator shape.
-  final RangeLabels labels;
+  final RangeLabels? labels;
 
   /// The color of the track's active segment, i.e. the span of track between
   /// the thumbs.
   ///
   /// Defaults to [Theme.of(context).primaryColor].
-  final Color activeColor;
+  final Color? activeColor;
 
   /// The color of the track's inactive segments, i.e. the span of tracks
   /// between the min and the start thumb, and the end thumb and the max.
   ///
   /// Defaults to [Colors.grey[300].
   /// That's the default Color for a normal CupertinoSlider Widget.
-  final Color inactiveColor;
+  final Color? inactiveColor;
 
   /// The callback used to create a semantic value from the slider's values.
   ///
@@ -263,7 +263,7 @@ class CupertinoRangeSlider extends StatelessWidget {
   ///  )
   /// ```
   /// {@end-tool}
-  final SemanticFormatterCallback semanticFormatterCallback;
+  final SemanticFormatterCallback? semanticFormatterCallback;
 
   @override
   Widget build(BuildContext context) {

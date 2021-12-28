@@ -19,14 +19,14 @@ import 'package:provider/provider.dart';
 ///
 class MatchCard extends StatefulWidget {
   MatchCard({
-    Key key,
+    Key? key,
     this.profile,
     this.clickable = true,
     this.showCarousel = true,
   }) : super(key: key);
 
   /// The profile of the match.
-  final Profile profile;
+  final Profile? profile;
 
   /// Whether or not the Match card can receive click gestures.
   final bool clickable;
@@ -39,7 +39,7 @@ class MatchCard extends StatefulWidget {
 }
 
 class _MatchCardState extends State<MatchCard> {
-  ScrollController _scrollController;
+  ScrollController? _scrollController;
 
   /// This connotes the Widget to display as the background.
   /// This is typically a [PhotoView].
@@ -56,7 +56,7 @@ class _MatchCardState extends State<MatchCard> {
         isClickable: widget.clickable,
         initialPhotoIndex: 0,
         descriptionHeightFraction: _isPotrait ? 0.2 : 0.4,
-        imageUrls: widget.profile.imageUrls,
+        imageUrls: widget.profile!.imageUrls,
         showCarousel: widget.showCarousel,
         descriptionWidget: _descriptionWidget(),
         carouselInactiveDotColor: inactiveDot,
@@ -105,7 +105,7 @@ class _MatchCardState extends State<MatchCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${widget.profile.username}, ${widget.profile.age}',
+              '${widget.profile!.username}, ${widget.profile!.age}',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: boldTextStyle.copyWith(
@@ -115,7 +115,7 @@ class _MatchCardState extends State<MatchCard> {
             ),
             Expanded(
               child: Text(
-                widget.profile.headline ?? '',
+                widget.profile!.headline ?? '',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: boldTextStyle.copyWith(
@@ -139,13 +139,13 @@ class _MatchCardState extends State<MatchCard> {
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    _scrollController!.dispose();
     super.dispose();
   }
 
   List<Widget> buildMatchDetails(
     Profile profile, {
-    @required BuildContext context,
+    required BuildContext context,
   }) {
     final _imageUrls = profile.imageUrls ?? <String>[];
 
@@ -192,7 +192,7 @@ class _MatchCardState extends State<MatchCard> {
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.symmetric(horizontal: 5.0),
         child: Text(
-          (profile.headline != null) ? profile.headline : '',
+          (profile.headline != null) ? profile.headline! : '',
           textAlign: TextAlign.left,
           style: defaultTextStyle,
         ),
@@ -204,7 +204,7 @@ class _MatchCardState extends State<MatchCard> {
       _buildDivider(),
       Text(
         (profile.description != null)
-            ? profile.description
+            ? profile.description!
             : 'No Description available',
         style: mediumCharStyle,
       ),
@@ -371,7 +371,7 @@ class _MatchCardState extends State<MatchCard> {
                 maxWidth: MediaQuery.of(context).size.width,
               ),
               trailing: CompatibilityScale(
-                value: profile.compatibilityScore,
+                value: profile.compatibilityScore!,
                 startValue: 20.0,
               ),
               onTap: () async {
@@ -395,7 +395,7 @@ class _MatchCardState extends State<MatchCard> {
                 Icons.info,
                 color: Colors.blue,
               ),
-              trailing: LikeScale(value: profile.hotnessScore),
+              trailing: LikeScale(value: profile.hotnessScore!),
                 onTap: () async {
                   try {
                     await GlobalWidgets.showAlertDialogue(
@@ -529,7 +529,7 @@ class _MatchCardState extends State<MatchCard> {
                     child: _buildBackground(context),
                   ),
                   ...buildMatchDetails(
-                    widget.profile,
+                    widget.profile!,
                     context: context,
                   ),
                   _matchControls(),
@@ -549,7 +549,7 @@ class _MatchCardState extends State<MatchCard> {
 /// matches.
 class PhotoView extends StatefulWidget {
   PhotoView({
-    Key key,
+    Key? key,
     this.isClickable = true,
     this.initialPhotoIndex = 0,
     this.descriptionWidget,
@@ -567,7 +567,7 @@ class PhotoView extends StatefulWidget {
     this.onChanged,
   })  : assert(
             initialPhotoIndex != null &&
-                initialPhotoIndex <= imageUrls.length &&
+                initialPhotoIndex <= imageUrls!.length &&
                 initialPhotoIndex.isEven,
             'The initialPhotoIndex cannot be "null" or negative. It must also be in the range of avaliable imageUrls (starting from `0`), Please supply a correct initialPhotoIndex or leave it as it is without supplying the parameter.'),
         assert(showCarousel != null,
@@ -589,12 +589,12 @@ class PhotoView extends StatefulWidget {
 
   /// A list of `imageUrl` String (literals).
   /// This is used by the [PhotoView] widget to produce carousel images.
-  final List<String> imageUrls;
+  final List<String>? imageUrls;
 
   /// A callback with value Function.
   /// Pass a value to this parameter to get notified whenever a change
   /// occurs to the [PhotoView]'s index.
-  final Function(int index) onChanged;
+  final Function(int? index)? onChanged;
 
   /// The [Color] to be used to paint the background of the Carousel.
   ///
@@ -640,7 +640,7 @@ class PhotoView extends StatefulWidget {
   final CarouselPosition carouselPosition;
 
   /// An optional Widget to build a description box into the PhotoView.
-  final Widget descriptionWidget;
+  final Widget? descriptionWidget;
 
   /// The alignment of the `desriptionWidget` in the stack.
   ///
@@ -673,13 +673,13 @@ class PhotoView extends StatefulWidget {
 
 class _PhotoViewState extends State<PhotoView> {
   //
-  List<Widget> imagesList;
+  late List<Widget> imagesList;
 
   //
-  List<CarouselDot> carouselDots;
+  List<CarouselDot>? carouselDots;
 
   // holds the state of the selected photo index.
-  int selectedPhotoIndex;
+  int? selectedPhotoIndex;
 
   @override
   void initState() {
@@ -711,10 +711,10 @@ class _PhotoViewState extends State<PhotoView> {
     carouselDots = <CarouselDot>[];
 
     for (int imageIndex = 0;
-        imageIndex < widget.imageUrls.length;
+        imageIndex < widget.imageUrls!.length;
         imageIndex++) {
       var img = Image.network(
-        'https://' + widget.imageUrls[imageIndex],
+        'https://' + widget.imageUrls![imageIndex],
         scale: 1.0,
         fit: BoxFit.cover,
       );
@@ -731,12 +731,12 @@ class _PhotoViewState extends State<PhotoView> {
 
   /// A private Function to call the onChanged Callback parameter of the [PhotoView] widget
   /// whenever a change is made to the index of the [PhotoView].
-  void _indexChangeListener(int index) {
+  void _indexChangeListener(int? index) {
     // check if the onChanged(int) Callback parameter passed to the [PhotoView] widget
     // is not `null`.
     if (widget.onChanged != null) {
       // call the `onChanged` Function of the [PhotoView] widget.
-      widget.onChanged(index);
+      widget.onChanged!(index);
     }
   }
 
@@ -747,10 +747,10 @@ class _PhotoViewState extends State<PhotoView> {
   /// change the Image Displayed back to the first image on the List.
   void _showNextImg() {
     // This prevents out of interval error.
-    if (selectedPhotoIndex != widget.imageUrls.length - 1) {
+    if (selectedPhotoIndex!=null && selectedPhotoIndex != widget.imageUrls!.length - 1) {
       setState(() {
         // increase the photo index by one (1).
-        selectedPhotoIndex += 1;
+        selectedPhotoIndex =selectedPhotoIndex! + 1;
       });
     } else {
       setState(() {
@@ -770,15 +770,15 @@ class _PhotoViewState extends State<PhotoView> {
   /// change the Image Displayed back to the last image on the List.
   void _showPrevImg() {
     // This prevents out of interval error.
-    if (selectedPhotoIndex != 0) {
+    if (selectedPhotoIndex!=null && selectedPhotoIndex! > 0) {
       setState(() {
         // decrease the photo index by one (1).
-        selectedPhotoIndex -= 1;
+        selectedPhotoIndex = selectedPhotoIndex! - 1;
       });
     } else {
       setState(() {
         // set the photo index to the last index of the image List.
-        selectedPhotoIndex = widget.imageUrls.length - 1;
+        selectedPhotoIndex = widget.imageUrls!.length - 1;
       });
     }
     // notify the `onChanged(int)` Callback Listener.
@@ -793,13 +793,9 @@ class _PhotoViewState extends State<PhotoView> {
   /// Note: use the `onChanged(int)` Function parameter of the [PhotoView]
   /// to get notified whenever a change occurs to the `index` of the [PhotoView].
   void moveToPhoto(int index) {
-    assert(
-      index != null,
-      'Index cannot be null. Please pass in an appropriate value for the index.',
-    );
 
     // check to verify that such index exists and is accepted.
-    if (index <= widget.imageUrls.length - 1 && !index.isNegative) {
+    if (index <= widget.imageUrls!.length - 1 && !index.isNegative) {
       // switch to the new index.
       setState(() {
         selectedPhotoIndex = index;
@@ -827,7 +823,7 @@ class _PhotoViewState extends State<PhotoView> {
   Widget _carouselLayer() {
     // Generate a list of CarouselDots based on the length of the
     // `imageUrls` passed in the constructor body.
-    var carousels = List.generate(widget.imageUrls.length, (index) {
+    var carousels = List.generate(widget.imageUrls!.length, (index) {
       return CarouselDot(
         key: Key(
           index.toString(),
@@ -906,7 +902,7 @@ class _PhotoViewState extends State<PhotoView> {
   /// The Space or Area in which the image will be displayed.
   Widget _imageLayer() {
     //
-    return imagesList[selectedPhotoIndex];
+    return imagesList[selectedPhotoIndex!];
   }
 
   @override
@@ -980,7 +976,7 @@ class _PhotoViewState extends State<PhotoView> {
 ///
 class CarouselDot extends StatelessWidget {
   const CarouselDot({
-    Key key,
+    Key? key,
     this.onTap,
     this.size = 3.5,
     this.focusedSize = 4.0,
@@ -993,15 +989,15 @@ class CarouselDot extends StatelessWidget {
   /// The active [Color] of this Dot.
   ///
   /// Is used to paint the Dot whenever tit is on Focus.
-  final Color activeColor;
+  final Color? activeColor;
 
   /// The inactive [Color] of this Dot.
   ///
   /// Is used to paint the Dot whenever it is no more on Focus.
-  final Color inactiveColor;
+  final Color? inactiveColor;
 
   /// A Function that fires when [this] is tapped.
-  final void Function() onTap;
+  final void Function()? onTap;
 
   /// Wether or not this Dot is bon Focus.
   ///
@@ -1021,7 +1017,7 @@ class CarouselDot extends StatelessWidget {
   final double focusedSize;
 
   /// The ShapeBorder to be used to draw the CarouselDot.
-  final ShapeBorder shape;
+  final ShapeBorder? shape;
 
   @override
   Widget build(BuildContext context) {
@@ -1030,7 +1026,7 @@ class CarouselDot extends StatelessWidget {
       size: Size.fromRadius(isFocused ? focusedSize : size),
       child: GestureDetector(
         onTap: () {
-          onTap();
+          onTap!();
         },
         child: DecoratedBox(
           decoration: BoxDecoration(

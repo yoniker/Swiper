@@ -8,12 +8,12 @@ import 'package:image_picker/image_picker.dart';
 
 class ProfileImageContainer extends StatelessWidget {
 
-  final String imageUrl;
-  final BuildContext context;
-  final bool loadingImage;
-  final Function(PickedFile imageFile) onImagePicked;
+  final String? imageUrl;
+  final BuildContext? context;
+  final bool? loadingImage;
+  final Function(PickedFile? imageFile)? onImagePicked;
   /// A function that fires when the cancel icon on the image-box is pressed.
-  final void Function() onDelete;
+  final void Function()? onDelete;
 
 
   ProfileImageContainer({
@@ -29,7 +29,7 @@ class ProfileImageContainer extends StatelessWidget {
 
     Widget _inBoxWidget = imageUrl != null
     ? Image.network(
-    imageUrl,
+    imageUrl!,
     fit: BoxFit.cover,
     )
         : Center(
@@ -78,7 +78,7 @@ class ProfileImageContainer extends StatelessWidget {
                 elevation: 2.0,
                 child: InkWell(
                   onTap: () {
-                    onDelete();
+                    onDelete!();
                   },
                   child: Padding(
                     padding: EdgeInsets.all(2.5),

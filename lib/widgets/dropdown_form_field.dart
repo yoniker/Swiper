@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 /// to help further customize the Apps UI to meet our needs.
 ///
 /// A convenience widget that makes a [DropdownButton] into a [FormField].
-class DropdownButtonFormFieldModified<T> extends FormField<T> {
+class DropdownButtonFormFieldModified<T> extends FormField<T?> {
   /// Creates a [DropdownButton] widget that is a [FormField], wrapped in an
   /// [InputDecorator].
   ///
@@ -16,37 +16,37 @@ class DropdownButtonFormFieldModified<T> extends FormField<T> {
   /// `autofocus`, and `decoration`  parameters must not be null.
   DropdownButtonFormFieldModified({
     this.textStyle,
-    Key key,
-    @required
+    Key? key,
+    required
     List<DropdownMenuItem<T>> items,
-    DropdownButtonBuilder selectedItemBuilder,
-    T value,
-    Widget hint,
-    Widget disabledHint,
+    DropdownButtonBuilder? selectedItemBuilder,
+    T? value,
+    Widget? hint,
+    Widget? disabledHint,
     this.onChanged,
-    VoidCallback onTap,
+    VoidCallback? onTap,
     int elevation = 8,
-    TextStyle style,
+    TextStyle? style,
     Alignment textAlignment = Alignment.centerRight,
-    Widget icon,
-    Color iconDisabledColor,
-    Color iconEnabledColor,
+    Widget? icon,
+    Color? iconDisabledColor,
+    Color? iconEnabledColor,
     double iconSize = 24.0,
     bool isDense = true,
     bool isExpanded = false,
-    double itemHeight,
-    Color focusColor,
-    FocusNode focusNode,
+    double? itemHeight,
+    Color? focusColor,
+    FocusNode? focusNode,
     bool autofocus = false,
-    Color dropdownColor,
-    InputDecoration decoration,
-    FormFieldSetter<T> onSaved,
-    FormFieldValidator<T> validator,
+    Color? dropdownColor,
+    InputDecoration? decoration,
+    FormFieldSetter<T>? onSaved,
+    FormFieldValidator<T>? validator,
     @Deprecated('Use autovalidateMode parameter which provide more specific '
         'behaviour related to auto validation. '
         'This feature was deprecated after v1.19.0.')
     bool autovalidate = false,
-    AutovalidateMode autovalidateMode,
+    AutovalidateMode? autovalidateMode,
   })  : assert(
   items == null ||
       items.isEmpty ||
@@ -80,7 +80,7 @@ class DropdownButtonFormFieldModified<T> extends FormField<T> {
         autovalidateMode: autovalidate
             ? AutovalidateMode.always
             : (autovalidateMode ?? AutovalidateMode.disabled),
-        builder: (FormFieldState<T> field) {
+        builder: (FormFieldState<T?> field) {
           final _DropdownButtonFormFieldState<T> state =
           field as _DropdownButtonFormFieldState<T>;
           final InputDecoration decorationArg =
@@ -133,10 +133,10 @@ class DropdownButtonFormFieldModified<T> extends FormField<T> {
       );
 
   /// {@macro flutter.material.dropdownButton.onChanged}
-  final ValueChanged<T> onChanged;
+  final ValueChanged<T>? onChanged;
 
   ///
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
 
   /// The decoration to show around the dropdown button form field.
   ///
@@ -148,23 +148,23 @@ class DropdownButtonFormFieldModified<T> extends FormField<T> {
   final InputDecoration decoration;
 
   @override
-  FormFieldState<T> createState() => _DropdownButtonFormFieldState<T>();
+  FormFieldState<T?> createState() => _DropdownButtonFormFieldState<T>();
 }
 
-class _DropdownButtonFormFieldState<T> extends FormFieldState<T> {
+class _DropdownButtonFormFieldState<T> extends FormFieldState<T?> {
   @override
-  DropdownButtonFormFieldModified<T> get widget =>
-      super.widget as DropdownButtonFormFieldModified<T>;
+  DropdownButtonFormFieldModified<T?> get widget =>
+      super.widget as DropdownButtonFormFieldModified<T?>;
 
   @override
-  void didChange(T value) {
+  void didChange(T? value) {
     super.didChange(value);
     assert(widget.onChanged != null);
-    widget.onChanged(value);
+    widget.onChanged!(value);
   }
 
   @override
-  void didUpdateWidget(DropdownButtonFormFieldModified<T> oldWidget) {
+  void didUpdateWidget(DropdownButtonFormFieldModified<T?> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.initialValue != widget.initialValue) {
       setValue(widget.initialValue);

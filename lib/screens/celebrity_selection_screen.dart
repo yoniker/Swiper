@@ -20,25 +20,25 @@ class ScreenCelebritySelection extends StatefulWidget {
 }
 
 class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
-  Timer
+  Timer?
       _debounce; //Define debounce, see https://stackoverflow.com/questions/51791501/how-to-debounce-textfield-onchange-in-dart
   TextEditingController _controller = TextEditingController();
 
   _onSearchChanged(String query, CelebsInfo celebInfo) {
-    if (_debounce?.isActive ?? false) _debounce.cancel();
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer( Duration(milliseconds: widget.msCelebsDebounce), () {
       celebInfo.sortListByKeywords(query);
     });
   }
 
-  FocusNode textFieldFocus;
+  FocusNode? textFieldFocus;
 
   // Used to determine wether or not the searchbox is focused.
   //
   // We need this so that we can change the color of the ""clear-button"" accordingly.
   bool searchBoxIsFocused = false;
   ScrollController _listController = ScrollController();
-  DateTime _lastCelebInfoChange = DateTime.now();
+  DateTime? _lastCelebInfoChange = DateTime.now();
 
   @override
   void initState() {
@@ -50,7 +50,7 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
   @override
   void dispose() {
     _debounce?.cancel();
-    textFieldFocus.dispose();
+    textFieldFocus!.dispose();
     _listController.dispose();
     super.dispose();
   }
@@ -71,10 +71,10 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
   }
 
   void toggleFocus() {
-    if (textFieldFocus.hasFocus) {
-      textFieldFocus.unfocus();
+    if (textFieldFocus!.hasFocus) {
+      textFieldFocus!.unfocus();
     } else {
-      textFieldFocus.requestFocus();
+      textFieldFocus!.requestFocus();
     }
 
     // make sure we update the state of the "searchBoxIsFocused" variable
@@ -83,7 +83,7 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
       // don't understand why this has to be inverted. Normally, it is expected that "hasFocus" returns
       // a boolean value of true if it has focus but this behaves otherwise returning true when it has no foucs
       // and false when it doesn't.
-      searchBoxIsFocused = !textFieldFocus.hasFocus;
+      searchBoxIsFocused = !textFieldFocus!.hasFocus;
     });
   }
 
@@ -92,11 +92,11 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
     return Consumer<CelebsInfo>(
       builder: (context, celebInfo, child) {
         int _numCelebsToShow = 0;
-        if (celebInfo.infoLoadedFromDatabase()) {
+        if (celebInfo.infoLoadedFromDatabase()!) {
           _numCelebsToShow = celebInfo.entireCelebsList.length;
         }
 
-        if (_listController.hasClients && celebInfo.lastChangeTime.difference(_lastCelebInfoChange)>Duration(milliseconds: 0))
+        if (_listController.hasClients && celebInfo.lastChangeTime!.difference(_lastCelebInfoChange!)>Duration(milliseconds: 0))
         {
           _listController.jumpTo(0);
           print(celebInfo.lastChangeTime);

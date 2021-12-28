@@ -11,16 +11,16 @@ import 'package:flutter/material.dart';
 import 'package:speech_bubble/speech_bubble.dart';
 
 class FaceSelectionScreenArguments {
-  final File imageFile;
-  final String imageFileName;
+  final File? imageFile;
+  final String? imageFileName;
 
   FaceSelectionScreenArguments({this.imageFile, this.imageFileName});
 }
 
 class FaceSelectionScreen extends StatefulWidget {
   static const String routeName = '/face_selection_screen';
-  final File imageFile;
-  final String imageFileName;
+  final File? imageFile;
+  final String? imageFileName;
   FaceSelectionScreen({this.imageFile, this.imageFileName});
 
   @override
@@ -29,7 +29,7 @@ class FaceSelectionScreen extends StatefulWidget {
 
 class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
   static final int _notSelected = -1;
-  List<String> _facesLinks;
+  List<String>? _facesLinks;
   int _indexSelected = _notSelected;
 
   @override
@@ -41,7 +41,7 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
   void getFacesLinks() async {
     HashMap<String, dynamic> facesData = await NetworkHelper().getFacesCustomImageSearchLinks(
         imageFileName: widget.imageFileName, userId: SettingsData().id);
-    String status = facesData['status'];
+    String? status = facesData['status'];
     while (status == 'incomplete') {
       facesData = await NetworkHelper().getFacesCustomImageSearchLinks(
           imageFileName: widget.imageFileName,
@@ -71,7 +71,7 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
               height: MediaQuery.of(context).size.height / 2,
               width: MediaQuery.of(context).size.width,
               child: Image.file(
-                widget.imageFile,
+                widget.imageFile!,
                 fit: BoxFit.scaleDown,
               )),
           Column(children: [
@@ -99,7 +99,7 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
                         ? null
                         : () {
                             SettingsData().filterDisplayImageUrl =
-                                _facesLinks[_indexSelected];
+                                _facesLinks![_indexSelected];
                             Navigator.popUntil(context, (route) {
                               print(route.settings.name);
                               return route.settings.name ==

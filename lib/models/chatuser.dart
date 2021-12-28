@@ -5,7 +5,7 @@ class ChatUser{
   String messageText;
   String imageURL;
   String time;
-  ChatUser({@required this.name,@required this.messageText,@required this.imageURL,@required this.time});
+  ChatUser({required this.name,required this.messageText,required this.imageURL,required this.time});
 
   static List<ChatUser> mockChatUsers = [
     ChatUser(name: "Brad", messageText: "Awesome Setup", imageURL: "assets/mock_images/brad.jpg", time: "Now"),

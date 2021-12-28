@@ -25,9 +25,9 @@ class ProfileDetailsScreen extends StatefulWidget {
   //
   // Also, if non is provided it will just go on with its normal process of loading and waiting for the images
   // which means this route can be pushed to satck without worrying about the "imageUrls" parameter since its optional.
-  final List<String> imageUrls;
+  final List<String>? imageUrls;
 
-  ProfileDetailsScreen({Key key, this.imageUrls}) : super(key: key);
+  ProfileDetailsScreen({Key? key, this.imageUrls}) : super(key: key);
 
   @override
   _ProfileDetailsScreenState createState() => _ProfileDetailsScreenState();
@@ -38,21 +38,21 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
   // this will be pre-filled with data from the server.
   bool _incognitoMode = false;
 
-  String _aboutMe;
+  String? _aboutMe;
 
-  String _jobTitle;
+  String? _jobTitle;
 
-  String _company;
+  String? _company;
 
   bool _loadingImage = false; //Is image in the process of being uploaded? give user visual cue
 
-  List<String> _profileImagesUrls = [];
+  List<String>? _profileImagesUrls = [];
 
   @override
   initState() {
     super.initState();
 
-    if (widget.imageUrls != null && widget.imageUrls.isNotEmpty) {
+    if (widget.imageUrls != null && widget.imageUrls!.isNotEmpty) {
       mountedLoader(() {
         _profileImagesUrls = widget.imageUrls;
       });
@@ -86,9 +86,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
 
   /// builds the toggle tile.
   Widget _buildToggleTile({
-    @required String title,
-    @required bool value,
-    void Function(bool) onToggle,
+    required String title,
+    required bool value,
+    void Function(bool)? onToggle,
   }) {
     return GlobalWidgets.buildSettingsBlock(
       top: Row(
@@ -110,13 +110,13 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
 
   /// A Box that Displays the currently available user profile images.
   Widget _pictureBox({
-    String imageUrl,
+    String? imageUrl,
 
     /// This function is fired when an image is successfully taken from the Gallery or Camera.
-    void Function(PickedFile imageFile) onImagePicked,
+    void Function(PickedFile? imageFile)? onImagePicked,
 
     /// A function that fires when the cancel icon on the image-box is pressed.
-    void Function() onDelete,
+    void Function()? onDelete,
   }) {
     Widget _inBoxWidget = imageUrl != null
         ? Image.network(
@@ -169,7 +169,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
                 elevation: 2.0,
                 child: InkWell(
                   onTap: () {
-                    onDelete();
+                    onDelete!();
                   },
                   child: Padding(
                     padding: EdgeInsets.all(2.5),
@@ -187,20 +187,18 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
 
   @override
   Widget build(BuildContext context) {
-    String _imgUrl;
+    String? _imgUrl;
 
-    if (_profileImagesUrls != null && _profileImagesUrls.isNotEmpty) {
-      _imgUrl = _profileImagesUrls.first;
+    if (_profileImagesUrls != null && _profileImagesUrls!.isNotEmpty) {
+      _imgUrl = _profileImagesUrls!.first;
     }
 
-    final ImageProvider _profileImage = _imgUrl == null
+    final ImageProvider _profileImage = (_imgUrl == null
         ? AssetImage(
             BetaIconPaths.defaultProfileImagePath01,
           )
         : CachedNetworkImageProvider(
-            NetworkHelper().getProfileImageUrl(_imgUrl),
-            imageRenderMethodForWeb: ImageRenderMethodForWeb.HtmlImage,
-          );
+            NetworkHelper().getProfileImageUrl(_imgUrl),)) as ImageProvider<Object>;
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -236,7 +234,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
                               onImagePicked: (image) {
                                 // log
                                 print(
-                                    'The Path to the New Profile Image is: ${image.path}');
+                                    'The Path to the New Profile Image is: ${image!.path}');
                               });
                         },
                         child: Padding(
@@ -254,17 +252,17 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
               ReorderableWrap(
                   needsLongPressDraggable: false,
                   onReorder: (int oldIndex, int newIndex) {
-                    if (newIndex >= _profileImagesUrls.length) {
+                    if (newIndex >= _profileImagesUrls!.length) {
                       return;
                     }
                     NetworkHelper().swapProfileImages(oldIndex,
                         newIndex); //I don't see a need to wait for the server;
                     setState(() {
-                      String temp = _profileImagesUrls[
+                      String temp = _profileImagesUrls![
                           oldIndex]; //Swap the elements (I wish there was a native way to do that!)
-                      _profileImagesUrls[oldIndex] =
-                          _profileImagesUrls[newIndex];
-                      _profileImagesUrls[newIndex] = temp;
+                      _profileImagesUrls![oldIndex] =
+                          _profileImagesUrls![newIndex];
+                      _profileImagesUrls![newIndex] = temp;
                     });
                   },
                   direction: Axis.horizontal,
@@ -273,14 +271,14 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
                   spacing: 12.0,
                   runSpacing: 12.0,
                   children: List<Widget>.generate(
-                      _profileImagesUrls.length + 1,
+                      _profileImagesUrls!.length + 1,
                       (index) => ReorderableWidget(
                             key: Key('#profile_screen-reorderable_key'),
-                            reorderable: index < _profileImagesUrls.length,
+                            reorderable: index < _profileImagesUrls!.length,
                             child: _pictureBox(
-                                imageUrl: index < _profileImagesUrls.length
+                                imageUrl: index < _profileImagesUrls!.length
                                     ? NetworkHelper().getProfileImageUrl(
-                                        _profileImagesUrls[index])
+                                        _profileImagesUrls![index])
                                     : null,
                                 onDelete: () {
                                   NetworkHelper()
@@ -296,7 +294,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
                                     _loadingImage = true;
                                   });
                                   NetworkHelper()
-                                      .postProfileImage(pickedImage)
+                                      .postProfileImage(pickedImage!)
                                       .then((_) {
                                        setState(() {
                                          _loadingImage = false;
@@ -368,8 +366,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
 /// The TextEditBlock used in the Profile Settings page.
 class TextEditBlock extends StatefulWidget {
   TextEditBlock({
-    Key key,
-    @required this.title,
+    Key? key,
+    required this.title,
     this.text,
     this.placeholder,
     this.maxLine,
@@ -382,33 +380,33 @@ class TextEditBlock extends StatefulWidget {
   }) : super(key: key);
 
   final String title;
-  final String text;
-  final String placeholder;
-  final int maxLine;
-  final void Function() onOpen;
-  final void Function() onCloseTile;
-  final TextEditingController controller;
+  final String? text;
+  final String? placeholder;
+  final int? maxLine;
+  final void Function()? onOpen;
+  final void Function()? onCloseTile;
+  final TextEditingController? controller;
 
   /// This Function is fired when the block is opened or closed.
   ///
   /// A value of `true` is returned when the block is opened and a
   /// value of `false` if otherwise.
-  final void Function(bool) onStatusChanged;
-  final void Function(String) onChanged;
-  final void Function(String) onSubmitted;
+  final void Function(bool?)? onStatusChanged;
+  final void Function(String)? onChanged;
+  final void Function(String)? onSubmitted;
 
   @override
   _TextEditBlockState createState() => _TextEditBlockState();
 }
 
 class _TextEditBlockState extends State<TextEditBlock> {
-  TextEditingController _textEditingController;
+  TextEditingController? _textEditingController;
 
-  bool _isOpened;
+  bool? _isOpened;
 
-  void toggle([bool force]) {
+  void toggle([bool? force]) {
     setState(() {
-      _isOpened = force ?? !_isOpened;
+      _isOpened = force ?? !_isOpened!;
     });
   }
 
@@ -417,8 +415,8 @@ class _TextEditBlockState extends State<TextEditBlock> {
     _textEditingController = widget.controller ?? TextEditingController();
 
     if (widget.text != null) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        _textEditingController.text = widget.text;
+      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+        _textEditingController!.text = widget.text!;
       });
     }
 
@@ -429,7 +427,7 @@ class _TextEditBlockState extends State<TextEditBlock> {
 
   @override
   void dispose() {
-    if (widget.controller == null) _textEditingController.dispose();
+    if (widget.controller == null) _textEditingController!.dispose();
 
     super.dispose();
   }
@@ -448,23 +446,23 @@ class _TextEditBlockState extends State<TextEditBlock> {
           InkWell(
             customBorder: CircleBorder(),
             onTap: () {
-              if ((_textEditingController.text ?? '').length > 0) {
-                print(_textEditingController.text ?? 'No text');
+              if ((_textEditingController!.text).length > 0) {
+                print(_textEditingController!.text);
                 return;
               }
               setState(() {
-                _isOpened = !_isOpened;
+                _isOpened = !_isOpened!;
               });
 
               // determine whether or not the [TextEditBlock] is expanded or not.
               if (_isOpened == true) {
-                if (widget.onOpen != null) widget.onOpen();
+                if (widget.onOpen != null) widget.onOpen!();
               } else {
-                if (widget.onCloseTile != null) widget.onCloseTile();
+                if (widget.onCloseTile != null) widget.onCloseTile!();
               }
 
               if (widget.onStatusChanged != null)
-                widget.onStatusChanged(_isOpened);
+                widget.onStatusChanged!(_isOpened);
             },
             child: GlobalWidgets.assetImageToIcon(
               BetaIconPaths.editIconPath02,
@@ -475,7 +473,7 @@ class _TextEditBlockState extends State<TextEditBlock> {
       ),
       body: AnimatedContainer(
         duration: Duration(milliseconds: 1200),
-        child: _isOpened
+        child: _isOpened!
             ? CupertinoTextField.borderless(
                 controller: _textEditingController,
                 placeholder: widget.placeholder,

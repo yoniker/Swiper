@@ -7,11 +7,11 @@ const Duration _kClickDuration = const Duration(milliseconds: 90);
 class Clickable extends StatefulWidget {
   final Widget child;
   final bool enableFeedback;
-  final void Function() onTap;
-  final void Function() onLongPressed;
+  final void Function()? onTap;
+  final void Function()? onLongPressed;
 
   Clickable({
-    @required this.child,
+    required this.child,
     this.enableFeedback = true,
     this.onTap,
     this.onLongPressed,
@@ -23,8 +23,8 @@ class Clickable extends StatefulWidget {
 
 class _ClickableState extends State<Clickable>
     with SingleTickerProviderStateMixin {
-  AnimationController _animationController;
-  Animation<double> _animation;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
 
   @override
   void initState() {
@@ -76,7 +76,7 @@ class _ClickableState extends State<Clickable>
                       _animationController.reverse();
                       Timer(_kClickDuration, () {
                         if (widget.onTap != null) {
-                          widget.onTap();
+                          widget.onTap!();
                         }
                       });
                     });
@@ -95,7 +95,7 @@ class _ClickableState extends State<Clickable>
                     _animationController.reverse();
 
                     if (widget.onLongPressed != null) {
-                      widget.onLongPressed();
+                      widget.onLongPressed!();
                     }
                   },
             // onTapUp: (details) {

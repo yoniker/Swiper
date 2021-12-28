@@ -44,7 +44,7 @@ class CupertinoRangeSliderThumbShape extends RangeSliderThumbShape {
   /// This is set to [_kSliderBoxShadows] by default.
   ///
   /// You can override this by passing it a list of [BoxShadow] of your choice.
-  final List<BoxShadow> boxShadows;
+  final List<BoxShadow>? boxShadows;
 
   /// The preferred radius of the round thumb shape when the slider is enabled.
   ///
@@ -55,7 +55,7 @@ class CupertinoRangeSliderThumbShape extends RangeSliderThumbShape {
   ///
   /// If no disabledRadius is provided, then it is equal to the
   /// [enabledThumbRadius].
-  final double disabledThumbRadius;
+  final double? disabledThumbRadius;
   double get _disabledThumbRadius => disabledThumbRadius ?? enabledThumbRadius;
 
   /// The resting elevation adds shadow to the unpressed thumb.
@@ -78,15 +78,15 @@ class CupertinoRangeSliderThumbShape extends RangeSliderThumbShape {
   void paint(
       PaintingContext context,
       Offset center, {
-        @required Animation<double> activationAnimation,
-        @required Animation<double> enableAnimation,
+        required Animation<double> activationAnimation,
+        required Animation<double> enableAnimation,
         bool isDiscrete = false,
         bool isEnabled = false,
-        bool isOnTop,
-        @required SliderThemeData sliderTheme,
-        TextDirection textDirection,
-        Thumb thumb,
-        bool isPressed,
+        bool? isOnTop,
+        required SliderThemeData sliderTheme,
+        TextDirection? textDirection,
+        Thumb? thumb,
+        bool? isPressed,
       }) {
     assert(context != null);
     assert(center != null);
@@ -110,13 +110,13 @@ class CupertinoRangeSliderThumbShape extends RangeSliderThumbShape {
     // the other thumb.
     if (isOnTop == true) {
       final Paint strokePaint = Paint()
-        ..color = sliderTheme.overlappingShapeStrokeColor
+        ..color = sliderTheme.overlappingShapeStrokeColor!
         ..strokeWidth = 1.0
         ..style = PaintingStyle.stroke;
       canvas.drawCircle(center, radius, strokePaint);
     }
 
-    final Color color = colorTween.evaluate(enableAnimation);
+    final Color color = colorTween.evaluate(enableAnimation)!;
 
     final Rect rect = Rect.fromCenter(center: center, width: 2 * radius, height: 2 * radius);
 

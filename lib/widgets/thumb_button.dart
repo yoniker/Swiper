@@ -39,7 +39,7 @@ const BoxConstraints _kDefaultBoxConstraints = BoxConstraints(
 /// widget to center the child widget properly in the thumb or else where depending.
 class ThumbButton extends StatelessWidget {
   const ThumbButton({
-    Key key,
+    Key? key,
     this.child,
     this.thumbColor = _kThumbColor,
     this.thumbConstraints = _kDefaultBoxConstraints,
@@ -55,7 +55,7 @@ class ThumbButton extends StatelessWidget {
   /// The Widget directly below this widget in the Widget tree.
   ///
   /// The supplied widget is painted right inside the thumb.
-  final Widget child;
+  final Widget? child;
 
   /// The constraints set for this ThumbButton.
   /// The constraints provided is used to compute the dimension of the thumb button.
@@ -78,7 +78,7 @@ class ThumbButton extends StatelessWidget {
   final bool enableFeedback;
 
   /// A callback that gets fired when this button is tapped.
-  final void Function() onTap;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +100,7 @@ class ThumbButton extends StatelessWidget {
               constraints: _kDefaultBoxConstraints,
             ),
           ),
-          if (child != null) child,
+          if (child != null) child!,
         ],
       ),
     );
@@ -110,7 +110,7 @@ class ThumbButton extends StatelessWidget {
 /// The CustomPainter for the [ThumbButton] widget.
 class ThumbButtonPainter extends CustomPainter {
   ThumbButtonPainter(
-      {@required this.color, this.boxShadows = _kThumbBoxShadows});
+      {required this.color, this.boxShadows = _kThumbBoxShadows});
 
   /// The color with which to paint this the thumb.
   final Color color;

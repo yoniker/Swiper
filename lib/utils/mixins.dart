@@ -23,7 +23,7 @@ mixin MountedStateMixin<T extends StatefulWidget> on State<T> {
     if (mounted) {
       setState(() {});
     } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         setState(() {});
       });
     }

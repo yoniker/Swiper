@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class GenderSelector extends StatefulWidget {
-  GenderSelector({Key key, this.selectedGender}) : super(key: key);
+  GenderSelector({Key? key, this.selectedGender}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -12,14 +12,14 @@ class GenderSelector extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String selectedGender;
+  final String? selectedGender;
 
   @override
   _GenderSelectorState createState() => _GenderSelectorState();
 }
 
 class _GenderSelectorState extends State<GenderSelector> {
-  String selectedGender;
+  String? selectedGender;
   @override
   initState(){
     super.initState();

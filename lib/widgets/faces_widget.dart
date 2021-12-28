@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class FacesWidget extends StatefulWidget {
-  final List<String> facesUrls;
+  final List<String>? facesUrls;
   final Function(int) onClickIndex;
   final int selectedIndex;
   FacesWidget(this.facesUrls,this.onClickIndex,this.selectedIndex);
@@ -14,7 +14,7 @@ class FacesWidget extends StatefulWidget {
 }
 
 class _FacesWidgetState extends State<FacesWidget> {
-  List<Image> facesImages;
+  List<Image>? facesImages;
   @override
   Widget build(BuildContext context) {
     Widget imagesWidget;
@@ -23,8 +23,8 @@ class _FacesWidgetState extends State<FacesWidget> {
       imagesWidget = CupertinoActivityIndicator();
     }
     else{
-      for(int imageIndex = 0 ; imageIndex<widget.facesUrls.length; imageIndex++){
-        String url = NetworkHelper.faceUrlToFullUrl(widget.facesUrls[imageIndex]);
+      for(int imageIndex = 0 ; imageIndex<widget.facesUrls!.length; imageIndex++){
+        String url = NetworkHelper.faceUrlToFullUrl(widget.facesUrls![imageIndex]);
         Image img = Image.network(url,height: 75.0,width: 75.0,fit:BoxFit.cover);
         precacheImage(img.image, context);
         facesImages.add(img);
@@ -32,7 +32,7 @@ class _FacesWidgetState extends State<FacesWidget> {
 
       }
 
-      if(widget.facesUrls.length==0){
+      if(widget.facesUrls!.length==0){
         imagesWidget = Center(child: Text('No face was detected!',style:boldTextStyle.copyWith(color: Colors.red)));
       } else{
 

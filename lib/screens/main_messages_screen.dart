@@ -4,7 +4,7 @@ import 'package:betabeta/widgets/chat_profile.dart';
 import 'package:flutter/material.dart';
 
 class MainMessagesScreen extends StatefulWidget {
-  MainMessagesScreen({Key key}) : super(key: key);
+  MainMessagesScreen({Key? key}) : super(key: key);
   static const String routeName = '/main_messages_screen';
 
   @override

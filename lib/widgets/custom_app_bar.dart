@@ -10,9 +10,9 @@ import 'package:flutter/material.dart';
 /// the parameter "icon" cannot be null.
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
-    Key key,
+    Key? key,
     this.title,
-    @required this.trailing,
+    required this.trailing,
     this.color = Colors.black,
     this.customTitleBuilder,
     this.hasTopPadding = false,
@@ -28,7 +28,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         super(key: key);
 
   CustomAppBar.subPage({
-    @required String subPageTitle,
+    required String subPageTitle,
     this.color,
     this.hasBackButton = true,
     this.hasTopPadding = false,
@@ -51,7 +51,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         this.customTitleBuilder = SizedBox.shrink();
 
   /// The `title` for this tile.
-  final String title;
+  final String? title;
 
   /// This denotes the icon widget that is placed in the Appbar .
   final Widget trailing;
@@ -61,14 +61,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool hasBackButton;
 
   /// The Color of the title text. Defaults to `Colors.black`
-  final Color color;
+  final Color? color;
 
   /// Determines whether to add a Padding to the Top of the AppBar in a case where it is used
   /// as the `appBar` parameter of the [Scaffold] widget.
   final bool hasTopPadding;
 
   /// Use this to build a custom title Widget for the [CustomAppbar].
-  final Widget customTitleBuilder;
+  final Widget? customTitleBuilder;
 
   /// Whether to show the App's Logo at the center of the App Bar.
   /// Must not be null.
@@ -84,7 +84,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   ///
   /// Note: if `hasBackButton` is false or null, this function won't fire as the backbutton will
   /// be hiddden.
-  final void Function() onPop;
+  final void Function()? onPop;
 
   /// This determines how much padding (in pixels) to add to the back to the trialing widget.
   ///
@@ -124,11 +124,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ),
                   (customTitleBuilder != null)
-                      ? customTitleBuilder
+                      ? customTitleBuilder!
                       : Padding(
                           padding: EdgeInsets.only(left: 10.0),
                           child: Text(
-                            title,
+                            title!,
                             style: TextStyle(
                               color: color,
                               fontSize: 22,

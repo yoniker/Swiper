@@ -21,20 +21,20 @@ class SettingsData extends ChangeNotifier{
   static const String TASTE_MIX_RATIO_KEY = 'taste_mix_ratio';
   static const String RADIUS_KEY = 'radius';
   static const _debounceSettingsTime = Duration(seconds: 2); //Debounce time such that we notify listeners
-  String _name;
-  String _facebookId;
-  String _facebookProfileImageUrl;
-  String _preferredGender;
-  int _minAge;
-  int _maxAge;
-  bool _readFromShared;
-  Timer _debounce;
-  int _auditionCount;
-  String _filterName;
-  String _filterDisplayImageUrl;
-  String _celebId;
-  double _tasteMixRatio;
-  double _radius;
+  String? _name;
+  String? _facebookId;
+  String? _facebookProfileImageUrl;
+  String? _preferredGender;
+  int? _minAge;
+  int? _maxAge;
+  bool? _readFromShared;
+  Timer? _debounce;
+  int? _auditionCount;
+  String? _filterName;
+  String? _filterDisplayImageUrl;
+  String? _celebId;
+  double? _tasteMixRatio;
+  double? _radius;
 
   SettingsData._privateConstructor(){
     //Fill in some "default" values which should be filled in within milliseconds of opening the App
@@ -82,121 +82,121 @@ class SettingsData extends ChangeNotifier{
     return _instance;
   }
 
-  bool get readFromShared{
+  bool? get readFromShared{
     return _readFromShared;
   }
 
 
 
 
-  String get preferredGender{
+  String? get preferredGender{
     return _preferredGender;
   }
 
-  set preferredGender(String newPreferredGender){
+  set preferredGender(String? newPreferredGender){
     _preferredGender = newPreferredGender;
     savePreferences(PREFERRED_GENDER_KEY, newPreferredGender);
   }
 
-  String get name{
+  String? get name{
     return _name;
   }
 
-  set name(String newName){
+  set name(String? newName){
     _name = newName;
     savePreferences(NAME_KEY, newName);
   }
 
 
-  String get facebookId{
+  String? get facebookId{
     return _facebookId;
   }
 
-  set facebookId(String newFacebookId){
+  set facebookId(String? newFacebookId){
     _facebookId = newFacebookId;
     savePreferences(FACEBOOK_ID_KEY, newFacebookId);
   }
 
 
 
-  String get facebookProfileImageUrl{
+  String? get facebookProfileImageUrl{
     return _facebookProfileImageUrl;
   }
 
-  set facebookProfileImageUrl(String newUrl){
+  set facebookProfileImageUrl(String? newUrl){
     _facebookProfileImageUrl = newUrl;
     savePreferences(FACEBOOK_PROFILE_IMAGE_URL_KEY, newUrl);
   }
 
 
-  int get minAge{
+  int? get minAge{
     return _minAge;
   }
 
-   set minAge(int newMinAge){
+   set minAge(int? newMinAge){
     _minAge = newMinAge;
     savePreferences(MIN_AGE_KEY,newMinAge);
   }
 
-  int get maxAge{
+  int? get maxAge{
     return _maxAge;
   }
 
-  set maxAge(int newMaxAge){
+  set maxAge(int? newMaxAge){
     _maxAge = newMaxAge;
     savePreferences(MAX_AGE_KEY, newMaxAge);
   }
 
-  int get auditionCount{
+  int? get auditionCount{
     return _auditionCount;
   }
 
-  set auditionCount(int newAuditionCount){
+  set auditionCount(int? newAuditionCount){
     _auditionCount = newAuditionCount;
     savePreferences(AUDITION_COUNT_KEY, newAuditionCount);
   }
 
-  String get filterName{
+  String? get filterName{
     return _filterName;
   }
 
-  set filterName(String newFilterName){
+  set filterName(String? newFilterName){
     _filterName = newFilterName;
     savePreferences(FILTER_NAME_KEY, newFilterName);
   }
 
-  String get filterDisplayImageUrl{
+  String? get filterDisplayImageUrl{
     return _filterDisplayImageUrl;
   }
 
-  set filterDisplayImageUrl(String newFilterDisplayImageUrl){
+  set filterDisplayImageUrl(String? newFilterDisplayImageUrl){
     _filterDisplayImageUrl = newFilterDisplayImageUrl;
     savePreferences(FILTER_DISPLAY_IMAGE_URL_KEY, newFilterDisplayImageUrl);
   }
 
-  String get celebId{
+  String? get celebId{
     return _celebId;
   }
 
-  set celebId(String newCelebId){
+  set celebId(String? newCelebId){
     _celebId = newCelebId;
     savePreferences(CELEB_ID_KEY, newCelebId);
   }
 
-  double get tasteMixRatio{
+  double? get tasteMixRatio{
     return _tasteMixRatio;
   }
 
-  set tasteMixRatio(double newTasteMixRatio){
+  set tasteMixRatio(double? newTasteMixRatio){
     _tasteMixRatio = newTasteMixRatio;
     savePreferences(TASTE_MIX_RATIO_KEY, newTasteMixRatio);
   }
 
-  double get radius{
+  double? get radius{
     return _radius;
   }
 
-  set radius(double newRadius){
+  set radius(double? newRadius){
     _radius = newRadius;
     savePreferences(RADIUS_KEY, newRadius);
   }
@@ -208,9 +208,9 @@ class SettingsData extends ChangeNotifier{
 
 
   void savePreferences(String sharedPreferencesKey, dynamic newValue) async {
-    if (_debounce?.isActive ?? false) _debounce.cancel();
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(_debounceSettingsTime, () async{
-      if(_facebookId !=null && _facebookId.length>0){
+      if(_facebookId !=null && _facebookId!.length>0){
       await NetworkHelper().postUserSettings();}
       MatchEngine().clear();
     });
