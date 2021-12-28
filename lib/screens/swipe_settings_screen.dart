@@ -31,7 +31,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
   Gender _currentGenderSelected = Gender.values
       .firstWhere((e) => e.toShortString() == SettingsData().preferredGender);
   RangeValues _selectedAges = RangeValues(
-      SettingsData().minAge!.toDouble(), SettingsData().maxAge!.toDouble());
+      SettingsData().minAge.toDouble(), SettingsData().maxAge.toDouble());
   bool _showInDiscovery =
       false; //TODO change SettingsData to support visibility
   double _maxDistance = SettingsData().radius;
@@ -192,7 +192,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                                       children: <InlineSpan>[
                                         TextSpan(
                                           text:
-                                              ' ${_maxDistance!.round().toString()} km away',
+                                              ' ${_maxDistance.round().toString()} km away',
                                           style: defaultTextStyle,
                                         ),
                                       ],
@@ -220,7 +220,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                                         EdgeInsets.symmetric(horizontal: 12.0),
                                     child: CupertinoSlider(
                                       activeColor: colorBlend01,
-                                      value: _maxDistance!,
+                                      value: _maxDistance,
                                       min: 0,
                                       max: 200,
                                       onChanged: (value) {

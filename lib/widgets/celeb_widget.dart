@@ -7,11 +7,11 @@ import 'package:betabeta/services/networking.dart';
 import 'package:flutter/material.dart';
 
 class CelebWidget extends StatefulWidget {
-  final Celeb? theCeleb;
+  final Celeb theCeleb;
   final CelebsInfo? celebsInfo;
   final void Function()? onTap;
   final int? celebIndex;
-  CelebWidget({this.theCeleb, this.celebsInfo, this.onTap,this.celebIndex});
+  CelebWidget({required this.theCeleb, this.celebsInfo, this.onTap,this.celebIndex});
   @override
   _CelebWidgetState createState() => _CelebWidgetState();
 }
@@ -48,13 +48,13 @@ class _CelebWidgetState extends State<CelebWidget> {
     final ThemeData theme = Theme.of(context);
     bool backImageButtonEnabled = false;
     bool nextImageButtonEnabled = false;
-    if (widget.theCeleb!.imagesUrls == null) {
-      widget.celebsInfo!.getCelebImageLinks(widget.theCeleb!);
+    if (widget.theCeleb.imagesUrls == null) {
+      widget.celebsInfo!.getCelebImageLinks(widget.theCeleb);
       imageWidget = Text('Loading...');
     } else {
       //TODO handle empty celeb images from server
 
-      if (_imageIndex > widget.theCeleb!.imagesUrls!.length - 1) {
+      if (_imageIndex > widget.theCeleb.imagesUrls!.length - 1) {
         _imageIndex = 0;
       }
       imageWidget = ClipOval(
@@ -63,12 +63,12 @@ class _CelebWidgetState extends State<CelebWidget> {
 
       backImageButtonEnabled = (_imageIndex > 0);
       nextImageButtonEnabled =
-          (_imageIndex < widget.theCeleb!.imagesUrls!.length - 1);
+          (_imageIndex < ((widget.theCeleb.imagesUrls?.length)??0 - 1));
     }
 
     return GestureDetector(
       onTap: () {
-        print('tapped ${widget.theCeleb!.celebName}');
+        print('tapped ${widget.theCeleb.celebName}');
         widget.onTap!();
       },
       child: Container(
@@ -93,7 +93,7 @@ class _CelebWidgetState extends State<CelebWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Text(
-              (widget.celebIndex!+1).toString()+'.'+ widget.theCeleb!.celebName!,
+              (widget.celebIndex!+1).toString()+'.'+ widget.theCeleb.celebName,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -132,7 +132,7 @@ class _CelebWidgetState extends State<CelebWidget> {
                                 0,
                                 min(
                                   _imageIndex,
-                                  widget.theCeleb!.imagesUrls!.length - 1,
+                                  widget.theCeleb.imagesUrls?.length??0 - 1,
                                 ),
                               );
                             },
@@ -149,7 +149,7 @@ class _CelebWidgetState extends State<CelebWidget> {
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 20.0),
                     child: Text(
-                      widget.theCeleb!.description!,
+                      widget.theCeleb.description??'',
                       style: TextStyle(
                           fontWeight: FontWeight.w600, fontSize: 14.0),
                       maxLines: 1,
@@ -164,10 +164,10 @@ class _CelebWidgetState extends State<CelebWidget> {
   }
 
   void updateCelebImages() {
-    if (widget.theCeleb!.imagesUrls != null) {
+    if (widget.theCeleb.imagesUrls != null) {
       celebImages = [];
-      for (int imageIndex = 0; imageIndex < widget.theCeleb!.imagesUrls!.length; imageIndex++) {
-        String url = 'https://'+NetworkHelper.SERVER_ADDR+ widget.theCeleb!.imagesUrls![imageIndex]!;
+      for (int imageIndex = 0; imageIndex < (widget.theCeleb.imagesUrls?.length??0); imageIndex++) {
+        String url = 'https://'+NetworkHelper.SERVER_ADDR+ widget.theCeleb.imagesUrls![imageIndex]!;
         Image img = Image.network(url,height: 150.0,width: 150.0,fit:BoxFit.cover);
         precacheImage(img.image, context);
         celebImages.add(img);

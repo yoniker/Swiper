@@ -1,15 +1,14 @@
 import 'dart:io';
-
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/chat_screen.dart';
+import 'package:betabeta/screens/conversations_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
 import 'package:betabeta/screens/account_settings.dart';
 import 'package:betabeta/screens/login_screen.dart';
-import 'package:betabeta/screens/main_messages_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/notification_screen.dart';
@@ -17,15 +16,15 @@ import 'package:betabeta/screens/profile_details_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
 import 'package:betabeta/services/notifications_controller.dart';
-import 'package:betabeta/splash_screen.dart';
+import 'package:betabeta/screens/splash_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-
 import 'models/celebs_info_model.dart';
 import 'models/details_model.dart';
 
@@ -76,35 +75,11 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  Future<void> _initializeApp() async{ //TODO support error states
-    await NotificationsController.instance.initialize();
-    await ChatData.initDB();
-    await SettingsData().readSettingsFromShared();
-    updateFcmToken();
 
-    //bool navigatingToChatScreen = await NotificationsController.instance.navigateChatOnBackgroundNotification();
-    //if(!navigatingToChatScreen) {Navigator.pushReplacementNamed(context, SignInScreen.routeName);}
-  }
 
-  Future<void> updateFcmToken()async{
-
-    while(true) {
-      try{
-        String? token = await FirebaseMessaging.instance.getToken();
-        print('Got the token $token');
-        if (token != null) {
-          await SettingsData().readSettingsFromShared();
-          if (SettingsData().fcmToken != token) {
-            print('updating fcm token..');
-            SettingsData().fcmToken = token;
-          }
-          return;
-        }
-      }
-      catch(val){
-        print('caught $val');
-      }
-    }
+  @override
+  void initState() {
+    super.initState();
   }
 
 
@@ -198,11 +173,11 @@ class _MyAppState extends State<MyApp> {
           return AccountSettingsScreen();
         },
       );
-    } else if (settings.name == MainMessagesScreen.routeName){
+    } else if (settings.name == ConversationsScreen.routeName){
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {
-          return MainMessagesScreen();
+          return ConversationsScreen();
         },
       );
 
@@ -258,7 +233,7 @@ class _MyAppState extends State<MyApp> {
       return MaterialPageRoute(
         settings: settings,
         builder: (context) {
-          return LoginScreen();
+          return SplashScreen();
         },
       );
     }

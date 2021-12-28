@@ -1,5 +1,6 @@
 import 'package:auth_buttons/auth_buttons.dart';
 import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/screens/conversations_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -34,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
       print('get settings decided to move to main nav screen');
       Navigator.pushReplacementNamed(
         context,
-        MainNavigationScreen.routeName,
+        ConversationsScreen.routeName//MainNavigationScreen.routeName,
       );
     }
   }
@@ -55,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         DefaultCacheManager().emptyCache();
         DefaultCacheManager()
-            .getSingleFile(SettingsData().facebookProfileImageUrl!);
+            .getSingleFile(SettingsData().facebookProfileImageUrl);
         _getSettings();
         break;
 

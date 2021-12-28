@@ -45,7 +45,7 @@ class GlobalWidgets {
     );
 
     // check if scale is null and assign it a default value of 4.0
-    scale ??= 4.0;
+    scale = 4.0;
 
     Widget _child = Padding(
       padding: iconPad,
@@ -556,7 +556,7 @@ class GlobalWidgets {
     assert(context != null,
         'The "context" provided is null! Please provide a non-null context');
     showLoadingIndicator(context: context, message: message);
-    fn?.call();
+    fn.call();
     hideLoadingIndicator(context);
     return;
   }

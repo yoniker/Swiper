@@ -336,7 +336,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                   children: <InlineSpan>[
                                                     TextSpan(
                                                       text:
-                                                          '${AdvancedSettingsScreen.similarityDescriptions[_chosenAuditionCount!]} Similar',
+                                                          '${AdvancedSettingsScreen.similarityDescriptions[_chosenAuditionCount]} Similar',
                                                       style: defaultTextStyle,
                                                     ),
                                                   ],
@@ -374,7 +374,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                             CupertinoColors
                                                                 .systemFill,
                                                             context),
-                                                value: _chosenAuditionCount!
+                                                value: _chosenAuditionCount
                                                     .roundToDouble(),
                                                 min: AdvancedSettingsScreen
                                                     .minAuditionValue
@@ -497,7 +497,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                         Image.network(
                                             NetworkHelper.faceUrlToFullUrl(
                                                 SettingsData()
-                                                    .filterDisplayImageUrl!),
+                                                    .filterDisplayImageUrl),
                                             height: 75,
                                             width: 75,
                                             fit: BoxFit.scaleDown),
@@ -555,7 +555,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                   children: <InlineSpan>[
                                                     TextSpan(
                                                       text:
-                                                          '${AdvancedSettingsScreen.similarityDescriptions[_chosenAuditionCount!]} Similar',
+                                                          '${AdvancedSettingsScreen.similarityDescriptions[_chosenAuditionCount]} Similar',
                                                       style: defaultTextStyle,
                                                     ),
                                                   ],
@@ -593,7 +593,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                             CupertinoColors
                                                                 .systemFill,
                                                             context),
-                                                value: _chosenAuditionCount!
+                                                value: _chosenAuditionCount
                                                     .roundToDouble(),
                                                 min: AdvancedSettingsScreen
                                                     .minAuditionValue
@@ -663,7 +663,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                             children: <InlineSpan>[
                                               TextSpan(
                                                 text:
-                                                    '${AdvancedSettingsScreen.tasteDescriptions[_chosenAuditionCount!]}th percentile (your taste)',
+                                                    '${AdvancedSettingsScreen.tasteDescriptions[_chosenAuditionCount]}th percentile (your taste)',
                                                 style: defaultTextStyle,
                                               ),
                                               WidgetSpan(
@@ -718,7 +718,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                             horizontal: 12.0),
                                         child: CupertinoSlider(
                                           activeColor: colorBlend01,
-                                          value: _chosenAuditionCount!
+                                          value: _chosenAuditionCount
                                               .roundToDouble(),
                                           min: AdvancedSettingsScreen
                                               .minAuditionValue
@@ -785,7 +785,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                             children: <InlineSpan>[
                                               TextSpan(
                                                 text:
-                                                '${AdvancedSettingsScreen.tasteDescriptions[_chosenAuditionCount!]}th percentile (their taste)',
+                                                '${AdvancedSettingsScreen.tasteDescriptions[_chosenAuditionCount]}th percentile (their taste)',
                                                 style: defaultTextStyle,
                                               ),
                                               WidgetSpan(
@@ -840,7 +840,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                             horizontal: 12.0),
                                         child: CupertinoSlider(
                                           activeColor: colorBlend01,
-                                          value: _chosenAuditionCount!
+                                          value: _chosenAuditionCount
                                               .roundToDouble(),
                                           min: AdvancedSettingsScreen
                                               .minAuditionValue

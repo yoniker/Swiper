@@ -166,8 +166,8 @@ class ThumbButtonPainter extends CustomPainter {
 
     // This is where the `boxShadows` parameter is checked for being null
     // and set to `_kSliderBoxShadows`.
-    for (final BoxShadow shadow in boxShadows ?? _kThumbBoxShadows) {
-      // this paints the shdows behind the button.
+    for (final BoxShadow shadow in boxShadows) {
+      // this paints a shadow behind the button.
       canvas.drawPath(path.shift(shadow.offset), shadow.toPaint());
     }
 

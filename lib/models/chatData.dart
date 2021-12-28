@@ -45,17 +45,16 @@ class ChatData extends ChangeNotifier {
 
 
   static Future<void> initDB()async{
-    try{
       await Hive.initFlutter();
       Hive.registerAdapter(InfoUserAdapter()); //TODO should I initialize Hive within the singleton?
       Hive.registerAdapter(InfoMessageAdapter());
       Hive.registerAdapter(InfoConversationAdapter());
-      Hive.registerAdapter(InfoMessageReceiptAdapter());}
-    catch(_){}
-    try{
+      Hive.registerAdapter(InfoMessageReceiptAdapter());
+
+
       await Hive.openBox<InfoConversation>(ChatData.CONVERSATIONS_BOXNAME);
-      await Hive.openBox<InfoUser>(ChatData.USERS_BOXNAME);}
-    catch(_){}
+      await Hive.openBox<InfoUser>(ChatData.USERS_BOXNAME);
+
   }
 
   bool addMessageToDB(InfoMessage messageReceived,{String? otherParticipantsId}){

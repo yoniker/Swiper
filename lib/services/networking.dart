@@ -77,8 +77,7 @@ class NetworkHelper {
           DateTime.now().difference(_lastMatchCall));
     }
     SettingsData settings = SettingsData();
-    String userName = settings.facebookId ??
-        'SOMEUSER'; //TODO Login screen if the username in sharedprefs is null
+    String userName = settings.facebookId; //TODO Login screen if the username in sharedprefs is null
     _lastMatchCall = DateTime.now();
     Uri matchesUrl = Uri.https(SERVER_ADDR, '/matches/$userName');
     http.Response response = await http.get(matchesUrl); //eg /12313?gender=Male
