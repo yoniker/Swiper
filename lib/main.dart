@@ -54,12 +54,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(ChangeNotifierProvider(
-      create: (context) => MatchEngine(),
-      child: ChangeNotifierProvider(
-          //TODO put it in a lower place down the Widget tree...
-          create: (context) => CelebsInfo(),
-          child: MyApp())));
+  runApp( MyApp(),);
 }
 
 

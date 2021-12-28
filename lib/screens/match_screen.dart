@@ -4,6 +4,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
+import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/match_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -93,16 +94,8 @@ class _MatchScreenState extends State<MatchScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  // We use the built in Consumer widget of the Provider package as a wrapper
-                  // around the "revert" button.
-                  // What this essentially does is that it listens for any change in the MatchEngine
-                  // and rebuilds the "revert" button widget to relect it.
-                  Consumer<MatchEngine>(
-                    // We explicitly pass the "child" parameter to the Consumer widget
-                    // this makes sure that everytime the Consumer Widget is being rebuilt
-                    // Flutter does not re-build this particular "child" widget.
-                    // This thus helps us to tone up the App's performance a little.
-                    child: InkWell(
+                  ListenerWidget(notifier: MatchEngine(), builder: (context){
+                    Widget dor =  InkWell(
                       borderRadius: BorderRadius.circular(16.0),
                       child: Padding(
                         padding: EdgeInsets.only(right: 20.0),
@@ -117,15 +110,10 @@ class _MatchScreenState extends State<MatchScreen>
                         ),
                       ),
                       onTap: () {
-                        Provider.of<MatchEngine>(
-                          context,
-                          listen: false,
-                        ).goBack();
+                        MatchEngine().goBack();
                       },
-                    ),
-
-                    builder: (context, matchEngine, child) {
-                      if (matchEngine.previousMatchExists()) {
+                    );
+                      if (MatchEngine().previousMatchExists()) {
                         _animationController.forward();
                       } else {
                         _animationController.reverse();
@@ -138,7 +126,7 @@ class _MatchScreenState extends State<MatchScreen>
 
                       return AnimatedBuilder(
                         animation: _animationController,
-                        child: child,
+                        child: dor,
                         builder: (context, child) {
                           return Opacity(
                             opacity: getAnimatedValue(1.0),
@@ -238,11 +226,12 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
   @override
   Widget build(BuildContext context) {
     // return a stack of cards well positioned.
-    return Consumer<MatchEngine>(
-      builder: (context, matchEngine, unusedChild) {
+    return ListenerWidget(
+      notifier: MatchEngine(),
+      builder: (context) {
          List<Match?> topEngineMatches = [
-          if (matchEngine.currentMatch() != null) matchEngine.currentMatch(),
-          if (matchEngine.nextMatch() != null) matchEngine.nextMatch()
+          if (MatchEngine().currentMatch() != null) MatchEngine().currentMatch(),
+          if (MatchEngine().nextMatch() != null) MatchEngine().nextMatch()
         ];
 
          Widget _buildThumbIcon() {
@@ -306,10 +295,10 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
                     onForward: (int index,SwipeInfo info){
                       if (index ==0){ //TODO index>0 should be impossible
                         if(info.direction == SwipeDirection.Left){
-                          matchEngine.currentMatchDecision(Decision.nope);
+                          MatchEngine().currentMatchDecision(Decision.nope);
                         }
                         else if (info.direction == SwipeDirection.Right){
-                          matchEngine.currentMatchDecision(Decision.like);
+                          MatchEngine().currentMatchDecision(Decision.like);
                         }
                       }
                     },
