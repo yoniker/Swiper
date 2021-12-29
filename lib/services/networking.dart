@@ -147,6 +147,7 @@ class NetworkHelper {
       SettingsData.FILTER_DISPLAY_IMAGE_URL_KEY: settings.filterDisplayImageUrl,
       SettingsData.RADIUS_KEY: settings.radius.toString(),
       SettingsData.FCM_TOKEN_KEY : settings.fcmToken,
+      SettingsData.FACEBOOK_PROFILE_IMAGE_URL_KEY:settings.facebookProfileImageUrl
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri =
