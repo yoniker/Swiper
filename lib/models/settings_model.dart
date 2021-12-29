@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsData extends ChangeNotifier{
   //Some consts to facilitate share preferences access
-  static const String PREFERRED_GENDER_KEY='preferredGender';
+  static const String PREFERRED_GENDER_KEY='gender_preferred';
   static const String NAME_KEY = 'name';
   static const String FACEBOOK_ID_KEY = 'facebook_id';
   static const String FACEBOOK_PROFILE_IMAGE_URL_KEY = 'facebook_profile_image_url';
@@ -91,6 +91,7 @@ class SettingsData extends ChangeNotifier{
   }
 
   set preferredGender(String newPreferredGender){
+    if(_preferredGender==newPreferredGender){return;}
     _preferredGender = newPreferredGender;
     savePreferences(PREFERRED_GENDER_KEY, newPreferredGender);
   }
@@ -100,6 +101,7 @@ class SettingsData extends ChangeNotifier{
   }
 
   set name(String newName){
+    if(_name==newName){return;}
     _name = newName;
     savePreferences(NAME_KEY, newName);
   }
@@ -110,6 +112,7 @@ class SettingsData extends ChangeNotifier{
   }
 
   set facebookId(String newFacebookId){
+    if(_facebookId == newFacebookId){return;}
     _facebookId = newFacebookId;
     savePreferences(FACEBOOK_ID_KEY, newFacebookId);
   }
@@ -121,6 +124,7 @@ class SettingsData extends ChangeNotifier{
   }
 
   set facebookProfileImageUrl(String newUrl){
+    if(newUrl==_facebookProfileImageUrl) {return;}
     _facebookProfileImageUrl = newUrl;
     savePreferences(FACEBOOK_PROFILE_IMAGE_URL_KEY, newUrl);
   }
@@ -131,6 +135,7 @@ class SettingsData extends ChangeNotifier{
   }
 
    set minAge(int newMinAge){
+    if(_minAge==newMinAge){return;}
     _minAge = newMinAge;
     savePreferences(MIN_AGE_KEY,newMinAge);
   }
@@ -140,6 +145,7 @@ class SettingsData extends ChangeNotifier{
   }
 
   set maxAge(int newMaxAge){
+    if(_maxAge==newMaxAge){return;}
     _maxAge = newMaxAge;
     savePreferences(MAX_AGE_KEY, newMaxAge);
   }
@@ -149,6 +155,7 @@ class SettingsData extends ChangeNotifier{
   }
 
   set auditionCount(int newAuditionCount){
+    if(auditionCount==_auditionCount){return;}
     _auditionCount = newAuditionCount;
     savePreferences(AUDITION_COUNT_KEY, newAuditionCount);
   }
@@ -158,6 +165,7 @@ class SettingsData extends ChangeNotifier{
   }
 
   set filterName(String newFilterName){
+    if(newFilterName==_filterName) {return;}
     _filterName = newFilterName;
     savePreferences(FILTER_NAME_KEY, newFilterName);
   }
@@ -167,6 +175,7 @@ class SettingsData extends ChangeNotifier{
   }
 
   set filterDisplayImageUrl(String newFilterDisplayImageUrl){
+    if(newFilterDisplayImageUrl==_filterDisplayImageUrl){return;}
     _filterDisplayImageUrl = newFilterDisplayImageUrl;
     savePreferences(FILTER_DISPLAY_IMAGE_URL_KEY, newFilterDisplayImageUrl);
   }
@@ -176,6 +185,7 @@ class SettingsData extends ChangeNotifier{
   }
 
   set celebId(String newCelebId){
+    if(newCelebId==_celebId) {return;}
     _celebId = newCelebId;
     savePreferences(CELEB_ID_KEY, newCelebId);
   }
@@ -185,6 +195,7 @@ class SettingsData extends ChangeNotifier{
   }
 
   set tasteMixRatio(double newTasteMixRatio){
+    if(newTasteMixRatio==_tasteMixRatio) {return;}
     _tasteMixRatio = newTasteMixRatio;
     savePreferences(TASTE_MIX_RATIO_KEY, newTasteMixRatio);
   }
@@ -194,6 +205,7 @@ class SettingsData extends ChangeNotifier{
   }
 
   set radius(double newRadius){
+    if(newRadius==_radius){return;}
     _radius = newRadius;
     savePreferences(RADIUS_KEY, newRadius);
   }
@@ -203,6 +215,7 @@ class SettingsData extends ChangeNotifier{
   }
 
   set lastSync(double newLastSync){
+    if(newLastSync==_lastSync) {return;}
     _lastSync = newLastSync;
     savePreferences(LAST_SYNC_KEY, newLastSync,sendServer: false);
   }
@@ -216,6 +229,7 @@ class SettingsData extends ChangeNotifier{
   }
 
   set fcmToken(String newToken){
+    if(newToken==_fcmToken){return;}
     _fcmToken = newToken;
     savePreferences(FCM_TOKEN_KEY, newToken);
   }
@@ -225,6 +239,7 @@ class SettingsData extends ChangeNotifier{
   }
 
   set registered(bool newRegistered){
+    if(newRegistered==_registered) {return;}
     _registered = newRegistered;
     savePreferences(REGISTERED_KEY, newRegistered,sendServer: false);
   }

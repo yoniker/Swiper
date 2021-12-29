@@ -279,11 +279,12 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                                     ),
                                   ),
                                   isExpanded: false,
-                                  onChanged: (newGender) {
+                                  onChanged: (Gender? newGender) {
                                     setState(() {
-                                      SettingsData().preferredGender =
-                                          newGender.toShortString();
-                                      _currentGenderSelected = newGender;
+                                      String gonnaGender = newGender?.toShortString()??Gender.Everyone.toString();
+                                      print('Going to change gender to $gonnaGender');
+                                      SettingsData().preferredGender = gonnaGender;
+                                      _currentGenderSelected = newGender??Gender.Everyone;
                                     });
                                   },
                                   style: defaultTextStyle,

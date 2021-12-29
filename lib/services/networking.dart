@@ -134,18 +134,19 @@ class NetworkHelper {
   postUserSettings() async {
     SettingsData settings = SettingsData();
     Map<String, String?> toSend = {
-      'decider_facebook_id': settings.facebookId,
+      SettingsData.FACEBOOK_ID_KEY: settings.facebookId,
       'update_date': '8.0',
-      'decider_name': settings.name,
-      'min_age': settings.minAge.toString(),
-      'max_age': settings.maxAge.toString(),
-      'gender_preferred': settings.preferredGender,
+      SettingsData.NAME_KEY: settings.name,
+      SettingsData.MIN_AGE_KEY: settings.minAge.toString(),
+      SettingsData.MAX_AGE_KEY: settings.maxAge.toString(),
+      SettingsData.PREFERRED_GENDER_KEY: settings.preferredGender,
       SettingsData.FILTER_NAME_KEY: settings.filterName,
       SettingsData.AUDITION_COUNT_KEY: settings.auditionCount.toString(),
       SettingsData.TASTE_MIX_RATIO_KEY: settings.tasteMixRatio.toString(),
       SettingsData.CELEB_ID_KEY: settings.celebId,
       SettingsData.FILTER_DISPLAY_IMAGE_URL_KEY: settings.filterDisplayImageUrl,
-      SettingsData.RADIUS_KEY: settings.radius.toString()
+      SettingsData.RADIUS_KEY: settings.radius.toString(),
+      SettingsData.FCM_TOKEN_KEY : settings.fcmToken,
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri =

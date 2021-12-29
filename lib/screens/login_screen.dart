@@ -35,8 +35,8 @@ class _LoginScreenState extends State<LoginScreen> {
       print('get settings decided to move to main nav screen');
       Navigator.pushReplacementNamed(
         context,
-        ConversationsScreen.routeName//MainNavigationScreen.routeName,
-      );
+        MainNavigationScreen.routeName,
+      ); //TODO make sure this makes sense given splash screen
     }
   }
 

@@ -2,6 +2,7 @@ import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/celebs_info_model.dart';
 import 'package:betabeta/models/chatData.dart';
+import 'package:betabeta/models/details_model.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/login_screen.dart';
@@ -36,6 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
     print('*********************************Initialized DB **********************');
     await NotificationsController.instance.initialize();
     await SettingsData().readSettingsFromShared();
+    DetailsData();
     MatchEngine(); //TODO make sure that those singletons don't have some async function during construction which might potentially create havoc
     CelebsInfo();
     updateFcmToken();

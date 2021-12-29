@@ -8,7 +8,7 @@ import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
 
 class MainNavigationScreen extends StatefulWidget {
-  static const String routeName = '/navigation_screen';
+  static const String routeName = '/main_navigation_screen';
   MainNavigationScreen({Key? key, this.pageIndex = 1}) : super(key: key);
 
   final int pageIndex;
