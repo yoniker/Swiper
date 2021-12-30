@@ -34,7 +34,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _initializeApp() async{ //TODO support error states
     await ChatData.initDB();
-    print('*********************************Initialized DB **********************');
     await NotificationsController.instance.initialize();
     await SettingsData().readSettingsFromShared();
     DetailsData();

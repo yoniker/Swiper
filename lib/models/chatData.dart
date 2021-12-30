@@ -21,10 +21,8 @@ import 'dart:convert';
 
 Future<void> handleBackgroundMessage(RemoteMessage rawMessage)async{
   PersistMessages().writeShouldSync(true);
-  print("SHUKI WOWOWOWOWOWOWOWOWOWO");
   await ChatData.initDB();
   await SettingsData().readSettingsFromShared();
-  print("It's not SHUKI TO BE HONEST IT'S SHUK SHUK SHUK");
   var message = rawMessage.data;
   print('SHUKI SHUKI MESSAGE: $message');
   if(message['push_notification_type']=='new_message'){
@@ -45,15 +43,23 @@ class ChatData extends ChangeNotifier {
 
 
   static Future<void> initDB()async{
-      await Hive.initFlutter();
-      Hive.registerAdapter(InfoUserAdapter()); //TODO should I initialize Hive within the singleton?
+    //The following try-catch blocks are a bad code practice and are here because onBackground(..) handler sometimes tries to register adapters again
+    //TODO check when exactly onbackground does an exception and when it's ok and remove the "bad code practice".
+    try{
+    await Hive.initFlutter();}
+    catch(_){}
+    try {
+      Hive.registerAdapter(
+          InfoUserAdapter()); //TODO should I initialize Hive within the singleton?
       Hive.registerAdapter(InfoMessageAdapter());
       Hive.registerAdapter(InfoConversationAdapter());
       Hive.registerAdapter(InfoMessageReceiptAdapter());
+    } catch(_){}
 
-
+      try{
       await Hive.openBox<InfoConversation>(ChatData.CONVERSATIONS_BOXNAME);
-      await Hive.openBox<InfoUser>(ChatData.USERS_BOXNAME);
+      await Hive.openBox<InfoUser>(ChatData.USERS_BOXNAME);}
+      catch(_){}
 
   }
 
@@ -344,6 +350,7 @@ class ChatData extends ChangeNotifier {
 
 
   static Stream<dynamic> createStream(){
+    print('^^^^^^CREATING STREAM ^^^^^');
     late StreamController<dynamic> controller;
     StreamSubscription? subscription;
     void setFirebaseEvents() {
@@ -380,7 +387,7 @@ class ChatData extends ChangeNotifier {
     String currentUserId = SettingsData().facebookId;
     InfoConversation? theConversation = conversationsBox.get(conversationId);
     if(theConversation == null) {return;}
-
+    double timeToTransmit = 0.0;
     for(var message in theConversation.messages){
       var sender = message.userId;
       if(sender==SettingsData().facebookId){continue;}
@@ -389,7 +396,7 @@ class ChatData extends ChangeNotifier {
         return; //There is a read receipt already
       }
 
-      double timeToTransmit= message.addedDate??message.changedDate??DateTime.now().millisecondsSinceEpoch/1000;
+      timeToTransmit= message.addedDate??message.changedDate??DateTime(2021).millisecondsSinceEpoch/1000; //The last date should never happen,but just in case - use a contant date so that we won't revisit this function when there's a bug
       if(markingConversation.containsKey(conversationId) && markingConversation[conversationId]!>=timeToTransmit){
         return; //We already sent a receipt for the conversation
       }
@@ -398,6 +405,7 @@ class ChatData extends ChangeNotifier {
       break;
 
     }
+    if(timeToTransmit==0.0){return;} //This can happen only when it wasn't set above after initialization eg when there's no message from sender for example
     bool markedSuccessfully = await ChatNetworkHelper.markConversationAsRead(conversationId);
     if(markedSuccessfully){
       for(var message in theConversation.messages){
