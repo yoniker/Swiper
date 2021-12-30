@@ -23,11 +23,14 @@ class CelebsInfo extends ChangeNotifier {
     notifyListeners();
   }
 
-  CelebsInfo(){
+
+
+  static final CelebsInfo instance = CelebsInfo._privateConstructor();
+
+  CelebsInfo._privateConstructor(){
     _lastChangeTime = DateTime.now();
     _infoLoadedFromDatabase = false;
     getCelebsFromDatabase();
-
   }
 
   bool? infoLoadedFromDatabase(){

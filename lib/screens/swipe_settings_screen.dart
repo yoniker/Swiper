@@ -9,6 +9,7 @@ import 'package:betabeta/widgets/dropdown_form_field.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide DropdownButtonFormField;
+import 'package:get/get.dart';
 
 import 'advanced_settings_screen.dart';
 
@@ -94,7 +95,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
             Icon(Icons.settings), //iconURI: 'assets/images/settings_icon.png',
         onPop: () {
           // close the settings screen.
-          Navigator.of(context).pop();
+          navigator!.pop();
 
           // fire the call back if provided.
           widget.onPop?.call();
@@ -397,8 +398,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                     onPressed: () {
                       // Direct user to the Advanced filters Page.
 
-                      Navigator.pushNamed(
-                          context, AdvancedSettingsScreen.routeName);
+                      navigator!.pushNamed(AdvancedSettingsScreen.routeName);
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -446,7 +446,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                     onPressed: widget.onPop ??
                         () {
                           // close the settings screen.
-                          Navigator.of(context).maybePop();
+                          navigator!.maybePop();
                         },
                   ),
                 ),

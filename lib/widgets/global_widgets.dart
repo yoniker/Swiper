@@ -3,6 +3,7 @@ import 'package:betabeta/widgets/gradient_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'clickable.dart';
@@ -257,7 +258,7 @@ class GlobalWidgets {
                       ),
                       onPressed: () {
                         // user has canceled the delete action.
-                        Navigator.of(context).pop<void>();
+                        navigator!.pop<void>();
                         // return false;
                       },
                       child: Text(
@@ -368,7 +369,7 @@ class GlobalWidgets {
       return InkWell(
         onTap: () {
           // Pop the dialogue and execute the image-picking Function.
-          Navigator.of(context).pop();
+          navigator!.pop();
 
           _onImageButtonPressed(source);
         },
@@ -543,7 +544,7 @@ class GlobalWidgets {
   ///
   /// This is equivalent to calling [Navigator.pop] from anywhere in the App.
   static void hideLoadingIndicator(BuildContext context) {
-    Navigator.of(context).maybePop();
+    navigator!.maybePop();
   }
 
   /// This funtion takes in a Function, `fn` to load, calls the showLoadingIndicator function to show

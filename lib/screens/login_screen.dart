@@ -4,6 +4,7 @@ import 'package:betabeta/screens/conversations_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:get/get.dart';
 
 import 'main_navigation_screen.dart';
 
@@ -33,8 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await settings.readSettingsFromShared();
     if (settings.readFromShared! && settings.facebookId != '') {
       print('get settings decided to move to main nav screen');
-      Navigator.pushReplacementNamed(
-        context,
+      navigator!.pushReplacementNamed(
         MainNavigationScreen.routeName,
       ); //TODO make sure this makes sense given splash screen
     }

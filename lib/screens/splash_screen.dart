@@ -38,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
     await SettingsData().readSettingsFromShared();
     DetailsData();
     MatchEngine(); //TODO make sure that those singletons don't have some async function during construction which might potentially create havoc
-    CelebsInfo();
+    var _ = CelebsInfo.instance;
     updateFcmToken();
     bool navigatingToChatScreen = await NotificationsController.instance.navigateChatOnBackgroundNotification();
     print('***************FINISHED INITIALIZING APP*****************');
@@ -86,7 +86,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final routeTo = await _routeTo();
 
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
-      await Navigator.of(context).pushReplacementNamed(routeTo);
+      await navigator!.pushReplacementNamed(routeTo);
     });
   }
 

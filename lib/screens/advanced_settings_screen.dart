@@ -10,6 +10,7 @@ import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:tuple/tuple.dart';
@@ -71,8 +72,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
 
       //
       print('Here!');
-      await Navigator.pushNamed(
-        context,
+      await navigator!.pushNamed(
         FaceSelectionScreen.routeName,
         arguments: FaceSelectionScreenArguments(
           imageFile: File(chosenImage.path),
@@ -255,8 +255,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                               TextButton(
                                 onPressed: () {
                                   // Direct user to the Celebrity Selection Page.
-                                  Navigator.pushNamed(context,
-                                          ScreenCelebritySelection.routeName)
+                                  navigator!.pushNamed(ScreenCelebritySelection.routeName)
                                       .then((selectedCeleb) {
                                     setState(() {
                                       // Set the `_selectedCeleb` variable to the newly selected
@@ -902,7 +901,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                 // call the `saveFilter` Function when the done button is clicked
 
                                 // Pop current context.
-                                Navigator.of(context).pop();
+                                navigator!.pop();
                               },
                             ),
                           ),

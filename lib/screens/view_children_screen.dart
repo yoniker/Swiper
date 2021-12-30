@@ -11,6 +11,7 @@ import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 /// The implementation for the Notification screen.
@@ -123,7 +124,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
       Provider.of<MatchEngine>(context, listen: false).goToNextMatch();
     }
     // close the view-children-page.
-    Navigator.of(context).maybePop();
+    navigator!.maybePop();
   }
 
   @override
@@ -408,7 +409,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                 elevation: 2.0,
                 child: InkWell(
                   onTap: () {
-                    Navigator.of(context).maybePop();
+                    navigator!.maybePop();
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(6.0),

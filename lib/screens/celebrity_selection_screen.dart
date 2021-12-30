@@ -10,7 +10,7 @@ import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 class ScreenCelebritySelection extends StatefulWidget {
   static const String routeName = '/celebrity_select_screen';
@@ -91,18 +91,18 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
   @override
   Widget build(BuildContext context) {
     return ListenerWidget(
-      notifier: CelebsInfo(),
+      notifier: CelebsInfo.instance,
       builder: (context) {
         int _numCelebsToShow = 0;
-        if (CelebsInfo().infoLoadedFromDatabase()!) {
-          _numCelebsToShow = CelebsInfo().entireCelebsList.length;
+        if (CelebsInfo.instance.infoLoadedFromDatabase()!) {
+          _numCelebsToShow = CelebsInfo.instance.entireCelebsList.length;
         }
 
-        if (_listController.hasClients && CelebsInfo().lastChangeTime!.difference(_lastCelebInfoChange!)>Duration(milliseconds: 0))
+        if (_listController.hasClients &&CelebsInfo.instance.lastChangeTime!.difference(_lastCelebInfoChange!)>Duration(milliseconds: 0))
         {
           _listController.jumpTo(0);
-          print(CelebsInfo().lastChangeTime);
-          _lastCelebInfoChange = CelebsInfo().lastChangeTime;
+          print(CelebsInfo.instance.lastChangeTime);
+          _lastCelebInfoChange = CelebsInfo.instance.lastChangeTime;
         }
         return Scaffold(
           backgroundColor: whiteCardColor,
@@ -139,7 +139,7 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
                       ),
                       onPressed: () {
                         _controller.clear();
-                        _onSearchChanged('', CelebsInfo());
+                        _onSearchChanged('', CelebsInfo.instance);
                       },
                       iconSize: 24.0,
                     ),
@@ -165,7 +165,7 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
                     });
                   },
                   onChanged: (String newText) {
-                    _onSearchChanged(newText, CelebsInfo());
+                    _onSearchChanged(newText, CelebsInfo.instance);
                   },
                   onEditingComplete: () {
                     // remove focus form the Text Field.
@@ -185,13 +185,13 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
                     },
                     itemCount: _numCelebsToShow,
                     itemBuilder: (BuildContext context, int index) {
-                      Celeb currentCeleb = CelebsInfo().entireCelebsList[index];
+                      Celeb currentCeleb = CelebsInfo.instance.entireCelebsList[index];
                       return CelebWidget(
                         theCeleb: currentCeleb,
-                        celebsInfo: CelebsInfo(),
+                        celebsInfo: CelebsInfo.instance,
                         celebIndex : index,
                         onTap: () {
-                          Navigator.pop(context, currentCeleb);
+                          navigator!.pop(currentCeleb);
                         },
                       );
                     },

@@ -2,6 +2,7 @@
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 /// A customAppBar that can be used as a Widget outside the [Scaffold] and can also be used inside the
 /// Material [Scaffold] as an [AppBar].
@@ -117,7 +118,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       onTap: onPop ??
                               () {
                             // Pop the current context.
-                            Navigator.of(context).maybePop();
+                                navigator!.maybePop();
                           },
                       child: GlobalWidgets.assetImageToIcon(
                         'assets/images/back_arrow.png',

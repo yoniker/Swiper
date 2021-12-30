@@ -8,6 +8,7 @@ import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/faces_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:speech_bubble/speech_bubble.dart';
 
 class FaceSelectionScreenArguments {
@@ -100,7 +101,7 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
                         : () {
                             SettingsData().filterDisplayImageUrl =
                                 _facesLinks![_indexSelected];
-                            Navigator.popUntil(context, (route) {
+                            navigator!.popUntil( (route) {
                               print(route.settings.name);
                               return route.settings.name ==
                                   AdvancedSettingsScreen.routeName;

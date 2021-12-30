@@ -11,6 +11,7 @@ import 'package:betabeta/widgets/like_scale.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 
@@ -253,8 +254,7 @@ class _MatchCardState extends State<MatchCard> {
                   //   builder: (context) =>
                   //       FullImageScreen(imageUrl: _url),
                   // );
-                  Navigator.push(
-                    context,
+                  navigator!.push(
                     MaterialPageRoute(
                       builder: (context) => FullImageScreen(
                         imageUrl: _url,
@@ -342,8 +342,7 @@ class _MatchCardState extends State<MatchCard> {
               ),
               onTap: () async {
                 // Before the new Route is pushed we set the value of
-                Navigator.push(
-                  context,
+                navigator!.push(
                   MaterialPageRoute(
                     builder: (context) => ViewChildrenScreen(
                       matchProfile: profile,

@@ -9,6 +9,7 @@ import 'package:betabeta/widgets/match_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:tcard/tcard.dart';
 
@@ -166,7 +167,7 @@ class _MatchScreenState extends State<MatchScreen>
                 setMatchCardVisibility(false);
 
                 // Navigate savely to the Settings screen.
-                await Navigator.of(context).push(
+                await navigator!.push(
                   CupertinoPageRoute(builder: (context) {
                     return SwipeSettingsScreen();
                   }),

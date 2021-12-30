@@ -13,6 +13,7 @@ import 'package:betabeta/widgets/thumb_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ProfileTabRedo extends StatefulWidget {
   ProfileTabRedo({Key? key}) : super(key: key);
@@ -78,8 +79,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
       padding: EdgeInsets.symmetric(vertical: 6.0),
       child: Clickable(
         onTap: () async {
-          await Navigator.push(
-            context,
+          await navigator!.push(
             MaterialPageRoute(
               builder: (context) => ProfileDetailsScreen(
                 imageUrls: _profileImagesUrls,
@@ -225,8 +225,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                         thumbColor: whiteCardColor,
                         onTap: () {
                           // move to general settings screen.
-                          Navigator.push(
-                            context,
+                          navigator!.push(
                             MaterialPageRoute(
                               builder: (context) => AccountSettingsScreen(),
                             ),
@@ -258,7 +257,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                         thumbColor: whiteCardColor,
                         onTap: () async {
                           // move to the profile screen.
-                          await Navigator.of(context).push(
+                          await navigator!.push(
                             MaterialPageRoute(
                               builder: (context) => ProfileDetailsScreen(
                                 imageUrls: _profileImagesUrls,
@@ -299,7 +298,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                         thumbColor: whiteCardColor,
                         onTap: () {
                           // move to the notification screen.
-                          Navigator.of(context).push(
+                          navigator!.push(
                             MaterialPageRoute(
                               builder: (context) => NotificationScreen(),
                             ),

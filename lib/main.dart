@@ -20,6 +20,7 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
+
 class MyHttpOverrides extends HttpOverrides {
   //TODO it's a temporary fix so we can use self signed certificates. DON'T USE IN PRODUCTION
   @override
@@ -69,10 +70,7 @@ void main() async {
 
         title: 'Swiper MVP',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primaryColorBrightness: Brightness.light,
-          primarySwatch: Colors.blue,
-        )
+        theme: ThemeData.from(colorScheme: ColorScheme.light().copyWith(primary: Colors.white,secondary: Colors.white70)),
 
 
     )

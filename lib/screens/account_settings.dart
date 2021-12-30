@@ -7,6 +7,7 @@ import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// The implementation for the Notification screen.
@@ -29,7 +30,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     await prefs.remove('preferredGender');
     SettingsData().facebookId = '';
     SettingsData().name = '';
-    Navigator.of(context).pushAndRemoveUntil(
+    navigator!.pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => LoginScreen()),
             (Route<dynamic> route) => false);
   }
@@ -69,8 +70,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             ),
             onTap: () {
               // move to swiping-preference screen.
-              Navigator.push(
-                context,
+              navigator!.push(
                 MaterialPageRoute(
                   builder: (context) => SwipeSettingsScreen(),
                 ),

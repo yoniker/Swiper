@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
 
 
@@ -13,7 +14,7 @@ class FullImageScreen extends StatelessWidget {
     return SafeArea(
       child: GestureDetector(
         onTap: (){
-          Navigator.pop(context);
+          navigator!.pop(context);
         },
         child: Container(
             child: PhotoView(
