@@ -52,7 +52,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
                     return GestureDetector(
                       onTap: (){
 
-                        {navigator!.pushNamed(ChatScreen.routeName, arguments: currentUser);}
+                        {Get.toNamed(ChatScreen.routeName, arguments: currentUser);}
 
                       },
                       child: Padding(

@@ -72,7 +72,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
 
       //
       print('Here!');
-      await navigator!.pushNamed(
+      await Get.toNamed(
         FaceSelectionScreen.routeName,
         arguments: FaceSelectionScreenArguments(
           imageFile: File(chosenImage.path),
@@ -253,10 +253,9 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                             filterName: AdvancedSettingsScreen.CELEB_FILTER,
                             children: [
                               TextButton(
-                                onPressed: () {
-                                  // Direct user to the Celebrity Selection Page.
-                                  navigator!.pushNamed(ScreenCelebritySelection.routeName)
-                                      .then((selectedCeleb) {
+                                onPressed: () async{
+
+                                  var selectedCeleb = await Get.toNamed(ScreenCelebritySelection.routeName);
                                     setState(() {
                                       // Set the `_selectedCeleb` variable to the newly selected
                                       // celebrity from the [CelebritySelectionScreen] page given that it is not null.
@@ -269,8 +268,8 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                         print('No Celebrity Selected!');
                                       }
                                     });
-                                  });
-                                },
+
+                                }, //onpressed
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -901,7 +900,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                 // call the `saveFilter` Function when the done button is clicked
 
                                 // Pop current context.
-                                navigator!.pop();
+                                Get.back();
                               },
                             ),
                           ),

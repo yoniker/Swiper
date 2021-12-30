@@ -95,7 +95,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
             Icon(Icons.settings), //iconURI: 'assets/images/settings_icon.png',
         onPop: () {
           // close the settings screen.
-          navigator!.pop();
+          Get.back();
 
           // fire the call back if provided.
           widget.onPop?.call();
@@ -398,7 +398,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                     onPressed: () {
                       // Direct user to the Advanced filters Page.
 
-                      navigator!.pushNamed(AdvancedSettingsScreen.routeName);
+                      Get.toNamed(AdvancedSettingsScreen.routeName);
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -446,7 +446,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                     onPressed: widget.onPop ??
                         () {
                           // close the settings screen.
-                          navigator!.maybePop();
+                          Get.back();
                         },
                   ),
                 ),

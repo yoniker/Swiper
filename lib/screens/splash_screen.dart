@@ -11,6 +11,7 @@ import 'package:betabeta/services/notifications_controller.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
 /// This is the first root of the Application from here
@@ -42,8 +43,9 @@ class _SplashScreenState extends State<SplashScreen> {
     updateFcmToken();
     bool navigatingToChatScreen = await NotificationsController.instance.navigateChatOnBackgroundNotification();
     print('***************FINISHED INITIALIZING APP*****************');
-    if(!navigatingToChatScreen && navigator!=null) {
-      navigator!.pushReplacementNamed(LoginScreen.routeName);}
+    if(!navigatingToChatScreen) {
+      Get.offAllNamed(LoginScreen.routeName);
+      }
   }
 
   Future<void> updateFcmToken()async{
@@ -86,7 +88,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final routeTo = await _routeTo();
 
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
-      await navigator!.pushReplacementNamed(routeTo);
+      await Get.offAllNamed(routeTo);
     });
   }
 

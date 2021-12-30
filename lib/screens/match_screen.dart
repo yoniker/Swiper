@@ -164,18 +164,11 @@ class _MatchScreenState extends State<MatchScreen>
               child: Icon(Icons.person_search, size: 35,color: colorBlend02,),
               onTap: () async {
                 // hide the overlay.
-                setMatchCardVisibility(false);
-
-                // Navigate savely to the Settings screen.
-                await navigator!.push(
-                  CupertinoPageRoute(builder: (context) {
-                    return SwipeSettingsScreen();
-                  }),
-                ).then((value) {
+                setMatchCardVisibility(false); //TODO Review this
+                var value = await Get.toNamed(SwipeSettingsScreen.routeName);
                   // make the match card visible.
                   setMatchCardVisibility(true);
-                });
-              },
+                  },
             ),
           ),
 

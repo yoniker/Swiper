@@ -54,7 +54,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> with MountedS
     if(messageReceived.userId != SettingsData().facebookId) {
       InfoUser? sender = ChatData().getUserById(messageReceived.userId);
       if(sender!=null && mounted){
-        navigator!.pushNamed(
+        Get.toNamed(
             ChatScreen.routeName, arguments: sender);}
     }
   }

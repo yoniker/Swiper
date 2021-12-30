@@ -2,6 +2,7 @@ import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/login_screen.dart';
+import 'package:betabeta/screens/splash_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
@@ -30,9 +31,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     await prefs.remove('preferredGender');
     SettingsData().facebookId = '';
     SettingsData().name = '';
-    navigator!.pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-            (Route<dynamic> route) => false);
+    Get.offAllNamed(SplashScreen.routeName);
   }
 
 
@@ -70,11 +69,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             ),
             onTap: () {
               // move to swiping-preference screen.
-              navigator!.push(
-                MaterialPageRoute(
-                  builder: (context) => SwipeSettingsScreen(),
-                ),
-              );
+              Get.toNamed(SwipeSettingsScreen.routeName);
+
             },
           ),
           ActionBox(

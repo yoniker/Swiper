@@ -79,13 +79,9 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
       padding: EdgeInsets.symmetric(vertical: 6.0),
       child: Clickable(
         onTap: () async {
-          await navigator!.push(
-            MaterialPageRoute(
-              builder: (context) => ProfileDetailsScreen(
-                imageUrls: _profileImagesUrls,
-              ),
-            ),
-          );
+          await Get.toNamed(
+              ProfileDetailsScreen.routeName,arguments: _profileImagesUrls,
+              );
 
           // this is because the imageUrls might have been edited.
           // we want this page to stay updated so we use it this way.
@@ -225,11 +221,8 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                         thumbColor: whiteCardColor,
                         onTap: () {
                           // move to general settings screen.
-                          navigator!.push(
-                            MaterialPageRoute(
-                              builder: (context) => AccountSettingsScreen(),
-                            ),
-                          );
+                          Get.toNamed(
+                              AccountSettingsScreen.routeName);
                         },
                         child: Positioned(
                           top: 12.0,
@@ -257,13 +250,9 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                         thumbColor: whiteCardColor,
                         onTap: () async {
                           // move to the profile screen.
-                          await navigator!.push(
-                            MaterialPageRoute(
-                              builder: (context) => ProfileDetailsScreen(
-                                imageUrls: _profileImagesUrls,
-                              ),
-                            ),
-                          );
+                          await Get.toNamed(ProfileDetailsScreen.routeName,
+                              arguments: _profileImagesUrls,
+                              );
 
                           // this is because the imageUrls might have been edited.
                           // we want this page to stay updated so we use it this way.
@@ -298,10 +287,8 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                         thumbColor: whiteCardColor,
                         onTap: () {
                           // move to the notification screen.
-                          navigator!.push(
-                            MaterialPageRoute(
-                              builder: (context) => NotificationScreen(),
-                            ),
+                          Get.toNamed(NotificationScreen.routeName
+
                           );
                         },
                         child: Positioned(

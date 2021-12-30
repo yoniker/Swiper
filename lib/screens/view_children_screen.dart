@@ -124,7 +124,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
       Provider.of<MatchEngine>(context, listen: false).goToNextMatch();
     }
     // close the view-children-page.
-    navigator!.maybePop();
+    Get.back();
   }
 
   @override
@@ -409,7 +409,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
                 elevation: 2.0,
                 child: InkWell(
                   onTap: () {
-                    navigator!.maybePop();
+                    Get.back();
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(6.0),

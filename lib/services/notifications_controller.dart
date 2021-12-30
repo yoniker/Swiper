@@ -37,7 +37,7 @@ class NotificationsController{
       InfoUser? collocutor = ChatData().getUserById(senderId);
 
       if(collocutor!=null){
-        navigator!.pushNamed(ChatScreen.routeName,arguments: collocutor);
+        Get.toNamed(ChatScreen.routeName,arguments: collocutor);
       }
 
     }
@@ -86,7 +86,7 @@ class NotificationsController{
   Future<bool> navigateChatOnBackgroundNotification()async{
     final notificationAppLaunchDetails = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
     if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
-      navigator!.pushReplacementNamed(ConversationsScreen.routeName); //So that the back button will go to main screen rather than /(splash/main screen)
+      Get.to(ConversationsScreen.routeName); //So that the back button will go to main screen rather than /(splash/main screen)
       selectNotification(notificationAppLaunchDetails!.payload);
       return true;
     }

@@ -191,7 +191,7 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
                         celebsInfo: CelebsInfo.instance,
                         celebIndex : index,
                         onTap: () {
-                          navigator!.pop(currentCeleb);
+                          Get.back(result: currentCeleb);
                         },
                       );
                     },

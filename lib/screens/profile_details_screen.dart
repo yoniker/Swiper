@@ -9,6 +9,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reorderables/reorderables.dart';
 
@@ -27,7 +28,7 @@ class ProfileDetailsScreen extends StatefulWidget {
   // which means this route can be pushed to satck without worrying about the "imageUrls" parameter since its optional.
   final List<String>? imageUrls;
 
-  ProfileDetailsScreen({Key? key, this.imageUrls}) : super(key: key);
+  ProfileDetailsScreen({Key? key}) : imageUrls = Get.arguments,super(key: key);
 
   @override
   _ProfileDetailsScreenState createState() => _ProfileDetailsScreenState();

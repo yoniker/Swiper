@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await settings.readSettingsFromShared();
     if (settings.readFromShared! && settings.facebookId != '') {
       print('get settings decided to move to main nav screen');
-      navigator!.pushReplacementNamed(
+      Get.offAllNamed(
         MainNavigationScreen.routeName,
       ); //TODO make sure this makes sense given splash screen
     }

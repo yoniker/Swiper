@@ -6,15 +6,14 @@ import 'package:photo_view/photo_view.dart';
 class FullImageScreen extends StatelessWidget {
   static const String routeName = '/main_messages_screen';
   final String? imageUrl;
-
-  const FullImageScreen({Key? key, this.imageUrl}) : super(key: key);
+  FullImageScreen({Key? key}) : imageUrl = (Get.arguments as String),super(key: key);
   @override
   Widget build(BuildContext context) {
 
     return SafeArea(
       child: GestureDetector(
         onTap: (){
-          navigator!.pop(context);
+          Get.back();
         },
         child: Container(
             child: PhotoView(

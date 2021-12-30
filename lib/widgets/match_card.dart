@@ -254,13 +254,10 @@ class _MatchCardState extends State<MatchCard> {
                   //   builder: (context) =>
                   //       FullImageScreen(imageUrl: _url),
                   // );
-                  navigator!.push(
-                    MaterialPageRoute(
-                      builder: (context) => FullImageScreen(
-                        imageUrl: _url,
-                      ),
-                    ),
-                  );
+                  Get.toNamed(
+                        FullImageScreen.routeName,arguments:_url,
+                      );
+
                 },
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
@@ -342,13 +339,7 @@ class _MatchCardState extends State<MatchCard> {
               ),
               onTap: () async {
                 // Before the new Route is pushed we set the value of
-                navigator!.push(
-                  MaterialPageRoute(
-                    builder: (context) => ViewChildrenScreen(
-                      matchProfile: profile,
-                    ),
-                  ),
-                );
+                Get.toNamed(ViewChildrenScreen.routeName, arguments: profile);
               },
               label: Align(
                 alignment: Alignment(-1.02, -2.0),

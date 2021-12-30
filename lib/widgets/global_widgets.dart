@@ -258,8 +258,7 @@ class GlobalWidgets {
                       ),
                       onPressed: () {
                         // user has canceled the delete action.
-                        navigator!.pop<void>();
-                        // return false;
+                        Get.back();
                       },
                       child: Text(
                         'OK',
@@ -369,7 +368,7 @@ class GlobalWidgets {
       return InkWell(
         onTap: () {
           // Pop the dialogue and execute the image-picking Function.
-          navigator!.pop();
+          Get.back();
 
           _onImageButtonPressed(source);
         },
@@ -539,14 +538,6 @@ class GlobalWidgets {
     );
   }
 
-  /// This method closes any opened LoadingIndicator-Dialogue by poping the Route
-  /// currently on top of the stack.
-  ///
-  /// This is equivalent to calling [Navigator.pop] from anywhere in the App.
-  static void hideLoadingIndicator(BuildContext context) {
-    navigator!.maybePop();
-  }
-
   /// This funtion takes in a Function, `fn` to load, calls the showLoadingIndicator function to show
   /// a loading indicator and closes automatically when the given `fn` is done.
   static Future<void> indicatorIncoporatedFetch(
@@ -558,7 +549,7 @@ class GlobalWidgets {
         'The "context" provided is null! Please provide a non-null context');
     showLoadingIndicator(context: context, message: message);
     fn.call();
-    hideLoadingIndicator(context);
+    Get.back();
     return;
   }
 }

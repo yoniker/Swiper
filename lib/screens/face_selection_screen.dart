@@ -22,11 +22,12 @@ class FaceSelectionScreen extends StatefulWidget {
   static const String routeName = '/face_selection_screen';
   final File? imageFile;
   final String? imageFileName;
-  FaceSelectionScreen({this.imageFile, this.imageFileName});
+  FaceSelectionScreen():imageFile = (Get.arguments as FaceSelectionScreenArguments).imageFile,imageFileName = (Get.arguments as FaceSelectionScreenArguments).imageFileName;
 
   @override
   _FaceSelectionScreenState createState() => _FaceSelectionScreenState();
 }
+
 
 class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
   static final int _notSelected = -1;
@@ -102,7 +103,6 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
                             SettingsData().filterDisplayImageUrl =
                                 _facesLinks![_indexSelected];
                             navigator!.popUntil( (route) {
-                              print(route.settings.name);
                               return route.settings.name ==
                                   AdvancedSettingsScreen.routeName;
                             }); //ModalRoute.withName(AdvancedSettingsScreen.routeName));

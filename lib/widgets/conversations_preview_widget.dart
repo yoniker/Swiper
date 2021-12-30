@@ -57,7 +57,7 @@ class _ConversationsPreviewWidgetState
                 return GestureDetector(
                   onTap: () {
                     if (collocutor != null) {
-                      navigator!.pushNamed( ChatScreen.routeName,
+                      Get.toNamed( ChatScreen.routeName,
                           arguments: collocutor);
                     }
                   },

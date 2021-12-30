@@ -44,7 +44,7 @@ class _GenderSelectorState extends State<GenderSelector> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: (){
-    navigator!.pop(selectedGender);
+    Get.back(result:selectedGender);
     return new Future(() => false);
     },
       child: Scaffold(
@@ -56,7 +56,7 @@ class _GenderSelectorState extends State<GenderSelector> {
           leading: IconButton(
             icon:Icon(Icons.arrow_back,color:Colors.redAccent),
             onPressed: (){
-              navigator!.pop(selectedGender);
+              Get.back(result: selectedGender);
             },
 
           ) ,
