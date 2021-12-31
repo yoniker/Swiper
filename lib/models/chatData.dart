@@ -7,9 +7,11 @@ import 'package:betabeta/models/infoMessageReceipt.dart';
 import 'package:betabeta/models/infoUser.dart';
 import 'package:betabeta/models/persistentMessagesData.dart';
 import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/screens/chat_screen.dart';
 import 'package:betabeta/services/chat_networking.dart';
 import 'package:betabeta/services/notifications_controller.dart';
 import 'package:betabeta/services/service_websocket.dart';
+import 'package:get/get.dart';
 import 'package:tuple/tuple.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,7 +26,6 @@ Future<void> handleBackgroundMessage(RemoteMessage rawMessage)async{
   await ChatData.initDB();
   await SettingsData().readSettingsFromShared();
   var message = rawMessage.data;
-  print('SHUKI SHUKI MESSAGE: $message');
   if(message['push_notification_type']=='new_message'){
     final String senderId = message['user_id'];
     if(senderId!=SettingsData().facebookId){
@@ -33,6 +34,35 @@ Future<void> handleBackgroundMessage(RemoteMessage rawMessage)async{
 
     }
   }}
+
+
+Future<void> setupInteractedMessage() async {
+  // Get any messages which caused the application to open from
+  // a terminated state.
+  RemoteMessage? initialMessage =
+  await FirebaseMessaging.instance.getInitialMessage();
+
+  // If the message also contains a data property with a "type" of "chat",
+  // navigate to a chat screen
+  if (initialMessage != null) {
+    _handleMessage(initialMessage);
+  }
+
+  // Also handle any interaction when the app is in the background via a
+  // Stream listener
+  FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+}
+
+void _handleMessage(RemoteMessage message){
+  final InfoMessage messageReceived = InfoMessage.fromJson(message.data);
+  ChatData().addMessageToDB(messageReceived);
+  if(messageReceived.userId != SettingsData().facebookId) {
+    InfoUser? sender = ChatData().getUserById(messageReceived.userId);
+    if(sender!=null){
+      Get.toNamed(
+          ChatScreen.routeName, arguments: sender);}
+  }
+}
 
 class ChatData extends ChangeNotifier {
 
@@ -193,11 +223,11 @@ class ChatData extends ChangeNotifier {
   ChatData._privateConstructor() {
     _fcmStream.listen(updateDatabaseOnMessage);
     ServiceWebsocket.instance.stream.listen((message) {
-      print('Got $message from websocket');
       updateDatabaseOnMessage(message);
 
     });
-    syncWithServer(); //Sync with the server (once,it's a singleton..) as soon as the app starts
+    syncWithServer(); //Sync with the server as soon as the app starts
+    setupInteractedMessage();
   }
   static final ChatData _instance = ChatData._privateConstructor();
 
@@ -224,18 +254,14 @@ class ChatData extends ChangeNotifier {
       listenedValues[conversationId] =  Tuple2(conversationsBox.listenable(keys:[conversationId]),0);
     }
     listenedValues[conversationId]!.item1.addListener(listener);
-    print('Added listener');
     listenedValues[conversationId]!.withItem2(listenedValues[conversationId]!.item2+1);
   }
 
   void removeListenerConversation(String conversationId,VoidCallback listener){
     if(listenedValues.containsKey(conversationId)){
-      print('actually removing listener');
       listenedValues[conversationId]!.item1.removeListener(listener);
       listenedValues[conversationId]!.withItem2(listenedValues[conversationId]!.item2-1);
-      print(listenedValues[conversationId]!.item2);
       if(listenedValues[conversationId]!.item2<=0){
-        print('removing from map');
         listenedValues.remove(conversationId);
       }
     }
@@ -244,9 +270,9 @@ class ChatData extends ChangeNotifier {
   factory ChatData() {
     return _instance;
   }
-  Stream<dynamic> _fcmStream = createStream();
-  Box<InfoConversation> conversationsBox = Hive.box(CONVERSATIONS_BOXNAME);
-  Box<InfoUser> usersBox = Hive.box(USERS_BOXNAME);
+  final Stream<dynamic> _fcmStream = createStream();
+  final Box<InfoConversation> conversationsBox = Hive.box(CONVERSATIONS_BOXNAME);
+  final Box<InfoUser> usersBox = Hive.box(USERS_BOXNAME);
 
   getUsersFromServer() async{
     List<InfoUser> gottenUsers = await ChatNetworkHelper.getAllUsers();
@@ -288,7 +314,6 @@ class ChatData extends ChangeNotifier {
     if(message.messageStatus!='Error'){
       return;
     }
-    print('Trying to resend message!');
     sendMessage(getCollocutorId(conversation), message.content, epochTime:message.addedDate);
 
   }
@@ -316,7 +341,6 @@ class ChatData extends ChangeNotifier {
     InfoMessage lastMessage = conversation.messages[0];
     if(lastMessage.userId==SettingsData().facebookId){return true;}
     //Check read receipt..
-    print('Checking read receipt for user ${SettingsData().name}');
     if(!lastMessage.receipts.containsKey(SettingsData().facebookId)){return false;}
     InfoMessageReceipt currentUserReceipt = lastMessage.receipts[SettingsData().facebookId]!;
     if(currentUserReceipt.readTime==0){return false;}
@@ -350,18 +374,12 @@ class ChatData extends ChangeNotifier {
 
 
   static Stream<dynamic> createStream(){
-    print('^^^^^^CREATING STREAM ^^^^^');
     late StreamController<dynamic> controller;
     StreamSubscription? subscription;
     void setFirebaseEvents() {
       if (subscription == null) {
         subscription =
             FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-              print('Got a message while in the foreground!');
-              if (message.notification != null) {
-                print('Message also contained a notification: ${message
-                    .notification}');
-              }
               controller.add(message.data);
             });
         FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);

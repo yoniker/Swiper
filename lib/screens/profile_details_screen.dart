@@ -74,7 +74,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
     _aboutMe = DetailsData().aboutMe;
     _company = DetailsData().company;
     _jobTitle = DetailsData().job;
-    print(_aboutMe);
 
     _syncFromServer();
   }

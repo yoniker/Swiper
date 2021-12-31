@@ -36,13 +36,11 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
     List<InfoMessage> currentChatMessages = ChatData().messagesInConversation(
         widget.conversationId);
     _messages = currentChatMessages.map((message) => message.toUiMessage()).toList();
-    print('Finished updating Chat Data');
 
   }
 
   void listenConversation()async{
     setStateIfMounted((){
-      print('updating chat info...');
       updateChatData();
 
     });
@@ -55,7 +53,6 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
 
   @override
   void initState() {
-    print('going to listen to conversation ${widget.conversationId}');
     ChatData().markConversationAsRead(widget.conversationId).then((_)
     {ChatData().listenConversation(widget.conversationId,listenConversation);
     AppStateInfo.instance.addListener(listenConversation);

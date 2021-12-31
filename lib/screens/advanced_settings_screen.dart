@@ -71,7 +71,6 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
       await NetworkHelper().postFaceSearchImage(imageFileDetails);
 
       //
-      print('Here!');
       await Get.toNamed(
         FaceSelectionScreen.routeName,
         arguments: FaceSelectionScreenArguments(
@@ -264,8 +263,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                         SettingsData().celebId =
                                             _selectedCeleb.celebName;
                                       } else {
-                                        //
-                                        print('No Celebrity Selected!');
+                                        //No celebrity selected
                                       }
                                     });
 
@@ -442,9 +440,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                             .showImagePickerDialogue(
                                           context: context,
                                           onImagePicked: (imageFile) async {
-                                            print('Done!');
                                             if (imageFile != null) {
-                                              print(imageFile.path);
                                               postCustomImageToNetwork(
                                                   imageFile);
                                             }
@@ -683,7 +679,6 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                     );
                                                     //<debug>
                                                     //
-                                                    print("what's this");
                                                   },
                                                 ),
                                               ),
@@ -804,8 +799,6 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                       'Show you matches based on the matches\' personal preferences (learnt by Alex, their personal AI assistant)',
                                                     );
                                                     //<debug>
-                                                    //
-                                                    print("what's this");
                                                   },
                                                 ),
                                               ),

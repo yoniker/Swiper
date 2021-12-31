@@ -101,7 +101,6 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
         if (_listController.hasClients &&CelebsInfo.instance.lastChangeTime!.difference(_lastCelebInfoChange!)>Duration(milliseconds: 0))
         {
           _listController.jumpTo(0);
-          print(CelebsInfo.instance.lastChangeTime);
           _lastCelebInfoChange = CelebsInfo.instance.lastChangeTime;
         }
         return Scaffold(

@@ -19,13 +19,12 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   //See https://codesundar.com/flutter-facebook-login/
 
-  late bool _errorTryingToLogin;
+  bool _errorTryingToLogin=false;
   String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
-    _errorTryingToLogin = false;
     _getSettings();
   }
 
@@ -33,7 +32,6 @@ class _LoginScreenState extends State<LoginScreen> {
     SettingsData settings = SettingsData();
     await settings.readSettingsFromShared();
     if (settings.readFromShared! && settings.facebookId != '') {
-      print('get settings decided to move to main nav screen');
       Get.offAllNamed(
         MainNavigationScreen.routeName,
       ); //TODO make sure this makes sense given splash screen

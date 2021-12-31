@@ -32,7 +32,6 @@ class DetailsData extends ChangeNotifier{
     
     //And after that, read settings from shared
     readDetailsFromShared();
-    print('called read details from shared');
 
   }
 
@@ -43,8 +42,6 @@ class DetailsData extends ChangeNotifier{
     _job = sharedPreferences.getString(JOB_KEY) ?? _job;
     _company = sharedPreferences.getString(COMPANY_KEY) ??_company;
     _readFromShared = true;
-    print('finished reading details from shared');
-    print('about me is $_aboutMe');
     return;
   }
 
@@ -107,7 +104,6 @@ class DetailsData extends ChangeNotifier{
 
     if(newValue is String){
       sharedPreferences.setString(sharedPreferencesKey, newValue);
-      print('just set $sharedPreferencesKey to $newValue');
       return;
     }
 

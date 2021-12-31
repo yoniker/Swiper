@@ -38,11 +38,11 @@ class _SplashScreenState extends State<SplashScreen> {
     await NotificationsController.instance.initialize();
     await SettingsData().readSettingsFromShared();
     DetailsData();
-    MatchEngine(); //TODO make sure that those singletons don't have some async function during construction which might potentially create havoc
+    MatchEngine();
     var _ = CelebsInfo.instance;
+    ChatData();
     updateFcmToken();
     bool navigatingToChatScreen = await NotificationsController.instance.navigateChatOnBackgroundNotification();
-    print('***************FINISHED INITIALIZING APP*****************');
     if(!navigatingToChatScreen) {
       Get.offAllNamed(LoginScreen.routeName);
       }
