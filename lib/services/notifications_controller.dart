@@ -102,7 +102,7 @@ class NotificationsController{
       )async{
     if(AppStateInfo.instance.appState==AppLifecycleState.resumed){ //The app is in the foreground. Let's see what to do
       if(showSnackIfResumed){
-        Get.snackbar("TITLE", "DOR IS THE KING",duration: Duration(seconds: 3));    
+        Get.snackbar("TITLE", Get.currentRoute,duration: Duration(seconds: 3));
       }
       
       if(dontNotifyOnForeground) {return;}
