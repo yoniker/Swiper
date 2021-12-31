@@ -14,13 +14,10 @@ import 'package:get/get.dart';
 import 'advanced_settings_screen.dart';
 
 class SwipeSettingsScreen extends StatefulWidget {
-  SwipeSettingsScreen({Key? key, this.onPop}) : super(key: key);
+  SwipeSettingsScreen({Key? key}) : super(key: key);
   static const String routeName = '/swipe_settings';
   static const minAge = 18;
   static const maxAge = 100;
-
-  /// A callback that is fired when the user exists the settings screen.
-  final void Function()? onPop;
 
   @override
   _SwipeSettingsScreenState createState() => _SwipeSettingsScreenState();
@@ -93,13 +90,6 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
         hasTopPadding: true,
         trailing:
             Icon(Icons.settings), //iconURI: 'assets/images/settings_icon.png',
-        onPop: () {
-          // close the settings screen.
-          Get.back();
-
-          // fire the call back if provided.
-          widget.onPop?.call();
-        },
       ),
       body: Stack(
         children: [
@@ -443,7 +433,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                         color: colorBlend02,
                       ),
                     ),
-                    onPressed: widget.onPop ??
+                    onPressed:
                         () {
                           // close the settings screen.
                           Get.back();

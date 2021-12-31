@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   }
 
-  Future<void> _initializeApp() async{ //TODO support error states
+  Future<bool> _initializeApp() async{ //TODO support error states
     await ChatData.initDB();
     await NotificationsController.instance.initialize();
     await SettingsData().readSettingsFromShared();
@@ -46,6 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if(!navigatingToChatScreen) {
       Get.offAllNamed(LoginScreen.routeName);
       }
+    return navigatingToChatScreen;
   }
 
   Future<void> updateFcmToken()async{
@@ -84,12 +85,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
   // loads in the shared preference.
   void _load() async {
-    await _initializeApp();
+    bool navigateToChatScreen = await _initializeApp();
     final routeTo = await _routeTo();
 
+
+    if(!navigateToChatScreen){
     WidgetsBinding.instance!.addPostFrameCallback((_) async {
       await Get.offAllNamed(routeTo);
-    });
+    });}
   }
 
   @override

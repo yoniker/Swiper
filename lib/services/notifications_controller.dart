@@ -3,6 +3,7 @@ import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/infoUser.dart';
 import 'package:betabeta/screens/chat_screen.dart';
 import 'package:betabeta/screens/conversations_screen.dart';
+import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/services/app_state_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -86,8 +87,9 @@ class NotificationsController{
   Future<bool> navigateChatOnBackgroundNotification()async{
     final notificationAppLaunchDetails = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
     if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
-      Get.to(ConversationsScreen.routeName); //So that the back button will go to main screen rather than /(splash/main screen)
+      Get.offAll(MainNavigationScreen(pageIndex: MainNavigationScreen.CONVERSATIONS_PAGE_INDEX));  //So that the back button will go to conversations screen rather than (splash/main screen)
       selectNotification(notificationAppLaunchDetails!.payload);
+
       return true;
     }
     return false;
@@ -96,9 +98,16 @@ class NotificationsController{
 
 
   Future<void> showNewMessageNotification(
-      {required String senderName, required String senderId,bool discardIfResumed=true}
+      {required String senderName, required String senderId,bool dontNotifyOnForeground=true,bool showSnackIfResumed=true}
       )async{
-    if(discardIfResumed && AppStateInfo.instance.appState==AppLifecycleState.resumed){return;} //Don't show this notification if app is in foreground
+    if(AppStateInfo.instance.appState==AppLifecycleState.resumed){ //The app is in the foreground. Let's see what to do
+      if(showSnackIfResumed){
+        Get.snackbar("TITLE", "DOR IS THE KING",duration: Duration(seconds: 3));    
+      }
+      
+      if(dontNotifyOnForeground) {return;}
+    } 
+    
     const AndroidNotificationDetails _androidNotificationDetails =
     AndroidNotificationDetails(
       'DorChat channel ID',

@@ -6,10 +6,15 @@ import 'package:betabeta/screens/view_likes_screen.dart';
 import 'package:betabeta/tabs/profile_tab.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class MainNavigationScreen extends StatefulWidget {
+  static const int PROFILE_PAGE_INDEX = 0;
+  static const int MATCHING_PAGE_INDEX = 1;
+  static const int LIKE_PAGE_INDEX = 2;
+  static const int CONVERSATIONS_PAGE_INDEX = 3;
   static const String routeName = '/main_navigation_screen';
-  MainNavigationScreen({Key? key, this.pageIndex = 1}) : super(key: key);
+  MainNavigationScreen({Key? key,this.pageIndex=1}) : super(key: key);
 
   final int pageIndex;
 

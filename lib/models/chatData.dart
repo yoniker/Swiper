@@ -29,7 +29,7 @@ Future<void> handleBackgroundMessage(RemoteMessage rawMessage)async{
     final String senderId = message['user_id'];
     if(senderId!=SettingsData().facebookId){
       final InfoUser sender = InfoUser.fromJson(jsonDecode(message["sender_details"]));
-      NotificationsController.instance.showNewMessageNotification(senderName: sender.name, senderId: sender.facebookId,discardIfResumed: false);
+      NotificationsController.instance.showNewMessageNotification(senderName: sender.name, senderId: sender.facebookId,dontNotifyOnForeground: false);
 
     }
   }}

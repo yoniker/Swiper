@@ -20,7 +20,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showAppLogo = false,
     this.hasBackButton = true,
     this.trailingPad = 5.0,
-    this.onPop,
   })  :
   // add necessary assertions.
   //assert(trailing != null, 'The parameter trailing cannot be null'),
@@ -35,7 +34,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.hasTopPadding = false,
     this.showAppLogo = true,
     this.trailingPad = 5.0,
-    this.onPop,
+
   })  : this.trailing = Padding(
     padding: EdgeInsets.only(left: 10.0),
     child: Text(
@@ -85,7 +84,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   ///
   /// Note: if `hasBackButton` is false or null, this function won't fire as the backbutton will
   /// be hiddden.
-  final void Function()? onPop;
 
   /// This determines how much padding (in pixels) to add to the back to the trialing widget.
   ///
@@ -115,11 +113,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     InkWell(
                       splashColor: colorBlend02.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8.0),
-                      onTap: onPop ??
-                              () {
-                            // Pop the current context.
-                                Get.back();
-                          },
+                      onTap: () {Get.back();},
                       child: GlobalWidgets.assetImageToIcon(
                         'assets/images/back_arrow.png',
                       ),
