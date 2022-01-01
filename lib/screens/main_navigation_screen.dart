@@ -16,15 +16,7 @@ class MainNavigationScreen extends StatefulWidget {
   static const int CONVERSATIONS_PAGE_INDEX = 3;
   static const String routeName = '/main_navigation_screen';
   static const String TAB_INDEX_PARAM = 'tab_index';
-  static String getRouteWithTab(int tabIndex){
-    if(tabIndex<0 || tabIndex>3){
-      tabIndex = 1;
-    }
-    return routeName+'?$TAB_INDEX_PARAM=$tabIndex';
-  }
-  MainNavigationScreen({Key? key}) : pageIndex = Get.parameters[TAB_INDEX_PARAM]??'1',super(key: key);
-
-  final String pageIndex;
+  MainNavigationScreen({Key? key}) : super(key: key);
 
   @override
   _MainNavigationScreenState createState() => _MainNavigationScreenState();
@@ -72,14 +64,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   void initState() {
     super.initState();
-
+    print('Current route at init state is ${Get.currentRoute}');
     // initialize the `_selectedTabIndex` variable with the
     // value provided.
-    try{
-    _selectedTabIndex = int.parse(widget.pageIndex);}
-    catch(_){
-      _selectedTabIndex = 1;
-    }
+    _selectedTabIndex = NotificationsController.instance.latestTabOnMainNavigation; //Ugly solution to a problem with two pushes after which route is only at the second route (chatscreen) when building mainnavscreen
 
     // initialize the pageController with necessary values.
     _pageController = PageController(initialPage: _selectedTabIndex);

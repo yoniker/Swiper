@@ -22,7 +22,7 @@ class NotificationsController{
   static const String NEW_MESSAGE_NOTIFICATION = 'new_message_notification';
   static const String NOTIFICATION_TYPE = 'notification_type';
   static const String SENDER_ID = 'sender_id';
-  int latestTabOnMainNavigation = 0 ; //Ugly as fuck as this couples this object with main navigataion, but I didn't think of a better solution. See https://stackoverflow.com/questions/70542493/show-a-snackbar-depending-on-current-page-route-state
+  int latestTabOnMainNavigation = 1 ; //Ugly as fuck as this couples this object with main navigataion, but I didn't think of a better solution. See https://stackoverflow.com/questions/70542493/show-a-snackbar-depending-on-current-page-route-state
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
@@ -84,11 +84,24 @@ class NotificationsController{
 
   }
 
+  bool shouldShowMessageSnackbar(String senderId){
+    //Goal: No snackbar on conversations tab, no snackbar when in chat with the same user...
+    var uri = Uri.parse(Get.currentRoute);
+    if(uri.path == MainNavigationScreen.routeName &&latestTabOnMainNavigation==MainNavigationScreen.CONVERSATIONS_PAGE_INDEX) {
+      return false;
+    }
+    if(uri.path == ChatScreen.routeName && uri.queryParameters.containsKey(ChatScreen.USERID_PARAM) && uri.queryParameters[ChatScreen.USERID_PARAM] == senderId){
+      return false;
+    }
+  return true;
+  }
+
 
   Future<bool> navigateChatOnBackgroundNotification()async{
     final notificationAppLaunchDetails = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
     if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
-      Get.offAllNamed(MainNavigationScreen.getRouteWithTab(MainNavigationScreen.CONVERSATIONS_PAGE_INDEX));  //So that the back button will go to conversations screen rather than (splash/main screen)
+      latestTabOnMainNavigation = MainNavigationScreen.CONVERSATIONS_PAGE_INDEX;
+      Get.offAllNamed(MainNavigationScreen.routeName);  //So that the back button will go to conversations screen rather than (splash/main screen)
       selectNotification(notificationAppLaunchDetails!.payload);
 
       return true;
@@ -102,8 +115,11 @@ class NotificationsController{
       {required String senderName, required String senderId,bool dontNotifyOnForeground=true,bool showSnackIfResumed=true}
       )async{
     if(AppStateInfo.instance.appState==AppLifecycleState.resumed){ //The app is in the foreground. Let's see what to do
-      if(showSnackIfResumed){
-        Get.snackbar("Current route", Get.currentRoute + ' and tab is $latestTabOnMainNavigation',duration: Duration(seconds: 3),);
+      if(showSnackIfResumed && shouldShowMessageSnackbar(senderId)){
+        Get.snackbar("You got a new message!", 'New message from $senderName',duration: Duration(seconds: 3),
+            onTap: (snackBar){
+          Get.toNamed(ChatScreen.getRouteWithUserId(senderId));
+        });
       }
       
       if(dontNotifyOnForeground) {return;}
