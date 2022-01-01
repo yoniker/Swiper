@@ -13,16 +13,15 @@ import 'dart:convert';
 import 'package:get/get.dart';
 
 class ChatScreen extends StatefulWidget {
-  ChatScreen({Key? key}) :theUser=Get.arguments, conversationId='',super(key: key){
-
-    conversationId =  ChatData().calculateConversationId(theUser.facebookId);
-  }
+  ChatScreen({Key? key}) :userid=Get.parameters[USERID_PARAM]??'no_user_param_found',super(key: key);
   static const String routeName = '/chat_screen';
-  String conversationId ;
+  static const String USERID_PARAM = "user_id";
+  static String getRouteWithUserId(String userid){
+    return routeName+'?$USERID_PARAM=$userid';
+  }
 
 
-
-  final InfoUser theUser;
+  final String userid;
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -30,11 +29,12 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
   List<types.Message> _messages = <types.Message>[];
+  late String conversationId;
+  late InfoUser theUser;
 
 
   void updateChatData() {
-    List<InfoMessage> currentChatMessages = ChatData().messagesInConversation(
-        widget.conversationId);
+    List<InfoMessage> currentChatMessages = ChatData().messagesInConversation(conversationId);
     _messages = currentChatMessages.map((message) => message.toUiMessage()).toList();
 
   }
@@ -46,15 +46,19 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
     });
 
     if(AppStateInfo.instance.appState==AppLifecycleState.resumed){
-      await ChatData().markConversationAsRead(widget.conversationId);}
+      await ChatData().markConversationAsRead(conversationId);}
   }
 
 
 
   @override
   void initState() {
-    ChatData().markConversationAsRead(widget.conversationId).then((_)
-    {ChatData().listenConversation(widget.conversationId,listenConversation);
+    InfoUser? userFound = ChatData().getUserById(widget.userid);
+    if(userFound==null){Get.back();} //TODO on this kind of error another option is to put out a detailed error screen
+    theUser = userFound!;
+    conversationId = ChatData().calculateConversationId(theUser.facebookId);
+    ChatData().markConversationAsRead(conversationId).then((_)
+    {ChatData().listenConversation(conversationId,listenConversation);
     AppStateInfo.instance.addListener(listenConversation);
 
     }
@@ -71,22 +75,22 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
       appBar: CustomAppBar(
         hasTopPadding: true,
         hasBackButton: true,
-        customTitle: ProfileDisplay(widget.theUser,minRadius: 10,maxRadius: 20,direction: Axis.horizontal,),
+        customTitle: ProfileDisplay(theUser,minRadius: 10,maxRadius: 20,direction: Axis.horizontal,),
       ),
       body: Chat(
         user: types.User(id: SettingsData().facebookId),
         showUserAvatars:true,
         onSendPressed: (text){
-          ChatData().sendMessage(widget.theUser.facebookId,
+          ChatData().sendMessage(theUser.facebookId,
               jsonEncode({"type":"text","content":"${text.text}"}));
         },
         messages: _messages,
         onMessageTap: (message){
-          ChatData().resendMessageIfError(widget.conversationId, message.id);
+          ChatData().resendMessageIfError(conversationId, message.id);
 
         },
         onMessageLongPress: (message){
-          ChatData().resendMessageIfError(widget.conversationId, message.id);
+          ChatData().resendMessageIfError(conversationId, message.id);
         },
 
 
@@ -96,7 +100,7 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
 
   @override
   void dispose() {
-    ChatData().removeListenerConversation(widget.conversationId,listenConversation);
+    ChatData().removeListenerConversation(conversationId,listenConversation);
     AppStateInfo.instance.removeListener(listenConversation);
     super.dispose();
   }

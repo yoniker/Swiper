@@ -52,7 +52,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
                     return GestureDetector(
                       onTap: (){
 
-                        {Get.toNamed(ChatScreen.routeName, arguments: currentUser);}
+                        {Get.toNamed(ChatScreen.getRouteWithUserId(currentUser.facebookId));}
 
                       },
                       child: Padding(

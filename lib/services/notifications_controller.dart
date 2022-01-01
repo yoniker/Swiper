@@ -38,7 +38,7 @@ class NotificationsController{
       InfoUser? collocutor = ChatData().getUserById(senderId);
 
       if(collocutor!=null){
-        Get.toNamed(ChatScreen.routeName,arguments: collocutor);
+        Get.toNamed(ChatScreen.getRouteWithUserId(collocutor.facebookId));
       }
 
     }
@@ -102,10 +102,7 @@ class NotificationsController{
       )async{
     if(AppStateInfo.instance.appState==AppLifecycleState.resumed){ //The app is in the foreground. Let's see what to do
       if(showSnackIfResumed){
-        for(var _ in [1,2,3,4,5]) {print('\n');}
-        print('*************Trying to show current path********');
-        for(var _ in [1,2,3,4,5]) {print('\n');}
-        Get.snackbar("TITLE", Get.currentRoute,duration: Duration(seconds: 3));
+        Get.snackbar("Current route", Get.currentRoute,duration: Duration(seconds: 3),);
       }
       
       if(dontNotifyOnForeground) {return;}

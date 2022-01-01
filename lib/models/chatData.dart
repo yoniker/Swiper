@@ -45,22 +45,22 @@ Future<void> setupInteractedMessage() async {
   // If the message also contains a data property with a "type" of "chat",
   // navigate to a chat screen
   if (initialMessage != null) {
-    _handleMessage(initialMessage);
+    _handleMessageOpenedFromNotification(initialMessage);
   }
 
   // Also handle any interaction when the app is in the background via a
   // Stream listener
-  FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+  FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageOpenedFromNotification);
 }
 
-void _handleMessage(RemoteMessage message){
+void _handleMessageOpenedFromNotification(RemoteMessage message){
   final InfoMessage messageReceived = InfoMessage.fromJson(message.data);
   ChatData().addMessageToDB(messageReceived);
   if(messageReceived.userId != SettingsData().facebookId) {
     InfoUser? sender = ChatData().getUserById(messageReceived.userId);
     if(sender!=null){
       Get.toNamed(
-          ChatScreen.routeName, arguments: sender);}
+          ChatScreen.getRouteWithUserId(sender.facebookId));}
   }
 }
 

@@ -57,8 +57,7 @@ class _ConversationsPreviewWidgetState
                 return GestureDetector(
                   onTap: () {
                     if (collocutor != null) {
-                      Get.toNamed( ChatScreen.routeName,
-                          arguments: collocutor);
+                      Get.toNamed( ChatScreen.getRouteWithUserId(collocutor.facebookId));
                     }
                   },
                   child: Container(
