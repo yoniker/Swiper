@@ -22,6 +22,7 @@ class NotificationsController{
   static const String NEW_MESSAGE_NOTIFICATION = 'new_message_notification';
   static const String NOTIFICATION_TYPE = 'notification_type';
   static const String SENDER_ID = 'sender_id';
+  int latestTabOnMainNavigation = 0 ; //Ugly as fuck as this couples this object with main navigataion, but I didn't think of a better solution. See https://stackoverflow.com/questions/70542493/show-a-snackbar-depending-on-current-page-route-state
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
@@ -87,7 +88,7 @@ class NotificationsController{
   Future<bool> navigateChatOnBackgroundNotification()async{
     final notificationAppLaunchDetails = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
     if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
-      Get.offAll(MainNavigationScreen(pageIndex: MainNavigationScreen.CONVERSATIONS_PAGE_INDEX));  //So that the back button will go to conversations screen rather than (splash/main screen)
+      Get.offAllNamed(MainNavigationScreen.getRouteWithTab(MainNavigationScreen.CONVERSATIONS_PAGE_INDEX));  //So that the back button will go to conversations screen rather than (splash/main screen)
       selectNotification(notificationAppLaunchDetails!.payload);
 
       return true;
@@ -102,7 +103,7 @@ class NotificationsController{
       )async{
     if(AppStateInfo.instance.appState==AppLifecycleState.resumed){ //The app is in the foreground. Let's see what to do
       if(showSnackIfResumed){
-        Get.snackbar("Current route", Get.currentRoute,duration: Duration(seconds: 3),);
+        Get.snackbar("Current route", Get.currentRoute + ' and tab is $latestTabOnMainNavigation',duration: Duration(seconds: 3),);
       }
       
       if(dontNotifyOnForeground) {return;}

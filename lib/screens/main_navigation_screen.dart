@@ -3,6 +3,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/screens/conversations_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
+import 'package:betabeta/services/notifications_controller.dart';
 import 'package:betabeta/tabs/profile_tab.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
@@ -14,18 +15,23 @@ class MainNavigationScreen extends StatefulWidget {
   static const int LIKE_PAGE_INDEX = 2;
   static const int CONVERSATIONS_PAGE_INDEX = 3;
   static const String routeName = '/main_navigation_screen';
-  MainNavigationScreen({Key? key,this.pageIndex=1}) : super(key: key);
+  static const String TAB_INDEX_PARAM = 'tab_index';
+  static String getRouteWithTab(int tabIndex){
+    if(tabIndex<0 || tabIndex>3){
+      tabIndex = 1;
+    }
+    return routeName+'?$TAB_INDEX_PARAM=$tabIndex';
+  }
+  MainNavigationScreen({Key? key}) : pageIndex = Get.parameters[TAB_INDEX_PARAM]??'1',super(key: key);
 
-  final int pageIndex;
+  final String pageIndex;
 
   @override
   _MainNavigationScreenState createState() => _MainNavigationScreenState();
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  /// holds the value of the current index form 0 to 3.
   int _selectedTabIndex = 0;
-
   // create a pageController variable to control the varoius pages
   PageController? _pageController;
 
@@ -69,7 +75,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
     // initialize the `_selectedTabIndex` variable with the
     // value provided.
-    _selectedTabIndex = widget.pageIndex;
+    try{
+    _selectedTabIndex = int.parse(widget.pageIndex);}
+    catch(_){
+      _selectedTabIndex = 1;
+    }
 
     // initialize the pageController with necessary values.
     _pageController = PageController(initialPage: _selectedTabIndex);
@@ -84,6 +94,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    NotificationsController.instance.latestTabOnMainNavigation = _selectedTabIndex; //TODO ugly as I mentioned at the comments at the notifications controller,switch with a better solution when available
     return Stack(
       fit: StackFit.expand,
       children: [
