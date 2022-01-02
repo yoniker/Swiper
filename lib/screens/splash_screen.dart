@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/celebs_info_model.dart';
@@ -36,6 +38,11 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<bool> _initializeApp() async{ //TODO support error states
     await ChatData.initDB();
     await NotificationsController.instance.initialize();
+    if(Platform.isIOS){
+      var result =
+      await NotificationsController.instance.requestIOSPermissions();
+      print('RESULT OF GETTING NOTIFICATIONS PERMISSIONS IS $result');
+    }
     await SettingsData().readSettingsFromShared();
     DetailsData();
     MatchEngine();

@@ -46,9 +46,8 @@ class NotificationsController{
 
   }
 
-  void requestIOSPermissions(
-      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) {
-    flutterLocalNotificationsPlugin
+  Future<bool?> requestIOSPermissions() async{
+    final bool? result = await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
         IOSFlutterLocalNotificationsPlugin>()
         ?.requestPermissions(
@@ -56,6 +55,8 @@ class NotificationsController{
       badge: true,
       sound: true,
     );
+
+    return result;
   }
 
 
