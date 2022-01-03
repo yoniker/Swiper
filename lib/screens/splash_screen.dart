@@ -50,9 +50,6 @@ class _SplashScreenState extends State<SplashScreen> {
     ChatData();
     updateFcmToken();
     bool navigatingToChatScreen = await NotificationsController.instance.navigateChatOnBackgroundNotification();
-    if(!navigatingToChatScreen) {
-      Get.offAllNamed(LoginScreen.routeName);
-      }
     return navigatingToChatScreen;
   }
 
@@ -94,12 +91,9 @@ class _SplashScreenState extends State<SplashScreen> {
   void _load() async {
     bool navigateToChatScreen = await _initializeApp();
     final routeTo = await _routeTo();
-
-
     if(!navigateToChatScreen){
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
-      await Get.offAllNamed(routeTo);
-    });}
+
+      Get.offAllNamed(routeTo);}
   }
 
   @override
