@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:auth_buttons/auth_buttons.dart';
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/conversations_screen.dart';
 import 'package:betabeta/services/notifications_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 
 import 'main_navigation_screen.dart';
@@ -23,6 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   //See https://codesundar.com/flutter-facebook-login/
 
   bool _errorTryingToLogin=false;
+  bool currentlyTryingToLogin = false;
   String? _errorMessage;
 
   @override
@@ -42,6 +45,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   _getFBLoginInfo() async {
+    setState(() {
+      currentlyTryingToLogin = true;
+    });
     final loginResult = await FacebookAuth.instance.login();
 
     switch (loginResult.status) {
@@ -75,32 +81,18 @@ class _LoginScreenState extends State<LoginScreen> {
         });
         break;
     }
+    setState(() {
+      currentlyTryingToLogin = false;
+    });
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'D',
-                style: TextStyle(
-                  fontSize: 55,
-                  fontFamily: 'RougeScript',
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('MVPBeta Login'),
-              )
-            ],
-          ),
-        ),
-        body: Center(
+        body:
+        currentlyTryingToLogin?  loggingInAnimation():
+        Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -110,7 +102,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   FacebookAuthButton(
                     onPressed: () {
                       _getFBLoginInfo();
-                      //Navigator.push(context, MaterialPageRoute(builder: (context) => MatchingScreen(title: 'Flutter Demo Home Page')));
                     },
                   ),
                   _errorTryingToLogin
@@ -165,6 +156,19 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ],
           ),
+        ));
+  }
+
+  Widget loggingInAnimation() {
+    return Center(
+        child:Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SpinKitPumpingHeart(
+              color: colorBlend02,
+            ),
+            Text('Logging in...',style: titleStyle,),
+          ],
         ));
   }
 }
