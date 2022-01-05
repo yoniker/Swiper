@@ -22,15 +22,16 @@ import 'dart:convert';
 
 
 Future<void> handleBackgroundMessage(RemoteMessage rawMessage)async{
-  PersistMessages().writeShouldSync(true);
+  await PersistMessages().writeShouldSync(true);
   await ChatData.initDB();
   await SettingsData().readSettingsFromShared();
+  await NotificationsController.instance.initialize();
   var message = rawMessage.data;
   if(message['push_notification_type']=='new_message'){
     final String senderId = message['user_id'];
     if(senderId!=SettingsData().facebookId){
       final InfoUser sender = InfoUser.fromJson(jsonDecode(message["sender_details"]));
-      NotificationsController.instance.showNewMessageNotification(senderName: sender.name, senderId: sender.facebookId,dontNotifyOnForeground: false,showSnackIfResumed: false);
+      await NotificationsController.instance.showNewMessageNotification(senderName: sender.name, senderId: sender.facebookId,dontNotifyOnForeground: false,showSnackIfResumed: false);
 
     }
   }}
@@ -219,15 +220,26 @@ class ChatData extends ChangeNotifier {
   }
 
 
-  //Make it a singleton
-  ChatData._privateConstructor() {
+   void setupStreams(){
     _fcmStream.listen(updateDatabaseOnMessage);
     ServiceWebsocket.instance.stream.listen((message) {
       updateDatabaseOnMessage(message);
 
     });
+  }
+
+  Future<void> onInitApp()async{
     syncWithServer(); //Sync with the server as soon as the app starts
     setupInteractedMessage();
+    setupStreams();
+  }
+
+
+  //Make it a singleton
+  ChatData._privateConstructor() {
+
+
+
   }
   static final ChatData _instance = ChatData._privateConstructor();
 

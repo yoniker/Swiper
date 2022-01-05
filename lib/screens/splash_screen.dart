@@ -47,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
     DetailsData();
     MatchEngine();
     var _ = CelebsInfo.instance;
-    ChatData();
+    ChatData().onInitApp();
     updateFcmToken();
     bool navigatingToChatScreen = await NotificationsController.instance.navigateChatOnBackgroundNotification();
     return navigatingToChatScreen;
