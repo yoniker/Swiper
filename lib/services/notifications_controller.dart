@@ -33,9 +33,9 @@ class NotificationsController{
 
   static Future selectNotification(String? payload) async {
     if(payload==null){return;}
-    Map<String,dynamic> handleNotificationData = json.jsonDecode(payload);
-    if(handleNotificationData[NOTIFICATION_TYPE]==NEW_MESSAGE_NOTIFICATION){
-      String senderId = handleNotificationData[SENDER_ID]!;
+    Map<String,dynamic> notificationData = json.jsonDecode(payload);
+    if(notificationData[NOTIFICATION_TYPE]==NEW_MESSAGE_NOTIFICATION){
+      String senderId = notificationData[SENDER_ID]!;
       InfoUser? collocutor = ChatData().getUserById(senderId);
 
       if(collocutor!=null){
@@ -58,6 +58,7 @@ class NotificationsController{
 
     return result;
   }
+  
 
 
 
