@@ -98,17 +98,27 @@ class NotificationsController{
   return true;
   }
 
+  void _navigateMainScreenConversations() {
+    latestTabOnMainNavigation = MainNavigationScreen.CONVERSATIONS_PAGE_INDEX;
+    Get.offAllNamed(MainNavigationScreen
+        .routeName); //So that the back button will go to conversations screen rather than (splash/main screen)
+  }
 
-  Future<bool> navigateChatOnBackgroundNotification()async{
+  Future<bool> navigateChatOnBackgroundNotification(bool notificationFromTerminated)async{
     final notificationAppLaunchDetails = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+    if(notificationFromTerminated){_navigateMainScreenConversations();}
     if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
-      latestTabOnMainNavigation = MainNavigationScreen.CONVERSATIONS_PAGE_INDEX;
-      Get.offAllNamed(MainNavigationScreen.routeName);  //So that the back button will go to conversations screen rather than (splash/main screen)
+      _navigateMainScreenConversations();
       selectNotification(notificationAppLaunchDetails!.payload);
 
       return true;
     }
     return false;
+  }
+
+
+  Future<void> cancelAllNotifications()async{
+    await flutterLocalNotificationsPlugin.cancelAll();
   }
 
 
@@ -151,6 +161,7 @@ class NotificationsController{
       SENDER_ID:senderId
     };
     await Future.delayed(Duration(seconds: 1)); //TODO this is a bad and not principled solution to the problem of having to have "raw notifications" from FCM on iPhone since onbackground doesn't work sometimes
+    //So the "solution" is to delay for one second (until raw FCM notification is show so we can clear them),clear all notifications, and then show our modern notification
     await flutterLocalNotificationsPlugin.cancelAll(); //Clear all raw notifications before showing current notification
     await flutterLocalNotificationsPlugin.show(
       0,
