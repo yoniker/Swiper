@@ -150,6 +150,7 @@ class NotificationsController{
       NOTIFICATION_TYPE:NEW_MESSAGE_NOTIFICATION,
       SENDER_ID:senderId
     };
+    await Future.delayed(Duration(seconds: 1)); //TODO this is a bad and not principled solution to the problem of having to have "raw notifications" from FCM on iPhone since onbackground doesn't work sometimes
     await flutterLocalNotificationsPlugin.cancelAll(); //Clear all raw notifications before showing current notification
     await flutterLocalNotificationsPlugin.show(
       0,
