@@ -149,6 +149,7 @@ class NotificationsController{
       NOTIFICATION_TYPE:NEW_MESSAGE_NOTIFICATION,
       SENDER_ID:senderId
     };
+    await flutterLocalNotificationsPlugin.cancelAll(); //Clear all raw notifications before showing current notification
     await flutterLocalNotificationsPlugin.show(
       0,
       'ChatDor',
