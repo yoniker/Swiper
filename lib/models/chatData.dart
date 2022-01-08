@@ -37,7 +37,8 @@ Future<void> handleBackgroundMessage(RemoteMessage rawMessage)async{
   }}
 
 
-Future<void> setupInteractedMessage() async {
+Future<bool> setupInteractedMessage() async {
+  bool notificationFromTerminatedState = false;
   // Get any messages which caused the application to open from
   // a terminated state.
   RemoteMessage? initialMessage =
@@ -46,12 +47,14 @@ Future<void> setupInteractedMessage() async {
   // If the message also contains a data property with a "type" of "chat",
   // navigate to a chat screen
   if (initialMessage != null) {
+    notificationFromTerminatedState = true;
     _handleMessageOpenedFromNotification(initialMessage);
   }
 
   // Also handle any interaction when the app is in the background via a
   // Stream listener
   FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageOpenedFromNotification);
+  return notificationFromTerminatedState;
 }
 
 void _handleMessageOpenedFromNotification(RemoteMessage message){
@@ -228,10 +231,11 @@ class ChatData extends ChangeNotifier {
     });
   }
 
-  Future<void> onInitApp()async{
-    syncWithServer(); //Sync with the server as soon as the app starts
-    setupInteractedMessage();
+  Future<bool> onInitApp()async{
+    //Returns true if there's a notification interaction from terminated state
+    await syncWithServer(); //Sync with the server as soon as the app starts
     setupStreams();
+    return await setupInteractedMessage();
   }
 
 
