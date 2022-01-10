@@ -162,6 +162,7 @@ class NotificationsController{
     };
     await Future.delayed(Duration(seconds: 1)); //TODO this is a bad and not principled solution to the problem of having to have "raw notifications" from FCM on iPhone since onbackground doesn't work sometimes
     //So the "solution" is to delay for one second (until raw FCM notification is show so we can clear them),clear all notifications, and then show our modern notification
+    if(false){
     await flutterLocalNotificationsPlugin.cancelAll(); //Clear all raw notifications before showing current notification
     await flutterLocalNotificationsPlugin.show(
       0,
@@ -169,7 +170,7 @@ class NotificationsController{
       'You got a new message from $senderName',
       platformChannelSpecifics,
       payload: json.jsonEncode(payloadData),
-    );
+    );}
 
   }
 

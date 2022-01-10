@@ -59,16 +59,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
       });
     }
 
-    // initialize the NetworkHelper instance.
-    //
-    // TODO(Yonikeren): You do know that whenever you work with [NetworkHelper()..do something] you are creating a
-    // new instance of the class and of-course whatever field or variable present in the class as well.
-    // that's why is always a good idea to instantiate a data-class via this form of declaration.
-    // so we don't end up with uneccessary duplicates whenever we create a new instance.
-    //
-    // also there are some FUnctions I will suggest you make static since they don't alter or make changes to
-    // any instance variable.
-
     // this makes sure that if the state is not yet mounted, we don't end up calling setState
     // but instead push the function forward to the addPostFrameCallback function.
     _aboutMe = DetailsData().aboutMe;
