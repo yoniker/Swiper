@@ -3,6 +3,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/screens/conversations_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
+import 'package:betabeta/services/app_state_info.dart';
 import 'package:betabeta/services/notifications_controller.dart';
 import 'package:betabeta/tabs/profile_tab.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
@@ -64,10 +65,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   void initState() {
     super.initState();
-    print('Current route at init state is ${Get.currentRoute}');
-    // initialize the `_selectedTabIndex` variable with the
-    // value provided.
-    _selectedTabIndex = NotificationsController.instance.latestTabOnMainNavigation; //Ugly solution to a problem with two pushes after which route is only at the second route (chatscreen) when building mainnavscreen
+    // initialize the `_selectedTabIndex` variable with the value provided by appstate
+    _selectedTabIndex = AppStateInfo.instance.latestTabOnMainNavigation;
 
     // initialize the pageController with necessary values.
     _pageController = PageController(initialPage: _selectedTabIndex);
@@ -82,7 +81,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    NotificationsController.instance.latestTabOnMainNavigation = _selectedTabIndex; //TODO ugly as I mentioned at the comments at the notifications controller,switch with a better solution when available
+    AppStateInfo.instance.latestTabOnMainNavigation = _selectedTabIndex; //TODO ugly as I mentioned at the comments at the Appstate,switch with a better solution when available
     return Stack(
       fit: StackFit.expand,
       children: [

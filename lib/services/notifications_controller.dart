@@ -22,8 +22,6 @@ class NotificationsController{
   static const String NEW_MESSAGE_NOTIFICATION = 'new_message_notification';
   static const String NOTIFICATION_TYPE = 'notification_type';
   static const String SENDER_ID = 'sender_id';
-  int latestTabOnMainNavigation = 1 ; //Ugly as fuck as this couples this object with main navigataion, but I didn't think of a better solution. See https://stackoverflow.com/questions/70542493/show-a-snackbar-depending-on-current-page-route-state
-
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
 
@@ -89,31 +87,13 @@ class NotificationsController{
   bool shouldShowMessageSnackbar(String senderId){
     //Goal: No snackbar on conversations tab, no snackbar when in chat with the same user...
     var uri = Uri.parse(Get.currentRoute);
-    if(uri.path == MainNavigationScreen.routeName &&latestTabOnMainNavigation==MainNavigationScreen.CONVERSATIONS_PAGE_INDEX) {
+    if(uri.path == MainNavigationScreen.routeName &&AppStateInfo.instance.latestTabOnMainNavigation==MainNavigationScreen.CONVERSATIONS_PAGE_INDEX) {
       return false;
     }
     if(uri.path == ChatScreen.routeName && uri.queryParameters.containsKey(ChatScreen.USERID_PARAM) && uri.queryParameters[ChatScreen.USERID_PARAM] == senderId){
       return false;
     }
   return true;
-  }
-
-  void _navigateMainScreenConversations() {
-    latestTabOnMainNavigation = MainNavigationScreen.CONVERSATIONS_PAGE_INDEX;
-    Get.offAllNamed(MainNavigationScreen
-        .routeName); //So that the back button will go to conversations screen rather than (splash/main screen)
-  }
-
-  Future<bool> navigateChatOnBackgroundNotification(bool notificationFromTerminated)async{
-    final notificationAppLaunchDetails = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
-    if(notificationFromTerminated){_navigateMainScreenConversations();}
-    if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
-      _navigateMainScreenConversations();
-      selectNotification(notificationAppLaunchDetails!.payload);
-
-      return true;
-    }
-    return false;
   }
 
 

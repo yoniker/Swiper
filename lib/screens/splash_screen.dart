@@ -9,6 +9,7 @@ import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/login_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
+import 'package:betabeta/services/app_state_info.dart';
 import 'package:betabeta/services/notifications_controller.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -49,9 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
     var _ = CelebsInfo.instance;
     bool notificationFromTerminated = await ChatData().onInitApp();
     updateFcmToken();
-    bool notificationFromLocalNotification = await NotificationsController.instance.navigateChatOnBackgroundNotification(notificationFromTerminated);
-    bool navigatingToChatScreen = notificationFromTerminated | notificationFromLocalNotification;
-    return navigatingToChatScreen;
+    return notificationFromTerminated;
   }
 
   Future<void> updateFcmToken()async{
@@ -90,11 +89,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   // loads in the shared preference.
   void _load() async {
-    bool navigateToChatScreen = await _initializeApp();
+    bool navigatedToChatScreen = await _initializeApp();
     final routeTo = await _routeTo();
-    if(!navigateToChatScreen){
-
-      Get.offAllNamed(routeTo);}
+    if(!navigatedToChatScreen){Get.offAllNamed(routeTo);}
     await NotificationsController.instance.cancelAllNotifications();
   }
 

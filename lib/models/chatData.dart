@@ -8,6 +8,8 @@ import 'package:betabeta/models/infoUser.dart';
 import 'package:betabeta/models/persistentMessagesData.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/chat_screen.dart';
+import 'package:betabeta/screens/main_navigation_screen.dart';
+import 'package:betabeta/services/app_state_info.dart';
 import 'package:betabeta/services/chat_networking.dart';
 import 'package:betabeta/services/notifications_controller.dart';
 import 'package:betabeta/services/service_websocket.dart';
@@ -62,6 +64,8 @@ void _handleMessageOpenedFromNotification(RemoteMessage message){
   ChatData().addMessageToDB(messageReceived);
   if(messageReceived.userId != SettingsData().facebookId) {
     InfoUser? sender = ChatData().getUserById(messageReceived.userId);
+    AppStateInfo.instance.latestTabOnMainNavigation = MainNavigationScreen.CONVERSATIONS_PAGE_INDEX;
+    Get.offAllNamed(MainNavigationScreen.routeName);
     if(sender!=null){
       Get.toNamed(
           ChatScreen.getRouteWithUserId(sender.facebookId));}
