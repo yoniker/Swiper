@@ -216,6 +216,7 @@ class ChatData extends ChangeNotifier {
     List<InfoMessage> newMessages = newData.item1;
     List<dynamic> unparsedUsers = newData.item2;
     await updateUsersData(unparsedUsers);
+    await removeOrphanConversations();
     print('got ${newMessages.length} new messages from server while syncing');
     double maxTimestampSeen =0.0;
     for(final message in newMessages){
@@ -302,6 +303,17 @@ class ChatData extends ChangeNotifier {
 
 
 
+  Future<void> removeOrphanConversations() async {
+    var allConversations = conversationsBox.keys.toList();
+    for(var conversation_id in allConversations){
+      var participants = participantsFromConversationId(conversation_id);
+      String otherParticipant= participants[0]!=SettingsData().facebookId?participants[0]:participants[1];
+      if(!usersBox.containsKey(otherParticipant)){
+        conversationsBox.delete(conversation_id);
+      }
+    }
+  }
+
   Future<void> updateUsersData(List<dynamic> unparsedUsers)async{
     for(var unparsedUser in unparsedUsers){
       InfoUser user = InfoUser.fromJson(unparsedUser);
@@ -312,7 +324,6 @@ class ChatData extends ChangeNotifier {
         await usersBox.put(user.facebookId,user);
       }
     }
-    print('dor');
   }
 
 
