@@ -59,9 +59,10 @@ Future<bool> setupInteractedMessage() async {
   return notificationFromTerminatedState;
 }
 
-void _handleMessageOpenedFromNotification(RemoteMessage message){
+void _handleMessageOpenedFromNotification(RemoteMessage message)async {
   final InfoMessage messageReceived = InfoMessage.fromJson(message.data);
-  ChatData().addMessageToDB(messageReceived);
+  await ChatData().syncWithServer();
+  //ChatData().addMessageToDB(messageReceived);
   if(messageReceived.userId != SettingsData().facebookId) {
     InfoUser? sender = ChatData().getUserById(messageReceived.userId);
     AppStateInfo.instance.latestTabOnMainNavigation = MainNavigationScreen.CONVERSATIONS_PAGE_INDEX;
@@ -101,21 +102,27 @@ class ChatData extends ChangeNotifier {
 
   }
 
-  bool addMessageToDB(InfoMessage messageReceived,{String? otherParticipantsId}){
-    bool needUpdateUsers = false;
+  List<String> participantsFromConversationId(String conversationId){
+    //get participants ids from strings such as "conversation_104428005452977_with_104828875410871";
+    List<String> l = conversationId.split('_with_');
+    l[0] = l[0].split('conversation_')[1];
+    return l;
+  }
+
+   void addMessageToDB(InfoMessage messageReceived,{String? otherParticipantsId}){
+    //Add message to DB -only if sender is in current active matches (=in user box).
     final String conversationId = messageReceived.conversationId;
     final InfoConversation? existingConversation = conversationsBox.get(conversationId);
     if(existingConversation==null){
-      //print('Conversation doesnt exist. creating conversation..');
       final messages = [messageReceived];
-      final List<String> participantsIds = List.from(Set.from([messageReceived.userId,SettingsData().facebookId,otherParticipantsId??SettingsData().facebookId]));
+      final List<String> participantsIds = participantsFromConversationId(conversationId);
       for(var participantId in participantsIds){
-        if(!usersBox.keys.contains(participantId)){
-          needUpdateUsers = true;
+        if(SettingsData().facebookId!=participantId && !usersBox.keys.contains(participantId)){
+          return; //This message belongs to a sender who is not an active match
         }
       }
       conversationsBox.put(conversationId,InfoConversation(conversationId: conversationId, lastChangedTime: 0, creationTime: 0, participantsIds: participantsIds, messages: messages));
-      return needUpdateUsers;
+      return;
     }
     //Conversation exists so update messages and participants etc
     //print('Conversation exists. Updating conversation');
@@ -168,27 +175,26 @@ class ChatData extends ChangeNotifier {
     messages.sort((messageA,messageB)=> (messageB.changedDate??messageB.addedDate??0)>(messageA.changedDate??messageA.addedDate??0)?1:-1);
     List<String> participantsIds = existingConversation.participantsIds;
 
-    participantsIds = List.from(Set.from([SettingsData().facebookId,messageReceived.userId,otherParticipantsId??SettingsData().facebookId,...participantsIds]));
+    participantsIds = participantsFromConversationId(conversationId);
     for(var participantId in participantsIds){
       if(!usersBox.keys.contains(participantId)){
-        needUpdateUsers = true;
       }}
     InfoConversation updatedConversation = InfoConversation(conversationId: existingConversation.conversationId,
         lastChangedTime: existingConversation.lastChangedTime, creationTime: existingConversation.creationTime, participantsIds: participantsIds, messages: messages); //TODO notice that changed time is complete bullshit for now
     conversationsBox.put(conversationId,updatedConversation);
-
-    return needUpdateUsers;
+    return;
 
   }
 
-  void updateDatabaseOnMessage(message) {
+  void handlePushData(message) {
     if(message['push_notification_type']=='new_read_receipt'){
       //TODO for now just sync with server "everything" there is to sync. Of course,this can be improved if and when necessary
       syncWithServer();
       return;
     }
-    if(message['push_notification_type']=='new_user'){
-      getUsersFromServer();
+    if(message['push_notification_type']=='new_match'){
+      //TODO implement new match overlay etc
+      syncWithServer();
       return;
     }
 
@@ -206,17 +212,17 @@ class ChatData extends ChangeNotifier {
   }
 
   Future<void> syncWithServer() async{
-    List<InfoMessage> newMessages = await ChatNetworkHelper.getMessagesByTimestamp();
+    Tuple2<List<InfoMessage>,List<dynamic>> newData = await ChatNetworkHelper.getMessagesByTimestamp();
+    List<InfoMessage> newMessages = newData.item1;
+    List<dynamic> unparsedUsers = newData.item2;
+    await updateUsersData(unparsedUsers);
     print('got ${newMessages.length} new messages from server while syncing');
     double maxTimestampSeen =0.0;
-    bool needUpdateUsers = false;
     for(final message in newMessages){
-      needUpdateUsers |= addMessageToDB(message);
+      addMessageToDB(message);
       maxTimestampSeen = max(maxTimestampSeen,message.changedDate??message.sentTime??0);
     }
-    if(needUpdateUsers){
-      await getUsersFromServer();
-    }
+
 
     if(SettingsData().lastSync<maxTimestampSeen){
       //print('setting last sync to be $maxTimestampSeen');
@@ -228,9 +234,9 @@ class ChatData extends ChangeNotifier {
 
 
    void setupStreams(){
-    _fcmStream.listen(updateDatabaseOnMessage);
+    _fcmStream.listen(handlePushData);
     ServiceWebsocket.instance.stream.listen((message) {
-      updateDatabaseOnMessage(message);
+      handlePushData(message);
 
     });
   }
@@ -294,12 +300,19 @@ class ChatData extends ChangeNotifier {
   final Box<InfoConversation> conversationsBox = Hive.box(CONVERSATIONS_BOXNAME);
   final Box<InfoUser> usersBox = Hive.box(USERS_BOXNAME);
 
-  getUsersFromServer() async{
-    List<InfoUser> gottenUsers = await ChatNetworkHelper.getAllUsers();
-    for(var user in gottenUsers){
-      usersBox.put(user.facebookId,user);
+
+
+  Future<void> updateUsersData(List<dynamic> unparsedUsers)async{
+    for(var unparsedUser in unparsedUsers){
+      InfoUser user = InfoUser.fromJson(unparsedUser);
+      if(unparsedUser['status']!='active'){
+        await usersBox.delete(user.facebookId);
+      }
+      else {
+        await usersBox.put(user.facebookId,user);
+      }
     }
-    notifyListeners();
+    print('dor');
   }
 
 

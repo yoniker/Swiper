@@ -1,15 +1,11 @@
 import 'package:betabeta/models/chatData.dart';
-import 'package:betabeta/models/infoMessage.dart';
-import 'package:betabeta/models/infoUser.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/contacts_widget.dart';
 import 'package:betabeta/widgets/conversations_preview_widget.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import 'chat_screen.dart';
 
@@ -24,18 +20,14 @@ class ConversationsScreen extends StatefulWidget {
 class _ConversationsScreenState extends State<ConversationsScreen> with MountedStateMixin {
   void listen(){setStateIfMounted(() {});}
 
-  void getUsers(){
-    ChatData().addListener(listen);
-    ChatData().getUsersFromServer();
-    return;
-  }
+
 
 
 
 
   @override
   void initState() {
-    getUsers();
+    ChatData().addListener(listen);
     super.initState();
   }
 

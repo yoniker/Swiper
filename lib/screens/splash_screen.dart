@@ -47,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
     await SettingsData().readSettingsFromShared();
     DetailsData();
     MatchEngine();
-    var _ = CelebsInfo.instance;
+    await CelebsInfo.instance.getCelebsFromDatabase();
     bool notificationFromTerminated = await ChatData().onInitApp();
     updateFcmToken();
     return notificationFromTerminated;

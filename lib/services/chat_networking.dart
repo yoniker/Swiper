@@ -9,6 +9,7 @@ import 'package:betabeta/models/infoUser.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:tuple/tuple.dart';
 
 
 enum NetworkTaskStatus { completed, inProgress, notExist } //possible statuses for long ongoing tasks on the server
@@ -28,6 +29,7 @@ class ChatNetworkHelper {
   ChatNetworkHelper._internal();
 
   static Future<List<InfoUser>> getAllUsers() async {
+    //TODO currently no one uses this method, remove if really redundant
     Uri usersLinkUri = Uri.https(SERVER_ADDR, 'users/${SettingsData().facebookId}');
     http.Response resp = await http.get(usersLinkUri);
     if (resp.statusCode == 200) {
@@ -79,13 +81,15 @@ class ChatNetworkHelper {
     return TaskResult.failed;
   }
 
-  static Future<List<InfoMessage>> getMessagesByTimestamp()async{
+  static Future<Tuple2<List<InfoMessage>,List<dynamic>>> getMessagesByTimestamp()async{
     print('going to sync with ${SettingsData().lastSync}');
     Uri syncChatDataUri = Uri.https(SERVER_ADDR, '/sync/${SettingsData().facebookId}/${SettingsData().lastSync}');
     http.Response response = await http.get(syncChatDataUri);
-    List<dynamic> unparsedMessages = json.jsonDecode(response.body);
+    var unparsedData = json.jsonDecode(response.body);
+    List<dynamic> unparsedMessages = unparsedData['messages_data'];
+    List<dynamic> unparsedMatchesChanges = unparsedData['matches_data'];
     List<InfoMessage> messages = unparsedMessages.map((message) => InfoMessage.fromJson(message)).toList();
-    return messages;
+    return Tuple2(messages,unparsedMatchesChanges);
 
   }
 
