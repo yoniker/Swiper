@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:auth_buttons/auth_buttons.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/conversations_screen.dart';
 import 'package:betabeta/services/notifications_controller.dart';
@@ -38,6 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
     SettingsData settings = SettingsData();
     await settings.readSettingsFromShared();
     if (settings.readFromShared! && settings.facebookId != '') {
+      ChatData().syncWithServer();
       Get.offAllNamed(
         MainNavigationScreen.routeName,
       ); //TODO make sure this makes sense given splash screen

@@ -192,6 +192,11 @@ class ChatData extends ChangeNotifier {
       syncWithServer();
       return;
     }
+
+    if(message['push_notification_type']=='new_user'){ //TODO remove this once done debugging
+      syncWithServer();
+      return;
+    }
     if(message['push_notification_type']=='new_match'){
       //TODO implement new match overlay etc
       syncWithServer();

@@ -447,7 +447,8 @@ class _MatchCardState extends State<MatchCard> {
                 scale: 4.0,
               ),
               onTap: () {
-                Provider.of<MatchEngine>(context, listen: false).currentMatchDecision(Decision.nope);
+                MatchEngine().currentMatchDecision(Decision.nope);
+                print('nope pressed');
               },
             ),
             InkWell(
@@ -458,7 +459,8 @@ class _MatchCardState extends State<MatchCard> {
                 scale: 3.75,
               ),
               onTap: () {
-                Provider.of<MatchEngine>(context, listen: false).currentMatchDecision(Decision.like);
+                MatchEngine().currentMatchDecision(Decision.like);
+                print('like pressed');
               },
             ),
             InkWell(
