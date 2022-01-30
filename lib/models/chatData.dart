@@ -406,7 +406,9 @@ class ChatData extends ChangeNotifier {
 
 
   List<InfoUser> get users{
-    return List.unmodifiable(usersBox.values);
+    var usersList = List<InfoUser>.from(usersBox.values);
+    usersList.sort((user1,user2)=>user1.changedTime.isAfter(user2.changedTime)?-1:1);
+    return List.unmodifiable(usersList);
   }
 
   InfoUser? getUserById(String userId){

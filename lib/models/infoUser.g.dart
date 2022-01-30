@@ -20,19 +20,22 @@ class InfoUserAdapter extends TypeAdapter<InfoUser> {
       imageUrl: fields[0] as String,
       name: fields[1] as String,
       facebookId: fields[2] as String,
+      changedTime: fields[3] as DateTime,
     );
   }
 
   @override
   void write(BinaryWriter writer, InfoUser obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.imageUrl)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.facebookId);
+      ..write(obj.facebookId)
+      ..writeByte(3)
+      ..write(obj.changedTime);
   }
 
   @override

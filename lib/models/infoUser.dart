@@ -10,11 +10,14 @@ class InfoUser{
   String name;
   @HiveField(2)
   String facebookId;
-  InfoUser({required this.imageUrl,required this.name,required this.facebookId});
+  @HiveField(3)
+  DateTime changedTime;
+  InfoUser({required this.imageUrl,required this.name,required this.facebookId,required this.changedTime});
   InfoUser.fromJson(Map json) :
         this.facebookId = json['facebook_id']??'',
         this.imageUrl = json['facebook_profile_image_url'],
-        this.name = json['name'];
+        this.name = json['name'],
+  this.changedTime = DateTime.fromMillisecondsSinceEpoch((json['match_changed_time']*1000).toInt()).toUtc();
 
 
   types.User toUiUser(){
