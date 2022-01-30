@@ -194,7 +194,7 @@ class ChatData extends ChangeNotifier {
       return;
     }
 
-    if(message['push_notification_type']=='new_user'){ //TODO remove this once done debugging
+    if(message['push_notification_type']=='match_info'){ //Match info,but not a new match,for now this can only mean cancelled match
       syncWithServer();
       return;
     }
