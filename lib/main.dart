@@ -6,6 +6,7 @@ import 'package:betabeta/screens/conversations_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
 import 'package:betabeta/screens/account_settings.dart';
 import 'package:betabeta/screens/full_image_screen.dart';
+import 'package:betabeta/screens/got_new_match_screen.dart';
 import 'package:betabeta/screens/login_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
@@ -66,7 +67,8 @@ void main() async {
         GetPage(name:ProfileDetailsScreen.routeName,page:()=>ProfileDetailsScreen()),
         GetPage(name:SwipeSettingsScreen.routeName,page:()=>SwipeSettingsScreen()),
         GetPage(name:ViewLikesScreen.routeName,page:()=>ViewLikesScreen()),
-        GetPage(name:FullImageScreen.routeName,page:()=>FullImageScreen())
+        GetPage(name:FullImageScreen.routeName,page:()=>FullImageScreen()),
+        GetPage(name:GotNewMatchScreen.routeName,page:()=>GotNewMatchScreen())
 
       ],
 

@@ -8,6 +8,7 @@ import 'package:betabeta/models/infoUser.dart';
 import 'package:betabeta/models/persistentMessagesData.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/chat_screen.dart';
+import 'package:betabeta/screens/got_new_match_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/services/app_state_info.dart';
 import 'package:betabeta/services/chat_networking.dart';
@@ -186,7 +187,7 @@ class ChatData extends ChangeNotifier {
 
   }
 
-  void handlePushData(message) {
+  void handlePushData(message) async{
     if(message['push_notification_type']=='new_read_receipt'){
       //TODO for now just sync with server "everything" there is to sync. Of course,this can be improved if and when necessary
       syncWithServer();
@@ -198,9 +199,12 @@ class ChatData extends ChangeNotifier {
       return;
     }
     if(message['push_notification_type']=='new_match'){
-      //TODO implement new match overlay etc
-      syncWithServer();
-      return;
+      await syncWithServer();
+      String? userId = message['user_id'];
+      InfoUser? theUser= userId==null? null:getUserById(userId);
+      if(theUser!=null) {
+        Get.toNamed(GotNewMatchScreen.routeName, arguments: theUser);
+      }
     }
 
     //If here then push notification is new message as all other notifications types were handled above this line
