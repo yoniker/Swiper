@@ -36,21 +36,6 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
     mountedLoader(_syncFromServer);
   }
 
-  @override
-  void dispose() {
-    // dispose off the instance.
-    //
-    // It is essential that this is called so that we don't keep unneccessary resources in memory
-    // which can potentially cause memory overloading.
-    //
-    // TODO(Yoni): We need to make sure every screen that make use of this resources are duly
-    // reviewed and restructured such that each screen has only an instance of these classes and that they
-    // are all properly disposed.
-    SettingsData().dispose();
-
-    super.dispose();
-  }
-
   void _syncFromServer([bool? reset]) async {
     // if (reset == true) {
     //   _profileImagesUrls = List.generate(6, (index) => null, growable: false);

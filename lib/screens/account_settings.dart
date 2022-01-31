@@ -1,9 +1,11 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/login_screen.dart';
 import 'package:betabeta/screens/splash_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
+import 'package:betabeta/services/chat_networking.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
@@ -31,6 +33,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     await prefs.remove('preferredGender');
     SettingsData().facebookId = '';
     SettingsData().name = '';
+    await ChatData().cancelSubscriptions();
     Get.offAllNamed(SplashScreen.routeName);
   }
 
@@ -88,6 +91,20 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             },
           ),
           SizedBox(height: 12.0),
+          ActionBox(
+            message: 'Delete account',
+            messageStyle: smallBoldedCharStyle,
+            margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+            trailing: Icon(
+              Icons.delete,
+            ),
+            onTap: () async {
+              // move to swiping-preference screen.
+              await ChatNetworkHelper.deleteAccount(); //TODO at the very least verify with the user that that's what she wants (in order to minimize accidental deleting of accounts)
+              await _logout();
+
+            },
+          )
         ],
       ),
     );

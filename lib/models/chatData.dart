@@ -80,6 +80,7 @@ class ChatData extends ChangeNotifier {
   static const USERS_BOXNAME = 'users';
   Map<String,Tuple2<ValueListenable<Box>,int>> listenedValues = {};
   Map<String,double> markingConversation = {};
+  StreamSubscription? _fcmSubscription,_websocketSubscription;
 
 
   static Future<void> initDB()async{
@@ -244,11 +245,18 @@ class ChatData extends ChangeNotifier {
 
 
    void setupStreams(){
-    _fcmStream.listen(handlePushData);
-    ServiceWebsocket.instance.stream.listen((message) {
+    try{
+     _fcmSubscription = _fcmStream.listen(handlePushData);
+    _websocketSubscription = ServiceWebsocket.instance.stream.listen((message) {
       handlePushData(message);
 
-    });
+    });}
+        catch(_){};
+  }
+
+  Future<void> cancelSubscriptions()async {
+    await _fcmSubscription?.cancel();
+    await _websocketSubscription?.cancel();
   }
 
   Future<bool> onInitApp()async{
