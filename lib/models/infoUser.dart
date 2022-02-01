@@ -17,7 +17,7 @@ class InfoUser{
         this.facebookId = json['facebook_id']??'',
         this.imageUrl = json['facebook_profile_image_url'],
         this.name = json['name'],
-  this.changedTime = DateTime.fromMillisecondsSinceEpoch((json['match_changed_time']*1000).toInt()).toUtc();
+  this.changedTime = json['match_changed_time']!=null? DateTime.fromMillisecondsSinceEpoch((json['match_changed_time']*1000).toInt()).toUtc():DateTime.now().toUtc();
 
 
   types.User toUiUser(){

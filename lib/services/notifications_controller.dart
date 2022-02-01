@@ -104,7 +104,7 @@ class NotificationsController{
 
 
   Future<void> showNewMessageNotification(
-      {required String senderName, required String senderId,bool dontNotifyOnForeground=true,bool showSnackIfResumed=true}
+      {required String senderName, required String senderId,bool showSnackIfResumed=true}
       )async{
     if(AppStateInfo.instance.appState==AppLifecycleState.resumed){ //The app is in the foreground. Let's see what to do
       if(showSnackIfResumed && shouldShowMessageSnackbar(senderId)){
@@ -114,7 +114,7 @@ class NotificationsController{
         });
       }
       
-      if(dontNotifyOnForeground) {return;}
+      return; //Never show notifications if the app is resumed
     } 
     
     const AndroidNotificationDetails _androidNotificationDetails =
@@ -128,7 +128,7 @@ class NotificationsController{
     );
 
     const IOSNotificationDetails _iOSNotificationDetails =
-    IOSNotificationDetails(threadIdentifier: 'DorChat_thread_id');
+    IOSNotificationDetails(threadIdentifier: 'Voila_thread_id');
 
 
     const NotificationDetails platformChannelSpecifics =
@@ -140,17 +140,14 @@ class NotificationsController{
       NOTIFICATION_TYPE:NEW_MESSAGE_NOTIFICATION,
       SENDER_ID:senderId
     };
-    await Future.delayed(Duration(seconds: 1)); //TODO this is a bad and not principled solution to the problem of having to have "raw notifications" from FCM on iPhone since onbackground doesn't work sometimes
-    //So the "solution" is to delay for one second (until raw FCM notification is show so we can clear them),clear all notifications, and then show our modern notification
-    if(false){
-    await flutterLocalNotificationsPlugin.cancelAll(); //Clear all raw notifications before showing current notification
+    await flutterLocalNotificationsPlugin.cancelAll(); //Clear all  notifications before showing current notification
     await flutterLocalNotificationsPlugin.show(
       0,
-      'ChatDor',
+      'Voilà Dating',
       'You got a new message from $senderName',
       platformChannelSpecifics,
       payload: json.jsonEncode(payloadData),
-    );}
+    );
 
   }
 
