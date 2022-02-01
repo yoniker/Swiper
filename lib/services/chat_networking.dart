@@ -104,6 +104,11 @@ class ChatNetworkHelper {
     //TODO check for a successful response and give user feedback if not successful
   }
 
+  static Future<void> verifyToken({required String firebaseIdToken}) async{
+    Uri verifyTokenUri = Uri.https(SERVER_ADDR, '/verify_token');
+    http.Response response = await http.get(verifyTokenUri,headers: {'firebase_id_token':firebaseIdToken});
+  }
+
 
 
 }

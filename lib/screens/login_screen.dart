@@ -4,13 +4,14 @@ import 'package:auth_buttons/auth_buttons.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/settings_model.dart';
-import 'package:betabeta/screens/conversations_screen.dart';
-import 'package:betabeta/services/notifications_controller.dart';
+import 'package:betabeta/services/chat_networking.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 import 'main_navigation_screen.dart';
 
@@ -46,18 +47,23 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  _getFBLoginInfo() async {
+  _tryLoginFacebook() async {
     setState(() {
       currentlyTryingToLogin = true;
     });
-    final loginResult = await FacebookAuth.instance.login();
-
+    final loginResult = await FacebookAuth.instance.login(permissions: ['email', 'public_profile', 'user_birthday']);
     switch (loginResult.status) {
       case LoginStatus.success:
         final AccessToken? accessToken = loginResult.accessToken;
+        final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken!.token);
+        UserCredential firebaseCredentials = await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+        var idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
+        String uid = FirebaseAuth.instance.currentUser!.uid;
+        await ChatNetworkHelper.verifyToken(firebaseIdToken: idToken!);
         final userData = await FacebookAuth.instance.getUserData(
-          fields: "name,email,picture.width(200)",
+          fields: "name,email,picture.width(200),birthday",
         );
+
         SettingsData().name = userData['name'];
         SettingsData().facebookId = userData['id'];
         SettingsData().facebookProfileImageUrl =
@@ -103,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   FacebookAuthButton(
                     onPressed: () {
-                      _getFBLoginInfo();
+                      _tryLoginFacebook();
                     },
                   ),
                   _errorTryingToLogin

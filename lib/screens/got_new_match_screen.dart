@@ -21,6 +21,7 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen> {
     theUser = Get.arguments;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
