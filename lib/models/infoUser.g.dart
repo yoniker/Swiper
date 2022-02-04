@@ -19,7 +19,7 @@ class InfoUserAdapter extends TypeAdapter<InfoUser> {
     return InfoUser(
       imageUrl: fields[0] as String,
       name: fields[1] as String,
-      facebookId: fields[2] as String,
+      uid: fields[2] as String,
       changedTime: fields[3] as DateTime,
     );
   }
@@ -33,7 +33,7 @@ class InfoUserAdapter extends TypeAdapter<InfoUser> {
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.facebookId)
+      ..write(obj.uid)
       ..writeByte(3)
       ..write(obj.changedTime);
   }

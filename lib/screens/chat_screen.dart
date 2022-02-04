@@ -56,7 +56,7 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
     InfoUser? userFound = ChatData().getUserById(widget.userid);
     if(userFound==null){Get.back();} //TODO on this kind of error another option is to put out a detailed error screen
     theUser = userFound!;
-    conversationId = ChatData().calculateConversationId(theUser.facebookId);
+    conversationId = ChatData().calculateConversationId(theUser.uid);
     ChatData().markConversationAsRead(conversationId).then((_)
     {ChatData().listenConversation(conversationId,listenConversation);
     AppStateInfo.instance.addListener(listenConversation);
@@ -81,7 +81,7 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
         user: types.User(id: SettingsData().facebookId),
         showUserAvatars:true,
         onSendPressed: (text){
-          ChatData().sendMessage(theUser.facebookId,
+          ChatData().sendMessage(theUser.uid,
               jsonEncode({"type":"text","content":"${text.text}"}));
         },
         messages: _messages,

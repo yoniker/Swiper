@@ -26,7 +26,7 @@ class ChatNetworkHelper {
 
   static Future<List<InfoUser>> getAllUsers() async {
     //TODO currently no one uses this method, remove if really redundant
-    Uri usersLinkUri = Uri.https(SERVER_ADDR, 'users/${SettingsData().facebookId}');
+    Uri usersLinkUri = Uri.https(SERVER_ADDR, 'users/${SettingsData().uid}');
     http.Response resp = await http.get(usersLinkUri);
     if (resp.statusCode == 200) {
       //TODO think how to handle network errors
@@ -47,12 +47,12 @@ class ChatNetworkHelper {
     Map<String, String> toSend = {
       SettingsData.NAME_KEY: settings.name,
       SettingsData.FCM_TOKEN_KEY: settings.fcmToken,
-      SettingsData.FACEBOOK_ID_KEY : settings.facebookId,
+      SettingsData.FIREBASE_UID_KEY : settings.uid,
       SettingsData.FACEBOOK_PROFILE_IMAGE_URL_KEY:settings.facebookProfileImageUrl,
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri =
-    Uri.https(SERVER_ADDR, '/register/${settings.facebookId}');
+    Uri.https(SERVER_ADDR, '/register/${settings.uid}');
     print('sending user data...');
     http.Response response = await http.post(postSettingsUri,
         body: encoded); //TODO something if response wasnt 200
@@ -61,15 +61,15 @@ class ChatNetworkHelper {
     }
   }
 
-  static Future<TaskResult> sendMessage(String facebookUserId,String startingConversationContent,double senderEpochTime) async{
+  static Future<TaskResult> sendMessage(String uid,String startingConversationContent,double senderEpochTime) async{
     Map<String, dynamic> toSend = {
-      'other_user_id':facebookUserId,
+      'other_user_id':uid,
       'message_content':startingConversationContent,
       'sender_epoch_time':senderEpochTime
     };
     String encoded = jsonEncode(toSend);
     Uri postMessageUri =
-    Uri.https(SERVER_ADDR, '/send_message/${SettingsData().facebookId}');
+    Uri.https(SERVER_ADDR, '/send_message/${SettingsData().uid}');
     http.Response response = await http.post(postMessageUri, body: encoded);
     if(response.statusCode==200){
       return TaskResult.success;
@@ -79,7 +79,7 @@ class ChatNetworkHelper {
 
   static Future<Tuple2<List<InfoMessage>,List<dynamic>>> getMessagesByTimestamp()async{
     print('going to sync with ${SettingsData().lastSync}');
-    Uri syncChatDataUri = Uri.https(SERVER_ADDR, '/sync/${SettingsData().facebookId}/${SettingsData().lastSync}');
+    Uri syncChatDataUri = Uri.https(SERVER_ADDR, '/sync/${SettingsData().uid}/${SettingsData().lastSync}');
     http.Response response = await http.get(syncChatDataUri);
     var unparsedData = json.jsonDecode(response.body);
     List<dynamic> unparsedMessages = unparsedData['messages_data'];
@@ -90,7 +90,7 @@ class ChatNetworkHelper {
   }
 
   static Future<bool> markConversationAsRead(String conversationId) async{
-    Uri syncChatDataUri = Uri.https(SERVER_ADDR, '/mark_conversation_read/${SettingsData().facebookId}/$conversationId');
+    Uri syncChatDataUri = Uri.https(SERVER_ADDR, '/mark_conversation_read/${SettingsData().uid}/$conversationId');
     http.Response response = await http.get(syncChatDataUri); //TODO something when there's an error
     if(response.statusCode==200){
       return true;
@@ -99,14 +99,20 @@ class ChatNetworkHelper {
   }
 
   static Future<void> deleteAccount()async{
-    Uri deleteAccountUri = Uri.https(SERVER_ADDR, '/delete_account/${SettingsData().facebookId}');
+    Uri deleteAccountUri = Uri.https(SERVER_ADDR, '/delete_account/${SettingsData().uid}');
     http.Response response = await http.get(deleteAccountUri);
     //TODO check for a successful response and give user feedback if not successful
   }
 
-  static Future<void> verifyToken({required String firebaseIdToken}) async{
-    Uri verifyTokenUri = Uri.https(SERVER_ADDR, '/verify_token');
+  static Future<String> registerUid({required String firebaseIdToken}) async{
+    Uri verifyTokenUri = Uri.https(SERVER_ADDR, '/register_firebase_uid');
     http.Response response = await http.get(verifyTokenUri,headers: {'firebase_id_token':firebaseIdToken});
+    if(response.statusCode!=200){
+    //TODO throw error (bad jwt? server down?)
+    }
+
+      return json.jsonDecode(response.body)['uid'];
+
   }
 
 

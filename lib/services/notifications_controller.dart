@@ -37,7 +37,7 @@ class NotificationsController{
       InfoUser? collocutor = ChatData().getUserById(senderId);
 
       if(collocutor!=null){
-        Get.toNamed(ChatScreen.getRouteWithUserId(collocutor.facebookId));
+        Get.toNamed(ChatScreen.getRouteWithUserId(collocutor.uid));
       }
 
     }
@@ -119,8 +119,8 @@ class NotificationsController{
     
     const AndroidNotificationDetails _androidNotificationDetails =
     AndroidNotificationDetails(
-      'DorChat channel ID',
-      'DorChat channel name',
+      'Voilà Dating channel ID',
+      'Voilà Dating channel name',
       channelDescription: 'DorChat channel description',
       playSound: true,
       priority: Priority.high,

@@ -9,19 +9,19 @@ class InfoUser{
   @HiveField(1)
   String name;
   @HiveField(2)
-  String facebookId;
+  String uid;
   @HiveField(3)
   DateTime changedTime;
-  InfoUser({required this.imageUrl,required this.name,required this.facebookId,required this.changedTime});
+  InfoUser({required this.imageUrl,required this.name,required this.uid,required this.changedTime});
   InfoUser.fromJson(Map json) :
-        this.facebookId = json['facebook_id']??'',
-        this.imageUrl = json['facebook_profile_image_url'],
+        this.uid = json['firebase_uid']??'',
+        this.imageUrl = json['facebook_profile_image_url']??'https://commons.wikimedia.org/wiki/File:Felis_catus-cat_on_snow.jpg', //TODO support getting profile image with a simple link
         this.name = json['name'],
   this.changedTime = json['match_changed_time']!=null? DateTime.fromMillisecondsSinceEpoch((json['match_changed_time']*1000).toInt()).toUtc():DateTime.now().toUtc();
 
 
   types.User toUiUser(){
-    return types.User(id:facebookId,firstName:name,imageUrl: imageUrl);
+    return types.User(id:uid,firstName:name,imageUrl: imageUrl);
   }
 
 }

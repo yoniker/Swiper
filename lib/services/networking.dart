@@ -134,6 +134,7 @@ class NetworkHelper {
   postUserSettings() async {
     SettingsData settings = SettingsData();
     Map<String, String?> toSend = {
+      SettingsData.FIREBASE_UID_KEY:settings.uid,
       SettingsData.FACEBOOK_ID_KEY: settings.facebookId,
       'update_date': '8.0',
       SettingsData.NAME_KEY: settings.name,
@@ -147,7 +148,8 @@ class NetworkHelper {
       SettingsData.FILTER_DISPLAY_IMAGE_URL_KEY: settings.filterDisplayImageUrl,
       SettingsData.RADIUS_KEY: settings.radius.toString(),
       SettingsData.FCM_TOKEN_KEY : settings.fcmToken,
-      SettingsData.FACEBOOK_PROFILE_IMAGE_URL_KEY:settings.facebookProfileImageUrl
+      SettingsData.FACEBOOK_PROFILE_IMAGE_URL_KEY:settings.facebookProfileImageUrl,
+      SettingsData.FACEBOOK_BIRTHDAY_KEY:settings.facebookBirthday
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri =

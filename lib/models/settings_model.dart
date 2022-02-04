@@ -23,8 +23,11 @@ class SettingsData extends ChangeNotifier{
   static const String LAST_SYNC_KEY = 'last_sync';
   static const String FCM_TOKEN_KEY = 'fcm_token';
   static const String REGISTERED_KEY = 'is_registered';
+  static const String FIREBASE_UID_KEY = 'firebase_uid';
+  static const String FACEBOOK_BIRTHDAY_KEY = 'facebook_birthday';
 
   static const _debounceSettingsTime = Duration(seconds: 2); //Debounce time such that we notify listeners
+  String _uid = '';
   String _name = '';
   String _facebookId = '';
   String _facebookProfileImageUrl = 'https://lunada.co.il/wp-content/uploads/2016/04/12198090531909861341man-silhouette.svg_.hi_-300x284.png';
@@ -41,6 +44,7 @@ class SettingsData extends ChangeNotifier{
   double _radius = 20;
   double _lastSync = 0;
   String _fcmToken = '';
+  String _facebookBirthday='';
   bool _registered = false;
 
   SettingsData._privateConstructor(){
@@ -65,6 +69,8 @@ class SettingsData extends ChangeNotifier{
     _tasteMixRatio = sharedPreferences.getDouble(TASTE_MIX_RATIO_KEY) ?? _tasteMixRatio;
     _lastSync =sharedPreferences.getDouble(LAST_SYNC_KEY) ?? _lastSync;
     _fcmToken = sharedPreferences.getString(FCM_TOKEN_KEY) ?? _fcmToken;
+    _facebookBirthday = sharedPreferences.getString(FACEBOOK_BIRTHDAY_KEY)?? _facebookBirthday;
+    _uid = sharedPreferences.getString(FIREBASE_UID_KEY)??_uid;
     _registered = sharedPreferences.getBool(REGISTERED_KEY) ?? _registered;
     _readFromShared = true;
 
@@ -244,13 +250,33 @@ class SettingsData extends ChangeNotifier{
     savePreferences(REGISTERED_KEY, newRegistered,sendServer: false);
   }
 
+  String get uid{
+    return _uid;
+  }
+
+  set uid(String newUid){
+    if(newUid==_uid){return;}
+    _uid = newUid;
+    savePreferences(FIREBASE_UID_KEY, _uid);
+  }
+
+  String get facebookBirthday{
+    return _facebookBirthday;
+  }
+
+  set facebookBirthday(String newFacebookBirthday){
+    //if(newFacebookBirthday==_facebookBirthday){return;}
+    _facebookBirthday = newFacebookBirthday;
+    savePreferences(FACEBOOK_BIRTHDAY_KEY, newFacebookBirthday);
+  }
 
 
   void savePreferences(String sharedPreferencesKey, dynamic newValue,{bool sendServer = true}) async {
     if(sendServer){
       if (_debounce?.isActive ?? false) {_debounce!.cancel();}
       _debounce = Timer(_debounceSettingsTime, () async{
-        if(_facebookId !=null && _facebookId.length>0){
+        print('666666666666666UID IS $_uid 66666666666666666');
+        if(_uid.length>0){
         await NetworkHelper().postUserSettings();}
         MatchEngine().clear();
       });

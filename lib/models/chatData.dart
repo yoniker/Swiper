@@ -32,9 +32,9 @@ Future<void> handleBackgroundMessage(RemoteMessage rawMessage)async{
   var message = rawMessage.data;
   if(message['push_notification_type']=='new_message'){
     final String senderId = message['user_id'];
-    if(senderId!=SettingsData().facebookId){
+    if(senderId!=SettingsData().uid){
       final InfoUser sender = InfoUser.fromJson(jsonDecode(message["sender_details"]));
-      await NotificationsController.instance.showNewMessageNotification(senderName: sender.name, senderId: sender.facebookId,dontNotifyOnForeground: false,showSnackIfResumed: false);
+      await NotificationsController.instance.showNewMessageNotification(senderName: sender.name, senderId: sender.uid,showSnackIfResumed: false);
 
     }
   }}
@@ -64,13 +64,13 @@ void _handleMessageOpenedFromNotification(RemoteMessage message)async {
   final InfoMessage messageReceived = InfoMessage.fromJson(message.data);
   await ChatData().syncWithServer();
   //ChatData().addMessageToDB(messageReceived);
-  if(messageReceived.userId != SettingsData().facebookId) {
+  if(messageReceived.userId != SettingsData().uid) {
     InfoUser? sender = ChatData().getUserById(messageReceived.userId);
     AppStateInfo.instance.latestTabOnMainNavigation = MainNavigationScreen.CONVERSATIONS_PAGE_INDEX;
     Get.offAllNamed(MainNavigationScreen.routeName);
     if(sender!=null){
       Get.toNamed(
-          ChatScreen.getRouteWithUserId(sender.facebookId));}
+          ChatScreen.getRouteWithUserId(sender.uid));}
   }
 }
 
@@ -119,7 +119,7 @@ class ChatData extends ChangeNotifier {
       final messages = [messageReceived];
       final List<String> participantsIds = participantsFromConversationId(conversationId);
       for(var participantId in participantsIds){
-        if(SettingsData().facebookId!=participantId && !usersBox.keys.contains(participantId)){
+        if(SettingsData().uid!=participantId && !usersBox.keys.contains(participantId)){
           return; //This message belongs to a sender who is not an active match
         }
       }
@@ -210,9 +210,9 @@ class ChatData extends ChangeNotifier {
 
     //If here then push notification is new message as all other notifications types were handled above this line
     final String senderId = message['user_id'];
-    if(senderId!=SettingsData().facebookId){ //Update Users Box
+    if(senderId!=SettingsData().uid){ //Update Users Box
       final InfoUser sender = InfoUser.fromJson(jsonDecode(message["sender_details"]));
-      usersBox.put(sender.facebookId, sender); //Update users box
+      usersBox.put(sender.uid, sender); //Update users box
       NotificationsController.instance.showNewMessageNotification(senderName: sender.name,senderId: senderId);
     }
     final InfoMessage messageReceived = InfoMessage.fromJson(message);
@@ -277,7 +277,7 @@ class ChatData extends ChangeNotifier {
 
 
   String calculateConversationId(String otherUserId){
-    String userId1 = SettingsData().facebookId;
+    String userId1 = SettingsData().uid;
     String userId2 = otherUserId;
     if (userId1.compareTo(userId2)>0){
       var temp = userId1; //Swap...
@@ -289,7 +289,7 @@ class ChatData extends ChangeNotifier {
   }
 
   String calculateMessageId(String conversationId,double epochTime){
-    return SettingsData().facebookId + '_' + conversationId + '_' + epochTime.toString();
+    return SettingsData().uid + '_' + conversationId + '_' + epochTime.toString();
   }
 
 
@@ -324,7 +324,7 @@ class ChatData extends ChangeNotifier {
     var allConversations = conversationsBox.keys.toList();
     for(var conversation_id in allConversations){
       var participants = participantsFromConversationId(conversation_id);
-      String otherParticipant= participants[0]!=SettingsData().facebookId?participants[0]:participants[1];
+      String otherParticipant= participants[0]!=SettingsData().uid?participants[0]:participants[1];
       if(!usersBox.containsKey(otherParticipant)){
         conversationsBox.delete(conversation_id);
       }
@@ -335,10 +335,10 @@ class ChatData extends ChangeNotifier {
     for(var unparsedUser in unparsedUsers){
       InfoUser user = InfoUser.fromJson(unparsedUser);
       if(unparsedUser['status']!='active'){
-        await usersBox.delete(user.facebookId);
+        await usersBox.delete(user.uid);
       }
       else {
-        await usersBox.put(user.facebookId,user);
+        await usersBox.put(user.uid,user);
       }
     }
   }
@@ -349,7 +349,7 @@ class ChatData extends ChangeNotifier {
       epochTime = DateTime.now().millisecondsSinceEpoch/1000;}
     String conversationId = calculateConversationId(otherUserId);
     String messageId = calculateMessageId(conversationId, epochTime);
-    InfoMessage newMessage = InfoMessage(content: messageContent,messageId: messageId,conversationId: conversationId,userId: SettingsData().facebookId,messageStatus: 'Uploading',receipts: {},changedDate: epochTime,addedDate: epochTime);
+    InfoMessage newMessage = InfoMessage(content: messageContent,messageId: messageId,conversationId: conversationId,userId: SettingsData().uid,messageStatus: 'Uploading',receipts: {},changedDate: epochTime,addedDate: epochTime);
     addMessageToDB(newMessage,otherParticipantsId: otherUserId);
     String? newMessageStatus;
     try{
@@ -359,7 +359,7 @@ class ChatData extends ChangeNotifier {
     catch(_){
       newMessageStatus = 'Error';
     }
-    InfoMessage updatedMessage = InfoMessage(content: messageContent,messageId: messageId,conversationId: conversationId,userId: SettingsData().facebookId,messageStatus: newMessageStatus,receipts: {},changedDate: epochTime,addedDate: epochTime);
+    InfoMessage updatedMessage = InfoMessage(content: messageContent,messageId: messageId,conversationId: conversationId,userId: SettingsData().uid,messageStatus: newMessageStatus,receipts: {},changedDate: epochTime,addedDate: epochTime);
     //TODO alternative is to implement copyWith...
     addMessageToDB(updatedMessage,otherParticipantsId: otherUserId);
     return;
@@ -400,19 +400,19 @@ class ChatData extends ChangeNotifier {
   bool conversationRead(InfoConversation conversation){
     if(conversation.messages.length==0){return true;}
     InfoMessage lastMessage = conversation.messages[0];
-    if(lastMessage.userId==SettingsData().facebookId){return true;}
+    if(lastMessage.userId==SettingsData().uid){return true;}
     //Check read receipt..
-    if(!lastMessage.receipts.containsKey(SettingsData().facebookId)){return false;}
-    InfoMessageReceipt currentUserReceipt = lastMessage.receipts[SettingsData().facebookId]!;
+    if(!lastMessage.receipts.containsKey(SettingsData().uid)){return false;}
+    InfoMessageReceipt currentUserReceipt = lastMessage.receipts[SettingsData().uid]!;
     if(currentUserReceipt.readTime==0){return false;}
     return true;
   }
 
   String getCollocutorId(InfoConversation conversation){
     for(var participantId in conversation.participantsIds){
-      if(participantId!=SettingsData().facebookId){return participantId;}
+      if(participantId!=SettingsData().uid){return participantId;}
     }
-    return SettingsData().facebookId;
+    return SettingsData().uid;
   }
 
 
@@ -465,13 +465,13 @@ class ChatData extends ChangeNotifier {
   }
 
   Future<void> markConversationAsRead(String conversationId) async{
-    String currentUserId = SettingsData().facebookId;
+    String currentUserId = SettingsData().uid;
     InfoConversation? theConversation = conversationsBox.get(conversationId);
     if(theConversation == null) {return;}
     double timeToTransmit = 0.0;
     for(var message in theConversation.messages){
       var sender = message.userId;
-      if(sender==SettingsData().facebookId){continue;}
+      if(sender==SettingsData().uid){continue;}
       //We got to the first message not by the user. Since messages are sorted by change date, this is the most recent message
       if(message.receipts.containsKey(currentUserId) && message.receipts[currentUserId]!.readTime>0){
         return; //There is a read receipt already
@@ -491,7 +491,7 @@ class ChatData extends ChangeNotifier {
     if(markedSuccessfully){
       for(var message in theConversation.messages){
         var sender = message.userId;
-        if(sender==SettingsData().facebookId){continue;}
+        if(sender==SettingsData().uid){continue;}
         if(!message.receipts.containsKey(currentUserId) || message.receipts[currentUserId]!.readTime==0){
           if(!message.receipts.containsKey(currentUserId)){
             message.receipts[currentUserId] = InfoMessageReceipt(userId: currentUserId, sentTime: 0, readTime: 0);
