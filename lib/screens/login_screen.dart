@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
       currentlyTryingToLogin = true;
     });
     final loginResult = await FacebookAuth.instance
-        .login(permissions: ['email', 'public_profile', 'user_birthday']);
+        .login(permissions: ['email', 'public_profile', ]); //'user_birthday'
     switch (loginResult.status) {
       case LoginStatus.success:
         final AccessToken? accessToken = loginResult.accessToken;
@@ -76,6 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         SettingsData().name = userData['name'];
         SettingsData().facebookId = userData['id'];
+        //TODO the following code does nothing as the actual birthday isn't provided yet (facebook wants to see how this integrated into the app, so do this after onboarding is complete)
         var facebookDateFormat = DateFormat('MM/dd/yyyy');
         String birthday = facebookDateFormat.parse(userData['birthday']??'01/01/1995').toString();
         SettingsData().facebookBirthday = birthday;
