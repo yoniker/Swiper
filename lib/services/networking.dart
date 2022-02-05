@@ -117,10 +117,10 @@ class NetworkHelper {
 
   postUserDetails() async{
     Map<String,String?> detailsToSend={
-      'about_me':DetailsData().aboutMe,
-      'job':DetailsData().job,
-      'company':DetailsData().company,
-      'user_facebook_id':SettingsData().facebookId,
+      DetailsData.ABOUT_ME_KEY:DetailsData().aboutMe,
+      DetailsData.JOB_KEY:DetailsData().job,
+      DetailsData.COMPANY_KEY:DetailsData().company,
+      SettingsData.FIREBASE_UID_KEY:SettingsData().uid,
 
     };
 
