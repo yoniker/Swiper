@@ -11,6 +11,7 @@ import 'package:betabeta/screens/login_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/notification_screen.dart';
+import 'package:betabeta/screens/onboarding/verification_code_screen.dart';
 import 'package:betabeta/screens/profile_details_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
@@ -68,7 +69,8 @@ void main() async {
         GetPage(name:SwipeSettingsScreen.routeName,page:()=>SwipeSettingsScreen()),
         GetPage(name:ViewLikesScreen.routeName,page:()=>ViewLikesScreen()),
         GetPage(name:FullImageScreen.routeName,page:()=>FullImageScreen()),
-        GetPage(name:GotNewMatchScreen.routeName,page:()=>GotNewMatchScreen())
+        GetPage(name:GotNewMatchScreen.routeName,page:()=>GotNewMatchScreen()),
+        GetPage(name:VerificationCodeScreen.routeName,page:()=>VerificationCodeScreen())
 
       ],
 

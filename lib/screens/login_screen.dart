@@ -1,18 +1,19 @@
-import 'dart:io';
-
 import 'package:auth_buttons/auth_buttons.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/chatData.dart';
+import 'package:betabeta/models/logins.dart';
 import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/screens/onboarding/verification_code_screen.dart';
 import 'package:betabeta/services/chat_networking.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_verification_code/flutter_verification_code.dart';
+
 
 
 import 'main_navigation_screen.dart';
@@ -35,18 +36,53 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    _getSettings();
+    _continueIfLoggedIn();
   }
 
-  _getSettings() async {
+  _tryLoginPhone()async{
+
+    setState(() {
+      currentlyTryingToLogin = true;
+    });
+    PhoneAuthCredential? phoneCredential = await LoginsService.tryLoginPhone();
+    if(phoneCredential==null){return;}
+    UserCredential? userCredential = await LoginsService.signInUser(credential: phoneCredential);
+    print('dor');
+    await _saveUid();
+
+
+    setState(() {
+      currentlyTryingToLogin = false;
+    });
+
+      _continueIfLoggedIn();
+
+  }
+
+  _continueIfLoggedIn() async {
+    //Continue to the next screen if the user is already logged in.
     SettingsData settings = SettingsData();
     await settings.readSettingsFromShared();
-    if (settings.readFromShared! && settings.facebookId != '') {
+    if (settings.readFromShared! && settings.uid.length>0) {
       ChatData().syncWithServer();
       Get.offAllNamed(
         MainNavigationScreen.routeName,
       ); //TODO make sure this makes sense given splash screen
     }
+  }
+
+
+
+  Future<void> _saveUid()async{
+    var idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    String serverUid = await ChatNetworkHelper.registerUid(firebaseIdToken: idToken!);
+    //TODO support existing accounts : check with the server if the uid already existed,and if so load the user's details from the server
+    if(uid!=serverUid){
+      print('The uid in server is different from client, something weird is going on!');
+      //TODO something about it?
+    }
+    SettingsData().uid = uid;
   }
 
   _tryLoginFacebook() async {
@@ -60,16 +96,8 @@ class _LoginScreenState extends State<LoginScreen> {
         final AccessToken? accessToken = loginResult.accessToken;
         final OAuthCredential facebookAuthCredential =
             FacebookAuthProvider.credential(loginResult.accessToken!.token);
-        UserCredential firebaseCredentials = await FirebaseAuth.instance
-            .signInWithCredential(facebookAuthCredential);
-        var idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
-        String uid = FirebaseAuth.instance.currentUser!.uid;
-        String serverUid = await ChatNetworkHelper.registerUid(firebaseIdToken: idToken!);
-        if(uid!=serverUid){
-          print('The uid in server is different from client, something weird is going on!');
-        }
-        SettingsData().uid = uid;
-        //TODO support existing accounts : check with the server if the uid already existed,and if so load the user's details from the server
+        UserCredential firebaseCredentials = await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+        await _saveUid();
         final userData = await FacebookAuth.instance.getUserData(
           fields: "name,email,picture.width(200),birthday",
         );
@@ -86,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
         DefaultCacheManager().emptyCache();
         DefaultCacheManager()
             .getSingleFile(SettingsData().facebookProfileImageUrl);
-        _getSettings();
+        _continueIfLoggedIn();
         break;
 
       case LoginStatus.cancelled:
@@ -117,6 +145,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    HuaweiAuthButton(onPressed: _tryLoginPhone,),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

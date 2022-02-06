@@ -111,6 +111,11 @@ class ChatData extends ChangeNotifier {
     return l;
   }
 
+  Future<void> deleteDB()async{
+    await conversationsBox.deleteAll(conversationsBox.keys); //Instead of deleteFromDisk which closes the box and creates an issue if another login occurs
+    await usersBox.deleteAll(usersBox.keys);
+  }
+
    void addMessageToDB(InfoMessage messageReceived,{String? otherParticipantsId}){
     //Add message to DB -only if sender is in current active matches (=in user box).
     final String conversationId = messageReceived.conversationId;

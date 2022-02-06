@@ -76,10 +76,9 @@ class NetworkHelper {
       await Future.delayed(MIN_MATCHES_CALL_INTERVAL -
           DateTime.now().difference(_lastMatchCall));
     }
-    SettingsData settings = SettingsData();
-    String userName = settings.facebookId; //TODO Login screen if the username in sharedprefs is null
     _lastMatchCall = DateTime.now();
-    Uri matchesUrl = Uri.https(SERVER_ADDR, '/matches/$userName');
+    Uri matchesUrl = Uri.https(SERVER_ADDR, '/matches/${SettingsData().uid}');
+    print('88888888888888888trying to get matches url is $matchesUrl 88888888888888');
     http.Response response = await http.get(matchesUrl); //eg /12313?gender=Male
     if (response.statusCode != 200) {
       return null; //TODO error handling

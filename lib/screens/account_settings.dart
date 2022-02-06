@@ -9,6 +9,7 @@ import 'package:betabeta/services/chat_networking.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,9 +32,11 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     await prefs.remove('facebook_id');
     await prefs.remove('facebook_profile_image_url');
     await prefs.remove('preferredGender');
-    SettingsData().facebookId = '';
     SettingsData().name = '';
     await ChatData().cancelSubscriptions();
+    SettingsData().uid='';
+    await ChatData().deleteDB();
+    await FirebaseAuth.instance.signOut();
     Get.offAllNamed(SplashScreen.routeName);
   }
 
