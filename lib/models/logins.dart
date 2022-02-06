@@ -46,8 +46,11 @@ class LoginsService{
       },
       codeAutoRetrievalTimeout: (String verificationId) async {
         //TODO this method is called after timeout where a phone couldn't find the sms sent to it. Should show the user something?
+        if(!completer.isCompleted){
         phoneCredential =  await _getCredential(verificationId:verificationId);
         completer.complete(true);
+        }
+
 
       },
     );
