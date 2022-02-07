@@ -1,7 +1,7 @@
 import 'package:auth_buttons/auth_buttons.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/chatData.dart';
-import 'package:betabeta/models/logins.dart';
+import 'package:betabeta/models/loginService.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/onboarding/verification_code_screen.dart';
 import 'package:betabeta/services/chat_networking.dart';
@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
+import 'package:tuple/tuple.dart';
 
 
 
@@ -44,10 +45,10 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       currentlyTryingToLogin = true;
     });
-    PhoneAuthCredential? phoneCredential = await LoginsService.tryLoginPhone();
-    if(phoneCredential==null){return;}
-    UserCredential? userCredential = await LoginsService.signInUser(credential: phoneCredential);
-    print('dor');
+    await LoginsService.instance.tryLoginPhone();
+    if(LoginsService.instance.phoneLoginState!=LoginState.Success || LoginsService.instance.phoneCredential==null){return;}
+    UserCredential? userCredential = await LoginsService.signInUser(credential: LoginsService.instance.phoneCredential!);
+    //TODO play here..
     await _saveUid();
 
 
@@ -64,6 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
     SettingsData settings = SettingsData();
     await settings.readSettingsFromShared();
     if (settings.readFromShared! && settings.uid.length>0) {
+      print('continue because uid is ${settings.uid}');
       ChatData().syncWithServer();
       Get.offAllNamed(
         MainNavigationScreen.routeName,
@@ -76,6 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _saveUid()async{
     var idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
     String uid = FirebaseAuth.instance.currentUser!.uid;
+    print('Registering uid...');
     String serverUid = await ChatNetworkHelper.registerUid(firebaseIdToken: idToken!);
     //TODO support existing accounts : check with the server if the uid already existed,and if so load the user's details from the server
     if(uid!=serverUid){
@@ -83,53 +86,19 @@ class _LoginScreenState extends State<LoginScreen> {
       //TODO something about it?
     }
     SettingsData().uid = uid;
+    print('Registered the uid $uid');
   }
 
   _tryLoginFacebook() async {
     setState(() {
       currentlyTryingToLogin = true;
     });
-    final loginResult = await FacebookAuth.instance
-        .login(permissions: ['email', 'public_profile', ]); //'user_birthday'
-    switch (loginResult.status) {
-      case LoginStatus.success:
-        final AccessToken? accessToken = loginResult.accessToken;
-        final OAuthCredential facebookAuthCredential =
-            FacebookAuthProvider.credential(loginResult.accessToken!.token);
-        UserCredential firebaseCredentials = await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
-        await _saveUid();
-        final userData = await FacebookAuth.instance.getUserData(
-          fields: "name,email,picture.width(200),birthday",
-        );
-
-        SettingsData().name = userData['name'];
-        SettingsData().facebookId = userData['id'];
-        //TODO the following code does nothing as the actual birthday isn't provided yet (facebook wants to see how this integrated into the app, so do this after onboarding is complete)
-        var facebookDateFormat = DateFormat('MM/dd/yyyy');
-        String birthday = facebookDateFormat.parse(userData['birthday']??'01/01/1995').toString();
-        SettingsData().facebookBirthday = birthday;
-        SettingsData().facebookProfileImageUrl =
-            userData['picture']['data']['url'];
-
-        DefaultCacheManager().emptyCache();
-        DefaultCacheManager()
-            .getSingleFile(SettingsData().facebookProfileImageUrl);
-        _continueIfLoggedIn();
-        break;
-
-      case LoginStatus.cancelled:
-        setState(() {
-          _errorTryingToLogin = true;
-          _errorMessage = 'User cancelled Login';
-        });
-        break;
-      case LoginStatus.operationInProgress:
-      case LoginStatus.failed:
-        setState(() {
-          _errorTryingToLogin = true;
-          _errorMessage = loginResult.message ?? 'Error trying to login';
-        });
-        break;
+    await LoginsService.instance.tryLoginFacebook();
+    if(LoginsService.instance.facebookLoginState==LoginState.Success){
+      await LoginsService.instance.getFacebookUserData();
+      await LoginsService.signInUser(credential: LoginsService.instance.facebookCredential!);
+      await _saveUid();
+      await _continueIfLoggedIn();
     }
     setState(() {
       currentlyTryingToLogin = false;

@@ -80,7 +80,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // we move to the Main-navigation screen otherwise we move to the LoginScreen.
     //
     // This is the standard way of creating a splash-screen for an Application.
-    if (settings.readFromShared! && settings.facebookId != '') {
+    if (settings.readFromShared! && settings.uid.length>0) {
       return MainNavigationScreen.routeName;
     } else {
       return LoginScreen.routeName;
