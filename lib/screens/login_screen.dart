@@ -3,17 +3,11 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/loginService.dart';
 import 'package:betabeta/models/settings_model.dart';
-import 'package:betabeta/screens/onboarding/verification_code_screen.dart';
 import 'package:betabeta/services/chat_networking.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter_verification_code/flutter_verification_code.dart';
-import 'package:tuple/tuple.dart';
 
 
 
