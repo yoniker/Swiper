@@ -47,8 +47,34 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     await LoginsService.instance.tryLoginPhone();
     if(LoginsService.instance.phoneLoginState!=LoginState.Success || LoginsService.instance.phoneCredential==null){return;}
-    UserCredential? userCredential = await LoginsService.signInUser(credential: LoginsService.instance.phoneCredential!);
     //TODO play here..
+
+    print('dor king');
+    print('dor is the king');
+    if(FirebaseAuth.instance.currentUser!=null && LoginsService.instance.phoneCredential!=null){
+      try{
+    await FirebaseAuth.instance.currentUser!.linkWithCredential(LoginsService.instance.phoneCredential!);}
+    on FirebaseAuthException catch (e){
+
+      if (e.code == 'invalid-verification-code') {//TODO something else while verifying code
+        Get.snackbar('Error verifying phone', 'Wrong verification code',duration: Duration(seconds:10)).show();
+      }
+
+      if(e.code == 'credential-already-in-use'){
+        Get.snackbar('Error', 'Credential in use',duration: Duration(seconds:10)).show();
+      }
+    }
+
+
+
+    }
+    else{//Phone is the main provider
+      UserCredential? userCredential = await LoginsService.signInUser(credential: LoginsService.instance.phoneCredential!);
+      if(userCredential!=null){
+        await _saveUid();
+        _continueIfLoggedIn();
+      }
+    }
     await _saveUid();
 
 
