@@ -148,7 +148,8 @@ class NetworkHelper {
       SettingsData.RADIUS_KEY: settings.radius.toString(),
       SettingsData.FCM_TOKEN_KEY : settings.fcmToken,
       SettingsData.FACEBOOK_PROFILE_IMAGE_URL_KEY:settings.facebookProfileImageUrl,
-      SettingsData.FACEBOOK_BIRTHDAY_KEY:settings.facebookBirthday
+      SettingsData.FACEBOOK_BIRTHDAY_KEY:settings.facebookBirthday,
+      SettingsData.EMAIL_KEY:settings.email,
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri =

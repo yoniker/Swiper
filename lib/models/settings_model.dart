@@ -25,6 +25,7 @@ class SettingsData extends ChangeNotifier{
   static const String REGISTERED_KEY = 'is_registered';
   static const String FIREBASE_UID_KEY = 'firebase_uid';
   static const String FACEBOOK_BIRTHDAY_KEY = 'facebook_birthday';
+  static const String EMAIL_KEY = 'email';
 
   static const _debounceSettingsTime = Duration(seconds: 2); //Debounce time such that we notify listeners
   String _uid = '';
@@ -45,6 +46,7 @@ class SettingsData extends ChangeNotifier{
   double _lastSync = 0;
   String _fcmToken = '';
   String _facebookBirthday='';
+  String _email = '';
   bool _registered = false;
 
   SettingsData._privateConstructor(){
@@ -71,6 +73,7 @@ class SettingsData extends ChangeNotifier{
     _fcmToken = sharedPreferences.getString(FCM_TOKEN_KEY) ?? _fcmToken;
     _facebookBirthday = sharedPreferences.getString(FACEBOOK_BIRTHDAY_KEY)?? _facebookBirthday;
     _uid = sharedPreferences.getString(FIREBASE_UID_KEY)??_uid;
+    _email = sharedPreferences.getString(EMAIL_KEY)??_email;
     _registered = sharedPreferences.getBool(REGISTERED_KEY) ?? _registered;
     _readFromShared = true;
 
@@ -264,6 +267,15 @@ class SettingsData extends ChangeNotifier{
     //if(newFacebookBirthday==_facebookBirthday){return;}
     _facebookBirthday = newFacebookBirthday;
     savePreferences(FACEBOOK_BIRTHDAY_KEY, newFacebookBirthday);
+  }
+
+  String get email{
+    return _email;
+  }
+
+  set email(String newEmail){
+    _email = newEmail;
+    savePreferences(EMAIL_KEY, newEmail);
   }
 
 

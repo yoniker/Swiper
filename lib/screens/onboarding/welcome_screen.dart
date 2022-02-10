@@ -1,8 +1,6 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
-import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/loginService.dart';
 import 'package:betabeta/models/settings_model.dart';
-import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/onboarding/phone_screen.dart';
 import 'package:betabeta/services/chat_networking.dart';
 import 'package:betabeta/services/screen_size.dart';
