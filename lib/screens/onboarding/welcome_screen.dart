@@ -139,13 +139,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           icon: Icons.facebook_rounded,
                           color: const Color(0xFF0060DB),
                           onTap: ()  async{
-                            await LoginsService.instance.tryLoginFacebook();
-                            if(LoginsService.instance.facebookLoginState==LoginState.Success){
-                              await LoginsService.instance.getFacebookUserData();
-                              Get.offAllNamed(PhoneScreen.routeName);
-                            }
-                            //TODO if not successful,show something to the user
-
+                             await _tryLoginFacebook();
+                             //TODO show indication to user if login wasn't successful
                           },
                         ),
                         const SizedBox(
