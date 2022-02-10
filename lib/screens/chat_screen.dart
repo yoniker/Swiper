@@ -85,11 +85,11 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
               jsonEncode({"type":"text","content":"${text.text}"}));
         },
         messages: _messages,
-        onMessageTap: (message){
+        onMessageTap: (context,message){
           ChatData().resendMessageIfError(conversationId, message.id);
 
         },
-        onMessageLongPress: (message){
+        onMessageLongPress: (context,message){
           ChatData().resendMessageIfError(conversationId, message.id);
         },
 

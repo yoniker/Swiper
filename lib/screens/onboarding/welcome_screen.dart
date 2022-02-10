@@ -1,9 +1,14 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/loginService.dart';
+import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/onboarding/phone_screen.dart';
+import 'package:betabeta/services/chat_networking.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
@@ -18,6 +23,47 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   late VideoPlayerController _controller;
+  bool currentlyTryingToLogin = false;
+
+
+  _continueIfLoggedIn() async {
+    //Continue to the next screen if the user is already logged in.
+    SettingsData settings = SettingsData.instance;
+    await settings.readSettingsFromShared();
+    if (settings.readFromShared! && settings.uid.length>0) {
+      print('continue because uid is ${settings.uid}');
+      Get.offAllNamed(PhoneScreen.routeName);
+    }
+  }
+
+  Future<void> _saveUid()async{
+    var idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    String serverUid = await ChatNetworkHelper.registerUid(firebaseIdToken: idToken!);
+    //TODO support existing accounts : check with the server if the uid already existed,and if so load the user's details from the server
+    if(uid!=serverUid){
+      print('The uid in server is different from client, something weird is going on!');
+      //TODO something about it?
+    }
+    SettingsData.instance.uid = uid;
+    print('Registered the uid $uid');
+  }
+
+  _tryLoginFacebook() async {
+    setState(() {
+      currentlyTryingToLogin = true;
+    });
+    await LoginsService.instance.tryLoginFacebook();
+    if(LoginsService.instance.facebookLoginState==LoginState.Success){
+      await LoginsService.instance.getFacebookUserData();
+      await LoginsService.signInUser(credential: LoginsService.instance.facebookCredential!);
+      await _saveUid();
+      await _continueIfLoggedIn();
+    }
+    setState(() {
+      currentlyTryingToLogin = false;
+    });
+  }
 
   @override
   void initState() {
