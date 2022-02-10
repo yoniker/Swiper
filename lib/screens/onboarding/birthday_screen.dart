@@ -1,0 +1,158 @@
+import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/screens/onboarding/pronouns_screen.dart';
+import 'package:betabeta/services/screen_size.dart';
+import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
+import 'package:betabeta/widgets/onboarding/progress_bar.dart';
+import 'package:betabeta/widgets/onboarding/rounded_button.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class BirthdayOnboardingScreen extends StatefulWidget {
+  static String routeName = '/birthday_onboarding';
+
+  const BirthdayOnboardingScreen({Key? key}) : super(key: key);
+
+  @override
+  _BirthdayOnboardingScreenState createState() => _BirthdayOnboardingScreenState();
+}
+
+class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
+  DateTime selectedDate = DateTime(1990, 1,
+      1); //TODO take the user's birthday if given (for example from Facebook)
+  final Key _cupertinoWidgetKey = UniqueKey();
+
+  final firstDate = DateTime(1940, 1);
+  final lastDate = DateTime(2022, 2);
+
+  @override
+  Widget build(BuildContext context) {
+    calculateAge(DateTime birthDate) {
+      DateTime currentDate = DateTime.now();
+      int age = currentDate.year - birthDate.year;
+      int month1 = currentDate.month;
+      int month2 = birthDate.month;
+      if (month2 > month1) {
+        age--;
+      } else if (month1 == month2) {
+        int day1 = currentDate.day;
+        int day2 = birthDate.day;
+        if (day2 > day1) {
+          age--;
+        }
+      }
+      return age;
+    }
+
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: OnboardingColumn(
+          image: ScreenSize.getSize(context) == ScreenSizeCategory.small
+              ? null
+              : Image.asset('images/birthday3.gif'),
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ProgressBar(
+                  page: 2,
+                ),
+                const FittedBox(
+                  child: Text(
+                    "When's your birthday?",
+                    style: kTitleStyle,
+                  ),
+                ),
+                Divider(
+                  height: screenHeight * 0.03,
+                  color: Colors.grey,
+                ),
+                SizedBox(
+                  height:
+                      ScreenSize.getSize(context) == ScreenSizeCategory.small
+                          ? screenHeight * 0.56
+                          : screenHeight * 0.18,
+                  child: CupertinoTheme(
+                    data: const CupertinoThemeData(
+                      textTheme: CupertinoTextThemeData(
+                        dateTimePickerTextStyle: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                    child: CupertinoDatePicker(
+                        key: _cupertinoWidgetKey,
+                        mode: CupertinoDatePickerMode.date,
+                        initialDateTime: selectedDate,
+                        minimumDate: firstDate,
+                        maximumDate: lastDate,
+                        onDateTimeChanged: (newDate) {
+                          setState(() {
+                            selectedDate = newDate;
+                          });
+                        }),
+                  ),
+                ),
+                Divider(
+                  height: screenHeight * 0.03,
+                  color: Colors.grey,
+                )
+              ],
+            ),
+            Column(
+              children: [
+                RoundedButton(
+                  name: 'NEXT',
+                  onTap: () {
+                    int age = calculateAge(selectedDate);
+                    showDialog(
+                        context: context,
+                        builder: (_) => CupertinoAlertDialog(
+                              title: Text(
+                                "You're $age",
+                              ),
+                              content: age >= 18
+                                  ? const Text(
+                                      "Make sure that this is you'r correct age.")
+                                  : const Text(
+                                      'The minimum age requirement for Voilà is 18 years old.\nWe will be happy to welcome you back when you are 18'),
+                              actions: age >= 18
+                                  ? ([
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('Cancel')),
+                                      TextButton(
+                                          onPressed: () {
+                                            Get.offAllNamed(PronounScreen.routeName);
+                                          },
+                                          child: const Text('Confirm'))
+                                    ])
+                                  : [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text(
+                                            'Close',
+                                            style: TextStyle(color: Colors.red),
+                                          ))
+                                    ],
+                            ));
+                  },
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}

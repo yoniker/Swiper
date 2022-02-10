@@ -9,6 +9,7 @@ import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/login_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
+import 'package:betabeta/screens/onboarding/welcome_screen.dart';
 import 'package:betabeta/services/app_state_info.dart';
 import 'package:betabeta/services/notifications_controller.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
@@ -39,7 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<bool> _initializeApp() async{ //TODO support error states
     await ChatData.initDB();
     await NotificationsController.instance.initialize();
-    if(Platform.isIOS){
+    if(Platform.isIOS){//TODO move to notifications screen
       var result =
       await NotificationsController.instance.requestIOSPermissions();
       print('RESULT OF GETTING NOTIFICATIONS PERMISSIONS IS $result');
@@ -83,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (settings.readFromShared! && settings.uid.length>0) {
       return MainNavigationScreen.routeName;
     } else {
-      return LoginScreen.routeName;
+      return WelcomeScreen.routeName;//LoginScreen.routeName;
     }
   }
 

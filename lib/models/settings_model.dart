@@ -271,7 +271,6 @@ class SettingsData extends ChangeNotifier{
     if(sendServer){
       if (_debounce?.isActive ?? false) {_debounce!.cancel();}
       _debounce = Timer(_debounceSettingsTime, () async{
-        print('666666666666666UID IS $_uid 66666666666666666');
         if(_uid.length>0){
         await NetworkHelper().postUserSettings();}
         MatchEngine().clear();

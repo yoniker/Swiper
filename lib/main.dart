@@ -11,7 +11,21 @@ import 'package:betabeta/screens/login_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/notification_screen.dart';
+import 'package:betabeta/screens/onboarding/about_me_screen.dart';
+import 'package:betabeta/screens/onboarding/birthday_screen.dart';
+import 'package:betabeta/screens/onboarding/email_address_screen.dart';
+import 'package:betabeta/screens/onboarding/finish_onboarding_screen.dart';
+import 'package:betabeta/screens/onboarding/get_name_screen.dart';
+import 'package:betabeta/screens/onboarding/location_permission_screen.dart';
+import 'package:betabeta/screens/onboarding/relationship_type_onboarding_screen.dart';
+import 'package:betabeta/screens/onboarding/notifications_permission_screen.dart';
+import 'package:betabeta/screens/onboarding/orientation_screen.dart';
+import 'package:betabeta/screens/onboarding/phone_screen.dart';
+import 'package:betabeta/screens/onboarding/pronouns_screen.dart';
+import 'package:betabeta/screens/onboarding/terms_screen.dart';
+import 'package:betabeta/screens/onboarding/upload_images_onboarding_screen.dart';
 import 'package:betabeta/screens/onboarding/verification_code_screen.dart';
+import 'package:betabeta/screens/onboarding/welcome_screen.dart';
 import 'package:betabeta/screens/profile_details_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
@@ -53,6 +67,20 @@ void main() async {
   runApp(
     GetMaterialApp(home: SplashScreen(),
       getPages: [
+        GetPage(name:UploadImagesOnboardingScreen.routeName,page:()=>UploadImagesOnboardingScreen()),
+        GetPage(name:FinishOnboardingScreen.routeName,page:()=>FinishOnboardingScreen()),
+        GetPage(name:AboutMeOnboardingScreen.routeName,page:()=>AboutMeOnboardingScreen()),
+        GetPage(name:RelationshipTypeOnboardingScreen.routeName,page:()=>RelationshipTypeOnboardingScreen()),
+        GetPage(name:EmailAddressScreen.routeName,page:()=>EmailAddressScreen()),
+        GetPage(name:OrientationScreen.routeName,page:()=>OrientationScreen()),
+        GetPage(name:PronounScreen.routeName,page:()=>PronounScreen()),
+        GetPage(name:BirthdayOnboardingScreen.routeName,page:()=>BirthdayOnboardingScreen()),
+        GetPage(name:GetNameScreen.routeName,page:()=>GetNameScreen()),
+        GetPage(name:TermsScreen.routeName,page:()=>TermsScreen()),
+        GetPage(name:NotificationsPermissionScreen.routeName,page:()=>NotificationsPermissionScreen()),
+        GetPage(name:LocationPermissionScreen.routeName,page: ()=>LocationPermissionScreen()),
+        GetPage(name: PhoneScreen.routeName, page: ()=>PhoneScreen()),
+        GetPage(name: WelcomeScreen.routeName, page: ()=>WelcomeScreen()),
         GetPage(name:SplashScreen.routeName,page: ()=> SplashScreen()),
         GetPage(name:LoginScreen.routeName, page: () =>LoginScreen()),
         GetPage(name:MainNavigationScreen.routeName,page:()=>MainNavigationScreen()),
