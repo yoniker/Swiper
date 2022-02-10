@@ -26,7 +26,9 @@ class SettingsData extends ChangeNotifier{
   static const String FIREBASE_UID_KEY = 'firebase_uid';
   static const String FACEBOOK_BIRTHDAY_KEY = 'facebook_birthday';
   static const String EMAIL_KEY = 'email';
-
+  static const String USER_DESCRIPTION_KEY = 'user_description';
+  static const String USER_GENDER_KEY = 'user_gender';
+  static const String SHOW_USER_GENDER_KEY = 'show_user_gender';
   static const _debounceSettingsTime = Duration(seconds: 2); //Debounce time such that we notify listeners
   String _uid = '';
   String _name = '';
@@ -47,7 +49,10 @@ class SettingsData extends ChangeNotifier{
   String _fcmToken = '';
   String _facebookBirthday='';
   String _email = '';
+  String _userDescription='';
   bool _registered = false;
+  String _userGender = '';
+  bool _showUserGender = true;
 
   SettingsData._privateConstructor(){
 
@@ -74,6 +79,9 @@ class SettingsData extends ChangeNotifier{
     _facebookBirthday = sharedPreferences.getString(FACEBOOK_BIRTHDAY_KEY)?? _facebookBirthday;
     _uid = sharedPreferences.getString(FIREBASE_UID_KEY)??_uid;
     _email = sharedPreferences.getString(EMAIL_KEY)??_email;
+    _userGender = sharedPreferences.getString(USER_GENDER_KEY)??_userGender;
+    _userDescription = sharedPreferences.getString(USER_DESCRIPTION_KEY)??_userDescription;
+    _showUserGender = sharedPreferences.getBool(SHOW_USER_GENDER_KEY)??_showUserGender;
     _registered = sharedPreferences.getBool(REGISTERED_KEY) ?? _registered;
     _readFromShared = true;
 
@@ -264,7 +272,7 @@ class SettingsData extends ChangeNotifier{
   }
 
   set facebookBirthday(String newFacebookBirthday){
-    //if(newFacebookBirthday==_facebookBirthday){return;}
+    if(newFacebookBirthday==_facebookBirthday){return;}
     _facebookBirthday = newFacebookBirthday;
     savePreferences(FACEBOOK_BIRTHDAY_KEY, newFacebookBirthday);
   }
@@ -274,8 +282,41 @@ class SettingsData extends ChangeNotifier{
   }
 
   set email(String newEmail){
+    if(_email==newEmail){return;}
     _email = newEmail;
     savePreferences(EMAIL_KEY, newEmail);
+  }
+
+  String get userGender{
+    return _userGender;
+  }
+
+  set userGender(String newUserGender){
+    if(newUserGender==_userGender){return;}
+    _userGender = newUserGender;
+    savePreferences(USER_GENDER_KEY, newUserGender);
+  }
+
+  String get userDescription{
+    return _userDescription;
+  }
+
+  set userDescription(String newUserDescription){
+    if(newUserDescription == _userDescription){
+      return;
+    }
+    _userDescription = newUserDescription;
+    savePreferences(USER_DESCRIPTION_KEY, newUserDescription);
+  }
+
+  bool get showUserGender{
+    return _showUserGender;
+  }
+
+  set showUserGender(bool newShowUserGender){
+    if(newShowUserGender==_showUserGender){return;}
+    _showUserGender = newShowUserGender;
+    savePreferences(SHOW_USER_GENDER_KEY, newShowUserGender);
   }
 
 

@@ -1,4 +1,5 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/onboarding/about_me_screen.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
@@ -10,7 +11,6 @@ import 'package:get/get.dart';
 
 class EmailAddressScreen extends StatefulWidget {
   static String routeName = '/emailAddressScreen';
-  static String? userEmail;
 
   const EmailAddressScreen({Key? key}) : super(key: key);
 
@@ -19,33 +19,13 @@ class EmailAddressScreen extends StatefulWidget {
 }
 
 class _EmailAddressScreenState extends State<EmailAddressScreen> {
-  List<String> validEmail = ["@", "."];
-  String? userEmail = '';
+  String userEmail = SettingsData.instance.email;
 
-  bool? isValid() {
-    String valid = '';
-    for (int i = 0; i < userEmail!.length; i++) {
-      if (userEmail![i] == '@' || userEmail![i] == '.') {
-        valid = valid + userEmail![i];
-      }
-    }
-    if (valid == '@.') {
-      return true;
-    } else {
-      return false;
-    }
+  bool isValid(String emailAddress) {
+    return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(emailAddress);
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    if (EmailAddressScreen.userEmail != null) {
-      setState(() {
-        userEmail = EmailAddressScreen.userEmail;
-      });
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +58,7 @@ class _EmailAddressScreenState extends State<EmailAddressScreen> {
                 ),
                 InputField(
                   hintText: 'add account recovery email',
-                  initialvalue: EmailAddressScreen.userEmail,
+                  initialvalue: userEmail,
                   keyboardType: TextInputType.emailAddress,
                   onType: (value) {
                     userEmail = value;
@@ -101,8 +81,11 @@ class _EmailAddressScreenState extends State<EmailAddressScreen> {
             RoundedButton(
                 name: 'CONTINUE',
                 onTap: () {
-                  isValid() == false
-                      ? showCupertinoDialog(
+                  if(isValid(userEmail)){
+                    SettingsData.instance.email=userEmail;
+                    Get.offAllNamed(AboutMeOnboardingScreen.routeName);
+                  }
+                   else showCupertinoDialog(
                           context: context,
                           builder: (_) => CupertinoAlertDialog(
                                 title: const Text('Invalid email'),
@@ -119,8 +102,8 @@ class _EmailAddressScreenState extends State<EmailAddressScreen> {
                                             const TextStyle(color: Colors.red),
                                       ))
                                 ],
-                              ))
-                      :Get.offAllNamed(AboutMeOnboardingScreen.routeName);
+                              ));
+
                 })
           ],
         ),

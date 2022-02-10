@@ -150,6 +150,9 @@ class NetworkHelper {
       SettingsData.FACEBOOK_PROFILE_IMAGE_URL_KEY:settings.facebookProfileImageUrl,
       SettingsData.FACEBOOK_BIRTHDAY_KEY:settings.facebookBirthday,
       SettingsData.EMAIL_KEY:settings.email,
+      SettingsData.USER_GENDER_KEY:settings.userGender,
+      SettingsData.USER_DESCRIPTION_KEY:settings.userDescription,
+      SettingsData.SHOW_USER_GENDER_KEY:settings.showUserGender.toString()
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri =

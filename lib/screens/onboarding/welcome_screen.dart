@@ -25,11 +25,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
 
   _continueIfLoggedIn() async {
-    //Continue to the next screen if the user is already logged in.
-    SettingsData settings = SettingsData.instance;
-    await settings.readSettingsFromShared();
-    if (settings.readFromShared! && settings.uid.length>0) {
-      print('continue because uid is ${settings.uid}');
+    await SettingsData.instance.readSettingsFromShared();
+    if (SettingsData.instance.readFromShared! && SettingsData.instance.uid.length>0) {
       Get.offAllNamed(PhoneScreen.routeName);
     }
   }

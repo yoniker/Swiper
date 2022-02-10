@@ -155,14 +155,20 @@ class LoginsService{
       fields: "name,email,picture.width(200),birthday",
     );
 
-    SettingsData.instance.name = userData['name'];
+
+    if(SettingsData.instance.name.length==0){
+    SettingsData.instance.name = ((userData['name'] as String?)??'').split(' ').first;}
     SettingsData.instance.facebookId = userData['id'];
     //TODO the following code does nothing as the actual birthday isn't provided yet (facebook wants to see how this integrated into the app, so do this after onboarding is complete)
     var facebookDateFormat = DateFormat('MM/dd/yyyy');
     String birthday = facebookDateFormat.parse(userData['birthday']??'01/01/1995').toString();
     SettingsData.instance.facebookBirthday = birthday;
-    SettingsData.instance.facebookProfileImageUrl =
-    userData['picture']['data']['url'];
+    SettingsData.instance.facebookProfileImageUrl = userData['picture']['data']['url'];
+    if((userData['email']??'').length>0){
+      SettingsData.instance.email = userData['email'];
+    }
+
+
 
     DefaultCacheManager().emptyCache();
     DefaultCacheManager()
