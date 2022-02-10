@@ -109,15 +109,15 @@ class LoginsService{
       fields: "name,email,picture.width(200),birthday",
     );
 
-    SettingsData().name = userData['name'];
-    SettingsData().facebookId = userData['id'];
+    SettingsData.instance.name = userData['name'];
+    SettingsData.instance.facebookId = userData['id'];
     //TODO the following code does nothing as the actual birthday isn't provided yet (facebook wants to see how this integrated into the app, so do this after onboarding is complete)
     var facebookDateFormat = DateFormat('MM/dd/yyyy');
     String birthday = facebookDateFormat.parse(userData['birthday']??'01/01/1995').toString();
-    SettingsData().facebookBirthday = birthday;
-    SettingsData().facebookProfileImageUrl =
+    SettingsData.instance.facebookBirthday = birthday;
+    SettingsData.instance.facebookProfileImageUrl =
     userData['picture']['data']['url'];
-    DefaultCacheManager().getSingleFile(SettingsData().facebookProfileImageUrl);
+    DefaultCacheManager().getSingleFile(SettingsData.instance.facebookProfileImageUrl);
   }
 
   
@@ -155,18 +155,18 @@ class LoginsService{
       fields: "name,email,picture.width(200),birthday",
     );
 
-    SettingsData().name = userData['name'];
-    SettingsData().facebookId = userData['id'];
+    SettingsData.instance.name = userData['name'];
+    SettingsData.instance.facebookId = userData['id'];
     //TODO the following code does nothing as the actual birthday isn't provided yet (facebook wants to see how this integrated into the app, so do this after onboarding is complete)
     var facebookDateFormat = DateFormat('MM/dd/yyyy');
     String birthday = facebookDateFormat.parse(userData['birthday']??'01/01/1995').toString();
-    SettingsData().facebookBirthday = birthday;
-    SettingsData().facebookProfileImageUrl =
+    SettingsData.instance.facebookBirthday = birthday;
+    SettingsData.instance.facebookProfileImageUrl =
     userData['picture']['data']['url'];
 
     DefaultCacheManager().emptyCache();
     DefaultCacheManager()
-        .getSingleFile(SettingsData().facebookProfileImageUrl);
+        .getSingleFile(SettingsData.instance.facebookProfileImageUrl);
   }
   
   static Future<UserCredential?> signInUser({required AuthCredential credential,void Function(Object)? onError})async{

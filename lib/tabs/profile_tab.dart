@@ -150,7 +150,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
             Padding(
               padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
               child: Text(
-                SettingsData().name,
+                SettingsData.instance.name,
                 style: titleStyle,
               ),
             ),

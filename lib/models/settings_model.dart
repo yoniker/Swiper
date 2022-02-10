@@ -80,11 +80,7 @@ class SettingsData extends ChangeNotifier{
 
 
   static final SettingsData _instance = SettingsData._privateConstructor();
-
-  factory SettingsData() {
-    return _instance;
-  }
-
+  static SettingsData get instance => _instance;
   bool? get readFromShared{
     return _readFromShared;
   }

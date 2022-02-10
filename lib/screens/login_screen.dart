@@ -82,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   _continueIfLoggedIn() async {
     //Continue to the next screen if the user is already logged in.
-    SettingsData settings = SettingsData();
+    SettingsData settings = SettingsData.instance;
     await settings.readSettingsFromShared();
     if (settings.readFromShared! && settings.uid.length>0) {
       print('continue because uid is ${settings.uid}');
@@ -105,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
       print('The uid in server is different from client, something weird is going on!');
       //TODO something about it?
     }
-    SettingsData().uid = uid;
+    SettingsData.instance.uid = uid;
     print('Registered the uid $uid');
   }
 

@@ -66,7 +66,7 @@ class InfoMessage {
   }
 
   types.Status calculateMessageStatus() {
-    if(userId == SettingsData().facebookId){
+    if(userId == SettingsData.instance.facebookId){
       //current user is the one who sent the message
       if(messageStatus=='Uploading'){
         return types.Status.sending;
@@ -80,7 +80,7 @@ class InfoMessage {
       }
       //if other users read the message change status to read, otherwise sent
       for(var receiptUserId in receipts.keys){
-        if(receiptUserId!=SettingsData().facebookId && receipts[receiptUserId]!.readTime>0){
+        if(receiptUserId!=SettingsData.instance.facebookId && receipts[receiptUserId]!.readTime>0){
           return types.Status.seen;
         }
 

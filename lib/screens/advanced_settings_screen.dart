@@ -47,11 +47,11 @@ class AdvancedSettingsScreen extends StatefulWidget {
 
 class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
   int _availableFilters = 1;
-  Celeb _selectedCeleb = Celeb(celebName: SettingsData().celebId, imagesUrls: [
-    SettingsData().filterDisplayImageUrl
+  Celeb _selectedCeleb = Celeb(celebName: SettingsData.instance.celebId, imagesUrls: [
+    SettingsData.instance.filterDisplayImageUrl
   ]); //TODO support Celeb fetching from SettingsData
-  String _currentChosenFilterName = SettingsData().filterName;
-  int _chosenAuditionCount = SettingsData().auditionCount;
+  String _currentChosenFilterName = SettingsData.instance.filterName;
+  int _chosenAuditionCount = SettingsData.instance.auditionCount;
 
   // THis enables us to block the UI why a process that demands that is going on.
   bool isLoading = false;
@@ -143,7 +143,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                           } else {
                             _currentChosenFilterName = '';
                           }
-                          SettingsData().filterName = _currentChosenFilterName;
+                          SettingsData.instance.filterName = _currentChosenFilterName;
                         });
                       },
                     )),
@@ -181,8 +181,8 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
       }
     }
 
-    bool customImageExists = SettingsData().filterDisplayImageUrl != null &&
-        SettingsData().filterDisplayImageUrl.length > 0;
+    bool customImageExists = SettingsData.instance.filterDisplayImageUrl != null &&
+        SettingsData.instance.filterDisplayImageUrl.length > 0;
 
     return Stack(
       children: [
@@ -260,7 +260,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                       // celebrity from the [CelebritySelectionScreen] page given that it is not null.
                                       if (selectedCeleb != null) {
                                         _selectedCeleb = selectedCeleb as Celeb;
-                                        SettingsData().celebId =
+                                        SettingsData.instance.celebId =
                                             _selectedCeleb.celebName;
                                       } else {
                                         //No celebrity selected
@@ -383,7 +383,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                   setState(() {
                                                     _chosenAuditionCount =
                                                         value.round();
-                                                    SettingsData()
+                                                    SettingsData.instance
                                                             .auditionCount =
                                                         _chosenAuditionCount;
                                                   });
@@ -490,14 +490,14 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                       children: [
                                         Image.network(
                                             NetworkHelper.faceUrlToFullUrl(
-                                                SettingsData()
+                                                SettingsData.instance
                                                     .filterDisplayImageUrl),
                                             height: 75,
                                             width: 75,
                                             fit: BoxFit.scaleDown),
                                         TextButton(
                                           onPressed: () {
-                                            SettingsData()
+                                            SettingsData.instance
                                                 .filterDisplayImageUrl = '';
                                             setState(() {});
                                           },
@@ -600,7 +600,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                   setState(() {
                                                     _chosenAuditionCount =
                                                         value.round();
-                                                    SettingsData()
+                                                    SettingsData.instance
                                                             .auditionCount =
                                                         _chosenAuditionCount;
                                                   });
@@ -724,7 +724,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                             setState(() {
                                               _chosenAuditionCount =
                                                   value.round();
-                                              SettingsData().auditionCount =
+                                              SettingsData.instance.auditionCount =
                                                   _chosenAuditionCount;
                                             });
                                           },
@@ -844,7 +844,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                             setState(() {
                                               _chosenAuditionCount =
                                                   value.round();
-                                              SettingsData().auditionCount =
+                                              SettingsData.instance.auditionCount =
                                                   _chosenAuditionCount;
                                             });
                                           },

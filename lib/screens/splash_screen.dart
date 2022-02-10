@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
       await NotificationsController.instance.requestIOSPermissions();
       print('RESULT OF GETTING NOTIFICATIONS PERMISSIONS IS $result');
     }
-    await SettingsData().readSettingsFromShared();
+    await SettingsData.instance.readSettingsFromShared();
     DetailsData();
     MatchEngine();
     await CelebsInfo.instance.getCelebsFromDatabase();
@@ -60,10 +60,10 @@ class _SplashScreenState extends State<SplashScreen> {
         String? token = await FirebaseMessaging.instance.getToken();
         print('Got the token $token');
         if (token != null) {
-          await SettingsData().readSettingsFromShared();
-          if (SettingsData().fcmToken != token) {
+          await SettingsData.instance.readSettingsFromShared();
+          if (SettingsData.instance.fcmToken != token) {
             print('updating fcm token..');
-            SettingsData().fcmToken = token;
+            SettingsData.instance.fcmToken = token;
           }
           return;
         }
@@ -75,7 +75,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<String> _routeTo() async {
-    SettingsData settings = SettingsData();
+    SettingsData settings = SettingsData.instance;
     // we are making sure that if the user is already logged in at a time and i.e. sharedPreferences data exist
     // we move to the Main-navigation screen otherwise we move to the LoginScreen.
     //

@@ -77,7 +77,7 @@ class NetworkHelper {
           DateTime.now().difference(_lastMatchCall));
     }
     _lastMatchCall = DateTime.now();
-    Uri matchesUrl = Uri.https(SERVER_ADDR, '/matches/${SettingsData().uid}');
+    Uri matchesUrl = Uri.https(SERVER_ADDR, '/matches/${SettingsData.instance.uid}');
     print('88888888888888888trying to get matches url is $matchesUrl 88888888888888');
     http.Response response = await http.get(matchesUrl); //eg /12313?gender=Male
     if (response.statusCode != 200) {
@@ -95,7 +95,7 @@ class NetworkHelper {
   }
 
   postUserDecision({Decision? decision, Profile? otherUserProfile}) async {
-    SettingsData settings = SettingsData();
+    SettingsData settings = SettingsData.instance;
     if (true) {
       print('TODO fix the profile @matchEngine stuff');
       return;
@@ -119,19 +119,19 @@ class NetworkHelper {
       DetailsData.ABOUT_ME_KEY:DetailsData().aboutMe,
       DetailsData.JOB_KEY:DetailsData().job,
       DetailsData.COMPANY_KEY:DetailsData().company,
-      SettingsData.FIREBASE_UID_KEY:SettingsData().uid,
+      SettingsData.FIREBASE_UID_KEY:SettingsData.instance.uid,
 
     };
 
     String encoded = jsonEncode(detailsToSend);
     Uri postDetailsUri =
-    Uri.https(SERVER_ADDR, '/details/${SettingsData().facebookId}');
+    Uri.https(SERVER_ADDR, '/details/${SettingsData.instance.facebookId}');
     http.Response response = await http.post(postDetailsUri,
         body: encoded);
   }
 
   postUserSettings() async {
-    SettingsData settings = SettingsData();
+    SettingsData settings = SettingsData.instance;
     Map<String, String?> toSend = {
       SettingsData.FIREBASE_UID_KEY:settings.uid,
       SettingsData.FACEBOOK_ID_KEY: settings.facebookId,
@@ -202,7 +202,7 @@ class NetworkHelper {
 
     http.MultipartRequest request = http.MultipartRequest(
       'POST',
-      Uri.https(SERVER_ADDR, '/upload/${SettingsData().facebookId}'),
+      Uri.https(SERVER_ADDR, '/upload/${SettingsData.instance.facebookId}'),
     );
     var multipartFile = new http.MultipartFile.fromBytes(
       'file',
@@ -221,7 +221,7 @@ class NetworkHelper {
 
     http.MultipartRequest request = http.MultipartRequest(
       'POST',
-      Uri.https(SERVER_ADDR, '/profile_images/${SettingsData().facebookId}'),
+      Uri.https(SERVER_ADDR, '/profile_images/${SettingsData.instance.facebookId}'),
     );
     var multipartFile = new http.MultipartFile.fromBytes(
       'file',
@@ -240,7 +240,7 @@ class NetworkHelper {
 
 
   Future<List<String>?> getProfileImages()async{
-    Uri countUri = Uri.https(SERVER_ADDR, '/profile_images/get_list/${SettingsData().facebookId}/');
+    Uri countUri = Uri.https(SERVER_ADDR, '/profile_images/get_list/${SettingsData.instance.facebookId}/');
     var response = await http.get(countUri);
     if(response.statusCode==200){
       var parsed = json.jsonDecode(response.body);
@@ -251,11 +251,11 @@ class NetworkHelper {
   }
 
   String getProfileImageUrl(String shortUrl){
-    return 'https://'+SERVER_ADDR+'/profile_images/${SettingsData().facebookId}/$shortUrl';
+    return 'https://'+SERVER_ADDR+'/profile_images/${SettingsData.instance.facebookId}/$shortUrl';
   }
 
   Future<void> deleteProfileImage(int index)async{
-    Uri deletionUri = Uri.https(SERVER_ADDR, '/profile_images/delete/${SettingsData().facebookId}/${index.toString()}');
+    Uri deletionUri = Uri.https(SERVER_ADDR, '/profile_images/delete/${SettingsData.instance.facebookId}/${index.toString()}');
     var response = await http.get(deletionUri);
     return;
   }
@@ -272,7 +272,7 @@ class NetworkHelper {
 
 
 
-    Uri swapUri = Uri.https(SERVER_ADDR, '/profile_images/swap/${SettingsData().facebookId}');
+    Uri swapUri = Uri.https(SERVER_ADDR, '/profile_images/swap/${SettingsData.instance.facebookId}');
     http.Response response = await http.post(swapUri,body: encoded);
     return;
   }
@@ -284,13 +284,13 @@ class NetworkHelper {
       'match_id':profile.userId!.id,
       'match_images_server_location':profile.serverUserImagesLocation,
       'user_type':UserType.REAL_USER.toString(),
-      'user_id':SettingsData().facebookId,
+      'user_id':SettingsData.instance.facebookId,
       'user_images_server_location':'',
     };
 
     String encoded = jsonEncode(detailsToSend);
     Uri getChildrenPicsUri =
-    Uri.https(SERVER_ADDR, '/generate_children/${SettingsData().facebookId}');
+    Uri.https(SERVER_ADDR, '/generate_children/${SettingsData.instance.facebookId}');
     http.Response response = await http.post(getChildrenPicsUri,
         body: encoded);
     if(response.statusCode==200){
@@ -314,7 +314,7 @@ class NetworkHelper {
           DateTime.now().difference(_lastTaskStatusCall));
     }
     _lastTaskStatusCall = DateTime.now();
-    Uri getTaskStatus = Uri.https(SERVER_ADDR, '/task_status/${SettingsData().facebookId}/$taskId');
+    Uri getTaskStatus = Uri.https(SERVER_ADDR, '/task_status/${SettingsData.instance.facebookId}/$taskId');
     http.Response response = await http.get(getTaskStatus);
     if(response.statusCode==200){
       var decodedResponse = json.jsonDecode(response.body);
@@ -336,7 +336,7 @@ class NetworkHelper {
   }
 
   Future<List<String>?> getFacesLinksMatch(Profile profile)async{
-    Uri getFacesUri = Uri.https(SERVER_ADDR, '/faces_analyzed/${SettingsData().facebookId}');
+    Uri getFacesUri = Uri.https(SERVER_ADDR, '/faces_analyzed/${SettingsData.instance.facebookId}');
     Map<String,String?> detailsToSend={
       'user_id':profile.userId!.id,
       'user_type':profile.userId!.userType.toString(),
@@ -355,7 +355,7 @@ class NetworkHelper {
   }
 
   Future<List<String>?> getFacesLinkSelf() async{
-    UserId selfId = UserId(id:SettingsData().facebookId,userType: UserType.REAL_USER);
+    UserId selfId = UserId(id:SettingsData.instance.facebookId,userType: UserType.REAL_USER);
     Profile selfProfile = Profile(userId:selfId,serverUserImagesLocation:'');
     return await getFacesLinksMatch(selfProfile);
 

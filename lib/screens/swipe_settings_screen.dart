@@ -27,12 +27,12 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
   String _currentLocation = 'Somewhere, Earth';
 
   Gender _currentGenderSelected = Gender.values
-      .firstWhere((e) => e.toShortString() == SettingsData().preferredGender);
+      .firstWhere((e) => e.toShortString() == SettingsData.instance.preferredGender);
   RangeValues _selectedAges = RangeValues(
-      SettingsData().minAge.toDouble(), SettingsData().maxAge.toDouble());
+      SettingsData.instance.minAge.toDouble(), SettingsData.instance.maxAge.toDouble());
   bool _showInDiscovery =
       false; //TODO change SettingsData to support visibility
-  double _maxDistance = SettingsData().radius;
+  double _maxDistance = SettingsData.instance.radius;
 
   @override
   void initState() {
@@ -53,7 +53,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
       value: selectedGender,
       onTap: () {
         setState(() {
-          SettingsData().preferredGender = selectedGender.toShortString();
+          SettingsData.instance.preferredGender = selectedGender.toShortString();
           _currentGenderSelected = selectedGender;
         });
       },
@@ -217,7 +217,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                                       onChanged: (value) {
                                         setState(() {
                                           _maxDistance = value;
-                                          SettingsData().radius = _maxDistance;
+                                          SettingsData.instance.radius = _maxDistance;
                                         });
                                       },
                                     ),
@@ -274,7 +274,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                                     setState(() {
                                       String gonnaGender = newGender?.toShortString()??Gender.Everyone.toString();
                                       print('Going to change gender to $gonnaGender');
-                                      SettingsData().preferredGender = gonnaGender;
+                                      SettingsData.instance.preferredGender = gonnaGender;
                                       _currentGenderSelected = newGender??Gender.Everyone;
                                     });
                                   },
@@ -357,9 +357,9 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                                                 newRangevalues.end
                                                     .roundToDouble(),
                                               );
-                                              SettingsData().minAge =
+                                              SettingsData.instance.minAge =
                                                   _selectedAges.start.toInt();
-                                              SettingsData().maxAge =
+                                              SettingsData.instance.maxAge =
                                                   _selectedAges.end.toInt();
                                             },
                                           );

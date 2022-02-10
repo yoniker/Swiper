@@ -61,7 +61,7 @@ class ServiceWebsocket {
         await Future.delayed(Duration(seconds: 2));
         await connectWs();}
       print('Registering my WS!');
-      var encoded = jsonEncode({'user_id':SettingsData().uid});
+      var encoded = jsonEncode({'user_id':SettingsData.instance.uid});
       _channel!.add(encoded);
       _channel!.listen(_listenRawMessages,onError: (error){
         delayConnect(delayTime: Duration(milliseconds: 200));

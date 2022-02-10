@@ -26,7 +26,7 @@ class ChatNetworkHelper {
 
   static Future<List<InfoUser>> getAllUsers() async {
     //TODO currently no one uses this method, remove if really redundant
-    Uri usersLinkUri = Uri.https(SERVER_ADDR, 'users/${SettingsData().uid}');
+    Uri usersLinkUri = Uri.https(SERVER_ADDR, 'users/${SettingsData.instance.uid}');
     http.Response resp = await http.get(usersLinkUri);
     if (resp.statusCode == 200) {
       //TODO think how to handle network errors
@@ -43,7 +43,7 @@ class ChatNetworkHelper {
 
 
   static postUserSettings() async {
-    SettingsData settings = SettingsData();
+    SettingsData settings = SettingsData.instance;
     Map<String, String> toSend = {
       SettingsData.NAME_KEY: settings.name,
       SettingsData.FCM_TOKEN_KEY: settings.fcmToken,
@@ -57,7 +57,7 @@ class ChatNetworkHelper {
     http.Response response = await http.post(postSettingsUri,
         body: encoded); //TODO something if response wasnt 200
     if (response.statusCode == 200){
-      SettingsData().registered = true;
+      SettingsData.instance.registered = true;
     }
   }
 
@@ -69,7 +69,7 @@ class ChatNetworkHelper {
     };
     String encoded = jsonEncode(toSend);
     Uri postMessageUri =
-    Uri.https(SERVER_ADDR, '/send_message/${SettingsData().uid}');
+    Uri.https(SERVER_ADDR, '/send_message/${SettingsData.instance.uid}');
     http.Response response = await http.post(postMessageUri, body: encoded);
     if(response.statusCode==200){
       return TaskResult.success;
@@ -78,8 +78,8 @@ class ChatNetworkHelper {
   }
 
   static Future<Tuple2<List<InfoMessage>,List<dynamic>>> getMessagesByTimestamp()async{
-    print('going to sync with ${SettingsData().lastSync}');
-    Uri syncChatDataUri = Uri.https(SERVER_ADDR, '/sync/${SettingsData().uid}/${SettingsData().lastSync}');
+    print('going to sync with ${SettingsData.instance.lastSync}');
+    Uri syncChatDataUri = Uri.https(SERVER_ADDR, '/sync/${SettingsData.instance.uid}/${SettingsData.instance.lastSync}');
     http.Response response = await http.get(syncChatDataUri);
     var unparsedData = json.jsonDecode(response.body);
     List<dynamic> unparsedMessages = unparsedData['messages_data'];
@@ -90,7 +90,7 @@ class ChatNetworkHelper {
   }
 
   static Future<bool> markConversationAsRead(String conversationId) async{
-    Uri syncChatDataUri = Uri.https(SERVER_ADDR, '/mark_conversation_read/${SettingsData().uid}/$conversationId');
+    Uri syncChatDataUri = Uri.https(SERVER_ADDR, '/mark_conversation_read/${SettingsData.instance.uid}/$conversationId');
     http.Response response = await http.get(syncChatDataUri); //TODO something when there's an error
     if(response.statusCode==200){
       return true;
@@ -99,7 +99,7 @@ class ChatNetworkHelper {
   }
 
   static Future<void> deleteAccount()async{
-    Uri deleteAccountUri = Uri.https(SERVER_ADDR, '/delete_account/${SettingsData().uid}');
+    Uri deleteAccountUri = Uri.https(SERVER_ADDR, '/delete_account/${SettingsData.instance.uid}');
     http.Response response = await http.get(deleteAccountUri);
     //TODO check for a successful response and give user feedback if not successful
   }

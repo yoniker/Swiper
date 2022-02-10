@@ -42,12 +42,12 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
 
   void getFacesLinks() async {
     HashMap<String, dynamic> facesData = await NetworkHelper().getFacesCustomImageSearchLinks(
-        imageFileName: widget.imageFileName, userId: SettingsData().id);
+        imageFileName: widget.imageFileName, userId: SettingsData.instance.id);
     String? status = facesData['status'];
     while (status == 'incomplete') {
       facesData = await NetworkHelper().getFacesCustomImageSearchLinks(
           imageFileName: widget.imageFileName,
-          userId: SettingsData().id);
+          userId: SettingsData.instance.id);
       status = facesData[
           'status']; //TODO make sure we don't fuck the server with lots of requests
 
@@ -100,7 +100,7 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
                     onPressed: _indexSelected == _notSelected
                         ? null
                         : () {
-                            SettingsData().filterDisplayImageUrl =
+                            SettingsData.instance.filterDisplayImageUrl =
                                 _facesLinks![_indexSelected];
                             navigator!.popUntil( (route) {
                               return route.settings.name ==

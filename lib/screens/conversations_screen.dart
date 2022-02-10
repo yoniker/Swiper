@@ -38,8 +38,8 @@ class _ConversationsScreenState extends State<ConversationsScreen> with MountedS
         hasTopPadding:true,
         customTitle:Row(
           children: [
-            ProfileImageAvatar.network(url:SettingsData().facebookProfileImageUrl),
-            Text(SettingsData().name)
+            ProfileImageAvatar.network(url:SettingsData.instance.facebookProfileImageUrl),
+            Text(SettingsData.instance.name)
           ],
         ),
 
