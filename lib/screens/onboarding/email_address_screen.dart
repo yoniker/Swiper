@@ -42,7 +42,7 @@ class _EmailAddressScreenState extends State<EmailAddressScreen> {
         body: RawScrollbar(
           thumbColor: Colors.black54,
           thickness: 5,
-          thumbVisibility: true,
+          isAlwaysShown: true,
           child: SingleChildScrollView(
             child: SizedBox(
               height: heightWithoutSafeArea,
@@ -74,7 +74,7 @@ class _EmailAddressScreenState extends State<EmailAddressScreen> {
                         ),
                         InputField(
                           hintText: 'add account recovery email',
-                          initialvalue: EmailAddressScreen.userEmail,
+                          initialvalue: userEmail,
                           keyboardType: TextInputType.emailAddress,
                           onType: (value) {
                             userEmail = value;
@@ -97,8 +97,13 @@ class _EmailAddressScreenState extends State<EmailAddressScreen> {
                     RoundedButton(
                         name: 'CONTINUE',
                         onTap: () {
-                          isValid() == false
-                              ? showCupertinoDialog(
+                          if(isValid(userEmail)) {
+                            SettingsData.instance.email = userEmail;
+                            Get.offAllNamed(
+                              AboutMeOnboardingScreen.routeName);
+                          }
+                              else{
+                               showCupertinoDialog(
                                   context: context,
                                   builder: (_) => CupertinoAlertDialog(
                                         title: const Text('Invalid email'),
@@ -115,9 +120,8 @@ class _EmailAddressScreenState extends State<EmailAddressScreen> {
                                                     color: Colors.red),
                                               ))
                                         ],
-                                      ))
-                              : Get.offAllNamed(
-                                  AboutMeOnboardingScreen.routeName);
+                                      ));}
+
                         })
                   ],
                 ),

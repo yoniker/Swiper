@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';

@@ -48,7 +48,7 @@ class _PronounScreenState extends State<PronounScreen> {
         backgroundColor: kBackroundThemeColor,
         resizeToAvoidBottomInset: true,
         body: RawScrollbar(
-          thumbVisibility: true,
+          isAlwaysShown: true,
           thumbColor: Colors.black54,
           thickness: 5,
           child: SingleChildScrollView(

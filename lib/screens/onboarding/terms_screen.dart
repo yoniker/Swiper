@@ -27,7 +27,7 @@ class _TermsScreenState extends State<TermsScreen> {
           child: ConditionalParentWidget(
             condition: ScreenSize.getSize(context) == ScreenSizeCategory.small,
             conditionalBuilder: (Widget child) => Scrollbar(
-              thumbVisibility: true,
+              isAlwaysShown: true,
               scrollbarOrientation: ScrollbarOrientation.right,
               child: Padding(
                 padding: const EdgeInsets.all(30.0),

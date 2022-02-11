@@ -1,7 +1,6 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/screens/onboarding/upload_images_onboarding_screen.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
-import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
 import 'package:betabeta/widgets/onboarding/progress_bar.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +38,7 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
         body: RawScrollbar(
           thumbColor: Colors.black54,
           thickness: 5,
-          thumbVisibility: true,
+          isAlwaysShown: true,
           child: SingleChildScrollView(
             reverse: false,
             child: SizedBox(
