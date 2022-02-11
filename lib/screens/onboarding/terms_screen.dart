@@ -32,6 +32,7 @@ class _TermsScreenState extends State<TermsScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(30.0),
                 child: SingleChildScrollView(
+                  reverse: true,
                   child: child,
                 ),
               ),
