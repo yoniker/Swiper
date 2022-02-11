@@ -6,14 +6,14 @@ import 'package:betabeta/widgets/onboarding/text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 class LocationPermissionScreen extends StatefulWidget {
   static String routeName = '/location_permission_screen';
 
   const LocationPermissionScreen({Key? key}) : super(key: key);
 
   @override
-  _LocationPermissionScreenState createState() => _LocationPermissionScreenState();
+  _LocationPermissionScreenState createState() =>
+      _LocationPermissionScreenState();
 }
 
 class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
@@ -21,6 +21,7 @@ class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: OnboardingColumn(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -67,6 +68,3 @@ class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
     );
   }
 }
-
-
-

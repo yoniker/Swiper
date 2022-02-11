@@ -21,12 +21,13 @@ class _FinishOnboardingScreenState extends State<FinishOnboardingScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _controller = VideoPlayerController.asset('assets/onboarding/videos/start1.mp4')
-      ..initialize().then((_) {
-        _controller.play();
-        _controller.setLooping(true);
-        setState(() {});
-      });
+    _controller =
+        VideoPlayerController.asset('assets/onboarding/videos/endingvideo.mp4')
+          ..initialize().then((_) {
+            _controller.play();
+            _controller.setLooping(true);
+            setState(() {});
+          });
   }
 
   @override
@@ -45,7 +46,7 @@ class _FinishOnboardingScreenState extends State<FinishOnboardingScreen> {
             ),
           ),
           Container(
-            color: Colors.black38,
+            color: Colors.black26,
             child: Padding(
               padding: const EdgeInsets.all(30.0),
               child: Column(

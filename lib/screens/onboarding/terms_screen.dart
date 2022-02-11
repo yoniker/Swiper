@@ -20,14 +20,20 @@ class _TermsScreenState extends State<TermsScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: kBackroundThemeColor,
         body: Padding(
-          padding: EdgeInsets.all(30),
+          padding: EdgeInsets.all(
+              ScreenSize.getSize(context) != ScreenSizeCategory.small ? 30 : 0),
           child: ConditionalParentWidget(
             condition: ScreenSize.getSize(context) == ScreenSizeCategory.small,
             conditionalBuilder: (Widget child) => Scrollbar(
-              isAlwaysShown: true,
-              child: SingleChildScrollView(
-                child: child,
+              thumbVisibility: true,
+              scrollbarOrientation: ScrollbarOrientation.right,
+              child: Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: SingleChildScrollView(
+                  child: child,
+                ),
               ),
             ),
             child: Column(

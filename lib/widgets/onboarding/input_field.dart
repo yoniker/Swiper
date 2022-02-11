@@ -37,6 +37,7 @@ class InputField extends StatelessWidget {
       elevation: pressed == true ? 1 : 5,
       color: Colors.transparent,
       child: TextFormField(
+        cursorColor: Colors.black,
         initialValue: initialvalue,
         onTap: onTap,
         maxLines: maxLines,

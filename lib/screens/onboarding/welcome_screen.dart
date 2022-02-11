@@ -25,24 +25,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   late VideoPlayerController _controller;
   bool currentlyTryingToLogin = false;
 
-
   _continueIfLoggedIn() async {
     //Continue to the next screen if the user is already logged in.
     SettingsData settings = SettingsData.instance;
     await settings.readSettingsFromShared();
-    if (settings.readFromShared! && settings.uid.length>0) {
+    if (settings.readFromShared! && settings.uid.length > 0) {
       print('continue because uid is ${settings.uid}');
       Get.offAllNamed(PhoneScreen.routeName);
     }
   }
 
-  Future<void> _saveUid()async{
+  Future<void> _saveUid() async {
     var idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
     String uid = FirebaseAuth.instance.currentUser!.uid;
-    String serverUid = await ChatNetworkHelper.registerUid(firebaseIdToken: idToken!);
+    String serverUid =
+        await ChatNetworkHelper.registerUid(firebaseIdToken: idToken!);
     //TODO support existing accounts : check with the server if the uid already existed,and if so load the user's details from the server
-    if(uid!=serverUid){
-      print('The uid in server is different from client, something weird is going on!');
+    if (uid != serverUid) {
+      print(
+          'The uid in server is different from client, something weird is going on!');
       //TODO something about it?
     }
     SettingsData.instance.uid = uid;
@@ -54,9 +55,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       currentlyTryingToLogin = true;
     });
     await LoginsService.instance.tryLoginFacebook();
-    if(LoginsService.instance.facebookLoginState==LoginState.Success){
+    if (LoginsService.instance.facebookLoginState == LoginState.Success) {
       await LoginsService.instance.getFacebookUserData();
-      await LoginsService.signInUser(credential: LoginsService.instance.facebookCredential!);
+      await LoginsService.signInUser(
+          credential: LoginsService.instance.facebookCredential!);
       await _saveUid();
       await _continueIfLoggedIn();
     }
@@ -67,14 +69,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   void initState() {
-    _controller = VideoPlayerController.asset('assets/onboarding/videos/start4.mp4')
-      ..initialize().then((_) {
-        _controller.play();
-        _controller.setLooping(true);
-        setState(() {});
-      });
+    _controller =
+        VideoPlayerController.asset('assets/onboarding/videos/startedit.mp4')
+          ..initialize().then((_) {
+            _controller.play();
+            _controller.setLooping(true);
+            setState(() {});
+          });
     super.initState();
-
   }
 
   @override
@@ -84,6 +86,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.black87,
         resizeToAvoidBottomInset: false,
         body: Stack(children: [
           SizedBox.expand(
@@ -104,7 +107,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ConditionalParentWidget(
-                  condition: ScreenSize.getSize(context) == ScreenSizeCategory.small,
+                  condition:
+                      ScreenSize.getSize(context) == ScreenSizeCategory.small,
                   conditionalBuilder: (Widget child) => FittedBox(
                     child: child,
                   ),
@@ -122,7 +126,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 ConditionalParentWidget(
                   condition:
-                  ScreenSize.getSize(context) == ScreenSizeCategory.small,
+                      ScreenSize.getSize(context) == ScreenSizeCategory.small,
                   conditionalBuilder: (Widget child) => FittedBox(
                     child: child,
                   ),
@@ -136,16 +140,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       children: [
                         RoundedButton(
                           name: 'Continue with Facebook',
+                          showBorder: false,
                           icon: Icons.facebook_rounded,
                           color: const Color(0xFF0060DB),
-                          onTap: ()  async{
+                          onTap: () async {
                             await LoginsService.instance.tryLoginFacebook();
-                            if(LoginsService.instance.facebookLoginState==LoginState.Success){
-                              await LoginsService.instance.getFacebookUserData();
+                            if (LoginsService.instance.facebookLoginState ==
+                                LoginState.Success) {
+                              await LoginsService.instance
+                                  .getFacebookUserData();
                               Get.offAllNamed(PhoneScreen.routeName);
                             }
                             //TODO if not successful,show something to the user
-
                           },
                         ),
                         const SizedBox(
@@ -153,6 +159,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         ),
                         RoundedButton(
                             name: 'Continue with Apple',
+                            showBorder: false,
                             color: Colors.white,
                             onTap: () {
                               //TODO Apple login logic
@@ -196,7 +203,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ),
     );
   }
-
 
   @override
   void dispose() {

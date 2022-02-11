@@ -26,15 +26,13 @@ class _OrientationScreenState extends State<OrientationScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      body: OnboardingColumn(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ConditionalParentWidget(
-            condition: ScreenSize.getSize(context) == ScreenSizeCategory.small,
-            conditionalBuilder: (Widget child) => FittedBox(
-              child: child,
-            ),
-            child: Column(
+      backgroundColor: kBackroundThemeColor,
+      body: Padding(
+        padding: const EdgeInsets.all(30.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ProgressBar(
@@ -81,33 +79,34 @@ class _OrientationScreenState extends State<OrientationScreen> {
                 ),
               ],
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FittedBox(
-                child: Row(
-                  children: [
-                    currentChoice != null
-                        ? const Icon(Icons.remove_red_eye_rounded,
-                            color: Colors.black54)
-                        : const SizedBox(),
-                    const SizedBox(width: 10),
-                    Text(whatWeShowText, style: kSmallInfoStyle),
-                  ],
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FittedBox(
+                  child: Row(
+                    children: [
+                      currentChoice != null
+                          ? const Icon(Icons.remove_red_eye_rounded,
+                              color: Colors.black54)
+                          : const SizedBox(),
+                      const SizedBox(width: 10),
+                      Text(whatWeShowText, style: kSmallInfoStyle),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              RoundedButton(
-                  name: 'CONTINUE',
-                  onTap: currentChoice != null
-                      ? () {
-                          Get.offAllNamed(RelationshipTypeOnboardingScreen.routeName);
-                        }
-                      : null),
-            ],
-          )
-        ],
+                const SizedBox(height: 10),
+                RoundedButton(
+                    name: 'CONTINUE',
+                    onTap: currentChoice != null
+                        ? () {
+                            Get.offAllNamed(
+                                RelationshipTypeOnboardingScreen.routeName);
+                          }
+                        : null),
+              ],
+            )
+          ],
+        ),
       ),
     ));
   }

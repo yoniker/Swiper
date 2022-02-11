@@ -3,18 +3,18 @@ import 'package:flutter/services.dart';
 
 const TextStyle kHintStyle = TextStyle(fontSize: 20, color: Colors.grey);
 const TextStyle kTitleStyle =
-TextStyle(fontSize: 30, fontWeight: FontWeight.w500, color: Colors.black87);
+    TextStyle(fontSize: 30, fontWeight: FontWeight.w500, color: Colors.black87);
 const TextStyle kTitleStyleWhite =
-TextStyle(fontSize: 30, fontWeight: FontWeight.w500, color: Colors.white);
+    TextStyle(fontSize: 30, fontWeight: FontWeight.w500, color: Colors.white);
 const TextStyle kTitleStyleBlack =
-TextStyle(fontSize: 35, fontWeight: FontWeight.bold);
+    TextStyle(fontSize: 35, fontWeight: FontWeight.bold);
 const TextStyle kInputTextStyle = TextStyle(fontSize: 20, height: 0.8);
 const TextStyle kSmallTitleBlack =
-TextStyle(fontSize: 20, fontWeight: FontWeight.w500);
+    TextStyle(fontSize: 20, fontWeight: FontWeight.w500);
 const TextStyle kSmallInfoStyle =
-TextStyle(color: Colors.black54, fontWeight: FontWeight.w500, fontSize: 15);
+    TextStyle(color: Colors.black54, fontWeight: FontWeight.w500, fontSize: 15);
 const TextStyle kSmallInfoStyleWhite =
-TextStyle(color: Colors.white70, fontWeight: FontWeight.w500, fontSize: 15);
+    TextStyle(color: Colors.white70, fontWeight: FontWeight.w500, fontSize: 15);
 const TextStyle kSmallInfoStyleUnderline = TextStyle(
     color: Colors.black54,
     fontWeight: FontWeight.w500,
@@ -25,13 +25,14 @@ const TextStyle kSmallInfoStyleUnderlineWhite = TextStyle(
     fontWeight: FontWeight.w500,
     decoration: TextDecoration.underline);
 const TextStyle kButtonText =
-TextStyle(fontSize: 20, color: Colors.black87, fontWeight: FontWeight.w500);
+    TextStyle(fontSize: 20, color: Colors.black87, fontWeight: FontWeight.w500);
 const TextStyle kButtonTextWhite = TextStyle(fontSize: 20, color: Colors.white);
 const TextStyle kSmallTitleStyle = TextStyle(color: Colors.white, fontSize: 20);
 const TextStyle kBlueButtonStyle =
-TextStyle(color: Colors.blueAccent, fontSize: 20);
+    TextStyle(color: Colors.blueAccent, fontSize: 20);
 const Color kIconColor = Colors.blueAccent;
 const TextStyle kVstyle = TextStyle(fontSize: 20, color: Colors.blueAccent);
+const int kTotalProgressBarPages = 8;
 
 const kColorizeColors = [
   Colors.purple,
@@ -39,6 +40,8 @@ const kColorizeColors = [
   Colors.yellow,
   Colors.red,
 ];
+
+Color kBackroundThemeColor = Color(0xFFE8EBF1);
 
 Color lamer = Colors.black.withOpacity(0.95);
 const BoxDecoration kThemeColor = BoxDecoration(
@@ -79,7 +82,7 @@ class PhoneFormatter extends TextInputFormatter {
             sample[newValue.text.length - 1] == seperator) {
           return TextEditingValue(
             text:
-            '${oldValue.text}$seperator${newValue.text.substring(newValue.text.length - 1)}',
+                '${oldValue.text}$seperator${newValue.text.substring(newValue.text.length - 1)}',
             selection: TextSelection.collapsed(
               offset: newValue.selection.end + 1,
             ),

@@ -18,68 +18,79 @@ class GetNameScreen extends StatefulWidget {
 }
 
 class _GetNameScreenState extends State<GetNameScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: kBackroundThemeColor,
         resizeToAvoidBottomInset:
             ScreenSize.getSize(context) == ScreenSizeCategory.small
                 ? false
                 : true,
-        body: OnboardingColumn(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Padding(
+            padding: const EdgeInsets.all(30),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ProgressBar(
-                  page: 1,
-                ),
-                const FittedBox(
-                  child: Text(
-                    "What's your first name?",
-                    style: kTitleStyle,
-                  ),
-                ),
-                const SizedBox(height: 30),
-                InputField(
-                  initialvalue: SettingsData.instance.name,
-                  onTapIcon: () {
-                   Get.offAllNamed(BirthdayOnboardingScreen.routeName);
-                  },
-                  icon: SettingsData.instance.name.length==0 ? null : Icons.send,
-                  hintText: ' Enter your first name here.',
-                  onType: (value) {
-                    setState(() {
-                      SettingsData.instance.name = value;
-                    });
-                  },
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: const [
-                    Icon(Icons.remove_red_eye_rounded, color: Colors.black54),
-                    SizedBox(width: 10),
-                    Text(
-                      'This will be shown on your profile.',
-                      style: kSmallInfoStyle,
-                    )
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ProgressBar(
+                      page: 1,
+                    ),
+                    const FittedBox(
+                      child: Text(
+                        "What's your first name?",
+                        style: kTitleStyle,
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    InputField(
+                      initialvalue: SettingsData.instance.name,
+                      onTapIcon: () {
+                        Get.offAllNamed(BirthdayOnboardingScreen.routeName);
+                      },
+                      icon: SettingsData.instance.name.length == 0
+                          ? null
+                          : Icons.send,
+                      hintText: ' Enter your first name here.',
+                      onType: (value) {
+                        setState(() {
+                          SettingsData.instance.name = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: const [
+                        Icon(Icons.remove_red_eye_rounded,
+                            color: Colors.black54),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            'This will be shown on your profile.',
+                            style: kSmallInfoStyle,
+                          ),
+                        )
+                      ],
+                    ),
                   ],
                 ),
+                RoundedButton(
+                  elvation: 1,
+                  name: 'NEXT',
+                  onTap: SettingsData.instance.name.isEmpty
+                      ? null
+                      : () {
+                          Get.offAllNamed(BirthdayOnboardingScreen.routeName);
+                        },
+                )
               ],
             ),
-            RoundedButton(
-              elvation: 1,
-              name: 'NEXT',
-              onTap: SettingsData.instance.name.isEmpty
-                  ? null
-                  : () {
-                Get.offAllNamed(BirthdayOnboardingScreen.routeName);
-                    },
-            )
-          ],
+          ),
         ),
       ),
     );

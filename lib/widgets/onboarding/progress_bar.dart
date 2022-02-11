@@ -1,32 +1,23 @@
+import 'dart:ffi';
+
+import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
-class ProgressBar extends StatefulWidget {
+class ProgressBar extends StatelessWidget {
   ProgressBar({this.page = 0});
-  int page;
+  final double page;
 
-  @override
-  State<ProgressBar> createState() => _ProgressBarState();
-}
-
-class _ProgressBarState extends State<ProgressBar> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 20),
-      child: Container(
-        height: 2,
-        width: MediaQuery.of(context).size.width,
-        color: Colors.grey[300],
-        child: Row(
-          children: [
-            for (int x = 0; x < 8; x++)
-              Expanded(
-                child: Container(
-                  color: widget.page > x ? Colors.blueAccent : null,
-                ),
-              ),
-          ],
-        ),
+      padding: const EdgeInsets.only(bottom: 5),
+      child: LinearPercentIndicator(
+        lineHeight: 2,
+        percent: page / kTotalProgressBarPages,
+        backgroundColor: Colors.grey[400],
+        progressColor: Colors.blueAccent,
+        fillColor: Colors.black26,
       ),
     );
   }
