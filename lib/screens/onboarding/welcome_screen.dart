@@ -25,7 +25,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   _continueIfLoggedIn() async {
     await SettingsData.instance.readSettingsFromShared();
-    if (SettingsData.instance.readFromShared! && SettingsData.instance.uid.length>0) {
+    if (SettingsData.instance.readFromShared! &&
+        SettingsData.instance.uid.length > 0) {
       Get.offAllNamed(PhoneScreen.routeName);
     }
   }
@@ -119,70 +120,63 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ],
                   ),
                 ),
-                ConditionalParentWidget(
-                  condition:
-                      ScreenSize.getSize(context) == ScreenSizeCategory.small,
-                  conditionalBuilder: (Widget child) => FittedBox(
-                    child: child,
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        bottom: screenHeight * 0.03,
-                        left: screenWidth * 0.06,
-                        right: screenWidth * 0.06),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.values[1],
-                      children: [
-                        RoundedButton(
-                          name: 'Continue with Facebook',
+                Padding(
+                  padding: EdgeInsets.only(
+                      bottom: screenHeight * 0.03,
+                      left: screenWidth * 0.06,
+                      right: screenWidth * 0.06),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.values[1],
+                    children: [
+                      RoundedButton(
+                        name: 'Continue with Facebook',
+                        showBorder: false,
+                        icon: Icons.facebook_rounded,
+                        color: const Color(0xFF0060DB),
+                        onTap: () async {
+                          await _tryLoginFacebook();
+                          //TODO show indication to user if login wasn't successful
+                        },
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      RoundedButton(
+                          name: 'Continue with Apple',
                           showBorder: false,
-                          icon: Icons.facebook_rounded,
-                          color: const Color(0xFF0060DB),
-                          onTap: ()  async{
-                             await _tryLoginFacebook();
-                             //TODO show indication to user if login wasn't successful
+                          color: Colors.white,
+                          onTap: () {
+                            //TODO Apple login logic
+                            Get.offAllNamed(PhoneScreen.routeName);
                           },
+                          icon: Icons.apple_rounded),
+                      Center(
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 20),
+                            const Text(
+                              "Don't worry! We never post to Facebook.",
+                              style: kSmallInfoStyleWhite,
+                            ),
+                            const SizedBox(height: 5),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Text(
+                                  'Terms of Service',
+                                  style: kSmallInfoStyleUnderlineWhite,
+                                ),
+                                SizedBox(width: 20),
+                                Text(
+                                  'Privacy Policy',
+                                  style: kSmallInfoStyleUnderlineWhite,
+                                ),
+                              ],
+                            )
+                          ],
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        RoundedButton(
-                            name: 'Continue with Apple',
-                            showBorder: false,
-                            color: Colors.white,
-                            onTap: () {
-                              //TODO Apple login logic
-                              Get.offAllNamed(PhoneScreen.routeName);
-                            },
-                            icon: Icons.apple_rounded),
-                        Center(
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 20),
-                              const Text(
-                                "Don't worry! We never post to Facebook.",
-                                style: kSmallInfoStyleWhite,
-                              ),
-                              const SizedBox(height: 5),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Text(
-                                    'Terms of Service',
-                                    style: kSmallInfoStyleUnderlineWhite,
-                                  ),
-                                  SizedBox(width: 20),
-                                  Text(
-                                    'Privacy Policy',
-                                    style: kSmallInfoStyleUnderlineWhite,
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+                      )
+                    ],
                   ),
                 ),
               ],
