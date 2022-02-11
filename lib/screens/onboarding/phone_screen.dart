@@ -20,13 +20,14 @@ class _PhoneScreenState extends State<PhoneScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: OnboardingColumn(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children:  [
+              children: [
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 10),
                   child: Text(
@@ -43,7 +44,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
                 ),
                 PhoneNumberCollector(
                   //TODO Yoni add phone login logic
-                  onTap: (){
+                  onTap: () {
                     Get.offAllNamed(LocationPermissionScreen.routeName);
                   },
                 )

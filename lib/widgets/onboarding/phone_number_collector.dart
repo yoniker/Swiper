@@ -5,7 +5,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/services.dart';
 
 class PhoneNumberCollector extends StatelessWidget {
-  const PhoneNumberCollector({Key? key,this.onTap}) : super(key: key);
+  const PhoneNumberCollector({Key? key, this.onTap}) : super(key: key);
   final VoidCallback? onTap;
 
   @override
@@ -30,6 +30,8 @@ class PhoneNumberCollector extends StatelessWidget {
           const SizedBox(width: 10),
           Expanded(
             child: TextField(
+              cursorColor: Colors.black,
+              cursorWidth: 2,
               inputFormatters: [
                 PhoneFormatter(seperator: ' ', sample: 'xxx xxx xxxx'),
                 LengthLimitingTextInputFormatter(16)
@@ -37,7 +39,7 @@ class PhoneNumberCollector extends StatelessWidget {
               keyboardType: TextInputType.phone,
               style: const TextStyle(fontSize: 20),
               decoration: const InputDecoration(
-                hintText: 'Phone number',
+                hintText: ' Phone number',
                 hintStyle: kHintStyle,
                 border: InputBorder.none,
               ),

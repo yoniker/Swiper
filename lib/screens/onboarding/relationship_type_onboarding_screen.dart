@@ -17,10 +17,12 @@ class RelationshipTypeOnboardingScreen extends StatefulWidget {
   const RelationshipTypeOnboardingScreen({Key? key}) : super(key: key);
 
   @override
-  _RelationshipTypeOnboardingScreenState createState() => _RelationshipTypeOnboardingScreenState();
+  _RelationshipTypeOnboardingScreenState createState() =>
+      _RelationshipTypeOnboardingScreenState();
 }
 
-class _RelationshipTypeOnboardingScreenState extends State<RelationshipTypeOnboardingScreen> {
+class _RelationshipTypeOnboardingScreenState
+    extends State<RelationshipTypeOnboardingScreen> {
   bool? _showOnProfile = true;
   RelationshipPreference? currentChoice;
 
@@ -32,74 +34,74 @@ class _RelationshipTypeOnboardingScreenState extends State<RelationshipTypeOnboa
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ConditionalParentWidget(
-              condition:
-                  ScreenSize.getSize(context) == ScreenSizeCategory.small,
-              conditionalBuilder: (Widget child) => FittedBox(
-                child: child,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ProgressBar(
-                    page: 5,
-                  ),
-                  const Text(
-                    'What are you looking for?',
-                    style: kTitleStyle,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Text(
-                    'This will help Voilà find you suitable matches',
-                    style: kSmallInfoStyle,
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  ChoiceButton(
-                    name: 'Relationship',
-                    onTap: () {
-                      setState(() {
-                        currentChoice = RelationshipPreference.relationship;
-                      });
-                    },
-                    pressed:
-                        currentChoice == RelationshipPreference.relationship ? true : false,
-                  ),
-                  const SizedBox(height: 20),
-                  ChoiceButton(
-                    name: 'Something casual',
-                    onTap: () {
-                      setState(() {
-                        currentChoice = RelationshipPreference.casual;
-                      });
-                    },
-                    pressed: currentChoice == RelationshipPreference.casual ? true : false,
-                  ),
-                  const SizedBox(height: 20),
-                  ChoiceButton(
-                    name: 'I\'m not sure',
-                    onTap: () {
-                      setState(() {
-                        currentChoice = RelationshipPreference.notSure;
-                      });
-                    },
-                    pressed: currentChoice == RelationshipPreference.notSure ? true : false,
-                  ),
-                  const SizedBox(height: 20),
-                  ChoiceButton(
-                    name: 'Prefer not to say',
-                    onTap: () {
-                      setState(() {
-                        currentChoice = RelationshipPreference.marriage;
-                      });
-                    },
-                    pressed: currentChoice == RelationshipPreference.marriage ? true : false,
-                  ),
-                ],
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ProgressBar(
+                  page: 5,
+                ),
+                const Text(
+                  'What are you looking for?',
+                  style: kTitleStyle,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text(
+                  'This will help Voilà find you suitable matches',
+                  style: kSmallInfoStyle,
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                ChoiceButton(
+                  name: 'Relationship',
+                  onTap: () {
+                    setState(() {
+                      currentChoice = RelationshipPreference.relationship;
+                    });
+                  },
+                  pressed: currentChoice == RelationshipPreference.relationship
+                      ? true
+                      : false,
+                ),
+                const SizedBox(height: 20),
+                ChoiceButton(
+                  name: 'Something casual',
+                  onTap: () {
+                    setState(() {
+                      currentChoice = RelationshipPreference.casual;
+                    });
+                  },
+                  pressed: currentChoice == RelationshipPreference.casual
+                      ? true
+                      : false,
+                ),
+                const SizedBox(height: 20),
+                ChoiceButton(
+                  name: 'I\'m not sure',
+                  onTap: () {
+                    setState(() {
+                      currentChoice = RelationshipPreference.notSure;
+                    });
+                  },
+                  pressed: currentChoice == RelationshipPreference.notSure
+                      ? true
+                      : false,
+                ),
+                const SizedBox(height: 20),
+                ChoiceButton(
+                  name: 'Prefer not to say',
+                  onTap: () {
+                    setState(() {
+                      currentChoice = RelationshipPreference.marriage;
+                    });
+                  },
+                  pressed: currentChoice == RelationshipPreference.marriage
+                      ? true
+                      : false,
+                ),
+              ],
             ),
             Column(
               children: [

@@ -8,12 +8,14 @@ class RoundedButton extends StatelessWidget {
     this.color = Colors.white,
     required this.onTap,
     this.icon,
+    this.showBorder,
     this.decoration,
     this.addControlerAnimation = 1,
     this.iconColor,
   });
 
   double elvation;
+  bool? showBorder = true;
   BoxDecoration? decoration;
   final Color? iconColor;
   final String? name;
@@ -27,9 +29,7 @@ class RoundedButton extends StatelessWidget {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
     return Container(
-      decoration: name == 'Continue with Facebook' ||
-              name == 'Continue with Apple' ||
-              onTap == null
+      decoration: onTap == null || showBorder == false
           ? null
           : (color == Colors.white ? kBlackBorder : kWhiteBorder),
       child: MaterialButton(

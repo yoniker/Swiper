@@ -14,7 +14,8 @@ class BirthdayOnboardingScreen extends StatefulWidget {
   const BirthdayOnboardingScreen({Key? key}) : super(key: key);
 
   @override
-  _BirthdayOnboardingScreenState createState() => _BirthdayOnboardingScreenState();
+  _BirthdayOnboardingScreenState createState() =>
+      _BirthdayOnboardingScreenState();
 }
 
 class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
@@ -53,7 +54,7 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
         body: OnboardingColumn(
           image: ScreenSize.getSize(context) == ScreenSizeCategory.small
               ? null
-              : Image.asset('images/birthday3.gif'),
+              : Image.asset('assets/onboarding/images/birthday3.gif'),
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
@@ -75,7 +76,7 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
                 SizedBox(
                   height:
                       ScreenSize.getSize(context) == ScreenSizeCategory.small
-                          ? screenHeight * 0.56
+                          ? screenHeight * 0.45
                           : screenHeight * 0.18,
                   child: CupertinoTheme(
                     data: const CupertinoThemeData(
@@ -128,12 +129,20 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
                                           onPressed: () {
                                             Navigator.pop(context);
                                           },
-                                          child: const Text('Cancel')),
+                                          child: const Text(
+                                            'Cancel',
+                                            style: TextStyle(color: Colors.red),
+                                          )),
                                       TextButton(
                                           onPressed: () {
-                                            Get.offAllNamed(PronounScreen.routeName);
+                                            Get.offAllNamed(
+                                                PronounScreen.routeName);
                                           },
-                                          child: const Text('Confirm'))
+                                          child: const Text(
+                                            'Confirm',
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          ))
                                     ])
                                   : [
                                       TextButton(
