@@ -2,7 +2,6 @@ import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/screens/onboarding/email_address_screen.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/choice_button.dart';
-import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
 import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
 import 'package:betabeta/widgets/onboarding/progress_bar.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
@@ -30,6 +29,7 @@ class _RelationshipTypeOnboardingScreenState
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: OnboardingColumn(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
