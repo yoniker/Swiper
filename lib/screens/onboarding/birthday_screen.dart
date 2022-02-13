@@ -52,9 +52,6 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: OnboardingColumn(
-          image: ScreenSize.getSize(context) == ScreenSizeCategory.small
-              ? null
-              : Image.asset('assets/onboarding/images/birthday3.gif'),
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(

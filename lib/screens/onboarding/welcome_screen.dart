@@ -142,7 +142,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         height: 20,
                       ),
                       RoundedButton(
-                          name: 'Continue with Apple',
+                          name: 'Continue with Apple      ',
                           showBorder: false,
                           color: Colors.white,
                           onTap: () {
