@@ -1,4 +1,5 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/onboarding/pronouns_screen.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
@@ -19,12 +20,10 @@ class BirthdayOnboardingScreen extends StatefulWidget {
 }
 
 class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
-  DateTime selectedDate = DateTime(1990, 1,
-      1); //TODO take the user's birthday if given (for example from Facebook)
-  final Key _cupertinoWidgetKey = UniqueKey();
+  DateTime selectedDate = SettingsData.instance.userBirthday.length>0?DateTime.parse(SettingsData.instance.userBirthday):DateTime(2000, 1, 1); //TODO take the user's birthday if given (for example from Facebook)
 
-  final firstDate = DateTime(1940, 1);
-  final lastDate = DateTime(2022, 2);
+  final earliestDate = DateTime(1900, 1);
+  final currentDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -88,11 +87,10 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
                       ),
                     ),
                     child: CupertinoDatePicker(
-                        key: _cupertinoWidgetKey,
                         mode: CupertinoDatePickerMode.date,
                         initialDateTime: selectedDate,
-                        minimumDate: firstDate,
-                        maximumDate: lastDate,
+                        minimumDate: earliestDate,
+                        maximumDate: currentDate,
                         onDateTimeChanged: (newDate) {
                           setState(() {
                             selectedDate = newDate;
@@ -135,6 +133,7 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
                                           )),
                                       TextButton(
                                           onPressed: () {
+                                            SettingsData.instance.userBirthday = selectedDate.toString();
                                             Get.offAllNamed(
                                                 PronounScreen.routeName);
                                           },

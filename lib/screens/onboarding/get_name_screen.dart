@@ -3,7 +3,6 @@ import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/onboarding/birthday_screen.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
-import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
 import 'package:betabeta/widgets/onboarding/progress_bar.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
@@ -11,13 +10,14 @@ import 'package:get/get.dart';
 
 class GetNameScreen extends StatefulWidget {
   static String routeName = '/get_name';
-  static String? userName;
 
   @override
   _GetNameScreenState createState() => _GetNameScreenState();
 }
 
 class _GetNameScreenState extends State<GetNameScreen> {
+  String userName = SettingsData.instance.name;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -49,8 +49,9 @@ class _GetNameScreenState extends State<GetNameScreen> {
                     ),
                     const SizedBox(height: 30),
                     InputField(
-                      initialvalue: SettingsData.instance.name,
+                      initialvalue: userName,
                       onTapIcon: () {
+                        SettingsData.instance.name = userName;
                         Get.offAllNamed(BirthdayOnboardingScreen.routeName);
                       },
                       icon: SettingsData.instance.name.length == 0
@@ -59,7 +60,7 @@ class _GetNameScreenState extends State<GetNameScreen> {
                       hintText: ' Enter your first name here.',
                       onType: (value) {
                         setState(() {
-                          SettingsData.instance.name = value;
+                          userName = value;
                         });
                       },
                     ),
@@ -82,9 +83,10 @@ class _GetNameScreenState extends State<GetNameScreen> {
                 RoundedButton(
                   elvation: 1,
                   name: 'NEXT',
-                  onTap: SettingsData.instance.name.isEmpty
+                  onTap: userName.isEmpty
                       ? null
                       : () {
+                    SettingsData.instance.name = userName;
                           Get.offAllNamed(BirthdayOnboardingScreen.routeName);
                         },
                 )

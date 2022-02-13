@@ -1,10 +1,10 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/onboarding/orientation_screen.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/choice_button.dart';
 import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
-import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
 import 'package:betabeta/widgets/onboarding/progress_bar.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +12,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 enum Gender { male, female, other }
+
+extension ParseToString on Gender {
+  String toShortString() {
+    return this.toString().split('.').last;
+  }
+}
 
 class PronounScreen extends StatefulWidget {
   static String routeName = '/pronounScreen';
@@ -25,7 +31,7 @@ class PronounScreen extends StatefulWidget {
 class _PronounScreenState extends State<PronounScreen> {
   Gender? selectedGender;
   bool? _checked = false;
-  bool? _showGender = false;
+  bool _showGender = true;
   String? elseGender;
 
   void UnFocus() {
@@ -34,6 +40,20 @@ class _PronounScreenState extends State<PronounScreen> {
       currentFocus.unfocus();
     }
   }
+
+  void saveSelectedGender(){
+    if(selectedGender==null|| (selectedGender == Gender.other &&
+  elseGender == null)){return;}
+    SettingsData.instance.showUserGender = _showGender;
+    if(selectedGender!=Gender.other){
+      SettingsData.instance.userGender = selectedGender!.toShortString();
+  }
+    else{
+      SettingsData.instance.userGender = elseGender!;
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +216,7 @@ class _PronounScreenState extends State<PronounScreen> {
                               value: _showGender,
                               onChanged: (value) {
                                 setState(() {
-                                  _showGender = value;
+                                  _showGender = value!;
                                 });
                               }),
                         ),
@@ -207,6 +227,7 @@ class _PronounScreenState extends State<PronounScreen> {
                                         elseGender == null
                                 ? null
                                 : () {
+                                    saveSelectedGender();
                                     Get.offAllNamed(
                                         OrientationScreen.routeName);
                                   })

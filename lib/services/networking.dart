@@ -152,7 +152,8 @@ class NetworkHelper {
       SettingsData.EMAIL_KEY:settings.email,
       SettingsData.USER_GENDER_KEY:settings.userGender,
       SettingsData.USER_DESCRIPTION_KEY:settings.userDescription,
-      SettingsData.SHOW_USER_GENDER_KEY:settings.showUserGender.toString()
+      SettingsData.SHOW_USER_GENDER_KEY:settings.showUserGender.toString(),
+      SettingsData.USER_BIRTHDAY_KEY:settings.userBirthday,
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri =
