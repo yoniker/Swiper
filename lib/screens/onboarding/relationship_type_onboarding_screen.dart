@@ -1,4 +1,5 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/onboarding/email_address_screen.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/choice_button.dart';
@@ -130,6 +131,7 @@ class _RelationshipTypeOnboardingScreenState
                     name: 'CONTINUE',
                     onTap: currentChoice != null
                         ? () {
+                      SettingsData.instance.relationshipType=currentChoice!.name;
                             Get.offAllNamed(EmailAddressScreen.routeName);
                           }
                         : null)

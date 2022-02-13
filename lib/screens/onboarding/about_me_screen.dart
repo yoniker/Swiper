@@ -1,4 +1,5 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/onboarding/upload_images_onboarding_screen.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:betabeta/widgets/onboarding/progress_bar.dart';
@@ -18,7 +19,7 @@ class AboutMeOnboardingScreen extends StatefulWidget {
 }
 
 class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
-  String aboutMe = '';
+  String aboutMeText = '';
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,7 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
     double heightWithoutSafeArea = height - padding.top - padding.bottom;
 
     int charactersLeft =
-        AboutMeOnboardingScreen.minCharInDescription - (aboutMe.length);
+        AboutMeOnboardingScreen.minCharInDescription - (aboutMeText.length);
 
     return SafeArea(
       child: Scaffold(
@@ -69,7 +70,7 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                           height: 30,
                         ),
                         InputField(
-                          onTapIcon: aboutMe.length <
+                          onTapIcon: aboutMeText.length <
                                   AboutMeOnboardingScreen.minCharInDescription
                               ? null
                               : () {
@@ -79,7 +80,7 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                           iconHeight: 90,
                           icon: Icons.send,
                           onType: (value) {
-                            aboutMe = value;
+                            aboutMeText = value;
                             setState(() {});
                           },
                           maxCharacters: 500,
@@ -92,7 +93,7 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                         ),
                         Center(
                           child: Text(
-                            aboutMe.length >=
+                            aboutMeText.length >=
                                     AboutMeOnboardingScreen.minCharInDescription
                                 ? ''
                                 : 'Minimum $charactersLeft characters left',
@@ -103,10 +104,11 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                     ),
                     RoundedButton(
                         name: 'CONTINUE',
-                        onTap: aboutMe.length <
+                        onTap: aboutMeText.length <
                                 AboutMeOnboardingScreen.minCharInDescription
                             ? null
                             : () {
+                          SettingsData.instance.userDescription = aboutMeText;
                                 Get.offAllNamed(
                                     UploadImagesOnboardingScreen.routeName);
                               })

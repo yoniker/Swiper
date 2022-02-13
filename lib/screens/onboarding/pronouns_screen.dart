@@ -13,12 +13,6 @@ import 'package:get/get.dart';
 
 enum Gender { male, female, other }
 
-extension ParseToString on Gender {
-  String toShortString() {
-    return this.toString().split('.').last;
-  }
-}
-
 class PronounScreen extends StatefulWidget {
   static String routeName = '/pronounScreen';
 
@@ -46,7 +40,7 @@ class _PronounScreenState extends State<PronounScreen> {
   elseGender == null)){return;}
     SettingsData.instance.showUserGender = _showGender;
     if(selectedGender!=Gender.other){
-      SettingsData.instance.userGender = selectedGender!.toShortString();
+      SettingsData.instance.userGender = selectedGender!.name;
   }
     else{
       SettingsData.instance.userGender = elseGender!;

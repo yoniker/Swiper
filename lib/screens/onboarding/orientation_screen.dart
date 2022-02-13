@@ -1,15 +1,13 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/onboarding/relationship_type_onboarding_screen.dart';
-import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/choice_button.dart';
-import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
-import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
 import 'package:betabeta/widgets/onboarding/progress_bar.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-enum Choice { men, women, everyone }
+enum PreferredGender { men, women, everyone }
 
 class OrientationScreen extends StatefulWidget {
   static String routeName = '/orientation_screen';
@@ -19,7 +17,7 @@ class OrientationScreen extends StatefulWidget {
 }
 
 class _OrientationScreenState extends State<OrientationScreen> {
-  Choice? currentChoice;
+  PreferredGender? currentChoice;
   String whatWeShowText = '';
 
   @override
@@ -49,33 +47,33 @@ class _OrientationScreenState extends State<OrientationScreen> {
                   name: 'Men',
                   onTap: () {
                     setState(() {
-                      currentChoice = Choice.men;
+                      currentChoice = PreferredGender.men;
                       whatWeShowText = 'We will only show you men';
                     });
                   },
-                  pressed: currentChoice == Choice.men ? true : false,
+                  pressed: currentChoice == PreferredGender.men ? true : false,
                 ),
                 const SizedBox(height: 20),
                 ChoiceButton(
                   name: 'Women',
                   onTap: () {
                     setState(() {
-                      currentChoice = Choice.women;
+                      currentChoice = PreferredGender.women;
                       whatWeShowText = 'We will only show you women';
                     });
                   },
-                  pressed: currentChoice == Choice.women ? true : false,
+                  pressed: currentChoice == PreferredGender.women ? true : false,
                 ),
                 const SizedBox(height: 20),
                 ChoiceButton(
                   name: 'Everyone',
                   onTap: () {
                     setState(() {
-                      currentChoice = Choice.everyone;
+                      currentChoice = PreferredGender.everyone;
                       whatWeShowText = 'We will show you everyone';
                     });
                   },
-                  pressed: currentChoice == Choice.everyone ? true : false,
+                  pressed: currentChoice == PreferredGender.everyone ? true : false,
                 ),
               ],
             ),
@@ -99,6 +97,7 @@ class _OrientationScreenState extends State<OrientationScreen> {
                     name: 'CONTINUE',
                     onTap: currentChoice != null
                         ? () {
+                      SettingsData.instance.preferredGender=currentChoice!.name;
                             Get.offAllNamed(
                                 RelationshipTypeOnboardingScreen.routeName);
                           }

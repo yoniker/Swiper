@@ -25,24 +25,25 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
   final earliestDate = DateTime(1900, 1);
   final currentDate = DateTime.now();
 
+  calculateAge(DateTime birthDate) {
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - birthDate.year;
+    int month1 = currentDate.month;
+    int month2 = birthDate.month;
+    if (month2 > month1) {
+      age--;
+    } else if (month1 == month2) {
+      int day1 = currentDate.day;
+      int day2 = birthDate.day;
+      if (day2 > day1) {
+        age--;
+      }
+    }
+    return age;
+  }
+
   @override
   Widget build(BuildContext context) {
-    calculateAge(DateTime birthDate) {
-      DateTime currentDate = DateTime.now();
-      int age = currentDate.year - birthDate.year;
-      int month1 = currentDate.month;
-      int month2 = birthDate.month;
-      if (month2 > month1) {
-        age--;
-      } else if (month1 == month2) {
-        int day1 = currentDate.day;
-        int day2 = birthDate.day;
-        if (day2 > day1) {
-          age--;
-        }
-      }
-      return age;
-    }
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
