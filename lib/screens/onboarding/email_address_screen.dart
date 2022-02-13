@@ -1,6 +1,8 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/onboarding/about_me_screen.dart';
+import 'package:betabeta/screens/onboarding/birthday_screen.dart';
+import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
 import 'package:betabeta/widgets/onboarding/progress_bar.dart';
@@ -10,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class EmailAddressScreen extends StatefulWidget {
-  static String routeName = '/emailAddressScreen';
+  static const String routeName = '/emailAddressScreen';
 
   const EmailAddressScreen({Key? key}) : super(key: key);
 
@@ -85,7 +87,7 @@ class _EmailAddressScreenState extends State<EmailAddressScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Get.offAllNamed(AboutMeOnboardingScreen.routeName);
+                            Get.offAllNamed(OnboardingFlowController.nextRoute(EmailAddressScreen.routeName));
                           },
                           child: const Text(
                             'Skip this step',
@@ -99,8 +101,7 @@ class _EmailAddressScreenState extends State<EmailAddressScreen> {
                         onTap: () {
                           if(isValid(userEmail)) {
                             SettingsData.instance.email = userEmail;
-                            Get.offAllNamed(
-                              AboutMeOnboardingScreen.routeName);
+                            Get.offAllNamed(OnboardingFlowController.nextRoute(EmailAddressScreen.routeName));
                           }
                               else{
                                showCupertinoDialog(

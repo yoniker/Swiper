@@ -1,6 +1,7 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/onboarding/birthday_screen.dart';
+import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:betabeta/widgets/onboarding/progress_bar.dart';
@@ -9,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class GetNameScreen extends StatefulWidget {
-  static String routeName = '/get_name';
+  static const String routeName = '/get_name';
 
   @override
   _GetNameScreenState createState() => _GetNameScreenState();
@@ -52,7 +53,7 @@ class _GetNameScreenState extends State<GetNameScreen> {
                       initialvalue: userName,
                       onTapIcon: () {
                         SettingsData.instance.name = userName;
-                        Get.offAllNamed(BirthdayOnboardingScreen.routeName);
+                        Get.offAllNamed(OnboardingFlowController.nextRoute(GetNameScreen.routeName));
                       },
                       icon: SettingsData.instance.name.length == 0
                           ? null
@@ -87,7 +88,7 @@ class _GetNameScreenState extends State<GetNameScreen> {
                       ? null
                       : () {
                     SettingsData.instance.name = userName;
-                          Get.offAllNamed(BirthdayOnboardingScreen.routeName);
+                    Get.offAllNamed(OnboardingFlowController.nextRoute(GetNameScreen.routeName));
                         },
                 )
               ],

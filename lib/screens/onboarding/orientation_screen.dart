@@ -1,5 +1,6 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
 import 'package:betabeta/screens/onboarding/relationship_type_onboarding_screen.dart';
 import 'package:betabeta/widgets/onboarding/choice_button.dart';
 import 'package:betabeta/widgets/onboarding/progress_bar.dart';
@@ -10,7 +11,7 @@ import 'package:get/get.dart';
 enum PreferredGender { men, women, everyone }
 
 class OrientationScreen extends StatefulWidget {
-  static String routeName = '/orientation_screen';
+  static const String routeName = '/orientation_screen';
 
   @override
   State<OrientationScreen> createState() => _OrientationScreenState();
@@ -98,8 +99,7 @@ class _OrientationScreenState extends State<OrientationScreen> {
                     onTap: currentChoice != null
                         ? () {
                       SettingsData.instance.preferredGender=currentChoice!.name;
-                            Get.offAllNamed(
-                                RelationshipTypeOnboardingScreen.routeName);
+                      Get.offAllNamed(OnboardingFlowController.nextRoute(OrientationScreen.routeName));;
                           }
                         : null),
               ],

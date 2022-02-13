@@ -1,5 +1,7 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/screens/onboarding/get_name_screen.dart';
+import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
 import 'package:betabeta/screens/onboarding/pronouns_screen.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
@@ -10,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class BirthdayOnboardingScreen extends StatefulWidget {
-  static String routeName = '/birthday_onboarding';
+  static const String routeName = '/birthday_onboarding';
 
   const BirthdayOnboardingScreen({Key? key}) : super(key: key);
 
@@ -135,8 +137,7 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
                                       TextButton(
                                           onPressed: () {
                                             SettingsData.instance.userBirthday = selectedDate.toString();
-                                            Get.offAllNamed(
-                                                PronounScreen.routeName);
+                                            Get.offAllNamed(OnboardingFlowController.nextRoute(BirthdayOnboardingScreen.routeName));
                                           },
                                           child: const Text(
                                             'Confirm',

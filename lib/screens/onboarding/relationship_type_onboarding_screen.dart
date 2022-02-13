@@ -1,6 +1,7 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/onboarding/email_address_screen.dart';
+import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/choice_button.dart';
 import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
@@ -12,7 +13,7 @@ import 'package:get/get.dart';
 enum RelationshipPreference { marriage, relationship, casual, notSure }
 
 class RelationshipTypeOnboardingScreen extends StatefulWidget {
-  static String routeName = '/lookingForOnboardingScreen';
+  static const String routeName = '/lookingForOnboardingScreen';
 
   const RelationshipTypeOnboardingScreen({Key? key}) : super(key: key);
 
@@ -132,7 +133,7 @@ class _RelationshipTypeOnboardingScreenState
                     onTap: currentChoice != null
                         ? () {
                       SettingsData.instance.relationshipType=currentChoice!.name;
-                            Get.offAllNamed(EmailAddressScreen.routeName);
+                      Get.offAllNamed(OnboardingFlowController.nextRoute(RelationshipTypeOnboardingScreen.routeName));
                           }
                         : null)
               ],

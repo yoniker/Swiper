@@ -1,11 +1,12 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
 import 'package:betabeta/screens/onboarding/terms_screen.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class NotificationsPermissionScreen extends StatefulWidget {
-  static String routeName = '/notifications_permission';
+  static const String routeName = '/notifications_permission';
 
   @override
   _NotificationsState createState() => _NotificationsState();
@@ -51,14 +52,14 @@ class _NotificationsState extends State<NotificationsPermissionScreen> {
                       name: 'Enable notifications',
                       onTap: () {
                         //TODO open notifications request
-                        Get.offAllNamed(TermsScreen.routeName);
+                        Get.offAllNamed(OnboardingFlowController.nextRoute(NotificationsPermissionScreen.routeName));
                       },
                     ),
                     SizedBox(height: 20),
                     GestureDetector(
                       onTap: () {
                         //TODO user refused notifications,save if needed
-                        Get.offAllNamed(TermsScreen.routeName);
+                        Get.offAllNamed(OnboardingFlowController.nextRoute(NotificationsPermissionScreen.routeName));
                       },
                       child: Text(
                         'Not now',
