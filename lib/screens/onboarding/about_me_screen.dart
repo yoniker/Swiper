@@ -75,6 +75,7 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                                   AboutMeOnboardingScreen.minCharInDescription
                               ? null
                               : () {
+                            SettingsData.instance.userDescription = aboutMeText;
                             Get.offAllNamed(OnboardingFlowController.nextRoute(AboutMeOnboardingScreen.routeName));
                                 },
                           iconHeight: 90,

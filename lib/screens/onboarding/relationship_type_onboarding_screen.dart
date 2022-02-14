@@ -1,6 +1,6 @@
+import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/models/settings_model.dart';
-import 'package:betabeta/screens/onboarding/email_address_screen.dart';
 import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/choice_button.dart';
@@ -9,8 +9,6 @@ import 'package:betabeta/widgets/onboarding/progress_bar.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-enum RelationshipPreference { marriage, relationship, casual, notSure }
 
 class RelationshipTypeOnboardingScreen extends StatefulWidget {
   static const String routeName = '/lookingForOnboardingScreen';
