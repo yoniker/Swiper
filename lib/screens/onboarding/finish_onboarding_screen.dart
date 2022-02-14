@@ -94,4 +94,10 @@ class _FinishOnboardingScreenState extends State<FinishOnboardingScreen> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 }

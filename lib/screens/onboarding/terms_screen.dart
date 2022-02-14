@@ -40,93 +40,96 @@ class _TermsScreenState extends State<TermsScreen> {
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AnimatedTextKit(
-                      animatedTexts: [
-                        ColorizeAnimatedText('Welcome to Voilà!',
-                            colors: kColorizeColors,
-                            textStyle: kTitleStyleBlack)
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Text(
-                      'We are excited for you to join our community! \nBefore you swipe, please follow these guidelines:',
-                      style: kSmallInfoStyle,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 20, top: 20),
-                      child: Row(
-                        children: const [
-                          Text(
-                            '✔',
-                            style: kVstyle,
-                          ),
-                          Text(
-                            '  No Catfishing.',
-                            style: kSmallTitleBlack,
-                            textAlign: TextAlign.start,
-                          ),
+                Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AnimatedTextKit(
+                        animatedTexts: [
+                          ColorizeAnimatedText('Welcome to Voilà!',
+                              colors: kColorizeColors,
+                              textStyle: kTitleStyleBlack)
                         ],
                       ),
-                    ),
-                    const Text(
-                      'Use your own bio, age and photos',
-                      style: kSmallInfoStyle,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 20, top: 20),
-                      child: Row(
-                        children: const [
-                          Text(
-                            '✔',
-                            style: kVstyle,
-                          ),
-                          Text(
-                            '  Respect.',
-                            style: kSmallTitleBlack,
-                            textAlign: TextAlign.start,
-                          ),
-                        ],
+                      const SizedBox(
+                        height: 10,
                       ),
-                    ),
-                    const Text(
-                      'Treat others the same way you want to be treated.',
-                      style: kSmallInfoStyle,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 20, top: 20),
-                      child: Row(
-                        children: const [
-                          Text(
-                            '✔',
-                            style: kVstyle,
-                          ),
-                          Text(
-                            '  Security.',
-                            style: kSmallTitleBlack,
-                            textAlign: TextAlign.start,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Text(
-                      'Keep your personal information to yourself. \nDont give your phone number too quickly!',
-                      style: kSmallInfoStyle,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 20, top: 20),
-                      child: Text(
-                        'And remember that we are here for you!',
+                      const Text(
+                        'We are excited for you to join our community! \nBefore you swipe, please follow these guidelines:',
                         style: kSmallInfoStyle,
-                        textAlign: TextAlign.start,
                       ),
-                    )
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 20, top: 20),
+                        child: Row(
+                          children: const [
+                            Text(
+                              '✔',
+                              style: kVstyle,
+                            ),
+                            Text(
+                              '  No Catfishing.',
+                              style: kSmallTitleBlack,
+                              textAlign: TextAlign.start,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Text(
+                        'Use your own bio, age and photos',
+                        style: kSmallInfoStyle,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 20, top: 20),
+                        child: Row(
+                          children: const [
+                            Text(
+                              '✔',
+                              style: kVstyle,
+                            ),
+                            Text(
+                              '  Respect.',
+                              style: kSmallTitleBlack,
+                              textAlign: TextAlign.start,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Text(
+                        'Treat others the same way you want to be treated.',
+                        style: kSmallInfoStyle,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 20, top: 20),
+                        child: Row(
+                          children: const [
+                            Text(
+                              '✔',
+                              style: kVstyle,
+                            ),
+                            Text(
+                              '  Security.',
+                              style: kSmallTitleBlack,
+                              textAlign: TextAlign.start,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Text(
+                        'Keep your personal information to yourself. \nDont give your phone number too quickly!',
+                        style: kSmallInfoStyle,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 20, top: 20),
+                        child: Text(
+                          'And remember that we are here for you!',
+                          style: kSmallInfoStyle,
+                          textAlign: TextAlign.start,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
                 RoundedButton(
                   elvation: 0,

@@ -31,7 +31,7 @@ class ChoiceButton extends StatelessWidget {
       padding: EdgeInsets.symmetric(
           horizontal: 20, vertical: pressed == true ? 16 : 18),
       onPressed: onTap,
-      minWidth: addControlerAnimation * 400,
+      minWidth: addControlerAnimation * MediaQuery.of(context).size.width,
       height: addControlerAnimation * MediaQuery.of(context).size.height * 0.04,
       child: Text(
         name!,
