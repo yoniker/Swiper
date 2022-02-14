@@ -40,7 +40,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
       ){
     SettingsData.instance.uid = Random().nextInt(999999).toString();
-    SettingsData.instance.uid = 'Lamer Admin';
+    SettingsData.instance.name = 'Lamer Admin';
     SettingsData.instance.userDescription = 'Lamer was fed by Tzippi';
     Get.offAllNamed(MainNavigationScreen.routeName);
   }
