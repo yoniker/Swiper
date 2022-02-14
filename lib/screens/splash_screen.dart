@@ -82,8 +82,7 @@ class _SplashScreenState extends State<SplashScreen> {
     //
     // This is the standard way of creating a splash-screen for an Application.
     if (settings.readFromShared! && settings.uid.length>0) {
-      return WelcomeScreen.routeName;
-      return MainNavigationScreen.routeName; //TODO change here when done onboarding code
+      return MainNavigationScreen.routeName;
     } else {
       return WelcomeScreen.routeName;//LoginScreen.routeName;
     }
