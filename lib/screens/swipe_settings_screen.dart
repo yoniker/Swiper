@@ -26,8 +26,8 @@ class SwipeSettingsScreen extends StatefulWidget {
 class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
   String _currentLocation = 'Somewhere, Earth';
 
-  Gender _currentGenderSelected = Gender.values
-      .firstWhere((e) => e.toShortString() == SettingsData.instance.preferredGender);
+  PreferredGender _currentGenderSelected = PreferredGender.values
+      .firstWhere((e) => e.name == SettingsData.instance.preferredGender);
   RangeValues _selectedAges = RangeValues(
       SettingsData.instance.minAge.toDouble(), SettingsData.instance.maxAge.toDouble());
   bool _showInDiscovery =
@@ -43,17 +43,17 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
   }
 
   //
-  DropdownMenuItem<Gender> _buildGenderDropDownMenuItem(Gender selectedGender) {
+  DropdownMenuItem<PreferredGender> _buildGenderDropDownMenuItem(PreferredGender selectedGender) {
     //
-    return DropdownMenuItem<Gender>(
+    return DropdownMenuItem<PreferredGender>(
       child: Text(
-        selectedGender.toShortString(),
+        selectedGender.name,
         style: defaultTextStyle,
       ),
       value: selectedGender,
       onTap: () {
         setState(() {
-          SettingsData.instance.preferredGender = selectedGender.toShortString();
+          SettingsData.instance.preferredGender = selectedGender.name;
           _currentGenderSelected = selectedGender;
         });
       },
@@ -262,7 +262,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                               Container(
                                 color: Colors.grey[200],
                                 width: 100,
-                                child: DropdownButtonFormFieldModified<Gender>(
+                                child: DropdownButtonFormFieldModified<PreferredGender>(
                                   decoration: InputDecoration.collapsed(
                                     hintText: 'My Preferred Gender',
                                     hintStyle: defaultTextStyle.copyWith(
@@ -270,17 +270,17 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                                     ),
                                   ),
                                   isExpanded: false,
-                                  onChanged: (Gender? newGender) {
+                                  onChanged: (PreferredGender? newGender) {
                                     setState(() {
-                                      String gonnaGender = newGender?.toShortString()??Gender.Everyone.toString();
+                                      String gonnaGender = newGender?.name??PreferredGender.Everyone.toString();
                                       print('Going to change gender to $gonnaGender');
                                       SettingsData.instance.preferredGender = gonnaGender;
-                                      _currentGenderSelected = newGender??Gender.Everyone;
+                                      _currentGenderSelected = newGender??PreferredGender.Everyone;
                                     });
                                   },
                                   style: defaultTextStyle,
                                   value: _currentGenderSelected,
-                                  items: Gender.values.map(
+                                  items: PreferredGender.values.map(
                                     (gender) {
                                       return _buildGenderDropDownMenuItem(
                                           gender);

@@ -1,3 +1,4 @@
+import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/onboarding/about_me_screen.dart';
 import 'package:betabeta/screens/onboarding/birthday_screen.dart';
@@ -35,6 +36,11 @@ class OnboardingFlowController{
 
   static String nextRoute(String currentRoute){
     int currentRouteIndex = onboardingFlow.indexOf(currentRoute);
-    return onboardingFlow[currentRouteIndex+1];
+    String candidateNextScreen =  onboardingFlow[currentRouteIndex+1];
+    if(candidateNextScreen==EmailAddressScreen.routeName && SettingsData.instance.email.length>0){
+      candidateNextScreen =  onboardingFlow[currentRouteIndex+2];
+    }
+    return candidateNextScreen;
+
   }
 }

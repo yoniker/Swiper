@@ -1,3 +1,4 @@
+import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/models/settings_model.dart';
 import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
@@ -8,7 +9,6 @@ import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-enum PreferredGender { men, women, everyone }
 
 class OrientationScreen extends StatefulWidget {
   static const String routeName = '/orientation_screen';
@@ -48,33 +48,33 @@ class _OrientationScreenState extends State<OrientationScreen> {
                   name: 'Men',
                   onTap: () {
                     setState(() {
-                      currentChoice = PreferredGender.men;
+                      currentChoice = PreferredGender.Men;
                       whatWeShowText = 'We will only show you men';
                     });
                   },
-                  pressed: currentChoice == PreferredGender.men ? true : false,
+                  pressed: currentChoice == PreferredGender.Men ? true : false,
                 ),
                 const SizedBox(height: 20),
                 ChoiceButton(
                   name: 'Women',
                   onTap: () {
                     setState(() {
-                      currentChoice = PreferredGender.women;
+                      currentChoice = PreferredGender.Women;
                       whatWeShowText = 'We will only show you women';
                     });
                   },
-                  pressed: currentChoice == PreferredGender.women ? true : false,
+                  pressed: currentChoice == PreferredGender.Women ? true : false,
                 ),
                 const SizedBox(height: 20),
                 ChoiceButton(
                   name: 'Everyone',
                   onTap: () {
                     setState(() {
-                      currentChoice = PreferredGender.everyone;
+                      currentChoice = PreferredGender.Everyone;
                       whatWeShowText = 'We will show you everyone';
                     });
                   },
-                  pressed: currentChoice == PreferredGender.everyone ? true : false,
+                  pressed: currentChoice == PreferredGender.Everyone ? true : false,
                 ),
               ],
             ),
