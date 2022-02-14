@@ -1,5 +1,6 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/screens/onboarding/location_permission_screen.dart';
+import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
 import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
 import 'package:betabeta/widgets/onboarding/phone_number_collector.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
                 PhoneNumberCollector(
                   //TODO Yoni add phone login logic
                   onTap: () {
-                    Get.offAllNamed(LocationPermissionScreen.routeName);
+                    Get.offAllNamed(OnboardingFlowController.nextRoute(PhoneScreen.routeName));
                   },
                 )
               ],

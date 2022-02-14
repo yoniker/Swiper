@@ -1,6 +1,7 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/models/loginService.dart';
 import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
 import 'package:betabeta/screens/onboarding/phone_screen.dart';
 import 'package:betabeta/services/chat_networking.dart';
 import 'package:betabeta/services/screen_size.dart';
@@ -27,7 +28,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     await SettingsData.instance.readSettingsFromShared();
     if (SettingsData.instance.readFromShared! &&
         SettingsData.instance.uid.length > 0) {
-      Get.offAllNamed(PhoneScreen.routeName);
+      Get.offAllNamed(OnboardingFlowController.nextRoute(WelcomeScreen.routeName));
     }
   }
 
@@ -147,7 +148,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           color: Colors.white,
                           onTap: () {
                             //TODO Apple login logic
-                            Get.offAllNamed(PhoneScreen.routeName);
+                            Get.offAllNamed(OnboardingFlowController.nextRoute(WelcomeScreen.routeName));
                           },
                           icon: Icons.apple_rounded),
                       Center(

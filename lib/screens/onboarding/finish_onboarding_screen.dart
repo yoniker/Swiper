@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
 class FinishOnboardingScreen extends StatefulWidget {
-  static String routeName = '/finishOnboardingScreen';
+  static const String routeName = '/finishOnboardingScreen';
 
   const FinishOnboardingScreen({Key? key}) : super(key: key);
 

@@ -1,5 +1,6 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/screens/onboarding/finish_onboarding_screen.dart';
+import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
 import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
 import 'package:betabeta/widgets/onboarding/profile_image_widget.dart';
 import 'package:betabeta/widgets/onboarding/progress_bar.dart';
@@ -10,7 +11,7 @@ import 'package:image_picker/image_picker.dart';
 
 
 class UploadImagesOnboardingScreen extends StatefulWidget {
-  static String routeName = '/uploadPicturesScreen';
+  static const String routeName = '/uploadPicturesScreen';
 
   const UploadImagesOnboardingScreen({Key? key}) : super(key: key);
 
@@ -99,7 +100,7 @@ class _UploadImagesOnboardingScreenState extends State<UploadImagesOnboardingScr
             RoundedButton(
               name: 'NEXT',
               onTap: () {
-                Get.offAllNamed(FinishOnboardingScreen.routeName);
+                Get.offAllNamed(OnboardingFlowController.nextRoute(UploadImagesOnboardingScreen.routeName));
               },
             )
           ],

@@ -1,4 +1,7 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/screens/onboarding/get_name_screen.dart';
+import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
 import 'package:betabeta/screens/onboarding/pronouns_screen.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
@@ -9,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class BirthdayOnboardingScreen extends StatefulWidget {
-  static String routeName = '/birthday_onboarding';
+  static const String routeName = '/birthday_onboarding';
 
   const BirthdayOnboardingScreen({Key? key}) : super(key: key);
 
@@ -19,31 +22,30 @@ class BirthdayOnboardingScreen extends StatefulWidget {
 }
 
 class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
-  DateTime selectedDate = DateTime(1990, 1,
-      1); //TODO take the user's birthday if given (for example from Facebook)
-  final Key _cupertinoWidgetKey = UniqueKey();
+  DateTime selectedDate = SettingsData.instance.userBirthday.length>0?DateTime.parse(SettingsData.instance.userBirthday):DateTime(2000, 1, 1); //TODO take the user's birthday if given (for example from Facebook)
 
-  final firstDate = DateTime(1940, 1);
-  final lastDate = DateTime(2022, 2);
+  final earliestDate = DateTime(1900, 1);
+  final currentDate = DateTime.now();
+
+  calculateAge(DateTime birthDate) {
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - birthDate.year;
+    int month1 = currentDate.month;
+    int month2 = birthDate.month;
+    if (month2 > month1) {
+      age--;
+    } else if (month1 == month2) {
+      int day1 = currentDate.day;
+      int day2 = birthDate.day;
+      if (day2 > day1) {
+        age--;
+      }
+    }
+    return age;
+  }
 
   @override
   Widget build(BuildContext context) {
-    calculateAge(DateTime birthDate) {
-      DateTime currentDate = DateTime.now();
-      int age = currentDate.year - birthDate.year;
-      int month1 = currentDate.month;
-      int month2 = birthDate.month;
-      if (month2 > month1) {
-        age--;
-      } else if (month1 == month2) {
-        int day1 = currentDate.day;
-        int day2 = birthDate.day;
-        if (day2 > day1) {
-          age--;
-        }
-      }
-      return age;
-    }
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -85,11 +87,10 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
                       ),
                     ),
                     child: CupertinoDatePicker(
-                        key: _cupertinoWidgetKey,
                         mode: CupertinoDatePickerMode.date,
                         initialDateTime: selectedDate,
-                        minimumDate: firstDate,
-                        maximumDate: lastDate,
+                        minimumDate: earliestDate,
+                        maximumDate: currentDate,
                         onDateTimeChanged: (newDate) {
                           setState(() {
                             selectedDate = newDate;
@@ -132,8 +133,8 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
                                           )),
                                       TextButton(
                                           onPressed: () {
-                                            Get.offAllNamed(
-                                                PronounScreen.routeName);
+                                            SettingsData.instance.userBirthday = selectedDate.toString();
+                                            Get.offAllNamed(OnboardingFlowController.nextRoute(BirthdayOnboardingScreen.routeName));
                                           },
                                           child: const Text(
                                             'Confirm',

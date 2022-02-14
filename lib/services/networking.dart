@@ -78,7 +78,6 @@ class NetworkHelper {
     }
     _lastMatchCall = DateTime.now();
     Uri matchesUrl = Uri.https(SERVER_ADDR, '/matches/${SettingsData.instance.uid}');
-    print('88888888888888888trying to get matches url is $matchesUrl 88888888888888');
     http.Response response = await http.get(matchesUrl); //eg /12313?gender=Male
     if (response.statusCode != 200) {
       return null; //TODO error handling
@@ -152,11 +151,13 @@ class NetworkHelper {
       SettingsData.EMAIL_KEY:settings.email,
       SettingsData.USER_GENDER_KEY:settings.userGender,
       SettingsData.USER_DESCRIPTION_KEY:settings.userDescription,
-      SettingsData.SHOW_USER_GENDER_KEY:settings.showUserGender.toString()
+      SettingsData.SHOW_USER_GENDER_KEY:settings.showUserGender.toString(),
+      SettingsData.USER_BIRTHDAY_KEY:settings.userBirthday,
+      SettingsData.USER_RELATIONSHIP_TYPE_KEY : settings.relationshipType,
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri =
-        Uri.https(SERVER_ADDR, '/settings/${settings.facebookId}');
+        Uri.https(SERVER_ADDR, '/settings/${settings.uid}');
     http.Response response = await http.post(postSettingsUri,
         body: encoded); //TODO something if response wasnt 200
   }

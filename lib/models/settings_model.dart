@@ -29,6 +29,8 @@ class SettingsData extends ChangeNotifier{
   static const String USER_DESCRIPTION_KEY = 'user_description';
   static const String USER_GENDER_KEY = 'user_gender';
   static const String SHOW_USER_GENDER_KEY = 'show_user_gender';
+  static const String USER_BIRTHDAY_KEY = 'user_birthday';
+  static const String USER_RELATIONSHIP_TYPE_KEY = 'relationship_type';
   static const _debounceSettingsTime = Duration(seconds: 2); //Debounce time such that we notify listeners
   String _uid = '';
   String _name = '';
@@ -53,6 +55,8 @@ class SettingsData extends ChangeNotifier{
   bool _registered = false;
   String _userGender = '';
   bool _showUserGender = true;
+  String _userBirthday='';
+  String _relationshipType='';
 
   SettingsData._privateConstructor(){
 
@@ -82,7 +86,10 @@ class SettingsData extends ChangeNotifier{
     _userGender = sharedPreferences.getString(USER_GENDER_KEY)??_userGender;
     _userDescription = sharedPreferences.getString(USER_DESCRIPTION_KEY)??_userDescription;
     _showUserGender = sharedPreferences.getBool(SHOW_USER_GENDER_KEY)??_showUserGender;
+    _userBirthday = sharedPreferences.getString(USER_BIRTHDAY_KEY)??_userBirthday;
+    _relationshipType = sharedPreferences.getString(USER_RELATIONSHIP_TYPE_KEY)??_relationshipType;
     _registered = sharedPreferences.getBool(REGISTERED_KEY) ?? _registered;
+
     _readFromShared = true;
 
     return;
@@ -317,6 +324,26 @@ class SettingsData extends ChangeNotifier{
     if(newShowUserGender==_showUserGender){return;}
     _showUserGender = newShowUserGender;
     savePreferences(SHOW_USER_GENDER_KEY, newShowUserGender);
+  }
+
+  String get userBirthday{
+    return _userBirthday;
+  }
+
+  set userBirthday(String newUserBirthday){
+    if(_userBirthday==newUserBirthday){return;}
+    _userBirthday = newUserBirthday;
+    savePreferences(USER_BIRTHDAY_KEY, newUserBirthday);
+  }
+
+  String get relationshipType{
+    return _relationshipType;
+  }
+
+  set relationshipType(String newRelationshipType){
+    if(_relationshipType==newRelationshipType){return;}
+    _relationshipType = newRelationshipType;
+    savePreferences(USER_RELATIONSHIP_TYPE_KEY, newRelationshipType);
   }
 
 
