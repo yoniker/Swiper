@@ -1,16 +1,20 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/models/loginService.dart';
 import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
 import 'package:betabeta/screens/onboarding/phone_screen.dart';
 import 'package:betabeta/services/chat_networking.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
+import 'package:betabeta/widgets/onboarding/text_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
+import 'dart:math';
+
 
 class WelcomeScreen extends StatefulWidget {
   static const String routeName = '/welcome_screen';
@@ -30,6 +34,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         SettingsData.instance.uid.length > 0) {
       Get.offAllNamed(OnboardingFlowController.nextRoute(WelcomeScreen.routeName));
     }
+  }
+
+  void skipLogin( //This function is so that development won't be hindered by the existence of onboarding
+
+      ){
+    SettingsData.instance.uid = Random().nextInt(999999).toString();
+    SettingsData.instance.uid = 'Lamer Admin';
+    SettingsData.instance.userDescription = 'Lamer was fed by Tzippi';
+    Get.offAllNamed(MainNavigationScreen.routeName);
   }
 
   Future<void> _saveUid() async {
@@ -162,10 +175,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             const SizedBox(height: 5),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Text(
-                                  'Terms of Service',
-                                  style: kSmallInfoStyleUnderlineWhite,
+                              children:  [
+                                GestureDetector(
+                                  child: Text(
+                                    'Terms of Service',
+                                    style: kSmallInfoStyleUnderlineWhite,
+                                  ),
+                                onTap: (){
+                                    skipLogin();
+                                },
                                 ),
                                 SizedBox(width: 20),
                                 Text(
