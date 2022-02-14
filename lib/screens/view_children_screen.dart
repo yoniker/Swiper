@@ -111,7 +111,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
 
   Widget waitingAnimation() {
     return SpinKitPumpingHeart(
-      color: colorBlend02,
+      color: mainAppColor02,
     );
   }
 
@@ -134,7 +134,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
     // the absolute size of the children image.
     final Size childrenCardSize = Size(256, 256);
 
-    double viewPortSize = childrenCardSize.width/screenSize.width;
+    double viewPortSize = childrenCardSize.width / screenSize.width;
 
     final double childrenVertCardPadding = 20.0;
 
@@ -297,7 +297,7 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
               child: !_childrenReady
                   ? Center(
                       child: SpinKitFadingFour(
-                        color: colorBlend02,
+                        color: mainAppColor02,
                       ),
                     )
                   : _generatedBabiesImages.isEmpty
@@ -364,7 +364,8 @@ class _ViewChildrenScreenState extends State<ViewChildrenScreen>
             SizedBox(height: 12.0),
             ActionBox(
               message: 'Like',
-              messageStyle: smallBoldedCharStyle.copyWith(color: colorBlend02),
+              messageStyle:
+                  smallBoldedCharStyle.copyWith(color: mainAppColor02),
               margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
               trailing: PrecachedImage.asset(
                 imageURI: BetaIconPaths.likeMatchIcon,

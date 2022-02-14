@@ -94,25 +94,27 @@ class _MatchScreenState extends State<MatchScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  ListenerWidget(notifier: MatchEngine(), builder: (context){
-                    Widget dor =  InkWell(
-                      borderRadius: BorderRadius.circular(16.0),
-                      child: Padding(
-                        padding: EdgeInsets.only(right: 20.0),
-                        child: Transform(
-                          alignment: Alignment.centerRight,
-                          transform: Matrix4.rotationY(math.pi),
-                          child: Icon(
-                            Icons.refresh,
-                            size: 24.0,
-                            color: colorBlend01,
+                  ListenerWidget(
+                    notifier: MatchEngine(),
+                    builder: (context) {
+                      Widget dor = InkWell(
+                        borderRadius: BorderRadius.circular(16.0),
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 20.0),
+                          child: Transform(
+                            alignment: Alignment.centerRight,
+                            transform: Matrix4.rotationY(math.pi),
+                            child: Icon(
+                              Icons.refresh,
+                              size: 24.0,
+                              color: colorBlend01,
+                            ),
                           ),
                         ),
-                      ),
-                      onTap: () {
-                        MatchEngine().goBack();
-                      },
-                    );
+                        onTap: () {
+                          MatchEngine().goBack();
+                        },
+                      );
                       if (MatchEngine().previousMatchExists()) {
                         _animationController.forward();
                       } else {
@@ -160,14 +162,18 @@ class _MatchScreenState extends State<MatchScreen>
             showAppLogo: false,
             hasBackButton: false,
             trailing: GestureDetector(
-              child: Icon(Icons.person_search, size: 35,color: colorBlend02,),
+              child: Icon(
+                Icons.person_search,
+                size: 35,
+                color: mainAppColor02,
+              ),
               onTap: () async {
                 // hide the overlay.
                 setMatchCardVisibility(false); //TODO Review this
                 var value = await Get.toNamed(SwipeSettingsScreen.routeName);
-                  // make the match card visible.
-                  setMatchCardVisibility(true);
-                  },
+                // make the match card visible.
+                setMatchCardVisibility(true);
+              },
             ),
           ),
 
@@ -196,7 +202,8 @@ class MatchCardBuilder extends StatefulWidget {
       : super(key: key);
 
   final void Function(bool) setMatchCardVisibility;
-  final maxThumbOpacity = 0.7; // Max opacity of the thumbs feedback (when swiping left/right)
+  final maxThumbOpacity =
+      0.7; // Max opacity of the thumbs feedback (when swiping left/right)
 
   @override
   _MatchCardBuilderState createState() => _MatchCardBuilderState();
@@ -215,54 +222,52 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     // return a stack of cards well positioned.
     return ListenerWidget(
       notifier: MatchEngine(),
       builder: (context) {
-         List<Match?> topEngineMatches = [
-          if (MatchEngine().currentMatch() != null) MatchEngine().currentMatch(),
+        List<Match?> topEngineMatches = [
+          if (MatchEngine().currentMatch() != null)
+            MatchEngine().currentMatch(),
           if (MatchEngine().nextMatch() != null) MatchEngine().nextMatch()
         ];
 
-         Widget _buildThumbIcon() {
-           if (currentJudgment == SwipeDirection.Right){
-             return Center(
-               child: Opacity(
-                 opacity: currentInterpolation*widget.maxThumbOpacity,
-                 child: Transform.scale(
-                   scale: currentInterpolation,
-                   child: Icon(
-                     Icons.thumb_up,
-                     size: 100.0,
-                     color: Colors.green,
-                   ),
-                 ),
-               ),
-             );
-           }
-           if (currentJudgment == SwipeDirection.Left){
-           return Center(
-             child: Opacity(
-               opacity: currentInterpolation*widget.maxThumbOpacity,
-               child: Transform.scale(
-                 scale: currentInterpolation,
-                 child: Icon(
-                   Icons.thumb_down,
-                   size: 100.0,
-                   color: Colors.red,
-                 ),
-               ),
-             ),
-           );}
+        Widget _buildThumbIcon() {
+          if (currentJudgment == SwipeDirection.Right) {
+            return Center(
+              child: Opacity(
+                opacity: currentInterpolation * widget.maxThumbOpacity,
+                child: Transform.scale(
+                  scale: currentInterpolation,
+                  child: Icon(
+                    Icons.thumb_up,
+                    size: 100.0,
+                    color: Colors.green,
+                  ),
+                ),
+              ),
+            );
+          }
+          if (currentJudgment == SwipeDirection.Left) {
+            return Center(
+              child: Opacity(
+                opacity: currentInterpolation * widget.maxThumbOpacity,
+                child: Transform.scale(
+                  scale: currentInterpolation,
+                  child: Icon(
+                    Icons.thumb_down,
+                    size: 100.0,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+            );
+          }
 
-
-
-           return SizedBox.shrink();
-
-         }
+          return SizedBox.shrink();
+        }
 
         return topEngineMatches.isEmpty
             ? SpinKitChasingDots(
@@ -272,42 +277,33 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
             : Stack(
                 fit: StackFit.expand,
                 children: [
-                   TCard(
-
-                     onDragCard: (double interpolation,SwipeDirection direction){
-                       setState(() {
-
-
-                       currentInterpolation = interpolation;
-                       currentJudgment = direction;
-                       });
-                       return;
-
-                     },
-                     delaySlideFor: 0,
-                    onForward: (int index,SwipeInfo info){
-                      if (index ==0){ //TODO index>0 should be impossible
-                        if(info.direction == SwipeDirection.Left){
+                  TCard(
+                    onDragCard:
+                        (double interpolation, SwipeDirection direction) {
+                      setState(() {
+                        currentInterpolation = interpolation;
+                        currentJudgment = direction;
+                      });
+                      return;
+                    },
+                    delaySlideFor: 0,
+                    onForward: (int index, SwipeInfo info) {
+                      if (index == 0) {
+                        //TODO index>0 should be impossible
+                        if (info.direction == SwipeDirection.Left) {
                           MatchEngine().currentMatchDecision(Decision.nope);
-                        }
-                        else if (info.direction == SwipeDirection.Right){
+                        } else if (info.direction == SwipeDirection.Right) {
                           MatchEngine().currentMatchDecision(Decision.like);
                         }
                       }
                     },
-
-
-
-
                     cards: topEngineMatches.map<Widget>((match) {
-                      return
-                         MatchCard(
-                          key: Key(match!.profile!.userId!.id!),
-                          profile: match.profile,
-                          showCarousel: true,
-                          clickable: true,
-                        );
-
+                      return MatchCard(
+                        key: Key(match!.profile!.userId!.id!),
+                        profile: match.profile,
+                        showCarousel: true,
+                        clickable: true,
+                      );
                     }).toList(),
                   ),
                   _buildThumbIcon(),

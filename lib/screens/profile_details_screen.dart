@@ -13,7 +13,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reorderables/reorderables.dart';
 
-
 /// The Implemntation of the Profile-screen
 class ProfileDetailsScreen extends StatefulWidget {
   static const String routeName = '/profile_details';
@@ -28,13 +27,16 @@ class ProfileDetailsScreen extends StatefulWidget {
   // which means this route can be pushed to satck without worrying about the "imageUrls" parameter since its optional.
   final List<String>? imageUrls;
 
-  ProfileDetailsScreen({Key? key}) : imageUrls = Get.arguments,super(key: key);
+  ProfileDetailsScreen({Key? key})
+      : imageUrls = Get.arguments,
+        super(key: key);
 
   @override
   _ProfileDetailsScreenState createState() => _ProfileDetailsScreenState();
 }
 
-class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with MountedStateMixin {
+class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
+    with MountedStateMixin {
   // --> All this information should be added to the data model.
   // this will be pre-filled with data from the server.
   bool _incognitoMode = false;
@@ -45,7 +47,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
 
   String? _company;
 
-  bool _loadingImage = false; //Is image in the process of being uploaded? give user visual cue
+  bool _loadingImage =
+      false; //Is image in the process of being uploaded? give user visual cue
 
   List<String>? _profileImagesUrls = [];
 
@@ -114,21 +117,19 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
             fit: BoxFit.cover,
           )
         : Center(
-            child:
-            _loadingImage == false?
-            IconButton(
-              icon: Icon(Icons.add_rounded),
-              onPressed: () async {
-                await GlobalWidgets.showImagePickerDialogue(
-                  context: context,
-                  onImagePicked: onImagePicked,
-                );
-              },
-            ):
-            SpinKitPumpingHeart(
-              color: colorBlend02,
-            )
-          );
+            child: _loadingImage == false
+                ? IconButton(
+                    icon: Icon(Icons.add_rounded),
+                    onPressed: () async {
+                      await GlobalWidgets.showImagePickerDialogue(
+                        context: context,
+                        onImagePicked: onImagePicked,
+                      );
+                    },
+                  )
+                : SpinKitPumpingHeart(
+                    color: mainAppColor02,
+                  ));
 
     return Container(
       height: 125,
@@ -188,7 +189,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
             BetaIconPaths.defaultProfileImagePath01,
           )
         : CachedNetworkImageProvider(
-            NetworkHelper().getProfileImageUrl(_imgUrl),)) as ImageProvider<Object>;
+            NetworkHelper().getProfileImageUrl(_imgUrl),
+          )) as ImageProvider<Object>;
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -196,7 +198,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
         hasTopPadding: true,
         showAppLogo: false,
         trailing: GlobalWidgets.assetImageToIcon(
-          BetaIconPaths.inactiveProfileTabIconPath,
+          BetaIconPaths.inactiveVoilaTabIconPath,
         ),
       ),
       body: SingleChildScrollView(
@@ -286,9 +288,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> with Mounte
                                   NetworkHelper()
                                       .postProfileImage(pickedImage!)
                                       .then((_) {
-                                       setState(() {
-                                         _loadingImage = false;
-                                       });
+                                    setState(() {
+                                      _loadingImage = false;
+                                    });
                                     _syncFromServer();
                                   });
                                 }),

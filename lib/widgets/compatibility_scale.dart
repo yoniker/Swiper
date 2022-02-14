@@ -11,13 +11,13 @@ class CompatibilityScale extends StatelessWidget {
     this.endValue = 100.0,
     this.colorGradient,
   })  : assert(value >= 0.0 && value <= 100.0,
-  'The "value" provided must be in the range (0.0, 100.0)\n Given: $value'),
+            'The "value" provided must be in the range (0.0, 100.0)\n Given: $value'),
         assert(endValue > startValue,
-        'The "endValue" provided must be greater than the "startValue'),
+            'The "endValue" provided must be greater than the "startValue'),
         assert(endValue >= 0.0 && endValue <= 100.0,
-        'The "endValue" provided must be in the range (0.0, 100.0)\n Given: $value'),
+            'The "endValue" provided must be in the range (0.0, 100.0)\n Given: $value'),
         assert(startValue >= 0.0 && startValue <= 100.0,
-        'The "startValue" provided must be in the range (0.0, 100.0)\n Given: $value'),
+            'The "startValue" provided must be in the range (0.0, 100.0)\n Given: $value'),
         super(key: key);
 
   // run some computation to return a valid value within range.
@@ -70,7 +70,7 @@ class CompatibilityScale extends StatelessWidget {
               final _gradient = colorGradient ??
                   LinearGradient(
                     colors: [
-                      colorBlend02,
+                      mainAppColor02,
                       defaultShadowColor,
                     ],
                     stops: [

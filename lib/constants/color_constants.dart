@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 // These final variables are used in making most of the
 // UI for the Settings Screen.
 
-const Color lightCardColor = Color(0xFFEFEFF1);
+const Color lightCardColor = Color(0xFFE8EBF1);
 const Color darkTextColor = Color(0xFF747474);
+const Color unselectedTabColor = Colors.black38;
 const Color blackTextColor = Color(0xFF000000);
 const Color whiteCardColor = Color(0xFFFFFFFF);
 const Color whiteTextColor = Color(0xFFFFFFFF);
@@ -19,10 +20,12 @@ const Color activeColor = Colors.blue;
 const Color disabledColor = Colors.grey;
 //
 const Color colorBlend01 = Color(0xFFED3C5C);
-const Color colorBlend02 = Color(0xFFE1189D);
+const Color mainAppColor02 = Colors.black87;
 
 const Color blue = Color(0xFF389CEB);
 const Color yellowishOrange = Color(0xFFF99442);
+
+const Color goldColorish = Color(0xFFC59533);
 
 // global textstyles
 const TextStyle defaultTextStyle = TextStyle(
@@ -100,6 +103,6 @@ const TextStyle headerStyle = TextStyle(
 const LinearGradient mainColorGradient = const LinearGradient(
   colors: <Color>[
     colorBlend01,
-    colorBlend02,
+    mainAppColor02,
   ],
 );

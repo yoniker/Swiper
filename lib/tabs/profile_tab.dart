@@ -65,8 +65,9 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
       child: Clickable(
         onTap: () async {
           await Get.toNamed(
-              ProfileDetailsScreen.routeName,arguments: _profileImagesUrls,
-              );
+            ProfileDetailsScreen.routeName,
+            arguments: _profileImagesUrls,
+          );
 
           // this is because the imageUrls might have been edited.
           // we want this page to stay updated so we use it this way.
@@ -129,7 +130,6 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
 
     String? _imgUrl;
 
-
     if (_profileImagesUrls != null && _profileImagesUrls!.isNotEmpty) {
       _imgUrl = _profileImagesUrls!.first;
     }
@@ -181,7 +181,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                   label: 'Loves',
                   iconURI: BetaIconPaths.heartIconFilled01,
                   value: '800+',
-                  color: colorBlend02,
+                  color: mainAppColor02,
                 ),
                 // _achievementLabel(
                 //   label: 'Stars',
@@ -206,8 +206,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                         thumbColor: whiteCardColor,
                         onTap: () {
                           // move to general settings screen.
-                          Get.toNamed(
-                              AccountSettingsScreen.routeName);
+                          Get.toNamed(AccountSettingsScreen.routeName);
                         },
                         child: Positioned(
                           top: 12.0,
@@ -235,9 +234,10 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                         thumbColor: whiteCardColor,
                         onTap: () async {
                           // move to the profile screen.
-                          await Get.toNamed(ProfileDetailsScreen.routeName,
-                              arguments: _profileImagesUrls,
-                              );
+                          await Get.toNamed(
+                            ProfileDetailsScreen.routeName,
+                            arguments: _profileImagesUrls,
+                          );
 
                           // this is because the imageUrls might have been edited.
                           // we want this page to stay updated so we use it this way.
@@ -272,9 +272,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
                         thumbColor: whiteCardColor,
                         onTap: () {
                           // move to the notification screen.
-                          Get.toNamed(NotificationScreen.routeName
-
-                          );
+                          Get.toNamed(NotificationScreen.routeName);
                         },
                         child: Positioned(
                           top: 12.0,

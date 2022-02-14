@@ -5,16 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 
-
 class ProfileImageContainer extends StatelessWidget {
-
   final String? imageUrl;
   final BuildContext? context;
   final bool? loadingImage;
   final Function(PickedFile? imageFile)? onImagePicked;
+
   /// A function that fires when the cancel icon on the image-box is pressed.
   final void Function()? onDelete;
-
 
   ProfileImageContainer({
     this.imageUrl,
@@ -22,32 +20,28 @@ class ProfileImageContainer extends StatelessWidget {
     this.loadingImage,
     this.onImagePicked,
     this.onDelete,
-
   });
   @override
   Widget build(BuildContext context) {
-
     Widget _inBoxWidget = imageUrl != null
-    ? Image.network(
-    imageUrl!,
-    fit: BoxFit.cover,
-    )
+        ? Image.network(
+            imageUrl!,
+            fit: BoxFit.cover,
+          )
         : Center(
-    child:
-    loadingImage == false?
-    IconButton(
-    icon: Icon(Icons.add_rounded),
-    onPressed: () async {
-    await GlobalWidgets.showImagePickerDialogue(
-    context: context,
-    onImagePicked: onImagePicked,
-    );
-    },
-    ):
-    SpinKitPumpingHeart(
-    color: colorBlend02,
-    )
-    );
+            child: loadingImage == false
+                ? IconButton(
+                    icon: Icon(Icons.add_rounded),
+                    onPressed: () async {
+                      await GlobalWidgets.showImagePickerDialogue(
+                        context: context,
+                        onImagePicked: onImagePicked,
+                      );
+                    },
+                  )
+                : SpinKitPumpingHeart(
+                    color: mainAppColor02,
+                  ));
 
     return Container(
       height: 125,
@@ -92,6 +86,5 @@ class ProfileImageContainer extends StatelessWidget {
         ],
       ),
     );
-
   }
 }

@@ -9,8 +9,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
-
 import 'main_navigation_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -34,57 +32,61 @@ class _LoginScreenState extends State<LoginScreen> {
     _continueIfLoggedIn();
   }
 
-  _tryLoginPhone()async{
-
+  _tryLoginPhone() async {
     setState(() {
       currentlyTryingToLogin = true;
     });
     await LoginsService.instance.tryLoginPhone();
-    if(LoginsService.instance.phoneLoginState!=LoginState.Success || LoginsService.instance.phoneCredential==null){return;}
+    if (LoginsService.instance.phoneLoginState != LoginState.Success ||
+        LoginsService.instance.phoneCredential == null) {
+      return;
+    }
     //TODO play here..
 
     print('dor king');
     print('dor is the king');
-    if(FirebaseAuth.instance.currentUser!=null && LoginsService.instance.phoneCredential!=null){
-      try{
-    await FirebaseAuth.instance.currentUser!.linkWithCredential(LoginsService.instance.phoneCredential!);}
-    on FirebaseAuthException catch (e){
+    if (FirebaseAuth.instance.currentUser != null &&
+        LoginsService.instance.phoneCredential != null) {
+      try {
+        await FirebaseAuth.instance.currentUser!
+            .linkWithCredential(LoginsService.instance.phoneCredential!);
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'invalid-verification-code') {
+          //TODO something else while verifying code
+          Get.snackbar('Error verifying phone', 'Wrong verification code',
+                  duration: Duration(seconds: 10))
+              .show();
+        }
 
-      if (e.code == 'invalid-verification-code') {//TODO something else while verifying code
-        Get.snackbar('Error verifying phone', 'Wrong verification code',duration: Duration(seconds:10)).show();
+        if (e.code == 'credential-already-in-use') {
+          Get.snackbar('Error', 'Credential in use',
+                  duration: Duration(seconds: 10))
+              .show();
+        }
       }
-
-      if(e.code == 'credential-already-in-use'){
-        Get.snackbar('Error', 'Credential in use',duration: Duration(seconds:10)).show();
-      }
-    }
-
-
-
-    }
-    else{//Phone is the main provider
-      UserCredential? userCredential = await LoginsService.signInUser(credential: LoginsService.instance.phoneCredential!);
-      if(userCredential!=null){
+    } else {
+      //Phone is the main provider
+      UserCredential? userCredential = await LoginsService.signInUser(
+          credential: LoginsService.instance.phoneCredential!);
+      if (userCredential != null) {
         await _saveUid();
         _continueIfLoggedIn();
       }
     }
     await _saveUid();
 
-
     setState(() {
       currentlyTryingToLogin = false;
     });
 
-      _continueIfLoggedIn();
-
+    _continueIfLoggedIn();
   }
 
   _continueIfLoggedIn() async {
     //Continue to the next screen if the user is already logged in.
     SettingsData settings = SettingsData.instance;
     await settings.readSettingsFromShared();
-    if (settings.readFromShared! && settings.uid.length>0) {
+    if (settings.readFromShared! && settings.uid.length > 0) {
       print('continue because uid is ${settings.uid}');
       ChatData().syncWithServer();
       Get.offAllNamed(
@@ -93,16 +95,16 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-
-
-  Future<void> _saveUid()async{
+  Future<void> _saveUid() async {
     var idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
     String uid = FirebaseAuth.instance.currentUser!.uid;
     print('Registering uid...');
-    String serverUid = await ChatNetworkHelper.registerUid(firebaseIdToken: idToken!);
+    String serverUid =
+        await ChatNetworkHelper.registerUid(firebaseIdToken: idToken!);
     //TODO support existing accounts : check with the server if the uid already existed,and if so load the user's details from the server
-    if(uid!=serverUid){
-      print('The uid in server is different from client, something weird is going on!');
+    if (uid != serverUid) {
+      print(
+          'The uid in server is different from client, something weird is going on!');
       //TODO something about it?
     }
     SettingsData.instance.uid = uid;
@@ -114,9 +116,10 @@ class _LoginScreenState extends State<LoginScreen> {
       currentlyTryingToLogin = true;
     });
     await LoginsService.instance.tryLoginFacebook();
-    if(LoginsService.instance.facebookLoginState==LoginState.Success){
+    if (LoginsService.instance.facebookLoginState == LoginState.Success) {
       await LoginsService.instance.getFacebookUserData();
-      await LoginsService.signInUser(credential: LoginsService.instance.facebookCredential!);
+      await LoginsService.signInUser(
+          credential: LoginsService.instance.facebookCredential!);
       await _saveUid();
       await _continueIfLoggedIn();
     }
@@ -134,8 +137,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    HuaweiAuthButton(onPressed: _tryLoginPhone,),
-
+                    HuaweiAuthButton(
+                      onPressed: _tryLoginPhone,
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -205,7 +209,7 @@ class _LoginScreenState extends State<LoginScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SpinKitPumpingHeart(
-          color: colorBlend02,
+          color: mainAppColor02,
         ),
         Text(
           'Logging in...',

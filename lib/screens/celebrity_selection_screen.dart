@@ -27,7 +27,7 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
 
   _onSearchChanged(String query, CelebsInfo celebInfo) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer( Duration(milliseconds: widget.msCelebsDebounce), () {
+    _debounce = Timer(Duration(milliseconds: widget.msCelebsDebounce), () {
       celebInfo.sortListByKeywords(query);
     });
   }
@@ -98,8 +98,10 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
           _numCelebsToShow = CelebsInfo.instance.entireCelebsList.length;
         }
 
-        if (_listController.hasClients &&CelebsInfo.instance.lastChangeTime!.difference(_lastCelebInfoChange!)>Duration(milliseconds: 0))
-        {
+        if (_listController.hasClients &&
+            CelebsInfo.instance.lastChangeTime!
+                    .difference(_lastCelebInfoChange!) >
+                Duration(milliseconds: 0)) {
           _listController.jumpTo(0);
           _lastCelebInfoChange = CelebsInfo.instance.lastChangeTime;
         }
@@ -121,7 +123,7 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
                 child: TextField(
                   controller: _controller,
                   focusNode: textFieldFocus,
-                  cursorColor: colorBlend02,
+                  cursorColor: mainAppColor02,
                   decoration: InputDecoration(
                     fillColor: lightCardColor,
                     filled: true,
@@ -133,7 +135,7 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
                       icon: Icon(
                         Icons.close_rounded,
                         color: searchBoxIsFocused
-                            ? colorBlend02
+                            ? mainAppColor02
                             : darkTextColor.withOpacity(0.5),
                       ),
                       onPressed: () {
@@ -184,11 +186,12 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
                     },
                     itemCount: _numCelebsToShow,
                     itemBuilder: (BuildContext context, int index) {
-                      Celeb currentCeleb = CelebsInfo.instance.entireCelebsList[index];
+                      Celeb currentCeleb =
+                          CelebsInfo.instance.entireCelebsList[index];
                       return CelebWidget(
                         theCeleb: currentCeleb,
                         celebsInfo: CelebsInfo.instance,
-                        celebIndex : index,
+                        celebIndex: index,
                         onTap: () {
                           Get.back(result: currentCeleb);
                         },

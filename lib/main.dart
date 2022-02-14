@@ -37,7 +37,6 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
-
 class MyHttpOverrides extends HttpOverrides {
   //TODO it's a temporary fix so we can use self signed certificates. DON'T USE IN PRODUCTION
   @override
@@ -65,48 +64,87 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    GetMaterialApp(home: SplashScreen(),
+    GetMaterialApp(
+      home: SplashScreen(),
       getPages: [
-        GetPage(name:UploadImagesOnboardingScreen.routeName,page:()=>UploadImagesOnboardingScreen()),
-        GetPage(name:FinishOnboardingScreen.routeName,page:()=>FinishOnboardingScreen()),
-        GetPage(name:AboutMeOnboardingScreen.routeName,page:()=>AboutMeOnboardingScreen()),
-        GetPage(name:RelationshipTypeOnboardingScreen.routeName,page:()=>RelationshipTypeOnboardingScreen()),
-        GetPage(name:EmailAddressScreen.routeName,page:()=>EmailAddressScreen()),
-        GetPage(name:OrientationScreen.routeName,page:()=>OrientationScreen()),
-        GetPage(name:PronounScreen.routeName,page:()=>PronounScreen()),
-        GetPage(name:BirthdayOnboardingScreen.routeName,page:()=>BirthdayOnboardingScreen()),
-        GetPage(name:GetNameScreen.routeName,page:()=>GetNameScreen()),
-        GetPage(name:TermsScreen.routeName,page:()=>TermsScreen()),
-        GetPage(name:NotificationsPermissionScreen.routeName,page:()=>NotificationsPermissionScreen()),
-        GetPage(name:LocationPermissionScreen.routeName,page: ()=>LocationPermissionScreen()),
-        GetPage(name: PhoneScreen.routeName, page: ()=>PhoneScreen()),
-        GetPage(name: WelcomeScreen.routeName, page: ()=>WelcomeScreen()),
-        GetPage(name:SplashScreen.routeName,page: ()=> SplashScreen()),
-        GetPage(name:LoginScreen.routeName, page: () =>LoginScreen()),
-        GetPage(name:MainNavigationScreen.routeName,page:()=>MainNavigationScreen()),
-        GetPage(name:AdvancedSettingsScreen.routeName,page:()=>AdvancedSettingsScreen()),
-        GetPage(name:ScreenCelebritySelection.routeName,page:()=>ScreenCelebritySelection()),
-        GetPage(name:FaceSelectionScreen.routeName,page:()=>FaceSelectionScreen()), //had args previously
-        GetPage(name:SwipeSettingsScreen.routeName,page:()=>SwipeSettingsScreen()),
-        GetPage(name:ChatScreen.routeName,page:()=>ChatScreen()),
-        GetPage(name:AccountSettingsScreen.routeName,page:()=>AccountSettingsScreen()),
-        GetPage(name:ConversationsScreen.routeName,page:()=>ConversationsScreen()),
-        GetPage(name:MatchScreen.routeName,page:()=>MatchScreen()),
-        GetPage(name:NotificationScreen.routeName,page:()=>NotificationScreen()),
-        GetPage(name:ProfileDetailsScreen.routeName,page:()=>ProfileDetailsScreen()),
-        GetPage(name:SwipeSettingsScreen.routeName,page:()=>SwipeSettingsScreen()),
-        GetPage(name:ViewLikesScreen.routeName,page:()=>ViewLikesScreen()),
-        GetPage(name:FullImageScreen.routeName,page:()=>FullImageScreen()),
-        GetPage(name:GotNewMatchScreen.routeName,page:()=>GotNewMatchScreen()),
-        GetPage(name:VerificationCodeScreen.routeName,page:()=>VerificationCodeScreen())
-
+        GetPage(
+            name: UploadImagesOnboardingScreen.routeName,
+            page: () => UploadImagesOnboardingScreen()),
+        GetPage(
+            name: FinishOnboardingScreen.routeName,
+            page: () => FinishOnboardingScreen()),
+        GetPage(
+            name: AboutMeOnboardingScreen.routeName,
+            page: () => AboutMeOnboardingScreen()),
+        GetPage(
+            name: RelationshipTypeOnboardingScreen.routeName,
+            page: () => RelationshipTypeOnboardingScreen()),
+        GetPage(
+            name: EmailAddressScreen.routeName,
+            page: () => EmailAddressScreen()),
+        GetPage(
+            name: OrientationScreen.routeName, page: () => OrientationScreen()),
+        GetPage(name: PronounScreen.routeName, page: () => PronounScreen()),
+        GetPage(
+            name: BirthdayOnboardingScreen.routeName,
+            page: () => BirthdayOnboardingScreen()),
+        GetPage(name: GetNameScreen.routeName, page: () => GetNameScreen()),
+        GetPage(name: TermsScreen.routeName, page: () => TermsScreen()),
+        GetPage(
+            name: NotificationsPermissionScreen.routeName,
+            page: () => NotificationsPermissionScreen()),
+        GetPage(
+            name: LocationPermissionScreen.routeName,
+            page: () => LocationPermissionScreen()),
+        GetPage(name: PhoneScreen.routeName, page: () => PhoneScreen()),
+        GetPage(name: WelcomeScreen.routeName, page: () => WelcomeScreen()),
+        GetPage(name: SplashScreen.routeName, page: () => SplashScreen()),
+        GetPage(name: LoginScreen.routeName, page: () => LoginScreen()),
+        GetPage(
+            name: MainNavigationScreen.routeName,
+            page: () => MainNavigationScreen()),
+        GetPage(
+            name: AdvancedSettingsScreen.routeName,
+            page: () => AdvancedSettingsScreen()),
+        GetPage(
+            name: ScreenCelebritySelection.routeName,
+            page: () => ScreenCelebritySelection()),
+        GetPage(
+            name: FaceSelectionScreen.routeName,
+            page: () => FaceSelectionScreen()), //had args previously
+        GetPage(
+            name: SwipeSettingsScreen.routeName,
+            page: () => SwipeSettingsScreen()),
+        GetPage(name: ChatScreen.routeName, page: () => ChatScreen()),
+        GetPage(
+            name: AccountSettingsScreen.routeName,
+            page: () => AccountSettingsScreen()),
+        GetPage(
+            name: ConversationsScreen.routeName,
+            page: () => ConversationsScreen()),
+        GetPage(name: MatchScreen.routeName, page: () => MatchScreen()),
+        GetPage(
+            name: NotificationScreen.routeName,
+            page: () => NotificationScreen()),
+        GetPage(
+            name: ProfileDetailsScreen.routeName,
+            page: () => ProfileDetailsScreen()),
+        GetPage(
+            name: SwipeSettingsScreen.routeName,
+            page: () => SwipeSettingsScreen()),
+        GetPage(name: ViewLikesScreen.routeName, page: () => ViewLikesScreen()),
+        GetPage(name: FullImageScreen.routeName, page: () => FullImageScreen()),
+        GetPage(
+            name: GotNewMatchScreen.routeName, page: () => GotNewMatchScreen()),
+        GetPage(
+            name: VerificationCodeScreen.routeName,
+            page: () => VerificationCodeScreen())
       ],
-
-        title: 'Swiper MVP',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData.from(colorScheme: ColorScheme.light().copyWith(primary: Colors.white,secondary: Colors.white70)),
-
-
-    )
-    ,);
+      title: 'Swiper MVP',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.from(
+          colorScheme: ColorScheme.light()
+              .copyWith(primary: Colors.white, secondary: Colors.white70)),
+    ),
+  );
 }
