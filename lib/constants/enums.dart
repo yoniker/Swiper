@@ -1,3 +1,6 @@
+
+enum RelationshipPreference { marriage, relationship, casual, notSure }
+
 enum PreferredGender{
   Men,
   Women,
