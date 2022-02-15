@@ -34,10 +34,10 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     _load();
     super.initState();
-
   }
 
-  Future<bool> _initializeApp() async{ //TODO support error states
+  Future<bool> _initializeApp() async {
+    //TODO support error states
     await ChatData.initDB();
     await NotificationsController.instance.initialize();
     await SettingsData.instance.readSettingsFromShared();
@@ -49,10 +49,9 @@ class _SplashScreenState extends State<SplashScreen> {
     return notificationFromTerminated;
   }
 
-  Future<void> updateFcmToken()async{
-
-    while(true) {
-      try{
+  Future<void> updateFcmToken() async {
+    while (true) {
+      try {
         String? token = await FirebaseMessaging.instance.getToken();
         print('Got the token $token');
         if (token != null) {
@@ -63,8 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
           }
           return;
         }
-      }
-      catch(val){
+      } catch (val) {
         print('caught $val');
       }
     }
@@ -76,18 +74,20 @@ class _SplashScreenState extends State<SplashScreen> {
     // we move to the Main-navigation screen otherwise we move to the LoginScreen.
     //
     // This is the standard way of creating a splash-screen for an Application.
-    if (settings.readFromShared! && settings.uid.length>0) {
+    if (settings.readFromShared! && settings.uid.length > 0) {
       return MainNavigationScreen.routeName;
-    } else {
-      return WelcomeScreen.routeName;//LoginScreen.routeName;
     }
+
+    return WelcomeScreen.routeName;
   }
 
   // loads in the shared preference.
   void _load() async {
     bool navigatedToChatScreen = await _initializeApp();
     final routeTo = await _routeTo();
-    if(!navigatedToChatScreen){Get.offAllNamed(routeTo);}
+    if (!navigatedToChatScreen) {
+      Get.offAllNamed(routeTo);
+    }
     await NotificationsController.instance.cancelAllNotifications();
   }
 
@@ -105,7 +105,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             Text(
               'Swiper',
-              style: mediumBoldedCharStyle.copyWith(color: colorBlend02),
+              style: mediumBoldedCharStyle.copyWith(color: mainAppColor02),
             ),
           ],
         ),

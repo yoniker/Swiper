@@ -1,4 +1,3 @@
-
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
@@ -21,32 +20,31 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.hasBackButton = true,
     this.trailingPad = 5.0,
   })  :
-  // add necessary assertions.
-  //assert(trailing != null, 'The parameter trailing cannot be null'),
+        // add necessary assertions.
+        //assert(trailing != null, 'The parameter trailing cannot be null'),
         assert((title == null) != (customTitle == null),
-        'One of "title" and "customTitleBuilder" must be null, You can only specify one of the two!'),
+            'One of "title" and "customTitleBuilder" must be null, You can only specify one of the two!'),
         super(key: key);
 
   CustomAppBar.subPage({
     required String subPageTitle,
-    this.color=Colors.blue,
+    this.color = Colors.blue,
     this.hasBackButton = true,
     this.hasTopPadding = false,
     this.showAppLogo = true,
     this.trailingPad = 5.0,
-
   })  : this.trailing = Padding(
-    padding: EdgeInsets.only(left: 10.0),
-    child: Text(
-      subPageTitle,
-      style: TextStyle(
-        color: color,
-        fontSize: 22,
-        fontFamily: 'Nunito',
-        fontWeight: FontWeight.w700,
-      ),
-    ),
-  ),
+          padding: EdgeInsets.only(left: 10.0),
+          child: Text(
+            subPageTitle,
+            style: TextStyle(
+              color: color,
+              fontSize: 22,
+              fontFamily: 'Nunito',
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
         this.title = '',
         this.customTitle = SizedBox.shrink();
 
@@ -97,7 +95,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return Padding(
       padding:
-      (hasTopPadding) ? EdgeInsets.only(top: topPadding) : EdgeInsets.zero,
+          (hasTopPadding) ? EdgeInsets.only(top: topPadding) : EdgeInsets.zero,
       child: Container(
         margin: EdgeInsets.only(top: 5.0),
         padding: EdgeInsets.symmetric(horizontal: 5.0),
@@ -111,14 +109,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 children: [
                   if (hasBackButton)
                     InkWell(
-                      splashColor: colorBlend02.withOpacity(0.2),
+                      splashColor: mainAppColor02.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(8.0),
-                      onTap: () {Get.back();},
+                      onTap: () {
+                        Get.back();
+                      },
                       child: GlobalWidgets.assetImageToIcon(
                         'assets/images/back_arrow.png',
                       ),
                     ),
-                  customTitle??
+                  customTitle ??
                       Padding(
                         padding: EdgeInsets.only(left: 10.0),
                         child: Text(

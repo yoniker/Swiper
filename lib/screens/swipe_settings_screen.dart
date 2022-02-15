@@ -29,7 +29,8 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
   PreferredGender _currentGenderSelected = PreferredGender.values
       .firstWhere((e) => e.name == SettingsData.instance.preferredGender);
   RangeValues _selectedAges = RangeValues(
-      SettingsData.instance.minAge.toDouble(), SettingsData.instance.maxAge.toDouble());
+      SettingsData.instance.minAge.toDouble(),
+      SettingsData.instance.maxAge.toDouble());
   bool _showInDiscovery =
       false; //TODO change SettingsData to support visibility
   double _maxDistance = SettingsData.instance.radius;
@@ -43,7 +44,8 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
   }
 
   //
-  DropdownMenuItem<PreferredGender> _buildGenderDropDownMenuItem(PreferredGender selectedGender) {
+  DropdownMenuItem<PreferredGender> _buildGenderDropDownMenuItem(
+      PreferredGender selectedGender) {
     //
     return DropdownMenuItem<PreferredGender>(
       child: Text(
@@ -217,7 +219,8 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                                       onChanged: (value) {
                                         setState(() {
                                           _maxDistance = value;
-                                          SettingsData.instance.radius = _maxDistance;
+                                          SettingsData.instance.radius =
+                                              _maxDistance;
                                         });
                                       },
                                     ),
@@ -262,7 +265,8 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                               Container(
                                 color: Colors.grey[200],
                                 width: 100,
-                                child: DropdownButtonFormFieldModified<PreferredGender>(
+                                child: DropdownButtonFormFieldModified<
+                                    PreferredGender>(
                                   decoration: InputDecoration.collapsed(
                                     hintText: 'My Preferred Gender',
                                     hintStyle: defaultTextStyle.copyWith(
@@ -272,10 +276,14 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                                   isExpanded: false,
                                   onChanged: (PreferredGender? newGender) {
                                     setState(() {
-                                      String gonnaGender = newGender?.name??PreferredGender.Everyone.toString();
-                                      print('Going to change gender to $gonnaGender');
-                                      SettingsData.instance.preferredGender = gonnaGender;
-                                      _currentGenderSelected = newGender??PreferredGender.Everyone;
+                                      String gonnaGender = newGender?.name ??
+                                          PreferredGender.Everyone.toString();
+                                      print(
+                                          'Going to change gender to $gonnaGender');
+                                      SettingsData.instance.preferredGender =
+                                          gonnaGender;
+                                      _currentGenderSelected =
+                                          newGender ?? PreferredGender.Everyone;
                                     });
                                   },
                                   style: defaultTextStyle,
@@ -430,14 +438,13 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                     child: Text(
                       'Done',
                       style: boldTextStyle.copyWith(
-                        color: colorBlend02,
+                        color: mainAppColor02,
                       ),
                     ),
-                    onPressed:
-                        () {
-                          // close the settings screen.
-                          Get.back();
-                        },
+                    onPressed: () {
+                      // close the settings screen.
+                      Get.back();
+                    },
                   ),
                 ),
               ],

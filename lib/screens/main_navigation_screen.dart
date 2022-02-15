@@ -1,14 +1,14 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/screens/conversations_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
 import 'package:betabeta/services/app_state_info.dart';
-import 'package:betabeta/services/notifications_controller.dart';
 import 'package:betabeta/tabs/profile_tab.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   static const int PROFILE_PAGE_INDEX = 0;
@@ -31,7 +31,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   // List of pages.
   List<Widget> pages = <Widget>[
     // ProfileTab(),
-    ProfileTabRedo(),
+    AdvancedSettingsScreen(),
     MatchScreen(
       key: Key('Match Screen'),
     ),
@@ -81,7 +81,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    AppStateInfo.instance.latestTabOnMainNavigation = _selectedTabIndex; //TODO ugly as I mentioned at the comments at the Appstate,switch with a better solution when available
+    AppStateInfo.instance.latestTabOnMainNavigation =
+        _selectedTabIndex; //TODO ugly as I mentioned at the comments at the Appstate,switch with a better solution when available
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -95,8 +96,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               color: darkTextColor,
               fontSize: 13.0,
             ),
-            selectedItemColor: colorBlend02,
-            unselectedItemColor: darkTextColor,
+            selectedItemColor: mainAppColor02,
+            unselectedItemColor: unselectedTabColor,
             showUnselectedLabels: true,
             elevation: 0.0,
             currentIndex: _selectedTabIndex,
@@ -109,41 +110,45 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             items: [
               BottomNavigationBarItem(
                 icon: PrecachedImage.asset(
-                  imageURI: BetaIconPaths.inactiveProfileTabIconPath,
+                  imageURI: BetaIconPaths.inactiveVoilaTabIconPath,
+                  width: 30,
+                  color: unselectedTabColor,
                 ),
                 activeIcon: PrecachedImage.asset(
-                  imageURI: BetaIconPaths.activeProfileTabIconPath,
+                  imageURI: BetaIconPaths.activeVoilaTabIconPath,
+                  color: goldColorish,
+                  width: 30,
                 ),
-                label: 'Profile',
-                tooltip: 'Profile',
+                label: 'Voilà',
+                tooltip: 'Voilà',
               ),
               BottomNavigationBarItem(
                 icon: PrecachedImage.asset(
                   imageURI: BetaIconPaths.inactiveMatchTabIconPath,
+                  color: unselectedTabColor,
                 ),
                 activeIcon: PrecachedImage.asset(
                   imageURI: BetaIconPaths.activeMatchTabIconPath,
+                  color: mainAppColor02,
                 ),
                 label: 'Match',
                 tooltip: 'Match',
               ),
               BottomNavigationBarItem(
-                icon: PrecachedImage.asset(
-                  imageURI: BetaIconPaths.inactiveLikesTabIconPath,
+                icon: Icon(
+                  FontAwesomeIcons.heart,
                 ),
-                activeIcon: PrecachedImage.asset(
-                  imageURI: BetaIconPaths.activeLikesTabIconPath,
+                activeIcon: Icon(
+                  FontAwesomeIcons.heartbeat,
                 ),
                 label: 'Likes',
                 tooltip: 'Likes',
               ),
               BottomNavigationBarItem(
-                icon: PrecachedImage.asset(
-                  imageURI: BetaIconPaths.inactiveMessagesTabIconPath,
+                icon: Icon(
+                  FontAwesomeIcons.comments,
                 ),
-                activeIcon: PrecachedImage.asset(
-                  imageURI: BetaIconPaths.activeMessagesTabIconPath,
-                ),
+                activeIcon: Icon(FontAwesomeIcons.solidComments),
                 label: 'Chat',
                 tooltip: 'Chat',
               ),

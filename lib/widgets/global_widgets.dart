@@ -262,7 +262,8 @@ class GlobalWidgets {
                       },
                       child: Text(
                         'OK',
-                        style: _varryingTextStyle.copyWith(color: colorBlend02),
+                        style:
+                            _varryingTextStyle.copyWith(color: mainAppColor02),
                       ),
                     ),
                   ),
@@ -659,13 +660,13 @@ class ActionBox extends StatelessWidget {
           ? Icon(
               CupertinoIcons.right_chevron,
               size: 30.0,
-              color: colorBlend02,
+              color: mainAppColor02,
             )
           : IconButton(
               icon: Icon(
                 CupertinoIcons.right_chevron,
                 size: 30.0,
-                color: colorBlend02,
+                color: mainAppColor02,
               ),
               onPressed: onTap,
             );
@@ -692,10 +693,11 @@ class ActionBox extends StatelessWidget {
     return Padding(
       padding: margin,
       child: ConstrainedBox(
-        constraints: constraints ?? BoxConstraints(
-          minHeight: 55.0,
-          maxHeight: 80.0,
-        ),
+        constraints: constraints ??
+            BoxConstraints(
+              minHeight: 55.0,
+              maxHeight: 80.0,
+            ),
         child: Material(
           color: backgroundColor ?? whiteCardColor,
           shadowColor: defaultShadowColor,
@@ -740,6 +742,7 @@ class DescriptionBanner extends StatelessWidget {
 
   /// The widget to display after the message.
   final Widget? leading;
+
   /// This is usually an icon button that can recieve a tap gesture.
   final Widget? trailing;
 
@@ -806,7 +809,7 @@ class DescriptionBanner extends StatelessWidget {
       _trailing ??= Icon(
         CupertinoIcons.right_chevron,
         size: 30.0,
-        color: colorBlend02,
+        color: mainAppColor02,
       );
     }
 
@@ -818,10 +821,11 @@ class DescriptionBanner extends StatelessWidget {
         children: [
           Container(
             margin: margin,
-            constraints: constraints ?? BoxConstraints(
-              minHeight: 75.0,
-              maxHeight: 90.5,
-            ),
+            constraints: constraints ??
+                BoxConstraints(
+                  minHeight: 75.0,
+                  maxHeight: 90.5,
+                ),
             decoration: BoxDecoration(
               color: lightCardColor,
               borderRadius: borderRadius ?? BorderRadius.circular(13.0),
@@ -833,7 +837,7 @@ class DescriptionBanner extends StatelessWidget {
                   Expanded(
                     child: Row(
                       children: [
-                        if(leading != null) leading!,
+                        if (leading != null) leading!,
                         if (leading != null) SizedBox(width: 5.0),
                         Expanded(
                           child: Text(
@@ -842,7 +846,6 @@ class DescriptionBanner extends StatelessWidget {
                             style: textStyle ?? mediumBoldedCharStyle,
                           ),
                         ),
-
                       ],
                     ),
                   ),

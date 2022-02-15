@@ -32,14 +32,7 @@ class AdvancedSettingsScreen extends StatefulWidget {
     'Extremely'
   ];
 
-  static const List<String> tasteDescriptions = [
-    '50',
-    '60',
-    '70',
-    '80',
-    '90'
-
-  ];
+  static const List<String> tasteDescriptions = ['50', '60', '70', '80', '90'];
 
   @override
   _AdvancedSettingsScreenState createState() => _AdvancedSettingsScreenState();
@@ -47,9 +40,11 @@ class AdvancedSettingsScreen extends StatefulWidget {
 
 class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
   int _availableFilters = 1;
-  Celeb _selectedCeleb = Celeb(celebName: SettingsData.instance.celebId, imagesUrls: [
-    SettingsData.instance.filterDisplayImageUrl
-  ]); //TODO support Celeb fetching from SettingsData
+  Celeb _selectedCeleb = Celeb(
+      celebName: SettingsData.instance.celebId,
+      imagesUrls: [
+        SettingsData.instance.filterDisplayImageUrl
+      ]); //TODO support Celeb fetching from SettingsData
   String _currentChosenFilterName = SettingsData.instance.filterName;
   int _chosenAuditionCount = SettingsData.instance.auditionCount;
 
@@ -143,7 +138,8 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                           } else {
                             _currentChosenFilterName = '';
                           }
-                          SettingsData.instance.filterName = _currentChosenFilterName;
+                          SettingsData.instance.filterName =
+                              _currentChosenFilterName;
                         });
                       },
                     )),
@@ -181,14 +177,16 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
       }
     }
 
-    bool customImageExists = SettingsData.instance.filterDisplayImageUrl != null &&
-        SettingsData.instance.filterDisplayImageUrl.length > 0;
+    bool customImageExists =
+        SettingsData.instance.filterDisplayImageUrl != null &&
+            SettingsData.instance.filterDisplayImageUrl.length > 0;
 
     return Stack(
       children: [
         Scaffold(
           backgroundColor: whiteCardColor,
           appBar: CustomAppBar(
+            hasBackButton: false,
             title: 'A.I. Filters',
             trailing: Icon(Icons.psychology_outlined, size: 34.0),
             hasTopPadding: true,
@@ -252,21 +250,20 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                             filterName: AdvancedSettingsScreen.CELEB_FILTER,
                             children: [
                               TextButton(
-                                onPressed: () async{
-
-                                  var selectedCeleb = await Get.toNamed(ScreenCelebritySelection.routeName);
-                                    setState(() {
-                                      // Set the `_selectedCeleb` variable to the newly selected
-                                      // celebrity from the [CelebritySelectionScreen] page given that it is not null.
-                                      if (selectedCeleb != null) {
-                                        _selectedCeleb = selectedCeleb as Celeb;
-                                        SettingsData.instance.celebId =
-                                            _selectedCeleb.celebName;
-                                      } else {
-                                        //No celebrity selected
-                                      }
-                                    });
-
+                                onPressed: () async {
+                                  var selectedCeleb = await Get.toNamed(
+                                      ScreenCelebritySelection.routeName);
+                                  setState(() {
+                                    // Set the `_selectedCeleb` variable to the newly selected
+                                    // celebrity from the [CelebritySelectionScreen] page given that it is not null.
+                                    if (selectedCeleb != null) {
+                                      _selectedCeleb = selectedCeleb as Celeb;
+                                      SettingsData.instance.celebId =
+                                          _selectedCeleb.celebName;
+                                    } else {
+                                      //No celebrity selected
+                                    }
+                                  });
                                 }, //onpressed
                                 child: Row(
                                   mainAxisAlignment:
@@ -637,7 +634,8 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                           _buildFilterWidget(
                             description: ' Find matches based on your taste',
                             title: 'Learnt Taste',
-                            filterName: AdvancedSettingsScreen.USER_TASTE_FILTER,
+                            filterName:
+                                AdvancedSettingsScreen.USER_TASTE_FILTER,
                             children: [
                               Container(
                                 padding: EdgeInsets.symmetric(
@@ -724,7 +722,8 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                             setState(() {
                                               _chosenAuditionCount =
                                                   value.round();
-                                              SettingsData.instance.auditionCount =
+                                              SettingsData
+                                                      .instance.auditionCount =
                                                   _chosenAuditionCount;
                                             });
                                           },
@@ -754,11 +753,12 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                             ],
                           ),
 
-
                           _buildFilterWidget(
-                            description: ' Find matches based on matches\' taste',
+                            description:
+                                ' Find matches based on matches\' taste',
                             title: 'Matches\' Taste',
-                            filterName: AdvancedSettingsScreen.MATCH_TASTE_FILTER,
+                            filterName:
+                                AdvancedSettingsScreen.MATCH_TASTE_FILTER,
                             children: [
                               Container(
                                 padding: EdgeInsets.symmetric(
@@ -767,7 +767,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                 ),
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Expanded(
@@ -778,7 +778,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                             children: <InlineSpan>[
                                               TextSpan(
                                                 text:
-                                                '${AdvancedSettingsScreen.tasteDescriptions[_chosenAuditionCount]}th percentile (their taste)',
+                                                    '${AdvancedSettingsScreen.tasteDescriptions[_chosenAuditionCount]}th percentile (their taste)',
                                                 style: defaultTextStyle,
                                               ),
                                               WidgetSpan(
@@ -796,7 +796,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                                       context,
                                                       title: 'Taste',
                                                       message:
-                                                      'Show you matches based on the matches\' personal preferences (learnt by Alex, their personal AI assistant)',
+                                                          'Show you matches based on the matches\' personal preferences (learnt by Alex, their personal AI assistant)',
                                                     );
                                                     //<debug>
                                                   },
@@ -817,7 +817,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                 ),
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Icon(
@@ -844,7 +844,8 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                             setState(() {
                                               _chosenAuditionCount =
                                                   value.round();
-                                              SettingsData.instance.auditionCount =
+                                              SettingsData
+                                                      .instance.auditionCount =
                                                   _chosenAuditionCount;
                                             });
                                           },
@@ -861,10 +862,10 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                               ),
                               Padding(
                                 padding:
-                                const EdgeInsets.symmetric(horizontal: 5.0),
+                                    const EdgeInsets.symmetric(horizontal: 5.0),
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text('More Matches'),
                                     Text('More Accurate')
@@ -873,30 +874,8 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                               )
                             ],
                           ),
-                          
-                          
-                          // build the [done] button.
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.0),
-                            child: TextButton(
-                              style: ButtonStyle(
-                                overlayColor: MaterialStateProperty.all(
-                                    colorBlend01.withOpacity(0.2)),
-                              ),
-                              child: Text(
-                                'Done',
-                                style: boldTextStyle.copyWith(
-                                  color: colorBlend02,
-                                ),
-                              ),
-                              onPressed: () {
-                                // call the `saveFilter` Function when the done button is clicked
 
-                                // Pop current context.
-                                Get.back();
-                              },
-                            ),
-                          ),
+                          // build the [done] button.
                         ],
                       ),
                     ),

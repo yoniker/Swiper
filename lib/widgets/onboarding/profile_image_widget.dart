@@ -19,7 +19,7 @@ class ProfileImageWidget extends StatelessWidget {
       {Key? key,
       this.imageUrl,
       this.onDelete,
-        this.onImagePicked,
+      this.onImagePicked,
       required this.loadingImage})
       : super(key: key);
 
@@ -43,7 +43,7 @@ class ProfileImageWidget extends StatelessWidget {
                     },
                   )
                 : SpinKitPumpingHeart(
-                    color: colorBlend02,
+                    color: mainAppColor02,
                   ));
 
     return Expanded(

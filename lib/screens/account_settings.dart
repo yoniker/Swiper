@@ -34,14 +34,11 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     await prefs.remove('preferredGender');
     SettingsData.instance.name = '';
     await ChatData().cancelSubscriptions();
-    SettingsData.instance.uid='';
+    SettingsData.instance.uid = '';
     await ChatData().deleteDB();
     await FirebaseAuth.instance.signOut();
     Get.offAllNamed(SplashScreen.routeName);
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -67,16 +64,15 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
           SizedBox(height: 12.0),
           ActionBox(
             message: 'Matching Settings',
-            messageStyle: smallBoldedCharStyle.copyWith(color: colorBlend02),
+            messageStyle: smallBoldedCharStyle.copyWith(color: mainAppColor02),
             margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
             trailing: Icon(
               Icons.settings,
-              color: colorBlend02,
+              color: mainAppColor02,
             ),
             onTap: () {
               // move to swiping-preference screen.
               Get.toNamed(SwipeSettingsScreen.routeName);
-
             },
           ),
           ActionBox(
@@ -87,10 +83,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               imageURI: BetaIconPaths.facebookLogo,
             ),
             onTap: () {
-
               _logout();
-
-
             },
           ),
           SizedBox(height: 12.0),
@@ -103,9 +96,9 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             ),
             onTap: () async {
               // move to swiping-preference screen.
-              await ChatNetworkHelper.deleteAccount(); //TODO at the very least verify with the user that that's what she wants (in order to minimize accidental deleting of accounts)
+              await ChatNetworkHelper
+                  .deleteAccount(); //TODO at the very least verify with the user that that's what she wants (in order to minimize accidental deleting of accounts)
               await _logout();
-
             },
           )
         ],

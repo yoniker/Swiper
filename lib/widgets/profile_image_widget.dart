@@ -42,7 +42,7 @@ class ProfileImageWidget extends StatelessWidget {
                     },
                   )
                 : SpinKitPumpingHeart(
-                    color: colorBlend02,
+                    color: mainAppColor02,
                   ));
 
     return Container(
