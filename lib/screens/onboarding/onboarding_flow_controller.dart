@@ -1,4 +1,6 @@
-import 'package:betabeta/models/settings_model.dart';
+import 'dart:io';
+
+import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/onboarding/about_me_screen.dart';
 import 'package:betabeta/screens/onboarding/birthday_screen.dart';
@@ -35,11 +37,20 @@ class OnboardingFlowController{
   ];
 
   static String nextRoute(String currentRoute){
-    int currentRouteIndex = onboardingFlow.indexOf(currentRoute);
-    String candidateNextScreen =  onboardingFlow[currentRouteIndex+1];
-    if(candidateNextScreen==EmailAddressScreen.routeName && SettingsData.instance.email.length>0){
-      candidateNextScreen =  onboardingFlow[currentRouteIndex+2];
+    String candidateNextScreen =  onboardingFlow[onboardingFlow.indexOf(currentRoute)+1];
+    while(true){
+      if(
+          (candidateNextScreen==EmailAddressScreen.routeName && SettingsData.instance.email.length>0)  //There is email
+      ||
+          (candidateNextScreen==NotificationsPermissionScreen.routeName && Platform.isAndroid)
+      ){
+        candidateNextScreen = onboardingFlow[onboardingFlow.indexOf(candidateNextScreen)+1];
+        continue;
+      }
+      break;
+
     }
+
     return candidateNextScreen;
 
   }

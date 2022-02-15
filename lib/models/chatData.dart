@@ -6,7 +6,7 @@ import 'package:betabeta/models/infoMessage.dart';
 import 'package:betabeta/models/infoMessageReceipt.dart';
 import 'package:betabeta/models/infoUser.dart';
 import 'package:betabeta/models/persistentMessagesData.dart';
-import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/chat_screen.dart';
 import 'package:betabeta/screens/got_new_match_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';

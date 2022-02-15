@@ -1,14 +1,14 @@
+import 'dart:io';
+
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/models/loginService.dart';
-import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
-import 'package:betabeta/screens/onboarding/phone_screen.dart';
 import 'package:betabeta/services/chat_networking.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
-import 'package:betabeta/widgets/onboarding/text_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -152,9 +152,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           //TODO show indication to user if login wasn't successful
                         },
                       ),
+
+                      if(Platform.isIOS)
                       const SizedBox(
                         height: 20,
                       ),
+                      if(Platform.isIOS)
                       RoundedButton(
                           name: 'Continue with Apple      ',
                           showBorder: false,

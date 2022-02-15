@@ -1,6 +1,8 @@
+import 'dart:io';
+
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
-import 'package:betabeta/screens/onboarding/terms_screen.dart';
+import 'package:betabeta/services/notifications_controller.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -50,8 +52,12 @@ class _NotificationsState extends State<NotificationsPermissionScreen> {
                   children: [
                     RoundedButton(
                       name: 'Enable notifications',
-                      onTap: () {
-                        //TODO open notifications request
+                      onTap: () async{
+                        if(Platform.isIOS){
+                          var result =
+                              await NotificationsController.instance.requestIOSPermissions();
+                          print('RESULT OF GETTING NOTIFICATIONS PERMISSIONS IS $result');
+                        }
                         Get.offAllNamed(OnboardingFlowController.nextRoute(NotificationsPermissionScreen.routeName));
                       },
                     ),
