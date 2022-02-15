@@ -1,7 +1,7 @@
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/infoMessage.dart';
 import 'package:betabeta/models/infoUser.dart';
-import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/services/app_state_info.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/chat_profile_display_widget.dart';

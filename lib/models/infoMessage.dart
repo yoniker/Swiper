@@ -1,7 +1,7 @@
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/infoMessageReceipt.dart';
 import 'package:betabeta/models/infoUser.dart';
-import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/services/settings_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:convert';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;

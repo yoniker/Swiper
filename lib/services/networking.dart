@@ -8,7 +8,7 @@ import 'dart:math';
 import 'package:betabeta/models/details_model.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
-import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/models/userid.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -154,6 +154,8 @@ class NetworkHelper {
       SettingsData.SHOW_USER_GENDER_KEY:settings.showUserGender.toString(),
       SettingsData.USER_BIRTHDAY_KEY:settings.userBirthday,
       SettingsData.USER_RELATIONSHIP_TYPE_KEY : settings.relationshipType,
+      SettingsData.LONGITUDE_KEY:settings.longitude.toString(),
+      SettingsData.LATITUDE_KEY:settings.latitude.toString(),
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri =

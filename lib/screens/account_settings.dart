@@ -1,7 +1,7 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/chatData.dart';
-import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/login_screen.dart';
 import 'package:betabeta/screens/splash_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';

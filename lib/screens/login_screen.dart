@@ -2,7 +2,7 @@ import 'package:auth_buttons/auth_buttons.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/loginService.dart';
-import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/services/chat_networking.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';

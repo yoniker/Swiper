@@ -2,7 +2,7 @@ import 'dart:collection';
 import 'dart:io';
 
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';

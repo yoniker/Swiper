@@ -1,5 +1,5 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
-import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/onboarding/about_me_screen.dart';
 import 'package:betabeta/screens/onboarding/birthday_screen.dart';
 import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';

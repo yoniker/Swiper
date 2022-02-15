@@ -31,6 +31,8 @@ class SettingsData extends ChangeNotifier{
   static const String SHOW_USER_GENDER_KEY = 'show_user_gender';
   static const String USER_BIRTHDAY_KEY = 'user_birthday';
   static const String USER_RELATIONSHIP_TYPE_KEY = 'relationship_type';
+  static const String LONGITUDE_KEY = 'longitude';
+  static const String LATITUDE_KEY = 'latitude';
   static const _debounceSettingsTime = Duration(seconds: 2); //Debounce time such that we notify listeners
   String _uid = '';
   String _name = '';
@@ -52,11 +54,13 @@ class SettingsData extends ChangeNotifier{
   String _facebookBirthday='';
   String _email = '';
   String _userDescription='';
-  bool _registered = false;
   String _userGender = '';
   bool _showUserGender = true;
   String _userBirthday='';
   String _relationshipType='';
+  double _longitude = 0.0;
+  double _latitude = 0.0;
+  bool _registered = false;
 
   SettingsData._privateConstructor(){
 
@@ -88,8 +92,9 @@ class SettingsData extends ChangeNotifier{
     _showUserGender = sharedPreferences.getBool(SHOW_USER_GENDER_KEY)??_showUserGender;
     _userBirthday = sharedPreferences.getString(USER_BIRTHDAY_KEY)??_userBirthday;
     _relationshipType = sharedPreferences.getString(USER_RELATIONSHIP_TYPE_KEY)??_relationshipType;
+    _latitude = sharedPreferences.getDouble(LATITUDE_KEY)??_latitude;
+    _longitude = sharedPreferences.getDouble(LONGITUDE_KEY)??_longitude;
     _registered = sharedPreferences.getBool(REGISTERED_KEY) ?? _registered;
-
     _readFromShared = true;
 
     return;
@@ -344,6 +349,24 @@ class SettingsData extends ChangeNotifier{
     if(_relationshipType==newRelationshipType){return;}
     _relationshipType = newRelationshipType;
     savePreferences(USER_RELATIONSHIP_TYPE_KEY, newRelationshipType);
+  }
+  double get longitude{
+    return _longitude;
+  }
+
+  set longitude(double newLongitude){
+    if(_longitude==newLongitude){return;}
+    _longitude = newLongitude;
+    savePreferences(LONGITUDE_KEY, newLongitude);
+  }
+  double get latitude{
+    return _latitude;
+  }
+
+  set latitude(double newLatitude){
+    if(_latitude==newLatitude){return;}
+    _latitude = newLatitude;
+    savePreferences(LATITUDE_KEY, newLatitude);
   }
 
 

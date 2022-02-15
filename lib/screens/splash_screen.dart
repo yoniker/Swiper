@@ -6,7 +6,7 @@ import 'package:betabeta/models/celebs_info_model.dart';
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/details_model.dart';
 import 'package:betabeta/models/match_engine.dart';
-import 'package:betabeta/models/settings_model.dart';
+import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/login_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/onboarding/welcome_screen.dart';
@@ -40,11 +40,6 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<bool> _initializeApp() async{ //TODO support error states
     await ChatData.initDB();
     await NotificationsController.instance.initialize();
-    if(Platform.isIOS){//TODO move to notifications screen
-      var result =
-      await NotificationsController.instance.requestIOSPermissions();
-      print('RESULT OF GETTING NOTIFICATIONS PERMISSIONS IS $result');
-    }
     await SettingsData.instance.readSettingsFromShared();
     DetailsData();
     MatchEngine();
