@@ -31,10 +31,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   // List of pages.
   List<Widget> pages = <Widget>[
     // ProfileTab(),
-    AdvancedSettingsScreen(),
     MatchScreen(
       key: Key('Match Screen'),
     ),
+    AdvancedSettingsScreen(),
     ViewLikesScreen(),
     ConversationsScreen(),
   ];
@@ -96,7 +96,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               color: darkTextColor,
               fontSize: 13.0,
             ),
-            selectedItemColor: mainAppColor02,
+            selectedItemColor:
+                _selectedTabIndex == 1 ? goldColorish : mainAppColor02,
             unselectedItemColor: unselectedTabColor,
             showUnselectedLabels: true,
             elevation: 0.0,
@@ -110,6 +111,18 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             items: [
               BottomNavigationBarItem(
                 icon: PrecachedImage.asset(
+                  imageURI: BetaIconPaths.inactiveMatchTabIconPath,
+                  color: unselectedTabColor,
+                ),
+                activeIcon: PrecachedImage.asset(
+                  imageURI: BetaIconPaths.activeMatchTabIconPath,
+                  color: mainAppColor02,
+                ),
+                label: 'Match',
+                tooltip: 'Match',
+              ),
+              BottomNavigationBarItem(
+                icon: PrecachedImage.asset(
                   imageURI: BetaIconPaths.inactiveVoilaTabIconPath,
                   width: 30,
                   color: unselectedTabColor,
@@ -121,18 +134,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 ),
                 label: 'Voilà',
                 tooltip: 'Voilà',
-              ),
-              BottomNavigationBarItem(
-                icon: PrecachedImage.asset(
-                  imageURI: BetaIconPaths.inactiveMatchTabIconPath,
-                  color: unselectedTabColor,
-                ),
-                activeIcon: PrecachedImage.asset(
-                  imageURI: BetaIconPaths.activeMatchTabIconPath,
-                  color: mainAppColor02,
-                ),
-                label: 'Match',
-                tooltip: 'Match',
               ),
               BottomNavigationBarItem(
                 icon: Icon(
