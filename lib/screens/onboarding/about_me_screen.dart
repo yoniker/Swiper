@@ -21,6 +21,7 @@ class AboutMeOnboardingScreen extends StatefulWidget {
 
 class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
   String aboutMeText = '';
+  bool clickOnDisable = false;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +30,16 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
     // Height (without SafeArea)
     var padding = MediaQuery.of(context).viewPadding;
     double heightWithoutSafeArea = height - padding.top - padding.bottom;
+
+    void alertUserMinimumText() async {
+      setState(() {
+        clickOnDisable = true;
+      });
+      await Future.delayed(Duration(seconds: 4));
+      setState(() {
+        clickOnDisable = false;
+      });
+    }
 
     int charactersLeft =
         AboutMeOnboardingScreen.minCharInDescription - (aboutMeText.length);
@@ -75,8 +86,11 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                                   AboutMeOnboardingScreen.minCharInDescription
                               ? null
                               : () {
-                            SettingsData.instance.userDescription = aboutMeText;
-                            Get.offAllNamed(OnboardingFlowController.nextRoute(AboutMeOnboardingScreen.routeName));
+                                  SettingsData.instance.userDescription =
+                                      aboutMeText;
+                                  Get.offAllNamed(
+                                      OnboardingFlowController.nextRoute(
+                                          AboutMeOnboardingScreen.routeName));
                                 },
                           iconHeight: 90,
                           icon: Icons.send,
@@ -98,20 +112,30 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                                     AboutMeOnboardingScreen.minCharInDescription
                                 ? ''
                                 : 'Minimum $charactersLeft characters left',
-                            style: kSmallInfoStyle,
+                            style: clickOnDisable != true
+                                ? kSmallInfoStyle
+                                : kSmallInfoStyleAlert,
                           ),
                         )
                       ],
                     ),
-                    RoundedButton(
-                        name: 'CONTINUE',
-                        onTap: aboutMeText.length <
-                                AboutMeOnboardingScreen.minCharInDescription
-                            ? null
-                            : () {
-                          SettingsData.instance.userDescription = aboutMeText;
-                          Get.offAllNamed(OnboardingFlowController.nextRoute(AboutMeOnboardingScreen.routeName));
-                              })
+                    GestureDetector(
+                      onTap: () {
+                        alertUserMinimumText();
+                      },
+                      child: RoundedButton(
+                          name: 'CONTINUE',
+                          onTap: aboutMeText.length <
+                                  AboutMeOnboardingScreen.minCharInDescription
+                              ? null
+                              : () {
+                                  SettingsData.instance.userDescription =
+                                      aboutMeText;
+                                  Get.offAllNamed(
+                                      OnboardingFlowController.nextRoute(
+                                          AboutMeOnboardingScreen.routeName));
+                                }),
+                    )
                   ],
                 ),
               ),
