@@ -60,7 +60,7 @@ class _FinishOnboardingScreenState extends State<FinishOnboardingScreen> {
                         height: 200,
                       ),
                       const Text(
-                        "You've ready to find someone special!",
+                        "You're ready to find someone special!",
                         style: kTitleStyleWhite,
                       ),
                       const SizedBox(

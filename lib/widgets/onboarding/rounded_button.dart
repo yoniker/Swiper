@@ -43,7 +43,10 @@ class RoundedButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(25.0),
         ),
         color: color,
-        elevation: color == Colors.grey.withOpacity(0.6) ? 0.0 : elvation,
+        elevation:
+            color == Colors.grey.withOpacity(0.6) || color == Colors.transparent
+                ? 0.0
+                : elvation,
         onPressed: onTap,
         minWidth: addControlerAnimation * 400,
         height: addControlerAnimation * screenHeight * 0.04,
@@ -55,6 +58,7 @@ class RoundedButton extends StatelessWidget {
             Text(name!,
                 style: color == Colors.blueGrey ||
                         color == Color(0xFF0060DB) ||
+                        color == Colors.transparent ||
                         onTap == null
                     ? kButtonTextWhite
                     : kButtonText),

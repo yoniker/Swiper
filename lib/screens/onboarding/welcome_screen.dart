@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/models/loginService.dart';
+import 'package:betabeta/screens/onboarding/phone_screen.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
@@ -14,7 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:math';
-
 
 class WelcomeScreen extends StatefulWidget {
   static const String routeName = '/welcome_screen';
@@ -32,13 +32,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     await SettingsData.instance.readSettingsFromShared();
     if (SettingsData.instance.readFromShared! &&
         SettingsData.instance.uid.length > 0) {
-      Get.offAllNamed(OnboardingFlowController.nextRoute(WelcomeScreen.routeName));
+      Get.offAllNamed(
+          OnboardingFlowController.nextRoute(WelcomeScreen.routeName));
     }
   }
 
-  void skipLogin( //This function is so that development won't be hindered by the existence of onboarding
+  void skipLogin(
+      //This function is so that development won't be hindered by the existence of onboarding
 
-      ){
+      ) {
     SettingsData.instance.uid = Random().nextInt(999999).toString();
     SettingsData.instance.name = 'Lamer Admin';
     SettingsData.instance.userDescription = 'Lamer was fed by Tzippi';
@@ -152,21 +154,32 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           //TODO show indication to user if login wasn't successful
                         },
                       ),
-
-                      if(Platform.isIOS)
-                      const SizedBox(
+                      if (Platform.isIOS)
+                        const SizedBox(
+                          height: 20,
+                        ),
+                      if (Platform.isIOS)
+                        RoundedButton(
+                            name: 'Continue with Apple      ',
+                            showBorder: false,
+                            color: Colors.white,
+                            onTap: () {
+                              //TODO Apple login logic
+                              Get.offAllNamed(
+                                  OnboardingFlowController.nextRoute(
+                                      WelcomeScreen.routeName));
+                            },
+                            icon: Icons.apple_rounded),
+                      SizedBox(
                         height: 20,
                       ),
-                      if(Platform.isIOS)
                       RoundedButton(
-                          name: 'Continue with Apple      ',
-                          showBorder: false,
-                          color: Colors.white,
+                          name: 'Continue with phone',
+                          color: Colors.transparent,
                           onTap: () {
-                            //TODO Apple login logic
-                            Get.offAllNamed(OnboardingFlowController.nextRoute(WelcomeScreen.routeName));
-                          },
-                          icon: Icons.apple_rounded),
+                            Get.offAllNamed(OnboardingFlowController.nextRoute(
+                                PhoneScreen.routeName));
+                          }),
                       Center(
                         child: Column(
                           children: [
@@ -178,15 +191,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             const SizedBox(height: 5),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children:  [
+                              children: [
                                 GestureDetector(
                                   child: Text(
                                     'Terms of Service',
                                     style: kSmallInfoStyleUnderlineWhite,
                                   ),
-                                onTap: (){
+                                  onTap: () {
                                     skipLogin();
-                                },
+                                  },
                                 ),
                                 SizedBox(width: 20),
                                 Text(

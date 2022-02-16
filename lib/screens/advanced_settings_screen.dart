@@ -10,6 +10,7 @@ import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
@@ -186,10 +187,47 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
         Scaffold(
           backgroundColor: whiteCardColor,
           appBar: CustomAppBar(
-            hasBackButton: false,
-            title: 'A.I. Filters',
-            trailing: Icon(Icons.psychology_outlined, size: 34.0),
             hasTopPadding: true,
+            customTitle: Container(
+              padding: EdgeInsets.only(left: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: ProfileImageAvatar.network(
+                        backgroundColor: Colors.grey,
+                        url:
+                            'https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_3.jpg'),
+                  ),
+                ],
+              ),
+            ),
+            showAppLogo: false,
+            hasBackButton: false,
+            trailing: Stack(
+              alignment: AlignmentDirectional.centerEnd,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 100),
+                  child: Image.asset(
+                    'assets/images/full_logo_only.jpg',
+                    width: 180,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: GestureDetector(
+                    child: Icon(
+                      FontAwesomeIcons.slidersH,
+                      size: 25,
+                      color: Colors.grey,
+                    ),
+                    onTap: () async {},
+                  ),
+                ),
+              ],
+            ),
           ),
           body: Padding(
             padding: MediaQuery.of(context)

@@ -35,7 +35,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       key: Key('Match Screen'),
     ),
     AdvancedSettingsScreen(),
-    ViewLikesScreen(),
     ConversationsScreen(),
   ];
 
@@ -134,16 +133,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 ),
                 label: 'Voilà',
                 tooltip: 'Voilà',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  FontAwesomeIcons.heart,
-                ),
-                activeIcon: Icon(
-                  FontAwesomeIcons.heartbeat,
-                ),
-                label: 'Likes',
-                tooltip: 'Likes',
               ),
               BottomNavigationBarItem(
                 icon: Icon(

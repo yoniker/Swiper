@@ -26,10 +26,13 @@ class ProfileImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget _inBoxWidget = imageUrl != null
-        ? Image.file(
-            /// Changed this from networkImage to local path for now.
-            File(imageUrl!),
-            fit: BoxFit.cover,
+        ? Container(
+            width: 200,
+            child: Image.file(
+              /// Changed this from networkImage to local path for now.
+              File(imageUrl!),
+              fit: BoxFit.cover,
+            ),
           )
         : Center(
             child: loadingImage == false
@@ -67,7 +70,7 @@ class ProfileImageWidget extends StatelessWidget {
           // This is the cancel button which will appear only when an image is present.
           if (imageUrl != null)
             Align(
-              alignment: Alignment(0.50, -1.0),
+              alignment: Alignment(0.80, -1.0),
               child: Material(
                 clipBehavior: Clip.antiAlias,
                 color: Colors.white,

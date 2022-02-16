@@ -6,10 +6,10 @@ class BetaIconPaths {
   // Naviagtion Tab Icons.
 
   /// The path to the active Profile Tab image.
-  static const String activeVoilaTabIconPath = 'assets/images/voila.png';
+  static const String activeVoilaTabIconPath = 'assets/images/voila_logo.png';
 
   /// The path to the inactive Profile Tab image.
-  static const String inactiveVoilaTabIconPath = 'assets/images/voila.png';
+  static const String inactiveVoilaTabIconPath = 'assets/images/voila_logo.png';
 
   /// The path to the active Match Tab image.
   static const String activeMatchTabIconPath =

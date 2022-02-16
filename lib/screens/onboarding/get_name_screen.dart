@@ -53,11 +53,10 @@ class _GetNameScreenState extends State<GetNameScreen> {
                       initialvalue: userName,
                       onTapIcon: () {
                         SettingsData.instance.name = userName;
-                        Get.offAllNamed(OnboardingFlowController.nextRoute(GetNameScreen.routeName));
+                        Get.offAllNamed(OnboardingFlowController.nextRoute(
+                            GetNameScreen.routeName));
                       },
-                      icon: SettingsData.instance.name.length == 0
-                          ? null
-                          : Icons.send,
+                      icon: userName.length == 0 ? null : Icons.send,
                       hintText: ' Enter your first name here.',
                       onType: (value) {
                         setState(() {
@@ -87,8 +86,9 @@ class _GetNameScreenState extends State<GetNameScreen> {
                   onTap: userName.isEmpty
                       ? null
                       : () {
-                    SettingsData.instance.name = userName;
-                    Get.offAllNamed(OnboardingFlowController.nextRoute(GetNameScreen.routeName));
+                          SettingsData.instance.name = userName;
+                          Get.offAllNamed(OnboardingFlowController.nextRoute(
+                              GetNameScreen.routeName));
                         },
                 )
               ],
