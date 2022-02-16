@@ -9,6 +9,7 @@ import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
 import 'package:betabeta/services/chat_networking.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
+import 'package:betabeta/widgets/onboarding/loading_indicator.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -96,129 +97,133 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     ScreenSize.getSize(context);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.black87,
-        resizeToAvoidBottomInset: false,
-        body: Stack(children: [
-          SizedBox.expand(
-            child: FittedBox(
-              fit: BoxFit.fill,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: VideoPlayer(_controller),
-              ),
+    return Scaffold(
+      backgroundColor: Colors.black87,
+      resizeToAvoidBottomInset: false,
+      body: Stack(children: [
+        SizedBox.expand(
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              child: VideoPlayer(_controller),
             ),
           ),
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: kDarkToTransTheme,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ConditionalParentWidget(
-                  condition:
-                      ScreenSize.getSize(context) == ScreenSizeCategory.small,
-                  conditionalBuilder: (Widget child) => FittedBox(
-                    child: child,
-                  ),
-                  child: Column(
-                    children: [
-                      Center(
+        ),
+        currentlyTryingToLogin == true
+            ? LoadingIndicator()
+            : Container(
+                height: double.infinity,
+                width: double.infinity,
+                decoration: kDarkToTransTheme,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ConditionalParentWidget(
+                      condition: ScreenSize.getSize(context) ==
+                          ScreenSizeCategory.small,
+                      conditionalBuilder: (Widget child) => FittedBox(
+                        child: child,
+                      ),
+                      child: Center(
                         child: Image.asset(
                           'assets/onboarding/images/Voila-logo.png',
                           width: MediaQuery.of(context).size.width * 0.60,
                           height: MediaQuery.of(context).size.height * 0.30,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      bottom: screenHeight * 0.03,
-                      left: screenWidth * 0.06,
-                      right: screenWidth * 0.06),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.values[1],
-                    children: [
-                      RoundedButton(
-                        name: 'Continue with Facebook',
-                        showBorder: false,
-                        icon: Icons.facebook_rounded,
-                        color: const Color(0xFF0060DB),
-                        onTap: () async {
-                          await _tryLoginFacebook();
-                          //TODO show indication to user if login wasn't successful
-                        },
-                      ),
-                      if (Platform.isIOS)
-                        const SizedBox(
-                          height: 20,
-                        ),
-                      if (Platform.isIOS)
-                        RoundedButton(
-                            name: 'Continue with Apple      ',
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          bottom: screenHeight * 0.03,
+                          left: screenWidth * 0.06,
+                          right: screenWidth * 0.06),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.values[1],
+                        children: [
+                          RoundedButton(
+                            name: 'Continue with Facebook',
                             showBorder: false,
-                            color: Colors.white,
-                            onTap: () {
-                              //TODO Apple login logic
-                              Get.offAllNamed(
-                                  OnboardingFlowController.nextRoute(
-                                      WelcomeScreen.routeName));
+                            icon: Icons.facebook_rounded,
+                            color: const Color(0xFF0060DB),
+                            onTap: () async {
+                              setState(() {
+                                currentlyTryingToLogin = true;
+                              });
+                              await _tryLoginFacebook();
+                              setState(() {
+                                currentlyTryingToLogin = false;
+                              });
+                              //TODO show indication to user if login wasn't successful
                             },
-                            icon: Icons.apple_rounded),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      RoundedButton(
-                          name: 'Continue with phone',
-                          color: Colors.transparent,
-                          onTap: () {
-                            Get.offAllNamed(OnboardingFlowController.nextRoute(
-                                PhoneScreen.routeName));
-                          }),
-                      Center(
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 20),
-                            const Text(
-                              "Don't worry! We never post to Facebook.",
-                              style: kSmallInfoStyleWhite,
+                          ),
+                          if (Platform.isIOS)
+                            const SizedBox(
+                              height: 20,
                             ),
-                            const SizedBox(height: 5),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                          if (Platform.isIOS)
+                            RoundedButton(
+                                name: 'Continue with Apple      ',
+                                showBorder: false,
+                                color: Colors.white,
+                                onTap: () {
+                                  //TODO Apple login logic
+                                  Get.offAllNamed(
+                                      OnboardingFlowController.nextRoute(
+                                          WelcomeScreen.routeName));
+                                },
+                                icon: Icons.apple_rounded),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          RoundedButton(
+                              name: 'Continue with phone      ',
+                              icon: Icons.phone_android,
+                              color: Colors.transparent,
+                              onTap: () {
+                                Get.offAllNamed(
+                                    OnboardingFlowController.nextRoute(
+                                        PhoneScreen.routeName));
+                              }),
+                          Center(
+                            child: Column(
                               children: [
-                                GestureDetector(
-                                  child: Text(
-                                    'Terms of Service',
-                                    style: kSmallInfoStyleUnderlineWhite,
-                                  ),
-                                  onTap: () {
-                                    skipLogin();
-                                  },
+                                const SizedBox(height: 20),
+                                const Text(
+                                  "Don't worry! We never post to Facebook.",
+                                  style: kSmallInfoStyleWhite,
                                 ),
-                                SizedBox(width: 20),
-                                Text(
-                                  'Privacy Policy',
-                                  style: kSmallInfoStyleUnderlineWhite,
-                                ),
+                                const SizedBox(height: 5),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    GestureDetector(
+                                      child: Text(
+                                        'Terms of Service',
+                                        style: kSmallInfoStyleUnderlineWhite,
+                                      ),
+                                      onTap: () {
+                                        skipLogin();
+                                      },
+                                    ),
+                                    SizedBox(width: 20),
+                                    Text(
+                                      'Privacy Policy',
+                                      style: kSmallInfoStyleUnderlineWhite,
+                                    ),
+                                  ],
+                                )
                               ],
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        ]),
-      ),
+              ),
+      ]),
     );
   }
 
