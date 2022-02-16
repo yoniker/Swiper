@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
@@ -5,6 +7,7 @@ import 'package:betabeta/screens/onboarding/upload_images_onboarding_screen.dart
 import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:betabeta/widgets/onboarding/progress_bar.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -22,6 +25,7 @@ class AboutMeOnboardingScreen extends StatefulWidget {
 class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
   String aboutMeText = '';
   bool clickOnDisable = false;
+  Timer? _debounce;
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +35,14 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
     var padding = MediaQuery.of(context).viewPadding;
     double heightWithoutSafeArea = height - padding.top - padding.bottom;
 
-    void alertUserMinimumText() async {
+    void alertUserMinimumText() {
       setState(() {
         clickOnDisable = true;
       });
-      await Future.delayed(Duration(seconds: 4));
-      setState(() {
-        clickOnDisable = false;
+      _debounce = Timer(Duration(seconds: 4), () {
+        setState(() {
+          clickOnDisable = false;
+        });
       });
     }
 
@@ -92,6 +97,11 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                                       OnboardingFlowController.nextRoute(
                                           AboutMeOnboardingScreen.routeName));
                                 },
+                          onTapIconDisable: charactersLeft <= 0
+                              ? null
+                              : () {
+                                  alertUserMinimumText();
+                                },
                           iconHeight: 90,
                           icon: Icons.send,
                           onType: (value) {
@@ -144,5 +154,13 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    if (_debounce?.isActive ?? false) {
+      _debounce!.cancel();
+    }
+    super.dispose();
   }
 }

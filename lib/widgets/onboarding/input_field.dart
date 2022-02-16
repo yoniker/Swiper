@@ -14,6 +14,7 @@ class InputField extends StatelessWidget {
       this.maxLines = 1,
       this.maxCharacters,
       this.style,
+      this.onTapIconDisable,
       this.onTapIcon});
 
   bool pressed;
@@ -25,6 +26,7 @@ class InputField extends StatelessWidget {
   int maxLines;
   void Function(String)? onType;
   void Function()? onTapIcon;
+  void Function()? onTapIconDisable;
   final IconData? icon;
   TextInputType? keyboardType = TextInputType.text;
   int? maxCharacters = 20;
@@ -54,9 +56,12 @@ class InputField extends StatelessWidget {
             padding: EdgeInsets.only(right: 15, top: iconHeight),
             child: GestureDetector(
               onTap: onTapIcon == null ? null : onTapIcon,
-              child: Icon(
-                icon,
-                color: onTapIcon == null ? Colors.grey : Colors.black87,
+              child: GestureDetector(
+                onTap: onTapIconDisable,
+                child: Icon(
+                  icon,
+                  color: onTapIcon == null ? Colors.grey : Colors.black87,
+                ),
               ),
             ),
           ),
