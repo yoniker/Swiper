@@ -205,28 +205,16 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
             ),
             showAppLogo: false,
             hasBackButton: false,
-            trailing: Stack(
-              alignment: AlignmentDirectional.centerEnd,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 100),
-                  child: Image.asset(
-                    'assets/images/full_logo_only.jpg',
-                    width: 180,
-                  ),
+            trailing: Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: GestureDetector(
+                child: Icon(
+                  FontAwesomeIcons.slidersH,
+                  size: 25,
+                  color: Colors.grey,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: GestureDetector(
-                    child: Icon(
-                      FontAwesomeIcons.slidersH,
-                      size: 25,
-                      color: Colors.grey,
-                    ),
-                    onTap: () async {},
-                  ),
-                ),
-              ],
+                onTap: () async {},
+              ),
             ),
           ),
           body: Padding(

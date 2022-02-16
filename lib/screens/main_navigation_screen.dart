@@ -90,6 +90,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           extendBody: true,
           resizeToAvoidBottomInset: true,
           bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: Colors.black,
             selectedLabelStyle: boldTextStyle.copyWith(color: Colors.red),
             unselectedLabelStyle: boldTextStyle.copyWith(
               color: darkTextColor,
@@ -128,7 +129,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 ),
                 activeIcon: PrecachedImage.asset(
                   imageURI: BetaIconPaths.activeVoilaTabIconPath,
-                  color: goldColorish,
                   width: 30,
                 ),
                 label: 'Voilà',
