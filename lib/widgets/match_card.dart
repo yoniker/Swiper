@@ -3,7 +3,6 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/full_image_screen.dart';
-import 'package:betabeta/screens/view_children_screen.dart';
 import 'package:betabeta/widgets/basic_detail.dart';
 import 'package:betabeta/widgets/compatibility_scale.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
@@ -325,29 +324,6 @@ class _MatchCardState extends State<MatchCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DescriptionBanner(
-              // TODO(Backend) Add a field "gender" to the profile Interface:
-              message: 'See your children',
-
-              leading: PrecachedImage.asset(imageURI: 'assets/images/babies.png'),//Image.asset('assets/images/babies.png'),
-
-              overflow: null,
-              constraints: BoxConstraints(
-                minHeight: 75.0,
-                maxHeight: 90.5,
-                maxWidth: MediaQuery.of(context).size.width,
-              ),
-              onTap: () async {
-                // Before the new Route is pushed we set the value of
-                Get.toNamed(ViewChildrenScreen.routeName, arguments: profile);
-              },
-              label: Align(
-                alignment: Alignment(-1.02, -2.0),
-                child: PrecachedImage.asset(
-                  imageURI: BetaIconPaths.tryMeBanner,
-                ),
-              ),
-            ),
             DescriptionBanner(
               message: 'Personal preference',
               leading: Icon(

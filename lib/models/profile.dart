@@ -10,14 +10,13 @@ class Profile {
   final String? location;
   final double? distance;
   final String? jobTitle;
-  final String? serverUserImagesLocation;
   final String? height;
   final double? compatibilityScore;
   final double? hotnessScore;
 
 
   UserId? userId;
-  Profile( { this.compatibilityScore, this.hotnessScore, this.imageUrls, this.username, this.headline, this.description, this.age, this.location,this.distance,this.jobTitle,this.serverUserImagesLocation,this.height, this.userId}){
+  Profile( { this.compatibilityScore, this.hotnessScore, this.imageUrls, this.username, this.headline, this.description, this.age, this.location,this.distance,this.jobTitle,this.height, this.userId}){
     if (this.userId ==null){
       this.userId =  UserId(id: this.username, userType: UserType.POF_USER);
     }
@@ -36,7 +35,6 @@ class Profile {
     }
   return Profile(username: match['username'],headline: match['headline'],description: match['description'],age:match['age'],
       location: locationDesc,distance: match['distance'],jobTitle: match['profession'],
-      serverUserImagesLocation: match['server_user_images_location'],
       height: match['height'],
       userId: userId,
       hotnessScore: match['hotness'] * 100,

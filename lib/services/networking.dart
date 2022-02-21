@@ -284,36 +284,6 @@ class NetworkHelper {
     return;
   }
 
-  Future<Map<String,String?>> startChildrenTasks(Profile profile) async{ //Send a request to produce 1.User's face links 2.Match's face links 3.children images
-
-    Map<String,String?> detailsToSend={
-      'match_type':profile.userId!.userType.toString(),
-      'match_id':profile.userId!.id,
-      'match_images_server_location':profile.serverUserImagesLocation,
-      'user_type':UserType.REAL_USER.toString(),
-      'user_id':SettingsData.instance.facebookId,
-      'user_images_server_location':'',
-    };
-
-    String encoded = jsonEncode(detailsToSend);
-    Uri getChildrenPicsUri =
-    Uri.https(SERVER_ADDR, '/generate_children/${SettingsData.instance.facebookId}');
-    http.Response response = await http.post(getChildrenPicsUri,
-        body: encoded);
-    if(response.statusCode==200){
-      var decodedResponse = json.jsonDecode(response.body);
-      String? childrenTaskId = decodedResponse['children_task'];
-      String? matchFacesTaskId = decodedResponse['match_faces_task'];
-      String? userFacesTaskId = decodedResponse['user_faces_task'];
-      String? targetLocation = decodedResponse['target_location'];
-      return {'childrenTaskId':childrenTaskId, 'targetLocation':targetLocation,
-        'user_faces_task':userFacesTaskId,'matchFacesTaskId':matchFacesTaskId
-      };
-
-    }
-
-    return {'taskId':'Status not 200', 'targetLocation':'NA'}; //TODO in general make the errors do sth in the UI (think what and how)
-  }
 
   Future<NetworkTaskStatus> checkTaskStatus(String? taskId) async{
     if (DateTime.now().difference(_lastTaskStatusCall) < MIN_TASK_STATUS_CALL_INTERVAL) {
@@ -347,7 +317,6 @@ class NetworkHelper {
     Map<String,String?> detailsToSend={
       'user_id':profile.userId!.id,
       'user_type':profile.userId!.userType.toString(),
-      'user_server_location':profile.serverUserImagesLocation
     };
 
     String encoded = jsonEncode(detailsToSend);
@@ -363,7 +332,7 @@ class NetworkHelper {
 
   Future<List<String>?> getFacesLinkSelf() async{
     UserId selfId = UserId(id:SettingsData.instance.facebookId,userType: UserType.REAL_USER);
-    Profile selfProfile = Profile(userId:selfId,serverUserImagesLocation:'');
+    Profile selfProfile = Profile(userId:selfId);
     return await getFacesLinksMatch(selfProfile);
 
   }
