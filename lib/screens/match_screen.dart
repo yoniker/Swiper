@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/match_engine.dart';
+import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
@@ -152,10 +153,15 @@ class _MatchScreenState extends State<MatchScreen>
                   ),
                   Padding(
                     padding: const EdgeInsets.all(4.0),
-                    child: ProfileImageAvatar.network(
-                        backgroundColor: Colors.grey,
-                        url:
-                            'https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_3.jpg'),
+                    child: GestureDetector(
+                      onTap: (){
+                        Get.toNamed(ProfileScreen.routeName);
+                      },
+                      child: ProfileImageAvatar.network(
+                          backgroundColor: Colors.grey,
+                          url:
+                              'https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_3.jpg'),
+                    ),
                   ),
                 ],
               ),

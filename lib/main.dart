@@ -26,6 +26,7 @@ import 'package:betabeta/screens/onboarding/upload_images_onboarding_screen.dart
 import 'package:betabeta/screens/onboarding/verification_code_screen.dart';
 import 'package:betabeta/screens/onboarding/welcome_screen.dart';
 import 'package:betabeta/screens/profile_details_screen.dart';
+import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
 import 'package:betabeta/screens/splash_screen.dart';
@@ -66,6 +67,10 @@ void main() async {
     GetMaterialApp(
       home: SplashScreen(),
       getPages: [
+        GetPage(
+          name:ProfileScreen.routeName,
+          page: () => ProfileScreen(),
+        ),
         GetPage(
             name: UploadImagesOnboardingScreen.routeName,
             page: () => UploadImagesOnboardingScreen()),
