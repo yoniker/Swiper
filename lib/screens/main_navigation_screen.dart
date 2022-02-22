@@ -4,6 +4,7 @@ import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/screens/conversations_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
+import 'package:betabeta/screens/voila_page.dart';
 import 'package:betabeta/services/app_state_info.dart';
 import 'package:betabeta/tabs/profile_tab.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
@@ -34,7 +35,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     MatchScreen(
       key: Key('Match Screen'),
     ),
-    AdvancedSettingsScreen(),
+    VoilaPage(),
     ConversationsScreen(),
   ];
 

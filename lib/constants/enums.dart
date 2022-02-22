@@ -1,18 +1,14 @@
-
 enum RelationshipPreference { marriage, relationship, casual, notSure }
 
-enum PreferredGender{
-  Men,
-  Women,
-  Everyone
-}
-
+enum PreferredGender { Men, Women, Everyone }
 
 enum FilterType {
   SELECT_CELEB,
   USE_TASTE,
   NONE,
 }
+
+enum ImageType { Celeb, Custom }
 
 /// CONVERT from String to FilterType.
 FilterType filterTypeFromString(String? filter) {
@@ -28,17 +24,15 @@ FilterType filterTypeFromString(String? filter) {
 
     default:
       return FilterType.NONE;
-
   }
 }
-
 
 /// CONVERT from FilterType to String.
 String filterTypeToString(FilterType? filterType) {
   switch (filterType) {
     case FilterType.SELECT_CELEB:
       return 'select_celeb';
-     ;
+      ;
     case FilterType.USE_TASTE:
       return 'use_taste';
 
@@ -47,6 +41,5 @@ String filterTypeToString(FilterType? filterType) {
 
     default:
       return 'none';
-
   }
 }

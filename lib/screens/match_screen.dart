@@ -168,7 +168,7 @@ class _MatchScreenState extends State<MatchScreen>
                 child: Icon(
                   FontAwesomeIcons.slidersH,
                   size: 25,
-                  color: Colors.grey,
+                  color: Colors.black87,
                 ),
                 onTap: () async {
                   // hide the overlay.

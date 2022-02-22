@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 // These final variables are used in making most of the
 // UI for the Settings Screen.
 
-const Color lightCardColor = Color(0xFFE8EBF1);
+const Color lightCardColor = Color(0xFFF5F5F5);
 const Color backgroundThemeColor = Color(0xFFE8EBF1);
 const Color darkTextColor = Color(0xFF747474);
 const Color unselectedTabColor = Colors.white60;
@@ -96,6 +96,20 @@ const TextStyle headerStyle = TextStyle(
   color: Colors.black,
   fontFamily: 'Nunito',
   fontSize: 24,
+  fontWeight: FontWeight.w700,
+);
+
+const TextStyle boldTextStyleWhite = TextStyle(
+  color: Colors.white,
+  fontFamily: 'Nunito',
+  fontSize: 18,
+  fontWeight: FontWeight.w700,
+);
+
+const TextStyle titleStyleWhite = TextStyle(
+  color: Colors.white,
+  fontFamily: 'Nunito',
+  fontSize: 22,
   fontWeight: FontWeight.w700,
 );
 

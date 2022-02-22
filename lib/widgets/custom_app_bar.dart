@@ -13,7 +13,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     Key? key,
     this.title,
     this.trailing,
-    this.color = Colors.black,
+    this.titleTextColor = Colors.black,
     this.customTitle,
     this.hasTopPadding = false,
     this.showAppLogo = false,
@@ -28,7 +28,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   CustomAppBar.subPage({
     required String subPageTitle,
-    this.color = Colors.blue,
+    this.titleTextColor = Colors.blue,
     this.hasBackButton = true,
     this.hasTopPadding = false,
     this.showAppLogo = true,
@@ -38,7 +38,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: Text(
             subPageTitle,
             style: TextStyle(
-              color: color,
+              color: titleTextColor,
               fontSize: 22,
               fontFamily: 'Nunito',
               fontWeight: FontWeight.w700,
@@ -59,7 +59,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool hasBackButton;
 
   /// The Color of the title text. Defaults to `Colors.black`
-  final Color color;
+  final Color titleTextColor;
 
   /// Determines whether to add a Padding to the Top of the AppBar in a case where it is used
   /// as the `appBar` parameter of the [Scaffold] widget.
@@ -93,54 +93,59 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     // This holds the value for the topPadding of the AppBar.
     double topPadding = MediaQuery.of(context).viewPadding.top;
 
-    return Padding(
-      padding:
-          (hasTopPadding) ? EdgeInsets.only(top: topPadding) : EdgeInsets.zero,
-      child: Container(
-        margin: EdgeInsets.only(top: 5.0),
-        padding: EdgeInsets.symmetric(horizontal: 5.0),
+    return Material(
+      elevation: 1,
+      child: Padding(
+        padding: (hasTopPadding)
+            ? EdgeInsets.only(top: topPadding)
+            : EdgeInsets.zero,
         child: Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  if (hasBackButton)
-                    InkWell(
-                      splashColor: mainAppColor02.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(8.0),
-                      onTap: () {
-                        Get.back();
-                      },
-                      child: GlobalWidgets.assetImageToIcon(
-                        'assets/images/back_arrow.png',
-                      ),
-                    ),
-                  customTitle ??
-                      Padding(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Text(
-                          title!,
-                          style: TextStyle(
-                            color: color,
-                            fontSize: 22,
-                            fontFamily: 'Nunito',
-                            fontWeight: FontWeight.w700,
-                          ),
+          margin: EdgeInsets.only(top: 5.0),
+          padding: EdgeInsets.symmetric(horizontal: 5.0),
+          child: Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    if (hasBackButton)
+                      InkWell(
+                        splashColor: mainAppColor02.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(8.0),
+                        onTap: () {
+                          Get.back();
+                        },
+                        child: GlobalWidgets.assetImageToIcon(
+                          'assets/images/back_arrow.png',
                         ),
                       ),
-                ],
-              ),
-              if (showAppLogo)
-                GlobalWidgets.assetImageToIcon('https://picsum.photos/200/300'),
-              Padding(
-                padding: EdgeInsets.only(right: trailingPad),
-                child: trailing,
-              ),
-              // show App Logo.
-            ],
+                    customTitle ??
+                        Padding(
+                          padding: EdgeInsets.only(left: 10.0),
+                          child: Text(
+                            title!,
+                            style: TextStyle(
+                              color: titleTextColor,
+                              fontSize: 22,
+                              fontFamily: 'Nunito',
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                  ],
+                ),
+                if (showAppLogo)
+                  GlobalWidgets.assetImageToIcon(
+                      'https://picsum.photos/200/300'),
+                Padding(
+                  padding: EdgeInsets.only(right: trailingPad),
+                  child: trailing,
+                ),
+                // show App Logo.
+              ],
+            ),
           ),
         ),
       ),

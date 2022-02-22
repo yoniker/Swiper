@@ -16,7 +16,7 @@ const TextStyle kSmallInfoStyle =
 const TextStyle kSmallInfoStyleAlert =
     TextStyle(color: Colors.red, fontWeight: FontWeight.w600, fontSize: 16);
 const TextStyle kSmallInfoStyleWhite =
-    TextStyle(color: Colors.white70, fontWeight: FontWeight.w500, fontSize: 15);
+    TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 15);
 const TextStyle kSmallInfoStyleUnderline = TextStyle(
     color: Colors.black54,
     fontWeight: FontWeight.w500,
