@@ -1,7 +1,7 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/models/details_model.dart';
 import 'package:betabeta/services/networking.dart';
+import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
@@ -64,9 +64,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
 
     // this makes sure that if the state is not yet mounted, we don't end up calling setState
     // but instead push the function forward to the addPostFrameCallback function.
-    _aboutMe = DetailsData().aboutMe;
-    _company = DetailsData().company;
-    _jobTitle = DetailsData().job;
+    _aboutMe = SettingsData.instance.userDescription;
+    _company = SettingsData.instance.userDescription; //TODO change settings data appropriately,add properties as needed etc
+    _jobTitle = SettingsData.instance.userDescription;
 
     _syncFromServer();
   }
@@ -312,7 +312,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                   // do something.
                 },
                 onChanged: (val) {
-                  DetailsData().aboutMe = val;
+                  SettingsData.instance.userDescription = val;
                 },
               ),
               TextEditBlock(
@@ -324,7 +324,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                   // do something.
                 },
                 onChanged: (val) {
-                  DetailsData().job = val;
+                  SettingsData.instance.userDescription = val;
                 },
               ),
               TextEditBlock(
@@ -336,7 +336,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                   // do something.
                 },
                 onChanged: (val) {
-                  DetailsData().company = val;
+                  SettingsData.instance.userDescription = val;
                 },
               ),
             ],
