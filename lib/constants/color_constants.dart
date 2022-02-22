@@ -107,10 +107,36 @@ const TextStyle boldTextStyleWhite = TextStyle(
 );
 
 const TextStyle titleStyleWhite = TextStyle(
-  color: Colors.white,
+    color: Colors.white,
+    fontFamily: 'Nunito',
+    fontSize: 22,
+    fontWeight: FontWeight.w700,
+    shadows: [
+      Shadow(
+        blurRadius: 15.0,
+        color: Colors.black,
+        offset: Offset(-2.0, 2.0),
+      ),
+    ]);
+
+const TextStyle LargeTitleStyleWhite = TextStyle(
+    color: Colors.white,
+    fontFamily: 'Nunito',
+    fontSize: 26,
+    fontWeight: FontWeight.bold,
+    shadows: [
+      Shadow(
+        blurRadius: 17.0,
+        color: Colors.black,
+        offset: Offset(-2.0, 2.0),
+      ),
+    ]);
+
+const TextStyle LargeTitleStyle = TextStyle(
+  color: Colors.black87,
   fontFamily: 'Nunito',
-  fontSize: 22,
-  fontWeight: FontWeight.w700,
+  fontSize: 26,
+  fontWeight: FontWeight.bold,
 );
 
 //<@SUGN> This is an optional Gradient variable to be used in conjuction with

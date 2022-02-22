@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
-import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/data_models/celeb.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
@@ -11,7 +11,7 @@ import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/widgets/advance_filter_card_widget.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
-import 'package:betabeta/widgets/onboarding/choice_button.dart';
+import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -19,8 +19,6 @@ import 'package:get/get.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:tuple/tuple.dart';
-
-import 'advanced_settings_screen.dart';
 
 class VoilaPage extends StatefulWidget {
   static const String routeName = '/voila_page';
@@ -143,7 +141,10 @@ class _VoilaPageState extends State<VoilaPage> {
                           Expanded(
                             child: AdvanceFilterCard(
                                 image: AssetImage('assets/images/custom1.jpg'),
-                                title: 'Custom Image',
+                                title: Text(
+                                  'Custom Image',
+                                  style: titleStyleWhite,
+                                ),
                                 onTap: () async {
                                   // Direct user to the custom Selection Page.
                                   // await Navigator.pushNamed(context,
@@ -165,8 +166,7 @@ class _VoilaPageState extends State<VoilaPage> {
                                     },
                                   );
                                 },
-                                info:
-                                    'Search for people who\nlook similar to anyone you choose.'),
+                                info: 'Discover picture \nlook-a-likes.'),
                           ),
                           SizedBox(
                             width: 10,
@@ -190,9 +190,11 @@ class _VoilaPageState extends State<VoilaPage> {
                                     }
                                   });
                                 },
-                                title: 'Celeb Filter',
-                                info:
-                                    'Search for people who\nlook similar to a celebrity of your choice.'),
+                                title: Text(
+                                  'Celeb Filter',
+                                  style: titleStyleWhite,
+                                ),
+                                info: 'Discover celebrity \nlook-a-likes.'),
                           ),
                         ],
                       ),
@@ -200,10 +202,113 @@ class _VoilaPageState extends State<VoilaPage> {
                         height: 20,
                       ),
                       AdvanceFilterCard(
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (_) => CupertinoAlertDialog(
+                                      title: Text(
+                                        "Coming Soon!",
+                                      ),
+                                      content:
+                                          Text('Coming in 2022. Stay Toned!'),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text(
+                                              'Close',
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ))
+                                      ],
+                                    ));
+                          },
+                          image: AssetImage('assets/images/textsearch.jpg'),
+                          button: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(40),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 5.0, vertical: 5),
+                              child: Text(
+                                '  Search now  ',
+                                style: boldTextStyle,
+                              ),
+                            ),
+                          ),
+                          title: Row(
+                            children: [
+                              Text(
+                                'Text Search',
+                                style: LargeTitleStyleWhite,
+                              ),
+                              DefaultTextStyle(
+                                style: LargeTitleStyle,
+                                child: AnimatedTextKit(
+                                  pause: Duration(seconds: 2),
+                                  repeatForever: true,
+                                  animatedTexts: [
+                                    TyperAnimatedText(
+                                      '   Dog lover?...',
+                                      speed: Duration(milliseconds: 100),
+                                    ),
+                                    TyperAnimatedText(
+                                      '   Vegan?...',
+                                      speed: Duration(milliseconds: 100),
+                                    ),
+                                    TyperAnimatedText(
+                                      '   Outdoors?...',
+                                      speed: Duration(milliseconds: 100),
+                                    ),
+                                    TyperAnimatedText(
+                                      '   Sushi?...',
+                                      speed: Duration(milliseconds: 100),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          info: 'Search by a simple word or text'),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      AdvanceFilterCard(
                           image: AssetImage('assets/images/bar3.jpg'),
-                          title: 'Local Bar. ',
+                          title: Text(
+                            'Local Bar.',
+                            style: LargeTitleStyleWhite,
+                          ),
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (_) => CupertinoAlertDialog(
+                                      title: Text(
+                                        "Coming Soon!",
+                                      ),
+                                      content:
+                                          Text('Coming in 2022. Stay Toned!'),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text(
+                                              'Close',
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ))
+                                      ],
+                                    ));
+                          },
                           info:
-                              'Join the local bar and meet people around you!'),
+                              'Join the local bar and meet people around you!')
                     ],
                   ),
                 ),
