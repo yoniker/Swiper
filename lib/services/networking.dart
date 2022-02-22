@@ -5,7 +5,6 @@ import 'dart:convert' as json;
 import 'dart:io';
 import 'dart:math';
 
-import 'package:betabeta/models/details_model.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -17,8 +16,11 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:tuple/tuple.dart';
 
-
-enum NetworkTaskStatus { completed, inProgress, notExist } //possible statuses for long ongoing tasks on the server
+enum NetworkTaskStatus {
+  completed,
+  inProgress,
+  notExist
+} //possible statuses for long ongoing tasks on the server
 
 class NetworkHelper {
   static const SERVER_ADDR = 'dordating.com:8081';
@@ -52,23 +54,21 @@ class NetworkHelper {
     return [];
   }
 
-
   static String faceUrlToFullUrl(String faceUrl) {
     return 'https://' + NetworkHelper.SERVER_ADDR + '/' + faceUrl;
   }
 
-  static List<Image> serverImagesUrlsToImages(List<String> facesUrls,BuildContext context){
+  static List<Image> serverImagesUrlsToImages(
+      List<String> facesUrls, BuildContext context) {
     List<Image> facesImages = [];
-    for(int imageIndex = 0 ; imageIndex<facesUrls.length; imageIndex++){
-  String url = NetworkHelper.faceUrlToFullUrl(facesUrls[imageIndex]);
-  Image img = Image.network(url,fit:BoxFit.cover);
-  precacheImage(img.image, context);
-  facesImages.add(img);
-
-
-  }
+    for (int imageIndex = 0; imageIndex < facesUrls.length; imageIndex++) {
+      String url = NetworkHelper.faceUrlToFullUrl(facesUrls[imageIndex]);
+      Image img = Image.network(url, fit: BoxFit.cover);
+      precacheImage(img.image, context);
+      facesImages.add(img);
+    }
     return facesImages;
-}
+  }
 
   //getMatches: Grab some matches and image links from the server
   dynamic getMatches() async {
@@ -77,7 +77,8 @@ class NetworkHelper {
           DateTime.now().difference(_lastMatchCall));
     }
     _lastMatchCall = DateTime.now();
-    Uri matchesUrl = Uri.https(SERVER_ADDR, '/matches/${SettingsData.instance.uid}');
+    Uri matchesUrl =
+        Uri.https(SERVER_ADDR, '/matches/${SettingsData.instance.uid}');
     http.Response response = await http.get(matchesUrl); //eg /12313?gender=Male
     if (response.statusCode != 200) {
       return null; //TODO error handling
@@ -113,26 +114,10 @@ class NetworkHelper {
         body: encoded); //TODO something if response wasnt 200
   }
 
-  postUserDetails() async{
-    Map<String,String?> detailsToSend={
-      DetailsData.ABOUT_ME_KEY:DetailsData().aboutMe,
-      DetailsData.JOB_KEY:DetailsData().job,
-      DetailsData.COMPANY_KEY:DetailsData().company,
-      SettingsData.FIREBASE_UID_KEY:SettingsData.instance.uid,
-
-    };
-
-    String encoded = jsonEncode(detailsToSend);
-    Uri postDetailsUri =
-    Uri.https(SERVER_ADDR, '/details/${SettingsData.instance.facebookId}');
-    http.Response response = await http.post(postDetailsUri,
-        body: encoded);
-  }
-
   postUserSettings() async {
     SettingsData settings = SettingsData.instance;
     Map<String, String?> toSend = {
-      SettingsData.FIREBASE_UID_KEY:settings.uid,
+      SettingsData.FIREBASE_UID_KEY: settings.uid,
       SettingsData.FACEBOOK_ID_KEY: settings.facebookId,
       'update_date': '8.0',
       SettingsData.NAME_KEY: settings.name,
@@ -145,21 +130,21 @@ class NetworkHelper {
       SettingsData.CELEB_ID_KEY: settings.celebId,
       SettingsData.FILTER_DISPLAY_IMAGE_URL_KEY: settings.filterDisplayImageUrl,
       SettingsData.RADIUS_KEY: settings.radius.toString(),
-      SettingsData.FCM_TOKEN_KEY : settings.fcmToken,
-      SettingsData.FACEBOOK_PROFILE_IMAGE_URL_KEY:settings.facebookProfileImageUrl,
-      SettingsData.FACEBOOK_BIRTHDAY_KEY:settings.facebookBirthday,
-      SettingsData.EMAIL_KEY:settings.email,
-      SettingsData.USER_GENDER_KEY:settings.userGender,
-      SettingsData.USER_DESCRIPTION_KEY:settings.userDescription,
-      SettingsData.SHOW_USER_GENDER_KEY:settings.showUserGender.toString(),
-      SettingsData.USER_BIRTHDAY_KEY:settings.userBirthday,
-      SettingsData.USER_RELATIONSHIP_TYPE_KEY : settings.relationshipType,
-      SettingsData.LONGITUDE_KEY:settings.longitude.toString(),
-      SettingsData.LATITUDE_KEY:settings.latitude.toString(),
+      SettingsData.FCM_TOKEN_KEY: settings.fcmToken,
+      SettingsData.FACEBOOK_PROFILE_IMAGE_URL_KEY:
+          settings.facebookProfileImageUrl,
+      SettingsData.FACEBOOK_BIRTHDAY_KEY: settings.facebookBirthday,
+      SettingsData.EMAIL_KEY: settings.email,
+      SettingsData.USER_GENDER_KEY: settings.userGender,
+      SettingsData.USER_DESCRIPTION_KEY: settings.userDescription,
+      SettingsData.SHOW_USER_GENDER_KEY: settings.showUserGender.toString(),
+      SettingsData.USER_BIRTHDAY_KEY: settings.userBirthday,
+      SettingsData.USER_RELATIONSHIP_TYPE_KEY: settings.relationshipType,
+      SettingsData.LONGITUDE_KEY: settings.longitude.toString(),
+      SettingsData.LATITUDE_KEY: settings.latitude.toString(),
     };
     String encoded = jsonEncode(toSend);
-    Uri postSettingsUri =
-        Uri.https(SERVER_ADDR, '/settings/${settings.uid}');
+    Uri postSettingsUri = Uri.https(SERVER_ADDR, '/settings/${settings.uid}');
     http.Response response = await http.post(postSettingsUri,
         body: encoded); //TODO something if response wasnt 200
   }
@@ -169,7 +154,8 @@ class NetworkHelper {
     if (_facesCall != null) {
       return HashMap();
     }
-    Uri facesLinkUri = Uri.https(SERVER_ADDR, 'faces/${userId!.id}/$imageFileName');
+    Uri facesLinkUri =
+        Uri.https(SERVER_ADDR, 'faces/${userId!.id}/$imageFileName');
     _facesCall = http.get(facesLinkUri);
     if (DateTime.now().difference(_lastFacesImagesCall) <
         MIN_FACES_CALL_INTERVAL) {
@@ -184,7 +170,7 @@ class NetworkHelper {
   }
 
   //A helper method to shrink an image if it's too large, and decode it into a workable image format
-  Future<img.Image> _prepareImage(PickedFile pickedImageFile)async{
+  Future<img.Image> _prepareImage(PickedFile pickedImageFile) async {
     const MAX_IMAGE_SIZE = 800; //TODO make it  a parameter (if needed)
 
     img.Image theImage = img.decodeImage(await pickedImageFile.readAsBytes())!;
@@ -197,19 +183,21 @@ class NetworkHelper {
     return theImage;
   }
 
-  Future<Tuple2<img.Image, String>> preparedFaceSearchImageFileDetails(PickedFile imageFile) async{
+  Future<Tuple2<img.Image, String>> preparedFaceSearchImageFileDetails(
+      PickedFile imageFile) async {
     img.Image theImage = await _prepareImage(imageFile);
     String fileName = 'custom_face_search_${DateTime.now()}.jpg';
     return Tuple2<img.Image, String>(theImage, fileName);
   }
 
-  Future<void> postFaceSearchImage(Tuple2<img.Image, String> imageFileDetails) async {
+  Future<void> postFaceSearchImage(
+      Tuple2<img.Image, String> imageFileDetails) async {
     img.Image theImage = imageFileDetails.item1;
     String fileName = imageFileDetails.item2;
 
     http.MultipartRequest request = http.MultipartRequest(
       'POST',
-      Uri.https(SERVER_ADDR, '/upload/${SettingsData.instance.facebookId}'),
+      Uri.https(SERVER_ADDR, '/upload/${SettingsData.instance.uid}'),
     );
     var multipartFile = new http.MultipartFile.fromBytes(
       'file',
@@ -228,7 +216,8 @@ class NetworkHelper {
 
     http.MultipartRequest request = http.MultipartRequest(
       'POST',
-      Uri.https(SERVER_ADDR, '/profile_images/${SettingsData.instance.facebookId}'),
+      Uri.https(
+          SERVER_ADDR, '/profile_images/${SettingsData.instance.uid}'),
     );
     var multipartFile = new http.MultipartFile.fromBytes(
       'file',
@@ -241,152 +230,69 @@ class NetworkHelper {
     return;
   }
 
-
-
-
-
-
-  Future<List<String>?> getProfileImages()async{
-    Uri countUri = Uri.https(SERVER_ADDR, '/profile_images/get_list/${SettingsData.instance.facebookId}/');
+  Future<List<String>?> getProfileImages() async {
+    Uri countUri = Uri.https(SERVER_ADDR,
+        '/profile_images/get_list/${SettingsData.instance.uid}/');
     var response = await http.get(countUri);
-    if(response.statusCode==200){
+    if (response.statusCode == 200) {
       var parsed = json.jsonDecode(response.body);
       List<String>? imagesLinks = parsed.cast<String>();
       return imagesLinks;
     }
-
   }
 
-  String getProfileImageUrl(String shortUrl){
-    return 'https://'+SERVER_ADDR+'/profile_images/${SettingsData.instance.facebookId}/$shortUrl';
+  String getProfileImageUrl(String shortUrl) {
+    return 'https://' +
+        SERVER_ADDR +
+        '/profile_images/${SettingsData.instance.uid}/$shortUrl';
   }
 
-  Future<void> deleteProfileImage(int index)async{
-    Uri deletionUri = Uri.https(SERVER_ADDR, '/profile_images/delete/${SettingsData.instance.facebookId}/${index.toString()}');
+  Future<void> deleteProfileImage(int index) async {
+    Uri deletionUri = Uri.https(SERVER_ADDR,
+        '/profile_images/delete/${SettingsData.instance.uid}/${index.toString()}');
     var response = await http.get(deletionUri);
     return;
   }
-  
-  Future<void> swapProfileImages(int profileImageIndex1,int profileImageIndex2) async{
+
+  Future<void> swapProfileImages(
+      int profileImageIndex1, int profileImageIndex2) async {
     Map<String, int> toSend = {
       'file1_index': profileImageIndex1,
       'file2_index': profileImageIndex2
     };
 
-
     String encoded = jsonEncode(toSend);
 
-
-
-
-    Uri swapUri = Uri.https(SERVER_ADDR, '/profile_images/swap/${SettingsData.instance.facebookId}');
-    http.Response response = await http.post(swapUri,body: encoded);
+    Uri swapUri = Uri.https(SERVER_ADDR,
+        '/profile_images/swap/${SettingsData.instance.uid}');
+    http.Response response = await http.post(swapUri, body: encoded);
     return;
   }
 
-  Future<Map<String,String?>> startChildrenTasks(Profile profile) async{ //Send a request to produce 1.User's face links 2.Match's face links 3.children images
-
-    Map<String,String?> detailsToSend={
-      'match_type':profile.userId!.userType.toString(),
-      'match_id':profile.userId!.id,
-      'match_images_server_location':profile.serverUserImagesLocation,
-      'user_type':UserType.REAL_USER.toString(),
-      'user_id':SettingsData.instance.facebookId,
-      'user_images_server_location':'',
-    };
-
-    String encoded = jsonEncode(detailsToSend);
-    Uri getChildrenPicsUri =
-    Uri.https(SERVER_ADDR, '/generate_children/${SettingsData.instance.facebookId}');
-    http.Response response = await http.post(getChildrenPicsUri,
-        body: encoded);
-    if(response.statusCode==200){
-      var decodedResponse = json.jsonDecode(response.body);
-      String? childrenTaskId = decodedResponse['children_task'];
-      String? matchFacesTaskId = decodedResponse['match_faces_task'];
-      String? userFacesTaskId = decodedResponse['user_faces_task'];
-      String? targetLocation = decodedResponse['target_location'];
-      return {'childrenTaskId':childrenTaskId, 'targetLocation':targetLocation,
-        'user_faces_task':userFacesTaskId,'matchFacesTaskId':matchFacesTaskId
-      };
-
-    }
-
-    return {'taskId':'Status not 200', 'targetLocation':'NA'}; //TODO in general make the errors do sth in the UI (think what and how)
-  }
-
-  Future<NetworkTaskStatus> checkTaskStatus(String? taskId) async{
-    if (DateTime.now().difference(_lastTaskStatusCall) < MIN_TASK_STATUS_CALL_INTERVAL) {
+  Future<NetworkTaskStatus> checkTaskStatus(String? taskId) async {
+    if (DateTime.now().difference(_lastTaskStatusCall) <
+        MIN_TASK_STATUS_CALL_INTERVAL) {
       await Future.delayed(MIN_TASK_STATUS_CALL_INTERVAL -
           DateTime.now().difference(_lastTaskStatusCall));
     }
     _lastTaskStatusCall = DateTime.now();
-    Uri getTaskStatus = Uri.https(SERVER_ADDR, '/task_status/${SettingsData.instance.facebookId}/$taskId');
+    Uri getTaskStatus = Uri.https(SERVER_ADDR,
+        '/task_status/${SettingsData.instance.uid}/$taskId');
     http.Response response = await http.get(getTaskStatus);
-    if(response.statusCode==200){
+    if (response.statusCode == 200) {
       var decodedResponse = json.jsonDecode(response.body);
-      if (decodedResponse=='in_progress')
-      { return NetworkTaskStatus.inProgress;
+      if (decodedResponse == 'in_progress') {
+        return NetworkTaskStatus.inProgress;
       }
-      if (decodedResponse == 'completed'){
+      if (decodedResponse == 'completed') {
         return NetworkTaskStatus.completed;
       }
       return NetworkTaskStatus.notExist;
-
     }
 
-
-    return NetworkTaskStatus.notExist; //TODO else what to do when status isnt 200?
-
-
-
+    return NetworkTaskStatus
+        .notExist; //TODO else what to do when status isnt 200?
   }
-
-  Future<List<String>?> getFacesLinksMatch(Profile profile)async{
-    Uri getFacesUri = Uri.https(SERVER_ADDR, '/faces_analyzed/${SettingsData.instance.facebookId}');
-    Map<String,String?> detailsToSend={
-      'user_id':profile.userId!.id,
-      'user_type':profile.userId!.userType.toString(),
-      'user_server_location':profile.serverUserImagesLocation
-    };
-
-    String encoded = jsonEncode(detailsToSend);
-    http.Response response = await http.post(getFacesUri,
-        body: encoded);
-    if(response.statusCode==200){
-      var decodedResponse = json.jsonDecode(response.body);
-      return decodedResponse.cast<String>();
-    }
-
-
-  }
-
-  Future<List<String>?> getFacesLinkSelf() async{
-    UserId selfId = UserId(id:SettingsData.instance.facebookId,userType: UserType.REAL_USER);
-    Profile selfProfile = Profile(userId:selfId,serverUserImagesLocation:'');
-    return await getFacesLinksMatch(selfProfile);
-
-  }
-
-  // /generated_children/<username>/<children_dir>
-  Future<List<String>?> getGeneratedBabiesLinks(String? childrenDirLocation)async{
-    Uri getChildrenUri = Uri.https(SERVER_ADDR, '/generated_children/$childrenDirLocation');
-    http.Response response = await http.get(getChildrenUri);
-    if(response.statusCode==200){
-      var decodedResponse = json.jsonDecode(response.body);
-      return decodedResponse.cast<String>();
-    }
-
-    return [];
-
-
-  }
-
-
-
-
-
-
 
 
 

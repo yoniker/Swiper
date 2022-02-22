@@ -15,15 +15,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ProfileTabRedo extends StatefulWidget {
-  ProfileTabRedo({Key? key}) : super(key: key);
+class ProfileScreen extends StatefulWidget {
+  ProfileScreen({Key? key}) : super(key: key);
+  static const String routeName = '/profile_screen';
 
   @override
-  _ProfileTabRedoState createState() => _ProfileTabRedoState();
+  _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _ProfileTabRedoState extends State<ProfileTabRedo>
-    with AutomaticKeepAliveClientMixin, MountedStateMixin<ProfileTabRedo> {
+class _ProfileScreenState extends State<ProfileScreen>
+    with AutomaticKeepAliveClientMixin, MountedStateMixin<ProfileScreen> {
   List<String>? _profileImagesUrls = [];
 
   // create a SettingsData & a NetworkHelper instance.
@@ -139,7 +140,7 @@ class _ProfileTabRedoState extends State<ProfileTabRedo>
       appBar: CustomAppBar(
         trailing: PrecachedImage.asset(imageURI: BetaIconPaths.editIcon03),
         hasTopPadding: true,
-        hasBackButton: false,
+        hasBackButton: true,
         showAppLogo: false,
         title: 'Profile',
       ),

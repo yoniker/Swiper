@@ -7,7 +7,6 @@ import 'package:betabeta/screens/face_selection_screen.dart';
 import 'package:betabeta/screens/account_settings.dart';
 import 'package:betabeta/screens/full_image_screen.dart';
 import 'package:betabeta/screens/got_new_match_screen.dart';
-import 'package:betabeta/screens/login_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/notification_screen.dart';
@@ -27,6 +26,7 @@ import 'package:betabeta/screens/onboarding/upload_images_onboarding_screen.dart
 import 'package:betabeta/screens/onboarding/verification_code_screen.dart';
 import 'package:betabeta/screens/onboarding/welcome_screen.dart';
 import 'package:betabeta/screens/profile_details_screen.dart';
+import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
 import 'package:betabeta/screens/splash_screen.dart';
@@ -69,6 +69,10 @@ void main() async {
       home: SplashScreen(),
       getPages: [
         GetPage(
+          name:ProfileScreen.routeName,
+          page: () => ProfileScreen(),
+        ),
+        GetPage(
             name: UploadImagesOnboardingScreen.routeName,
             page: () => UploadImagesOnboardingScreen()),
         GetPage(
@@ -100,7 +104,6 @@ void main() async {
         GetPage(name: PhoneScreen.routeName, page: () => PhoneScreen()),
         GetPage(name: WelcomeScreen.routeName, page: () => WelcomeScreen()),
         GetPage(name: SplashScreen.routeName, page: () => SplashScreen()),
-        GetPage(name: LoginScreen.routeName, page: () => LoginScreen()),
         GetPage(
             name: MainNavigationScreen.routeName,
             page: () => MainNavigationScreen()),

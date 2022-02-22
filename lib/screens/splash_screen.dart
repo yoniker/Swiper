@@ -4,15 +4,11 @@ import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/celebs_info_model.dart';
 import 'package:betabeta/models/chatData.dart';
-import 'package:betabeta/models/details_model.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/services/settings_model.dart';
-import 'package:betabeta/screens/login_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/onboarding/welcome_screen.dart';
-import 'package:betabeta/services/app_state_info.dart';
 import 'package:betabeta/services/notifications_controller.dart';
-import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -41,7 +37,6 @@ class _SplashScreenState extends State<SplashScreen> {
     await ChatData.initDB();
     await NotificationsController.instance.initialize();
     await SettingsData.instance.readSettingsFromShared();
-    DetailsData();
     MatchEngine();
     await CelebsInfo.instance.getCelebsFromDatabase();
     bool notificationFromTerminated = await ChatData().onInitApp();
@@ -75,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen> {
     //
     // This is the standard way of creating a splash-screen for an Application.
     if (settings.readFromShared! && settings.uid.length > 0) {
-      return WelcomeScreen.routeName;
+      return MainNavigationScreen.routeName;
     }
 
     return WelcomeScreen.routeName;
