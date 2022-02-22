@@ -4,6 +4,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/data_models/celeb.dart';
+import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
@@ -97,10 +98,15 @@ class _VoilaPageState extends State<VoilaPage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(4.0),
-                    child: ProfileImageAvatar.network(
-                        backgroundColor: Colors.grey,
-                        url:
-                            'https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_3.jpg'),
+                    child: GestureDetector(
+                      onTap: (){
+                        Get.toNamed(ProfileScreen.routeName);
+                      },
+                      child: ProfileImageAvatar.network(
+                          backgroundColor: Colors.grey,
+                          url:
+                              'https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_3.jpg'),
+                    ),
                   ),
                 ],
               ),
