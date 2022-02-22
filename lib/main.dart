@@ -30,6 +30,7 @@ import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
 import 'package:betabeta/screens/splash_screen.dart';
+import 'package:betabeta/screens/voila_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -141,7 +142,8 @@ void main() async {
             name: GotNewMatchScreen.routeName, page: () => GotNewMatchScreen()),
         GetPage(
             name: VerificationCodeScreen.routeName,
-            page: () => VerificationCodeScreen())
+            page: () => VerificationCodeScreen()),
+        GetPage(name: VoilaPage.routeName, page: () => VoilaPage())
       ],
       title: 'Swiper MVP',
       debugShowCheckedModeBanner: false,
