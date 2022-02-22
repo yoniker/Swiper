@@ -7,7 +7,6 @@ import 'package:betabeta/screens/face_selection_screen.dart';
 import 'package:betabeta/screens/account_settings.dart';
 import 'package:betabeta/screens/full_image_screen.dart';
 import 'package:betabeta/screens/got_new_match_screen.dart';
-import 'package:betabeta/screens/login_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/notification_screen.dart';
@@ -99,7 +98,6 @@ void main() async {
         GetPage(name: PhoneScreen.routeName, page: () => PhoneScreen()),
         GetPage(name: WelcomeScreen.routeName, page: () => WelcomeScreen()),
         GetPage(name: SplashScreen.routeName, page: () => SplashScreen()),
-        GetPage(name: LoginScreen.routeName, page: () => LoginScreen()),
         GetPage(
             name: MainNavigationScreen.routeName,
             page: () => MainNavigationScreen()),
