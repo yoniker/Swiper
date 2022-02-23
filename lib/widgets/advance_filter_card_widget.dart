@@ -1,6 +1,3 @@
-import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/widgets/onboarding/input_field.dart';
-import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/onboarding_consts.dart';
@@ -8,6 +5,7 @@ import '../constants/onboarding_consts.dart';
 class AdvanceFilterCard extends StatelessWidget {
   AssetImage image;
   Widget title;
+  bool? comingSoon;
   Widget? button;
   String info;
   Function()? onTap;
@@ -15,6 +13,7 @@ class AdvanceFilterCard extends StatelessWidget {
       {required this.image,
       required this.title,
       required this.info,
+      this.comingSoon,
       this.button,
       this.onTap});
 
@@ -50,8 +49,27 @@ class AdvanceFilterCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(),
+                SizedBox(),
                 title,
                 SizedBox(),
+                comingSoon == true
+                    ? Center(
+                        child: Text(
+                          'Coming Soon!',
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 17.0,
+                                  color: Colors.black,
+                                  offset: Offset(-2.0, 2.0),
+                                ),
+                              ]),
+                        ),
+                      )
+                    : SizedBox(),
                 SizedBox(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

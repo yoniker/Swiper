@@ -233,6 +233,7 @@ class _VoilaPageState extends State<VoilaPage> {
                             inDevelopmentPopUp();
                           },
                           image: AssetImage('assets/images/textsearch.jpg'),
+                          comingSoon: true,
                           // button: Container(
                           //   decoration: BoxDecoration(
                           //     border: Border.all(color: Colors.black),
@@ -294,6 +295,7 @@ class _VoilaPageState extends State<VoilaPage> {
                                 onTap: () {
                                   inDevelopmentPopUp();
                                 },
+                                comingSoon: true,
                                 image: AssetImage('assets/images/taste5.jpg'),
                                 title: Text(
                                   'Your Taste',
@@ -309,6 +311,7 @@ class _VoilaPageState extends State<VoilaPage> {
                                 onTap: () {
                                   inDevelopmentPopUp();
                                 },
+                                comingSoon: true,
                                 image: AssetImage('assets/images/taste9.jpg'),
                                 title: Text(
                                   'Their Taste',
@@ -331,6 +334,7 @@ class _VoilaPageState extends State<VoilaPage> {
                           onTap: () {
                             inDevelopmentPopUp();
                           },
+                          comingSoon: true,
                           info:
                               'Join the local bar and meet people around you!')
                     ],
