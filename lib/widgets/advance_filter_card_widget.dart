@@ -8,14 +8,14 @@ import '../constants/onboarding_consts.dart';
 class AdvanceFilterCard extends StatelessWidget {
   AssetImage image;
   Widget title;
-  Widget button;
+  Widget? button;
   String info;
   Function()? onTap;
   AdvanceFilterCard(
       {required this.image,
       required this.title,
       required this.info,
-      this.button = const Text(''),
+      this.button,
       this.onTap});
 
   @override
@@ -49,30 +49,40 @@ class AdvanceFilterCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(''),
+                SizedBox(),
                 title,
-                Text(''),
-                Text(''),
+                SizedBox(),
+                SizedBox(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          info,
-                          style: kSmallInfoStyleWhite,
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          'Discover',
-                          style: TextStyle(color: Colors.white70),
-                        )
-                      ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            info,
+                            style: kSmallInfoStyleWhite,
+                            overflow: TextOverflow.visible,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'A.I.',
+                                style: TextStyle(color: Colors.white70),
+                              ),
+                              Icon(
+                                Icons.psychology_outlined,
+                                color: Colors.white70,
+                                size: 20,
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                    button
+                    if (button != null) button!,
                   ],
                 )
               ],

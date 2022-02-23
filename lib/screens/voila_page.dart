@@ -81,6 +81,27 @@ class _VoilaPageState extends State<VoilaPage> {
     });
   }
 
+  void inDevelopmentPopUp() {
+    showDialog(
+        context: context,
+        builder: (_) => CupertinoAlertDialog(
+              title: Text(
+                "Coming Soon!",
+              ),
+              content: Text('Coming in 2022. Stay Toned!'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'Close',
+                      style: TextStyle(color: Colors.red),
+                    ))
+              ],
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -97,7 +118,7 @@ class _VoilaPageState extends State<VoilaPage> {
                   Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Get.toNamed(ProfileScreen.routeName);
                       },
                       child: ProfileImageAvatar.network(
@@ -146,7 +167,7 @@ class _VoilaPageState extends State<VoilaPage> {
                         children: [
                           Expanded(
                             child: AdvanceFilterCard(
-                                image: AssetImage('assets/images/custom1.jpg'),
+                                image: AssetImage('assets/images/picture5.jpg'),
                                 title: Text(
                                   'Custom Image',
                                   style: titleStyleWhite,
@@ -209,45 +230,26 @@ class _VoilaPageState extends State<VoilaPage> {
                       ),
                       AdvanceFilterCard(
                           onTap: () {
-                            showDialog(
-                                context: context,
-                                builder: (_) => CupertinoAlertDialog(
-                                      title: Text(
-                                        "Coming Soon!",
-                                      ),
-                                      content:
-                                          Text('Coming in 2022. Stay Toned!'),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Text(
-                                              'Close',
-                                              style:
-                                                  TextStyle(color: Colors.red),
-                                            ))
-                                      ],
-                                    ));
+                            inDevelopmentPopUp();
                           },
                           image: AssetImage('assets/images/textsearch.jpg'),
-                          button: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black),
-                              color: Colors.white,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(40),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 5.0, vertical: 5),
-                              child: Text(
-                                '  Search now  ',
-                                style: boldTextStyle,
-                              ),
-                            ),
-                          ),
+                          // button: Container(
+                          //   decoration: BoxDecoration(
+                          //     border: Border.all(color: Colors.black),
+                          //     color: Colors.white,
+                          //     borderRadius: BorderRadius.all(
+                          //       Radius.circular(40),
+                          //     ),
+                          //   ),
+                          //   child: Padding(
+                          //     padding: const EdgeInsets.symmetric(
+                          //         horizontal: 5.0, vertical: 5),
+                          //     child: Text(
+                          //       '  Search now  ',
+                          //       style: boldTextStyle,
+                          //     ),
+                          //   ),
+                          // ),
                           title: Row(
                             children: [
                               Text(
@@ -285,6 +287,41 @@ class _VoilaPageState extends State<VoilaPage> {
                       SizedBox(
                         height: 20,
                       ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: AdvanceFilterCard(
+                                onTap: () {
+                                  inDevelopmentPopUp();
+                                },
+                                image: AssetImage('assets/images/taste5.jpg'),
+                                title: Text(
+                                  'Your Taste',
+                                  style: titleStyleWhite,
+                                ),
+                                info: 'Show me people \nwho are my taste'),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: AdvanceFilterCard(
+                                onTap: () {
+                                  inDevelopmentPopUp();
+                                },
+                                image: AssetImage('assets/images/taste9.jpg'),
+                                title: Text(
+                                  'Their Taste',
+                                  style: titleStyleWhite,
+                                ),
+                                info:
+                                    'Show me people who are more likely to like me'),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
                       AdvanceFilterCard(
                           image: AssetImage('assets/images/bar3.jpg'),
                           title: Text(
@@ -292,26 +329,7 @@ class _VoilaPageState extends State<VoilaPage> {
                             style: LargeTitleStyleWhite,
                           ),
                           onTap: () {
-                            showDialog(
-                                context: context,
-                                builder: (_) => CupertinoAlertDialog(
-                                      title: Text(
-                                        "Coming Soon!",
-                                      ),
-                                      content:
-                                          Text('Coming in 2022. Stay Toned!'),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Text(
-                                              'Close',
-                                              style:
-                                                  TextStyle(color: Colors.red),
-                                            ))
-                                      ],
-                                    ));
+                            inDevelopmentPopUp();
                           },
                           info:
                               'Join the local bar and meet people around you!')
