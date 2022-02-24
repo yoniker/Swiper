@@ -17,7 +17,7 @@ class SwipeSettingsScreen extends StatefulWidget {
   SwipeSettingsScreen({Key? key}) : super(key: key);
   static const String routeName = '/swipe_settings';
   static const minAge = 18;
-  static const maxAge = 100;
+  static const maxAge = 65;
 
   @override
   _SwipeSettingsScreenState createState() => _SwipeSettingsScreenState();

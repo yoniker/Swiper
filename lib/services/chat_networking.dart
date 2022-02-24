@@ -7,11 +7,13 @@ import 'package:betabeta/services/settings_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:tuple/tuple.dart';
 
+enum NetworkTaskStatus {
+  completed,
+  inProgress,
+  notExist
+} //possible statuses for long ongoing tasks on the server
 
-enum NetworkTaskStatus { completed, inProgress, notExist } //possible statuses for long ongoing tasks on the server
-
-enum TaskResult {success,failed}
-
+enum TaskResult { success, failed }
 
 class ChatNetworkHelper {
   static const SERVER_ADDR = 'dordating.com:8085';
@@ -26,7 +28,8 @@ class ChatNetworkHelper {
 
   static Future<List<InfoUser>> getAllUsers() async {
     //TODO currently no one uses this method, remove if really redundant
-    Uri usersLinkUri = Uri.https(SERVER_ADDR, 'users/${SettingsData.instance.uid}');
+    Uri usersLinkUri =
+        Uri.https(SERVER_ADDR, 'users/${SettingsData.instance.uid}');
     http.Response resp = await http.get(usersLinkUri);
     if (resp.statusCode == 200) {
       //TODO think how to handle network errors
@@ -38,83 +41,85 @@ class ChatNetworkHelper {
     return [];
   }
 
-
-
-
-
   static postUserSettings() async {
     SettingsData settings = SettingsData.instance;
     Map<String, String> toSend = {
       SettingsData.NAME_KEY: settings.name,
       SettingsData.FCM_TOKEN_KEY: settings.fcmToken,
-      SettingsData.FIREBASE_UID_KEY : settings.uid,
-      SettingsData.FACEBOOK_PROFILE_IMAGE_URL_KEY:settings.facebookProfileImageUrl,
+      SettingsData.FIREBASE_UID_KEY: settings.uid,
+      SettingsData.FACEBOOK_PROFILE_IMAGE_URL_KEY:
+          settings.facebookProfileImageUrl,
     };
     String encoded = jsonEncode(toSend);
-    Uri postSettingsUri =
-    Uri.https(SERVER_ADDR, '/register/${settings.uid}');
+    Uri postSettingsUri = Uri.https(SERVER_ADDR, '/register/${settings.uid}');
     print('sending user data...');
     http.Response response = await http.post(postSettingsUri,
         body: encoded); //TODO something if response wasnt 200
-    if (response.statusCode == 200){
+    if (response.statusCode == 200) {
       SettingsData.instance.registered = true;
     }
   }
 
-  static Future<TaskResult> sendMessage(String uid,String startingConversationContent,double senderEpochTime) async{
+  static Future<TaskResult> sendMessage(String uid,
+      String startingConversationContent, double senderEpochTime) async {
     Map<String, dynamic> toSend = {
-      'other_user_id':uid,
-      'message_content':startingConversationContent,
-      'sender_epoch_time':senderEpochTime
+      'other_user_id': uid,
+      'message_content': startingConversationContent,
+      'sender_epoch_time': senderEpochTime
     };
     String encoded = jsonEncode(toSend);
     Uri postMessageUri =
-    Uri.https(SERVER_ADDR, '/send_message/${SettingsData.instance.uid}');
+        Uri.https(SERVER_ADDR, '/send_message/${SettingsData.instance.uid}');
     http.Response response = await http.post(postMessageUri, body: encoded);
-    if(response.statusCode==200){
+    if (response.statusCode == 200) {
       return TaskResult.success;
     }
     return TaskResult.failed;
   }
 
-  static Future<Tuple2<List<InfoMessage>,List<dynamic>>> getMessagesByTimestamp()async{
+  static Future<Tuple2<List<InfoMessage>, List<dynamic>>>
+      getMessagesByTimestamp() async {
     print('going to sync with ${SettingsData.instance.lastSync}');
-    Uri syncChatDataUri = Uri.https(SERVER_ADDR, '/sync/${SettingsData.instance.uid}/${SettingsData.instance.lastSync}');
+    Uri syncChatDataUri = Uri.https(SERVER_ADDR,
+        '/sync/${SettingsData.instance.uid}/${SettingsData.instance.lastSync}');
+    print('getting here');
     http.Response response = await http.get(syncChatDataUri);
+    print('never here');
     var unparsedData = json.jsonDecode(response.body);
     List<dynamic> unparsedMessages = unparsedData['messages_data'];
     List<dynamic> unparsedMatchesChanges = unparsedData['matches_data'];
-    List<InfoMessage> messages = unparsedMessages.map((message) => InfoMessage.fromJson(message)).toList();
-    return Tuple2(messages,unparsedMatchesChanges);
-
+    List<InfoMessage> messages = unparsedMessages
+        .map((message) => InfoMessage.fromJson(message))
+        .toList();
+    return Tuple2(messages, unparsedMatchesChanges);
   }
 
-  static Future<bool> markConversationAsRead(String conversationId) async{
-    Uri syncChatDataUri = Uri.https(SERVER_ADDR, '/mark_conversation_read/${SettingsData.instance.uid}/$conversationId');
-    http.Response response = await http.get(syncChatDataUri); //TODO something when there's an error
-    if(response.statusCode==200){
+  static Future<bool> markConversationAsRead(String conversationId) async {
+    Uri syncChatDataUri = Uri.https(SERVER_ADDR,
+        '/mark_conversation_read/${SettingsData.instance.uid}/$conversationId');
+    http.Response response =
+        await http.get(syncChatDataUri); //TODO something when there's an error
+    if (response.statusCode == 200) {
       return true;
     }
     return false;
   }
 
-  static Future<void> deleteAccount()async{
-    Uri deleteAccountUri = Uri.https(SERVER_ADDR, '/delete_account/${SettingsData.instance.uid}');
+  static Future<void> deleteAccount() async {
+    Uri deleteAccountUri =
+        Uri.https(SERVER_ADDR, '/delete_account/${SettingsData.instance.uid}');
     http.Response response = await http.get(deleteAccountUri);
     //TODO check for a successful response and give user feedback if not successful
   }
 
-  static Future<String> registerUid({required String firebaseIdToken}) async{
+  static Future<String> registerUid({required String firebaseIdToken}) async {
     Uri verifyTokenUri = Uri.https(SERVER_ADDR, '/register_firebase_uid');
-    http.Response response = await http.get(verifyTokenUri,headers: {'firebase_id_token':firebaseIdToken});
-    if(response.statusCode!=200){
-    //TODO throw error (bad jwt? server down?)
+    http.Response response = await http
+        .get(verifyTokenUri, headers: {'firebase_id_token': firebaseIdToken});
+    if (response.statusCode != 200) {
+      //TODO throw error (bad jwt? server down?)
     }
 
-      return json.jsonDecode(response.body)['uid'];
-
+    return json.jsonDecode(response.body)['uid'];
   }
-
-
-
 }

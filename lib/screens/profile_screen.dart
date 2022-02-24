@@ -100,11 +100,13 @@ class _ProfileScreenState extends State<ProfileScreen>
     required String iconURI,
     required String value,
     required Color color,
+    Color? imageColor,
   }) {
     return Column(
       children: [
         PrecachedImage.asset(
           imageURI: iconURI,
+          color: imageColor,
         ),
         Padding(
           padding: EdgeInsets.symmetric(vertical: 6.0),
@@ -136,7 +138,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     }
 
     return Scaffold(
-      backgroundColor: lightCardColor,
+      backgroundColor: backgroundThemeColor,
       appBar: CustomAppBar(
         trailing: PrecachedImage.asset(imageURI: BetaIconPaths.editIcon03),
         hasTopPadding: true,
@@ -158,8 +160,9 @@ class _ProfileScreenState extends State<ProfileScreen>
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                PrecachedImage.asset(
-                  imageURI: BetaIconPaths.locationIconFilled01,
+                Icon(
+                  Icons.location_on_rounded,
+                  color: colorBlend01,
                 ),
                 SizedBox(width: 4.0),
                 Text(
@@ -182,7 +185,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                   label: 'Loves',
                   iconURI: BetaIconPaths.heartIconFilled01,
                   value: '800+',
-                  color: mainAppColor02,
+                  imageColor: colorBlend01,
+                  color: Colors.black,
                 ),
                 // _achievementLabel(
                 //   label: 'Stars',
@@ -213,6 +217,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                           top: 12.0,
                           child: PrecachedImage.asset(
                             imageURI: BetaIconPaths.settingsIconFilled01,
+                            color: Colors.blueGrey,
                           ),
                         ),
                       ),

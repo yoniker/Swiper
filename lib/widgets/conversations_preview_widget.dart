@@ -1,4 +1,3 @@
-
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/infoConversation.dart';
 import 'package:betabeta/models/infoMessage.dart';
@@ -58,19 +57,20 @@ class _ConversationsPreviewWidgetState
                 return GestureDetector(
                   onTap: () {
                     if (collocutor != null) {
-                      Get.toNamed( ChatScreen.getRouteWithUserId(collocutor.uid));
+                      Get.toNamed(
+                          ChatScreen.getRouteWithUserId(collocutor.uid));
                     }
                   },
                   child: Container(
                     decoration: BoxDecoration(
                         color:
-                        messageWasRead ? Colors.white : Color(0xFFFFEFEE),
+                            messageWasRead ? Colors.white : Color(0xFFFFEFEE),
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(20.0),
                             bottomRight: Radius.circular(20.0))),
                     margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 20.0),
                     padding:
-                    EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -103,7 +103,7 @@ class _ConversationsPreviewWidgetState
                                 ),
                                 Container(
                                   width:
-                                  MediaQuery.of(context).size.width * 0.45,
+                                      MediaQuery.of(context).size.width * 0.45,
                                   child: Text(lastMessage.toUiMessage().text,
                                       style: TextStyle(
                                         color: Colors.grey,

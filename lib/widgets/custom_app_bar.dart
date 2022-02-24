@@ -1,5 +1,6 @@
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
+import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,6 +16,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.trailing,
     this.titleTextColor = Colors.black,
     this.customTitle,
+    this.backgroundColor = Colors.transparent,
+    this.centerTitle = false,
     this.hasTopPadding = false,
     this.showAppLogo = false,
     this.hasBackButton = true,
@@ -29,6 +32,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   CustomAppBar.subPage({
     required String subPageTitle,
     this.titleTextColor = Colors.blue,
+    this.centerTitle = false,
+    this.backgroundColor = Colors.transparent,
     this.hasBackButton = true,
     this.hasTopPadding = false,
     this.showAppLogo = true,
@@ -72,6 +77,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Must not be null.
   final bool showAppLogo;
 
+  /// If the Appbar should have a background color we can use this.
+  final Color backgroundColor;
+
   /// This is an optional Callback called immediately the backbutton (if enabled) is clicked.
   ///
   /// You can pass in this parameter to override the default pop behavour of the backbutton
@@ -88,13 +96,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// The defualt is 5(px).
   final double trailingPad;
 
+  final bool centerTitle;
+
   @override
   Widget build(BuildContext context) {
     // This holds the value for the topPadding of the AppBar.
     double topPadding = MediaQuery.of(context).viewPadding.top;
 
     return Material(
-      elevation: 1,
+      color: backgroundColor,
+      elevation: 0,
       child: Padding(
         padding: (hasTopPadding)
             ? EdgeInsets.only(top: topPadding)

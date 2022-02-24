@@ -154,7 +154,7 @@ class _MatchScreenState extends State<MatchScreen>
                   Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Get.toNamed(ProfileScreen.routeName);
                       },
                       child: ProfileImageAvatar.network(

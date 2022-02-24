@@ -104,246 +104,249 @@ class _VoilaPageState extends State<VoilaPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: MediaQuery.of(context).padding,
-      child: Column(
-        children: [
-          CustomAppBar(
-            titleTextColor: Colors.black,
-            customTitle: Container(
-              padding: EdgeInsets.only(left: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        Get.toNamed(ProfileScreen.routeName);
-                      },
-                      child: ProfileImageAvatar.network(
-                          backgroundColor: Colors.grey,
-                          url:
-                              'https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_3.jpg'),
+    return Container(
+      child: Padding(
+        padding: MediaQuery.of(context).padding,
+        child: Column(
+          children: [
+            CustomAppBar(
+              titleTextColor: Colors.black,
+              customTitle: Container(
+                padding: EdgeInsets.only(left: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Get.toNamed(ProfileScreen.routeName);
+                        },
+                        child: ProfileImageAvatar.network(
+                            backgroundColor: Colors.grey,
+                            url:
+                                'https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_3.jpg'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              showAppLogo: false,
+              hasBackButton: false,
+              trailing: Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: GestureDetector(
+                  child: Icon(
+                    FontAwesomeIcons.slidersH,
+                    size: 25,
+                    color: Colors.black87,
+                  ),
+                  onTap: () {},
+                ),
+              ),
+            ),
+            Container(
+              child: Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          'Voilà Features',
+                          style: boldTextStyle,
+                        ),
+                        Text('Explore...'),
+                        Divider(
+                          color: lightCardColor,
+                          thickness: 2.0,
+                          indent: 24.0,
+                          endIndent: 24.0,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: AdvanceFilterCard(
+                                  image:
+                                      AssetImage('assets/images/picture5.jpg'),
+                                  title: Text(
+                                    'Custom Image',
+                                    style: titleStyleWhite,
+                                  ),
+                                  onTap: () async {
+                                    // Direct user to the custom Selection Page.
+                                    // await Navigator.pushNamed(context,
+                                    //     ImageSourceSelectionScreen.routeName);
+                                    // setState(() { //Make flutter rebuild the widget, as the image might have changed
+
+                                    // });
+
+                                    // Display an image picker Dilaogue.
+                                    setState(() {
+                                      currentChoice = ImageType.Custom;
+                                    });
+                                    await GlobalWidgets.showImagePickerDialogue(
+                                      context: context,
+                                      onImagePicked: (imageFile) async {
+                                        if (imageFile != null) {
+                                          postCustomImageToNetwork(imageFile);
+                                        }
+                                      },
+                                    );
+                                  },
+                                  info: 'Discover picture \nlook-a-likes.'),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: AdvanceFilterCard(
+                                  image: AssetImage('assets/images/celeb3.jpg'),
+                                  onTap: () async {
+                                    var selectedCeleb = await Get.toNamed(
+                                        ScreenCelebritySelection.routeName);
+                                    setState(() {
+                                      currentChoice = ImageType.Celeb;
+                                      // Set the `_selectedCeleb` variable to the newly selected
+                                      // celebrity from the [CelebritySelectionScreen] page given that it is not null.
+                                      if (selectedCeleb != null) {
+                                        _selectedCeleb = selectedCeleb as Celeb;
+                                        SettingsData.instance.celebId =
+                                            _selectedCeleb.celebName;
+                                      } else {
+                                        //No celebrity selected
+                                      }
+                                    });
+                                  },
+                                  title: Text(
+                                    'Celeb Filter',
+                                    style: titleStyleWhite,
+                                  ),
+                                  info: 'Discover celebrity \nlook-a-likes.'),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        AdvanceFilterCard(
+                            onTap: () {
+                              inDevelopmentPopUp();
+                            },
+                            image: AssetImage('assets/images/textsearch.jpg'),
+                            comingSoon: true,
+                            // button: Container(
+                            //   decoration: BoxDecoration(
+                            //     border: Border.all(color: Colors.black),
+                            //     color: Colors.white,
+                            //     borderRadius: BorderRadius.all(
+                            //       Radius.circular(40),
+                            //     ),
+                            //   ),
+                            //   child: Padding(
+                            //     padding: const EdgeInsets.symmetric(
+                            //         horizontal: 5.0, vertical: 5),
+                            //     child: Text(
+                            //       '  Search now  ',
+                            //       style: boldTextStyle,
+                            //     ),
+                            //   ),
+                            // ),
+                            title: Row(
+                              children: [
+                                Text(
+                                  'Text Search',
+                                  style: LargeTitleStyleWhite,
+                                ),
+                                DefaultTextStyle(
+                                  style: LargeTitleStyle,
+                                  child: AnimatedTextKit(
+                                    pause: Duration(seconds: 2),
+                                    repeatForever: true,
+                                    animatedTexts: [
+                                      TyperAnimatedText(
+                                        '   Dog lover?...',
+                                        speed: Duration(milliseconds: 100),
+                                      ),
+                                      TyperAnimatedText(
+                                        '   Vegan?...',
+                                        speed: Duration(milliseconds: 100),
+                                      ),
+                                      TyperAnimatedText(
+                                        '   Outdoors?...',
+                                        speed: Duration(milliseconds: 100),
+                                      ),
+                                      TyperAnimatedText(
+                                        '   Sushi?...',
+                                        speed: Duration(milliseconds: 100),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            info: 'Search by a simple word or text'),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: AdvanceFilterCard(
+                                  onTap: () {
+                                    inDevelopmentPopUp();
+                                  },
+                                  comingSoon: true,
+                                  image: AssetImage('assets/images/taste5.jpg'),
+                                  title: Text(
+                                    'Your Taste',
+                                    style: titleStyleWhite,
+                                  ),
+                                  info: 'Show me people \nwho are my taste'),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: AdvanceFilterCard(
+                                  onTap: () {
+                                    inDevelopmentPopUp();
+                                  },
+                                  comingSoon: true,
+                                  image: AssetImage('assets/images/taste9.jpg'),
+                                  title: Text(
+                                    'Their Taste',
+                                    style: titleStyleWhite,
+                                  ),
+                                  info:
+                                      'Show me people who are more likely to like me'),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        AdvanceFilterCard(
+                            image: AssetImage('assets/images/bar3.jpg'),
+                            title: Text(
+                              'Local Bar.',
+                              style: LargeTitleStyleWhite,
+                            ),
+                            onTap: () {
+                              inDevelopmentPopUp();
+                            },
+                            comingSoon: true,
+                            info:
+                                'Join the local bar and meet people around you!')
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
-            showAppLogo: false,
-            hasBackButton: false,
-            trailing: Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: GestureDetector(
-                child: Icon(
-                  FontAwesomeIcons.slidersH,
-                  size: 25,
-                  color: Colors.black87,
-                ),
-                onTap: () {},
-              ),
-            ),
-          ),
-          Container(
-            child: Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        'Voilà Features',
-                        style: boldTextStyle,
-                      ),
-                      Text('Explore...'),
-                      Divider(
-                        color: lightCardColor,
-                        thickness: 2.0,
-                        indent: 24.0,
-                        endIndent: 24.0,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: AdvanceFilterCard(
-                                image: AssetImage('assets/images/picture5.jpg'),
-                                title: Text(
-                                  'Custom Image',
-                                  style: titleStyleWhite,
-                                ),
-                                onTap: () async {
-                                  // Direct user to the custom Selection Page.
-                                  // await Navigator.pushNamed(context,
-                                  //     ImageSourceSelectionScreen.routeName);
-                                  // setState(() { //Make flutter rebuild the widget, as the image might have changed
-
-                                  // });
-
-                                  // Display an image picker Dilaogue.
-                                  setState(() {
-                                    currentChoice = ImageType.Custom;
-                                  });
-                                  await GlobalWidgets.showImagePickerDialogue(
-                                    context: context,
-                                    onImagePicked: (imageFile) async {
-                                      if (imageFile != null) {
-                                        postCustomImageToNetwork(imageFile);
-                                      }
-                                    },
-                                  );
-                                },
-                                info: 'Discover picture \nlook-a-likes.'),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            child: AdvanceFilterCard(
-                                image: AssetImage('assets/images/celeb3.jpg'),
-                                onTap: () async {
-                                  var selectedCeleb = await Get.toNamed(
-                                      ScreenCelebritySelection.routeName);
-                                  setState(() {
-                                    currentChoice = ImageType.Celeb;
-                                    // Set the `_selectedCeleb` variable to the newly selected
-                                    // celebrity from the [CelebritySelectionScreen] page given that it is not null.
-                                    if (selectedCeleb != null) {
-                                      _selectedCeleb = selectedCeleb as Celeb;
-                                      SettingsData.instance.celebId =
-                                          _selectedCeleb.celebName;
-                                    } else {
-                                      //No celebrity selected
-                                    }
-                                  });
-                                },
-                                title: Text(
-                                  'Celeb Filter',
-                                  style: titleStyleWhite,
-                                ),
-                                info: 'Discover celebrity \nlook-a-likes.'),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      AdvanceFilterCard(
-                          onTap: () {
-                            inDevelopmentPopUp();
-                          },
-                          image: AssetImage('assets/images/textsearch.jpg'),
-                          comingSoon: true,
-                          // button: Container(
-                          //   decoration: BoxDecoration(
-                          //     border: Border.all(color: Colors.black),
-                          //     color: Colors.white,
-                          //     borderRadius: BorderRadius.all(
-                          //       Radius.circular(40),
-                          //     ),
-                          //   ),
-                          //   child: Padding(
-                          //     padding: const EdgeInsets.symmetric(
-                          //         horizontal: 5.0, vertical: 5),
-                          //     child: Text(
-                          //       '  Search now  ',
-                          //       style: boldTextStyle,
-                          //     ),
-                          //   ),
-                          // ),
-                          title: Row(
-                            children: [
-                              Text(
-                                'Text Search',
-                                style: LargeTitleStyleWhite,
-                              ),
-                              DefaultTextStyle(
-                                style: LargeTitleStyle,
-                                child: AnimatedTextKit(
-                                  pause: Duration(seconds: 2),
-                                  repeatForever: true,
-                                  animatedTexts: [
-                                    TyperAnimatedText(
-                                      '   Dog lover?...',
-                                      speed: Duration(milliseconds: 100),
-                                    ),
-                                    TyperAnimatedText(
-                                      '   Vegan?...',
-                                      speed: Duration(milliseconds: 100),
-                                    ),
-                                    TyperAnimatedText(
-                                      '   Outdoors?...',
-                                      speed: Duration(milliseconds: 100),
-                                    ),
-                                    TyperAnimatedText(
-                                      '   Sushi?...',
-                                      speed: Duration(milliseconds: 100),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          info: 'Search by a simple word or text'),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: AdvanceFilterCard(
-                                onTap: () {
-                                  inDevelopmentPopUp();
-                                },
-                                comingSoon: true,
-                                image: AssetImage('assets/images/taste5.jpg'),
-                                title: Text(
-                                  'Your Taste',
-                                  style: titleStyleWhite,
-                                ),
-                                info: 'Show me people \nwho are my taste'),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            child: AdvanceFilterCard(
-                                onTap: () {
-                                  inDevelopmentPopUp();
-                                },
-                                comingSoon: true,
-                                image: AssetImage('assets/images/taste9.jpg'),
-                                title: Text(
-                                  'Their Taste',
-                                  style: titleStyleWhite,
-                                ),
-                                info:
-                                    'Show me people who are more likely to like me'),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      AdvanceFilterCard(
-                          image: AssetImage('assets/images/bar3.jpg'),
-                          title: Text(
-                            'Local Bar.',
-                            style: LargeTitleStyleWhite,
-                          ),
-                          onTap: () {
-                            inDevelopmentPopUp();
-                          },
-                          comingSoon: true,
-                          info:
-                              'Join the local bar and meet people around you!')
-                    ],
-                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

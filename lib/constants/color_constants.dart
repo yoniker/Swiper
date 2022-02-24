@@ -20,7 +20,7 @@ const Color inactiveDot = Color(0xFFBDBDBD);
 const Color activeColor = Colors.blue;
 const Color disabledColor = Colors.grey;
 //
-const Color colorBlend01 = Color(0xFFED3C5C);
+const Color colorBlend01 = Color(0xFFEA4336);
 const Color mainAppColor02 = Colors.white;
 
 const Color blue = Color(0xFF389CEB);

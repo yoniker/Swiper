@@ -104,64 +104,64 @@ class GlobalWidgets {
     );
 
     var _textStyle = TextStyle(
-      color: darkTextColor,
+      color: Colors.black,
       fontFamily: 'Nunito',
-      fontSize: 15,
-      fontWeight: FontWeight.w500,
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
     );
 
-    return Container(
-      margin: outerPadding,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: lightCardColor,
-          width: 1.0,
-        ),
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            padding: titlePadding,
-            constraints: BoxConstraints(
-              minHeight: 50.0,
+    return Column(
+      children: [
+        Container(
+          margin: outerPadding,
+          decoration: BoxDecoration(
+            color: Colors.black12,
+            border: Border.all(
+              color: Colors.white,
+              width: 0.0,
             ),
-            decoration: BoxDecoration(
-              color: lightCardColor,
-            ),
-            child: (top != null)
-                ? top
-                : Text.rich(
-                    TextSpan(
-                      children: <InlineSpan>[
-                        if (title != null)
-                          TextSpan(
-                            text: '$title' + ' ',
-                            style: _textStyle.copyWith(
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.2,
-                            ),
-                          ),
-                        TextSpan(
-                          text: description,
-                        ),
-                      ],
-                    ),
-                    style: _textStyle,
-                  ),
+            borderRadius: BorderRadius.circular(10.0),
           ),
-          if (body != null)
-            Container(
-              padding: bodyPadding,
-              decoration: BoxDecoration(
-                color: whiteCardColor,
+          clipBehavior: Clip.antiAlias,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                padding: titlePadding,
+                constraints: BoxConstraints(
+                  minHeight: 50.0,
+                ),
+                child: (top != null)
+                    ? top
+                    : Center(
+                        child: Column(
+                          children: [
+                            if (title != null)
+                              Text(
+                                '$title' + '',
+                                style: _textStyle,
+                              ),
+                          ],
+                        ),
+                      ),
               ),
-              child: body,
-            ),
-        ],
-      ),
+              if (body != null)
+                Container(
+                  padding: bodyPadding,
+                  decoration: BoxDecoration(
+                    color: whiteCardColor,
+                  ),
+                  child: body,
+                ),
+            ],
+          ),
+        ),
+        if (description != null)
+          Text(
+            '$description',
+            textAlign: TextAlign.center,
+          ),
+      ],
     );
   }
 

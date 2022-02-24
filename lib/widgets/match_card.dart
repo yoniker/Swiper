@@ -11,8 +11,6 @@ import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
-
 
 /// A widget to paint the various information of a
 /// match unto the screen.
@@ -65,7 +63,7 @@ class _MatchCardState extends State<MatchCard> {
     );
   }
 
-  Widget _buildDivider(){
+  Widget _buildDivider() {
     return Divider(
       color: lightCardColor,
       indent: 2.0,
@@ -109,6 +107,13 @@ class _MatchCardState extends State<MatchCard> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: boldTextStyle.copyWith(
+                shadows: [
+                  Shadow(
+                    blurRadius: 17.0,
+                    color: Colors.black,
+                    offset: Offset(-2.0, 2.0),
+                  ),
+                ],
                 color: Colors.white,
                 fontSize: getRelativeTextSize(25),
               ),
@@ -119,6 +124,13 @@ class _MatchCardState extends State<MatchCard> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: boldTextStyle.copyWith(
+                  shadows: [
+                    Shadow(
+                      blurRadius: 17.0,
+                      color: Colors.black,
+                      offset: Offset(-2.0, 2.0),
+                    ),
+                  ],
                   color: Colors.white,
                   fontSize: getRelativeTextSize(20),
                 ),
@@ -208,15 +220,12 @@ class _MatchCardState extends State<MatchCard> {
             : 'No Description available',
         style: mediumCharStyle,
       ),
-      SizedBox(height:20),
-
-
+      SizedBox(height: 20),
       Text(
         'Profile Images',
         style: subTitleStyle,
       ),
       _buildDivider(),
-
       Container(
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.only(
@@ -234,80 +243,89 @@ class _MatchCardState extends State<MatchCard> {
           ),
           child: !(_imageUrls.length > 0)
               ? Center(
-            child: Text(
-              'No Profile image Available for match',
-              style: mediumBoldedCharStyle,
-            ),
-          )
+                  child: Text(
+                    'No Profile image Available for match',
+                    style: mediumBoldedCharStyle,
+                  ),
+                )
               : ListView.separated(
-            key: UniqueKey(),
-            scrollDirection: Axis.horizontal,
-            itemCount: _imageUrls.length,
-            itemBuilder: (cntx, index) {
-              final String _url =
-                  'https://'+_imageUrls[index];
-              return GestureDetector(
-                onTap: () {
-                  // pushToScreen(
-                  //   context,
-                  //   builder: (context) =>
-                  //       FullImageScreen(imageUrl: _url),
-                  // );
-                  Get.toNamed(
-                        FullImageScreen.routeName,arguments:_url,
-                      );
-
-                },
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: 30.5,
-                    maxHeight: 100.5,
-                    minWidth: 30.5,
-                    maxWidth: 100.5,
-                  ),
-                  // height: 80.5,
-                  // width: 100.0,
-                  child: AspectRatio(
-                    aspectRatio: 1 / 1,
-                    child: Card(
-                      margin: EdgeInsets.all(6.0),
-                      clipBehavior: Clip.antiAlias,
-                      elevation: 2.1,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
+                  key: UniqueKey(),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _imageUrls.length,
+                  itemBuilder: (cntx, index) {
+                    final String _url = 'https://' + _imageUrls[index];
+                    return GestureDetector(
+                      onTap: () {
+                        // pushToScreen(
+                        //   context,
+                        //   builder: (context) =>
+                        //       FullImageScreen(imageUrl: _url),
+                        // );
+                        Get.toNamed(
+                          FullImageScreen.routeName,
+                          arguments: _url,
+                        );
+                      },
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: 30.5,
+                          maxHeight: 100.5,
+                          minWidth: 30.5,
+                          maxWidth: 100.5,
+                        ),
+                        // height: 80.5,
+                        // width: 100.0,
+                        child: AspectRatio(
+                          aspectRatio: 1 / 1,
+                          child: Card(
+                            margin: EdgeInsets.all(6.0),
+                            clipBehavior: Clip.antiAlias,
+                            elevation: 2.1,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                            child: PrecachedImage.network(
+                              imageURL: _url,
+                              fadeIn: true,
+                              shouldPrecache: false,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
                       ),
-                      child: PrecachedImage.network(
-                        imageURL: _url,
-                        fadeIn: true,
-                        shouldPrecache: false,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
+                    );
+                  },
+                  separatorBuilder: (cntx, index) {
+                    return SizedBox(width: 16.0);
+                  },
                 ),
-              );
-            },
-            separatorBuilder: (cntx, index) {
-              return SizedBox(width: 16.0);
-            },
-          ),
         ),
       ),
-
-
       Text(
         'Basic Info',
         style: subTitleStyle,
       ),
       _buildDivider(),
-      if (profile.location!=null)
-        BasicDetail(detailText: '${profile.location}',
-          detailIcon: FaIcon(FontAwesomeIcons.mapMarkedAlt,color: Colors.red,)),
-      if(profile.height!=null)
-        BasicDetail(detailText: '${profile.height}',detailIcon: FaIcon(FontAwesomeIcons.ruler,color: Colors.yellow[700],),),
-      if(profile.jobTitle!=null)
-        BasicDetail(detailText: '${profile.jobTitle}',detailIcon: FaIcon(FontAwesomeIcons.userTie,color:Colors.black),),
-
+      if (profile.location != null)
+        BasicDetail(
+            detailText: '${profile.location}',
+            detailIcon: FaIcon(
+              FontAwesomeIcons.mapMarkedAlt,
+              color: Colors.red,
+            )),
+      if (profile.height != null)
+        BasicDetail(
+          detailText: '${profile.height}',
+          detailIcon: FaIcon(
+            FontAwesomeIcons.ruler,
+            color: Colors.yellow[700],
+          ),
+        ),
+      if (profile.jobTitle != null)
+        BasicDetail(
+          detailText: '${profile.jobTitle}',
+          detailIcon: FaIcon(FontAwesomeIcons.userTie, color: Colors.black),
+        ),
       Text(
         'Artificial Intelligence',
         style: subTitleStyle,
@@ -350,30 +368,30 @@ class _MatchCardState extends State<MatchCard> {
               },
             ),
             DescriptionBanner(
-              message: 'Compatibility',
-              overflow: null,
-              constraints: BoxConstraints(
-                minHeight: 75.0,
-                maxHeight: 90.5,
-                maxWidth: MediaQuery.of(context).size.width,
-              ),
-              leading: Icon(
-                Icons.info,
-                color: Colors.blue,
-              ),
-              trailing: LikeScale(value: profile.hotnessScore!),
+                message: 'Compatibility',
+                overflow: null,
+                constraints: BoxConstraints(
+                  minHeight: 75.0,
+                  maxHeight: 90.5,
+                  maxWidth: MediaQuery.of(context).size.width,
+                ),
+                leading: Icon(
+                  Icons.info,
+                  color: Colors.blue,
+                ),
+                trailing: LikeScale(value: profile.hotnessScore!),
                 onTap: () async {
                   try {
                     await GlobalWidgets.showAlertDialogue(
                       context,
                       title: 'Info',
                       message:
-                      'The probability that you will be a good match, according to Chris. Chris is an AI which was trained on millions of successful couples!',
-                    );} catch (e, s) {
+                          'The probability that you will be a good match, according to Chris. Chris is an AI which was trained on millions of successful couples!',
+                    );
+                  } catch (e, s) {
                     print(s);
                   }
-                }
-            ),
+                }),
           ],
         ),
       ),
@@ -506,7 +524,6 @@ class _MatchCardState extends State<MatchCard> {
             ),
           );
         }),
-
       ],
     );
   }
@@ -715,10 +732,11 @@ class _PhotoViewState extends State<PhotoView> {
   /// change the Image Displayed back to the first image on the List.
   void _showNextImg() {
     // This prevents out of interval error.
-    if (selectedPhotoIndex!=null && selectedPhotoIndex != widget.imageUrls!.length - 1) {
+    if (selectedPhotoIndex != null &&
+        selectedPhotoIndex != widget.imageUrls!.length - 1) {
       setState(() {
         // increase the photo index by one (1).
-        selectedPhotoIndex =selectedPhotoIndex! + 1;
+        selectedPhotoIndex = selectedPhotoIndex! + 1;
       });
     } else {
       setState(() {
@@ -738,7 +756,7 @@ class _PhotoViewState extends State<PhotoView> {
   /// change the Image Displayed back to the last image on the List.
   void _showPrevImg() {
     // This prevents out of interval error.
-    if (selectedPhotoIndex!=null && selectedPhotoIndex! > 0) {
+    if (selectedPhotoIndex != null && selectedPhotoIndex! > 0) {
       setState(() {
         // decrease the photo index by one (1).
         selectedPhotoIndex = selectedPhotoIndex! - 1;
@@ -761,7 +779,6 @@ class _PhotoViewState extends State<PhotoView> {
   /// Note: use the `onChanged(int)` Function parameter of the [PhotoView]
   /// to get notified whenever a change occurs to the `index` of the [PhotoView].
   void moveToPhoto(int index) {
-
     // check to verify that such index exists and is accepted.
     if (index <= widget.imageUrls!.length - 1 && !index.isNegative) {
       // switch to the new index.
@@ -864,7 +881,6 @@ class _PhotoViewState extends State<PhotoView> {
         ),
       ],
     );
-
   }
 
   /// The Space or Area in which the image will be displayed.
