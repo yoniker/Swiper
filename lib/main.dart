@@ -3,6 +3,7 @@ import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/chat_screen.dart';
 import 'package:betabeta/screens/conversations_screen.dart';
+import 'package:betabeta/screens/current_user_profile_view_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
 import 'package:betabeta/screens/account_settings.dart';
 import 'package:betabeta/screens/full_image_screen.dart';
@@ -69,7 +70,7 @@ void main() async {
       home: SplashScreen(),
       getPages: [
         GetPage(
-          name:ProfileScreen.routeName,
+          name: ProfileScreen.routeName,
           page: () => ProfileScreen(),
         ),
         GetPage(
@@ -143,7 +144,10 @@ void main() async {
         GetPage(
             name: VerificationCodeScreen.routeName,
             page: () => VerificationCodeScreen()),
-        GetPage(name: VoilaPage.routeName, page: () => VoilaPage())
+        GetPage(name: VoilaPage.routeName, page: () => VoilaPage()),
+        GetPage(
+            name: CurrentUserProfileViewScreen.routeName,
+            page: () => CurrentUserProfileViewScreen()),
       ],
       title: 'Swiper MVP',
       debugShowCheckedModeBanner: false,

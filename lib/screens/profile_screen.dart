@@ -1,5 +1,6 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/screens/current_user_profile_view_screen.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/account_settings.dart';
 import 'package:betabeta/screens/notification_screen.dart';
@@ -64,17 +65,21 @@ class _ProfileScreenState extends State<ProfileScreen>
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 6.0),
       child: Clickable(
-        onTap: () async {
-          await Get.toNamed(
-            ProfileDetailsScreen.routeName,
-            arguments: _profileImagesUrls,
-          );
+        onTap: () {
+          showModalBottomSheet(
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              context: context,
+              builder: (context) => CurrentUserProfileViewScreen());
+          // Get.toNamed(
+          //   CurrentUserProfileViewScreen.routeName,
+          // );
 
           // this is because the imageUrls might have been edited.
           // we want this page to stay updated so we use it this way.
           //
           // To avoid this we should consider using a StateManagement Library such as Provider or Bloc.
-          _syncFromServer();
+          // _syncFromServer();
         },
         child: Material(
           color: Colors.white,

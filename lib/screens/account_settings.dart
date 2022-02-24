@@ -18,7 +18,6 @@ import 'dart:math' as math;
 import '../constants/enums.dart';
 import '../widgets/cupertino_range_slider.dart';
 import '../widgets/dropdown_form_field.dart';
-import 'advanced_settings_screen.dart';
 
 /// The implementation for the Notification screen.
 class AccountSettingsScreen extends StatefulWidget {
@@ -52,8 +51,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   PreferredGender _currentGenderSelected = PreferredGender.values
       .firstWhere((e) => e.name == SettingsData.instance.preferredGender);
   String _currentLocation = 'Somewhere, Earth';
-  bool _showInDiscovery =
-      false; //TODO change SettingsData to support visibility
+  bool _showInDiscovery = true; //TODO change SettingsData to support visibility
   double _maxDistance = SettingsData.instance.radius;
 
   DropdownMenuItem<PreferredGender> _buildGenderDropDownMenuItem(
