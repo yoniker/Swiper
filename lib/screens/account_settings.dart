@@ -444,6 +444,41 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                   ),
                 ),
               ),
+              Center(
+                child: Text(
+                  'Swiper V 1.0.2',
+                  style: mediumBoldedCharStyle,
+                ),
+              ),
+              SizedBox(height: 12.0),
+              ActionBox(
+                message: 'Facebook Logout',
+                messageStyle: mediumBoldedCharStyle.copyWith(color: blue),
+                margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                trailing: PrecachedImage.asset(
+                  imageURI: BetaIconPaths.facebookLogo,
+                ),
+                onTap: () {
+                  _logout();
+                },
+              ),
+              ActionBox(
+                message: 'Delete account',
+                messageStyle: mediumBoldedCharStyle,
+                margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+                trailing: Icon(
+                  Icons.delete,
+                ),
+                onTap: () async {
+                  // move to swiping-preference screen.
+                  await ChatNetworkHelper
+                      .deleteAccount(); //TODO at the very least verify with the user that that's what she wants (in order to minimize accidental deleting of accounts)
+                  await _logout();
+                },
+              ),
+              SizedBox(
+                height: 20,
+              ),
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(width: 2, color: Colors.black),
@@ -466,53 +501,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                 ),
               ),
               SizedBox(
-                height: 30,
-              ),
-              Center(
-                child: Text(
-                  'Swiper V 1.0.2',
-                  style: mediumBoldedCharStyle,
-                ),
-              ),
-              SizedBox(height: 12.0),
-              ActionBox(
-                message: 'Matching Settings',
-                messageStyle: mediumBoldedCharStyle,
-                margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-                trailing: Icon(
-                  Icons.settings,
-                ),
-                onTap: () {
-                  // move to swiping-preference screen.
-                  Get.toNamed(SwipeSettingsScreen.routeName);
-                },
-              ),
-              ActionBox(
-                message: 'Facebook Logout',
-                messageStyle: mediumBoldedCharStyle.copyWith(color: blue),
-                margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-                trailing: PrecachedImage.asset(
-                  imageURI: BetaIconPaths.facebookLogo,
-                ),
-                onTap: () {
-                  _logout();
-                },
-              ),
-              SizedBox(height: 12.0),
-              ActionBox(
-                message: 'Delete account',
-                messageStyle: mediumBoldedCharStyle,
-                margin: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-                trailing: Icon(
-                  Icons.delete,
-                ),
-                onTap: () async {
-                  // move to swiping-preference screen.
-                  await ChatNetworkHelper
-                      .deleteAccount(); //TODO at the very least verify with the user that that's what she wants (in order to minimize accidental deleting of accounts)
-                  await _logout();
-                },
-              ),
+                height: 20,
+              )
             ],
           ),
         ),
