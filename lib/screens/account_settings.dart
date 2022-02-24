@@ -405,45 +405,6 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                   ),
                 ),
               ),
-              GlobalWidgets.buildSettingsBlock(
-                title: 'Advanced'.toUpperCase(),
-                description: '',
-                body: TextButton(
-                  onPressed: () {
-                    // Direct user to the Advanced filters Page.
-
-                    Get.toNamed(AdvancedSettingsScreen.routeName);
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Artificial Intelligence Filters',
-                            style: boldTextStyle,
-                          ),
-                          SizedBox(
-                            width: 4.0,
-                          ),
-                          Icon(
-                            Icons.psychology_outlined,
-                            color: colorBlend01,
-                            size: 34.0,
-                          ),
-                        ],
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.black54,
-                        size: 18,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
               Center(
                 child: Text(
                   'Swiper V 1.0.2',
