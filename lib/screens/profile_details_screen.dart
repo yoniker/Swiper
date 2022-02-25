@@ -1,6 +1,7 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/services/networking.dart';
+import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
@@ -68,7 +69,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
     _company = SettingsData.instance.userDescription; //TODO change settings data appropriately,add properties as needed etc
     _jobTitle = SettingsData.instance.userDescription;
 
-    _syncFromServer();
+    _syncProfileImagesFromServer();
   }
 
   @override
@@ -189,7 +190,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
             BetaIconPaths.defaultProfileImagePath01,
           )
         : CachedNetworkImageProvider(
-            NetworkHelper().getProfileImageUrl(_imgUrl),
+            NewNetworkService.getProfileImageUrl(_imgUrl),
           )) as ImageProvider<Object>;
 
     return Scaffold(
@@ -269,7 +270,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                             reorderable: index < _profileImagesUrls!.length,
                             child: _pictureBox(
                                 imageUrl: index < _profileImagesUrls!.length
-                                    ? NetworkHelper().getProfileImageUrl(
+                                    ? NewNetworkService.getProfileImageUrl(
                                         _profileImagesUrls![index])
                                     : null,
                                 onDelete: () {
@@ -277,7 +278,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                                       .deleteProfileImage(index)
                                       .then((_) {
                                     {
-                                      _syncFromServer();
+                                      _syncProfileImagesFromServer();
                                     }
                                   });
                                 },
@@ -285,13 +286,13 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                                   setState(() {
                                     _loadingImage = true;
                                   });
-                                  NetworkHelper()
+                                  NewNetworkService.instance
                                       .postProfileImage(pickedImage!)
                                       .then((_) {
                                     setState(() {
                                       _loadingImage = false;
                                     });
-                                    _syncFromServer();
+                                    _syncProfileImagesFromServer();
                                   });
                                 }),
                           ))),
@@ -346,8 +347,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
     );
   }
 
-  void _syncFromServer() {
-    NetworkHelper().getProfileImages().then((profileImagesUrls) {
+  void _syncProfileImagesFromServer() {
+    NewNetworkService.instance.getProfileImagesUrls().then((profileImagesUrls) {
       setStateIfMounted(() {
         _profileImagesUrls = profileImagesUrls;
       });
