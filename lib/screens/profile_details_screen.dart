@@ -248,8 +248,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                     if (newIndex >= _profileImagesUrls!.length) {
                       return;
                     }
-                    NetworkHelper().swapProfileImages(oldIndex,
-                        newIndex); //I don't see a need to wait for the server;
+                    NewNetworkService.instance.swapProfileImages(_profileImagesUrls![oldIndex],
+                        _profileImagesUrls![newIndex]); //I don't see a need to wait for the server;
                     setState(() {
                       String temp = _profileImagesUrls![
                           oldIndex]; //Swap the elements (I wish there was a native way to do that!)

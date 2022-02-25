@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:http/http.dart' as http;
@@ -63,6 +64,22 @@ class NewNetworkService{
       List<String>? imagesLinks = parsed.cast<String>();
       return imagesLinks;
     }
+  }
+
+
+  Future<void> swapProfileImages(
+      String profileImage1Url, String profileImage2Url) async {
+    Map<String, String> toSend = {
+      'file1_url': profileImage1Url,
+      'file2_url': profileImage2Url
+    };
+
+    String encoded = jsonEncode(toSend);
+
+    Uri swapUri = Uri.https(SERVER_ADDR,
+        '/profile_images/swap/${SettingsData.instance.uid}');
+    http.Response response = await http.post(swapUri, body: encoded);
+    return;
   }
 
 }
