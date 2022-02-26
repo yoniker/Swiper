@@ -59,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         ? PrecachedImage.asset(
             imageURI: BetaIconPaths.defaultProfileImagePath01,
           ).image
-        : CachedNetworkImageProvider(
+        : NetworkImage(
             NewNetworkService.getProfileImageUrl(imageUrl),
           );
 

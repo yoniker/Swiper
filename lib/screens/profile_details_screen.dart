@@ -1,18 +1,19 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:reorderables/reorderables.dart';
+import 'package:extended_image/extended_image.dart';
+
+
 
 /// The Implemntation of the Profile-screen
 class ProfileDetailsScreen extends StatefulWidget {
@@ -113,9 +114,12 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
     void Function()? onDelete,
   }) {
     Widget _inBoxWidget = imageUrl != null
-        ? Image.network(
+        ?
+    ExtendedImage.network(
             imageUrl,
             fit: BoxFit.cover,
+      retries: 3,
+      cache: true,
           )
         : Center(
             child: _loadingImage == false
@@ -189,8 +193,11 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
         ? AssetImage(
             BetaIconPaths.defaultProfileImagePath01,
           )
-        : CachedNetworkImageProvider(
+        : ExtendedNetworkImageProvider(
             NewNetworkService.getProfileImageUrl(_imgUrl),
+            cache: true,
+            retries: 30,
+      timeLimit: Duration(milliseconds: 20)
           )) as ImageProvider<Object>;
 
     return Scaffold(
@@ -266,35 +273,29 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                   children: List<Widget>.generate(
                       _profileImagesUrls!.length + 1,
                       (index) => ReorderableWidget(
-                            key: Key('#profile_screen-reorderable_key'),
+                            key: Key('#reorderable'),
                             reorderable: index < _profileImagesUrls!.length,
                             child: _pictureBox(
                                 imageUrl: index < _profileImagesUrls!.length
                                     ? NewNetworkService.getProfileImageUrl(
                                         _profileImagesUrls![index])
                                     : null,
-                                onDelete: () {
-                                  NetworkHelper()
-                                      .deleteProfileImage(index)
-                                      .then((_) {
-                                    {
-                                      _syncProfileImagesFromServer();
-                                    }
-                                  });
+                                onDelete: ()async {
+                                  if(_profileImagesUrls!.length<index+1){return;}
+                                  await NewNetworkService.instance.deleteProfileImage(_profileImagesUrls![index]);
+                                  await _syncProfileImagesFromServer();
                                 },
-                                onImagePicked: (pickedImage) {
+                                onImagePicked: (pickedImage)async {
                                   setState(() {
                                     _loadingImage = true;
                                   });
-                                  NewNetworkService.instance
-                                      .postProfileImage(pickedImage!)
-                                      .then((_) {
+                                  await NewNetworkService.instance.postProfileImage(pickedImage!);
                                     setState(() {
                                       _loadingImage = false;
                                     });
-                                    _syncProfileImagesFromServer();
-                                  });
-                                }),
+                                    await _syncProfileImagesFromServer();
+                                  }
+                                ),
                           ))),
               _buildToggleTile(
                 title: 'Incognito Mode',
@@ -347,12 +348,12 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
     );
   }
 
-  void _syncProfileImagesFromServer() {
-    NewNetworkService.instance.getProfileImagesUrls().then((profileImagesUrls) {
+  Future<void> _syncProfileImagesFromServer() async{
+    var profileImagesUrls = await NewNetworkService.instance.getProfileImagesUrls();
       setStateIfMounted(() {
         _profileImagesUrls = profileImagesUrls;
       });
-    });
+
   }
 }
 

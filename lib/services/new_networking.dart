@@ -17,7 +17,7 @@ class NewNetworkService{
 
   //A helper method to shrink an image if it's too large, and decode it into a workable image format
   static Future<img.Image> _prepareImage(PickedFile pickedImageFile) async {
-    const MAX_IMAGE_SIZE = 800; //TODO make it  a parameter (if needed)
+    const MAX_IMAGE_SIZE = 600; //TODO make it  a parameter (if needed)
 
     img.Image theImage = img.decodeImage(await pickedImageFile.readAsBytes())!;
     if (max(theImage.height, theImage.width) > MAX_IMAGE_SIZE) {
@@ -79,6 +79,17 @@ class NewNetworkService{
     Uri swapUri = Uri.https(SERVER_ADDR,
         '/profile_images/swap/${SettingsData.instance.uid}');
     http.Response response = await http.post(swapUri, body: encoded);
+    return;
+  }
+
+  Future<void> deleteProfileImage(String profileImageUrl) async {
+    Uri deletionUri = Uri.https(SERVER_ADDR,
+        '/profile_images/delete/${SettingsData.instance.uid}');
+    Map<String, String> toSend = {
+      'file_url': profileImageUrl,
+    };
+    String encoded = jsonEncode(toSend);
+    var response = await http.post(deletionUri,body: encoded);
     return;
   }
 
