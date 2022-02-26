@@ -118,9 +118,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
     ExtendedImage.network(
             imageUrl,
             fit: BoxFit.cover,
-      retries: 30,
-      timeRetry: Duration(milliseconds: 300),
-      timeLimit: Duration(milliseconds: 300),
       cache: true,
           )
         : Center(
@@ -198,9 +195,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
         : ExtendedNetworkImageProvider(
             NewNetworkService.getProfileImageUrl(_imgUrl),
             cache: true,
-            retries: 30,
-      timeLimit: Duration(milliseconds: 20),
-      timeRetry: Duration(milliseconds: 20),
           )) as ImageProvider<Object>;
 
     return Scaffold(
@@ -352,7 +346,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
   }
 
   Future<void> _syncProfileImagesFromServer() async{
-    var profileImagesUrls = await NewNetworkService.instance.getProfileImagesUrls();
+    var profileImagesUrls = await NewNetworkService.instance.getCurrentProfileImagesUrls();
       setStateIfMounted(() {
         _profileImagesUrls = profileImagesUrls;
       });

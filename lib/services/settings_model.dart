@@ -33,6 +33,7 @@ class SettingsData extends ChangeNotifier{
   static const String USER_RELATIONSHIP_TYPE_KEY = 'relationship_type';
   static const String LONGITUDE_KEY = 'longitude';
   static const String LATITUDE_KEY = 'latitude';
+  static const String PROFILE_IMAGES_KEY = 'profile_images_urls';
   static const _debounceSettingsTime = Duration(seconds: 2); //Debounce time such that we notify listeners
   String _uid = '';
   String _name = '';
@@ -61,6 +62,7 @@ class SettingsData extends ChangeNotifier{
   double _longitude = 0.0;
   double _latitude = 0.0;
   bool _registered = false;
+  List<String> _profileImagesUrls = [];
 
   SettingsData._privateConstructor(){
 
@@ -94,6 +96,7 @@ class SettingsData extends ChangeNotifier{
     _relationshipType = sharedPreferences.getString(USER_RELATIONSHIP_TYPE_KEY)??_relationshipType;
     _latitude = sharedPreferences.getDouble(LATITUDE_KEY)??_latitude;
     _longitude = sharedPreferences.getDouble(LONGITUDE_KEY)??_longitude;
+    _profileImagesUrls = sharedPreferences.getStringList(PROFILE_IMAGES_KEY)??_profileImagesUrls;
     _registered = sharedPreferences.getBool(REGISTERED_KEY) ?? _registered;
     _readFromShared = true;
 
@@ -369,6 +372,16 @@ class SettingsData extends ChangeNotifier{
     savePreferences(LATITUDE_KEY, newLatitude);
   }
 
+  List<String> get profileImagesUrls{
+    return _profileImagesUrls;
+  }
+
+  set profileImagesUrls(List<String> newUrlsList){
+     _profileImagesUrls = newUrlsList;
+     savePreferences(PROFILE_IMAGES_KEY, newUrlsList,sendServer: false);
+
+  }
+
 
   void savePreferences(String sharedPreferencesKey, dynamic newValue,{bool sendServer = true}) async {
     if(sendServer){
@@ -396,6 +409,11 @@ class SettingsData extends ChangeNotifier{
 
     if (newValue is double){
       sharedPreferences.setDouble(sharedPreferencesKey, newValue);
+      return;
+    }
+
+    if(newValue is List<String>){
+      sharedPreferences.setStringList(sharedPreferencesKey, newValue);
       return;
     }
 

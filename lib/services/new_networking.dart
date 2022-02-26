@@ -61,11 +61,20 @@ class NewNetworkService{
     return;
   }
 
+
+  static String getImageProfileByUserId(String userId){
+    //Get the user's main profile image by her userId
+    return 'https://'+SERVER_ADDR+'/profile_image/$userId';
+  }
+
   static String getProfileImageUrl(String shortUrl) {
+    //Get any profile image link (not just the main one) from the shorthand version of /profile_images/real/something/something.jpg
     return 'https://' + SERVER_ADDR + shortUrl;
   }
 
-  Future<List<String>?> getProfileImagesUrls() async {
+
+
+  Future<List<String>?> getCurrentProfileImagesUrls() async {
     Uri countUri = Uri.https(SERVER_ADDR,
         '/profile_images/get_urls/${SettingsData.instance.uid}/');
     var response = await http.get(countUri);
@@ -102,5 +111,7 @@ class NewNetworkService{
     var response = await http.post(deletionUri,body: encoded);
     return;
   }
+
+
 
 }
