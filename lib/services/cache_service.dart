@@ -9,7 +9,7 @@ class CacheService{
 
   static String keyToMd5(String key) => md5.convert(utf8.encode(key)).toString();
 
-  static Future<void> saveToCache(String url,Uint8List? data)async{
+  static Future<void> saveToCache(String url,List<int>? data)async{
     if(data==null){return;}
     String md5Key = keyToMd5(url);
   final Directory _cacheImagesDirectory = Directory(
@@ -19,7 +19,7 @@ class CacheService{
   }
   final File cacheFile = File(join(_cacheImagesDirectory.path, md5Key));
     if (cacheFile.existsSync()) {return;} //File already exists. TODO worry about max Age?
-    await File(join(_cacheImagesDirectory.path, md5Key)).writeAsBytes(data!);
+    await File(join(_cacheImagesDirectory.path, md5Key)).writeAsBytes(data);
 }
 
 }

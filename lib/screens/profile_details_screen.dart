@@ -49,8 +49,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
 
   String? _company;
 
-  bool _loadingImage =
-      false; //Is image in the process of being uploaded? give user visual cue
+  bool _uploadingImage =
+      false; //Is image in the process of being uploaded? give user a visual cue
 
   List<String>? _profileImagesUrls = [];
 
@@ -124,7 +124,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
       cache: true,
           )
         : Center(
-            child: _loadingImage == false
+            child: _uploadingImage == false
                 ? IconButton(
                     icon: Icon(Icons.add_rounded),
                     onPressed: () async {
@@ -135,7 +135,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                     },
                   )
                 : SpinKitPumpingHeart(
-                    color: mainAppColor02,
+                    color: Colors.red,
                   ));
 
     return Container(
@@ -290,11 +290,11 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                                 },
                                 onImagePicked: (pickedImage)async {
                                   setState(() {
-                                    _loadingImage = true;
+                                    _uploadingImage = true;
                                   });
                                   await NewNetworkService.instance.postProfileImage(pickedImage!);
                                     setState(() {
-                                      _loadingImage = false;
+                                      _uploadingImage = false;
                                     });
                                     await _syncProfileImagesFromServer();
                                   }

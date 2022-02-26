@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:betabeta/services/cache_service.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -47,7 +48,16 @@ class NewNetworkService{
     );
     request.files.add(multipartFile);
     var response = await request.send(); //TODO something if response wasn't 200
+    if(response.statusCode==200){
     var resp_text = await response.stream.bytesToString();
+    var responseMap = jsonDecode(resp_text);
+    String url = getProfileImageUrl(responseMap['image_url']);
+    await CacheService.saveToCache(url,img.encodeJpg(theImage,quality: 50));
+    print('SAVED UPLOADED IMAGE TO CACHE!');
+
+    }
+
+
     return;
   }
 
