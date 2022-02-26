@@ -392,6 +392,8 @@ class SettingsData extends ChangeNotifier{
         MatchEngine().clear();
       });
     }
+    print('notifying listeners');
+    notifyListeners();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if(newValue is int) {
       sharedPreferences.setInt(sharedPreferencesKey, newValue);
