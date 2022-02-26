@@ -118,7 +118,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
     ExtendedImage.network(
             imageUrl,
             fit: BoxFit.cover,
-      retries: 3,
+      retries: 30,
+      timeRetry: Duration(milliseconds: 300),
+      timeLimit: Duration(milliseconds: 300),
       cache: true,
           )
         : Center(
@@ -197,7 +199,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
             NewNetworkService.getProfileImageUrl(_imgUrl),
             cache: true,
             retries: 30,
-      timeLimit: Duration(milliseconds: 20)
+      timeLimit: Duration(milliseconds: 20),
+      timeRetry: Duration(milliseconds: 20),
           )) as ImageProvider<Object>;
 
     return Scaffold(
