@@ -17,7 +17,7 @@ class NewNetworkService{
 
   //A helper method to shrink an image if it's too large, and decode it into a workable image format
   static Future<img.Image> _prepareImage(PickedFile pickedImageFile) async {
-    const MAX_IMAGE_SIZE = 600; //TODO make it  a parameter (if needed)
+    const MAX_IMAGE_SIZE = 1500; //TODO make this a parameter and let the user control it (if needed)
 
     img.Image theImage = img.decodeImage(await pickedImageFile.readAsBytes())!;
     if (max(theImage.height, theImage.width) > MAX_IMAGE_SIZE) {
@@ -41,7 +41,7 @@ class NewNetworkService{
     );
     var multipartFile = new http.MultipartFile.fromBytes(
       'file',
-      img.encodeJpg(theImage),
+      img.encodeJpg(theImage,quality: 50),
       filename: fileName,
       contentType: media.MediaType.parse('image/jpeg'),
     );
