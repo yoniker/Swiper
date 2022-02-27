@@ -3,6 +3,7 @@ import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/utils/mixins.dart';
+import 'package:betabeta/widgets/circular_user_avatar.dart';
 import 'package:betabeta/widgets/contacts_widget.dart';
 import 'package:betabeta/widgets/conversations_preview_widget.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
@@ -48,10 +49,12 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                     onTap: (){
                       Get.toNamed(ProfileScreen.routeName);
                     },
-                    child: ProfileImageAvatar.network(
-                        backgroundColor: Colors.grey,
-                        url:
-                        'https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_3.jpg'),
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.toNamed(ProfileScreen.routeName);
+                      },
+                      child: CircularUserAvatar(backgroundColor: Colors.grey,),
+                    ),
                   )
               ),
             ],
