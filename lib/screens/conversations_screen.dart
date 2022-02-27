@@ -1,15 +1,11 @@
-import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/screens/profile_screen.dart';
-import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/circular_user_avatar.dart';
 import 'package:betabeta/widgets/contacts_widget.dart';
 import 'package:betabeta/widgets/conversations_preview_widget.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
-import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class ConversationsScreen extends StatefulWidget {
