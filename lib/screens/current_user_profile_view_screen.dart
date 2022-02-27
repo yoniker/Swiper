@@ -6,16 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CurrentUserProfileViewScreen extends StatefulWidget {
   static const String routeName = '/user_profile_viewer';
-  const CurrentUserProfileViewScreen({Key? key}) : super(key: key);
-
-  @override
-  _CurrentUserProfileViewScreenState createState() =>
-      _CurrentUserProfileViewScreenState();
-}
-
-class _CurrentUserProfileViewScreenState
-    extends State<CurrentUserProfileViewScreen> {
-  final dummyProfile = Profile(
+  static final dummyProfile = Profile(
       username: "Nitzan",
       headline: 'The Lamer',
       description:
@@ -30,30 +21,39 @@ class _CurrentUserProfileViewScreenState
       jobTitle: 'The Rim Guy Owner',
       compatibilityScore: 0.5,
       hotnessScore: 0.5);
+  const CurrentUserProfileViewScreen({Key? key}) : super(key: key);
 
   @override
+  _CurrentUserProfileViewScreenState createState() =>
+      _CurrentUserProfileViewScreenState();
+}
+
+class _CurrentUserProfileViewScreenState
+    extends State<CurrentUserProfileViewScreen> {
+  @override
   Widget build(BuildContext context) {
-    return Stack(alignment: Alignment.bottomRight, children: [
-      Container(
+    return Stack(alignment: Alignment.topLeft, children: [
+      Scaffold(
         // appBar: CustomAppBar(),
-        child: MatchCard(
-          clickable: false,
-          showCarousel: false,
-          profile: dummyProfile,
-        ),
+        body: MatchCard(
+            clickable: true,
+            showCarousel: true,
+            profile: CurrentUserProfileViewScreen.dummyProfile),
       ),
-      Padding(
-        padding: const EdgeInsets.all(30.0),
-        child: FloatingActionButton(
-            backgroundColor: Colors.blueGrey,
-            child: Icon(
-              FontAwesomeIcons.chevronLeft,
-              size: 40,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            }),
+      SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: FloatingActionButton(
+              backgroundColor: Colors.blueGrey,
+              child: Icon(
+                FontAwesomeIcons.chevronLeft,
+                size: 40,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+        ),
       )
     ]);
   }
