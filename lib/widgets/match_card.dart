@@ -3,6 +3,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/full_image_screen.dart';
+import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/widgets/basic_detail.dart';
 import 'package:betabeta/widgets/compatibility_scale.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
@@ -253,7 +254,7 @@ class _MatchCardState extends State<MatchCard> {
                   scrollDirection: Axis.horizontal,
                   itemCount: _imageUrls.length,
                   itemBuilder: (cntx, index) {
-                    final String _url = 'https://' + _imageUrls[index];
+                    final String _url = NewNetworkService.getProfileImageUrl(_imageUrls[index]);
                     return GestureDetector(
                       onTap: () {
                         // pushToScreen(
@@ -694,19 +695,27 @@ class _PhotoViewState extends State<PhotoView> {
 
     // instantiate the carousel List
     carouselDots = <CarouselDot>[];
-    bool isRealProfile = false;
-    if(widget.imageUrls?.isNotEmpty??false && widget.imageUrls!.first.contains('real'))
+    if(widget.imageUrls!.length==0){
+      var img = Image.network(NewNetworkService.getProfileImageUrl(BetaIconPaths.anonymousProfileUrl),
+        scale: 1.0,
+        fit: BoxFit.cover,
+      );
+      precacheImage(img.image, context);
+      imagesList = [img];
+      return;
+    }
     for (int imageIndex = 0;
         imageIndex < widget.imageUrls!.length;
         imageIndex++) {
-      var img = Image.network(
-        'https://' + widget.imageUrls![imageIndex],
+      var img =  Image.network(
+        NewNetworkService.getProfileImageUrl(widget.imageUrls![imageIndex]),
         scale: 1.0,
         fit: BoxFit.cover,
       );
       precacheImage(img.image, context);
       imagesList.add(img);
     }
+
   }
 
   @override
