@@ -161,7 +161,7 @@ class _MatchCardState extends State<MatchCard> {
   }) {
     final _imageUrls = profile.imageUrls ?? <String>[];
 
-    // builds the achivement items such as loves and stars.
+    // builds the achievement items such as loves and stars.
     Widget _buildAchievementItem(String iconURI, String value) {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 2.0),
@@ -694,7 +694,8 @@ class _PhotoViewState extends State<PhotoView> {
 
     // instantiate the carousel List
     carouselDots = <CarouselDot>[];
-
+    bool isRealProfile = false;
+    if(widget.imageUrls?.isNotEmpty??false && widget.imageUrls!.first.contains('real'))
     for (int imageIndex = 0;
         imageIndex < widget.imageUrls!.length;
         imageIndex++) {
