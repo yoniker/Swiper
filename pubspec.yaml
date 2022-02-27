@@ -67,7 +67,11 @@ dependencies:
   location: ^4.3.0
   extended_image: ^6.0.1
       # publish_to: 'none'
-
+dependency_overrides:
+  photo_view:
+    git:
+      url: https://github.com/bluefireteam/photo_view
+      ref: master
 
 dev_dependencies:
   flutter_test:
