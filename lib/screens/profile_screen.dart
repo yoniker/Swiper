@@ -63,11 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       padding: EdgeInsets.symmetric(vertical: 6.0),
       child: Clickable(
         onTap: () {
-          showModalBottomSheet(
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              context: context,
-              builder: (context) => CurrentUserProfileViewScreen());
+          Navigator.pushNamed(context, CurrentUserProfileViewScreen.routeName);
           // Get.toNamed(
           //   CurrentUserProfileViewScreen.routeName,
           // );

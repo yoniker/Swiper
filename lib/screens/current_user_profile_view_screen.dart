@@ -16,7 +16,7 @@ class CurrentUserProfileViewScreen extends StatefulWidget {
 
 class _CurrentUserProfileViewScreenState
     extends State<CurrentUserProfileViewScreen> {
-  final dummyProfile = Profile(
+  static final dummyProfile = Profile(
       username: SettingsData.instance.name,
       headline: SettingsData.instance.userDescription,
       description:
@@ -28,29 +28,35 @@ class _CurrentUserProfileViewScreenState
       compatibilityScore: 1, //Compatibility scores is calculated between users.
       hotnessScore: 1);
 
+
+  @override
+  _CurrentUserProfileViewScreenState createState() =>
+      _CurrentUserProfileViewScreenState();
+
   @override
   Widget build(BuildContext context) {
-    return Stack(alignment: Alignment.bottomRight, children: [
-      Container(
+    return Stack(alignment: Alignment.topLeft, children: [
+      Scaffold(
         // appBar: CustomAppBar(),
-        child: MatchCard(
-          clickable: false,
-          showCarousel: false,
-          profile: dummyProfile,
-        ),
+        body: MatchCard(
+            clickable: true,
+            showCarousel: true,
+            profile: dummyProfile),
       ),
-      Padding(
-        padding: const EdgeInsets.all(30.0),
-        child: FloatingActionButton(
-            backgroundColor: Colors.blueGrey,
-            child: Icon(
-              FontAwesomeIcons.chevronLeft,
-              size: 40,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            }),
+      SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: FloatingActionButton(
+              backgroundColor: Colors.blueGrey,
+              child: Icon(
+                FontAwesomeIcons.chevronLeft,
+                size: 40,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+        ),
       )
     ]);
   }
