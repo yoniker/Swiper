@@ -132,10 +132,11 @@ class _TermsScreenState extends State<TermsScreen> {
                   ),
                 ),
                 RoundedButton(
-                  elvation: 0,
+                  elevation: 0,
                   name: 'I Agree',
                   onTap: () {
-                    Get.offAllNamed(OnboardingFlowController.nextRoute(TermsScreen.routeName));
+                    Get.offAllNamed(OnboardingFlowController.nextRoute(
+                        TermsScreen.routeName));
                   },
                 ),
               ],

@@ -6,14 +6,12 @@ import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/account_settings.dart';
 import 'package:betabeta/screens/notification_screen.dart';
 import 'package:betabeta/screens/profile_details_screen.dart';
-import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/clickable.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:betabeta/widgets/thumb_button.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +27,6 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen>
     with AutomaticKeepAliveClientMixin, MountedStateMixin<ProfileScreen> {
-
   // create a SettingsData & a NetworkHelper instance.
 
   @override
@@ -41,8 +38,9 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   void _syncFromServer() async {
-    final List<String>? _resp = await NewNetworkService.instance.getCurrentProfileImagesUrls();
-    if(_resp!=null){
+    final List<String>? _resp =
+        await NewNetworkService.instance.getCurrentProfileImagesUrls();
+    if (_resp != null) {
       SettingsData.instance.profileImagesUrls = _resp;
     }
   }
@@ -56,8 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           ).image
         : ExtendedNetworkImageProvider(
             NewNetworkService.getProfileImageUrl(imageUrl),
-      cache: true
-          );
+            cache: true);
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 6.0),
@@ -131,172 +128,177 @@ class _ProfileScreenState extends State<ProfileScreen>
 
     return ListenerWidget(
       notifier: SettingsData.instance,
-      builder:(context) {
+      builder: (context) {
         String? _profileImageToShow;
-        List<String> _profileImagesUrls = SettingsData.instance.profileImagesUrls;
+        List<String> _profileImagesUrls =
+            SettingsData.instance.profileImagesUrls;
 
         if (_profileImagesUrls.isNotEmpty) {
           _profileImageToShow = _profileImagesUrls.first;
         }
 
         return Scaffold(
-        backgroundColor: backgroundThemeColor,
-        appBar: CustomAppBar(
-          trailing: PrecachedImage.asset(imageURI: BetaIconPaths.editIcon03),
-          hasTopPadding: true,
-          hasBackButton: true,
-          showAppLogo: false,
-          title: 'Profile',
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              _profilePicDisplay(_profileImageToShow),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
-                child: Text(
-                  SettingsData.instance.name,
-                  style: titleStyle,
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.location_on_rounded,
-                    color: colorBlend01,
-                  ),
-                  SizedBox(width: 4.0),
-                  Text(
-                    'Your city, U.S.A',
-                    style: subTitleStyle.copyWith(color: darkTextColor),
-                  ),
-                ],
-              ),
-              SizedBox(height: 12.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  // _achievementLabel(
-                  //   label: 'Likes',
-                  //   iconURI: BetaIconPaths.likeIconFilled01,
-                  //   value: '500+',
-                  //   color: blue,
-                  // ),
-                  _achievementLabel(
-                    label: 'Loves',
-                    iconURI: BetaIconPaths.heartIconFilled01,
-                    value: '800+',
-                    imageColor: colorBlend01,
-                    color: Colors.black,
-                  ),
-                  // _achievementLabel(
-                  //   label: 'Stars',
-                  //   iconURI: BetaIconPaths.starIconFilled01,
-                  //   value: '50+',
-                  //   color: yellowishOrange,
-                  // ),
-                ],
-              ),
-              SizedBox(height: 12.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: 100,
-                      minWidth: 85,
-                    ),
-                    child: Column(
-                      children: [
-                        ThumbButton(
-                          thumbColor: whiteCardColor,
-                          onTap: () {
-                            // move to general settings screen.
-                            Get.toNamed(AccountSettingsScreen.routeName);
-                          },
-                          child: Positioned(
-                            top: 12.0,
-                            child: PrecachedImage.asset(
-                              imageURI: BetaIconPaths.settingsIconFilled01,
-                              color: Colors.blueGrey,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 2.0),
-                        Text(
-                          'Settings',
-                          style: smallBoldedCharStyle,
-                        ),
-                      ],
-                    ),
-                  ),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: 100,
-                      minWidth: 85,
-                    ),
-                    child: Column(
-                      children: [
-                        ThumbButton(
-                          thumbColor: whiteCardColor,
-                          onTap: () async {
-                            // move to the profile screen.
-                            await Get.toNamed(
-                              ProfileDetailsScreen.routeName,);
-                          },
-                          child: Positioned(
-                            top: 12.0,
-                            child: PrecachedImage.asset(
-                              imageURI: BetaIconPaths.editIconFilled01,
-                              color: yellowishOrange,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 2.0),
-                        Text(
-                          'Edit Profile',
-                          style: smallBoldedCharStyle,
-                        ),
-                      ],
-                    ),
-                  ),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: 100,
-                      minWidth: 85,
-                    ),
-                    child: Column(
-                      children: [
-                        ThumbButton(
-                          thumbColor: whiteCardColor,
-                          onTap: () {
-                            // move to the notification screen.
-                            Get.toNamed(NotificationScreen.routeName);
-                          },
-                          child: Positioned(
-                            top: 12.0,
-                            child: PrecachedImage.asset(
-                              imageURI: BetaIconPaths.notificationIconFilled01,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 2.0),
-                        Text(
-                          'Notifications',
-                          style: smallBoldedCharStyle,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
+          backgroundColor: backgroundThemeColor,
+          appBar: CustomAppBar(
+            trailing: PrecachedImage.asset(imageURI: BetaIconPaths.editIcon03),
+            hasTopPadding: true,
+            hasBackButton: true,
+            showAppLogo: false,
+            title: 'Profile',
           ),
-        ),
-      );},
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                _profilePicDisplay(_profileImageToShow),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
+                  child: Text(
+                    SettingsData.instance.name,
+                    style: titleStyle,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.location_on_rounded,
+                      color: colorBlend01,
+                    ),
+                    SizedBox(width: 4.0),
+                    Text(
+                      'Your city, U.S.A',
+                      style: subTitleStyle.copyWith(color: darkTextColor),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    // _achievementLabel(
+                    //   label: 'Likes',
+                    //   iconURI: BetaIconPaths.likeIconFilled01,
+                    //   value: '500+',
+                    //   color: blue,
+                    // ),
+                    _achievementLabel(
+                      label: 'Loves',
+                      iconURI: BetaIconPaths.heartIconFilled01,
+                      value: '800+',
+                      imageColor: colorBlend01,
+                      color: Colors.black,
+                    ),
+                    // _achievementLabel(
+                    //   label: 'Stars',
+                    //   iconURI: BetaIconPaths.starIconFilled01,
+                    //   value: '50+',
+                    //   color: yellowishOrange,
+                    // ),
+                  ],
+                ),
+                SizedBox(height: 12.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: 100,
+                        minWidth: 85,
+                      ),
+                      child: Column(
+                        children: [
+                          ThumbButton(
+                            thumbColor: whiteCardColor,
+                            onTap: () {
+                              // move to general settings screen.
+                              Get.toNamed(AccountSettingsScreen.routeName);
+                            },
+                            child: Positioned(
+                              top: 12.0,
+                              child: PrecachedImage.asset(
+                                imageURI: BetaIconPaths.settingsIconFilled01,
+                                color: Colors.blueGrey,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 2.0),
+                          Text(
+                            'Settings',
+                            style: smallBoldedCharStyle,
+                          ),
+                        ],
+                      ),
+                    ),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: 100,
+                        minWidth: 85,
+                      ),
+                      child: Column(
+                        children: [
+                          ThumbButton(
+                            thumbColor: whiteCardColor,
+                            onTap: () async {
+                              // move to the profile screen.
+                              await Get.toNamed(
+                                ProfileDetailsScreen.routeName,
+                              );
+                            },
+                            child: Positioned(
+                              top: 12.0,
+                              child: PrecachedImage.asset(
+                                imageURI: BetaIconPaths.editIconFilled01,
+                                color: yellowishOrange,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 2.0),
+                          Text(
+                            'Edit Profile',
+                            style: smallBoldedCharStyle,
+                          ),
+                        ],
+                      ),
+                    ),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: 100,
+                        minWidth: 85,
+                      ),
+                      child: Column(
+                        children: [
+                          ThumbButton(
+                            thumbColor: whiteCardColor,
+                            onTap: () {
+                              // move to the notification screen.
+                              Get.toNamed(NotificationScreen.routeName);
+                            },
+                            child: Positioned(
+                              top: 12.0,
+                              child: PrecachedImage.asset(
+                                imageURI:
+                                    BetaIconPaths.notificationIconFilled01,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 2.0),
+                          Text(
+                            'Notifications',
+                            style: smallBoldedCharStyle,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
+
   @override
   bool get wantKeepAlive => true;
 }

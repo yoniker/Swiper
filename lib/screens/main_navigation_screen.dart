@@ -1,12 +1,9 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/screens/conversations_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
-import 'package:betabeta/screens/view_likes_screen.dart';
 import 'package:betabeta/screens/voila_page.dart';
 import 'package:betabeta/services/app_state_info.dart';
-import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

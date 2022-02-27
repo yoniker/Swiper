@@ -15,13 +15,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:reorderables/reorderables.dart';
 import 'package:extended_image/extended_image.dart';
 
-
-
 /// The Implemntation of the Profile-screen
 class ProfileDetailsScreen extends StatefulWidget {
   static const String routeName = '/profile_details';
 
-  ProfileDetailsScreen({Key? key}) :super(key: key);
+  ProfileDetailsScreen({Key? key}) : super(key: key);
 
   @override
   _ProfileDetailsScreenState createState() => _ProfileDetailsScreenState();
@@ -42,6 +40,30 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
   bool _uploadingImage =
       false; //Is image in the process of being uploaded? give user a visual cue
 
+  void PhotoInfoPopUp() {
+    showDialog(
+        context: context,
+        builder: (_) => CupertinoAlertDialog(
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      setState(() {});
+                    },
+                    child: Text(
+                      'Delete Picture',
+                      style: TextStyle(color: Colors.red),
+                    )),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'Cancel',
+                    )),
+              ],
+            ));
+  }
+
   @override
   initState() {
     super.initState();
@@ -49,7 +71,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
     // this makes sure that if the state is not yet mounted, we don't end up calling setState
     // but instead push the function forward to the addPostFrameCallback function.
     _aboutMe = SettingsData.instance.userDescription;
-    _company = SettingsData.instance.userDescription; //TODO change settings data appropriately,add properties as needed etc
+    _company = SettingsData.instance
+        .userDescription; //TODO change settings data appropriately,add properties as needed etc
     _jobTitle = SettingsData.instance.userDescription;
 
     _syncProfileImagesFromServer();
@@ -96,11 +119,52 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
     void Function()? onDelete,
   }) {
     Widget _inBoxWidget = imageUrl != null
-        ?
-    ExtendedImage.network(
-            imageUrl,
-            fit: BoxFit.cover,
-      cache: true,
+        ? GestureDetector(
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (_) => Dialog(
+                        alignment: Alignment.bottomCenter,
+                        backgroundColor: Colors.transparent,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.8),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(30),
+                              )),
+                          height: 120,
+                          child: Column(
+                            children: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    onDelete!();
+                                  },
+                                  child: Text(
+                                    'Delete Picture',
+                                    style: TextStyle(
+                                        color: Colors.red, fontSize: 18),
+                                  )),
+                              Divider(),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 18),
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ));
+            },
+            child: ExtendedImage.network(
+              imageUrl,
+              fit: BoxFit.cover,
+              cache: true,
+            ),
           )
         : Center(
             child: _uploadingImage == false
@@ -136,27 +200,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
           ),
 
           // This is the cancel button which will appear only when an image is present.
-          if (imageUrl != null)
-            Align(
-              alignment: Alignment(1.2, -1.2),
-              child: Material(
-                clipBehavior: Clip.antiAlias,
-                color: Colors.white,
-                shape: CircleBorder(),
-                elevation: 2.0,
-                child: InkWell(
-                  onTap: () {
-                    onDelete!();
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.all(2.5),
-                    child: GlobalWidgets.assetImageToIcon(
-                      BetaIconPaths.cancelIconPath,
-                    ),
-                  ),
-                ),
-              ),
-            ),
         ],
       ),
     );
@@ -164,187 +207,201 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
 
   @override
   Widget build(BuildContext context) {
-
-
     return ListenerWidget(
       notifier: SettingsData.instance,
-      builder: (context){
-
-
+      builder: (context) {
         String? _mainProfileImage;
-        List<String> _profileImagesUrls = SettingsData.instance.profileImagesUrls;
+        List<String> _profileImagesUrls =
+            SettingsData.instance.profileImagesUrls;
 
-        if ( _profileImagesUrls.isNotEmpty) {
+        if (_profileImagesUrls.isNotEmpty) {
           _mainProfileImage = _profileImagesUrls.first;
         }
 
         final ImageProvider _profileImage = (_mainProfileImage == null
             ? AssetImage(
-          BetaIconPaths.defaultProfileImagePath01,
-        )
+                BetaIconPaths.defaultProfileImagePath01,
+              )
             : ExtendedNetworkImageProvider(
-          NewNetworkService.getProfileImageUrl(_mainProfileImage),
-          cache: true,
-        )) as ImageProvider<Object>;
-
+                NewNetworkService.getProfileImageUrl(_mainProfileImage),
+                cache: true,
+              )) as ImageProvider<Object>;
 
         return Scaffold(
-        appBar: CustomAppBar(
-          title: 'Profile',
-          hasTopPadding: true,
-          showAppLogo: false,
-          trailing: GlobalWidgets.assetImageToIcon(
-            BetaIconPaths.inactiveVoilaTabIconPath,
+          backgroundColor: backgroundThemeColor,
+          appBar: CustomAppBar(
+            title: 'My Profile',
+            hasTopPadding: true,
+            showAppLogo: false,
+            trailing: GlobalWidgets.assetImageToIcon(
+              BetaIconPaths.inactiveVoilaTabIconPath,
+            ),
           ),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            child: Column(
-              children: [
-                Center(
-                  child: CircleAvatar(
-                    backgroundColor: Colors.grey[200],
-                    backgroundImage: _profileImage,
-                    radius: 50.5,
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: Material(
-                        clipBehavior: Clip.antiAlias,
-                        color: Colors.white,
-                        shape: CircleBorder(),
-                        elevation: 2.0,
-                        child: InkWell(
-                          onTap: () async {
-                            // show the imagePicker Dialogue.
-                            await GlobalWidgets.showImagePickerDialogue(
-                                context: context,
-                                onImagePicked: (image) {
-                                  // log
-                                  print(
-                                      'The Path to the New Profile Image is: ${image!.path}');
-                                });
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.all(2.5),
-                            child: GlobalWidgets.assetImageToIcon(
-                              BetaIconPaths.editProfileIconPath,
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: CircleAvatar(
+                      backgroundColor: Colors.grey[200],
+                      backgroundImage: _profileImage,
+                      radius: 50.5,
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: Material(
+                          clipBehavior: Clip.antiAlias,
+                          color: Colors.white,
+                          shape: CircleBorder(),
+                          elevation: 2.0,
+                          child: InkWell(
+                            onTap: () async {
+                              // show the imagePicker Dialogue.
+                              await GlobalWidgets.showImagePickerDialogue(
+                                  context: context,
+                                  onImagePicked: (image) {
+                                    // log
+                                    print(
+                                        'The Path to the New Profile Image is: ${image!.path}');
+                                  });
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(2.5),
+                              child: GlobalWidgets.assetImageToIcon(
+                                BetaIconPaths.editProfileIconPath,
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 20.0),
-                ReorderableWrap(
-                    needsLongPressDraggable: false,
-                    onReorder: (int oldIndex, int newIndex) {
-                      if (newIndex >= _profileImagesUrls.length) {
-                        return;
-                      }
-                      NewNetworkService.instance.swapProfileImages(_profileImagesUrls[oldIndex],
-                          _profileImagesUrls[newIndex]); //I don't see a need to wait for the server;
-                      String temp = _profileImagesUrls[
-                      oldIndex]; //Swap the elements (I wish there was a native way to do that!)
-                      _profileImagesUrls[oldIndex] =
-                      _profileImagesUrls[newIndex];
-                      _profileImagesUrls[newIndex] = temp;
+                  SizedBox(height: 10.0),
+                  Text(
+                    'My pictures',
+                    style: LargeTitleStyle,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  ReorderableWrap(
+                      needsLongPressDraggable: false,
+                      onReorder: (int oldIndex, int newIndex) {
+                        if (newIndex >= _profileImagesUrls.length) {
+                          return;
+                        }
+                        NewNetworkService.instance.swapProfileImages(
+                            _profileImagesUrls[oldIndex],
+                            _profileImagesUrls[
+                                newIndex]); //I don't see a need to wait for the server;
+                        String temp = _profileImagesUrls[
+                            oldIndex]; //Swap the elements (I wish there was a native way to do that!)
+                        _profileImagesUrls[oldIndex] =
+                            _profileImagesUrls[newIndex];
+                        _profileImagesUrls[newIndex] = temp;
 
-                      setState(() {
-                        SettingsData.instance.profileImagesUrls = _profileImagesUrls;
-
-                      });
-                    },
-                    direction: Axis.horizontal,
-                    alignment: WrapAlignment.spaceAround,
-                    runAlignment: WrapAlignment.spaceAround,
-                    spacing: 12.0,
-                    runSpacing: 12.0,
-                    children: List<Widget>.generate(
-                        _profileImagesUrls.length + 1,
-                        (index) => ReorderableWidget(
-                              key: Key('#reorderable'),
-                              reorderable: index < _profileImagesUrls.length,
-                              child: _pictureBox(
-                                  imageUrl: index < _profileImagesUrls.length
-                                      ? NewNetworkService.getProfileImageUrl(
-                                          _profileImagesUrls[index])
-                                      : null,
-                                  onDelete: ()async {
-                                    if(_profileImagesUrls.length<index+1){return;}
-                                    await NewNetworkService.instance.deleteProfileImage(_profileImagesUrls[index]);
-                                    await _syncProfileImagesFromServer();
-                                  },
-                                  onImagePicked: (pickedImage)async {
-                                    setState(() {
-                                      _uploadingImage = true;
-                                    });
-                                    await NewNetworkService.instance.postProfileImage(pickedImage!);
+                        setState(() {
+                          SettingsData.instance.profileImagesUrls =
+                              _profileImagesUrls;
+                        });
+                      },
+                      direction: Axis.horizontal,
+                      alignment: WrapAlignment.spaceAround,
+                      runAlignment: WrapAlignment.spaceAround,
+                      spacing: 12.0,
+                      runSpacing: 12.0,
+                      children: List<Widget>.generate(
+                          _profileImagesUrls.length + 1,
+                          (index) => ReorderableWidget(
+                                key: Key('#reorderable'),
+                                reorderable: index < _profileImagesUrls.length,
+                                child: _pictureBox(
+                                    imageUrl: index < _profileImagesUrls.length
+                                        ? NewNetworkService.getProfileImageUrl(
+                                            _profileImagesUrls[index])
+                                        : null,
+                                    onDelete: () async {
+                                      if (_profileImagesUrls.length <
+                                          index + 1) {
+                                        return;
+                                      }
+                                      await NewNetworkService.instance
+                                          .deleteProfileImage(
+                                              _profileImagesUrls[index]);
+                                      await _syncProfileImagesFromServer();
+                                    },
+                                    onImagePicked: (pickedImage) async {
+                                      setState(() {
+                                        _uploadingImage = true;
+                                      });
+                                      await NewNetworkService.instance
+                                          .postProfileImage(pickedImage!);
                                       setState(() {
                                         _uploadingImage = false;
                                       });
                                       await _syncProfileImagesFromServer();
-                                    }
-                                  ),
-                            ))),
-                _buildToggleTile(
-                  title: 'Incognito Mode',
-                  value: _incognitoMode,
-                  onToggle: (val) {
-                    setState(() {
-                      _incognitoMode = val;
-                    });
-                  },
-                ),
-                TextEditBlock(
-                  title: 'About Me',
-                  placeholder: 'About Me',
-                  text: _aboutMe,
-                  onCloseTile: () {
-                    // do something.
-                  },
-                  onChanged: (val) {
-                    SettingsData.instance.userDescription = val;
-                  },
-                ),
-                TextEditBlock(
-                  title: 'Job Title',
-                  placeholder: 'Job Title',
-                  maxLine: 1,
-                  text: _jobTitle,
-                  onCloseTile: () {
-                    // do something.
-                  },
-                  onChanged: (val) {
-                    SettingsData.instance.userDescription = val;
-                  },
-                ),
-                TextEditBlock(
-                  title: 'Company',
-                  placeholder: 'Company',
-                  maxLine: 1,
-                  text: _company,
-                  onCloseTile: () {
-                    // do something.
-                  },
-                  onChanged: (val) {
-                    SettingsData.instance.userDescription = val;
-                  },
-                ),
-              ],
+                                    }),
+                              ))),
+                  _buildToggleTile(
+                    title: 'Incognito Mode',
+                    value: _incognitoMode,
+                    onToggle: (val) {
+                      setState(() {
+                        _incognitoMode = val;
+                      });
+                    },
+                  ),
+                  TextEditBlock(
+                    title: 'About Me',
+                    placeholder: 'About Me',
+                    text: _aboutMe,
+                    onCloseTile: () {
+                      // do something.
+                    },
+                    onChanged: (val) {
+                      SettingsData.instance.userDescription = val;
+                    },
+                  ),
+                  TextEditBlock(
+                    title: 'Job Title',
+                    placeholder: 'Job Title',
+                    maxLine: 1,
+                    text: _jobTitle,
+                    onCloseTile: () {
+                      // do something.
+                    },
+                    onChanged: (val) {
+                      SettingsData.instance.userDescription = val;
+                    },
+                  ),
+                  TextEditBlock(
+                    title: 'Company',
+                    placeholder: 'Company',
+                    maxLine: 1,
+                    text: _company,
+                    onCloseTile: () {
+                      // do something.
+                    },
+                    onChanged: (val) {
+                      SettingsData.instance.userDescription = val;
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      );},
+        );
+      },
     );
   }
 
-  Future<void> _syncProfileImagesFromServer() async{
-    var profileImagesUrls = await NewNetworkService.instance.getCurrentProfileImagesUrls();
-    if(profileImagesUrls!=null){
-    SettingsData.instance.profileImagesUrls = profileImagesUrls;}
-
+  Future<void> _syncProfileImagesFromServer() async {
+    var profileImagesUrls =
+        await NewNetworkService.instance.getCurrentProfileImagesUrls();
+    if (profileImagesUrls != null) {
+      SettingsData.instance.profileImagesUrls = profileImagesUrls;
+    }
   }
 }
 

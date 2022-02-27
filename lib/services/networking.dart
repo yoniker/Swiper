@@ -79,6 +79,7 @@ class NetworkHelper {
     _lastMatchCall = DateTime.now();
     Uri matchesUrl =
         Uri.https(SERVER_ADDR, '/matches/${SettingsData.instance.uid}');
+    print('ICHS GETTINGS MATCHES FROM ${matchesUrl.path}');
     http.Response response = await http.get(matchesUrl); //eg /12313?gender=Male
     if (response.statusCode != 200) {
       return null; //TODO error handling
@@ -216,8 +217,7 @@ class NetworkHelper {
 
     http.MultipartRequest request = http.MultipartRequest(
       'POST',
-      Uri.https(
-          SERVER_ADDR, '/profile_images/${SettingsData.instance.uid}'),
+      Uri.https(SERVER_ADDR, '/profile_images/${SettingsData.instance.uid}'),
     );
     var multipartFile = new http.MultipartFile.fromBytes(
       'file',
@@ -231,8 +231,8 @@ class NetworkHelper {
   }
 
   Future<List<String>?> getProfileImages() async {
-    Uri countUri = Uri.https(SERVER_ADDR,
-        '/profile_images/get_list/${SettingsData.instance.uid}/');
+    Uri countUri = Uri.https(
+        SERVER_ADDR, '/profile_images/get_list/${SettingsData.instance.uid}/');
     var response = await http.get(countUri);
     if (response.statusCode == 200) {
       var parsed = json.jsonDecode(response.body);
@@ -263,8 +263,8 @@ class NetworkHelper {
 
     String encoded = jsonEncode(toSend);
 
-    Uri swapUri = Uri.https(SERVER_ADDR,
-        '/profile_images/swap/${SettingsData.instance.uid}');
+    Uri swapUri = Uri.https(
+        SERVER_ADDR, '/profile_images/swap/${SettingsData.instance.uid}');
     http.Response response = await http.post(swapUri, body: encoded);
     return;
   }
@@ -276,8 +276,8 @@ class NetworkHelper {
           DateTime.now().difference(_lastTaskStatusCall));
     }
     _lastTaskStatusCall = DateTime.now();
-    Uri getTaskStatus = Uri.https(SERVER_ADDR,
-        '/task_status/${SettingsData.instance.uid}/$taskId');
+    Uri getTaskStatus = Uri.https(
+        SERVER_ADDR, '/task_status/${SettingsData.instance.uid}/$taskId');
     http.Response response = await http.get(getTaskStatus);
     if (response.statusCode == 200) {
       var decodedResponse = json.jsonDecode(response.body);
@@ -293,8 +293,4 @@ class NetworkHelper {
     return NetworkTaskStatus
         .notExist; //TODO else what to do when status isnt 200?
   }
-
-
-
-
 }

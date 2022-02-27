@@ -81,7 +81,7 @@ class _GetNameScreenState extends State<GetNameScreen> {
                   ],
                 ),
                 RoundedButton(
-                  elvation: 1,
+                  elevation: 1,
                   name: 'NEXT',
                   onTap: userName.isEmpty
                       ? null
