@@ -10,6 +10,7 @@ import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/widgets/advance_filter_card_widget.dart';
+import 'package:betabeta/widgets/circular_user_avatar.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
@@ -122,10 +123,9 @@ class _VoilaPageState extends State<VoilaPage> {
                         onTap: () {
                           Get.toNamed(ProfileScreen.routeName);
                         },
-                        child: ProfileImageAvatar.network(
+                        child: CircularUserAvatar(
                             backgroundColor: Colors.grey,
-                            url:
-                                'https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_3.jpg'),
+                            ),
                       ),
                     ),
                   ],

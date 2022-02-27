@@ -4,6 +4,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
+import 'package:betabeta/widgets/circular_user_avatar.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/match_card.dart';
@@ -157,10 +158,7 @@ class _MatchScreenState extends State<MatchScreen>
                       onTap: () {
                         Get.toNamed(ProfileScreen.routeName);
                       },
-                      child: ProfileImageAvatar.network(
-                          backgroundColor: Colors.grey,
-                          url:
-                              'https://d2qp0siotla746.cloudfront.net/img/use-cases/profile-picture/template_3.jpg'),
+                      child: CircularUserAvatar(backgroundColor: Colors.grey,),
                     ),
                   ),
                 ],

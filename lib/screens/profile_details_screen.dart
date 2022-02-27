@@ -163,25 +163,31 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
 
   @override
   Widget build(BuildContext context) {
-    String? _mainProfileImage;
-    List<String> _profileImagesUrls = SettingsData.instance.profileImagesUrls;
 
-    if ( _profileImagesUrls.isNotEmpty) {
-      _mainProfileImage = _profileImagesUrls.first;
-    }
-
-    final ImageProvider _profileImage = (_mainProfileImage == null
-        ? AssetImage(
-            BetaIconPaths.defaultProfileImagePath01,
-          )
-        : ExtendedNetworkImageProvider(
-            NewNetworkService.getProfileImageUrl(_mainProfileImage),
-            cache: true,
-          )) as ImageProvider<Object>;
 
     return ListenerWidget(
       notifier: SettingsData.instance,
-      builder: (context)=>Scaffold(
+      builder: (context){
+
+
+        String? _mainProfileImage;
+        List<String> _profileImagesUrls = SettingsData.instance.profileImagesUrls;
+
+        if ( _profileImagesUrls.isNotEmpty) {
+          _mainProfileImage = _profileImagesUrls.first;
+        }
+
+        final ImageProvider _profileImage = (_mainProfileImage == null
+            ? AssetImage(
+          BetaIconPaths.defaultProfileImagePath01,
+        )
+            : ExtendedNetworkImageProvider(
+          NewNetworkService.getProfileImageUrl(_mainProfileImage),
+          cache: true,
+        )) as ImageProvider<Object>;
+
+
+        return Scaffold(
         appBar: CustomAppBar(
           title: 'Profile',
           hasTopPadding: true,
@@ -329,7 +335,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
             ),
           ),
         ),
-      ),
+      );},
     );
   }
 

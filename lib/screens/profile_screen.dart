@@ -14,6 +14,7 @@ import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:betabeta/widgets/thumb_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -53,8 +54,9 @@ class _ProfileScreenState extends State<ProfileScreen>
         ? PrecachedImage.asset(
             imageURI: BetaIconPaths.defaultProfileImagePath01,
           ).image
-        : NetworkImage(
+        : ExtendedNetworkImageProvider(
             NewNetworkService.getProfileImageUrl(imageUrl),
+      cache: true
           );
 
     return Padding(
@@ -132,12 +134,6 @@ class _ProfileScreenState extends State<ProfileScreen>
     super.build(context);
 
     return ListenerWidget(
-      action: (){
-        print('Profile Image screen listener called!!');
-        setState(() {
-
-        });
-      },
       notifier: SettingsData.instance,
       builder:(context) {
         String? _profileImageToShow;
