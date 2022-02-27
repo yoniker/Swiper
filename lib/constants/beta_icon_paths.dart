@@ -148,4 +148,5 @@ class BetaIconPaths {
   /// The path to edit icon used in the Profile tab.
   static const String editIconFilled01 =
       'assets/images/edit_icon_filled_01.png';
+  static const String anonymousProfileUrl = '/profile_images/real/app_assets/anonymous_user.jpg'; //short url to anon profile
 }

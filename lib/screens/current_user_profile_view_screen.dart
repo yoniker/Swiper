@@ -16,7 +16,7 @@ class CurrentUserProfileViewScreen extends StatefulWidget {
 
 class _CurrentUserProfileViewScreenState
     extends State<CurrentUserProfileViewScreen> {
-  static final dummyProfile = Profile(
+   final dummyProfile = Profile(
       username: SettingsData.instance.name,
       headline: SettingsData.instance.userDescription,
       description:

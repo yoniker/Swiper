@@ -69,7 +69,9 @@ class NewNetworkService{
 
   static String getProfileImageUrl(String shortUrl) {
     //Get any profile image link (not just the main one) from the shorthand version of /profile_images/real/something/something.jpg
-    return 'https://' + SERVER_ADDR + shortUrl;
+    if(shortUrl.contains('/real/')) {
+    return 'https://' + SERVER_ADDR + shortUrl;}
+    return 'https://' + shortUrl; //Support old dummy images url style
   }
 
 
