@@ -4,6 +4,7 @@ import 'package:betabeta/screens/onboarding/get_name_screen.dart';
 import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
 import 'package:betabeta/screens/onboarding/pronouns_screen.dart';
 import 'package:betabeta/services/screen_size.dart';
+import 'package:betabeta/utils/utils_methods.dart';
 import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
 import 'package:betabeta/widgets/onboarding/progress_bar.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
@@ -27,22 +28,7 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
   final earliestDate = DateTime(1900, 1);
   final currentDate = DateTime.now();
 
-  calculateAge(DateTime birthDate) {
-    DateTime currentDate = DateTime.now();
-    int age = currentDate.year - birthDate.year;
-    int month1 = currentDate.month;
-    int month2 = birthDate.month;
-    if (month2 > month1) {
-      age--;
-    } else if (month1 == month2) {
-      int day1 = currentDate.day;
-      int day2 = birthDate.day;
-      if (day2 > day1) {
-        age--;
-      }
-    }
-    return age;
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +95,7 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
                 RoundedButton(
                   name: 'NEXT',
                   onTap: () {
-                    int age = calculateAge(selectedDate);
+                    int age = UtilsMethods.calculateAge(selectedDate);
                     showDialog(
                         context: context,
                         builder: (_) => CupertinoAlertDialog(
