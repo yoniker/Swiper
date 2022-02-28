@@ -39,7 +39,7 @@ class LocationService{
     if(locationData.longitude==null || locationData.latitude==null){return;}
     SettingsData.instance.longitude = locationData.longitude!;
     SettingsData.instance.latitude = locationData.latitude!;
-    print('UPDATED LOCATION TO ${locationData.longitude!} ${locationData.latitude!}');
+    print('UPDATED LOCATION TO  ${locationData.latitude!},${locationData.longitude!}');
   }
 
   static void listenLocationChanges(){
