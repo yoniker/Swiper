@@ -52,7 +52,7 @@ class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
                 RoundedButton(
                     color: Colors.white,
                     name: 'Enable location',
-                    onTap: ()async {
+                    onTap: () async {
                       var status = await LocationService.requestLocationCapability();
                       if(status==LocationServiceStatus.enabled){
                         LocationService.onInit();

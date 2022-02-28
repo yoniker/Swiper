@@ -34,6 +34,7 @@ class SettingsData extends ChangeNotifier{
   static const String LONGITUDE_KEY = 'longitude';
   static const String LATITUDE_KEY = 'latitude';
   static const String PROFILE_IMAGES_KEY = 'profile_images_urls';
+  static const String LOCATION_DESCRIPTION_KEY = 'location_description';
   static const _debounceSettingsTime = Duration(seconds: 2); //Debounce time such that we notify listeners
   String _uid = '';
   String _name = '';
@@ -61,6 +62,7 @@ class SettingsData extends ChangeNotifier{
   String _relationshipType='';
   double _longitude = 0.0;
   double _latitude = 0.0;
+  String _locationDescription = '';
   bool _registered = false;
   List<String> _profileImagesUrls = [];
 
@@ -97,6 +99,7 @@ class SettingsData extends ChangeNotifier{
     _latitude = sharedPreferences.getDouble(LATITUDE_KEY)??_latitude;
     _longitude = sharedPreferences.getDouble(LONGITUDE_KEY)??_longitude;
     _profileImagesUrls = sharedPreferences.getStringList(PROFILE_IMAGES_KEY)??_profileImagesUrls;
+    _locationDescription = sharedPreferences.getString(LOCATION_DESCRIPTION_KEY)??_locationDescription;
     _registered = sharedPreferences.getBool(REGISTERED_KEY) ?? _registered;
     _readFromShared = true;
 
@@ -380,6 +383,15 @@ class SettingsData extends ChangeNotifier{
      _profileImagesUrls = newUrlsList;
      savePreferences(PROFILE_IMAGES_KEY, newUrlsList,sendServer: false);
 
+  }
+
+  String get locationDescription{
+    return _locationDescription;
+  }
+
+  set locationDescription(String newLocationDescription){
+    _locationDescription = newLocationDescription;
+    savePreferences(LOCATION_DESCRIPTION_KEY, newLocationDescription,sendServer: false);
   }
 
 
