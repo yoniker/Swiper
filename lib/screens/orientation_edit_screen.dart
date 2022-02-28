@@ -1,27 +1,31 @@
-import 'package:betabeta/constants/enums.dart';
-import 'package:betabeta/constants/onboarding_consts.dart';
-import 'package:betabeta/services/settings_model.dart';
-import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
-import 'package:betabeta/widgets/onboarding/choice_button.dart';
-import 'package:betabeta/widgets/onboarding/progress_bar.dart';
-import 'package:betabeta/widgets/onboarding/rounded_button.dart';
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-class OrientationScreen extends StatefulWidget {
-  static const String routeName = '/orientation_screen';
+import '../constants/enums.dart';
+import '../constants/onboarding_consts.dart';
+import '../widgets/custom_app_bar.dart';
+import '../widgets/onboarding/choice_button.dart';
+
+class OrientationEditScreen extends StatefulWidget {
+  static const String routeName = '/orientation_edit_screen';
 
   @override
-  State<OrientationScreen> createState() => _OrientationScreenState();
+  _OrientationEditScreenState createState() => _OrientationEditScreenState();
 }
 
-class _OrientationScreenState extends State<OrientationScreen> {
+class _OrientationEditScreenState extends State<OrientationEditScreen> {
   PreferredGender? currentChoice;
   String whatWeShowText = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CustomAppBar(
+        hasTopPadding: true,
+        hasBackButton: true,
+        showAppLogo: false,
+        title: 'My orientation',
+      ),
       backgroundColor: kBackroundThemeColor,
       body: Padding(
         padding: const EdgeInsets.all(30.0),
@@ -31,15 +35,12 @@ class _OrientationScreenState extends State<OrientationScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ProgressBar(
-                  page: 4,
+                Center(
+                  child: const Text(
+                    'Interested in?',
+                    style: smallBoldedTitleBlack,
+                  ),
                 ),
-                const Text(
-                  'Who are you interested in?',
-                  style: kTitleStyle,
-                ),
-                const SizedBox(height: 10),
-                const Text('This can be changed later', style: kSmallInfoStyle),
                 const SizedBox(height: 30),
                 ChoiceButton(
                   name: 'Men',
@@ -93,17 +94,6 @@ class _OrientationScreenState extends State<OrientationScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                RoundedButton(
-                    name: 'CONTINUE',
-                    onTap: currentChoice != null
-                        ? () {
-                            SettingsData.instance.preferredGender =
-                                currentChoice!.name;
-                            Get.offAllNamed(OnboardingFlowController.nextRoute(
-                                OrientationScreen.routeName));
-                            ;
-                          }
-                        : null),
               ],
             )
           ],

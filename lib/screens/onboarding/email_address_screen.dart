@@ -1,10 +1,7 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/settings_model.dart';
-import 'package:betabeta/screens/onboarding/about_me_screen.dart';
-import 'package:betabeta/screens/onboarding/birthday_screen.dart';
 import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
-import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
 import 'package:betabeta/widgets/onboarding/progress_bar.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,10 +21,10 @@ class _EmailAddressScreenState extends State<EmailAddressScreen> {
   String userEmail = SettingsData.instance.email;
 
   bool isValid(String emailAddress) {
-    return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(emailAddress);
+    return RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(emailAddress);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +34,11 @@ class _EmailAddressScreenState extends State<EmailAddressScreen> {
     var padding = MediaQuery.of(context).viewPadding;
     double heightWithoutSafeArea = height - padding.top - padding.bottom;
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: kBackroundThemeColor,
-        resizeToAvoidBottomInset: true,
-        body: RawScrollbar(
+    return Scaffold(
+      backgroundColor: kBackroundThemeColor,
+      resizeToAvoidBottomInset: true,
+      body: SafeArea(
+        child: RawScrollbar(
           thumbColor: Colors.black54,
           thickness: 5,
           isAlwaysShown: true,
@@ -87,7 +84,8 @@ class _EmailAddressScreenState extends State<EmailAddressScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Get.offAllNamed(OnboardingFlowController.nextRoute(EmailAddressScreen.routeName));
+                            Get.offAllNamed(OnboardingFlowController.nextRoute(
+                                EmailAddressScreen.routeName));
                           },
                           child: const Text(
                             'Skip this step',
@@ -99,30 +97,30 @@ class _EmailAddressScreenState extends State<EmailAddressScreen> {
                     RoundedButton(
                         name: 'CONTINUE',
                         onTap: () {
-                          if(isValid(userEmail)) {
+                          if (isValid(userEmail)) {
                             SettingsData.instance.email = userEmail;
-                            Get.offAllNamed(OnboardingFlowController.nextRoute(EmailAddressScreen.routeName));
+                            Get.offAllNamed(OnboardingFlowController.nextRoute(
+                                EmailAddressScreen.routeName));
+                          } else {
+                            showCupertinoDialog(
+                                context: context,
+                                builder: (_) => CupertinoAlertDialog(
+                                      title: const Text('Invalid email'),
+                                      content: const Text(
+                                          'The email you have entered \ndoes not appear to be valid.'),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text(
+                                              'Close',
+                                              style: const TextStyle(
+                                                  color: Colors.red),
+                                            ))
+                                      ],
+                                    ));
                           }
-                              else{
-                               showCupertinoDialog(
-                                  context: context,
-                                  builder: (_) => CupertinoAlertDialog(
-                                        title: const Text('Invalid email'),
-                                        content: const Text(
-                                            'The email you have entered \ndoes not appear to be valid.'),
-                                        actions: [
-                                          TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: const Text(
-                                                'Close',
-                                                style: const TextStyle(
-                                                    color: Colors.red),
-                                              ))
-                                        ],
-                                      ));}
-
                         })
                   ],
                 ),

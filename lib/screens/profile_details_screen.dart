@@ -1,16 +1,19 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/screens/orientation_edit_screen.dart';
+import 'package:betabeta/screens/pronouns_edit_screen.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
+import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:get/get.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:reorderables/reorderables.dart';
 import 'package:extended_image/extended_image.dart';
@@ -37,32 +40,14 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
 
   String? _company;
 
+  String? _school = 'Gordon';
+
+  String? _gender = 'Male';
+
+  String? _orientation = 'Straight';
+
   bool _uploadingImage =
       false; //Is image in the process of being uploaded? give user a visual cue
-
-  void PhotoInfoPopUp() {
-    showDialog(
-        context: context,
-        builder: (_) => CupertinoAlertDialog(
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      setState(() {});
-                    },
-                    child: Text(
-                      'Delete Picture',
-                      style: TextStyle(color: Colors.red),
-                    )),
-                TextButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text(
-                      'Cancel',
-                    )),
-              ],
-            ));
-  }
 
   @override
   initState() {
@@ -233,59 +218,55 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
             title: 'My Profile',
             hasTopPadding: true,
             showAppLogo: false,
-            trailing: GlobalWidgets.assetImageToIcon(
-              BetaIconPaths.inactiveVoilaTabIconPath,
-            ),
           ),
           body: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: CircleAvatar(
-                      backgroundColor: Colors.grey[200],
-                      backgroundImage: _profileImage,
-                      radius: 50.5,
-                      child: Align(
-                        alignment: Alignment.bottomRight,
-                        child: Material(
-                          clipBehavior: Clip.antiAlias,
-                          color: Colors.white,
-                          shape: CircleBorder(),
-                          elevation: 2.0,
-                          child: InkWell(
-                            onTap: () async {
-                              // show the imagePicker Dialogue.
-                              await GlobalWidgets.showImagePickerDialogue(
-                                  context: context,
-                                  onImagePicked: (image) {
-                                    // log
-                                    print(
-                                        'The Path to the New Profile Image is: ${image!.path}');
-                                  });
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.all(2.5),
-                              child: GlobalWidgets.assetImageToIcon(
-                                BetaIconPaths.editProfileIconPath,
-                              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: CircleAvatar(
+                    backgroundColor: Colors.grey[200],
+                    backgroundImage: _profileImage,
+                    radius: 50.5,
+                    child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: Material(
+                        clipBehavior: Clip.antiAlias,
+                        color: Colors.white,
+                        shape: CircleBorder(),
+                        elevation: 2.0,
+                        child: InkWell(
+                          onTap: () async {
+                            // show the imagePicker Dialogue.
+                            await GlobalWidgets.showImagePickerDialogue(
+                                context: context,
+                                onImagePicked: (image) {
+                                  // log
+                                  print(
+                                      'The Path to the New Profile Image is: ${image!.path}');
+                                });
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(2.5),
+                            child: GlobalWidgets.assetImageToIcon(
+                              BetaIconPaths.editProfileIconPath,
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                  SizedBox(height: 10.0),
-                  Text(
-                    'My pictures',
-                    style: LargeTitleStyle,
+                ),
+                SizedBox(height: 10.0),
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    ' My pictures',
+                    style: smallBoldedTitleBlack,
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  ReorderableWrap(
+                ),
+                Center(
+                  child: ReorderableWrap(
                       needsLongPressDraggable: false,
                       onReorder: (int oldIndex, int newIndex) {
                         if (newIndex >= _profileImagesUrls.length) {
@@ -343,52 +324,81 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                                       await _syncProfileImagesFromServer();
                                     }),
                               ))),
-                  _buildToggleTile(
-                    title: 'Incognito Mode',
-                    value: _incognitoMode,
-                    onToggle: (val) {
-                      setState(() {
-                        _incognitoMode = val;
-                      });
-                    },
+                ),
+                TextEditBlock2(
+                  title: 'About me',
+                  maxLines: 4,
+                  initialValue: _aboutMe,
+                  onType: (value) {
+                    SettingsData.instance.userDescription = value;
+                  },
+                ),
+                TextEditBlock2(
+                  title: 'Gender',
+                  icon: FontAwesomeIcons.chevronRight,
+                  readOnly: true,
+                  initialValue: _gender,
+                  onTap: () {
+                    Navigator.pushNamed(context, PronounsEditScreen.routeName);
+                  },
+                ),
+                TextEditBlock2(
+                  title: 'Orientation',
+                  icon: FontAwesomeIcons.chevronRight,
+                  readOnly: true,
+                  initialValue: _orientation,
+                  onTap: () {
+                    Navigator.pushNamed(
+                        context, OrientationEditScreen.routeName);
+                  },
+                ),
+                TextEditBlock2(
+                  title: 'Job Title',
+                  placeholder: 'Job Title',
+                  initialValue: _jobTitle,
+                  onType: (val) {
+                    SettingsData.instance.userDescription = val;
+                  },
+                ),
+                TextEditBlock2(
+                  title: 'Company',
+                  initialValue: _company,
+                  onType: (val) {
+                    SettingsData.instance.userDescription = val;
+                  },
+                ),
+                TextEditBlock2(
+                  title: 'School',
+                  initialValue: _school,
+                  onType: (val) {
+                    _school = val;
+                  },
+                ),
+                Theme(
+                  data: ThemeData(
+                    unselectedWidgetColor: Colors.black87,
                   ),
-                  TextEditBlock(
-                    title: 'About Me',
-                    placeholder: 'About Me',
-                    text: _aboutMe,
-                    onCloseTile: () {
-                      // do something.
-                    },
-                    onChanged: (val) {
-                      SettingsData.instance.userDescription = val;
-                    },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CheckboxListTile(
+                        title: Text(
+                          'Hide my profile',
+                          style: boldTextStyle,
+                        ),
+                        value: _incognitoMode,
+                        controlAffinity: ListTileControlAffinity.trailing,
+                        contentPadding: EdgeInsets.zero,
+                        checkColor: Colors.white,
+                        activeColor: Colors.black87,
+                        tristate: false,
+                        onChanged: (val) {
+                          setState(() {
+                            _incognitoMode = val!;
+                          });
+                        }),
                   ),
-                  TextEditBlock(
-                    title: 'Job Title',
-                    placeholder: 'Job Title',
-                    maxLine: 1,
-                    text: _jobTitle,
-                    onCloseTile: () {
-                      // do something.
-                    },
-                    onChanged: (val) {
-                      SettingsData.instance.userDescription = val;
-                    },
-                  ),
-                  TextEditBlock(
-                    title: 'Company',
-                    placeholder: 'Company',
-                    maxLine: 1,
-                    text: _company,
-                    onCloseTile: () {
-                      // do something.
-                    },
-                    onChanged: (val) {
-                      SettingsData.instance.userDescription = val;
-                    },
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         );
@@ -405,6 +415,57 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
   }
 }
 
+/// Replacement for TextEditBlock for profile settings page.
+
+class TextEditBlock2 extends StatefulWidget {
+  TextEditBlock2(
+      {required this.title,
+      this.initialValue,
+      this.maxLines = 1,
+      this.onType,
+      this.onTap,
+      this.icon,
+      this.readOnly = false,
+      this.placeholder});
+  final String title;
+  final IconData? icon;
+  final int maxLines;
+  final String? placeholder;
+  bool readOnly;
+  String? initialValue;
+  void Function(String)? onType;
+  void Function()? onTap;
+
+  @override
+  _TextEditBlock2State createState() => _TextEditBlock2State();
+}
+
+class _TextEditBlock2State extends State<TextEditBlock2> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(' ${widget.title}', style: smallBoldedTitleBlack),
+          InputField(
+            icon: widget.icon,
+            onTap: widget.onTap,
+            readonly: widget.readOnly,
+            onType: widget.onType,
+            initialvalue: widget.initialValue,
+            maxLines: widget.maxLines,
+            hintText: widget.placeholder != null
+                ? ' ${widget.placeholder}'
+                : ' ${widget.title}',
+          )
+        ],
+      ),
+    );
+  }
+}
+
 /// The TextEditBlock used in the Profile Settings page.
 class TextEditBlock extends StatefulWidget {
   TextEditBlock({
@@ -418,10 +479,14 @@ class TextEditBlock extends StatefulWidget {
     this.onStatusChanged,
     this.onChanged,
     this.onSubmitted,
+    this.onTap,
+    this.readOnly = false,
     this.controller,
   }) : super(key: key);
 
   final String title;
+  final bool readOnly;
+  final Function()? onTap;
   final String? text;
   final String? placeholder;
   final int? maxLine;
@@ -485,38 +550,41 @@ class _TextEditBlockState extends State<TextEditBlock> {
             widget.title,
             style: boldTextStyle,
           ),
-          InkWell(
-            customBorder: CircleBorder(),
-            onTap: () {
-              if ((_textEditingController!.text).length > 0) {
-                print(_textEditingController!.text);
-                return;
-              }
-              setState(() {
-                _isOpened = !_isOpened!;
-              });
-
-              // determine whether or not the [TextEditBlock] is expanded or not.
-              if (_isOpened == true) {
-                if (widget.onOpen != null) widget.onOpen!();
-              } else {
-                if (widget.onCloseTile != null) widget.onCloseTile!();
-              }
-
-              if (widget.onStatusChanged != null)
-                widget.onStatusChanged!(_isOpened);
-            },
-            child: GlobalWidgets.assetImageToIcon(
-              BetaIconPaths.editIconPath02,
-              iconPad: EdgeInsets.all(12.0),
-            ),
-          ),
+          // InkWell(
+          //   customBorder: CircleBorder(),
+          //   onTap: () {
+          //     if ((_textEditingController!.text).length > 0) {
+          //       print(_textEditingController!.text);
+          //       return;
+          //     }
+          //     setState(() {
+          //       _isOpened = !_isOpened!;
+          //     });
+          //
+          //     // determine whether or not the [TextEditBlock] is expanded or not.
+          //     if (_isOpened == true) {
+          //       if (widget.onOpen != null) widget.onOpen!();
+          //     } else {
+          //       if (widget.onCloseTile != null) widget.onCloseTile!();
+          //     }
+          //
+          //     if (widget.onStatusChanged != null)
+          //       widget.onStatusChanged!(_isOpened);
+          //   },
+          //   child: GlobalWidgets.assetImageToIcon(
+          //     BetaIconPaths.editIconPath02,
+          //     iconPad: EdgeInsets.all(12.0),
+          //   ),
+          // ),
         ],
       ),
       body: AnimatedContainer(
         duration: Duration(milliseconds: 1200),
         child: _isOpened!
             ? CupertinoTextField.borderless(
+                onTap: widget.onTap,
+                readOnly: widget.readOnly,
+                cursorColor: Colors.black87,
                 controller: _textEditingController,
                 placeholder: widget.placeholder,
                 placeholderStyle:

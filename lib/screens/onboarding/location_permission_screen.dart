@@ -4,9 +4,9 @@ import 'package:betabeta/services/location_service.dart';
 import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:betabeta/widgets/onboarding/text_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 
 class LocationPermissionScreen extends StatefulWidget {
   static const String routeName = '/location_permission_screen';
@@ -19,17 +19,24 @@ class LocationPermissionScreen extends StatefulWidget {
 }
 
 class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
-
+  void enableLocation() async {
+    var status = await LocationService.requestLocationCapability();
+    if (status == LocationServiceStatus.enabled) {
+      LocationService.onInit();
+      Get.offAllNamed(OnboardingFlowController.nextRoute(
+          LocationPermissionScreen.routeName));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: OnboardingColumn(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: OnboardingColumn(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SafeArea(
+            child: Column(
               children: [
                 SizedBox(
                   height: 160,
@@ -47,30 +54,57 @@ class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
                 )
               ],
             ),
-            Column(
-              children: [
-                RoundedButton(
-                    color: Colors.white,
-                    name: 'Enable location',
-                    onTap: ()async {
-                      var status = await LocationService.requestLocationCapability();
-                      if(status==LocationServiceStatus.enabled){
-                        LocationService.onInit();
-                      }
-                      Get.offAllNamed(OnboardingFlowController.nextRoute(LocationPermissionScreen.routeName));
-                    }),
-                const SizedBox(height: 20),
-                TextButtonOnly(
-                  label: 'Not now',
-                  onClick: () {
-                    //TODO save the fact that the user didnt allow location permission somewhere?
-                    Get.offAllNamed(OnboardingFlowController.nextRoute(LocationPermissionScreen.routeName));
-                  },
-                )
-              ],
-            ),
-          ],
-        ),
+          ),
+          Column(
+            children: [
+              RoundedButton(
+                color: Colors.white,
+                name: 'Enable location',
+                onTap: () {
+                  enableLocation();
+                },
+              ),
+              const SizedBox(height: 20),
+              TextButtonOnly(
+                label: 'Not now',
+                onClick: () {
+                  showDialog(
+                      context: context,
+                      builder: (_) => CupertinoAlertDialog(
+                            title: Text(
+                              "In order to see other users, Location services must be used.",
+                            ),
+                            content: Text(
+                                'Are you sure you want to continue without it?'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    //TODO save the fact that the user didnt allow location permission somewhere?
+                                    Get.offAllNamed(
+                                        OnboardingFlowController.nextRoute(
+                                            LocationPermissionScreen
+                                                .routeName));
+                                  },
+                                  child: const Text(
+                                    'Yes',
+                                    style: TextStyle(color: Colors.black),
+                                  )),
+                              TextButton(
+                                onPressed: () {
+                                  enableLocation();
+                                },
+                                child: Text(
+                                  'Enable location',
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                              )
+                            ],
+                          ));
+                },
+              )
+            ],
+          ),
+        ],
       ),
     );
   }

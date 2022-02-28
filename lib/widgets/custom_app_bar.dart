@@ -16,7 +16,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.trailing,
     this.titleTextColor = Colors.black,
     this.customTitle,
-    this.backgroundColor = Colors.transparent,
+    this.backgroundColor = backgroundThemeColor,
+    this.elevation = 2,
     this.centerTitle = false,
     this.hasTopPadding = false,
     this.showAppLogo = false,
@@ -33,10 +34,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     required String subPageTitle,
     this.titleTextColor = Colors.blue,
     this.centerTitle = false,
-    this.backgroundColor = Colors.transparent,
+    this.backgroundColor = backgroundThemeColor,
     this.hasBackButton = true,
     this.hasTopPadding = false,
     this.showAppLogo = true,
+    this.elevation = 2,
     this.trailingPad = 5.0,
   })  : this.trailing = Padding(
           padding: EdgeInsets.only(left: 10.0),
@@ -77,6 +79,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Must not be null.
   final bool showAppLogo;
 
+  final double elevation;
+
   /// If the Appbar should have a background color we can use this.
   final Color backgroundColor;
 
@@ -105,7 +109,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return Material(
       color: backgroundColor,
-      elevation: 0,
+      elevation: elevation,
       child: Padding(
         padding: (hasTopPadding)
             ? EdgeInsets.only(top: topPadding)

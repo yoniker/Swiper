@@ -65,6 +65,7 @@ dependencies:
   animated_text_kit: ^4.2.1
   percent_indicator: ^4.0.0
   location: ^4.3.0
+  csc_picker: ^0.2.6
   extended_image: ^6.0.1
       # publish_to: 'none'
 

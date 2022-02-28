@@ -26,8 +26,10 @@ import 'package:betabeta/screens/onboarding/terms_screen.dart';
 import 'package:betabeta/screens/onboarding/upload_images_onboarding_screen.dart';
 import 'package:betabeta/screens/onboarding/verification_code_screen.dart';
 import 'package:betabeta/screens/onboarding/welcome_screen.dart';
+import 'package:betabeta/screens/orientation_edit_screen.dart';
 import 'package:betabeta/screens/profile_details_screen.dart';
 import 'package:betabeta/screens/profile_screen.dart';
+import 'package:betabeta/screens/pronouns_edit_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
 import 'package:betabeta/screens/splash_screen.dart';
@@ -148,6 +150,12 @@ void main() async {
         GetPage(
             name: CurrentUserProfileViewScreen.routeName,
             page: () => CurrentUserProfileViewScreen()),
+        GetPage(
+            name: PronounsEditScreen.routeName,
+            page: () => PronounsEditScreen()),
+        GetPage(
+            name: OrientationEditScreen.routeName,
+            page: () => OrientationEditScreen())
       ],
       title: 'Swiper MVP',
       debugShowCheckedModeBanner: false,

@@ -32,66 +32,64 @@ class _FinishOnboardingScreenState extends State<FinishOnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Stack(children: [
-          SizedBox.expand(
-            child: FittedBox(
-              fit: BoxFit.fill,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: VideoPlayer(_controller),
-              ),
+    return Scaffold(
+      body: Stack(children: [
+        SizedBox.expand(
+          child: FittedBox(
+            fit: BoxFit.fill,
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              child: VideoPlayer(_controller),
             ),
           ),
-          Container(
-            color: Colors.black26,
-            child: Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Image.asset(
-                        'assets/onboarding/images/Voila-logo.png',
-                        height: 200,
-                      ),
-                      const Text(
-                        "You're ready to find someone special!",
-                        style: kTitleStyleWhite,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Text(
-                        'When you match with someone, both parties need to have a meaningful connection',
-                        style: kSmallTitleStyle,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Text(
-                        'One message is not enough! have a conversation to keep your match!',
-                        style: kSmallTitleStyle,
-                      )
-                    ],
-                  ),
-                  RoundedButton(
-                    name: 'Got it',
-                    onTap: () {
-                      Get.offAllNamed(MainNavigationScreen.routeName);
-                    },
-                    color: Colors.white,
-                  )
-                ],
-              ),
+        ),
+        Container(
+          color: Colors.black26,
+          child: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image.asset(
+                      'assets/onboarding/images/Voila-logo.png',
+                      height: 200,
+                    ),
+                    const Text(
+                      "You're ready to find someone special!",
+                      style: kTitleStyleWhite,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text(
+                      'When you match with someone, both parties need to have a meaningful connection',
+                      style: kSmallTitleStyle,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Text(
+                      'One message is not enough! have a conversation to keep your match!',
+                      style: kSmallTitleStyle,
+                    )
+                  ],
+                ),
+                RoundedButton(
+                  name: 'Got it',
+                  onTap: () {
+                    Get.offAllNamed(MainNavigationScreen.routeName);
+                  },
+                  color: Colors.white,
+                )
+              ],
             ),
           ),
-        ]),
-      ),
+        ),
+      ]),
     );
   }
 

@@ -1,6 +1,5 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/settings_model.dart';
-import 'package:betabeta/screens/onboarding/birthday_screen.dart';
 import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
@@ -21,18 +20,18 @@ class _GetNameScreenState extends State<GetNameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: kBackroundThemeColor,
-        resizeToAvoidBottomInset:
-            ScreenSize.getSize(context) == ScreenSizeCategory.small
-                ? false
-                : true,
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Padding(
-            padding: const EdgeInsets.all(30),
+    return Scaffold(
+      backgroundColor: kBackroundThemeColor,
+      resizeToAvoidBottomInset:
+          ScreenSize.getSize(context) == ScreenSizeCategory.small
+              ? false
+              : true,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Padding(
+          padding: const EdgeInsets.all(30),
+          child: SafeArea(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -81,7 +80,6 @@ class _GetNameScreenState extends State<GetNameScreen> {
                   ],
                 ),
                 RoundedButton(
-                  elevation: 1,
                   name: 'NEXT',
                   onTap: userName.isEmpty
                       ? null

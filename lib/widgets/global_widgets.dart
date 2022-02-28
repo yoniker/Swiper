@@ -115,12 +115,7 @@ class GlobalWidgets {
         Container(
           margin: outerPadding,
           decoration: BoxDecoration(
-            color: Colors.black12,
-            border: Border.all(
-              color: Colors.white,
-              width: 0.0,
-            ),
-            borderRadius: BorderRadius.circular(10.0),
+            color: Colors.transparent,
           ),
           clipBehavior: Clip.antiAlias,
           child: Column(

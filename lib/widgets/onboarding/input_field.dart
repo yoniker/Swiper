@@ -8,6 +8,7 @@ class InputField extends StatelessWidget {
       this.onType,
       this.initialvalue,
       this.pressed = false,
+      this.readonly = false,
       this.icon,
       this.iconHeight = 1,
       this.keyboardType,
@@ -18,6 +19,7 @@ class InputField extends StatelessWidget {
       this.onTapIcon});
 
   bool pressed;
+  bool readonly;
   String? initialvalue;
   void Function()? onTap;
   final double iconHeight;
@@ -39,6 +41,8 @@ class InputField extends StatelessWidget {
       elevation: pressed == true ? 1 : 5,
       color: Colors.transparent,
       child: TextFormField(
+        onEditingComplete: () => FocusScope.of(context).unfocus(),
+        readOnly: readonly,
         cursorColor: Colors.black,
         initialValue: initialvalue,
         onTap: onTap,

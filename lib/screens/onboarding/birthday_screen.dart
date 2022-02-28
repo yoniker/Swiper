@@ -22,7 +22,10 @@ class BirthdayOnboardingScreen extends StatefulWidget {
 }
 
 class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
-  DateTime selectedDate = SettingsData.instance.userBirthday.length>0?DateTime.parse(SettingsData.instance.userBirthday):DateTime(2000, 1, 1); //TODO take the user's birthday if given (for example from Facebook)
+  DateTime selectedDate = SettingsData.instance.userBirthday.length > 0
+      ? DateTime.parse(SettingsData.instance.userBirthday)
+      : DateTime(2000, 1,
+          1); //TODO take the user's birthday if given (for example from Facebook)
 
   final earliestDate = DateTime(1900, 1);
   final currentDate = DateTime.now();
@@ -46,14 +49,13 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: OnboardingColumn(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+        child: OnboardingColumn(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
@@ -133,8 +135,13 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
                                           )),
                                       TextButton(
                                           onPressed: () {
-                                            SettingsData.instance.userBirthday = selectedDate.toString();
-                                            Get.offAllNamed(OnboardingFlowController.nextRoute(BirthdayOnboardingScreen.routeName));
+                                            SettingsData.instance.userBirthday =
+                                                selectedDate.toString();
+                                            Get.offAllNamed(
+                                                OnboardingFlowController
+                                                    .nextRoute(
+                                                        BirthdayOnboardingScreen
+                                                            .routeName));
                                           },
                                           child: const Text(
                                             'Confirm',

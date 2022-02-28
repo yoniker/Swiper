@@ -1,28 +1,31 @@
-import 'package:betabeta/constants/onboarding_consts.dart';
-import 'package:betabeta/services/settings_model.dart';
-import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
-import 'package:betabeta/services/screen_size.dart';
-import 'package:betabeta/widgets/onboarding/choice_button.dart';
-import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
-import 'package:betabeta/widgets/onboarding/input_field.dart';
-import 'package:betabeta/widgets/onboarding/progress_bar.dart';
-import 'package:betabeta/widgets/onboarding/rounded_button.dart';
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+import '../constants/onboarding_consts.dart';
+import '../services/screen_size.dart';
+import '../services/settings_model.dart';
+import '../widgets/custom_app_bar.dart';
+import '../widgets/onboarding/choice_button.dart';
+import '../widgets/onboarding/conditional_parent_widget.dart';
+import '../widgets/onboarding/input_field.dart';
+import '../widgets/onboarding/rounded_button.dart';
+import 'onboarding/onboarding_flow_controller.dart';
+import 'onboarding/pronouns_screen.dart';
 
 enum Gender { male, female, other }
 
-class PronounScreen extends StatefulWidget {
-  static const String routeName = '/pronounScreen';
-
-  const PronounScreen({Key? key}) : super(key: key);
+class PronounsEditScreen extends StatefulWidget {
+  static const String routeName = '/pronouns_edit_screen';
+  const PronounsEditScreen({Key? key}) : super(key: key);
 
   @override
-  _PronounScreenState createState() => _PronounScreenState();
+  _PronounsEditScreenState createState() => _PronounsEditScreenState();
 }
 
-class _PronounScreenState extends State<PronounScreen> {
+class _PronounsEditScreenState extends State<PronounsEditScreen> {
   Gender? selectedGender;
   bool? _checked = false;
   bool _showGender = true;
@@ -57,8 +60,13 @@ class _PronounScreenState extends State<PronounScreen> {
     double heightWithoutSafeArea = height - padding.top - padding.bottom;
 
     return Scaffold(
-      backgroundColor: kBackroundThemeColor,
-      resizeToAvoidBottomInset: true,
+      backgroundColor: backgroundThemeColor,
+      appBar: CustomAppBar(
+        hasTopPadding: true,
+        hasBackButton: true,
+        showAppLogo: false,
+        title: 'My gender',
+      ),
       body: SafeArea(
         child: RawScrollbar(
           isAlwaysShown: true,
@@ -67,7 +75,7 @@ class _PronounScreenState extends State<PronounScreen> {
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: SizedBox(
-              height: heightWithoutSafeArea,
+              height: heightWithoutSafeArea - 38,
               child: Padding(
                 padding: const EdgeInsets.all(30),
                 child: Column(
@@ -76,16 +84,6 @@ class _PronounScreenState extends State<PronounScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          child: ProgressBar(
-                            page: 3,
-                          ),
-                        ),
-                        const Text('How do you identify?', style: kTitleStyle),
-                        const SizedBox(height: 10),
-                        const Text('We welcome everyone on Voilà!',
-                            style: kSmallInfoStyle),
-                        const SizedBox(height: 30),
                         ConditionalParentWidget(
                           condition: ScreenSize.getSize(context) ==
                               ScreenSizeCategory.small,
@@ -199,9 +197,9 @@ class _PronounScreenState extends State<PronounScreen> {
                           child: CheckboxListTile(
                               title: const Text(
                                 'Show my gender on my profile',
-                                style: kSmallInfoStyle,
+                                style: boldTextStyle,
                               ),
-                              controlAffinity: ListTileControlAffinity.leading,
+                              controlAffinity: ListTileControlAffinity.trailing,
                               contentPadding: EdgeInsets.zero,
                               checkColor: Colors.white,
                               activeColor: Colors.black87,
@@ -213,18 +211,6 @@ class _PronounScreenState extends State<PronounScreen> {
                                 });
                               }),
                         ),
-                        RoundedButton(
-                            name: 'CONTINUE',
-                            onTap: selectedGender == null ||
-                                    selectedGender == Gender.other &&
-                                        elseGender == null
-                                ? null
-                                : () {
-                                    saveSelectedGender();
-                                    Get.offAllNamed(
-                                        OnboardingFlowController.nextRoute(
-                                            PronounScreen.routeName));
-                                  })
                       ],
                     ),
                   ],

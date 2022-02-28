@@ -19,25 +19,25 @@ class TermsScreen extends StatefulWidget {
 class _TermsScreenState extends State<TermsScreen> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: kBackroundThemeColor,
-        body: Padding(
-          padding: EdgeInsets.all(
-              ScreenSize.getSize(context) != ScreenSizeCategory.small ? 30 : 0),
-          child: ConditionalParentWidget(
-            condition: ScreenSize.getSize(context) == ScreenSizeCategory.small,
-            conditionalBuilder: (Widget child) => Scrollbar(
-              isAlwaysShown: true,
-              scrollbarOrientation: ScrollbarOrientation.right,
-              child: Padding(
-                padding: const EdgeInsets.all(30.0),
-                child: SingleChildScrollView(
-                  reverse: true,
-                  child: child,
-                ),
+    return Scaffold(
+      backgroundColor: kBackroundThemeColor,
+      body: Padding(
+        padding: EdgeInsets.all(
+            ScreenSize.getSize(context) != ScreenSizeCategory.small ? 30 : 0),
+        child: ConditionalParentWidget(
+          condition: ScreenSize.getSize(context) == ScreenSizeCategory.small,
+          conditionalBuilder: (Widget child) => Scrollbar(
+            isAlwaysShown: true,
+            scrollbarOrientation: ScrollbarOrientation.right,
+            child: Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: SingleChildScrollView(
+                reverse: true,
+                child: child,
               ),
             ),
+          ),
+          child: SafeArea(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.stretch,

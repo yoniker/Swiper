@@ -85,6 +85,9 @@ const TextStyle smallBoldedCharStyle = TextStyle(
   fontWeight: FontWeight.w700,
 );
 
+const TextStyle smallBoldedTitleBlack =
+    TextStyle(fontFamily: 'Nunito', fontSize: 18, fontWeight: FontWeight.bold);
+
 const TextStyle mediumBoldedCharStyle = TextStyle(
   color: darkTextColor,
   fontFamily: 'Nunito',

@@ -27,10 +27,10 @@ class _RelationshipTypeOnboardingScreenState
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: OnboardingColumn(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+        child: OnboardingColumn(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -130,8 +130,10 @@ class _RelationshipTypeOnboardingScreenState
                     name: 'CONTINUE',
                     onTap: currentChoice != null
                         ? () {
-                      SettingsData.instance.relationshipType=currentChoice!.name;
-                      Get.offAllNamed(OnboardingFlowController.nextRoute(RelationshipTypeOnboardingScreen.routeName));
+                            SettingsData.instance.relationshipType =
+                                currentChoice!.name;
+                            Get.offAllNamed(OnboardingFlowController.nextRoute(
+                                RelationshipTypeOnboardingScreen.routeName));
                           }
                         : null)
               ],

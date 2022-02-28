@@ -3,11 +3,9 @@ import 'dart:async';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
-import 'package:betabeta/screens/onboarding/upload_images_onboarding_screen.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:betabeta/widgets/onboarding/progress_bar.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -49,11 +47,11 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
     int charactersLeft =
         AboutMeOnboardingScreen.minCharInDescription - (aboutMeText.length);
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: kBackroundThemeColor,
-        resizeToAvoidBottomInset: true,
-        body: RawScrollbar(
+    return Scaffold(
+      backgroundColor: kBackroundThemeColor,
+      resizeToAvoidBottomInset: true,
+      body: SafeArea(
+        child: RawScrollbar(
           thumbColor: Colors.black54,
           thickness: 5,
           isAlwaysShown: true,
