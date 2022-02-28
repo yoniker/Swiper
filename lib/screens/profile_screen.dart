@@ -166,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     ),
                     SizedBox(width: 4.0),
                     Text(
-                      'Your city, U.S.A',
+                      SettingsData.instance.locationDescription,
                       style: subTitleStyle.copyWith(color: darkTextColor),
                     ),
                   ],

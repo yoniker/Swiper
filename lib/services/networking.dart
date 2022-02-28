@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:convert' as json;
-import 'dart:io';
 import 'dart:math';
 
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/models/userid.dart';
 import 'package:flutter/material.dart';
@@ -116,6 +116,7 @@ class NetworkHelper {
   }
 
   postUserSettings() async {
+    await NewNetworkService.instance.postUserSettings(); //TODO This is because matches are changed through the older server. Once the matches are handled by new server, get rid of this method and switch the calls to it to newnetworkservice
     SettingsData settings = SettingsData.instance;
     Map<String, String?> toSend = {
       SettingsData.FIREBASE_UID_KEY: settings.uid,
@@ -148,6 +149,7 @@ class NetworkHelper {
     Uri postSettingsUri = Uri.https(SERVER_ADDR, '/settings/${settings.uid}');
     http.Response response = await http.post(postSettingsUri,
         body: encoded); //TODO something if response wasnt 200
+
   }
 
   Future<HashMap<String, dynamic>> getFacesCustomImageSearchLinks(

@@ -4,7 +4,7 @@ import 'package:photo_view/photo_view.dart';
 
 
 class FullImageScreen extends StatelessWidget {
-  static const String routeName = '/main_messages_screen';
+  static const String routeName = '/full_image_screen';
   final String? imageUrl;
   FullImageScreen({Key? key}) : imageUrl = (Get.arguments as String),super(key: key){
     print('Dor and only dor?');

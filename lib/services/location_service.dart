@@ -1,14 +1,14 @@
 import 'package:betabeta/services/settings_model.dart';
 import 'package:location/location.dart';
-enum LocationServiceStatus{
+
+enum LocationServiceStatus {
   enabled,
   serviceDisabled,
   userNotGrantedPermission
 }
 
-class LocationService{
-
-  static Future<LocationServiceStatus> requestLocationCapability()async{
+class LocationService {
+  static Future<LocationServiceStatus> requestLocationCapability() async {
     Location location = new Location();
 
     bool _serviceEnabled;
@@ -30,40 +30,42 @@ class LocationService{
       }
     }
     return LocationServiceStatus.enabled;
-
-
-
   }
 
-  static updateLocation(LocationData locationData){
-    if(locationData.longitude==null || locationData.latitude==null){return;}
+  static updateLocation(LocationData locationData) {
+    if (locationData.longitude == null || locationData.latitude == null) {
+      return;
+    }
     SettingsData.instance.longitude = locationData.longitude!;
     SettingsData.instance.latitude = locationData.latitude!;
+    print(
+        'UPDATED LOCATION TO  ${locationData.latitude!},${locationData.longitude!}');
   }
 
-  static void listenLocationChanges(){
+  static void listenLocationChanges() {
     Location location = new Location();
-    location.changeSettings(accuracy: LocationAccuracy.balanced,interval: 1000);
+    location.changeSettings(
+        accuracy: LocationAccuracy.balanced, interval: 10000);
     location.onLocationChanged.listen((data) {
+      print('location listener triggered update');
       updateLocation(data);
     });
   }
 
-  static Future<LocationData> getLocation()async{
-    LocationServiceStatus status = await LocationService.requestLocationCapability();
-    if(status!=LocationServiceStatus.enabled){
-      throw Exception('Location service not enabled when get location was called!');
+  static Future<LocationData> getLocation() async {
+    LocationServiceStatus status =
+        await LocationService.requestLocationCapability();
+    if (status != LocationServiceStatus.enabled) {
+      throw Exception(
+          'Location service not enabled when get location was called!');
     }
     Location location = new Location();
     return await location.getLocation();
-
-
   }
 
-  static onInit()async{
+  static onInit() async {
     var location = await LocationService.getLocation();
     LocationService.updateLocation(location);
     LocationService.listenLocationChanges();
   }
-
 }

@@ -5,6 +5,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/celebs_info_model.dart';
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/match_engine.dart';
+import 'package:betabeta/services/location_service.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/onboarding/welcome_screen.dart';
@@ -37,6 +38,9 @@ class _SplashScreenState extends State<SplashScreen> {
     await ChatData.initDB();
     await NotificationsController.instance.initialize();
     await SettingsData.instance.readSettingsFromShared();
+    if(SettingsData.instance.uid.length>0){
+      await LocationService.onInit();
+    }
     MatchEngine();
     await CelebsInfo.instance.getCelebsFromDatabase();
     bool notificationFromTerminated = await ChatData().onInitApp();
