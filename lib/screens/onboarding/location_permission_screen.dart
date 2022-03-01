@@ -74,21 +74,8 @@ class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
                             title: Text(
                               "In order to see other users, Location services must be used.",
                             ),
-                            content: Text(
-                                'Are you sure you want to continue without it?'),
+                            content: Text('Please activate Location services.'),
                             actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    //TODO save the fact that the user didnt allow location permission somewhere?
-                                    Get.offAllNamed(
-                                        OnboardingFlowController.nextRoute(
-                                            LocationPermissionScreen
-                                                .routeName));
-                                  },
-                                  child: const Text(
-                                    'Yes',
-                                    style: TextStyle(color: Colors.black),
-                                  )),
                               TextButton(
                                 onPressed: () {
                                   enableLocation();

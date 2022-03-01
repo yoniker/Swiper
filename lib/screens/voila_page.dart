@@ -124,8 +124,8 @@ class _VoilaPageState extends State<VoilaPage> {
                           Get.toNamed(ProfileScreen.routeName);
                         },
                         child: CircularUserAvatar(
-                            backgroundColor: Colors.grey,
-                            ),
+                          backgroundColor: Colors.grey,
+                        ),
                       ),
                     ),
                   ],
@@ -236,6 +236,7 @@ class _VoilaPageState extends State<VoilaPage> {
                             },
                             image: AssetImage('assets/images/textsearch.jpg'),
                             comingSoon: true,
+                            showAI: false,
                             // button: Container(
                             //   decoration: BoxDecoration(
                             //     border: Border.all(color: Colors.black),

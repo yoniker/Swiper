@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class InputField extends StatelessWidget {
   InputField(
       {this.hintText,
+      this.controller,
+      this.formatters,
       this.padding,
       this.onTap,
       this.onType,
       this.initialvalue,
       this.pressed = false,
       this.readonly = false,
+      this.showCursor = true,
       this.icon,
       this.iconHeight = 1,
       this.keyboardType,
@@ -20,9 +24,12 @@ class InputField extends StatelessWidget {
 
   bool pressed;
   bool readonly;
+  bool showCursor;
   String? initialvalue;
   void Function()? onTap;
   final double iconHeight;
+  final TextEditingController? controller;
+  List<TextInputFormatter>? formatters = [];
   TextStyle? style;
   String? hintText = "";
   int maxLines;
@@ -41,6 +48,9 @@ class InputField extends StatelessWidget {
       elevation: pressed == true ? 1 : 5,
       color: Colors.transparent,
       child: TextFormField(
+        showCursor: showCursor,
+        inputFormatters: formatters,
+        controller: controller,
         onEditingComplete: () => FocusScope.of(context).unfocus(),
         readOnly: readonly,
         cursorColor: Colors.black,

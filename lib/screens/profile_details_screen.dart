@@ -11,12 +11,15 @@ import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:reorderables/reorderables.dart';
 import 'package:extended_image/extended_image.dart';
+
+enum HeightUnit { ft, cm }
 
 /// The Implemntation of the Profile-screen
 class ProfileDetailsScreen extends StatefulWidget {
@@ -38,8 +41,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
 
   String? _jobTitle;
 
-  String? _company;
-
   String? _school = 'Gordon';
 
   String? _gender = 'Male';
@@ -56,8 +57,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
     // this makes sure that if the state is not yet mounted, we don't end up calling setState
     // but instead push the function forward to the addPostFrameCallback function.
     _aboutMe = SettingsData.instance.userDescription;
-    _company = SettingsData.instance
-        .userDescription; //TODO change settings data appropriately,add properties as needed etc
     _jobTitle = SettingsData.instance.userDescription;
 
     _syncProfileImagesFromServer();
@@ -67,30 +66,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
   void dispose() {
     // make sure these are properly disposed after use.
     super.dispose();
-  }
-
-  /// builds the toggle tile.
-  Widget _buildToggleTile({
-    required String title,
-    required bool value,
-    void Function(bool)? onToggle,
-  }) {
-    return GlobalWidgets.buildSettingsBlock(
-      top: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: boldTextStyle,
-          ),
-          CupertinoSwitch(
-            value: value,
-            activeColor: colorBlend01,
-            onChanged: onToggle,
-          ),
-        ],
-      ),
-    );
   }
 
   /// A Box that Displays the currently available user profile images.
@@ -188,6 +163,39 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
         ],
       ),
     );
+  }
+
+  HeightUnit selectedUnit = HeightUnit.ft;
+  TextEditingController heightController = TextEditingController();
+  int ft = 0;
+  int inches = 0;
+  String? cm;
+
+  cmToInches(inchess) {
+    ft = inchess ~/ 12;
+    inches = inchess % 12;
+    print('$ft feet and $inches inches');
+  }
+
+  inchesToCm() {
+    int inchesTotal = (ft * 12) + inches;
+    cm = (inchesTotal * 2.54).toStringAsPrecision(5);
+    heightController.text = cm!;
+  }
+
+  void checkHeightUnit() {
+    if (selectedUnit == HeightUnit.ft) {
+      setState(() {
+        int inchess = (double.parse(heightController.text) ~/ 2.54).toInt();
+        cmToInches(inchess);
+        heightController.text = '$ft\' $inches"';
+      });
+    } else if (selectedUnit == HeightUnit.cm) {
+      setState(() {
+        print(heightController.text);
+        inchesToCm();
+      });
+    }
   }
 
   @override
@@ -353,16 +361,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                   },
                 ),
                 TextEditBlock2(
-                  title: 'Job Title',
-                  placeholder: 'Job Title',
+                  title: 'Job title',
+                  placeholder: 'Job title',
                   initialValue: _jobTitle,
-                  onType: (val) {
-                    SettingsData.instance.userDescription = val;
-                  },
-                ),
-                TextEditBlock2(
-                  title: 'Company',
-                  initialValue: _company,
                   onType: (val) {
                     SettingsData.instance.userDescription = val;
                   },
@@ -374,6 +375,192 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                     _school = val;
                   },
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              ' Height',
+                              style: smallBoldedTitleBlack,
+                            ),
+                            Row(
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 8),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        if (heightController.text.isEmpty) {
+                                          selectedUnit = HeightUnit.ft;
+                                        } else {
+                                          selectedUnit = HeightUnit.ft;
+                                          checkHeightUnit();
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        border: Border.all(
+                                          width: 2,
+                                          color: selectedUnit == HeightUnit.ft
+                                              ? Colors.black87
+                                              : Colors.transparent,
+                                        ),
+                                        color: Colors.transparent,
+                                      ),
+                                      width: 31,
+                                      height: 31,
+                                      child: Center(
+                                          child: Text('ft',
+                                              style: smallBoldedTitleBlack)),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 8),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        if (heightController.text.isEmpty) {
+                                          selectedUnit = HeightUnit.cm;
+                                        } else {
+                                          selectedUnit = HeightUnit.cm;
+                                          checkHeightUnit();
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        border: Border.all(
+                                          width: 2,
+                                          color: selectedUnit == HeightUnit.cm
+                                              ? Colors.black87
+                                              : Colors.transparent,
+                                        ),
+                                        color: Colors.transparent,
+                                      ),
+                                      width: 31,
+                                      height: 31,
+                                      child: Center(
+                                          child: Text('cm',
+                                              style: smallBoldedTitleBlack)),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      InputField(
+                        icon: FontAwesomeIcons.chevronDown,
+                        showCursor: false,
+                        controller: heightController,
+                        keyboardType: TextInputType.number,
+                        hintText:
+                            selectedUnit == HeightUnit.ft ? "__' __\"" : '__',
+                        formatters: [
+                          FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                        ],
+                        onTap: selectedUnit == HeightUnit.ft
+                            ? () {
+                                FocusScope.of(context)
+                                    .requestFocus(new FocusNode());
+                                showCupertinoModalPopup(
+                                    context: context,
+                                    builder: (context) {
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.vertical(
+                                                top: Radius.circular(30))),
+                                        height: 300,
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 3,
+                                              child: CupertinoPicker(
+                                                itemExtent: 32.0,
+                                                onSelectedItemChanged:
+                                                    (int index) {
+                                                  print(index + 1);
+                                                  setState(() {
+                                                    ft = (index + 1);
+                                                    heightController.text =
+                                                        "$ft' $inches\"";
+                                                  });
+                                                },
+                                                children:
+                                                    List.generate(12, (index) {
+                                                  return Center(
+                                                    child: Text('${index + 1}'),
+                                                  );
+                                                }),
+                                              ),
+                                            ),
+                                            Expanded(
+                                                flex: 1,
+                                                child: Center(
+                                                    child: Text('ft',
+                                                        style: TextStyle(
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .none,
+                                                          fontSize: 16,
+                                                          color: Colors.black,
+                                                        )))),
+                                            Expanded(
+                                              child: CupertinoPicker(
+                                                itemExtent: 32.0,
+                                                onSelectedItemChanged:
+                                                    (int index) {
+                                                  print(index);
+                                                  setState(() {
+                                                    inches = (index);
+                                                    heightController.text =
+                                                        "$ft' $inches\"";
+                                                  });
+                                                },
+                                                children:
+                                                    List.generate(12, (index) {
+                                                  return Center(
+                                                    child: Text('$index'),
+                                                  );
+                                                }),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 3,
+                                              child: Center(
+                                                  child: Text('inches',
+                                                      style: TextStyle(
+                                                        decoration:
+                                                            TextDecoration.none,
+                                                        fontSize: 16,
+                                                        color: Colors.black,
+                                                      ))),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    });
+                              }
+                            : null,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 25),
                 Theme(
                   data: ThemeData(
                     unselectedWidgetColor: Colors.black87,
@@ -382,7 +569,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                     padding: const EdgeInsets.all(8.0),
                     child: CheckboxListTile(
                         title: Text(
-                          'Hide my profile',
+                          ' Hide my profile',
                           style: boldTextStyle,
                         ),
                         value: _incognitoMode,
@@ -449,6 +636,9 @@ class _TextEditBlock2State extends State<TextEditBlock2> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(' ${widget.title}', style: smallBoldedTitleBlack),
+          SizedBox(
+            height: 5,
+          ),
           InputField(
             icon: widget.icon,
             onTap: widget.onTap,
@@ -461,140 +651,6 @@ class _TextEditBlock2State extends State<TextEditBlock2> {
                 : ' ${widget.title}',
           )
         ],
-      ),
-    );
-  }
-}
-
-/// The TextEditBlock used in the Profile Settings page.
-class TextEditBlock extends StatefulWidget {
-  TextEditBlock({
-    Key? key,
-    required this.title,
-    this.text,
-    this.placeholder,
-    this.maxLine,
-    this.onOpen,
-    this.onCloseTile,
-    this.onStatusChanged,
-    this.onChanged,
-    this.onSubmitted,
-    this.onTap,
-    this.readOnly = false,
-    this.controller,
-  }) : super(key: key);
-
-  final String title;
-  final bool readOnly;
-  final Function()? onTap;
-  final String? text;
-  final String? placeholder;
-  final int? maxLine;
-  final void Function()? onOpen;
-  final void Function()? onCloseTile;
-  final TextEditingController? controller;
-
-  /// This Function is fired when the block is opened or closed.
-  ///
-  /// A value of `true` is returned when the block is opened and a
-  /// value of `false` if otherwise.
-  final void Function(bool?)? onStatusChanged;
-  final void Function(String)? onChanged;
-  final void Function(String)? onSubmitted;
-
-  @override
-  _TextEditBlockState createState() => _TextEditBlockState();
-}
-
-class _TextEditBlockState extends State<TextEditBlock> {
-  TextEditingController? _textEditingController;
-
-  bool? _isOpened;
-
-  void toggle([bool? force]) {
-    setState(() {
-      _isOpened = force ?? !_isOpened!;
-    });
-  }
-
-  @override
-  void initState() {
-    _textEditingController = widget.controller ?? TextEditingController();
-
-    if (widget.text != null) {
-      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-        _textEditingController!.text = widget.text!;
-      });
-    }
-
-    _isOpened = (widget.text != null) && (widget.text != '');
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    if (widget.controller == null) _textEditingController!.dispose();
-
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GlobalWidgets.buildSettingsBlock(
-      bodyPadding: EdgeInsets.zero,
-      top: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            widget.title,
-            style: boldTextStyle,
-          ),
-          // InkWell(
-          //   customBorder: CircleBorder(),
-          //   onTap: () {
-          //     if ((_textEditingController!.text).length > 0) {
-          //       print(_textEditingController!.text);
-          //       return;
-          //     }
-          //     setState(() {
-          //       _isOpened = !_isOpened!;
-          //     });
-          //
-          //     // determine whether or not the [TextEditBlock] is expanded or not.
-          //     if (_isOpened == true) {
-          //       if (widget.onOpen != null) widget.onOpen!();
-          //     } else {
-          //       if (widget.onCloseTile != null) widget.onCloseTile!();
-          //     }
-          //
-          //     if (widget.onStatusChanged != null)
-          //       widget.onStatusChanged!(_isOpened);
-          //   },
-          //   child: GlobalWidgets.assetImageToIcon(
-          //     BetaIconPaths.editIconPath02,
-          //     iconPad: EdgeInsets.all(12.0),
-          //   ),
-          // ),
-        ],
-      ),
-      body: AnimatedContainer(
-        duration: Duration(milliseconds: 1200),
-        child: _isOpened!
-            ? CupertinoTextField.borderless(
-                onTap: widget.onTap,
-                readOnly: widget.readOnly,
-                cursorColor: Colors.black87,
-                controller: _textEditingController,
-                placeholder: widget.placeholder,
-                placeholderStyle:
-                    boldTextStyle.copyWith(color: Colors.grey[300]),
-                onChanged: widget.onChanged,
-                onSubmitted: widget.onSubmitted,
-                maxLines: widget.maxLine,
-                style: defaultTextStyle,
-              )
-            : SizedBox.shrink(),
       ),
     );
   }

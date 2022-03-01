@@ -6,6 +6,7 @@ class AdvanceFilterCard extends StatelessWidget {
   AssetImage image;
   Widget title;
   bool? comingSoon;
+  bool? showAI;
   Widget? button;
   String info;
   Function()? onTap;
@@ -14,6 +15,7 @@ class AdvanceFilterCard extends StatelessWidget {
       required this.title,
       required this.info,
       this.comingSoon,
+      this.showAI,
       this.button,
       this.onTap});
 
@@ -83,20 +85,21 @@ class AdvanceFilterCard extends StatelessWidget {
                             style: kSmallInfoStyleWhite,
                             overflow: TextOverflow.visible,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'A.I.',
-                                style: TextStyle(color: Colors.white70),
-                              ),
-                              Icon(
-                                Icons.psychology_outlined,
-                                color: Colors.white70,
-                                size: 20,
-                              ),
-                            ],
-                          )
+                          if (showAI != false)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'A.I.',
+                                  style: TextStyle(color: Colors.white70),
+                                ),
+                                Icon(
+                                  Icons.psychology_outlined,
+                                  color: Colors.white70,
+                                  size: 20,
+                                ),
+                              ],
+                            )
                         ],
                       ),
                     ),

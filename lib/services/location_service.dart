@@ -45,7 +45,7 @@ class LocationService {
   static void listenLocationChanges() {
     Location location = new Location();
     location.changeSettings(
-        accuracy: LocationAccuracy.balanced, interval: 10000);
+        accuracy: LocationAccuracy.balanced, interval: 10000000);
     location.onLocationChanged.listen((data) {
       print('location listener triggered update');
       updateLocation(data);
