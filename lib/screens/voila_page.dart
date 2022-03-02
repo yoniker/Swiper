@@ -22,6 +22,8 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:tuple/tuple.dart';
 
+enum activeCard { customImage, celebImage, normalMode }
+
 class VoilaPage extends StatefulWidget {
   static const String routeName = '/voila_page';
 
@@ -43,6 +45,9 @@ class _VoilaPageState extends State<VoilaPage> {
   bool isLoading = false;
   bool isPressed = false;
   ImageType? currentChoice;
+  String flagName = 'Normal mode';
+
+  activeCard selectedCard = activeCard.normalMode;
 
   /// Here is where the custom-picked image is being Posted and sent over Network.
   void postCustomImageToNetwork(PickedFile chosenImage) async {
@@ -80,6 +85,16 @@ class _VoilaPageState extends State<VoilaPage> {
     setState(() {
       isLoading = false;
     });
+  }
+
+  String getCardName() {
+    if (currentChoice == activeCard.celebImage) {
+      return 'Celeb mode';
+    } else if (currentChoice == activeCard.customImage) {
+      return 'Image mode';
+    } else {
+      return 'Normal mode';
+    }
   }
 
   void inDevelopmentPopUp() {
@@ -131,6 +146,24 @@ class _VoilaPageState extends State<VoilaPage> {
                   ],
                 ),
               ),
+              centerWidget: Center(
+                child: Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    Image.asset(
+                      'assets/images/flag2.png',
+                      height: 45,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2.0),
+                      child: Text(
+                        flagName,
+                        style: titleStyleWhite.copyWith(shadows: [Shadow()]),
+                      ),
+                    )
+                  ],
+                ),
+              ),
               showAppLogo: false,
               hasBackButton: false,
               trailing: Padding(
@@ -153,11 +186,37 @@ class _VoilaPageState extends State<VoilaPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text(
-                          'Voilà Features',
-                          style: boldTextStyle,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Voilà Features',
+                              style: boldTextStyle,
+                            ),
+                            AnimatedContainer(
+                              width: selectedCard != activeCard.normalMode
+                                  ? 200
+                                  : 0,
+                              duration: Duration(milliseconds: 500),
+                              child: SizedBox(
+                                width: 100,
+                                height: 40,
+                                child: RoundedButton(
+                                  elevation: 4,
+                                  name: 'Deactivate filters',
+                                  onTap: () {
+                                    setState(() {
+                                      selectedCard = activeCard.normalMode;
+                                      flagName = 'Normal mode';
+                                    });
+                                  },
+                                  withPadding: false,
+                                  color: Colors.red[800],
+                                ),
+                              ),
+                            )
+                          ],
                         ),
-                        Text('Explore...'),
                         Divider(
                           color: lightCardColor,
                           thickness: 2.0,
@@ -168,6 +227,10 @@ class _VoilaPageState extends State<VoilaPage> {
                           children: [
                             Expanded(
                               child: AdvanceFilterCard(
+                                  isActive:
+                                      selectedCard == activeCard.customImage
+                                          ? true
+                                          : false,
                                   image:
                                       AssetImage('assets/images/picture5.jpg'),
                                   title: Text(
@@ -185,12 +248,17 @@ class _VoilaPageState extends State<VoilaPage> {
                                     // Display an image picker Dilaogue.
                                     setState(() {
                                       currentChoice = ImageType.Custom;
+                                      flagName = 'Image mode';
                                     });
                                     await GlobalWidgets.showImagePickerDialogue(
                                       context: context,
                                       onImagePicked: (imageFile) async {
                                         if (imageFile != null) {
                                           postCustomImageToNetwork(imageFile);
+                                          setState(() {
+                                            selectedCard =
+                                                activeCard.customImage;
+                                          });
                                         }
                                       },
                                     );
@@ -203,6 +271,10 @@ class _VoilaPageState extends State<VoilaPage> {
                             Expanded(
                               child: AdvanceFilterCard(
                                   image: AssetImage('assets/images/celeb3.jpg'),
+                                  isActive:
+                                      selectedCard == activeCard.celebImage
+                                          ? true
+                                          : false,
                                   onTap: () async {
                                     var selectedCeleb = await Get.toNamed(
                                         ScreenCelebritySelection.routeName);
@@ -214,6 +286,8 @@ class _VoilaPageState extends State<VoilaPage> {
                                         _selectedCeleb = selectedCeleb as Celeb;
                                         SettingsData.instance.celebId =
                                             _selectedCeleb.celebName;
+                                        selectedCard = activeCard.celebImage;
+                                        flagName = 'Celeb Mode';
                                       } else {
                                         //No celebrity selected
                                       }
@@ -237,23 +311,6 @@ class _VoilaPageState extends State<VoilaPage> {
                             image: AssetImage('assets/images/textsearch.jpg'),
                             comingSoon: true,
                             showAI: false,
-                            // button: Container(
-                            //   decoration: BoxDecoration(
-                            //     border: Border.all(color: Colors.black),
-                            //     color: Colors.white,
-                            //     borderRadius: BorderRadius.all(
-                            //       Radius.circular(40),
-                            //     ),
-                            //   ),
-                            //   child: Padding(
-                            //     padding: const EdgeInsets.symmetric(
-                            //         horizontal: 5.0, vertical: 5),
-                            //     child: Text(
-                            //       '  Search now  ',
-                            //       style: boldTextStyle,
-                            //     ),
-                            //   ),
-                            // ),
                             title: Row(
                               children: [
                                 Text(

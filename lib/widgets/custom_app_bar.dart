@@ -23,6 +23,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showAppLogo = false,
     this.hasBackButton = true,
     this.trailingPad = 5.0,
+    this.centerWidget,
   })  :
         // add necessary assertions.
         //assert(trailing != null, 'The parameter trailing cannot be null'),
@@ -40,6 +41,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showAppLogo = true,
     this.elevation = 2,
     this.trailingPad = 5.0,
+    this.centerWidget,
   })  : this.trailing = Padding(
           padding: EdgeInsets.only(left: 10.0),
           child: Text(
@@ -74,6 +76,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   /// Use this to build a custom title Widget for the [CustomAppbar].
   final Widget? customTitle;
+
+  final Widget? centerWidget;
 
   /// Whether to show the App's Logo at the center of the App Bar.
   /// Must not be null.
@@ -118,49 +122,52 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           margin: EdgeInsets.only(top: 5.0),
           padding: EdgeInsets.symmetric(horizontal: 5.0),
           child: Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    if (hasBackButton)
-                      InkWell(
-                        splashColor: mainAppColor02.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(8.0),
-                        onTap: () {
-                          Get.back();
-                        },
-                        child: GlobalWidgets.assetImageToIcon(
-                          'assets/images/back_arrow.png',
-                        ),
-                      ),
-                    customTitle ??
-                        Padding(
-                          padding: EdgeInsets.only(left: 10.0),
-                          child: Text(
-                            title!,
-                            style: TextStyle(
-                              color: titleTextColor,
-                              fontSize: 22,
-                              fontFamily: 'Nunito',
-                              fontWeight: FontWeight.w700,
-                            ),
+            child: Stack(children: [
+              if (centerWidget != null) centerWidget!,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      if (hasBackButton)
+                        InkWell(
+                          splashColor: mainAppColor02.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(8.0),
+                          onTap: () {
+                            Get.back();
+                          },
+                          child: GlobalWidgets.assetImageToIcon(
+                            'assets/images/back_arrow.png',
                           ),
                         ),
-                  ],
-                ),
-                if (showAppLogo)
-                  GlobalWidgets.assetImageToIcon(
-                      'https://picsum.photos/200/300'),
-                Padding(
-                  padding: EdgeInsets.only(right: trailingPad),
-                  child: trailing,
-                ),
-                // show App Logo.
-              ],
-            ),
+                      customTitle ??
+                          Padding(
+                            padding: EdgeInsets.only(left: 10.0),
+                            child: Text(
+                              title!,
+                              style: TextStyle(
+                                color: titleTextColor,
+                                fontSize: 22,
+                                fontFamily: 'Nunito',
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                    ],
+                  ),
+                  if (showAppLogo)
+                    GlobalWidgets.assetImageToIcon(
+                        'https://picsum.photos/200/300'),
+                  Padding(
+                    padding: EdgeInsets.only(right: trailingPad),
+                    child: trailing,
+                  ),
+                  // show App Logo.
+                ],
+              ),
+            ]),
           ),
         ),
       ),

@@ -8,6 +8,7 @@ class RoundedButton extends StatelessWidget {
     this.color = Colors.white,
     required this.onTap,
     this.icon,
+    this.withPadding,
     this.showBorder,
     this.decoration,
     this.addControlerAnimation = 1,
@@ -16,6 +17,7 @@ class RoundedButton extends StatelessWidget {
 
   double elevation;
   bool? showBorder = true;
+  bool? withPadding = true;
   BoxDecoration? decoration;
   final Color? iconColor;
   final String? name;
@@ -44,7 +46,9 @@ class RoundedButton extends StatelessWidget {
           textColor: color == Colors.white && onTap != null
               ? Colors.black
               : Colors.white,
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+          padding: withPadding != false
+              ? EdgeInsets.symmetric(horizontal: 20, vertical: 14)
+              : null,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(25.0),
           ),
@@ -61,13 +65,20 @@ class RoundedButton extends StatelessWidget {
                 ? MainAxisAlignment.center
                 : MainAxisAlignment.spaceEvenly,
             children: [
-              Text(name!,
+              Flexible(
+                child: Text(
+                  name!,
                   style: color == Colors.blueGrey ||
                           color == Color(0xFF0060DB) ||
                           color == Colors.transparent ||
-                          onTap == null
+                          onTap == null ||
+                          color == Colors.red[800]
                       ? kButtonTextWhite
-                      : kButtonText),
+                      : kButtonText,
+                  overflow: TextOverflow.fade,
+                  maxLines: 1,
+                ),
+              ),
               (icon != null
                   ? Icon(
                       icon,

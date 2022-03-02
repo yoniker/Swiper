@@ -7,6 +7,7 @@ class AdvanceFilterCard extends StatelessWidget {
   Widget title;
   bool? comingSoon;
   bool? showAI;
+  bool? isActive;
   Widget? button;
   String info;
   Function()? onTap;
@@ -16,6 +17,7 @@ class AdvanceFilterCard extends StatelessWidget {
       required this.info,
       this.comingSoon,
       this.showAI,
+      this.isActive = false,
       this.button,
       this.onTap});
 
@@ -26,6 +28,9 @@ class AdvanceFilterCard extends StatelessWidget {
       child: Container(
         height: 250,
         decoration: BoxDecoration(
+          border: isActive == true
+              ? Border.all(color: Color(0xFFC62828), width: 4)
+              : null,
           borderRadius: BorderRadius.all(
             Radius.circular(10),
           ),
