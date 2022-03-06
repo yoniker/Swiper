@@ -85,8 +85,16 @@ class NetworkHelper {
       return null; //TODO error handling
     }
 
-    dynamic listProfiles = jsonDecode(response.body);
+    try{dynamic listProfiles = jsonDecode(response.body);
     return listProfiles;
+    }
+    catch(e){
+      print('Error during parsing matches');
+      print('dor');
+      print('king');
+      return [];
+    }
+
   }
 
   static List<String> serverImagesUrl(List<String> imagesUrls) {

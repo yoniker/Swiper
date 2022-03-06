@@ -35,6 +35,7 @@ class SettingsData extends ChangeNotifier{
   static const String LATITUDE_KEY = 'latitude';
   static const String PROFILE_IMAGES_KEY = 'profile_images_urls';
   static const String LOCATION_DESCRIPTION_KEY = 'location_description';
+  static const String SEARCH_DISTANCE_ENABLED_KEY = 'search_distance_enabled';
   static const _debounceSettingsTime = Duration(seconds: 2); //Debounce time such that we notify listeners
   String _uid = '';
   String _name = '';
@@ -64,6 +65,7 @@ class SettingsData extends ChangeNotifier{
   double _latitude = 0.0;
   String _locationDescription = '';
   bool _registered = false;
+  bool _searchDistanceEnabled = false;
   List<String> _profileImagesUrls = [];
 
   SettingsData._privateConstructor(){
@@ -100,6 +102,7 @@ class SettingsData extends ChangeNotifier{
     _longitude = sharedPreferences.getDouble(LONGITUDE_KEY)??_longitude;
     _profileImagesUrls = sharedPreferences.getStringList(PROFILE_IMAGES_KEY)??_profileImagesUrls;
     _locationDescription = sharedPreferences.getString(LOCATION_DESCRIPTION_KEY)??_locationDescription;
+    _searchDistanceEnabled = sharedPreferences.getBool(SEARCH_DISTANCE_ENABLED_KEY)??_searchDistanceEnabled;
     _registered = sharedPreferences.getBool(REGISTERED_KEY) ?? _registered;
     _readFromShared = true;
 
@@ -392,6 +395,15 @@ class SettingsData extends ChangeNotifier{
   set locationDescription(String newLocationDescription){
     _locationDescription = newLocationDescription;
     savePreferences(LOCATION_DESCRIPTION_KEY, newLocationDescription,sendServer: false);
+  }
+
+  bool get searchDistanceEnabled{
+    return _searchDistanceEnabled;
+  }
+
+  set searchDistanceEnabled(bool newSearchDistanceEnabled){
+    _searchDistanceEnabled = newSearchDistanceEnabled;
+    savePreferences(SEARCH_DISTANCE_ENABLED_KEY, newSearchDistanceEnabled);
   }
 
 

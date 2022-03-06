@@ -140,6 +140,7 @@ class NewNetworkService {
       SettingsData.USER_RELATIONSHIP_TYPE_KEY: settings.relationshipType,
       SettingsData.LONGITUDE_KEY: settings.longitude.toString(),
       SettingsData.LATITUDE_KEY: settings.latitude.toString(),
+      SettingsData.SEARCH_DISTANCE_ENABLED_KEY:settings.searchDistanceEnabled.toString(),
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri = Uri.https(SERVER_ADDR, '/settings/${settings.uid}');
