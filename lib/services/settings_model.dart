@@ -103,6 +103,7 @@ class SettingsData extends ChangeNotifier{
     _profileImagesUrls = sharedPreferences.getStringList(PROFILE_IMAGES_KEY)??_profileImagesUrls;
     _locationDescription = sharedPreferences.getString(LOCATION_DESCRIPTION_KEY)??_locationDescription;
     _searchDistanceEnabled = sharedPreferences.getBool(SEARCH_DISTANCE_ENABLED_KEY)??_searchDistanceEnabled;
+    _radius = sharedPreferences.getDouble(RADIUS_KEY)??_radius;
     _registered = sharedPreferences.getBool(REGISTERED_KEY) ?? _registered;
     _readFromShared = true;
 
