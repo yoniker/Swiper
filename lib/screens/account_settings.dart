@@ -295,8 +295,6 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                                   setState(() {
                                     String gonnaGender = newGender?.name ??
                                         PreferredGender.Everyone.toString();
-                                    print(
-                                        'Going to change gender to $gonnaGender');
                                     SettingsData.instance.preferredGender =
                                         gonnaGender;
                                     _currentGenderSelected =

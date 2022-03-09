@@ -52,7 +52,6 @@ class ChatNetworkHelper {
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri = Uri.https(SERVER_ADDR, '/register/${settings.uid}');
-    print('sending user data...');
     http.Response response = await http.post(postSettingsUri,
         body: encoded); //TODO something if response wasnt 200
     if (response.statusCode == 200) {
@@ -79,12 +78,9 @@ class ChatNetworkHelper {
 
   static Future<Tuple2<List<InfoMessage>, List<dynamic>>>
       getMessagesByTimestamp() async {
-    print('going to sync with ${SettingsData.instance.lastSync}');
     Uri syncChatDataUri = Uri.https(SERVER_ADDR,
         '/sync/${SettingsData.instance.uid}/${SettingsData.instance.lastSync}');
-    print('getting here');
     http.Response response = await http.get(syncChatDataUri);
-    print('never here');
     var unparsedData = json.jsonDecode(response.body);
     List<dynamic> unparsedMessages = unparsedData['messages_data'];
     List<dynamic> unparsedMatchesChanges = unparsedData['matches_data'];

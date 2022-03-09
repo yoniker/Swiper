@@ -79,7 +79,6 @@ class NetworkHelper {
     _lastMatchCall = DateTime.now();
     Uri matchesUrl =
         Uri.https(SERVER_ADDR, '/matches/${SettingsData.instance.uid}');
-    print('ICHS GETTINGS MATCHES FROM ${matchesUrl.path}');
     http.Response response = await http.get(matchesUrl); //eg /12313?gender=Male
     if (response.statusCode != 200) {
       return null; //TODO error handling
@@ -90,8 +89,6 @@ class NetworkHelper {
     }
     catch(e){
       print('Error during parsing matches');
-      print('dor');
-      print('king');
       return [];
     }
 

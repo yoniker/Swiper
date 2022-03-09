@@ -442,7 +442,7 @@ class _MatchCardState extends State<MatchCard> {
                 scale: 4.0,
               ),
               onTap: () {
-                MatchEngine().currentMatchDecision(Decision.nope);
+                MatchEngine.instance.currentMatchDecision(Decision.nope);
                 print('nope pressed');
               },
             ),
@@ -454,7 +454,7 @@ class _MatchCardState extends State<MatchCard> {
                 scale: 3.75,
               ),
               onTap: () {
-                MatchEngine().currentMatchDecision(Decision.like);
+                MatchEngine.instance.currentMatchDecision(Decision.like);
                 print('like pressed');
               },
             ),

@@ -36,6 +36,7 @@ class SettingsData extends ChangeNotifier{
   static const String PROFILE_IMAGES_KEY = 'profile_images_urls';
   static const String LOCATION_DESCRIPTION_KEY = 'location_description';
   static const String SEARCH_DISTANCE_ENABLED_KEY = 'search_distance_enabled';
+  static const String GET_DUMMY_PROFILES_KEY = 'show_dummy_profiles';
   static const _debounceSettingsTime = Duration(seconds: 2); //Debounce time such that we notify listeners
   String _uid = '';
   String _name = '';
@@ -51,7 +52,7 @@ class SettingsData extends ChangeNotifier{
   String _filterDisplayImageUrl = '';
   String _celebId = 'No celeb was selected';
   double _tasteMixRatio = 0.5;
-  double _radius = 20;
+  double _radius = 20.0;
   double _lastSync = 0;
   String _fcmToken = '';
   String _facebookBirthday='';
@@ -66,6 +67,7 @@ class SettingsData extends ChangeNotifier{
   String _locationDescription = '';
   bool _registered = false;
   bool _searchDistanceEnabled = false;
+  bool _showDummyProfiles = false;
   List<String> _profileImagesUrls = [];
 
   SettingsData._privateConstructor(){
@@ -104,6 +106,7 @@ class SettingsData extends ChangeNotifier{
     _locationDescription = sharedPreferences.getString(LOCATION_DESCRIPTION_KEY)??_locationDescription;
     _searchDistanceEnabled = sharedPreferences.getBool(SEARCH_DISTANCE_ENABLED_KEY)??_searchDistanceEnabled;
     _radius = sharedPreferences.getDouble(RADIUS_KEY)??_radius;
+    _showDummyProfiles = sharedPreferences.getBool(GET_DUMMY_PROFILES_KEY)??_showDummyProfiles;
     _registered = sharedPreferences.getBool(REGISTERED_KEY) ?? _registered;
     _readFromShared = true;
 
@@ -243,6 +246,15 @@ class SettingsData extends ChangeNotifier{
     if(newRadius==_radius){return;}
     _radius = newRadius;
     savePreferences(RADIUS_KEY, newRadius);
+  }
+
+  bool get showDummyProfiles{
+    return _showDummyProfiles;
+  }
+
+  set showDummyProfiles(bool newShowDummyProfiles){
+    _showDummyProfiles = newShowDummyProfiles;
+    savePreferences(GET_DUMMY_PROFILES_KEY, newShowDummyProfiles);
   }
 
   double get lastSync{
@@ -414,10 +426,9 @@ class SettingsData extends ChangeNotifier{
       _debounce = Timer(_debounceSettingsTime, () async{
         if(_uid.length>0){
         await NetworkHelper().postUserSettings();}
-        MatchEngine().clear();
+        MatchEngine.instance.clear();
       });
     }
-    print('notifying listeners');
     notifyListeners();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if(newValue is int) {

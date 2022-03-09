@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if(SettingsData.instance.uid.length>0){
       await LocationService.onInit();
     }
-    MatchEngine();
+    MatchEngine.instance;
     await CelebsInfo.instance.getCelebsFromDatabase();
     bool notificationFromTerminated = await ChatData().onInitApp();
     updateFcmToken();

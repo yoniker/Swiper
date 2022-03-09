@@ -80,8 +80,6 @@ class NewNetworkService {
     if (response.statusCode == 200) {
       var parsed = json.jsonDecode(response.body);
       List<String>? imagesLinks = parsed.cast<String>();
-      print('dor king');
-      print('only dor');
       return imagesLinks;
     }
   }
@@ -129,8 +127,7 @@ class NewNetworkService {
       SettingsData.FILTER_DISPLAY_IMAGE_URL_KEY: settings.filterDisplayImageUrl,
       SettingsData.RADIUS_KEY: settings.radius.toString(),
       SettingsData.FCM_TOKEN_KEY: settings.fcmToken,
-      SettingsData.FACEBOOK_PROFILE_IMAGE_URL_KEY:
-          settings.facebookProfileImageUrl,
+      SettingsData.FACEBOOK_PROFILE_IMAGE_URL_KEY: settings.facebookProfileImageUrl,
       SettingsData.FACEBOOK_BIRTHDAY_KEY: settings.facebookBirthday,
       SettingsData.EMAIL_KEY: settings.email,
       SettingsData.USER_GENDER_KEY: settings.userGender,
@@ -141,6 +138,7 @@ class NewNetworkService {
       SettingsData.LONGITUDE_KEY: settings.longitude.toString(),
       SettingsData.LATITUDE_KEY: settings.latitude.toString(),
       SettingsData.SEARCH_DISTANCE_ENABLED_KEY:settings.searchDistanceEnabled.toString(),
+      SettingsData.GET_DUMMY_PROFILES_KEY:settings.showDummyProfiles.toString(),
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri = Uri.https(SERVER_ADDR, '/settings/${settings.uid}');
@@ -150,6 +148,7 @@ class NewNetworkService {
       var dict_response = jsonDecode(response.body);
       String locationDescription = dict_response['location_description'];
       if (locationDescription.length > 0) {
+        print('SETTING LOCATION DESCRIPTION TO $locationDescription');
         SettingsData.instance.locationDescription = locationDescription;
       }
     }

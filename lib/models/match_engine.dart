@@ -16,9 +16,7 @@ class MatchEngine extends ChangeNotifier {
       }
   static final MatchEngine _instance = MatchEngine._privateConstructor();
 
-  factory MatchEngine(){
-    return _instance;
-  }
+  static MatchEngine get instance => _instance;
 
   clear(){
     _matches.clear();
@@ -48,9 +46,8 @@ class MatchEngine extends ChangeNotifier {
         List newProfiles = matches.map<Profile>((match){return Profile.fromServer(match);}).toList();
         List<Match> newPotentialMatches=newProfiles.map<Match>((profile){return Match(profile: profile);}).toList();
         if (newPotentialMatches.length>0) {
-          bool frontCardsChanged = true;//_matches.length<2; //TODO this is an ugly temporary fix-change implementation such that dragging while rebuilding is fine
           _matches.addAll(newPotentialMatches);
-          if(frontCardsChanged){notifyListeners();}
+          notifyListeners();
         }
       } finally {
         itemsBeingGotten = null;
@@ -62,12 +59,16 @@ class MatchEngine extends ChangeNotifier {
 
   void addMatchesIfNeeded(){
     if(this.length()<MINIMUM_CACHED_PROFILES){
-      getMoreMatchesFromServer();} //TODO use user's settings instead of a hardcoded value
+      getMoreMatchesFromServer();
+    }
+    else{print('no more matches are needed,length is ${this.length()}');}//TODO use user's settings instead of a hardcoded value
   }
 
   void goToNextMatch() {
+    print('go to next match called,decision is ${currentMatch()!.decision}');
     if (currentMatch()!.decision != Decision.indecided) {
       _previousMatches.addLast(_matches.removeFirst());
+      printMatches();
       notifyListeners();
       addMatchesIfNeeded();
     }

@@ -255,6 +255,24 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                                   },
                                 ),
                               ],
+                            ),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Show Dummy Profiles',
+                                  style: boldTextStyle,
+                                ),
+                                CupertinoSwitch(
+                                  value: SettingsData.instance.showDummyProfiles,
+                                  activeColor: colorBlend01,
+                                  onChanged: (value) {
+                                    SettingsData.instance.showDummyProfiles = value;
+                                  },
+                                ),
+                              ],
                             )
                           ],
 

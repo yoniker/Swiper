@@ -18,24 +18,18 @@ class Profile {
   UserId? userId;
   Profile( { this.compatibilityScore, this.hotnessScore, this.imageUrls, this.username, this.headline, this.description, this.age, this.location,this.distance,this.jobTitle,this.height, this.userId}){
     if (this.userId ==null){
-      this.userId =  UserId(id: this.username, userType: UserType.POF_USER);
+      this.userId =  UserId(id: this.username, userType: UserType.DUMMY);
     }
   }
 
   factory Profile.fromServer(dynamic match){
     List images=match['images'];
     List<String> imagesUrls = images.cast<String>();
-    UserId userId = UserId(id: match['pof_id'].toString(), userType: UserType.POF_USER); //TODO change here when implementing real users profiles
-    String locationDesc ='';
-    if(match['state_id']!=null){
-      locationDesc += match['state_id']+' , ';
-    }
-    if(match['city']!=null){
-      locationDesc += match['city'];
-    }
-  return Profile(username: match['username'],headline: match['headline'],description: match['description'],age:match['age'],
-      location: locationDesc,distance: match['distance'],jobTitle: match['profession'],
-      height: match['height'],
+    UserType userType = match['user_type']=='real'?UserType.REAL_USER:UserType.DUMMY;
+    UserId userId = UserId(id: match['firebase_uid'].toString(), userType: userType);
+  return Profile(username: match['username'],headline: match['headline']??match['user_description'],description: match['user_description']??match['headline'],age:match['age'],
+      location: match['location_description'],distance: match['distance'],jobTitle: match['job_title'],
+      height: match['height_in_cm'].toString(),
       userId: userId,
       hotnessScore: match['hotness'] * 100,
       compatibilityScore: match['compatibility'] * 100 ,

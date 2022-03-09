@@ -100,8 +100,9 @@ class _MatchScreenState extends State<MatchScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ListenerWidget(
-                    notifier: MatchEngine(),
+                    notifier: MatchEngine.instance,
                     builder: (context) {
+                      print('Listener on match screen called!');
                       Widget dor = InkWell(
                         borderRadius: BorderRadius.circular(16.0),
                         child: Padding(
@@ -117,10 +118,10 @@ class _MatchScreenState extends State<MatchScreen>
                           ),
                         ),
                         onTap: () {
-                          MatchEngine().goBack();
+                          MatchEngine.instance.goBack();
                         },
                       );
-                      if (MatchEngine().previousMatchExists()) {
+                      if (MatchEngine.instance.previousMatchExists()) {
                         _animationController.forward();
                       } else {
                         _animationController.reverse();
@@ -234,12 +235,12 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
   Widget build(BuildContext context) {
     // return a stack of cards well positioned.
     return ListenerWidget(
-      notifier: MatchEngine(),
+      notifier: MatchEngine.instance,
       builder: (context) {
         List<Match?> topEngineMatches = [
-          if (MatchEngine().currentMatch() != null)
-            MatchEngine().currentMatch(),
-          if (MatchEngine().nextMatch() != null) MatchEngine().nextMatch()
+          if (MatchEngine.instance.currentMatch() != null)
+            MatchEngine.instance.currentMatch(),
+          if (MatchEngine.instance.nextMatch() != null) MatchEngine.instance.nextMatch()
         ];
 
         Widget _buildThumbIcon() {
@@ -299,9 +300,9 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
                       if (index == 0) {
                         //TODO index>0 should be impossible
                         if (info.direction == SwipeDirection.Left) {
-                          MatchEngine().currentMatchDecision(Decision.nope);
+                          MatchEngine.instance.currentMatchDecision(Decision.nope);
                         } else if (info.direction == SwipeDirection.Right) {
-                          MatchEngine().currentMatchDecision(Decision.like);
+                          MatchEngine.instance.currentMatchDecision(Decision.like);
                         }
                       }
                     },
