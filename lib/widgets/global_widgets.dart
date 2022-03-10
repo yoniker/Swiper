@@ -144,6 +144,7 @@ class GlobalWidgets {
                 Container(
                   padding: bodyPadding,
                   decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
                     color: whiteCardColor,
                   ),
                   child: body,

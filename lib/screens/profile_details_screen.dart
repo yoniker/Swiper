@@ -10,6 +10,7 @@ import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/images_upload_widget.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
+import 'package:betabeta/widgets/setting_edit_block.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -75,10 +76,11 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
   int inches = 0;
   String? cm;
 
-  cmToInches(inchess) {
-    ft = inchess ~/ 12;
-    inches = inchess % 12;
-    print('$ft feet and $inches inches');
+  cmToFeet(centimeters) {
+    double height = centimeters / 2.54;
+    double inch = height % 12;
+    double feet = height / 12;
+    return ("${feet.toInt()}' ${inch.toInt()}");
   }
 
   inchesToCm() {
@@ -91,7 +93,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
     if (selectedUnit == HeightUnit.ft) {
       setState(() {
         int inchess = (double.parse(heightController.text) ~/ 2.54).toInt();
-        cmToInches(inchess);
+        cmToFeet(inchess);
         heightController.text = '$ft\' $inches"';
       });
     } else if (selectedUnit == HeightUnit.cm) {
@@ -127,7 +129,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
         return Scaffold(
           backgroundColor: backgroundThemeColor,
           appBar: CustomAppBar(
-            title: 'My Profile',
+            title: 'Edit Profile',
             hasTopPadding: true,
             showAppLogo: false,
           ),
@@ -135,43 +137,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
-                  child: CircleAvatar(
-                    backgroundColor: Colors.grey[200],
-                    backgroundImage: _profileImage,
-                    radius: 50.5,
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: Material(
-                        clipBehavior: Clip.antiAlias,
-                        color: Colors.white,
-                        shape: CircleBorder(),
-                        elevation: 2.0,
-                        child: InkWell(
-                          onTap: () async {
-                            // show the imagePicker Dialogue.
-                            await GlobalWidgets.showImagePickerDialogue(
-                                context: context,
-                                onImagePicked: (image) {
-                                  // log
-                                  print(
-                                      'The Path to the New Profile Image is: ${image!.path}');
-                                });
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.all(2.5),
-                            child: GlobalWidgets.assetImageToIcon(
-                              BetaIconPaths.editProfileIconPath,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10.0),
                 Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(5.0),
                   child: Text(
                     ' My pictures',
                     style: smallBoldedTitleBlack,
@@ -181,6 +148,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                   child: ImagesUploadwidget(),
                 ),
                 TextEditBlock2(
+                  showCursor: true,
                   title: 'About me',
                   maxLines: 4,
                   initialValue: _aboutMe,
@@ -208,6 +176,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                   },
                 ),
                 TextEditBlock2(
+                  showCursor: true,
                   title: 'Job title',
                   placeholder: 'Job title',
                   initialValue: _jobTitle,
@@ -216,6 +185,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                   },
                 ),
                 TextEditBlock2(
+                  showCursor: true,
                   title: 'School',
                   initialValue: _school,
                   onType: (val) {
@@ -229,84 +199,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(bottom: 5.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              ' Height',
-                              style: smallBoldedTitleBlack,
-                            ),
-                            Row(
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 8),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        if (heightController.text.isEmpty) {
-                                          selectedUnit = HeightUnit.ft;
-                                        } else {
-                                          selectedUnit = HeightUnit.ft;
-                                          checkHeightUnit();
-                                        }
-                                      });
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        border: Border.all(
-                                          width: 2,
-                                          color: selectedUnit == HeightUnit.ft
-                                              ? Colors.black87
-                                              : Colors.transparent,
-                                        ),
-                                        color: Colors.transparent,
-                                      ),
-                                      width: 31,
-                                      height: 31,
-                                      child: Center(
-                                          child: Text('ft',
-                                              style: smallBoldedTitleBlack)),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 8),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        if (heightController.text.isEmpty) {
-                                          selectedUnit = HeightUnit.cm;
-                                        } else {
-                                          selectedUnit = HeightUnit.cm;
-                                          checkHeightUnit();
-                                        }
-                                      });
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                        border: Border.all(
-                                          width: 2,
-                                          color: selectedUnit == HeightUnit.cm
-                                              ? Colors.black87
-                                              : Colors.transparent,
-                                        ),
-                                        color: Colors.transparent,
-                                      ),
-                                      width: 31,
-                                      height: 31,
-                                      child: Center(
-                                          child: Text('cm',
-                                              style: smallBoldedTitleBlack)),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
+                        child: Text(
+                          ' Height',
+                          style: smallBoldedTitleBlack,
                         ),
                       ),
                       InputField(
@@ -326,78 +221,44 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                                 showCupertinoModalPopup(
                                     context: context,
                                     builder: (context) {
-                                      return Container(
-                                        decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.vertical(
-                                                top: Radius.circular(30))),
-                                        height: 300,
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 3,
-                                              child: CupertinoPicker(
-                                                itemExtent: 32.0,
-                                                onSelectedItemChanged:
-                                                    (int index) {
-                                                  print(index + 1);
-                                                  setState(() {
-                                                    ft = (index + 1);
-                                                    heightController.text =
-                                                        "$ft' $inches\"";
-                                                  });
-                                                },
-                                                children:
-                                                    List.generate(12, (index) {
-                                                  return Center(
-                                                    child: Text('${index + 1}'),
-                                                  );
-                                                }),
+                                      return Padding(
+                                        padding: const EdgeInsets.all(30.0),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(10))),
+                                          height: 300,
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                flex: 3,
+                                                child: CupertinoPicker(
+                                                  scrollController:
+                                                      FixedExtentScrollController(
+                                                          initialItem: 63),
+                                                  itemExtent: 50.0,
+                                                  onSelectedItemChanged:
+                                                      (int index) {
+                                                    setState(() {
+                                                      cm = (index + 91)
+                                                          .toString();
+                                                      heightController.text =
+                                                          "$cm cm (${cmToFeet(index + 91)} ft)";
+                                                    });
+                                                  },
+                                                  children: List.generate(129,
+                                                      (index) {
+                                                    return Center(
+                                                      child: Text(
+                                                          '${index + 91} cm (${cmToFeet(index + 91)})'),
+                                                    );
+                                                    return SizedBox();
+                                                  }),
+                                                ),
                                               ),
-                                            ),
-                                            Expanded(
-                                                flex: 1,
-                                                child: Center(
-                                                    child: Text('ft',
-                                                        style: TextStyle(
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .none,
-                                                          fontSize: 16,
-                                                          color: Colors.black,
-                                                        )))),
-                                            Expanded(
-                                              child: CupertinoPicker(
-                                                itemExtent: 32.0,
-                                                onSelectedItemChanged:
-                                                    (int index) {
-                                                  print(index);
-                                                  setState(() {
-                                                    inches = (index);
-                                                    heightController.text =
-                                                        "$ft' $inches\"";
-                                                  });
-                                                },
-                                                children:
-                                                    List.generate(12, (index) {
-                                                  return Center(
-                                                    child: Text('$index'),
-                                                  );
-                                                }),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              flex: 3,
-                                              child: Center(
-                                                  child: Text('inches',
-                                                      style: TextStyle(
-                                                        decoration:
-                                                            TextDecoration.none,
-                                                        fontSize: 16,
-                                                        color: Colors.black,
-                                                      ))),
-                                            )
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       );
                                     });
@@ -446,59 +307,5 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
     if (profileImagesUrls != null) {
       SettingsData.instance.profileImagesUrls = profileImagesUrls;
     }
-  }
-}
-
-/// Replacement for TextEditBlock for profile settings page.
-
-class TextEditBlock2 extends StatefulWidget {
-  TextEditBlock2(
-      {required this.title,
-      this.initialValue,
-      this.maxLines = 1,
-      this.onType,
-      this.onTap,
-      this.icon,
-      this.readOnly = false,
-      this.placeholder});
-  final String title;
-  final IconData? icon;
-  final int maxLines;
-  final String? placeholder;
-  bool readOnly;
-  String? initialValue;
-  void Function(String)? onType;
-  void Function()? onTap;
-
-  @override
-  _TextEditBlock2State createState() => _TextEditBlock2State();
-}
-
-class _TextEditBlock2State extends State<TextEditBlock2> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(' ${widget.title}', style: smallBoldedTitleBlack),
-          SizedBox(
-            height: 5,
-          ),
-          InputField(
-            icon: widget.icon,
-            onTap: widget.onTap,
-            readonly: widget.readOnly,
-            onType: widget.onType,
-            initialvalue: widget.initialValue,
-            maxLines: widget.maxLines,
-            hintText: widget.placeholder != null
-                ? ' ${widget.placeholder}'
-                : ' ${widget.title}',
-          )
-        ],
-      ),
-    );
   }
 }

@@ -1,0 +1,60 @@
+import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/widgets/onboarding/input_field.dart';
+import 'package:flutter/material.dart';
+
+/// Replacement for TextEditBlock for profile settings page.
+
+class TextEditBlock2 extends StatefulWidget {
+  TextEditBlock2(
+      {required this.title,
+      this.initialValue,
+      this.maxLines = 1,
+      this.onType,
+      this.onTap,
+      this.icon,
+      this.readOnly = false,
+      this.showCursor = false,
+      this.placeholder});
+  final String title;
+  final IconData? icon;
+  final int maxLines;
+  final String? placeholder;
+  bool readOnly;
+  bool showCursor;
+  String? initialValue;
+  void Function(String)? onType;
+  void Function()? onTap;
+
+  @override
+  _TextEditBlock2State createState() => _TextEditBlock2State();
+}
+
+class _TextEditBlock2State extends State<TextEditBlock2> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(' ${widget.title}', style: smallBoldedTitleBlack),
+          SizedBox(
+            height: 5,
+          ),
+          InputField(
+            showCursor: widget.showCursor,
+            icon: widget.icon,
+            onTap: widget.onTap,
+            readonly: widget.readOnly,
+            onType: widget.onType,
+            initialvalue: widget.initialValue,
+            maxLines: widget.maxLines,
+            hintText: widget.placeholder != null
+                ? ' ${widget.placeholder}'
+                : ' ${widget.title}',
+          )
+        ],
+      ),
+    );
+  }
+}

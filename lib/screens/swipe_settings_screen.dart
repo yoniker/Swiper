@@ -31,8 +31,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
   RangeValues _selectedAges = RangeValues(
       SettingsData.instance.minAge.toDouble(),
       SettingsData.instance.maxAge.toDouble());
-  bool _showInDiscovery =
-      false; //TODO change SettingsData to support visibility
+  bool _showInDiscovery = true; //TODO change SettingsData to support visibility
   double _maxDistance = SettingsData.instance.radius;
 
   @override
@@ -389,45 +388,6 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                     ),
                   ),
                 ),
-                GlobalWidgets.buildSettingsBlock(
-                  title: 'Advanced'.toUpperCase(),
-                  description: '',
-                  body: TextButton(
-                    onPressed: () {
-                      // Direct user to the Advanced filters Page.
-
-                      Get.toNamed(AdvancedSettingsScreen.routeName);
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Artificial Intelligence Filters',
-                              style: boldTextStyle,
-                            ),
-                            SizedBox(
-                              width: 4.0,
-                            ),
-                            Icon(
-                              Icons.psychology_outlined,
-                              color: colorBlend01,
-                              size: 34.0,
-                            ),
-                          ],
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.black54,
-                          size: 18,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.0),
                   child: TextButton(
@@ -438,7 +398,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                     child: Text(
                       'Done',
                       style: boldTextStyle.copyWith(
-                        color: mainAppColor02,
+                        color: Colors.black87,
                       ),
                     ),
                     onPressed: () {

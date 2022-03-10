@@ -405,7 +405,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               ),
               Center(
                 child: Text(
-                  'Swiper V 1.0.2',
+                  'Voila V 1.0.2',
                   style: mediumBoldedCharStyle,
                 ),
               ),
@@ -446,7 +446,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  padding: EdgeInsets.symmetric(horizontal: 20),
                   child: TextButton(
                     child: Text(
                       'Done',

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
@@ -26,9 +27,22 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation sizeAnimation;
   @override
   void initState() {
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 2),
+    );
+    sizeAnimation =
+        Tween<double>(begin: 100.0, end: 160.0).animate(_controller);
+    _controller.addListener(() {
+      setState(() {});
+    });
+    _controller.repeat(reverse: true);
     _load();
     super.initState();
   }
@@ -38,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
     await ChatData.initDB();
     await NotificationsController.instance.initialize();
     await SettingsData.instance.readSettingsFromShared();
-    if(SettingsData.instance.uid.length>0){
+    if (SettingsData.instance.uid.length > 0) {
       await LocationService.onInit();
     }
     MatchEngine();
@@ -93,22 +107,53 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: lightCardColor,
+      color: Colors.black87,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
               padding: const EdgeInsets.all(6.0),
-              child: Image.asset(BetaIconPaths.appLogoIcon),
+              child: Container(
+                width: sizeAnimation.value,
+                child: Image.asset('assets/images/voila.png'),
+              ),
             ),
-            Text(
-              'Swiper',
-              style: mediumBoldedCharStyle.copyWith(color: mainAppColor02),
+            Container(
+              width: 200,
+              child: Image.asset(
+                'assets/images/logo_text.png',
+              ),
             ),
           ],
         ),
       ),
+      // child: Center(
+      //   child: Column(
+      //     mainAxisAlignment: MainAxisAlignment.center,
+      //     children: [
+      //       Padding(
+      //         padding: const EdgeInsets.all(6.0),
+      //         child: Container(
+      //           width: 200,
+      //           child: Image.asset('assets/images/voila.png'),
+      //         ),
+      //       ),
+      //       Container(
+      //         width: 200,
+      //         child: Image.asset(
+      //           'assets/images/logo_text.png',
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }

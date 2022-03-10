@@ -55,9 +55,11 @@ class AdvanceFilterCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: title,
+                ),
                 SizedBox(),
-                SizedBox(),
-                title,
                 SizedBox(),
                 comingSoon == true
                     ? Center(
@@ -78,6 +80,7 @@ class AdvanceFilterCard extends StatelessWidget {
                       )
                     : SizedBox(),
                 SizedBox(),
+                SizedBox(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -88,7 +91,8 @@ class AdvanceFilterCard extends StatelessWidget {
                           Text(
                             info,
                             style: kSmallInfoStyleWhite,
-                            overflow: TextOverflow.visible,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
                           ),
                           if (showAI != false)
                             Row(
