@@ -68,7 +68,6 @@ class MatchEngine extends ChangeNotifier {
     print('go to next match called,decision is ${currentMatch()!.decision}');
     if (currentMatch()!.decision != Decision.indecided) {
       _previousMatches.addLast(_matches.removeFirst());
-      printMatches();
       notifyListeners();
       addMatchesIfNeeded();
     }

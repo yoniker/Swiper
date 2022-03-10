@@ -139,6 +139,7 @@ class NewNetworkService {
       SettingsData.LATITUDE_KEY: settings.latitude.toString(),
       SettingsData.SEARCH_DISTANCE_ENABLED_KEY:settings.searchDistanceEnabled.toString(),
       SettingsData.GET_DUMMY_PROFILES_KEY:settings.showDummyProfiles.toString(),
+
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri = Uri.https(SERVER_ADDR, '/settings/${settings.uid}');

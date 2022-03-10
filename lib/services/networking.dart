@@ -152,8 +152,7 @@ class NetworkHelper {
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri = Uri.https(SERVER_ADDR, '/settings/${settings.uid}');
-    http.Response response = await http.post(postSettingsUri,
-        body: encoded); //TODO something if response wasnt 200
+    //http.Response response = await http.post(postSettingsUri, body: encoded); //TODO something if response wasnt 200
 
   }
 
