@@ -14,11 +14,13 @@ class TextEditBlock2 extends StatefulWidget {
       this.icon,
       this.readOnly = false,
       this.showCursor = false,
+      this.controller,
       this.placeholder});
   final String title;
   final IconData? icon;
   final int maxLines;
   final String? placeholder;
+  final TextEditingController? controller;
   bool readOnly;
   bool showCursor;
   String? initialValue;
@@ -44,6 +46,7 @@ class _TextEditBlock2State extends State<TextEditBlock2> {
           InputField(
             showCursor: widget.showCursor,
             icon: widget.icon,
+            controller: widget.controller,
             onTap: widget.onTap,
             readonly: widget.readOnly,
             onType: widget.onType,

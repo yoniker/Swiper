@@ -16,6 +16,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:extended_image/extended_image.dart';
+import 'package:get/get.dart';
 
 /// The Implemntation of the Profile-screen
 class ProfileDetailsScreen extends StatefulWidget {
@@ -39,10 +40,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
 
   String? _school = 'Gordon';
 
-  String? _gender = 'Male';
-
-  String? _orientation = 'Straight';
-
   bool _uploadingImage =
       false; //Is image in the process of being uploaded? give user a visual cue
 
@@ -65,6 +62,10 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
   }
 
   TextEditingController heightController = TextEditingController();
+  TextEditingController genderController =
+      TextEditingController(text: SettingsData.instance.userGender);
+  TextEditingController orientationController =
+      TextEditingController(text: SettingsData.instance.preferredGender);
   int ft = 0;
   int inches = 0;
   String? cm;
@@ -87,23 +88,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
     return ListenerWidget(
       notifier: SettingsData.instance,
       builder: (context) {
-        String? _mainProfileImage;
-        List<String> _profileImagesUrls =
-            SettingsData.instance.profileImagesUrls;
-
-        if (_profileImagesUrls.isNotEmpty) {
-          _mainProfileImage = _profileImagesUrls.first;
-        }
-
-        final ImageProvider _profileImage = (_mainProfileImage == null
-            ? AssetImage(
-                BetaIconPaths.defaultProfileImagePath01,
-              )
-            : ExtendedNetworkImageProvider(
-                NewNetworkService.getProfileImageUrl(_mainProfileImage),
-                cache: true,
-              )) as ImageProvider<Object>;
-
         return Scaffold(
           backgroundColor: backgroundThemeColor,
           appBar: CustomAppBar(
@@ -129,28 +113,30 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                   showCursor: true,
                   title: 'About me',
                   maxLines: 4,
-                  initialValue: _aboutMe,
+                  initialValue: SettingsData.instance.userDescription,
                   onType: (value) {
                     SettingsData.instance.userDescription = value;
                   },
                 ),
                 TextEditBlock2(
                   title: 'Gender',
+                  controller: genderController,
                   icon: FontAwesomeIcons.chevronRight,
                   readOnly: true,
-                  initialValue: _gender,
-                  onTap: () {
-                    Navigator.pushNamed(context, PronounsEditScreen.routeName);
+                  onTap: () async {
+                    await Get.toNamed(PronounsEditScreen.routeName);
+                    genderController.text = SettingsData.instance.userGender;
                   },
                 ),
                 TextEditBlock2(
                   title: 'Orientation',
                   icon: FontAwesomeIcons.chevronRight,
                   readOnly: true,
-                  initialValue: _orientation,
-                  onTap: () {
-                    Navigator.pushNamed(
-                        context, OrientationEditScreen.routeName);
+                  controller: orientationController,
+                  onTap: () async {
+                    await Get.toNamed(OrientationEditScreen.routeName);
+                    orientationController.text =
+                        SettingsData.instance.preferredGender;
                   },
                 ),
                 TextEditBlock2(

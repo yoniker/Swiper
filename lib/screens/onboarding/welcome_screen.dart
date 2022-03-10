@@ -83,7 +83,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   void initState() {
     _controller =
-        VideoPlayerController.asset('assets/onboarding/videos/startedit.mp4')
+        VideoPlayerController.asset('assets/onboarding/videos/startvideo.mp4')
           ..initialize().then((_) {
             _controller.play();
             _controller.setLooping(true);

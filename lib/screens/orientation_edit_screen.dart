@@ -1,4 +1,5 @@
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/services/settings_model.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/enums.dart';
@@ -16,6 +17,23 @@ class OrientationEditScreen extends StatefulWidget {
 class _OrientationEditScreenState extends State<OrientationEditScreen> {
   PreferredGender? currentChoice;
   String whatWeShowText = '';
+
+  updateText() {
+    if (SettingsData.instance.preferredGender == PreferredGender.Men.name) {
+      whatWeShowText = 'We will only show you men';
+    } else if (SettingsData.instance.preferredGender ==
+        PreferredGender.Women.name) {
+      whatWeShowText = 'We will only show you women';
+    } else {
+      whatWeShowText = 'We will show you everyone';
+    }
+  }
+
+  @override
+  void initState() {
+    updateText();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,36 +64,38 @@ class _OrientationEditScreenState extends State<OrientationEditScreen> {
                   name: 'Men',
                   onTap: () {
                     setState(() {
-                      currentChoice = PreferredGender.Men;
+                      SettingsData.instance.preferredGender =
+                          PreferredGender.Men.name;
                       whatWeShowText = 'We will only show you men';
                     });
                   },
-                  pressed: currentChoice == PreferredGender.Men ? true : false,
+                  pressed: SettingsData.instance.preferredGender ==
+                      PreferredGender.Men.name,
                 ),
                 const SizedBox(height: 20),
                 ChoiceButton(
-                  name: 'Women',
-                  onTap: () {
-                    setState(() {
-                      currentChoice = PreferredGender.Women;
-                      whatWeShowText = 'We will only show you women';
-                    });
-                  },
-                  pressed:
-                      currentChoice == PreferredGender.Women ? true : false,
-                ),
+                    name: 'Women',
+                    onTap: () {
+                      setState(() {
+                        SettingsData.instance.preferredGender =
+                            PreferredGender.Women.name;
+                        whatWeShowText = 'We will only show you women';
+                      });
+                    },
+                    pressed: SettingsData.instance.preferredGender ==
+                        PreferredGender.Women.name),
                 const SizedBox(height: 20),
                 ChoiceButton(
-                  name: 'Everyone',
-                  onTap: () {
-                    setState(() {
-                      currentChoice = PreferredGender.Everyone;
-                      whatWeShowText = 'We will show you everyone';
-                    });
-                  },
-                  pressed:
-                      currentChoice == PreferredGender.Everyone ? true : false,
-                ),
+                    name: 'Everyone',
+                    onTap: () {
+                      setState(() {
+                        SettingsData.instance.preferredGender =
+                            PreferredGender.Everyone.name;
+                        whatWeShowText = 'We will show you everyone';
+                      });
+                    },
+                    pressed: SettingsData.instance.preferredGender ==
+                        PreferredGender.Everyone.name),
               ],
             ),
             Column(
@@ -84,10 +104,8 @@ class _OrientationEditScreenState extends State<OrientationEditScreen> {
                 FittedBox(
                   child: Row(
                     children: [
-                      currentChoice != null
-                          ? const Icon(Icons.remove_red_eye_rounded,
-                              color: Colors.black54)
-                          : const SizedBox(),
+                      const Icon(Icons.remove_red_eye_rounded,
+                          color: Colors.black54),
                       const SizedBox(width: 10),
                       Text(whatWeShowText, style: kSmallInfoStyle),
                     ],
