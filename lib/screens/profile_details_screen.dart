@@ -6,7 +6,6 @@ import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
-import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/images_upload_widget.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
@@ -14,14 +13,9 @@ import 'package:betabeta/widgets/setting_edit_block.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:image_picker/image_picker.dart';
-import 'package:reorderables/reorderables.dart';
 import 'package:extended_image/extended_image.dart';
-
-enum HeightUnit { ft, cm }
 
 /// The Implemntation of the Profile-screen
 class ProfileDetailsScreen extends StatefulWidget {
@@ -70,7 +64,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
     super.dispose();
   }
 
-  HeightUnit selectedUnit = HeightUnit.ft;
   TextEditingController heightController = TextEditingController();
   int ft = 0;
   int inches = 0;
@@ -87,21 +80,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
     int inchesTotal = (ft * 12) + inches;
     cm = (inchesTotal * 2.54).toStringAsPrecision(5);
     heightController.text = cm!;
-  }
-
-  void checkHeightUnit() {
-    if (selectedUnit == HeightUnit.ft) {
-      setState(() {
-        int inchess = (double.parse(heightController.text) ~/ 2.54).toInt();
-        cmToFeet(inchess);
-        heightController.text = '$ft\' $inches"';
-      });
-    } else if (selectedUnit == HeightUnit.cm) {
-      setState(() {
-        print(heightController.text);
-        inchesToCm();
-      });
-    }
   }
 
   @override
@@ -205,92 +183,103 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                         ),
                       ),
                       InputField(
-                        icon: FontAwesomeIcons.chevronDown,
-                        showCursor: false,
-                        controller: heightController,
-                        keyboardType: TextInputType.number,
-                        hintText:
-                            selectedUnit == HeightUnit.ft ? "__' __\"" : '__',
-                        formatters: [
-                          FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
-                        ],
-                        onTap: selectedUnit == HeightUnit.ft
-                            ? () {
-                                FocusScope.of(context)
-                                    .requestFocus(new FocusNode());
-                                showCupertinoModalPopup(
-                                    context: context,
-                                    builder: (context) {
-                                      return Padding(
-                                        padding: const EdgeInsets.all(30.0),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(10))),
-                                          height: 300,
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                flex: 3,
-                                                child: CupertinoPicker(
-                                                  scrollController:
-                                                      FixedExtentScrollController(
-                                                          initialItem: 63),
-                                                  itemExtent: 50.0,
-                                                  onSelectedItemChanged:
-                                                      (int index) {
-                                                    setState(() {
-                                                      cm = (index + 91)
-                                                          .toString();
-                                                      heightController.text =
-                                                          "$cm cm (${cmToFeet(index + 91)} ft)";
-                                                    });
-                                                  },
-                                                  children: List.generate(129,
-                                                      (index) {
-                                                    return Center(
-                                                      child: Text(
-                                                          '${index + 91} cm (${cmToFeet(index + 91)})'),
-                                                    );
-                                                    return SizedBox();
-                                                  }),
-                                                ),
-                                              ),
-                                            ],
+                          icon: FontAwesomeIcons.chevronDown,
+                          showCursor: false,
+                          controller: heightController,
+                          keyboardType: TextInputType.number,
+                          hintText: 'Height',
+                          formatters: [
+                            FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                          ],
+                          onTap: () {
+                            FocusScope.of(context)
+                                .requestFocus(new FocusNode());
+                            showCupertinoModalPopup(
+                                context: context,
+                                builder: (context) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(30.0),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10))),
+                                      height: 300,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 3,
+                                            child: CupertinoPicker(
+                                              scrollController:
+                                                  FixedExtentScrollController(
+                                                      initialItem: 63),
+                                              itemExtent: 50.0,
+                                              onSelectedItemChanged:
+                                                  (int index) {
+                                                setState(() {
+                                                  cm = (index + 91).toString();
+                                                  heightController.text =
+                                                      "$cm cm (${cmToFeet(index + 91)} ft)";
+                                                });
+                                              },
+                                              children:
+                                                  List.generate(129, (index) {
+                                                return Center(
+                                                  child: Text(
+                                                      '${index + 91} cm (${cmToFeet(index + 91)})'),
+                                                );
+                                                return SizedBox();
+                                              }),
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    });
-                              }
-                            : null,
-                      ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                });
+                          }),
                     ],
                   ),
                 ),
-                SizedBox(width: 25),
+                SizedBox(height: 20),
                 Theme(
                   data: ThemeData(
                     unselectedWidgetColor: Colors.black87,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CheckboxListTile(
-                        title: Text(
-                          ' Hide my profile',
-                          style: boldTextStyle,
+                    padding: const EdgeInsets.all(10.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.grey[350],
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Show my profile',
+                              style: smallBoldedTitleBlack,
+                            ),
+                            CupertinoSwitch(
+                              value: _incognitoMode,
+                              activeColor: colorBlend01,
+                              onChanged: (value) {
+                                setState(
+                                  () {
+                                    // TODO:// Add required Function.
+                                    // Alert user to make sure he is intentionally changing his visibiliry status.
+
+                                    // set "_showInDiscovery" to the currrent switch value.
+                                    _incognitoMode = value;
+                                  },
+                                );
+                              },
+                            ),
+                          ],
                         ),
-                        value: _incognitoMode,
-                        controlAffinity: ListTileControlAffinity.trailing,
-                        contentPadding: EdgeInsets.zero,
-                        checkColor: Colors.white,
-                        activeColor: Colors.black87,
-                        tristate: false,
-                        onChanged: (val) {
-                          setState(() {
-                            _incognitoMode = val!;
-                          });
-                        }),
+                      ),
+                    ),
                   ),
                 ),
               ],

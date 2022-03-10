@@ -1,8 +1,3 @@
-import 'dart:io';
-import 'dart:math';
-
-import 'package:betabeta/constants/beta_icon_paths.dart';
-import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/celebs_info_model.dart';
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/match_engine.dart';
@@ -128,26 +123,6 @@ class _SplashScreenState extends State<SplashScreen>
           ],
         ),
       ),
-      // child: Center(
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: [
-      //       Padding(
-      //         padding: const EdgeInsets.all(6.0),
-      //         child: Container(
-      //           width: 200,
-      //           child: Image.asset('assets/images/voila.png'),
-      //         ),
-      //       ),
-      //       Container(
-      //         width: 200,
-      //         child: Image.asset(
-      //           'assets/images/logo_text.png',
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
 
