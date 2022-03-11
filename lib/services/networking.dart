@@ -95,6 +95,7 @@ class NetworkHelper {
   }
 
   static List<String> serverImagesUrl(List<String> imagesUrls) {
+
     return imagesUrls.map((val) {
       return NetworkHelper.SERVER_ADDR + '/images/' + val;
     }).toList();

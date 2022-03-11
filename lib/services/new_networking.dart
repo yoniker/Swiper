@@ -65,12 +65,13 @@ class NewNetworkService {
     return 'https://' + SERVER_ADDR + '/profile_image/$userId';
   }
 
+  static List<String> serverImagesUrl(List<String> imagesUrls) {
+
+    return imagesUrls.map((val) => NewNetworkService.getProfileImageUrl(val)).toList();
+  }
+
   static String getProfileImageUrl(String shortUrl) {
-    //Get any profile image link (not just the main one) from the shorthand version of /profile_images/real/something/something.jpg
-    if (shortUrl.contains('/real/')) {
-      return 'https://' + SERVER_ADDR + shortUrl;
-    }
-    return 'https://' + shortUrl; //Support old dummy images url style
+      return 'https://' + SERVER_ADDR +shortUrl;
   }
 
   Future<List<String>?> getCurrentProfileImagesUrls() async {

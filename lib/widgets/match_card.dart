@@ -254,7 +254,7 @@ class _MatchCardState extends State<MatchCard> {
                   scrollDirection: Axis.horizontal,
                   itemCount: _imageUrls.length,
                   itemBuilder: (cntx, index) {
-                    final String _url = NewNetworkService.getProfileImageUrl(_imageUrls[index]);
+                    final String _url = _imageUrls[index];
                     return GestureDetector(
                       onTap: () {
                         // pushToScreen(
@@ -708,7 +708,7 @@ class _PhotoViewState extends State<PhotoView> {
         imageIndex < widget.imageUrls!.length;
         imageIndex++) {
       var img =  Image.network(
-        NewNetworkService.getProfileImageUrl(widget.imageUrls![imageIndex]),
+        widget.imageUrls![imageIndex],
         scale: 1.0,
         fit: BoxFit.cover,
       );

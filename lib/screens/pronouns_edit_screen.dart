@@ -58,7 +58,6 @@ class _PronounsEditScreenState extends State<PronounsEditScreen> {
     // Height (without SafeArea)
     var padding = MediaQuery.of(context).viewPadding;
     double heightWithoutSafeArea = height - padding.top - padding.bottom;
-
     return Scaffold(
       backgroundColor: backgroundThemeColor,
       appBar: CustomAppBar(

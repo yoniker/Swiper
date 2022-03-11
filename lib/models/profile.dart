@@ -1,5 +1,6 @@
 import 'package:betabeta/models/userid.dart';
 import 'package:betabeta/services/networking.dart';
+import 'package:betabeta/services/new_networking.dart';
 
 class Profile {
   final List<String>? imageUrls;
@@ -27,12 +28,15 @@ class Profile {
     List<String> imagesUrls = images.cast<String>();
     UserType userType = match['user_type']=='real'?UserType.REAL_USER:UserType.DUMMY;
     UserId userId = UserId(id: match['firebase_uid'].toString(), userType: userType);
-  return Profile(username: match['username'],headline: match['headline']??match['user_description'],description: match['user_description']??match['headline'],age:match['age'],
+  Profile toReturn =  Profile(username: match['username']??match['name'],headline: match['headline']??match['user_description'],description: match['user_description']??match['headline'],age:match['age'],
       location: match['location_description'],distance: match['distance'],jobTitle: match['job_title'],
       height: match['height_in_cm'].toString(),
       userId: userId,
       hotnessScore: match['hotness'] * 100,
       compatibilityScore: match['compatibility'] * 100 ,
-      imageUrls: NetworkHelper.serverImagesUrl(imagesUrls)
-  );}
+      imageUrls: NewNetworkService.serverImagesUrl(imagesUrls)
+  );
+  return toReturn;
+
+  }
 }
