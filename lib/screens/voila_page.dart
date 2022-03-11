@@ -5,6 +5,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/data_models/celeb.dart';
 import 'package:betabeta/screens/profile_screen.dart';
+import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
@@ -13,6 +14,7 @@ import 'package:betabeta/widgets/advance_filter_card_widget.dart';
 import 'package:betabeta/widgets/circular_user_avatar.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
+import 'package:betabeta/widgets/gradient_text_widget.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +28,8 @@ enum activeCard { customImage, celebImage, normalMode }
 
 class VoilaPage extends StatefulWidget {
   static const String routeName = '/voila_page';
+  static activeCard selectedCard = activeCard.normalMode;
+  static String flagName = 'Normal mode';
 
   @override
   State<VoilaPage> createState() => _VoilaPageState();
@@ -45,9 +49,6 @@ class _VoilaPageState extends State<VoilaPage> {
   bool isLoading = false;
   bool isPressed = false;
   ImageType? currentChoice;
-  String flagName = 'Normal mode';
-
-  activeCard selectedCard = activeCard.normalMode;
 
   /// Here is where the custom-picked image is being Posted and sent over Network.
   void postCustomImageToNetwork(PickedFile chosenImage) async {
@@ -147,21 +148,21 @@ class _VoilaPageState extends State<VoilaPage> {
                 ),
               ),
               centerWidget: Center(
-                child: Stack(
-                  alignment: Alignment.topCenter,
-                  children: [
-                    Image.asset(
-                      'assets/images/flag2.png',
-                      height: 45,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 2.0),
-                      child: Text(
-                        flagName,
-                        style: titleStyleWhite.copyWith(shadows: [Shadow()]),
-                      ),
-                    )
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GradientText(
+                    'Voilà-dating',
+                    style: TextStyle(
+                        overflow: TextOverflow.fade,
+                        color: goldColorish,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold),
+                    gradient: LinearGradient(colors: [
+                      Color(0XFFFBCE32),
+                      Color(0XFFD2AB54),
+                      Color(0XFFC3932F),
+                    ]),
+                  ),
                 ),
               ),
               showAppLogo: false,
@@ -174,7 +175,10 @@ class _VoilaPageState extends State<VoilaPage> {
                     size: 25,
                     color: Colors.black87,
                   ),
-                  onTap: () {},
+                  onTap: () async {
+                    var value =
+                        await Get.toNamed(SwipeSettingsScreen.routeName);
+                  },
                 ),
               ),
             ),
@@ -194,7 +198,8 @@ class _VoilaPageState extends State<VoilaPage> {
                               style: boldTextStyle,
                             ),
                             AnimatedContainer(
-                              width: selectedCard != activeCard.normalMode
+                              width: VoilaPage.selectedCard !=
+                                      activeCard.normalMode
                                   ? 200
                                   : 0,
                               duration: Duration(milliseconds: 500),
@@ -206,8 +211,9 @@ class _VoilaPageState extends State<VoilaPage> {
                                   name: 'Deactivate filters',
                                   onTap: () {
                                     setState(() {
-                                      selectedCard = activeCard.normalMode;
-                                      flagName = 'Normal mode';
+                                      VoilaPage.selectedCard =
+                                          activeCard.normalMode;
+                                      VoilaPage.flagName = 'Normal mode';
                                     });
                                   },
                                   withPadding: false,
@@ -227,10 +233,10 @@ class _VoilaPageState extends State<VoilaPage> {
                           children: [
                             Expanded(
                               child: AdvanceFilterCard(
-                                  isActive:
-                                      selectedCard == activeCard.customImage
-                                          ? true
-                                          : false,
+                                  isActive: VoilaPage.selectedCard ==
+                                          activeCard.customImage
+                                      ? true
+                                      : false,
                                   image:
                                       AssetImage('assets/images/picture5.jpg'),
                                   title: Text(
@@ -248,7 +254,7 @@ class _VoilaPageState extends State<VoilaPage> {
                                     // Display an image picker Dilaogue.
                                     setState(() {
                                       currentChoice = ImageType.Custom;
-                                      flagName = 'Image mode';
+                                      VoilaPage.flagName = 'Image mode';
                                     });
                                     await GlobalWidgets.showImagePickerDialogue(
                                       context: context,
@@ -256,7 +262,7 @@ class _VoilaPageState extends State<VoilaPage> {
                                         if (imageFile != null) {
                                           postCustomImageToNetwork(imageFile);
                                           setState(() {
-                                            selectedCard =
+                                            VoilaPage.selectedCard =
                                                 activeCard.customImage;
                                           });
                                         }
@@ -271,10 +277,10 @@ class _VoilaPageState extends State<VoilaPage> {
                             Expanded(
                               child: AdvanceFilterCard(
                                   image: AssetImage('assets/images/celeb3.jpg'),
-                                  isActive:
-                                      selectedCard == activeCard.celebImage
-                                          ? true
-                                          : false,
+                                  isActive: VoilaPage.selectedCard ==
+                                          activeCard.celebImage
+                                      ? true
+                                      : false,
                                   onTap: () async {
                                     var selectedCeleb = await Get.toNamed(
                                         ScreenCelebritySelection.routeName);
@@ -286,8 +292,9 @@ class _VoilaPageState extends State<VoilaPage> {
                                         _selectedCeleb = selectedCeleb as Celeb;
                                         SettingsData.instance.celebId =
                                             _selectedCeleb.celebName;
-                                        selectedCard = activeCard.celebImage;
-                                        flagName = 'Celeb Mode';
+                                        VoilaPage.selectedCard =
+                                            activeCard.celebImage;
+                                        VoilaPage.flagName = 'Celeb Mode';
                                       } else {
                                         //No celebrity selected
                                       }
@@ -308,7 +315,7 @@ class _VoilaPageState extends State<VoilaPage> {
                             onTap: () {
                               inDevelopmentPopUp();
                             },
-                            image: AssetImage('assets/images/textsearch.jpg'),
+                            image: AssetImage('assets/images/textsearch2.jpg'),
                             comingSoon: true,
                             showAI: false,
                             title: Row(
@@ -318,7 +325,7 @@ class _VoilaPageState extends State<VoilaPage> {
                                   style: LargeTitleStyleWhite,
                                 ),
                                 DefaultTextStyle(
-                                  style: LargeTitleStyle,
+                                  style: LargeTitleStyleWhite,
                                   child: AnimatedTextKit(
                                     pause: Duration(seconds: 2),
                                     repeatForever: true,
@@ -372,7 +379,7 @@ class _VoilaPageState extends State<VoilaPage> {
                                     inDevelopmentPopUp();
                                   },
                                   comingSoon: true,
-                                  image: AssetImage('assets/images/taste9.jpg'),
+                                  image: AssetImage('assets/images/taste2.jpg'),
                                   title: Text(
                                     'Their Taste',
                                     style: titleStyleWhite,

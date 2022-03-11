@@ -1,5 +1,4 @@
 import 'package:betabeta/models/userid.dart';
-import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/services/new_networking.dart';
 
 class Profile {

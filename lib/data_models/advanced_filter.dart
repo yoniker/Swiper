@@ -1,5 +1,3 @@
-
-
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/data_models/celeb.dart';
 
@@ -36,7 +34,6 @@ class AdvancedFilter {
   /// A constructor for the [AdvancedFilter] class
   /// to construct an [AdvancedFilter] instance from a Map of values.
   factory AdvancedFilter.fromJson(Map<String, dynamic> json) {
-
     return AdvancedFilter(
       filterIndex: json['filter_index'] ?? 0,
       filterType: filterTypeFromString(json['filter_type']),

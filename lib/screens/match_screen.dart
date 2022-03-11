@@ -4,8 +4,10 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
+import 'package:betabeta/screens/voila_page.dart';
 import 'package:betabeta/widgets/circular_user_avatar.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
+import 'package:betabeta/widgets/gradient_text_widget.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/match_card.dart';
 import 'package:flutter/cupertino.dart';
@@ -94,6 +96,44 @@ class _MatchScreenState extends State<MatchScreen>
       child: Column(
         children: [
           CustomAppBar(
+            centerWidget: VoilaPage.selectedCard != activeCard.normalMode
+                ? Center(
+                    child: Stack(
+                      alignment: Alignment.topCenter,
+                      children: [
+                        Image.asset(
+                          'assets/images/flag2.png',
+                          height: 45,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2.0),
+                          child: Text(
+                            VoilaPage.flagName,
+                            style:
+                                titleStyleWhite.copyWith(shadows: [Shadow()]),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                : Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GradientText(
+                        'Voilà-dating',
+                        style: TextStyle(
+                            overflow: TextOverflow.fade,
+                            color: goldColorish,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold),
+                        gradient: LinearGradient(colors: [
+                          Color(0XFFFBCE32),
+                          Color(0XFFD2AB54),
+                          Color(0XFFC3932F),
+                        ]),
+                      ),
+                    ),
+                  ),
             customTitle: Container(
               padding: EdgeInsets.only(left: 10.0),
               child: Row(
@@ -159,7 +199,9 @@ class _MatchScreenState extends State<MatchScreen>
                       onTap: () {
                         Get.toNamed(ProfileScreen.routeName);
                       },
-                      child: CircularUserAvatar(backgroundColor: Colors.grey,),
+                      child: CircularUserAvatar(
+                        backgroundColor: Colors.grey,
+                      ),
                     ),
                   ),
                 ],
