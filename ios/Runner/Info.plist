@@ -24,7 +24,9 @@
 	<string>Grant access to camera so you can take your own photos </string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Grant access to microphone so you will be able to share video and audio</string>
-	<key>CFBundleSignature</key>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>Grant access to your location so you will view matches around you</string>
+    <key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
 	<array>
