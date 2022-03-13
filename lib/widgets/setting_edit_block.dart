@@ -9,9 +9,11 @@ class TextEditBlock2 extends StatefulWidget {
       {required this.title,
       this.initialValue,
       this.maxLines = 1,
+      this.minLines = 1,
       this.onType,
       this.onTap,
       this.icon,
+      this.keyboardType,
       this.readOnly = false,
       this.showCursor = false,
       this.controller,
@@ -19,8 +21,10 @@ class TextEditBlock2 extends StatefulWidget {
   final String title;
   final IconData? icon;
   final int maxLines;
+  final int minLines;
   final String? placeholder;
   final TextEditingController? controller;
+  TextInputType? keyboardType = TextInputType.text;
   bool readOnly;
   bool showCursor;
   String? initialValue;
@@ -44,6 +48,8 @@ class _TextEditBlock2State extends State<TextEditBlock2> {
             height: 5,
           ),
           InputField(
+            minLines: widget.minLines,
+            keyboardType: widget.keyboardType,
             showCursor: widget.showCursor,
             icon: widget.icon,
             controller: widget.controller,

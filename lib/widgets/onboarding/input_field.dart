@@ -17,6 +17,7 @@ class InputField extends StatelessWidget {
       this.iconHeight = 1,
       this.keyboardType,
       this.maxLines = 1,
+      this.minLines = 1,
       this.maxCharacters,
       this.style,
       this.onTapIconDisable,
@@ -33,6 +34,7 @@ class InputField extends StatelessWidget {
   TextStyle? style;
   String? hintText = "";
   int maxLines;
+  int minLines;
   void Function(String)? onType;
   void Function()? onTapIcon;
   void Function()? onTapIconDisable;
@@ -47,54 +49,64 @@ class InputField extends StatelessWidget {
       borderRadius: const BorderRadius.all(Radius.circular(10)),
       elevation: pressed == true ? 1 : 0,
       color: Colors.transparent,
-      child: TextFormField(
-        showCursor: showCursor,
-        inputFormatters: formatters,
-        controller: controller,
-        onEditingComplete: () => FocusScope.of(context).unfocus(),
-        readOnly: readonly,
-        cursorColor: Colors.black,
-        initialValue: initialvalue,
-        onTap: onTap,
-        maxLines: maxLines,
-        textCapitalization: TextCapitalization.sentences,
-        onChanged: onType,
-        keyboardType: keyboardType,
-        style: style != null
-            ? style
-            : const TextStyle(fontSize: 20, color: Colors.black87),
-        maxLength: maxCharacters,
-        textAlign: TextAlign.start,
-        decoration: InputDecoration(
-          suffixIcon: Padding(
-            padding: EdgeInsets.only(right: 15, top: iconHeight),
-            child: GestureDetector(
-              onTap: onTapIcon == null ? null : onTapIcon,
+      child: Theme(
+        data: ThemeData(
+          textSelectionHandleColor: Colors.blue,
+          textSelectionTheme: TextSelectionThemeData(
+              selectionColor: Colors.blue[100],
+              cursorColor: Colors.blue,
+              selectionHandleColor: Colors.blue),
+        ),
+        child: TextFormField(
+          showCursor: showCursor,
+          inputFormatters: formatters,
+          controller: controller,
+          onEditingComplete: () => FocusScope.of(context).unfocus(),
+          readOnly: readonly,
+          cursorColor: Colors.black,
+          initialValue: initialvalue,
+          onTap: onTap,
+          maxLines: maxLines,
+          minLines: minLines,
+          textCapitalization: TextCapitalization.sentences,
+          onChanged: onType,
+          keyboardType: keyboardType,
+          style: style != null
+              ? style
+              : const TextStyle(fontSize: 20, color: Colors.black87),
+          maxLength: maxCharacters,
+          textAlign: TextAlign.start,
+          decoration: InputDecoration(
+            suffixIcon: Padding(
+              padding: EdgeInsets.only(right: 15, top: iconHeight),
               child: GestureDetector(
-                onTap: onTapIconDisable,
-                child: Icon(
-                  icon,
-                  color: onTapIcon == null ? Colors.grey : Colors.black87,
+                onTap: onTapIcon == null ? null : onTapIcon,
+                child: GestureDetector(
+                  onTap: onTapIconDisable,
+                  child: Icon(
+                    icon,
+                    color: onTapIcon == null ? Colors.grey : Colors.black87,
+                  ),
                 ),
               ),
             ),
-          ),
-          focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black87, width: 2)),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white, width: 1.5),
-            borderRadius: BorderRadius.all(
-              Radius.circular(10),
+            focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black87, width: 2)),
+            enabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.white, width: 1.5),
+              borderRadius: BorderRadius.all(
+                Radius.circular(10),
+              ),
             ),
-          ),
-          filled: true,
-          fillColor: Colors.white,
-          hintText: hintText,
-          hintStyle: const TextStyle(color: Colors.black12, fontSize: 18),
-          counterText: "",
-          contentPadding: padding,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+            filled: true,
+            fillColor: Colors.white,
+            hintText: hintText,
+            hintStyle: const TextStyle(color: Colors.black12, fontSize: 18),
+            counterText: "",
+            contentPadding: padding,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
         ),
       ),

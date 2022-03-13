@@ -42,7 +42,7 @@ class _OrientationEditScreenState extends State<OrientationEditScreen> {
         hasTopPadding: true,
         hasBackButton: true,
         showAppLogo: false,
-        title: 'My orientation',
+        title: 'Interested in',
       ),
       backgroundColor: kBackroundThemeColor,
       body: Padding(

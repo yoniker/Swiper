@@ -34,9 +34,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
   // this will be pre-filled with data from the server.
   bool _incognitoMode = true;
 
-  String? _jobTitle = 'KFC';
+  String? _jobTitle = 'Please add';
 
-  String? _school = 'Gordon';
+  String? _school = 'Please add';
 
   bool _uploadingImage =
       false; //Is image in the process of being uploaded? give user a visual cue
@@ -56,7 +56,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
     super.dispose();
   }
 
-  TextEditingController heightController = TextEditingController();
+  TextEditingController heightController =
+      TextEditingController(text: "cm (ft)");
   TextEditingController genderController =
       TextEditingController(text: SettingsData.instance.userGender);
   TextEditingController orientationController =
@@ -107,9 +108,11 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                   child: ImagesUploadwidget(),
                 ),
                 TextEditBlock2(
+                  keyboardType: TextInputType.multiline,
                   showCursor: true,
                   title: 'About me',
-                  maxLines: 4,
+                  minLines: 4,
+                  maxLines: 14,
                   controller: aboutMeController,
                   onType: (value) {
                     SettingsData.instance.userDescription = value;
@@ -126,7 +129,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                   },
                 ),
                 TextEditBlock2(
-                  title: 'Orientation',
+                  title: 'Interested in',
                   icon: FontAwesomeIcons.chevronRight,
                   readOnly: true,
                   controller: orientationController,

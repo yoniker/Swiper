@@ -157,11 +157,8 @@ void main() async {
             name: OrientationEditScreen.routeName,
             page: () => OrientationEditScreen())
       ],
-      title: 'Swiper MVP',
+      title: 'Voilà MVP',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.from(
-          colorScheme: ColorScheme.light()
-              .copyWith(primary: Colors.white, secondary: Colors.white70)),
     ),
   );
 }

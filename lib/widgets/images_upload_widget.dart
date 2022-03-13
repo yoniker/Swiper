@@ -43,16 +43,19 @@ class _ImagesUploadwidgetState extends State<ImagesUploadwidget> {
                           height: 120,
                           child: Column(
                             children: [
-                              TextButton(
-                                  onPressed: () {
-                                    Get.back();
-                                    onDelete!();
-                                  },
-                                  child: Text(
-                                    'Delete Picture',
-                                    style: TextStyle(
-                                        color: Colors.red, fontSize: 18),
-                                  )),
+                              if (SettingsData
+                                      .instance.profileImagesUrls.length !=
+                                  1)
+                                TextButton(
+                                    onPressed: () {
+                                      Get.back();
+                                      onDelete!();
+                                    },
+                                    child: Text(
+                                      'Delete Picture',
+                                      style: TextStyle(
+                                          color: Colors.red, fontSize: 18),
+                                    )),
                               Divider(),
                               TextButton(
                                   onPressed: () {

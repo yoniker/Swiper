@@ -100,14 +100,16 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                               : () {
                                   alertUserMinimumText();
                                 },
-                          iconHeight: 90,
+                          iconHeight: 110,
                           icon: Icons.send,
                           onType: (value) {
                             aboutMeText = value;
                             setState(() {});
                           },
                           maxCharacters: 500,
-                          maxLines: 5,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: 15,
+                          minLines: 5,
                           hintText:
                               'Write something interesting about yourself',
                         ),
