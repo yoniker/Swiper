@@ -7,6 +7,7 @@ import 'package:betabeta/widgets/cupertino_range_slider.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/dropdown_form_field.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
+import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide DropdownButtonFormField;
 import 'package:get/get.dart';
@@ -33,6 +34,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
       SettingsData.instance.maxAge.toDouble());
   bool _showInDiscovery = true; //TODO change SettingsData to support visibility
   double _maxDistance = SettingsData.instance.radius;
+
 
   @override
   void initState() {
@@ -85,6 +87,15 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    return ListenerWidget(
+      notifier: SettingsData.instance,
+      builder: (context){
+
+    RangeValues _selectedAges = RangeValues(
+        SettingsData.instance.minAge.toDouble(),
+        SettingsData.instance.maxAge.toDouble());
+
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Settings',
@@ -184,7 +195,7 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                                       children: <InlineSpan>[
                                         TextSpan(
                                           text:
-                                              ' ${_maxDistance.round().toString()} km away',
+                                              ' ${SettingsData.instance.radius.round().toString()} km away',
                                           style: defaultTextStyle,
                                         ),
                                       ],
@@ -212,15 +223,11 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                                         EdgeInsets.symmetric(horizontal: 12.0),
                                     child: CupertinoSlider(
                                       activeColor: colorBlend01,
-                                      value: _maxDistance,
+                                      value: SettingsData.instance.radius,
                                       min: 0,
                                       max: 200,
                                       onChanged: (value) {
-                                        setState(() {
-                                          _maxDistance = value;
-                                          SettingsData.instance.radius =
-                                              _maxDistance;
-                                        });
+                                          SettingsData.instance.radius = value;
                                       },
                                     ),
                                   ),
@@ -236,7 +243,43 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
                                 ),
                               ],
                             ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'I care about distance',
+                                  style: boldTextStyle,
+                                ),
+                                CupertinoSwitch(
+                                  value: SettingsData.instance.searchDistanceEnabled,
+                                  activeColor: colorBlend01,
+                                  onChanged: (value) {
+                                    SettingsData.instance.searchDistanceEnabled = value;
+                                  },
+                                ),
+                              ],
+                            ),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Show Dummy Profiles',
+                                  style: boldTextStyle,
+                                ),
+                                CupertinoSwitch(
+                                  value: SettingsData.instance.showDummyProfiles,
+                                  activeColor: colorBlend01,
+                                  onChanged: (value) {
+                                    SettingsData.instance.showDummyProfiles = value;
+                                  },
+                                ),
+                              ],
+                            )
                           ],
+
                         ),
                       ),
                     ],
@@ -413,5 +456,5 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
         ],
       ),
     );
-  }
+  });}
 }

@@ -38,12 +38,10 @@ class ServiceWebsocket {
   }
 
   void _listenRawMessages(dynamic message){
-    print('Sending ack for message $message!');
     var decoded_message = json.decode(message);
     Map<String,dynamic> content = decoded_message;
     String ack_id = decoded_message['ack_id'];
     var encodedAckResponse = jsonEncode({'message_type':'ack','ack_id':ack_id});
-    print('ACK FOR $content');
     _channel!.add(encodedAckResponse);
     if(_exposedStreamActive){
       _streamController.add(content);

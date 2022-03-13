@@ -79,17 +79,23 @@ class NetworkHelper {
     _lastMatchCall = DateTime.now();
     Uri matchesUrl =
         Uri.https(SERVER_ADDR, '/matches/${SettingsData.instance.uid}');
-    print('ICHS GETTINGS MATCHES FROM ${matchesUrl.path}');
     http.Response response = await http.get(matchesUrl); //eg /12313?gender=Male
     if (response.statusCode != 200) {
       return null; //TODO error handling
     }
 
-    dynamic listProfiles = jsonDecode(response.body);
+    try{dynamic listProfiles = jsonDecode(response.body);
     return listProfiles;
+    }
+    catch(e){
+      print('Error during parsing matches');
+      return [];
+    }
+
   }
 
   static List<String> serverImagesUrl(List<String> imagesUrls) {
+
     return imagesUrls.map((val) {
       return NetworkHelper.SERVER_ADDR + '/images/' + val;
     }).toList();
@@ -147,8 +153,7 @@ class NetworkHelper {
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri = Uri.https(SERVER_ADDR, '/settings/${settings.uid}');
-    http.Response response = await http.post(postSettingsUri,
-        body: encoded); //TODO something if response wasnt 200
+    //http.Response response = await http.post(postSettingsUri, body: encoded); //TODO something if response wasnt 200
 
   }
 

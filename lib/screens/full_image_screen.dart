@@ -7,7 +7,6 @@ class FullImageScreen extends StatelessWidget {
   static const String routeName = '/full_image_screen';
   final String? imageUrl;
   FullImageScreen({Key? key}) : imageUrl = (Get.arguments as String),super(key: key){
-    print('Dor and only dor?');
   }
   @override
   Widget build(BuildContext context) {

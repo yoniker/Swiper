@@ -1,5 +1,6 @@
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/profile_details_screen.dart';
+import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/utils/utils_methods.dart';
 import 'package:betabeta/widgets/match_card.dart';
@@ -35,7 +36,7 @@ class _CurrentUserProfileViewScreenState
         age: age,
         headline: SettingsData.instance.userDescription,
         description: SettingsData.instance.userDescription,
-        imageUrls: SettingsData.instance.profileImagesUrls,
+        imageUrls: NewNetworkService.serverImagesUrl(SettingsData.instance.profileImagesUrls),
         location: SettingsData.instance.locationDescription,
         height:
             "TODO add height to current profile", //TODO add height to profile

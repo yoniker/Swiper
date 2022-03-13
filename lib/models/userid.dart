@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 
 enum UserType{
-POF_USER,REAL_USER
+DUMMY,REAL_USER
 }
 
 class UserId{

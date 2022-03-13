@@ -254,7 +254,7 @@ class _MatchCardState extends State<MatchCard> {
                   scrollDirection: Axis.horizontal,
                   itemCount: _imageUrls.length,
                   itemBuilder: (cntx, index) {
-                    final String _url = NewNetworkService.getProfileImageUrl(_imageUrls[index]);
+                    final String _url = _imageUrls[index];
                     return GestureDetector(
                       onTap: () {
                         // pushToScreen(
@@ -442,7 +442,7 @@ class _MatchCardState extends State<MatchCard> {
                 scale: 4.0,
               ),
               onTap: () {
-                MatchEngine().currentMatchDecision(Decision.nope);
+                MatchEngine.instance.currentMatchDecision(Decision.nope);
                 print('nope pressed');
               },
             ),
@@ -454,7 +454,7 @@ class _MatchCardState extends State<MatchCard> {
                 scale: 3.75,
               ),
               onTap: () {
-                MatchEngine().currentMatchDecision(Decision.like);
+                MatchEngine.instance.currentMatchDecision(Decision.like);
                 print('like pressed');
               },
             ),
@@ -708,7 +708,7 @@ class _PhotoViewState extends State<PhotoView> {
         imageIndex < widget.imageUrls!.length;
         imageIndex++) {
       var img =  Image.network(
-        NewNetworkService.getProfileImageUrl(widget.imageUrls![imageIndex]),
+        widget.imageUrls![imageIndex],
         scale: 1.0,
         fit: BoxFit.cover,
       );
