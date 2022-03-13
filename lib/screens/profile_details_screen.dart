@@ -32,11 +32,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
     with MountedStateMixin {
   // --> All this information should be added to the data model.
   // this will be pre-filled with data from the server.
-  bool _incognitoMode = false;
+  bool _incognitoMode = true;
 
-  String? _aboutMe;
-
-  String? _jobTitle;
+  String? _jobTitle = 'KFC';
 
   String? _school = 'Gordon';
 
@@ -49,9 +47,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
 
     // this makes sure that if the state is not yet mounted, we don't end up calling setState
     // but instead push the function forward to the addPostFrameCallback function.
-    _aboutMe = SettingsData.instance.userDescription;
-    _jobTitle = SettingsData.instance.userDescription;
-
     _syncProfileImagesFromServer();
   }
 
@@ -66,6 +61,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
       TextEditingController(text: SettingsData.instance.userGender);
   TextEditingController orientationController =
       TextEditingController(text: SettingsData.instance.preferredGender);
+  TextEditingController aboutMeController =
+      TextEditingController(text: SettingsData.instance.userDescription);
   int ft = 0;
   int inches = 0;
   String? cm;
@@ -113,7 +110,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                   showCursor: true,
                   title: 'About me',
                   maxLines: 4,
-                  initialValue: SettingsData.instance.userDescription,
+                  controller: aboutMeController,
                   onType: (value) {
                     SettingsData.instance.userDescription = value;
                   },
@@ -142,10 +139,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                 TextEditBlock2(
                   showCursor: true,
                   title: 'Job title',
-                  placeholder: 'Job title',
                   initialValue: _jobTitle,
                   onType: (val) {
-                    SettingsData.instance.userDescription = val;
+                    _jobTitle = val;
                   },
                 ),
                 TextEditBlock2(
@@ -195,27 +191,33 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                                         children: [
                                           Expanded(
                                             flex: 3,
-                                            child: CupertinoPicker(
-                                              scrollController:
-                                                  FixedExtentScrollController(
-                                                      initialItem: 63),
-                                              itemExtent: 50.0,
-                                              onSelectedItemChanged:
-                                                  (int index) {
-                                                setState(() {
-                                                  cm = (index + 91).toString();
-                                                  heightController.text =
-                                                      "$cm cm (${cmToFeet(index + 91)} ft)";
-                                                });
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.pop(context);
                                               },
-                                              children:
-                                                  List.generate(129, (index) {
-                                                return Center(
-                                                  child: Text(
-                                                      '${index + 91} cm (${cmToFeet(index + 91)})'),
-                                                );
-                                                return SizedBox();
-                                              }),
+                                              child: CupertinoPicker(
+                                                scrollController:
+                                                    FixedExtentScrollController(
+                                                        initialItem: 63),
+                                                itemExtent: 50.0,
+                                                onSelectedItemChanged:
+                                                    (int index) {
+                                                  setState(() {
+                                                    cm =
+                                                        (index + 91).toString();
+                                                    heightController.text =
+                                                        "$cm cm (${cmToFeet(index + 91)} ft)";
+                                                  });
+                                                },
+                                                children:
+                                                    List.generate(129, (index) {
+                                                  return Center(
+                                                    child: Text(
+                                                        '${index + 91} cm (${cmToFeet(index + 91)})'),
+                                                  );
+                                                  return SizedBox();
+                                                }),
+                                              ),
                                             ),
                                           ),
                                         ],

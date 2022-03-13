@@ -45,7 +45,7 @@ class InputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       borderRadius: const BorderRadius.all(Radius.circular(10)),
-      elevation: pressed == true ? 1 : 3,
+      elevation: pressed == true ? 1 : 0,
       color: Colors.transparent,
       child: TextFormField(
         showCursor: showCursor,
