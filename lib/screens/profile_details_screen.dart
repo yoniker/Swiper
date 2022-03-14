@@ -1,5 +1,6 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/screens/my_hobbies_screen.dart';
 import 'package:betabeta/screens/orientation_edit_screen.dart';
 import 'package:betabeta/screens/pronouns_edit_screen.dart';
 import 'package:betabeta/services/new_networking.dart';
@@ -169,9 +170,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                       ),
                       InputField(
                           icon: FontAwesomeIcons.chevronDown,
+                          readonly: true,
                           showCursor: false,
                           controller: heightController,
-                          keyboardType: TextInputType.number,
                           hintText: 'Height',
                           formatters: [
                             FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
@@ -231,6 +232,13 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                           }),
                     ],
                   ),
+                ),
+                TextEditBlock2(
+                  title: 'My hobbies',
+                  readOnly: true,
+                  onTap: () {
+                    Get.toNamed(MyHobbiesScreen.routeName);
+                  },
                 ),
                 SizedBox(height: 20),
                 Theme(

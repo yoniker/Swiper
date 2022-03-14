@@ -40,9 +40,12 @@ class _RelationshipTypeOnboardingScreenState
                 ProgressBar(
                   page: 5,
                 ),
-                const Text(
-                  'What are you looking for?',
-                  style: kTitleStyle,
+                FittedBox(
+                  child: const Text(
+                    'What are you looking for?',
+                    maxLines: 2,
+                    style: kTitleStyle,
+                  ),
                 ),
                 const SizedBox(
                   height: 10,
