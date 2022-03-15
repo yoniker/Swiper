@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:betabeta/services/cache_service.dart';
+import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -9,7 +10,9 @@ import 'package:http_parser/src/media_type.dart' as media;
 import 'dart:convert' as json;
 
 class NewNetworkService {
-  static const SERVER_ADDR = 'dordating.com:8087';
+  static const SERVER_ADDR = 'dordating.com:8088';
+  static const MIN_MATCHES_CALL_INTERVAL = Duration(seconds: 1);
+  DateTime _lastMatchCall = DateTime(2000);
   NewNetworkService._privateConstructor();
 
   static final NewNetworkService _instance =
@@ -71,6 +74,9 @@ class NewNetworkService {
   }
 
   static String getProfileImageUrl(String shortUrl) {
+      if(shortUrl.contains('dummy/') && false){
+        return 'https://' + NetworkHelper.SERVER_ADDR+shortUrl;
+      }
       return 'https://' + SERVER_ADDR +shortUrl;
   }
 
@@ -106,6 +112,7 @@ class NewNetworkService {
     Map<String, String> toSend = {
       'file_url': profileImageUrl,
     };
+    print('trying to delete $profileImageUrl');
     String encoded = jsonEncode(toSend);
     var response = await http.post(deletionUri, body: encoded);
     return;
@@ -154,5 +161,31 @@ class NewNetworkService {
         SettingsData.instance.locationDescription = locationDescription;
       }
     }
+  }
+
+
+
+  //getMatches: Grab some matches and image links from the server
+  dynamic getMatches() async {
+    if (DateTime.now().difference(_lastMatchCall) < MIN_MATCHES_CALL_INTERVAL) {
+      await Future.delayed(MIN_MATCHES_CALL_INTERVAL -
+          DateTime.now().difference(_lastMatchCall));
+    }
+    _lastMatchCall = DateTime.now();
+    Uri matchesUrl =
+    Uri.https(SERVER_ADDR, '/matches/${SettingsData.instance.uid}');
+    http.Response response = await http.get(matchesUrl); //eg /12313?gender=Male
+    if (response.statusCode != 200) {
+      return null; //TODO error handling
+    }
+
+    try{dynamic listProfiles = jsonDecode(response.body);
+    return listProfiles;
+    }
+    catch(e){
+      print('Error during parsing matches');
+      return [];
+    }
+
   }
 }

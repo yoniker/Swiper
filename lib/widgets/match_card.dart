@@ -711,6 +711,7 @@ class _PhotoViewState extends State<PhotoView> {
         widget.imageUrls![imageIndex],
         scale: 1.0,
         fit: BoxFit.cover,
+        //headers:{"Keep-Alive":"timeout=20"},
       );
       precacheImage(img.image, context);
       imagesList.add(img);

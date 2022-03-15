@@ -1,4 +1,5 @@
 import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:flutter/widgets.dart';
 import 'package:betabeta/services/networking.dart';
@@ -40,7 +41,7 @@ class MatchEngine extends ChangeNotifier {
       return;}
     if(SettingsData.instance.uid ==null || SettingsData.instance.uid.length<=0){return;}
       try {
-        itemsBeingGotten = NetworkHelper().getMatches();
+        itemsBeingGotten = NewNetworkService.instance.getMatches();
         dynamic matches = await itemsBeingGotten;
         if(matches==null){return;}
         List newProfiles = matches.map<Profile>((match){return Profile.fromServer(match);}).toList();
