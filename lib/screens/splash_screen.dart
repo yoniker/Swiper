@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen>
       duration: Duration(seconds: 2),
     );
     sizeAnimation =
-        Tween<double>(begin: 100.0, end: 160.0).animate(_controller);
+        Tween<double>(begin: 100.0, end: 140.0).animate(_controller);
     _controller.addListener(() {
       setState(() {});
     });
@@ -115,9 +115,11 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
             Container(
-              width: 200,
+              alignment: Alignment.center,
               child: Image.asset(
                 'assets/images/logo_text.png',
+                fit: BoxFit.contain,
+                width: 230,
               ),
             ),
           ],

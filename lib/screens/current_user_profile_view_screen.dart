@@ -58,7 +58,7 @@ class _CurrentUserProfileViewScreenState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               FloatingActionButton(
-                  elevation: 0,
+                  elevation: 30,
                   backgroundColor: Colors.transparent,
                   child: Icon(
                     FontAwesomeIcons.chevronLeft,
@@ -78,7 +78,7 @@ class _CurrentUserProfileViewScreenState
               SizedBox(
                 width: 100,
                 child: RoundedButton(
-                  elevation: 10,
+                  elevation: 15,
                   color: Colors.transparent,
                   name: 'Edit',
                   onTap: () async {

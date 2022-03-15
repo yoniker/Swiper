@@ -10,6 +10,7 @@ import 'package:betabeta/screens/full_image_screen.dart';
 import 'package:betabeta/screens/got_new_match_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
+import 'package:betabeta/screens/my_hobbies_screen.dart';
 import 'package:betabeta/screens/notification_screen.dart';
 import 'package:betabeta/screens/onboarding/about_me_screen.dart';
 import 'package:betabeta/screens/onboarding/birthday_screen.dart';
@@ -155,13 +156,11 @@ void main() async {
             page: () => PronounsEditScreen()),
         GetPage(
             name: OrientationEditScreen.routeName,
-            page: () => OrientationEditScreen())
+            page: () => OrientationEditScreen()),
+        GetPage(name: MyHobbiesScreen.routeName, page: () => MyHobbiesScreen())
       ],
-      title: 'Swiper MVP',
+      title: 'Voilà MVP',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.from(
-          colorScheme: ColorScheme.light()
-              .copyWith(primary: Colors.white, secondary: Colors.white70)),
     ),
   );
 }

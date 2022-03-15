@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // This is a list of colors and gradients.
@@ -85,8 +86,17 @@ const TextStyle smallBoldedCharStyle = TextStyle(
   fontWeight: FontWeight.w700,
 );
 
-const TextStyle smallBoldedTitleBlack =
-    TextStyle(fontFamily: 'Nunito', fontSize: 18, fontWeight: FontWeight.bold);
+const TextStyle smallBoldedTitleBlack = TextStyle(
+    fontFamily: 'Nunito',
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: Colors.black);
+
+const TextStyle smallTitleLighterBlack = TextStyle(
+    fontFamily: 'Nunito',
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    color: Colors.black54);
 
 const TextStyle mediumBoldedCharStyle = TextStyle(
   color: darkTextColor,

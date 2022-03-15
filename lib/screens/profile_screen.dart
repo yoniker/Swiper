@@ -60,7 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       padding: EdgeInsets.symmetric(vertical: 6.0),
       child: Clickable(
         onTap: () {
-          Navigator.pushNamed(context, CurrentUserProfileViewScreen.routeName);
+          Get.toNamed(CurrentUserProfileViewScreen.routeName);
           // Get.toNamed(
           //   CurrentUserProfileViewScreen.routeName,
           // );
@@ -69,7 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           // we want this page to stay updated so we use it this way.
           //
           // To avoid this we should consider using a StateManagement Library such as Provider or Bloc.
-          // _syncFromServer();
+          _syncFromServer();
         },
         child: Material(
           color: Colors.white,

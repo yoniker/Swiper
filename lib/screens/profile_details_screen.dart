@@ -1,5 +1,6 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/screens/my_hobbies_screen.dart';
 import 'package:betabeta/screens/orientation_edit_screen.dart';
 import 'package:betabeta/screens/pronouns_edit_screen.dart';
 import 'package:betabeta/services/new_networking.dart';
@@ -32,13 +33,11 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
     with MountedStateMixin {
   // --> All this information should be added to the data model.
   // this will be pre-filled with data from the server.
-  bool _incognitoMode = false;
+  bool _incognitoMode = true;
 
-  String? _aboutMe;
+  String? _jobTitle = 'Please add';
 
-  String? _jobTitle;
-
-  String? _school = 'Gordon';
+  String? _school = 'Please add';
 
   bool _uploadingImage =
       false; //Is image in the process of being uploaded? give user a visual cue
@@ -49,9 +48,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
 
     // this makes sure that if the state is not yet mounted, we don't end up calling setState
     // but instead push the function forward to the addPostFrameCallback function.
-    _aboutMe = SettingsData.instance.userDescription;
-    _jobTitle = SettingsData.instance.userDescription;
-
     _syncProfileImagesFromServer();
   }
 
@@ -61,11 +57,14 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
     super.dispose();
   }
 
-  TextEditingController heightController = TextEditingController();
+  TextEditingController heightController =
+      TextEditingController(text: "cm (ft)");
   TextEditingController genderController =
       TextEditingController(text: SettingsData.instance.userGender);
   TextEditingController orientationController =
       TextEditingController(text: SettingsData.instance.preferredGender);
+  TextEditingController aboutMeController =
+      TextEditingController(text: SettingsData.instance.userDescription);
   int ft = 0;
   int inches = 0;
   String? cm;
@@ -110,10 +109,12 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                   child: ImagesUploadwidget(),
                 ),
                 TextEditBlock2(
+                  keyboardType: TextInputType.multiline,
                   showCursor: true,
                   title: 'About me',
-                  maxLines: 4,
-                  initialValue: SettingsData.instance.userDescription,
+                  minLines: 4,
+                  maxLines: 14,
+                  controller: aboutMeController,
                   onType: (value) {
                     SettingsData.instance.userDescription = value;
                   },
@@ -129,7 +130,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                   },
                 ),
                 TextEditBlock2(
-                  title: 'Orientation',
+                  title: 'Interested in',
                   icon: FontAwesomeIcons.chevronRight,
                   readOnly: true,
                   controller: orientationController,
@@ -142,10 +143,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                 TextEditBlock2(
                   showCursor: true,
                   title: 'Job title',
-                  placeholder: 'Job title',
                   initialValue: _jobTitle,
                   onType: (val) {
-                    SettingsData.instance.userDescription = val;
+                    _jobTitle = val;
                   },
                 ),
                 TextEditBlock2(
@@ -170,9 +170,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                       ),
                       InputField(
                           icon: FontAwesomeIcons.chevronDown,
+                          readonly: true,
                           showCursor: false,
                           controller: heightController,
-                          keyboardType: TextInputType.number,
                           hintText: 'Height',
                           formatters: [
                             FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
@@ -195,27 +195,33 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                                         children: [
                                           Expanded(
                                             flex: 3,
-                                            child: CupertinoPicker(
-                                              scrollController:
-                                                  FixedExtentScrollController(
-                                                      initialItem: 63),
-                                              itemExtent: 50.0,
-                                              onSelectedItemChanged:
-                                                  (int index) {
-                                                setState(() {
-                                                  cm = (index + 91).toString();
-                                                  heightController.text =
-                                                      "$cm cm (${cmToFeet(index + 91)} ft)";
-                                                });
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.pop(context);
                                               },
-                                              children:
-                                                  List.generate(129, (index) {
-                                                return Center(
-                                                  child: Text(
-                                                      '${index + 91} cm (${cmToFeet(index + 91)})'),
-                                                );
-                                                return SizedBox();
-                                              }),
+                                              child: CupertinoPicker(
+                                                scrollController:
+                                                    FixedExtentScrollController(
+                                                        initialItem: 63),
+                                                itemExtent: 50.0,
+                                                onSelectedItemChanged:
+                                                    (int index) {
+                                                  setState(() {
+                                                    cm =
+                                                        (index + 91).toString();
+                                                    heightController.text =
+                                                        "$cm cm (${cmToFeet(index + 91)} ft)";
+                                                  });
+                                                },
+                                                children:
+                                                    List.generate(129, (index) {
+                                                  return Center(
+                                                    child: Text(
+                                                        '${index + 91} cm (${cmToFeet(index + 91)})'),
+                                                  );
+                                                  return SizedBox();
+                                                }),
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -226,6 +232,13 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen>
                           }),
                     ],
                   ),
+                ),
+                TextEditBlock2(
+                  title: 'My hobbies',
+                  readOnly: true,
+                  onTap: () {
+                    Get.toNamed(MyHobbiesScreen.routeName);
+                  },
                 ),
                 SizedBox(height: 20),
                 Theme(
