@@ -744,7 +744,7 @@ class _PhotoViewState extends State<PhotoView> {
   void _showNextImg() {
     // This prevents out of interval error.
     if (selectedPhotoIndex != null &&
-        selectedPhotoIndex != widget.imageUrls!.length - 1) {
+        selectedPhotoIndex! < imagesList.length - 1) {
       setState(() {
         // increase the photo index by one (1).
         selectedPhotoIndex = selectedPhotoIndex! + 1;
@@ -775,7 +775,7 @@ class _PhotoViewState extends State<PhotoView> {
     } else {
       setState(() {
         // set the photo index to the last index of the image List.
-        selectedPhotoIndex = widget.imageUrls!.length - 1;
+        selectedPhotoIndex = imagesList.length - 1;
       });
     }
     // notify the `onChanged(int)` Callback Listener.
