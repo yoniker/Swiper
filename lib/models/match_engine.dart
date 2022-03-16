@@ -12,7 +12,7 @@ class MatchEngine extends ChangeNotifier {
   Queue<Match> _matches;
   bool? addedMoreProfiles;
   Future? itemsBeingGotten; //See https://stackoverflow.com/questions/63402499/flutter-how-not-to-call-the-same-service-over-and-over/63402620?noredirect=1#comment112113319_63402620
-
+  MatchSearchStatus _serverMatchesSearchStatus = MatchSearchStatus.empty;
   MatchEngine._privateConstructor():_matches=Queue<Match>(),_previousMatches=Queue<Match>(){
         addMatchesIfNeeded();
       }
@@ -22,6 +22,7 @@ class MatchEngine extends ChangeNotifier {
 
   clear(){
     _matches.clear();
+    _serverMatchesSearchStatus = MatchSearchStatus.empty;
     notifyListeners();
     addMatchesIfNeeded();
   }
@@ -38,6 +39,9 @@ class MatchEngine extends ChangeNotifier {
     return _matches.elementAt(1);}
 
   Future<void> getMoreMatchesFromServer() async {
+    if(_serverMatchesSearchStatus==MatchSearchStatus.not_found){
+      print('Not getting more matches from server since nothing was found!');
+      return;}
     if (! (itemsBeingGotten == null && _matches.length < MINIMUM_CACHED_PROFILES)) {
       return;}
     if(SettingsData.instance.uid ==null || SettingsData.instance.uid.length<=0){return;}
@@ -45,10 +49,13 @@ class MatchEngine extends ChangeNotifier {
         itemsBeingGotten = NewNetworkService.instance.getMatches();
         dynamic matchesSearchResult = await itemsBeingGotten;
         if(matchesSearchResult==null){return;}
-
-        String status = matchesSearchResult[API_CONSTS.MATCHES_STATUS_KEY];
-        print('STATUS OF FINDING MATCHES IS $status');
-        dynamic matches = matchesSearchResult[API_CONSTS.MATCHES_KEY];
+        MatchSearchStatus newStatus = MatchSearchStatus.values.firstWhere((s) => s.name==matchesSearchResult[API_CONSTS.MATCHES_SEARCH_STATUS_KEY],orElse:()=>MatchSearchStatus.empty) ;
+        if (_serverMatchesSearchStatus!=newStatus){
+          _serverMatchesSearchStatus = newStatus;
+          notifyListeners();
+        }
+        print('STATUS OF FINDING MATCHES IS $_serverMatchesSearchStatus');
+        dynamic matches = matchesSearchResult[API_CONSTS.MATCHES_SEARCH_MATCHES_KEY];
         List newProfiles = matches.map<Profile>((match){return Profile.fromServer(match);}).toList();
         List<Match> newPotentialMatches=newProfiles.map<Match>((profile){return Match(profile: profile);}).toList();
         if (newPotentialMatches.length>0) {
@@ -61,6 +68,10 @@ class MatchEngine extends ChangeNotifier {
       }
 
 
+  }
+  
+  MatchSearchStatus get getServerSearchStatus{
+    return _serverMatchesSearchStatus;
   }
 
   void addMatchesIfNeeded(){

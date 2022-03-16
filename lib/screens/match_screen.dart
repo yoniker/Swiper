@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/screens/profile_screen.dart';
@@ -273,6 +274,18 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
     super.initState();
   }
 
+  Widget _widgetWhenNoCardsExist(){
+    if(MatchEngine.instance.getServerSearchStatus == MatchSearchStatus.not_found){
+      return Center(child: Text('FOR NITZAN : DO A REASONABLR "NO MORE MATCHES FOUND" WIDGET HERE'));
+    }
+
+
+    return SpinKitChasingDots(
+      size: 20.0,
+      color: Colors.blue,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // return a stack of cards well positioned.
@@ -321,10 +334,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
         }
 
         return topEngineMatches.isEmpty
-            ? SpinKitChasingDots(
-                size: 20.0,
-                color: Colors.blue,
-              )
+            ? _widgetWhenNoCardsExist()
             : Stack(
                 fit: StackFit.expand,
                 children: [
