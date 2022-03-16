@@ -5,7 +5,7 @@ import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/account_settings.dart';
 import 'package:betabeta/screens/notification_screen.dart';
-import 'package:betabeta/screens/profile_details_screen.dart';
+import 'package:betabeta/screens/profile_edit_screen.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/clickable.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
@@ -241,7 +241,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             onTap: () async {
                               // move to the profile screen.
                               await Get.toNamed(
-                                ProfileDetailsScreen.routeName,
+                                ProfileEditScreen.routeName,
                               );
                             },
                             child: Positioned(

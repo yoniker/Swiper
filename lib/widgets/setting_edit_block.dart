@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 /// Replacement for TextEditBlock for profile settings page.
 
-class TextEditBlock2 extends StatefulWidget {
-  TextEditBlock2(
+class TextEditBlock extends StatefulWidget {
+  TextEditBlock(
       {required this.title,
       this.initialValue,
       this.maxLines = 1,
@@ -32,10 +32,10 @@ class TextEditBlock2 extends StatefulWidget {
   void Function()? onTap;
 
   @override
-  _TextEditBlock2State createState() => _TextEditBlock2State();
+  _TextEditBlockState createState() => _TextEditBlockState();
 }
 
-class _TextEditBlock2State extends State<TextEditBlock2> {
+class _TextEditBlockState extends State<TextEditBlock> {
   @override
   Widget build(BuildContext context) {
     return Padding(

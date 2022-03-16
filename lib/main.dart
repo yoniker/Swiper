@@ -6,6 +6,7 @@ import 'package:betabeta/screens/conversations_screen.dart';
 import 'package:betabeta/screens/current_user_profile_view_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
 import 'package:betabeta/screens/account_settings.dart';
+import 'package:betabeta/screens/fitness_screen.dart';
 import 'package:betabeta/screens/full_image_screen.dart';
 import 'package:betabeta/screens/got_new_match_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
@@ -28,9 +29,10 @@ import 'package:betabeta/screens/onboarding/upload_images_onboarding_screen.dart
 import 'package:betabeta/screens/onboarding/verification_code_screen.dart';
 import 'package:betabeta/screens/onboarding/welcome_screen.dart';
 import 'package:betabeta/screens/orientation_edit_screen.dart';
-import 'package:betabeta/screens/profile_details_screen.dart';
+import 'package:betabeta/screens/profile_edit_screen.dart';
 import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/screens/pronouns_edit_screen.dart';
+import 'package:betabeta/screens/smoking_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
 import 'package:betabeta/screens/splash_screen.dart';
@@ -135,8 +137,7 @@ void main() async {
             name: NotificationScreen.routeName,
             page: () => NotificationScreen()),
         GetPage(
-            name: ProfileDetailsScreen.routeName,
-            page: () => ProfileDetailsScreen()),
+            name: ProfileEditScreen.routeName, page: () => ProfileEditScreen()),
         GetPage(
             name: SwipeSettingsScreen.routeName,
             page: () => SwipeSettingsScreen()),
@@ -157,7 +158,9 @@ void main() async {
         GetPage(
             name: OrientationEditScreen.routeName,
             page: () => OrientationEditScreen()),
-        GetPage(name: MyHobbiesScreen.routeName, page: () => MyHobbiesScreen())
+        GetPage(name: MyHobbiesScreen.routeName, page: () => MyHobbiesScreen()),
+        GetPage(name: FitnessScreen.routeName, page: () => FitnessScreen()),
+        GetPage(name: SmokingScreen.routeName, page: () => SmokingScreen())
       ],
       title: 'Voilà MVP',
       debugShowCheckedModeBanner: false,

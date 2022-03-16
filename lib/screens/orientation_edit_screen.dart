@@ -1,5 +1,7 @@
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/services/settings_model.dart';
+import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/enums.dart';
@@ -50,53 +52,60 @@ class _OrientationEditScreenState extends State<OrientationEditScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: const Text(
-                    'Interested in?',
-                    style: smallBoldedTitleBlack,
+            ConditionalParentWidget(
+              condition:
+                  ScreenSize.getSize(context) == ScreenSizeCategory.small,
+              conditionalBuilder: (Widget child) => FittedBox(
+                child: child,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: const Text(
+                      'Interested in?',
+                      style: titleStyle,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 30),
-                ChoiceButton(
-                  name: 'Men',
-                  onTap: () {
-                    setState(() {
-                      SettingsData.instance.preferredGender =
-                          PreferredGender.Men.name;
-                      whatWeShowText = 'We will only show you men';
-                    });
-                  },
-                  pressed: SettingsData.instance.preferredGender ==
-                      PreferredGender.Men.name,
-                ),
-                const SizedBox(height: 20),
-                ChoiceButton(
-                    name: 'Women',
+                  const SizedBox(height: 30),
+                  ChoiceButton(
+                    name: 'Men',
                     onTap: () {
                       setState(() {
                         SettingsData.instance.preferredGender =
-                            PreferredGender.Women.name;
-                        whatWeShowText = 'We will only show you women';
+                            PreferredGender.Men.name;
+                        whatWeShowText = 'We will only show you men';
                       });
                     },
                     pressed: SettingsData.instance.preferredGender ==
-                        PreferredGender.Women.name),
-                const SizedBox(height: 20),
-                ChoiceButton(
-                    name: 'Everyone',
-                    onTap: () {
-                      setState(() {
-                        SettingsData.instance.preferredGender =
-                            PreferredGender.Everyone.name;
-                        whatWeShowText = 'We will show you everyone';
-                      });
-                    },
-                    pressed: SettingsData.instance.preferredGender ==
-                        PreferredGender.Everyone.name),
-              ],
+                        PreferredGender.Men.name,
+                  ),
+                  const SizedBox(height: 20),
+                  ChoiceButton(
+                      name: 'Women',
+                      onTap: () {
+                        setState(() {
+                          SettingsData.instance.preferredGender =
+                              PreferredGender.Women.name;
+                          whatWeShowText = 'We will only show you women';
+                        });
+                      },
+                      pressed: SettingsData.instance.preferredGender ==
+                          PreferredGender.Women.name),
+                  const SizedBox(height: 20),
+                  ChoiceButton(
+                      name: 'Everyone',
+                      onTap: () {
+                        setState(() {
+                          SettingsData.instance.preferredGender =
+                              PreferredGender.Everyone.name;
+                          whatWeShowText = 'We will show you everyone';
+                        });
+                      },
+                      pressed: SettingsData.instance.preferredGender ==
+                          PreferredGender.Everyone.name),
+                ],
+              ),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

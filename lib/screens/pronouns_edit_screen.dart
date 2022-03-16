@@ -76,7 +76,7 @@ class _PronounsEditScreenState extends State<PronounsEditScreen> {
                                 child: Column(
                                   children: [
                                     ChoiceButton(
-                                        name: 'Woman',
+                                        name: 'Female',
                                         onTap: () {
                                           UnFocus();
                                           setState(() {
@@ -89,7 +89,7 @@ class _PronounsEditScreenState extends State<PronounsEditScreen> {
                                                 Gender.female.name),
                                     const SizedBox(height: 20),
                                     ChoiceButton(
-                                        name: 'Man',
+                                        name: 'Male',
                                         onTap: () {
                                           UnFocus();
                                           SettingsData.instance.userGender =
