@@ -1,3 +1,4 @@
+import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -42,8 +43,12 @@ class MatchEngine extends ChangeNotifier {
     if(SettingsData.instance.uid ==null || SettingsData.instance.uid.length<=0){return;}
       try {
         itemsBeingGotten = NewNetworkService.instance.getMatches();
-        dynamic matches = await itemsBeingGotten;
-        if(matches==null){return;}
+        dynamic matchesSearchResult = await itemsBeingGotten;
+        if(matchesSearchResult==null){return;}
+
+        String status = matchesSearchResult[API_CONSTS.MATCHES_STATUS_KEY];
+        print('STATUS OF FINDING MATCHES IS $status');
+        dynamic matches = matchesSearchResult[API_CONSTS.MATCHES_KEY];
         List newProfiles = matches.map<Profile>((match){return Profile.fromServer(match);}).toList();
         List<Match> newPotentialMatches=newProfiles.map<Match>((profile){return Match(profile: profile);}).toList();
         if (newPotentialMatches.length>0) {

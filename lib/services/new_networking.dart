@@ -179,8 +179,8 @@ class NewNetworkService {
       return null; //TODO error handling
     }
 
-    try{dynamic listProfiles = jsonDecode(response.body);
-    return listProfiles;
+    try{dynamic profilesSearchResult = jsonDecode(response.body);
+    return profilesSearchResult;
     }
     catch(e){
       print('Error during parsing matches');
