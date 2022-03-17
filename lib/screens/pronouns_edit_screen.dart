@@ -7,6 +7,7 @@ import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/onboarding/choice_button.dart';
 import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
+import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -60,7 +61,8 @@ class _PronounsEditScreenState extends State<PronounsEditScreen> {
                   child: SizedBox(
                     height: heightWithoutSafeArea - 38,
                     child: Padding(
-                      padding: const EdgeInsets.all(30),
+                      padding:
+                          const EdgeInsets.only(top: 30, left: 20, right: 20),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -171,6 +173,11 @@ class _PronounsEditScreenState extends State<PronounsEditScreen> {
                           ),
                           Column(
                             children: [
+                              RoundedButton(
+                                  name: 'Save',
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  }),
                               Theme(
                                 data: ThemeData(
                                     unselectedWidgetColor: Colors.black87),
@@ -192,7 +199,7 @@ class _PronounsEditScreenState extends State<PronounsEditScreen> {
                                             value;
                                       }
                                     }),
-                              ),
+                              )
                             ],
                           ),
                         ],

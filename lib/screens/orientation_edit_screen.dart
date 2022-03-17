@@ -2,6 +2,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
+import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/enums.dart';
@@ -48,7 +49,7 @@ class _OrientationEditScreenState extends State<OrientationEditScreen> {
       ),
       backgroundColor: kBackroundThemeColor,
       body: Padding(
-        padding: const EdgeInsets.all(30.0),
+        padding: const EdgeInsets.only(top: 20.0, left: 20, right: 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -108,8 +109,16 @@ class _OrientationEditScreenState extends State<OrientationEditScreen> {
               ),
             ),
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                RoundedButton(
+                    name: 'Save',
+                    onTap: () {
+                      Navigator.pop(context);
+                    }),
+                SizedBox(
+                  height: 5,
+                ),
                 FittedBox(
                   child: Row(
                     children: [

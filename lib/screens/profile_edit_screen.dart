@@ -1,5 +1,8 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/screens/children_screen.dart';
+import 'package:betabeta/screens/covid_screen.dart';
+import 'package:betabeta/screens/drinking_screen.dart';
 import 'package:betabeta/screens/fitness_screen.dart';
 import 'package:betabeta/screens/my_hobbies_screen.dart';
 import 'package:betabeta/screens/orientation_edit_screen.dart';
@@ -218,6 +221,13 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                   },
                 ),
                 ProfileEditBlock2(
+                  title: 'Drinking',
+                  icon: FontAwesomeIcons.wineGlassAlt,
+                  onTap: () {
+                    Get.toNamed(DrinkingScreen.routeName);
+                  },
+                ),
+                ProfileEditBlock2(
                   title: 'Interested in',
                   icon: FontAwesomeIcons.users,
                   value: orientationController.text,
@@ -225,6 +235,20 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                     await Get.toNamed(OrientationEditScreen.routeName);
                     orientationController.text =
                         SettingsData.instance.preferredGender;
+                  },
+                ),
+                ProfileEditBlock2(
+                  title: 'Children',
+                  icon: FontAwesomeIcons.babyCarriage,
+                  onTap: () {
+                    Get.toNamed(KidsScreen.routeName);
+                  },
+                ),
+                ProfileEditBlock2(
+                  title: 'Covid Vaccine',
+                  icon: FontAwesomeIcons.syringe,
+                  onTap: () {
+                    Get.toNamed(CovidScreen.routeName);
                   },
                 ),
                 ProfileEditBlock2(
@@ -247,46 +271,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                   },
                 ),
                 SizedBox(height: 20),
-                Theme(
-                  data: ThemeData(
-                    unselectedWidgetColor: Colors.black87,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.grey[350],
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Show my profile',
-                              style: smallBoldedTitleBlack,
-                            ),
-                            CupertinoSwitch(
-                              value: _incognitoMode,
-                              activeColor: colorBlend01,
-                              onChanged: (value) {
-                                setState(
-                                  () {
-                                    // TODO:// Add required Function.
-                                    // Alert user to make sure he is intentionally changing his visibiliry status.
-
-                                    // set "_showInDiscovery" to the currrent switch value.
-                                    _incognitoMode = value;
-                                  },
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),

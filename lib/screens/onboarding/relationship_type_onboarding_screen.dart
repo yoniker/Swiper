@@ -29,6 +29,7 @@ class _RelationshipTypeOnboardingScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: kBackroundThemeColor,
       body: SafeArea(
         child: OnboardingColumn(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -5,6 +5,7 @@ import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/onboarding/choice_button.dart';
 import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
+import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
 
 enum Smoking { Regularly, Socially, Never }
@@ -56,80 +57,76 @@ class _SmokingScreen extends State<SmokingScreen> {
                   child: SizedBox(
                     height: heightWithoutSafeArea - 38,
                     child: Padding(
-                      padding: const EdgeInsets.all(30),
+                      padding: const EdgeInsets.all(20),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ConditionalParentWidget(
-                                condition: ScreenSize.getSize(context) ==
-                                    ScreenSizeCategory.small,
-                                conditionalBuilder: (Widget child) => FittedBox(
-                                  child: child,
+                          ConditionalParentWidget(
+                            condition: ScreenSize.getSize(context) ==
+                                ScreenSizeCategory.small,
+                            conditionalBuilder: (Widget child) => FittedBox(
+                              child: child,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Do you smoke?',
+                                  style: titleStyle,
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Do you smoke?',
-                                      style: titleStyle,
-                                    ),
-                                    SizedBox(
-                                      height: 30,
-                                    ),
-                                    ChoiceButton(
-                                        name: 'Regularly',
-                                        onTap: () {
-                                          setState(() {
-                                            UnFocus();
-                                            smokingLevel !=
-                                                    Smoking.Regularly.name
-                                                ? smokingLevel =
-                                                    Smoking.Regularly.name
-                                                : smokingLevel = null;
-                                          });
-                                        },
-                                        pressed: smokingLevel ==
-                                            Smoking.Regularly.name),
-                                    const SizedBox(height: 20),
-                                    ChoiceButton(
-                                        name: 'Socially',
-                                        onTap: () {
-                                          setState(() {
-                                            UnFocus();
-                                            smokingLevel !=
-                                                    Smoking.Socially.name
-                                                ? smokingLevel =
-                                                    Smoking.Socially.name
-                                                : smokingLevel = null;
-                                          });
-                                        },
-                                        pressed: smokingLevel ==
-                                            Smoking.Socially.name),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    ChoiceButton(
-                                      name: 'Never',
-                                      onTap: () {
-                                        setState(() {
-                                          UnFocus();
-                                          smokingLevel != Smoking.Never.name
-                                              ? smokingLevel =
-                                                  Smoking.Never.name
-                                              : smokingLevel = null;
-                                        });
-                                      },
-                                      pressed:
-                                          smokingLevel == Smoking.Never.name,
-                                    )
-                                  ],
+                                SizedBox(
+                                  height: 30,
                                 ),
-                              ),
-                            ],
+                                ChoiceButton(
+                                    name: 'Regularly',
+                                    onTap: () {
+                                      setState(() {
+                                        UnFocus();
+                                        smokingLevel != Smoking.Regularly.name
+                                            ? smokingLevel =
+                                                Smoking.Regularly.name
+                                            : smokingLevel = null;
+                                      });
+                                    },
+                                    pressed:
+                                        smokingLevel == Smoking.Regularly.name),
+                                const SizedBox(height: 20),
+                                ChoiceButton(
+                                    name: 'Socially',
+                                    onTap: () {
+                                      setState(() {
+                                        UnFocus();
+                                        smokingLevel != Smoking.Socially.name
+                                            ? smokingLevel =
+                                                Smoking.Socially.name
+                                            : smokingLevel = null;
+                                      });
+                                    },
+                                    pressed:
+                                        smokingLevel == Smoking.Socially.name),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                ChoiceButton(
+                                  name: 'Never',
+                                  onTap: () {
+                                    setState(() {
+                                      UnFocus();
+                                      smokingLevel != Smoking.Never.name
+                                          ? smokingLevel = Smoking.Never.name
+                                          : smokingLevel = null;
+                                    });
+                                  },
+                                  pressed: smokingLevel == Smoking.Never.name,
+                                )
+                              ],
+                            ),
                           ),
+                          RoundedButton(
+                              name: 'Save',
+                              onTap: () {
+                                Navigator.pop(context);
+                              })
                         ],
                       ),
                     ),

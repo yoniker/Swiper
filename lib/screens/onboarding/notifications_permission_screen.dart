@@ -17,9 +17,9 @@ class NotificationsPermissionScreen extends StatefulWidget {
 class _NotificationsState extends State<NotificationsPermissionScreen> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Container(
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
           width: double.infinity,
           height: double.infinity,
           color: Color(0xFFE8EBF1),
@@ -33,7 +33,8 @@ class _NotificationsState extends State<NotificationsPermissionScreen> {
                     children: [
                       SizedBox(
                         height: 140,
-                        child: Image.asset('assets/onboarding/images/pushnote.gif'),
+                        child: Image.asset(
+                            'assets/onboarding/images/pushnote.gif'),
                       ),
                       Text(
                         'Enable notifications',
@@ -52,20 +53,23 @@ class _NotificationsState extends State<NotificationsPermissionScreen> {
                   children: [
                     RoundedButton(
                       name: 'Enable notifications',
-                      onTap: () async{
-                        if(Platform.isIOS){
-                          var result =
-                              await NotificationsController.instance.requestIOSPermissions();
-                          print('RESULT OF GETTING NOTIFICATIONS PERMISSIONS IS $result');
+                      onTap: () async {
+                        if (Platform.isIOS) {
+                          var result = await NotificationsController.instance
+                              .requestIOSPermissions();
+                          print(
+                              'RESULT OF GETTING NOTIFICATIONS PERMISSIONS IS $result');
                         }
-                        Get.offAllNamed(OnboardingFlowController.nextRoute(NotificationsPermissionScreen.routeName));
+                        Get.offAllNamed(OnboardingFlowController.nextRoute(
+                            NotificationsPermissionScreen.routeName));
                       },
                     ),
                     SizedBox(height: 20),
                     GestureDetector(
                       onTap: () {
                         //TODO user refused notifications,save if needed
-                        Get.offAllNamed(OnboardingFlowController.nextRoute(NotificationsPermissionScreen.routeName));
+                        Get.offAllNamed(OnboardingFlowController.nextRoute(
+                            NotificationsPermissionScreen.routeName));
                       },
                       child: Text(
                         'Not now',

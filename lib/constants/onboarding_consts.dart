@@ -15,14 +15,30 @@ const TextStyle kSmallInfoStyle =
     TextStyle(color: Colors.black54, fontWeight: FontWeight.w500, fontSize: 15);
 const TextStyle kSmallInfoStyleAlert =
     TextStyle(color: Colors.red, fontWeight: FontWeight.w600, fontSize: 16);
-const TextStyle kSmallInfoStyleWhite =
-    TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 15);
+const TextStyle kSmallInfoStyleWhite = TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.w500,
+    fontSize: 15,
+    shadows: [
+      Shadow(
+        blurRadius: 17.0,
+        color: Colors.black,
+        offset: Offset(-2.0, 2.0),
+      ),
+    ]);
 const TextStyle kSmallInfoStyleUnderline = TextStyle(
     color: Colors.black54,
     fontWeight: FontWeight.w500,
     fontSize: 15,
     decoration: TextDecoration.underline);
 const TextStyle kSmallInfoStyleUnderlineWhite = TextStyle(
+    shadows: [
+      Shadow(
+        blurRadius: 17.0,
+        color: Colors.black,
+        offset: Offset(-2.0, 2.0),
+      ),
+    ],
     color: Colors.white70,
     fontWeight: FontWeight.w500,
     decoration: TextDecoration.underline);

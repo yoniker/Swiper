@@ -8,18 +8,18 @@ import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
 
-enum Fitness { Active, Occasionally, Never }
+enum Drinking { Frequently, Socially, Never }
 
-class FitnessScreen extends StatefulWidget {
-  static const String routeName = '/fitness_screen';
-  const FitnessScreen({Key? key}) : super(key: key);
+class DrinkingScreen extends StatefulWidget {
+  static const String routeName = '/drinking_screen';
+  const DrinkingScreen({Key? key}) : super(key: key);
 
   @override
-  _FitnessScreen createState() => _FitnessScreen();
+  _DrinkingScreen createState() => _DrinkingScreen();
 }
 
-class _FitnessScreen extends State<FitnessScreen> {
-  String? fitLevel;
+class _DrinkingScreen extends State<DrinkingScreen> {
+  String? drinkingLevel;
 
   void UnFocus() {
     FocusScopeNode currentFocus = FocusScope.of(context);
@@ -45,7 +45,7 @@ class _FitnessScreen extends State<FitnessScreen> {
               hasTopPadding: true,
               hasBackButton: true,
               showAppLogo: false,
-              title: 'Fitness',
+              title: 'Drinking',
             ),
             body: SafeArea(
               child: RawScrollbar(
@@ -74,39 +74,41 @@ class _FitnessScreen extends State<FitnessScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'How often do you work out?',
+                                      'Do you smoke?',
                                       style: titleStyle,
                                     ),
                                     SizedBox(
                                       height: 30,
                                     ),
                                     ChoiceButton(
-                                        name: 'Active',
+                                        name: 'Frequently',
                                         onTap: () {
                                           setState(() {
                                             UnFocus();
-                                            fitLevel != Fitness.Active.name
-                                                ? fitLevel = Fitness.Active.name
-                                                : fitLevel = null;
+                                            drinkingLevel !=
+                                                    Drinking.Frequently.name
+                                                ? drinkingLevel =
+                                                    Drinking.Frequently.name
+                                                : drinkingLevel = null;
                                           });
                                         },
-                                        pressed:
-                                            fitLevel == Fitness.Active.name),
+                                        pressed: drinkingLevel ==
+                                            Drinking.Frequently.name),
                                     const SizedBox(height: 20),
                                     ChoiceButton(
-                                        name: 'Occasionally',
+                                        name: 'Socially',
                                         onTap: () {
                                           setState(() {
                                             UnFocus();
-                                            fitLevel !=
-                                                    Fitness.Occasionally.name
-                                                ? fitLevel =
-                                                    Fitness.Occasionally.name
-                                                : fitLevel = null;
+                                            drinkingLevel !=
+                                                    Drinking.Socially.name
+                                                ? drinkingLevel =
+                                                    Drinking.Socially.name
+                                                : drinkingLevel = null;
                                           });
                                         },
-                                        pressed: fitLevel ==
-                                            Fitness.Occasionally.name),
+                                        pressed: drinkingLevel ==
+                                            Drinking.Socially.name),
                                     const SizedBox(
                                       height: 20,
                                     ),
@@ -115,17 +117,18 @@ class _FitnessScreen extends State<FitnessScreen> {
                                       onTap: () {
                                         setState(() {
                                           UnFocus();
-                                          fitLevel != Fitness.Never.name
-                                              ? fitLevel = Fitness.Never.name
-                                              : fitLevel = null;
+                                          drinkingLevel != Drinking.Never.name
+                                              ? drinkingLevel =
+                                                  Drinking.Never.name
+                                              : drinkingLevel = null;
                                         });
                                       },
-                                      pressed: fitLevel == Fitness.Never.name,
+                                      pressed:
+                                          drinkingLevel == Drinking.Never.name,
                                     )
                                   ],
                                 ),
                               ),
-                              const SizedBox(height: 20),
                             ],
                           ),
                           RoundedButton(

@@ -31,14 +31,13 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
   final earliestDate = DateTime(1900, 1);
   final currentDate = DateTime.now();
 
-
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      backgroundColor: kBackroundThemeColor,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: OnboardingColumn(

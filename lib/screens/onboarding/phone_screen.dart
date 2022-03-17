@@ -19,10 +19,10 @@ class _PhoneScreenState extends State<PhoneScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: OnboardingColumn(
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+        child: OnboardingColumn(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
@@ -46,7 +46,8 @@ class _PhoneScreenState extends State<PhoneScreen> {
                 PhoneNumberCollector(
                   //TODO Yoni add phone login logic
                   onTap: () {
-                    Get.offAllNamed(OnboardingFlowController.nextRoute(PhoneScreen.routeName));
+                    Get.offAllNamed(OnboardingFlowController.nextRoute(
+                        PhoneScreen.routeName));
                   },
                 )
               ],

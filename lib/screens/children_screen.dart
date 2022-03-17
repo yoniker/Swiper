@@ -8,18 +8,18 @@ import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
 
-enum Fitness { Active, Occasionally, Never }
+enum kids { NoKids, HaveKids, WantSomeday, DontWant, NotSure }
 
-class FitnessScreen extends StatefulWidget {
-  static const String routeName = '/fitness_screen';
-  const FitnessScreen({Key? key}) : super(key: key);
+class KidsScreen extends StatefulWidget {
+  static const String routeName = '/kids_screen';
+  const KidsScreen({Key? key}) : super(key: key);
 
   @override
-  _FitnessScreen createState() => _FitnessScreen();
+  _KidsScreen createState() => _KidsScreen();
 }
 
-class _FitnessScreen extends State<FitnessScreen> {
-  String? fitLevel;
+class _KidsScreen extends State<KidsScreen> {
+  String? kidsChoice;
 
   void UnFocus() {
     FocusScopeNode currentFocus = FocusScope.of(context);
@@ -45,7 +45,7 @@ class _FitnessScreen extends State<FitnessScreen> {
               hasTopPadding: true,
               hasBackButton: true,
               showAppLogo: false,
-              title: 'Fitness',
+              title: 'Children',
             ),
             body: SafeArea(
               child: RawScrollbar(
@@ -74,53 +74,84 @@ class _FitnessScreen extends State<FitnessScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'How often do you work out?',
+                                      'Do you have plans for children?',
                                       style: titleStyle,
                                     ),
                                     SizedBox(
                                       height: 30,
                                     ),
                                     ChoiceButton(
-                                        name: 'Active',
+                                        name: 'Have & no more',
                                         onTap: () {
                                           setState(() {
                                             UnFocus();
-                                            fitLevel != Fitness.Active.name
-                                                ? fitLevel = Fitness.Active.name
-                                                : fitLevel = null;
+                                            kidsChoice != kids.NoKids.name
+                                                ? kidsChoice = kids.NoKids.name
+                                                : kidsChoice = null;
                                           });
                                         },
                                         pressed:
-                                            fitLevel == Fitness.Active.name),
+                                            kidsChoice == kids.NoKids.name),
                                     const SizedBox(height: 20),
                                     ChoiceButton(
-                                        name: 'Occasionally',
+                                        name: 'Have & want more',
                                         onTap: () {
                                           setState(() {
                                             UnFocus();
-                                            fitLevel !=
-                                                    Fitness.Occasionally.name
-                                                ? fitLevel =
-                                                    Fitness.Occasionally.name
-                                                : fitLevel = null;
+                                            kidsChoice != kids.HaveKids.name
+                                                ? kidsChoice =
+                                                    kids.HaveKids.name
+                                                : kidsChoice = null;
                                           });
                                         },
-                                        pressed: fitLevel ==
-                                            Fitness.Occasionally.name),
+                                        pressed:
+                                            kidsChoice == kids.HaveKids.name),
                                     const SizedBox(
                                       height: 20,
                                     ),
                                     ChoiceButton(
-                                      name: 'Never',
+                                      name: 'Want someday',
                                       onTap: () {
                                         setState(() {
                                           UnFocus();
-                                          fitLevel != Fitness.Never.name
-                                              ? fitLevel = Fitness.Never.name
-                                              : fitLevel = null;
+                                          kidsChoice != kids.WantSomeday.name
+                                              ? kidsChoice =
+                                                  kids.WantSomeday.name
+                                              : kidsChoice = null;
                                         });
                                       },
-                                      pressed: fitLevel == Fitness.Never.name,
+                                      pressed:
+                                          kidsChoice == kids.WantSomeday.name,
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    ChoiceButton(
+                                      name: "Don't want",
+                                      onTap: () {
+                                        setState(() {
+                                          UnFocus();
+                                          kidsChoice != kids.DontWant.name
+                                              ? kidsChoice = kids.DontWant.name
+                                              : kidsChoice = null;
+                                        });
+                                      },
+                                      pressed: kidsChoice == kids.DontWant.name,
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    ChoiceButton(
+                                      name: 'Not sure',
+                                      onTap: () {
+                                        setState(() {
+                                          UnFocus();
+                                          kidsChoice != kids.NotSure.name
+                                              ? kidsChoice = kids.NotSure.name
+                                              : kidsChoice = null;
+                                        });
+                                      },
+                                      pressed: kidsChoice == kids.NotSure.name,
                                     )
                                   ],
                                 ),
