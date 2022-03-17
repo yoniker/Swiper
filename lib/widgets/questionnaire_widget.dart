@@ -27,55 +27,66 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     var padding = MediaQuery.of(context).viewPadding;
     double heightWithoutSafeArea = height - padding.top - padding.bottom;
 
-    return SizedBox(
-      height: heightWithoutSafeArea - 38,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ConditionalParentWidget(
-              condition:
-                  ScreenSize.getSize(context) == ScreenSizeCategory.small,
-              conditionalBuilder: (Widget child) => FittedBox(
-                child: child,
-              ),
+    return SafeArea(
+      child: RawScrollbar(
+        isAlwaysShown: true,
+        thumbColor: Colors.black54,
+        thickness: 5,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: SizedBox(
+            height: heightWithoutSafeArea - 38,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  if (widget.headline != null)
-                    Text(
-                      widget.headline!,
-                      style: titleStyle,
+                  ConditionalParentWidget(
+                    condition:
+                        ScreenSize.getSize(context) == ScreenSizeCategory.small,
+                    conditionalBuilder: (Widget child) => FittedBox(
+                      child: child,
                     ),
-                  SizedBox(
-                    height: 30,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (widget.headline != null)
+                          Text(
+                            widget.headline!,
+                            style: titleStyle,
+                          ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Column(
+                          children: widget.choices
+                              .map((h) => Padding(
+                                    padding:
+                                        const EdgeInsets.only(bottom: 20.0),
+                                    child: ChoiceButton(
+                                      name: '$h',
+                                      onTap: () {
+                                        setState(() {
+                                          widget.choice = h;
+                                        });
+                                      },
+                                      pressed: widget.choice == h,
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                      ],
+                    ),
                   ),
-                  Column(
-                    children: widget.choices
-                        .map((h) => Padding(
-                              padding: const EdgeInsets.only(bottom: 20.0),
-                              child: ChoiceButton(
-                                name: '$h',
-                                onTap: () {
-                                  setState(() {
-                                    widget.choice = h;
-                                  });
-                                },
-                                pressed: widget.choice == h,
-                              ),
-                            ))
-                        .toList(),
-                  ),
+                  RoundedButton(
+                      name: 'Save',
+                      onTap: () {
+                        Navigator.pop(context);
+                      })
                 ],
               ),
             ),
-            RoundedButton(
-                name: 'Save',
-                onTap: () {
-                  Navigator.pop(context);
-                })
-          ],
+          ),
         ),
       ),
     );

@@ -18,11 +18,11 @@ class _NotificationsState extends State<NotificationsPermissionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kBackroundThemeColor,
       body: SafeArea(
         child: Container(
           width: double.infinity,
           height: double.infinity,
-          color: Color(0xFFE8EBF1),
           child: Padding(
             padding: const EdgeInsets.all(30),
             child: Column(

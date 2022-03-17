@@ -17,7 +17,6 @@ class OnboardingColumn extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
-      decoration: kThemeColor,
       child: Stack(children: [
         Center(
           child: SizedBox(
