@@ -35,7 +35,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: SizedBox(
-            height: heightWithoutSafeArea - 38,
+            height: heightWithoutSafeArea - 50,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(

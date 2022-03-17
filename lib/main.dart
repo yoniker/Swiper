@@ -170,6 +170,7 @@ void main() async {
       ],
       title: 'Voilà MVP',
       debugShowCheckedModeBanner: false,
+      theme: ThemeData.light(),
     ),
   );
 }

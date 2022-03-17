@@ -1,5 +1,6 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/screens/conversations_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/voila_page.dart';
@@ -84,6 +85,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       fit: StackFit.expand,
       children: [
         Scaffold(
+          backgroundColor: kBackroundThemeColor,
           body: _body(),
           extendBody: true,
           resizeToAvoidBottomInset: true,

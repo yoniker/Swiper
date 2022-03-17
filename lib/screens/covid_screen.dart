@@ -36,32 +36,13 @@ class _CovidScreenState extends State<CovidScreen> {
               showAppLogo: false,
               title: 'Covid Vaccine',
             ),
-            body: RawScrollbar(
-              isAlwaysShown: true,
-              thumbColor: Colors.black54,
-              thickness: 5,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: SizedBox(
-                  height: heightWithoutSafeArea - 38,
-                  child: Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        QuestionnaireWidget(
-                          headline: 'Test headline',
-                          choices: [
-                            'Fully vaccinated',
-                            'Partially vaccinated',
-                            'Not vaccinated'
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+            body: QuestionnaireWidget(
+              headline: 'Test headline',
+              choices: [
+                'Fully vaccinated',
+                'Partially vaccinated',
+                'Not vaccinated'
+              ],
             ),
           );
         });
