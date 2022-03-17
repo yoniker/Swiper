@@ -35,7 +35,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: SizedBox(
-            height: heightWithoutSafeArea - 50,
+            height: height * 0.92,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -67,7 +67,9 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
                                       name: '$h',
                                       onTap: () {
                                         setState(() {
-                                          widget.choice = h;
+                                          widget.choice != h
+                                              ? widget.choice = h
+                                              : widget.choice = null;
                                         });
                                       },
                                       pressed: widget.choice == h,

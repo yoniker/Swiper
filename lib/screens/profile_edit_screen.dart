@@ -3,6 +3,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/screens/children_screen.dart';
 import 'package:betabeta/screens/covid_screen.dart';
 import 'package:betabeta/screens/drinking_screen.dart';
+import 'package:betabeta/screens/education_screen.dart';
 import 'package:betabeta/screens/fitness_screen.dart';
 import 'package:betabeta/screens/my_hobbies_screen.dart';
 import 'package:betabeta/screens/orientation_edit_screen.dart';
@@ -225,6 +226,13 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                   icon: FontAwesomeIcons.wineGlassAlt,
                   onTap: () {
                     Get.toNamed(DrinkingScreen.routeName);
+                  },
+                ),
+                ProfileEditBlock2(
+                  title: 'Education',
+                  icon: FontAwesomeIcons.userGraduate,
+                  onTap: () {
+                    Get.toNamed(EducationScreen.routeName);
                   },
                 ),
                 ProfileEditBlock2(

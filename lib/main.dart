@@ -7,6 +7,7 @@ import 'package:betabeta/screens/conversations_screen.dart';
 import 'package:betabeta/screens/covid_screen.dart';
 import 'package:betabeta/screens/current_user_profile_view_screen.dart';
 import 'package:betabeta/screens/drinking_screen.dart';
+import 'package:betabeta/screens/education_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
 import 'package:betabeta/screens/account_settings.dart';
 import 'package:betabeta/screens/fitness_screen.dart';
@@ -42,6 +43,7 @@ import 'package:betabeta/screens/splash_screen.dart';
 import 'package:betabeta/screens/voila_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -73,6 +75,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark));
   runApp(
     GetMaterialApp(
       home: SplashScreen(),
@@ -166,11 +171,11 @@ void main() async {
         GetPage(name: SmokingScreen.routeName, page: () => SmokingScreen()),
         GetPage(name: KidsScreen.routeName, page: () => KidsScreen()),
         GetPage(name: DrinkingScreen.routeName, page: () => DrinkingScreen()),
-        GetPage(name: CovidScreen.routeName, page: () => CovidScreen())
+        GetPage(name: CovidScreen.routeName, page: () => CovidScreen()),
+        GetPage(name: EducationScreen.routeName, page: () => EducationScreen())
       ],
       title: 'Voilà MVP',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(),
     ),
   );
 }
