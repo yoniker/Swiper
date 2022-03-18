@@ -6,6 +6,7 @@ import 'package:betabeta/screens/drinking_screen.dart';
 import 'package:betabeta/screens/education_screen.dart';
 import 'package:betabeta/screens/fitness_screen.dart';
 import 'package:betabeta/screens/my_hobbies_screen.dart';
+import 'package:betabeta/screens/my_pets_screen.dart';
 import 'package:betabeta/screens/orientation_edit_screen.dart';
 import 'package:betabeta/screens/pronouns_edit_screen.dart';
 import 'package:betabeta/screens/smoking_screen.dart';
@@ -75,6 +76,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
   int ft = 0;
   int inches = 0;
   String? cm;
+  String? zodiac;
+  String? religion;
 
   cmToFeet(centimeters) {
     double height = centimeters / 2.54;
@@ -87,6 +90,47 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
     int inchesTotal = (ft * 12) + inches;
     cm = (inchesTotal * 2.54).toStringAsPrecision(5);
     heightController.text = cm!;
+  }
+
+  choicesPopUp(List<String> choices, String? controller) {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    showCupertinoModalPopup(
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              height: 300,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: CupertinoPicker(
+                        scrollController: FixedExtentScrollController(
+                            initialItem: choices.length ~/ 2),
+                        itemExtent: 50.0,
+                        onSelectedItemChanged: (int index) {
+                          setState(() {
+                            controller = choices[index].toString();
+                          });
+                        },
+                        children:
+                            choices.map((e) => Center(child: Text(e))).toList(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   @override
@@ -208,6 +252,54 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                   },
                 ),
                 ProfileEditBlock2(
+                  title: 'Religion',
+                  icon: FontAwesomeIcons.prayingHands,
+                  onTap: () {
+                    choicesPopUp([
+                      'Atheism/Agnosticism',
+                      'Bahá’í',
+                      'Buddhism',
+                      'Christianity',
+                      'Confucianism',
+                      'Druze',
+                      'Gnosticism',
+                      'Hinduism',
+                      'Islam',
+                      'Jainism',
+                      'Judaism',
+                      'Rastafarianism',
+                      'Shinto',
+                      'Sikhism',
+                      'Zoroastrianism',
+                      'Traditional African Religions',
+                      'African Diaspora Religions',
+                      'Indigenous American Religions',
+                      'Other'
+                    ], religion);
+                  },
+                ),
+                ProfileEditBlock2(
+                  title: 'Zodiac',
+                  icon: FontAwesomeIcons.starAndCrescent,
+                  value: zodiac != null ? zodiac : null,
+                  onTap: () {
+                    choicesPopUp([
+                      'Capricorn',
+                      'Aquarius',
+                      'Pisces',
+                      'Aries',
+                      'Taurus',
+                      'Gemini',
+                      'Cancer',
+                      'Leo',
+                      'Virgo',
+                      'Libra',
+                      'Scorpio',
+                      'Sagittarius'
+                    ], zodiac);
+                  },
+                ),
+                ProfileEditBlock2(
                   title: 'Fitness',
                   icon: FontAwesomeIcons.dumbbell,
                   onTap: () {
@@ -259,18 +351,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                     Get.toNamed(CovidScreen.routeName);
                   },
                 ),
-                ProfileEditBlock2(
-                  title: 'Location',
-                  icon: FontAwesomeIcons.globeAmericas,
-                  value: SettingsData.instance.locationDescription
-                      .split(',')
-                      .first,
-                  onTap: () {
-                    print(SettingsData.instance.locationDescription
-                        .split(',')
-                        .first);
-                  },
-                ),
                 TextEditBlock(
                   title: 'My hobbies',
                   readOnly: true,
@@ -278,7 +358,13 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                     Get.toNamed(MyHobbiesScreen.routeName);
                   },
                 ),
-                SizedBox(height: 20),
+                TextEditBlock(
+                  title: 'My pets',
+                  readOnly: true,
+                  onTap: () {
+                    Get.toNamed(MyPetsScreen.routeName);
+                  },
+                )
               ],
             ),
           ),

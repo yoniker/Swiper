@@ -10,6 +10,7 @@ class ProfileEditBlock2 extends StatefulWidget {
     required this.title,
     this.value,
     this.onType,
+    this.showArrow = true,
     this.iconColor = Colors.black,
     this.onTap,
     this.icon,
@@ -18,6 +19,7 @@ class ProfileEditBlock2 extends StatefulWidget {
   final IconData? icon;
   final Color iconColor;
   final String? value;
+  final bool showArrow;
   void Function(String)? onType;
   void Function()? onTap;
 
@@ -68,13 +70,14 @@ class _TextEditBlockState extends State<ProfileEditBlock2> {
                 SizedBox(
                   width: 5,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Icon(
-                    FontAwesomeIcons.chevronRight,
-                    color: Colors.black54,
-                  ),
-                )
+                if (widget.showArrow)
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Icon(
+                      FontAwesomeIcons.chevronRight,
+                      color: Colors.black54,
+                    ),
+                  )
               ],
             )
           ],

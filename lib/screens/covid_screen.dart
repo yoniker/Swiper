@@ -30,6 +30,7 @@ class _CovidScreenState extends State<CovidScreen> {
         notifier: SettingsData.instance,
         builder: (context) {
           return Scaffold(
+            backgroundColor: backgroundThemeColor,
             appBar: CustomAppBar(
               hasTopPadding: true,
               hasBackButton: true,
@@ -37,7 +38,6 @@ class _CovidScreenState extends State<CovidScreen> {
               title: 'Covid Vaccine',
             ),
             body: QuestionnaireWidget(
-              headline: 'Test headline',
               choices: [
                 'Fully vaccinated',
                 'Partially vaccinated',
