@@ -73,6 +73,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
       TextEditingController(text: SettingsData.instance.preferredGender);
   TextEditingController aboutMeController =
       TextEditingController(text: SettingsData.instance.userDescription);
+  TextEditingController schoolController =
+      TextEditingController(text: SettingsData.instance.school);
   int ft = 0;
   int inches = 0;
   String? cm;
@@ -173,7 +175,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                 TextEditBlock(
                   showCursor: true,
                   title: 'Job title',
-                  initialValue: _jobTitle,
                   onType: (val) {
                     _jobTitle = val;
                   },
@@ -181,9 +182,9 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                 TextEditBlock(
                   showCursor: true,
                   title: 'School',
-                  initialValue: _school,
+                  controller: schoolController,
                   onType: (val) {
-                    _school = val;
+                    SettingsData.instance.school = val;
                   },
                 ),
                 ProfileEditBlock2(
