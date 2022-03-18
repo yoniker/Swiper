@@ -22,10 +22,10 @@ class ProfileEditBlock2 extends StatefulWidget {
   void Function()? onTap;
 
   @override
-  _TextEditBlockState createState() => _TextEditBlockState();
+  _TextEditBlock2State createState() => _TextEditBlock2State();
 }
 
-class _TextEditBlockState extends State<ProfileEditBlock2> {
+class _TextEditBlock2State extends State<ProfileEditBlock2> {
   @override
   Widget build(BuildContext context) {
     return Padding(
