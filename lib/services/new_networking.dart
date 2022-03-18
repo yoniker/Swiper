@@ -147,6 +147,7 @@ class NewNetworkService {
       SettingsData.LATITUDE_KEY: settings.latitude.toString(),
       SettingsData.SEARCH_DISTANCE_ENABLED_KEY:settings.searchDistanceEnabled.toString(),
       SettingsData.GET_DUMMY_PROFILES_KEY:settings.showDummyProfiles.toString(),
+      SettingsData.JOB_TITLE_KEY:settings.jobTitle,
       SettingsData.SCHOOL_KEY :settings.school,
       SettingsData.RELIGION_KEY :settings.religion,
       SettingsData.ZODIAC_KEY : settings.zodiac,
