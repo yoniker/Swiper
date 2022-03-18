@@ -40,6 +40,7 @@ class SettingsData extends ChangeNotifier{
   static const String LOCATION_DESCRIPTION_KEY = 'location_description';
   static const String SEARCH_DISTANCE_ENABLED_KEY = 'search_distance_enabled';
   static const String GET_DUMMY_PROFILES_KEY = 'show_dummy_profiles';
+  static const String JOB_TITLE_KEY = 'job_title';
   static const String SCHOOL_KEY = 'school';
   static const String RELIGION_KEY = 'religion';
   static const String ZODIAC_KEY = 'zodiac';
@@ -94,7 +95,8 @@ class SettingsData extends ChangeNotifier{
   String _smoking = '';
   String _drinking = '';
   String _education = '';
-  String  _children ='';
+  String  _children = '';
+  String _jobTitle = '';
   String _covid_vaccine='';
   List<String>  _hobbies=[];
   List<String> _pets = [];
@@ -151,6 +153,7 @@ class SettingsData extends ChangeNotifier{
     _hobbies=sharedPreferences.getStringList(HOBBIES_KEY) ??_hobbies;
     _pets = sharedPreferences.getStringList(PETS_KEY) ??_pets;
     _heightInCm = sharedPreferences.getInt(HEIGHT_IN_CM_KEY) ?? _heightInCm;
+    _jobTitle = sharedPreferences.getString(JOB_TITLE_KEY)??_jobTitle;
     _readFromShared = true;
 
     return;
@@ -545,6 +548,16 @@ class SettingsData extends ChangeNotifier{
     savePreferences(COVID_VACCINE_KEY, newCovidVaccine,resetMatchEngine: false);
   }
 
+  String get jobTitle{
+    return _jobTitle;
+  }
+
+  set jobTitle(String newJobTitle){
+    if(_jobTitle==newJobTitle){return;}
+    _jobTitle = newJobTitle;
+    savePreferences(JOB_TITLE_KEY, newJobTitle,resetMatchEngine: false);
+  }
+
   List<String> get hobbies{
     return _hobbies;
   }
@@ -574,10 +587,6 @@ class SettingsData extends ChangeNotifier{
     _heightInCm = newHeightInCm;
     savePreferences(HEIGHT_IN_CM_KEY, newHeightInCm,resetMatchEngine: false);
   }
-
-
-
-
 
 
   bool get searchDistanceEnabled{
