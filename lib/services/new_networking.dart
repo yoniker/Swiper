@@ -147,6 +147,18 @@ class NewNetworkService {
       SettingsData.LATITUDE_KEY: settings.latitude.toString(),
       SettingsData.SEARCH_DISTANCE_ENABLED_KEY:settings.searchDistanceEnabled.toString(),
       SettingsData.GET_DUMMY_PROFILES_KEY:settings.showDummyProfiles.toString(),
+      SettingsData.SCHOOL_KEY :settings.school,
+      SettingsData.RELIGION_KEY :settings.religion,
+      SettingsData.ZODIAC_KEY : settings.zodiac,
+      SettingsData.FITNESS_KEY : settings.fitness,
+      SettingsData.SMOKING_KEY :settings.smoking,
+      SettingsData.DRINKING_KEY : settings.drinking,
+      SettingsData.EDUCATION_KEY :settings.education,
+      SettingsData.CHILDREN_KEY : settings.children,
+      SettingsData.COVID_VACCINE_KEY : settings.covid_vaccine,
+      SettingsData.HOBBIES_KEY: settings.hobbies.toString(),
+      SettingsData.PETS_KEY :settings.pets.toString(),
+      SettingsData.HEIGHT_IN_CM_KEY:settings.heightInCm.toString(),
 
     };
     String encoded = jsonEncode(toSend);

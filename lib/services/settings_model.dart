@@ -2,9 +2,12 @@ import 'dart:async';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/userid.dart';
 import 'package:betabeta/services/networking.dart';
+import 'package:betabeta/services/new_networking.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:collection/collection.dart';
+
 
 class SettingsData extends ChangeNotifier{
   //Some consts to facilitate share preferences access
@@ -37,6 +40,20 @@ class SettingsData extends ChangeNotifier{
   static const String LOCATION_DESCRIPTION_KEY = 'location_description';
   static const String SEARCH_DISTANCE_ENABLED_KEY = 'search_distance_enabled';
   static const String GET_DUMMY_PROFILES_KEY = 'show_dummy_profiles';
+  static const String SCHOOL_KEY = 'school';
+  static const String RELIGION_KEY = 'religion';
+  static const String ZODIAC_KEY = 'zodiac';
+  static const String FITNESS_KEY = 'fitness';
+  static const String SMOKING_KEY = 'smoking';
+  static const String DRINKING_KEY = 'drinking';
+  static const String EDUCATION_KEY = 'education';
+  static const String CHILDREN_KEY = 'children';
+  static const String COVID_VACCINE_KEY = 'covid_vaccine';
+  static const String HOBBIES_KEY = 'hobbies';
+  static const String PETS_KEY = 'pets';
+  static const String HEIGHT_IN_CM_KEY = 'height_in_cm';
+
+
   static const _debounceSettingsTime = Duration(seconds: 2); //Debounce time such that we notify listeners
   String _uid = '';
   String _name = '';
@@ -69,6 +86,19 @@ class SettingsData extends ChangeNotifier{
   bool _searchDistanceEnabled = false;
   bool _showDummyProfiles = false;
   List<String> _profileImagesUrls = [];
+
+  String _school = '';
+  String _religion = '';
+  String _zodiac = '';
+  String _fitness ='';
+  String _smoking = '';
+  String _drinking = '';
+  String _education = '';
+  String  _children ='';
+  String _covid_vaccine='';
+  List<String>  _hobbies=[];
+  List<String> _pets = [];
+  int _heightInCm = 0;
 
   SettingsData._privateConstructor(){
 
@@ -108,6 +138,19 @@ class SettingsData extends ChangeNotifier{
     _radius = sharedPreferences.getDouble(RADIUS_KEY)??_radius;
     _showDummyProfiles = sharedPreferences.getBool(GET_DUMMY_PROFILES_KEY)??_showDummyProfiles;
     _registered = sharedPreferences.getBool(REGISTERED_KEY) ?? _registered;
+
+    _school = sharedPreferences.getString(SCHOOL_KEY) ??_school;
+    _religion = sharedPreferences.getString(RELIGION_KEY) ??_religion;
+    _zodiac = sharedPreferences.getString(ZODIAC_KEY) ??_zodiac;
+    _fitness =sharedPreferences.getString(FITNESS_KEY) ??_fitness;
+    _smoking = sharedPreferences.getString(SMOKING_KEY) ??_smoking;
+    _drinking = sharedPreferences.getString(DRINKING_KEY) ??_drinking;
+    _education = sharedPreferences.getString(EDUCATION_KEY) ??_education;
+    _children =sharedPreferences.getString(CHILDREN_KEY) ??_children;
+    _covid_vaccine=sharedPreferences.getString(COVID_VACCINE_KEY) ??_covid_vaccine;
+    _hobbies=sharedPreferences.getStringList(HOBBIES_KEY) ??_hobbies;
+    _pets = sharedPreferences.getStringList(PETS_KEY) ??_pets;
+    _heightInCm = sharedPreferences.getInt(HEIGHT_IN_CM_KEY) ?? _heightInCm;
     _readFromShared = true;
 
     return;
@@ -141,7 +184,7 @@ class SettingsData extends ChangeNotifier{
   set name(String newName){
     if(_name==newName){return;}
     _name = newName;
-    savePreferences(NAME_KEY, newName);
+    savePreferences(NAME_KEY, newName,resetMatchEngine: false);
   }
 
 
@@ -152,7 +195,7 @@ class SettingsData extends ChangeNotifier{
   set facebookId(String newFacebookId){
     if(_facebookId == newFacebookId){return;}
     _facebookId = newFacebookId;
-    savePreferences(FACEBOOK_ID_KEY, newFacebookId);
+    savePreferences(FACEBOOK_ID_KEY, newFacebookId,resetMatchEngine: false);
   }
 
 
@@ -164,7 +207,7 @@ class SettingsData extends ChangeNotifier{
   set facebookProfileImageUrl(String newUrl){
     if(newUrl==_facebookProfileImageUrl) {return;}
     _facebookProfileImageUrl = newUrl;
-    savePreferences(FACEBOOK_PROFILE_IMAGE_URL_KEY, newUrl);
+    savePreferences(FACEBOOK_PROFILE_IMAGE_URL_KEY, newUrl,resetMatchEngine: false);
   }
 
 
@@ -264,7 +307,7 @@ class SettingsData extends ChangeNotifier{
   set lastSync(double newLastSync){
     if(newLastSync==_lastSync) {return;}
     _lastSync = newLastSync;
-    savePreferences(LAST_SYNC_KEY, newLastSync,sendServer: false);
+    savePreferences(LAST_SYNC_KEY, newLastSync,sendServer: false,resetMatchEngine: false);
   }
   
   UserId get id{
@@ -278,7 +321,7 @@ class SettingsData extends ChangeNotifier{
   set fcmToken(String newToken){
     if(newToken==_fcmToken){return;}
     _fcmToken = newToken;
-    savePreferences(FCM_TOKEN_KEY, newToken);
+    savePreferences(FCM_TOKEN_KEY, newToken,resetMatchEngine: false);
   }
 
   bool get registered{
@@ -288,7 +331,7 @@ class SettingsData extends ChangeNotifier{
   set registered(bool newRegistered){
     if(newRegistered==_registered) {return;}
     _registered = newRegistered;
-    savePreferences(REGISTERED_KEY, newRegistered,sendServer: false);
+    savePreferences(REGISTERED_KEY, newRegistered,sendServer: false,resetMatchEngine: false);
   }
 
   String get uid{
@@ -308,7 +351,7 @@ class SettingsData extends ChangeNotifier{
   set facebookBirthday(String newFacebookBirthday){
     if(newFacebookBirthday==_facebookBirthday){return;}
     _facebookBirthday = newFacebookBirthday;
-    savePreferences(FACEBOOK_BIRTHDAY_KEY, newFacebookBirthday);
+    savePreferences(FACEBOOK_BIRTHDAY_KEY, newFacebookBirthday,resetMatchEngine: false);
   }
 
   String get email{
@@ -318,7 +361,7 @@ class SettingsData extends ChangeNotifier{
   set email(String newEmail){
     if(_email==newEmail){return;}
     _email = newEmail;
-    savePreferences(EMAIL_KEY, newEmail);
+    savePreferences(EMAIL_KEY, newEmail,resetMatchEngine: false);
   }
 
   String get userGender{
@@ -328,7 +371,7 @@ class SettingsData extends ChangeNotifier{
   set userGender(String newUserGender){
     if(newUserGender==_userGender){return;}
     _userGender = newUserGender;
-    savePreferences(USER_GENDER_KEY, newUserGender);
+    savePreferences(USER_GENDER_KEY, newUserGender,resetMatchEngine: false);
   }
 
   String get userDescription{
@@ -340,7 +383,7 @@ class SettingsData extends ChangeNotifier{
       return;
     }
     _userDescription = newUserDescription;
-    savePreferences(USER_DESCRIPTION_KEY, newUserDescription);
+    savePreferences(USER_DESCRIPTION_KEY, newUserDescription,resetMatchEngine: false);
   }
 
   bool get showUserGender{
@@ -350,7 +393,7 @@ class SettingsData extends ChangeNotifier{
   set showUserGender(bool newShowUserGender){
     if(newShowUserGender==_showUserGender){return;}
     _showUserGender = newShowUserGender;
-    savePreferences(SHOW_USER_GENDER_KEY, newShowUserGender);
+    savePreferences(SHOW_USER_GENDER_KEY, newShowUserGender,resetMatchEngine: false);
   }
 
   String get userBirthday{
@@ -360,7 +403,7 @@ class SettingsData extends ChangeNotifier{
   set userBirthday(String newUserBirthday){
     if(_userBirthday==newUserBirthday){return;}
     _userBirthday = newUserBirthday;
-    savePreferences(USER_BIRTHDAY_KEY, newUserBirthday);
+    savePreferences(USER_BIRTHDAY_KEY, newUserBirthday,resetMatchEngine: false);
   }
 
   String get relationshipType{
@@ -370,7 +413,7 @@ class SettingsData extends ChangeNotifier{
   set relationshipType(String newRelationshipType){
     if(_relationshipType==newRelationshipType){return;}
     _relationshipType = newRelationshipType;
-    savePreferences(USER_RELATIONSHIP_TYPE_KEY, newRelationshipType);
+    savePreferences(USER_RELATIONSHIP_TYPE_KEY, newRelationshipType,resetMatchEngine: false);
   }
   double get longitude{
     return _longitude;
@@ -379,7 +422,7 @@ class SettingsData extends ChangeNotifier{
   set longitude(double newLongitude){
     if(_longitude==newLongitude){return;}
     _longitude = newLongitude;
-    savePreferences(LONGITUDE_KEY, newLongitude);
+    savePreferences(LONGITUDE_KEY, newLongitude,resetMatchEngine: false);
   }
   double get latitude{
     return _latitude;
@@ -388,7 +431,7 @@ class SettingsData extends ChangeNotifier{
   set latitude(double newLatitude){
     if(_latitude==newLatitude){return;}
     _latitude = newLatitude;
-    savePreferences(LATITUDE_KEY, newLatitude);
+    savePreferences(LATITUDE_KEY, newLatitude,resetMatchEngine: false);
   }
 
   List<String> get profileImagesUrls{
@@ -397,7 +440,7 @@ class SettingsData extends ChangeNotifier{
 
   set profileImagesUrls(List<String> newUrlsList){
      _profileImagesUrls = newUrlsList;
-     savePreferences(PROFILE_IMAGES_KEY, newUrlsList,sendServer: false);
+     savePreferences(PROFILE_IMAGES_KEY, newUrlsList,sendServer: false,resetMatchEngine: false);
 
   }
 
@@ -407,8 +450,135 @@ class SettingsData extends ChangeNotifier{
 
   set locationDescription(String newLocationDescription){
     _locationDescription = newLocationDescription;
-    savePreferences(LOCATION_DESCRIPTION_KEY, newLocationDescription,sendServer: false);
+    savePreferences(LOCATION_DESCRIPTION_KEY, newLocationDescription,sendServer: false,resetMatchEngine: false);
   }
+
+
+  String get school{
+    return _school;
+  }
+
+  set school(String newSchool){
+    if(_school==newSchool){return;}
+    _school = newSchool;
+    savePreferences(SCHOOL_KEY, newSchool,resetMatchEngine: false);
+  }
+
+
+  String get religion{
+    return _religion;
+  }
+
+  set religion(String newReligion){
+    if(_religion==newReligion){return;}
+    _religion = newReligion;
+    savePreferences(RELIGION_KEY, newReligion,resetMatchEngine: false);
+  }
+
+  String get zodiac{
+    return _zodiac;
+  }
+
+  set zodiac(String newZodiac){
+    if(_zodiac==newZodiac){return;}
+    _zodiac = newZodiac;
+    savePreferences(ZODIAC_KEY, newZodiac,resetMatchEngine: false);
+  }
+
+  String get fitness{
+    return _fitness;
+  }
+
+  set fitness(String newFitness){
+    if(_fitness==newFitness){return;}
+    _fitness = newFitness;
+    savePreferences(FITNESS_KEY, newFitness,resetMatchEngine: false);
+  }
+
+  String get smoking{
+    return _smoking;
+  }
+
+  set smoking(String newSmoking){
+    if(_smoking==newSmoking){return;}
+    _smoking = newSmoking;
+    savePreferences(SMOKING_KEY, newSmoking,resetMatchEngine: false);
+  }
+
+  String get drinking{
+    return _drinking;
+  }
+
+  set drinking(String newDrinking){
+    if(_drinking==newDrinking){return;}
+    _drinking = newDrinking;
+    savePreferences(DRINKING_KEY, newDrinking,resetMatchEngine: false);
+  }
+
+  String get education{
+    return _education;
+  }
+
+  set education(String newEducation){
+    if(_education==newEducation){return;}
+    _education = newEducation;
+    savePreferences(EDUCATION_KEY, newEducation,resetMatchEngine: false);
+  }
+
+  String get children{
+    return _children;
+  }
+
+  set children(String newChildren){
+    if(_children==newChildren){return;}
+    _children = newChildren;
+    savePreferences(CHILDREN_KEY, newChildren,resetMatchEngine: false);
+  }
+
+  String get covid_vaccine{
+    return _covid_vaccine;
+  }
+
+  set covid_vaccine(String newCovidVaccine){
+    if(_covid_vaccine==newCovidVaccine){return;}
+    _covid_vaccine = newCovidVaccine;
+    savePreferences(COVID_VACCINE_KEY, newCovidVaccine,resetMatchEngine: false);
+  }
+
+  List<String> get hobbies{
+    return _hobbies;
+  }
+
+  set hobbies(List<String> newHobbies){
+    if(ListEquality().equals(newHobbies,_hobbies)) {return;}
+    _hobbies = newHobbies;
+    savePreferences(HOBBIES_KEY, newHobbies,resetMatchEngine: false);
+  }
+
+  List<String> get pets{
+    return _pets;
+  }
+
+  set pets(List<String> newPets){
+    if(ListEquality().equals(newPets,_pets)) {return;}
+    _pets = newPets;
+    savePreferences(PETS_KEY, newPets,resetMatchEngine: false);
+  }
+
+  int get heightInCm{
+    return _heightInCm;
+  }
+
+  set heightInCm(int newHeightInCm){
+    if(newHeightInCm==_heightInCm){return;}
+    _heightInCm = newHeightInCm;
+    savePreferences(HEIGHT_IN_CM_KEY, newHeightInCm,resetMatchEngine: false);
+  }
+
+
+
+
+
 
   bool get searchDistanceEnabled{
     return _searchDistanceEnabled;
@@ -420,13 +590,13 @@ class SettingsData extends ChangeNotifier{
   }
 
 
-  void savePreferences(String sharedPreferencesKey, dynamic newValue,{bool sendServer = true}) async {
+  void savePreferences(String sharedPreferencesKey, dynamic newValue,{bool sendServer = true,bool resetMatchEngine=true}) async {
     if(sendServer){
       if (_debounce?.isActive ?? false) {_debounce!.cancel();}
       _debounce = Timer(_debounceSettingsTime, () async{
         if(_uid.length>0){
-        await NetworkHelper().postUserSettings();}
-        MatchEngine.instance.clear();
+        await NewNetworkService.instance.postUserSettings();}
+        if(resetMatchEngine) {MatchEngine.instance.clear();}
       });
     }
     notifyListeners();
