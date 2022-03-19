@@ -1,5 +1,4 @@
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -55,17 +54,21 @@ class _TextEditBlock2State extends State<ProfileEditBlock2> {
             ),
             Row(
               children: [
-                widget.value == null
+                widget.value == 0 || widget.value == '' || widget.value == null
                     ? Text(
                         'Add',
                         style: smallTitleLighterBlack,
                       )
-                    : Text(
-                        widget.value!,
-                        style: smallBoldedTitleBlack,
-                        maxLines: 1,
-                        softWrap: false,
-                        overflow: TextOverflow.ellipsis,
+                    : SizedBox(
+                        width: 150,
+                        child: Text(
+                          widget.value!,
+                          textAlign: TextAlign.end,
+                          style: smallBoldedTitleBlack,
+                          maxLines: 1,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                 SizedBox(
                   width: 5,

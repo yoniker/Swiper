@@ -1,18 +1,24 @@
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/screen_size.dart';
-import 'package:betabeta/services/settings_model.dart';
-import 'package:betabeta/widgets/custom_app_bar.dart';
-import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/onboarding/choice_button.dart';
 import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
 
 class QuestionnaireWidget extends StatefulWidget {
-  QuestionnaireWidget({required this.choices, this.headline});
+  QuestionnaireWidget(
+      {required this.choices,
+      this.headline,
+      this.choice,
+      this.promotes,
+      this.alwaysPressed = false});
   final List<String> choices;
   final String? headline;
+  bool alwaysPressed;
   String? choice;
+  String promote = '';
+  List<String>? promotes;
 
   @override
   State<QuestionnaireWidget> createState() => _QuestionnaireWidgetState();
@@ -66,11 +72,20 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
                                     child: ChoiceButton(
                                       name: '$h',
                                       onTap: () {
-                                        setState(() {
-                                          widget.choice != h
-                                              ? widget.choice = h
-                                              : widget.choice = null;
-                                        });
+                                        widget.alwaysPressed != true
+                                            ? setState(
+                                                () {
+                                                  (widget.choice != h
+                                                      ? widget.choice = h
+                                                      : widget.choice = '');
+                                                },
+                                              )
+                                            : setState(() {
+                                                (widget.choice = h);
+                                                widget.promote = widget
+                                                        .promotes![
+                                                    widget.choices.indexOf(h)];
+                                              });
                                       },
                                       pressed: widget.choice == h,
                                     ),
@@ -80,11 +95,30 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
                       ],
                     ),
                   ),
-                  RoundedButton(
-                      name: 'Save',
-                      onTap: () {
-                        Navigator.pop(context);
-                      })
+                  Column(
+                    children: [
+                      RoundedButton(
+                        name: 'Save',
+                        onTap: () {
+                          Navigator.pop(context, widget.choice);
+                        },
+                      ),
+                      if (widget.promote != '')
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: FittedBox(
+                            child: Row(
+                              children: [
+                                const Icon(Icons.remove_red_eye_rounded,
+                                    color: Colors.black54),
+                                const SizedBox(width: 10),
+                                Text(widget.promote, style: kSmallInfoStyle),
+                              ],
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ],
               ),
             ),
