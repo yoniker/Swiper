@@ -39,7 +39,7 @@ class _CovidScreenState extends State<CovidScreen> {
                 'Partially vaccinated',
                 'Not vaccinated'
               ],
-              choice: SettingsData.instance.covid_vaccine,
+              initialChoice: SettingsData.instance.covid_vaccine,
             ),
           );
         });

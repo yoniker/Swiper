@@ -29,7 +29,7 @@ class _EducationScreenState extends State<EducationScreen> {
             ),
             body: QuestionnaireWidget(
               choices: ['High School', 'Undergraduate', 'Postgraduate'],
-              choice: SettingsData.instance.education,
+              initialChoice: SettingsData.instance.education,
             ),
           );
         });

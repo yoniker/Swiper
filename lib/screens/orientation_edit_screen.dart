@@ -53,7 +53,7 @@ class _OrientationEditScreenState extends State<OrientationEditScreen> {
         headline: 'Interested in?',
         promotes: promotes,
         alwaysPressed: true,
-        choice: SettingsData.instance.preferredGender,
+        initialChoice: SettingsData.instance.preferredGender,
       ),
     );
   }

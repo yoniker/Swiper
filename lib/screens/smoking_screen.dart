@@ -30,7 +30,9 @@ class _SmokingScreen extends State<SmokingScreen> {
             body: QuestionnaireWidget(
               headline: 'Do you smoke?',
               choices: ['Regularly', 'Socially', 'Never'],
-              choice: SettingsData.instance.smoking,
+              initialChoice: SettingsData.instance.smoking,
+              onValueChanged: (newSmokingVal){SettingsData.instance.smoking = newSmokingVal;},
+
             ),
           );
         });

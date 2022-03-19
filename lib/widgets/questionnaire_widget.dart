@@ -5,26 +5,41 @@ import 'package:betabeta/widgets/onboarding/choice_button.dart';
 import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class QuestionnaireWidget extends StatefulWidget {
   QuestionnaireWidget(
       {required this.choices,
+        this.initialChoice,
+        this.onValueChanged,
+        this.onSave,
       this.headline,
-      this.choice,
       this.promotes,
       this.alwaysPressed = false});
   final List<String> choices;
   final String? headline;
-  bool alwaysPressed;
-  String? choice;
-  String promote = '';
-  List<String>? promotes;
+  final void Function(String)? onValueChanged;
+  final void Function()? onSave;
+  final bool alwaysPressed;
+  final String? initialChoice;
+
+  final List<String>? promotes;
 
   @override
   State<QuestionnaireWidget> createState() => _QuestionnaireWidgetState();
 }
 
+
+
 class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
+  String? currentUserChoice;
+  String promote = '';
+
+  @override
+  void initState() {
+    currentUserChoice = widget.initialChoice;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     //height (with SafeArea)
@@ -66,28 +81,33 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
                         ),
                         Column(
                           children: widget.choices
-                              .map((h) => Padding(
+                              .map((choiceTitle) => Padding(
                                     padding:
                                         const EdgeInsets.only(bottom: 20.0),
                                     child: ChoiceButton(
-                                      name: '$h',
+                                      name: '$choiceTitle',
                                       onTap: () {
                                         widget.alwaysPressed != true
                                             ? setState(
                                                 () {
-                                                  (widget.choice != h
-                                                      ? widget.choice = h
-                                                      : widget.choice = '');
-                                                },
-                                              )
+                                                  if(currentUserChoice!=choiceTitle)
+
+                                                  {currentUserChoice = choiceTitle;
+
+                                                  }
+                                                  else {currentUserChoice = '';};
+                                                })
+
                                             : setState(() {
-                                                (widget.choice = h);
-                                                widget.promote = widget
+                                                (currentUserChoice = choiceTitle);
+                                                promote = widget
                                                         .promotes![
-                                                    widget.choices.indexOf(h)];
+                                                    widget.choices.indexOf(choiceTitle)];
                                               });
+
+                                        if(currentUserChoice!=null) {widget.onValueChanged?.call(currentUserChoice!);}
                                       },
-                                      pressed: widget.choice == h,
+                                      pressed: currentUserChoice == choiceTitle,
                                     ),
                                   ))
                               .toList(),
@@ -100,10 +120,15 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
                       RoundedButton(
                         name: 'Save',
                         onTap: () {
-                          Navigator.pop(context, widget.choice);
+                          if(widget.onSave!=null){
+                            widget.onSave!.call();
+                          }
+                          else{
+                            Get.back();
+                          }
                         },
                       ),
-                      if (widget.promote != '')
+                      if (promote != '')
                         Padding(
                           padding: const EdgeInsets.only(top: 5.0),
                           child: FittedBox(
@@ -112,7 +137,7 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
                                 const Icon(Icons.remove_red_eye_rounded,
                                     color: Colors.black54),
                                 const SizedBox(width: 10),
-                                Text(widget.promote, style: kSmallInfoStyle),
+                                Text(promote, style: kSmallInfoStyle),
                               ],
                             ),
                           ),

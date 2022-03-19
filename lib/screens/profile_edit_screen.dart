@@ -262,9 +262,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                   title: 'Smoking',
                   icon: FontAwesomeIcons.smoking,
                   value: SettingsData.instance.smoking,
-                  onTap: () async {
-                    SettingsData.instance.smoking =
-                        await Get.toNamed(SmokingScreen.routeName);
+                  onTap: ()  {
+                    Get.toNamed(SmokingScreen.routeName);
                   },
                 ),
                 ProfileEditBlock2(

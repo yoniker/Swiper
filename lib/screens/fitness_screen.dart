@@ -30,7 +30,7 @@ class _FitnessScreen extends State<FitnessScreen> {
               body: QuestionnaireWidget(
                 headline: 'How often do you work out?',
                 choices: ['Active', 'Occasionally', 'Never'],
-                choice: SettingsData.instance.fitness,
+                initialChoice: SettingsData.instance.fitness,
               ));
         });
   }

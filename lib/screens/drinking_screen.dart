@@ -30,7 +30,7 @@ class _DrinkingScreen extends State<DrinkingScreen> {
             body: QuestionnaireWidget(
               headline: 'How often do you drink?',
               choices: ['Frequently', 'Socially', 'Never'],
-              choice: SettingsData.instance.drinking,
+              initialChoice: SettingsData.instance.drinking,
             ),
           );
         });
