@@ -12,15 +12,15 @@ class ContactsWidget extends StatefulWidget {
 }
 
 class _ContactsWidgetState extends State<ContactsWidget> {
-  List<InfoUser> users = ChatData().users;
+  List<InfoUser> users = ChatData.instance.users;
 
   void listenContacts(){setState(() {
-    users = ChatData().users;
+    users = ChatData.instance.users;
   });}
 
   @override
   void initState() {
-    ChatData().addListener(listenContacts); //TODO add an option to listen only to users box changes on the ChatData API
+    ChatData.instance.addListener(listenContacts); //TODO add an option to listen only to users box changes on the ChatData API
     super.initState();
   }
 
@@ -76,7 +76,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
 
   @override
   void dispose() {
-    ChatData().removeListener(listenContacts);
+    ChatData.instance.removeListener(listenContacts);
     super.dispose();
   }
 }

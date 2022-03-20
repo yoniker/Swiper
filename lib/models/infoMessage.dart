@@ -47,7 +47,7 @@ class InfoMessage {
         receipts = InfoMessageReceipt.fromJson(json);
 
   types.TextMessage toUiMessage(){
-    InfoUser? author = ChatData().getUserById(userId);
+    InfoUser? author = ChatData.instance.getUserById(userId);
     if(author==null){
       author = InfoUser(imageUrl: '', name: '', uid: userId,changedTime: DateTime.now());
     }

@@ -16,23 +16,22 @@ class ConversationsPreviewWidget extends StatefulWidget {
 
 class _ConversationsPreviewWidgetState
     extends State<ConversationsPreviewWidget> {
-  List<InfoConversation> conversations = ChatData().conversations;
+  List<InfoConversation> conversations = ChatData.instance.conversations;
 
   void listenConversations() {
     setState(() {
-      conversations = ChatData().conversations;
+      conversations = ChatData.instance.conversations;
     });
   }
 
   @override
   void initState() {
-    ChatData().addListener(listenConversations);
+    ChatData.instance.addListener(listenConversations);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print('dor');
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
@@ -51,9 +50,9 @@ class _ConversationsPreviewWidgetState
               itemBuilder: (context, index) {
                 InfoConversation conversation = conversations[index];
                 InfoMessage lastMessage = conversation.messages[0];
-                InfoUser? collocutor = ChatData()
-                    .getUserById(ChatData().getCollocutorId(conversation));
-                bool messageWasRead = ChatData().conversationRead(conversation);
+                InfoUser? collocutor = ChatData.instance
+                    .getUserById(ChatData.instance.getCollocutorId(conversation));
+                bool messageWasRead = ChatData.instance.conversationRead(conversation);
                 return GestureDetector(
                   onTap: () {
                     if (collocutor != null) {
@@ -143,7 +142,7 @@ class _ConversationsPreviewWidgetState
 
   @override
   void dispose() {
-    ChatData().removeListener(listenConversations);
+    ChatData.instance.removeListener(listenConversations);
     super.dispose();
   }
 }

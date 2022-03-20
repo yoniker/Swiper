@@ -65,10 +65,10 @@ Future<bool> setupInteractedMessage() async {
 
 void _handleMessageOpenedFromNotification(RemoteMessage message) async {
   final InfoMessage messageReceived = InfoMessage.fromJson(message.data);
-  await ChatData().syncWithServer();
+  await ChatData.instance.syncWithServer();
   //ChatData().addMessageToDB(messageReceived);
   if (messageReceived.userId != SettingsData.instance.uid) {
-    InfoUser? sender = ChatData().getUserById(messageReceived.userId);
+    InfoUser? sender = ChatData.instance.getUserById(messageReceived.userId);
     AppStateInfo.instance.latestTabOnMainNavigation =
         MainNavigationScreen.CONVERSATIONS_PAGE_INDEX;
     Get.offAllNamed(MainNavigationScreen.routeName);
@@ -338,10 +338,8 @@ class ChatData extends ChangeNotifier {
       }
     }
   }
+  static ChatData get instance => _instance;
 
-  factory ChatData() {
-    return _instance;
-  }
   final Stream<dynamic> _fcmStream = createStream();
   final Box<InfoConversation> conversationsBox =
       Hive.box(CONVERSATIONS_BOXNAME);

@@ -38,9 +38,9 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     await prefs.remove('facebook_profile_image_url');
     await prefs.remove('preferredGender');
     SettingsData.instance.name = '';
-    await ChatData().cancelSubscriptions();
+    await ChatData.instance.cancelSubscriptions();
     SettingsData.instance.uid = '';
-    await ChatData().deleteDB();
+    await ChatData.instance.deleteDB();
     await FirebaseAuth.instance.signOut();
     Get.offAllNamed(SplashScreen.routeName);
   }
