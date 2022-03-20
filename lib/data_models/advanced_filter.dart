@@ -14,7 +14,7 @@ class AdvancedFilter {
 
   /// The index of the [AdvancedFilter] instance
   ///
-  /// This is `1` for [FilterType.SELECT_CELEB], `2` for [FilterType.USE_TASTE] and `0` (zero) for [FilterType.NONE].
+  /// This is `1` for [FilterType.CELEB_IMAGE], `2` for [FilterType.USER_TASTE] and `0` (zero) for [FilterType.NONE].
   int? filterIndex;
 
   /// The type of the Advanced filters chosen.

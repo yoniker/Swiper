@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/userid.dart';
 import 'package:betabeta/services/networking.dart';
@@ -244,14 +245,22 @@ class SettingsData extends ChangeNotifier{
     savePreferences(AUDITION_COUNT_KEY, newAuditionCount);
   }
 
-  String get filterName{
+  String get filterName{ //TODO remove public support
     return _filterName;
   }
 
-  set filterName(String newFilterName){
+   set filterName(String newFilterName){ //TODO remove public support
     if(newFilterName==_filterName) {return;}
     _filterName = newFilterName;
     savePreferences(FILTER_NAME_KEY, newFilterName);
+  }
+
+  FilterType get filterType{
+    return FilterType.values.firstWhere((filter) => filter.description==_filterName,orElse:()=>FilterType.NONE);
+  }
+
+  set filterType(FilterType filterType){
+    this.filterName = filterType.description;
   }
 
   String get filterDisplayImageUrl{

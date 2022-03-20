@@ -15,6 +15,7 @@ import 'package:betabeta/widgets/circular_user_avatar.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/gradient_text_widget.dart';
+import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,31 +25,21 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:tuple/tuple.dart';
 
-enum activeCard { customImage, celebImage, normalMode }
-
 class VoilaPage extends StatefulWidget {
   static const String routeName = '/voila_page';
-  static activeCard selectedCard = activeCard.normalMode;
-  static String flagName = 'Normal mode';
 
   @override
   State<VoilaPage> createState() => _VoilaPageState();
 }
 
 class _VoilaPageState extends State<VoilaPage> {
-  Celeb _selectedCeleb = Celeb(
-      celebName: SettingsData.instance.celebId,
-      imagesUrls: [
-        SettingsData.instance.filterDisplayImageUrl
-      ]); //TODO support Celeb fetching from SettingsData
-  int _chosenAuditionCount = SettingsData.instance.auditionCount;
 
-  bool customImageExists =
-      SettingsData.instance.filterDisplayImageUrl != null &&
-          SettingsData.instance.filterDisplayImageUrl.length > 0;
+
+  // bool customImageExists =
+  //     SettingsData.instance.filterDisplayImageUrl != null &&
+  //         SettingsData.instance.filterDisplayImageUrl.length > 0;
   bool isLoading = false;
   bool isPressed = false;
-  ImageType? currentChoice;
 
   /// Here is where the custom-picked image is being Posted and sent over Network.
   void postCustomImageToNetwork(PickedFile chosenImage) async {
@@ -88,16 +79,6 @@ class _VoilaPageState extends State<VoilaPage> {
     });
   }
 
-  String getCardName() {
-    if (currentChoice == activeCard.celebImage) {
-      return 'Celeb mode';
-    } else if (currentChoice == activeCard.customImage) {
-      return 'Image mode';
-    } else {
-      return 'Normal mode';
-    }
-  }
-
   void inDevelopmentPopUp() {
     showDialog(
         context: context,
@@ -120,7 +101,15 @@ class _VoilaPageState extends State<VoilaPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
+
+  return ListenerWidget(notifier: SettingsData.instance, builder: (BuildContext context) {
+
+    Celeb _selectedCeleb = Celeb(
+        celebName: SettingsData.instance.celebId,
+        imagesUrls: [
+          SettingsData.instance.filterDisplayImageUrl
+        ]);
     return Container(
       child: Padding(
         padding: MediaQuery.of(context).padding,
@@ -198,8 +187,7 @@ class _VoilaPageState extends State<VoilaPage> {
                               style: boldTextStyle,
                             ),
                             AnimatedContainer(
-                              width: VoilaPage.selectedCard !=
-                                      activeCard.normalMode
+                              width: SettingsData.instance.filterType != FilterType.NONE
                                   ? 200
                                   : 0,
                               duration: Duration(milliseconds: 500),
@@ -210,11 +198,7 @@ class _VoilaPageState extends State<VoilaPage> {
                                   elevation: 4,
                                   name: 'Deactivate filters',
                                   onTap: () {
-                                    setState(() {
-                                      VoilaPage.selectedCard =
-                                          activeCard.normalMode;
-                                      VoilaPage.flagName = 'Normal mode';
-                                    });
+                                      SettingsData.instance.filterType = FilterType.NONE;
                                   },
                                   withPadding: false,
                                   color: Colors.red[800],
@@ -233,14 +217,11 @@ class _VoilaPageState extends State<VoilaPage> {
                           children: [
                             Expanded(
                               child: AdvanceFilterCard(
-                                  isActive: VoilaPage.selectedCard ==
-                                          activeCard.customImage
-                                      ? true
-                                      : false,
+                                  isActive: SettingsData.instance.filterType == FilterType.CUSTOM_IMAGE,
                                   image:
                                       AssetImage('assets/images/picture5.jpg'),
                                   title: Text(
-                                    'Custom Image',
+                                    FilterType.CUSTOM_IMAGE.description,
                                     style: titleStyleWhite,
                                   ),
                                   onTap: () async {
@@ -253,18 +234,15 @@ class _VoilaPageState extends State<VoilaPage> {
 
                                     // Display an image picker Dilaogue.
                                     setState(() {
-                                      currentChoice = ImageType.Custom;
-                                      VoilaPage.flagName = 'Image mode';
+                                      SettingsData.instance.filterType= FilterType.CUSTOM_IMAGE;
                                     });
                                     await GlobalWidgets.showImagePickerDialogue(
                                       context: context,
                                       onImagePicked: (imageFile) async {
                                         if (imageFile != null) {
                                           postCustomImageToNetwork(imageFile);
-                                          setState(() {
-                                            VoilaPage.selectedCard =
-                                                activeCard.customImage;
-                                          });
+
+                                            SettingsData.instance.filterType = FilterType.CUSTOM_IMAGE;
                                         }
                                       },
                                     );
@@ -277,31 +255,26 @@ class _VoilaPageState extends State<VoilaPage> {
                             Expanded(
                               child: AdvanceFilterCard(
                                   image: AssetImage('assets/images/celeb3.jpg'),
-                                  isActive: VoilaPage.selectedCard ==
-                                          activeCard.celebImage
-                                      ? true
-                                      : false,
+                                  isActive: SettingsData.instance.filterType == FilterType.CELEB_IMAGE,
                                   onTap: () async {
                                     var selectedCeleb = await Get.toNamed(
                                         ScreenCelebritySelection.routeName);
                                     setState(() {
-                                      currentChoice = ImageType.Celeb;
+                                      SettingsData.instance.filterType = FilterType.CELEB_IMAGE;
                                       // Set the `_selectedCeleb` variable to the newly selected
                                       // celebrity from the [CelebritySelectionScreen] page given that it is not null.
                                       if (selectedCeleb != null) {
                                         _selectedCeleb = selectedCeleb as Celeb;
                                         SettingsData.instance.celebId =
                                             _selectedCeleb.celebName;
-                                        VoilaPage.selectedCard =
-                                            activeCard.celebImage;
-                                        VoilaPage.flagName = 'Celeb Mode';
+                                        SettingsData.instance.filterType = FilterType.CELEB_IMAGE;
                                       } else {
                                         //No celebrity selected
                                       }
                                     });
                                   },
                                   title: Text(
-                                    'Celeb Filter',
+                                    FilterType.CELEB_IMAGE.description,
                                     style: titleStyleWhite,
                                   ),
                                   info: 'Discover celebrity \nlook-a-likes.'),
@@ -414,5 +387,5 @@ class _VoilaPageState extends State<VoilaPage> {
         ),
       ),
     );
-  }
+  });}
 }

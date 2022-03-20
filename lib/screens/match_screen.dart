@@ -2,10 +2,12 @@ import 'dart:math' as math;
 
 import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/screens/voila_page.dart';
+import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/circular_user_avatar.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/gradient_text_widget.dart';
@@ -97,7 +99,7 @@ class _MatchScreenState extends State<MatchScreen>
       child: Column(
         children: [
           CustomAppBar(
-            centerWidget: VoilaPage.selectedCard != activeCard.normalMode
+            centerWidget: SettingsData.instance.filterType != FilterType.NONE
                 ? Center(
                     child: Stack(
                       alignment: Alignment.topCenter,
@@ -109,7 +111,7 @@ class _MatchScreenState extends State<MatchScreen>
                         Padding(
                           padding: const EdgeInsets.only(top: 2.0),
                           child: Text(
-                            VoilaPage.flagName,
+                            SettingsData.instance.filterType.description,
                             style:
                                 titleStyleWhite.copyWith(shadows: [Shadow()]),
                           ),
