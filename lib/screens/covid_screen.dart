@@ -40,6 +40,9 @@ class _CovidScreenState extends State<CovidScreen> {
                 'Not vaccinated'
               ],
               initialChoice: SettingsData.instance.covid_vaccine,
+              onValueChanged: (newCovidValue) {
+                SettingsData.instance.covid_vaccine = newCovidValue;
+              },
             ),
           );
         });

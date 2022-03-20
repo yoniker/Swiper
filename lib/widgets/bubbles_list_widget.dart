@@ -1,13 +1,21 @@
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
+import 'package:get/get.dart';
 
 class BubblesListWidget extends StatefulWidget {
   BubblesListWidget(
-      {this.headline, required this.bubbles, this.maxChoices = 1});
+      {this.headline,
+      required this.bubbles,
+      this.maxChoices = 1,
+      required this.initialValue,
+      this.onValueChanged});
 
   final String? headline;
   final List<String> bubbles;
   final int maxChoices;
+  final void Function(List<String>)? onValueChanged;
+  final List<String> initialValue;
 
   @override
   State<BubblesListWidget> createState() => _BubblesListWidgetState();
@@ -15,6 +23,12 @@ class BubblesListWidget extends StatefulWidget {
 
 class _BubblesListWidgetState extends State<BubblesListWidget> {
   List<String> pickedBubbles = [];
+
+  @override
+  void initState() {
+    pickedBubbles = List.from(widget.initialValue);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,15 +69,19 @@ class _BubblesListWidgetState extends State<BubblesListWidget> {
                                     (widget.maxChoices.toInt() + 1))
                                   pickedBubbles.remove(h);
                               });
+                              widget.onValueChanged?.call(pickedBubbles);
                             },
                             child: Container(
                               margin: EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                   color: pickedBubbles.contains(h)
-                                      ? Colors.blue[200]
+                                      ? Colors.blue[100]
                                       : null,
                                   border: Border.all(
-                                      color: Colors.black, width: 1.5),
+                                      color: pickedBubbles.contains(h)
+                                          ? Colors.blueAccent
+                                          : Colors.black,
+                                      width: 1.5),
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(30))),
                               child: Padding(
@@ -82,13 +100,13 @@ class _BubblesListWidgetState extends State<BubblesListWidget> {
             ),
           ],
         ),
-        if (pickedBubbles.isNotEmpty)
+        if (pickedBubbles.equals(widget.initialValue) != true)
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: FloatingActionButton.extended(
               backgroundColor: Colors.blue[800]!.withOpacity(0.8),
               onPressed: () {
-                Navigator.pop(context);
+                Get.back();
               },
               label: Text(
                 'OK (${pickedBubbles.length}/${widget.maxChoices})',

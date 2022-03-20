@@ -1,4 +1,6 @@
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/lists_consts.dart';
+import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/bubbles_list_widget.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -12,25 +14,6 @@ class MyPetsScreen extends StatefulWidget {
 }
 
 class _MyPetsScreenState extends State<MyPetsScreen> {
-  List<String> pets = [
-    'Fish  🐟',
-    'Dog  🐕',
-    'Cat  🐈',
-    'Reptile  🦎',
-    'Bird  🐦',
-    'Horse  🐎',
-    'Rabbit  🐇',
-    'Poultry  🐔',
-    'Hamster  🐹',
-    'Turtle  🐢',
-    'Spider  🕷️',
-    'Snake  🐍',
-    'Ferret  🐭',
-    'Frog  🐸',
-    'Guinea pig  🐹',
-    'Hedgehog  🦔',
-    'Other  🐐'
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,9 +25,13 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
         title: 'My pets',
       ),
       body: BubblesListWidget(
-        bubbles: pets,
+        bubbles: kPetsList,
         headline: 'Do you have pets?',
         maxChoices: 5,
+        initialValue: SettingsData.instance.pets,
+        onValueChanged: (newPetsValue) {
+          SettingsData.instance.pets = newPetsValue;
+        },
       ),
     );
   }

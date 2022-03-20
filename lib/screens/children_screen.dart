@@ -43,6 +43,9 @@ class _KidsScreen extends State<KidsScreen> {
                 'Not sure'
               ],
               initialChoice: SettingsData.instance.children,
+              onValueChanged: (newChildrenValue) {
+                SettingsData.instance.children = newChildrenValue;
+              },
             ),
           );
         });

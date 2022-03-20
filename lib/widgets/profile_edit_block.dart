@@ -4,8 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 /// Edit block that present the button in a different way
 
-class ProfileEditBlock2 extends StatefulWidget {
-  ProfileEditBlock2({
+class ProfileEditBlock extends StatefulWidget {
+  ProfileEditBlock({
     required this.title,
     this.value,
     this.onType,
@@ -19,14 +19,14 @@ class ProfileEditBlock2 extends StatefulWidget {
   final Color iconColor;
   final String? value;
   final bool showArrow;
-  void Function(String)? onType;
-  void Function()? onTap;
+  final void Function(String)? onType;
+  final void Function()? onTap;
 
   @override
   _TextEditBlock2State createState() => _TextEditBlock2State();
 }
 
-class _TextEditBlock2State extends State<ProfileEditBlock2> {
+class _TextEditBlock2State extends State<ProfileEditBlock> {
   @override
   Widget build(BuildContext context) {
     return Padding(

@@ -30,6 +30,9 @@ class _EducationScreenState extends State<EducationScreen> {
             body: QuestionnaireWidget(
               choices: ['High School', 'Undergraduate', 'Postgraduate'],
               initialChoice: SettingsData.instance.education,
+              onValueChanged: (newEducationValue) {
+                SettingsData.instance.education = newEducationValue;
+              },
             ),
           );
         });

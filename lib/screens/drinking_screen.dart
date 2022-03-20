@@ -31,6 +31,9 @@ class _DrinkingScreen extends State<DrinkingScreen> {
               headline: 'How often do you drink?',
               choices: ['Frequently', 'Socially', 'Never'],
               initialChoice: SettingsData.instance.drinking,
+              onValueChanged: (newDrinkingValue) {
+                SettingsData.instance.drinking = newDrinkingValue;
+              },
             ),
           );
         });
