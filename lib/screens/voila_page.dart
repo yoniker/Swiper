@@ -170,10 +170,9 @@ class _VoilaPageState extends State<VoilaPage> {
               trailing: Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: GestureDetector(
-                  child: Icon(
-                    FontAwesomeIcons.slidersH,
-                    size: 25,
-                    color: Colors.black87,
+                  child: Image.asset(
+                    'assets/images/settings.png',
+                    scale: 12,
                   ),
                   onTap: () async {
                     var value =
