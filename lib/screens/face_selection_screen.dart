@@ -102,7 +102,7 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
                         ? null
                         : () {
                             SettingsData.instance.filterDisplayImageUrl =
-                                NetworkHelper.faceUrlToFullUrl(_facesLinks![_indexSelected]);
+                                _facesLinks![_indexSelected];
                             navigator!.popUntil( (route) {
                               return route.settings.name ==
                                   VoilaPage.routeName || route.settings.name == MainNavigationScreen.routeName;
