@@ -320,10 +320,6 @@ class SettingsData extends ChangeNotifier{
     _lastSync = newLastSync;
     savePreferences(LAST_SYNC_KEY, newLastSync,sendServer: false,resetMatchEngine: false);
   }
-  
-  UserId get id{
-    return UserId(id: _facebookId, userType: UserType.REAL_USER);
-  }
 
   String get fcmToken{
     return _fcmToken;

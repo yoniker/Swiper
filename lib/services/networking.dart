@@ -162,12 +162,12 @@ class NetworkHelper {
   }
 
   Future<HashMap<String, dynamic>> getFacesCustomImageSearchLinks(
-      {String? imageFileName, UserId? userId}) async {
+      {String? imageFileName}) async {
     if (_facesCall != null) {
       return HashMap();
     }
     Uri facesLinkUri =
-        Uri.https(SERVER_ADDR, 'faces/${userId!.id}/$imageFileName');
+        Uri.https(SERVER_ADDR, 'faces/${SettingsData.instance.uid}/$imageFileName');
     _facesCall = http.get(facesLinkUri);
     if (DateTime.now().difference(_lastFacesImagesCall) <
         MIN_FACES_CALL_INTERVAL) {
