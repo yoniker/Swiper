@@ -2,6 +2,8 @@ import 'dart:collection';
 import 'dart:io';
 
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/screens/main_navigation_screen.dart';
+import 'package:betabeta/screens/voila_page.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/services/networking.dart';
@@ -103,7 +105,7 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
                                 _facesLinks![_indexSelected];
                             navigator!.popUntil( (route) {
                               return route.settings.name ==
-                                  AdvancedSettingsScreen.routeName;
+                                  VoilaPage.routeName || route.settings.name == MainNavigationScreen.routeName;
                             }); //ModalRoute.withName(AdvancedSettingsScreen.routeName));
                           },
                     child: Column(

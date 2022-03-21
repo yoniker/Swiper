@@ -102,7 +102,7 @@ class NetworkHelper {
   }
 
   static String serverCelebImageUrl(String imageUrl){
-    return NetworkHelper.SERVER_ADDR + imageUrl;
+    return NetworkHelper.faceUrlToFullUrl(imageUrl);
   }
 
   postUserDecision({Decision? decision, Profile? otherUserProfile}) async {

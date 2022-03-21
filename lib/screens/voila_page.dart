@@ -33,11 +33,6 @@ class VoilaPage extends StatefulWidget {
 }
 
 class _VoilaPageState extends State<VoilaPage> {
-
-
-  // bool customImageExists =
-  //     SettingsData.instance.filterDisplayImageUrl != null &&
-  //         SettingsData.instance.filterDisplayImageUrl.length > 0;
   bool isLoading = false;
   bool isPressed = false;
 
@@ -103,8 +98,9 @@ class _VoilaPageState extends State<VoilaPage> {
   @override
   Widget build(BuildContext context){
 
-  return ListenerWidget(notifier: SettingsData.instance, builder: (BuildContext context) {
 
+  return ListenerWidget(notifier: SettingsData.instance, builder: (BuildContext context) {
+    bool customImageExists = SettingsData.instance.filterDisplayImageUrl.length > 0;
     Celeb _selectedCeleb = Celeb(
         celebName: SettingsData.instance.celebId,
         imagesUrls: [
@@ -137,21 +133,29 @@ class _VoilaPageState extends State<VoilaPage> {
                 ),
               ),
               centerWidget: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GradientText(
-                    'Voilà-dating',
-                    style: TextStyle(
-                        overflow: TextOverflow.fade,
-                        color: goldColorish,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                    gradient: LinearGradient(colors: [
-                      Color(0XFFFBCE32),
-                      Color(0XFFD2AB54),
-                      Color(0XFFC3932F),
-                    ]),
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (customImageExists)
+                      CircularUserAvatar(imageProvider:NetworkImage(SettingsData.instance.filterDisplayImageUrl),),
+
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GradientText(
+                        'Voilà-dating',
+                        style: TextStyle(
+                            overflow: TextOverflow.fade,
+                            color: goldColorish,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold),
+                        gradient: LinearGradient(colors: [
+                          Color(0XFFFBCE32),
+                          Color(0XFFD2AB54),
+                          Color(0XFFC3932F),
+                        ]),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               showAppLogo: false,
@@ -199,6 +203,7 @@ class _VoilaPageState extends State<VoilaPage> {
                                   name: 'Deactivate filters',
                                   onTap: () {
                                       SettingsData.instance.filterType = FilterType.NONE;
+                                      SettingsData.instance.filterDisplayImageUrl = '';
                                   },
                                   withPadding: false,
                                   color: Colors.red[800],
