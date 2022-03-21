@@ -1,8 +1,16 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/enums.dart';
+import 'package:betabeta/models/chatData.dart';
+import 'package:betabeta/screens/splash_screen.dart';
+import 'package:betabeta/screens/swipe_settings_screen.dart';
+import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/swipe_setting_widget.dart';
 
 /// The implementation for the Notification screen.
@@ -16,7 +24,6 @@ class AccountSettingsScreen extends StatefulWidget {
 }
 
 class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
-<<<<<<< HEAD
   _logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //Save name, id and picture url to persistent storage, and move on to the next screen
@@ -79,8 +86,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     return agesRangeText;
   }
 
-=======
->>>>>>> theme
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
