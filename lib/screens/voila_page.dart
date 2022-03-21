@@ -259,7 +259,6 @@ class _VoilaPageState extends State<VoilaPage> {
                                   onTap: () async {
                                     var selectedCeleb = await Get.toNamed(
                                         ScreenCelebritySelection.routeName);
-                                    setState(() {
                                       SettingsData.instance.filterType = FilterType.CELEB_IMAGE;
                                       // Set the `_selectedCeleb` variable to the newly selected
                                       // celebrity from the [CelebritySelectionScreen] page given that it is not null.
@@ -272,13 +271,18 @@ class _VoilaPageState extends State<VoilaPage> {
                                           {
                                           SettingsData.instance.filterDisplayImageUrl = NetworkHelper.serverCelebImageUrl(_selectedCeleb.imagesUrls![0]);
                                           }
-                                        else {SettingsData.instance.filterDisplayImageUrl = '';}
+                                        else {
+                                          SettingsData.instance.filterDisplayImageUrl = '';
+                                        }
                                         
                                       }
                                       else {
+                                        SettingsData.instance.filterDisplayImageUrl = '';
+                                        SettingsData.instance.celebId = '';
+                                        SettingsData.instance.filterType = FilterType.NONE;
                                         //No celebrity selected
                                       }
-                                    });
+
                                   },
                                   title: Text(
                                     FilterType.CELEB_IMAGE.description,
