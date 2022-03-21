@@ -72,11 +72,18 @@ class AdvanceFilterCard extends StatelessWidget {
                   child: title,
                 ),
                 if (hasTextField == true)
-                  InputField(
-                    hintText: ' Search...',
-                    maxLines: 1,
-                    maxCharacters: 10,
-                    icon: FontAwesomeIcons.search,
+                  AnimatedContainer(
+                    height: isActive == false ? 0 : 54,
+                    duration: const Duration(milliseconds: 500),
+                    child: SingleChildScrollView(
+                      child: InputField(
+                        hintText: ' Search...',
+                        maxLines: 1,
+                        maxCharacters: 10,
+                        icon: Icons.search,
+                        iconSize: 30,
+                      ),
+                    ),
                   ),
                 SizedBox(),
                 SizedBox(),

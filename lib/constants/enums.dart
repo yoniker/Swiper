@@ -31,8 +31,6 @@ enum ImageType { Celeb, Custom }
 
 /// CONVERT from String to FilterType.
 FilterType filterTypeFromString(String? filterName) {
-  return FilterType.values.firstWhere((filter) => filter.name==filterName,orElse:()=>FilterType.NONE);
-
+  return FilterType.values.firstWhere((filter) => filter.name == filterName,
+      orElse: () => FilterType.NONE);
 }
-
-

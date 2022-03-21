@@ -66,10 +66,8 @@ class _VoilaPageState extends State<VoilaPage> {
         context,
         message: 'An error occurred, please try again later!',
       );
-    }
-
-    finally{
-      if(SettingsData.instance.filterDisplayImageUrl.length==0){
+    } finally {
+      if (SettingsData.instance.filterDisplayImageUrl.length == 0) {
         SettingsData.instance.filterType = FilterType.NONE;
       }
     }
@@ -184,43 +182,43 @@ class _VoilaPageState extends State<VoilaPage> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    'Voilà Features',
-                                    style: boldTextStyle,
-                                  ),
-                                  AnimatedContainer(
-                                    width: SettingsData.instance.filterType !=
-                                            FilterType.NONE
-                                        ? 200
-                                        : 0,
-                                    duration: Duration(milliseconds: 500),
-                                    child: SizedBox(
-                                      width: 100,
-                                      height: 40,
-                                      child: RoundedButton(
-                                        elevation: 4,
-                                        name: 'Deactivate filters',
-                                        onTap: () {
-                                          SettingsData.instance.filterType =
-                                              FilterType.NONE;
-                                          SettingsData.instance
-                                              .filterDisplayImageUrl = '';
-                                        },
-                                        withPadding: false,
-                                        color: Colors.red[800],
+                                  Flexible(
+                                    child: AnimatedContainer(
+                                      margin:
+                                          SettingsData.instance.filterType !=
+                                                  FilterType.NONE
+                                              ? EdgeInsets.only(bottom: 10)
+                                              : EdgeInsets.zero,
+                                      height:
+                                          SettingsData.instance.filterType !=
+                                                  FilterType.NONE
+                                              ? 40
+                                              : 0,
+                                      width: SettingsData.instance.filterType !=
+                                              FilterType.NONE
+                                          ? 1000
+                                          : 0,
+                                      duration: Duration(milliseconds: 500),
+                                      child: SizedBox(
+                                        width: 100,
+                                        child: RoundedButton(
+                                          elevation: 4,
+                                          name: 'Deactivate filters',
+                                          onTap: () {
+                                            SettingsData.instance.filterType =
+                                                FilterType.NONE;
+                                            SettingsData.instance
+                                                .filterDisplayImageUrl = '';
+                                          },
+                                          withPadding: false,
+                                          color: Colors.red[800],
+                                        ),
                                       ),
                                     ),
                                   )
                                 ],
-                              ),
-                              Divider(
-                                color: lightCardColor,
-                                thickness: 2.0,
-                                indent: 24.0,
-                                endIndent: 24.0,
                               ),
                               Row(
                                 children: [
@@ -244,8 +242,8 @@ class _VoilaPageState extends State<VoilaPage> {
                                           // });
 
                                           // Display an image picker Dilaogue.
-                                            SettingsData.instance.filterType =
-                                                FilterType.CUSTOM_IMAGE;
+                                          SettingsData.instance.filterType =
+                                              FilterType.CUSTOM_IMAGE;
 
                                           await GlobalWidgets
                                               .showImagePickerDialogue(

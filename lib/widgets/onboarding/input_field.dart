@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 class InputField extends StatelessWidget {
   InputField(
-      {this.hintText,
+      {this.hintText = '',
       this.controller,
       this.formatters,
       this.padding,
@@ -15,33 +15,35 @@ class InputField extends StatelessWidget {
       this.showCursor = true,
       this.icon,
       this.iconHeight = 1,
-      this.keyboardType,
+      this.iconSize,
+      this.keyboardType = TextInputType.text,
       this.maxLines = 1,
       this.minLines = 1,
-      this.maxCharacters,
+      this.maxCharacters = 20,
       this.style,
       this.onTapIconDisable,
       this.onTapIcon});
 
-  bool pressed;
-  bool readonly;
-  bool showCursor;
-  String? initialvalue;
-  void Function()? onTap;
+  final bool pressed;
+  final bool readonly;
+  final bool showCursor;
+  final String? initialvalue;
+  final void Function()? onTap;
   final double iconHeight;
   final TextEditingController? controller;
-  List<TextInputFormatter>? formatters = [];
-  TextStyle? style;
-  String? hintText = "";
-  int maxLines;
-  int minLines;
-  void Function(String)? onType;
-  void Function()? onTapIcon;
-  void Function()? onTapIconDisable;
+  final List<TextInputFormatter>? formatters;
+  final TextStyle? style;
+  final String? hintText;
+  final int maxLines;
+  final int minLines;
+  final double? iconSize;
+  final void Function(String)? onType;
+  final void Function()? onTapIcon;
+  final void Function()? onTapIconDisable;
   final IconData? icon;
-  TextInputType? keyboardType = TextInputType.text;
-  int? maxCharacters = 20;
-  EdgeInsets? padding = EdgeInsets.fromLTRB(20, 10.0, 20, 10.0);
+  final TextInputType? keyboardType;
+  final int? maxCharacters;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +87,7 @@ class InputField extends StatelessWidget {
                   onTap: onTapIconDisable,
                   child: Icon(
                     icon,
+                    size: iconSize,
                     color: onTapIcon == null ? Colors.grey : Colors.black87,
                   ),
                 ),
@@ -103,7 +106,9 @@ class InputField extends StatelessWidget {
             hintText: hintText,
             hintStyle: const TextStyle(color: Colors.black12, fontSize: 18),
             counterText: "",
-            contentPadding: padding,
+            contentPadding: padding != null
+                ? padding
+                : EdgeInsets.fromLTRB(20, 15.0, 20, 15.0),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
             ),

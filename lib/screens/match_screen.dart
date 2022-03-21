@@ -11,8 +11,10 @@ import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/circular_user_avatar.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/gradient_text_widget.dart';
+import 'package:betabeta/widgets/image_filterview_widget.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/match_card.dart';
+import 'package:betabeta/widgets/voila_logo_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
@@ -105,6 +107,18 @@ class _MatchScreenState extends State<MatchScreen>
     super.dispose();
   }
 
+  Widget buildCenterWidget() {
+    switch (SettingsData.instance.filterType) {
+      case FilterType.TEXT_SEARCH:
+        return VoilaLogoWidget();
+      case FilterType.CELEB_IMAGE:
+      case FilterType.CUSTOM_IMAGE:
+        return ImageFilterViewWidget(animationController: _animationController);
+      default:
+        return VoilaLogoWidget();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -112,57 +126,7 @@ class _MatchScreenState extends State<MatchScreen>
       child: Column(
         children: [
           CustomAppBar(
-            centerWidget: SettingsData.instance.filterType != FilterType.NONE
-                ? Center(
-                    child: Container(
-                      height: 44,
-                      width: 100,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                NetworkHelper.faceUrlToFullUrl(SettingsData
-                                    .instance.filterDisplayImageUrl),
-                              ))),
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Opacity(
-                                opacity: 0.8,
-                                child: AnimatedIcon(
-                                    icon: AnimatedIcons.search_ellipsis,
-                                    color: Colors.white,
-                                    size: 30,
-                                    progress: _animationController),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  )
-                : Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GradientText(
-                        'Voilà-dating',
-                        style: TextStyle(
-                            overflow: TextOverflow.fade,
-                            color: goldColorish,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold),
-                        gradient: LinearGradient(colors: [
-                          Color(0XFFFBCE32),
-                          Color(0XFFD2AB54),
-                          Color(0XFFC3932F),
-                        ]),
-                      ),
-                    ),
-                  ),
+            centerWidget: buildCenterWidget(),
             customTitle: Container(
               padding: EdgeInsets.only(left: 10.0),
               child: Row(
