@@ -1,22 +1,27 @@
+import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/services/networking.dart';
+import 'package:betabeta/services/settings_model.dart';
+import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:flutter/material.dart';
-
-import '../constants/onboarding_consts.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AdvanceFilterCard extends StatelessWidget {
-  AssetImage image;
-  Widget title;
-  bool? comingSoon;
-  bool? showAI;
-  bool? isActive;
-  Widget? button;
-  String info;
-  Function()? onTap;
+  final AssetImage image;
+  final Widget title;
+  final bool? comingSoon;
+  final bool? showAI;
+  final bool? isActive;
+  final bool? hasTextField;
+  final Widget? button;
+  final String info;
+  final void Function()? onTap;
   AdvanceFilterCard(
       {required this.image,
       required this.title,
       required this.info,
       this.comingSoon,
       this.showAI,
+      this.hasTextField = false,
       this.isActive = false,
       this.button,
       this.onTap});
@@ -34,10 +39,17 @@ class AdvanceFilterCard extends StatelessWidget {
           borderRadius: BorderRadius.all(
             Radius.circular(10),
           ),
-          image: DecorationImage(
-            image: image,
-            fit: BoxFit.cover,
-          ),
+          image: isActive == true &&
+                  SettingsData.instance.filterDisplayImageUrl != ''
+              ? DecorationImage(
+                  image: NetworkImage(NetworkHelper.faceUrlToFullUrl(
+                      SettingsData.instance.filterDisplayImageUrl)),
+                  fit: BoxFit.cover,
+                )
+              : DecorationImage(
+                  image: image,
+                  fit: BoxFit.cover,
+                ),
         ),
         child: Container(
           decoration: BoxDecoration(
@@ -59,6 +71,13 @@ class AdvanceFilterCard extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 8.0),
                   child: title,
                 ),
+                if (hasTextField == true)
+                  InputField(
+                    hintText: ' Search...',
+                    maxLines: 1,
+                    maxCharacters: 10,
+                    icon: FontAwesomeIcons.search,
+                  ),
                 SizedBox(),
                 SizedBox(),
                 comingSoon == true

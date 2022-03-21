@@ -5,18 +5,24 @@ enum PreferredGender { Men, Women, Everyone }
 enum FilterType {
   CELEB_IMAGE,
   CUSTOM_IMAGE,
+  TEXT_SEARCH,
   USER_TASTE,
   NONE,
 }
 
-extension uiDescription on FilterType{
-  String get description{
-    switch(this){
-      case FilterType.CELEB_IMAGE: return "Celeb Filter";
-      case FilterType.CUSTOM_IMAGE: return "Custom Image";
-      case FilterType.USER_TASTE: return "My taste";
-      case FilterType.NONE: return "Normal mode";
-      default: return "Normal mode";
+extension uiDescription on FilterType {
+  String get description {
+    switch (this) {
+      case FilterType.CELEB_IMAGE:
+        return "Celeb Filter";
+      case FilterType.CUSTOM_IMAGE:
+        return "Custom Image";
+      case FilterType.USER_TASTE:
+        return "My taste";
+      case FilterType.NONE:
+        return "Normal mode";
+      default:
+        return "Normal mode";
     }
   }
 }
@@ -46,6 +52,8 @@ String filterTypeToString(FilterType? filterType) {
     case FilterType.CELEB_IMAGE:
       return 'select_celeb';
       ;
+    case FilterType.TEXT_SEARCH:
+      return 'text_search';
     case FilterType.USER_TASTE:
       return 'use_taste';
 

@@ -6,21 +6,17 @@ import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
-import 'package:betabeta/screens/voila_page.dart';
+import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/circular_user_avatar.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/gradient_text_widget.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/match_card.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:tcard/tcard.dart';
-
-import '../widgets/global_widgets.dart';
 
 class MatchScreen extends StatefulWidget {
   static const String routeName = '/match_screen';
@@ -38,7 +34,22 @@ class _MatchScreenState extends State<MatchScreen>
 
   // Initialize the Animation Controller for the exposure of the revert button when a change
   // is discovered.
-  late AnimationController _animationController;
+  // late AnimationController _animationController;
+  late final AnimationController _animationController = AnimationController(
+      vsync: this, duration: const Duration(seconds: 1))
+    //..repeat(reverse: true); // <-- comment this line
+
+    ..addStatusListener((AnimationStatus status) {
+      // <-- add listener
+      if (status == AnimationStatus.completed) {
+        Future.delayed(
+            Duration(milliseconds: _animationController.value == 0 ? 500 : 0),
+            () {
+          _animationController
+              .animateTo(_animationController.value == 0 ? 1 : 0);
+        });
+      }
+    });
 
   // Holds a boolean value whether or not to hide the MatchCard.
   //
@@ -74,19 +85,21 @@ class _MatchScreenState extends State<MatchScreen>
   @override
   void initState() {
     super.initState();
+    _animationController.forward(from: 0);
 
     // Instantiate and Initialize the Animation Controller and the respective Animation.
-    _animationController = AnimationController(
-      duration: Duration(milliseconds: 400),
-      upperBound: 1.0,
-      lowerBound: 0.0,
-      vsync: this,
-    );
+    // _animationController = AnimationController(
+    //   duration: Duration(milliseconds: 400),
+    //   upperBound: 1.0,
+    //   lowerBound: 0.0,
+    //   vsync: this,
+    // );
   }
 
   @override
   void dispose() {
     // dispose the Animation Controller instance.
+    // _animationController.dispose();
     _animationController.dispose();
 
     super.dispose();
@@ -101,22 +114,35 @@ class _MatchScreenState extends State<MatchScreen>
           CustomAppBar(
             centerWidget: SettingsData.instance.filterType != FilterType.NONE
                 ? Center(
-                    child: Stack(
-                      alignment: Alignment.topCenter,
-                      children: [
-                        Image.asset(
-                          'assets/images/flag2.png',
-                          height: 45,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 2.0),
-                          child: Text(
-                            SettingsData.instance.filterType.description,
-                            style:
-                                titleStyleWhite.copyWith(shadows: [Shadow()]),
-                          ),
-                        )
-                      ],
+                    child: Container(
+                      height: 44,
+                      width: 100,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                NetworkHelper.faceUrlToFullUrl(SettingsData
+                                    .instance.filterDisplayImageUrl),
+                              ))),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Opacity(
+                                opacity: 0.8,
+                                child: AnimatedIcon(
+                                    icon: AnimatedIcons.search_ellipsis,
+                                    color: Colors.white,
+                                    size: 30,
+                                    progress: _animationController),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   )
                 : Center(
@@ -142,60 +168,60 @@ class _MatchScreenState extends State<MatchScreen>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  ListenerWidget(
-                    notifier: MatchEngine.instance,
-                    builder: (context) {
-                      print('Listener on match screen called!');
-                      Widget dor = InkWell(
-                        borderRadius: BorderRadius.circular(16.0),
-                        child: Padding(
-                          padding: EdgeInsets.only(right: 20.0),
-                          child: Transform(
-                            alignment: Alignment.centerRight,
-                            transform: Matrix4.rotationY(math.pi),
-                            child: Icon(
-                              Icons.refresh,
-                              size: 24.0,
-                              color: colorBlend01,
-                            ),
-                          ),
-                        ),
-                        onTap: () {
-                          MatchEngine.instance.goBack();
-                        },
-                      );
-                      if (MatchEngine.instance.previousMatchExists()) {
-                        _animationController.forward();
-                      } else {
-                        _animationController.reverse();
-                      }
-
-                      //
-                      double getAnimatedValue(num value) {
-                        return _animationController.value * value;
-                      }
-
-                      return AnimatedBuilder(
-                        animation: _animationController,
-                        child: dor,
-                        builder: (context, child) {
-                          return Opacity(
-                            opacity: getAnimatedValue(1.0),
-                            child: Container(
-                              width: getAnimatedValue(30.0),
-                              child: child,
-                              transform: Matrix4.identity()
-                                ..setTranslationRaw(
-                                  getAnimatedValue(1.0),
-                                  0.0,
-                                  0.0,
-                                ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
+                  // ListenerWidget(
+                  //   notifier: MatchEngine.instance,
+                  //   builder: (context) {
+                  //     print('Listener on match screen called!');
+                  //     // Widget dor = InkWell(
+                  //     //   borderRadius: BorderRadius.circular(16.0),
+                  //     //   child: Padding(
+                  //     //     padding: EdgeInsets.only(right: 20.0),
+                  //     //     child: Transform(
+                  //     //       alignment: Alignment.centerRight,
+                  //     //       transform: Matrix4.rotationY(math.pi),
+                  //     //       child: Icon(
+                  //     //         Icons.refresh,
+                  //     //         size: 24.0,
+                  //     //         color: colorBlend01,
+                  //     //       ),
+                  //     //     ),
+                  //     //   ),
+                  //     //   onTap: () {
+                  //     //     MatchEngine.instance.goBack();
+                  //     //   },
+                  //     // );
+                  //     // if (MatchEngine.instance.previousMatchExists()) {
+                  //     //   _animationController.forward();
+                  //     // } else {
+                  //     //   _animationController.reverse();
+                  //     // }
+                  //     //
+                  //     // //
+                  //     // double getAnimatedValue(num value) {
+                  //     //   return _animationController.value * value;
+                  //     // }
+                  //
+                  //     // return AnimatedBuilder(
+                  //     //   animation: _animationController,
+                  //     //   child: dor,
+                  //     //   builder: (context, child) {
+                  //     //     return Opacity(
+                  //     //       opacity: getAnimatedValue(1.0),
+                  //     //       child: Container(
+                  //     //         width: getAnimatedValue(30.0),
+                  //     //         child: child,
+                  //     //         transform: Matrix4.identity()
+                  //     //           ..setTranslationRaw(
+                  //     //             getAnimatedValue(1.0),
+                  //     //             0.0,
+                  //     //             0.0,
+                  //     //           ),
+                  //     //       ),
+                  //     //     );
+                  //     //   },
+                  //     // );
+                  //   },
+                  // ),
                   Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: GestureDetector(
