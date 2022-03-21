@@ -40,7 +40,7 @@ class CelebsInfo extends ChangeNotifier {
   Future<void> getCelebImageLinks(Celeb celeb)async{
     _numCelebsUrlsToGet += 1;
     String? celebName = celeb.celebName;
-    List<String>? celebUrls = await NetworkHelper.getCeleblinks(celebName);
+    List<String> celebUrls = await NetworkHelper.getCeleblinks(celebName);
     for (int i = 0; i < _celebsInfo!.length; i++){
       if(_celebsInfo![i].celebName == celebName){
         _celebsInfo![i].imagesUrls = celebUrls;

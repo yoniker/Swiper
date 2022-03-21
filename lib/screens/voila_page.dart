@@ -268,7 +268,14 @@ class _VoilaPageState extends State<VoilaPage> {
                                         SettingsData.instance.celebId =
                                             _selectedCeleb.celebName;
                                         SettingsData.instance.filterType = FilterType.CELEB_IMAGE;
-                                      } else {
+                                        if(_selectedCeleb.imagesUrls!=null && _selectedCeleb.imagesUrls!.length>0)
+                                          {
+                                          SettingsData.instance.filterDisplayImageUrl = NetworkHelper.serverCelebImageUrl(_selectedCeleb.imagesUrls![0]);
+                                          }
+                                        else {SettingsData.instance.filterDisplayImageUrl = '';}
+                                        
+                                      }
+                                      else {
                                         //No celebrity selected
                                       }
                                     });

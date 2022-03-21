@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/userid.dart';
-import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -245,7 +244,7 @@ class SettingsData extends ChangeNotifier{
     savePreferences(AUDITION_COUNT_KEY, newAuditionCount);
   }
 
-  String get filterName{ //TODO remove public support
+  String get filterName{ //TODO remove public support?
     return _filterName;
   }
 
@@ -256,11 +255,11 @@ class SettingsData extends ChangeNotifier{
   }
 
   FilterType get filterType{
-    return FilterType.values.firstWhere((filter) => filter.description==_filterName,orElse:()=>FilterType.NONE);
+    return FilterType.values.firstWhere((filter) => filter.name==_filterName,orElse:()=>FilterType.NONE);
   }
 
   set filterType(FilterType filterType){
-    this.filterName = filterType.description;
+    this.filterName = filterType.name;
   }
 
   String get filterDisplayImageUrl{

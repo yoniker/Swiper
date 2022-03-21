@@ -12,7 +12,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' hide DropdownButtonFormField;
 import 'package:get/get.dart';
 
-import 'advanced_settings_screen.dart';
 
 class SwipeSettingsScreen extends StatefulWidget {
   SwipeSettingsScreen({Key? key}) : super(key: key);
