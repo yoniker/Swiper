@@ -651,9 +651,7 @@ class SettingsData extends ChangeNotifier {
   }
 
   set hobbies(List<String> newHobbies) {
-    if (ListEquality().equals(newHobbies, _hobbies)) {
-      return;
-    }
+    print('setting hobbies to $newHobbies');
     _hobbies = newHobbies;
     savePreferences(HOBBIES_KEY, newHobbies, resetMatchEngine: false);
   }
@@ -663,9 +661,6 @@ class SettingsData extends ChangeNotifier {
   }
 
   set pets(List<String> newPets) {
-    if (ListEquality().equals(newPets, _pets)) {
-      return;
-    }
     _pets = newPets;
     savePreferences(PETS_KEY, newPets, resetMatchEngine: false);
   }

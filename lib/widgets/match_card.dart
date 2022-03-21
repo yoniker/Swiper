@@ -1,5 +1,6 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/full_image_screen.dart';
@@ -184,42 +185,19 @@ class _MatchCardState extends State<MatchCard> {
     // Return a List of Widgets.
     return [
       SizedBox(height: 16.0),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.0),
-              child: Text(
-                '${profile.username}, ${profile.age}',
-                textAlign: TextAlign.left,
-                // overflow: TextOverflow.ellipsis,
-                style: boldTextStyle.copyWith(fontSize: 18.0),
-              ),
-            ),
-          ),
-        ],
-      ),
-      Container(
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.symmetric(horizontal: 5.0),
-        child: Text(
-          (profile.headline != null) ? profile.headline! : '',
-          textAlign: TextAlign.left,
-          style: defaultTextStyle,
-        ),
-      ),
       Text(
         'About me',
         style: subTitleStyle,
       ),
       _buildDivider(),
-      Text(
-        (profile.description != null)
-            ? profile.description!
-            : 'No Description available',
-        style: mediumCharStyle,
+      Container(
+        margin: EdgeInsets.symmetric(horizontal: 5),
+        child: Text(
+          (profile.description != null)
+              ? profile.description!
+              : 'No Description available',
+          style: defaultTextStyle,
+        ),
       ),
       SizedBox(height: 20),
       Text(
@@ -316,7 +294,7 @@ class _MatchCardState extends State<MatchCard> {
             )),
       if (profile.height != null)
         BasicDetail(
-          detailText: '${profile.height}',
+          detailText: '${cmToFeet(int.parse(profile.height!))} ft',
           detailIcon: FaIcon(
             FontAwesomeIcons.ruler,
             color: Colors.yellow[700],
@@ -327,10 +305,11 @@ class _MatchCardState extends State<MatchCard> {
           detailText: '${profile.jobTitle}',
           detailIcon: FaIcon(FontAwesomeIcons.userTie, color: Colors.black),
         ),
-      Text(
-        'Artificial Intelligence',
-        style: subTitleStyle,
-      ),
+      if (profile.religion != null)
+        Text(
+          'Artificial Intelligence',
+          style: subTitleStyle,
+        ),
       _buildDivider(),
       Container(
         alignment: Alignment.centerLeft,
@@ -695,8 +674,9 @@ class _PhotoViewState extends State<PhotoView> {
 
     // instantiate the carousel List
     carouselDots = <CarouselDot>[];
-    if(widget.imageUrls!.length==0){
-      var img = Image.network(NewNetworkService.getProfileImageUrl(BetaIconPaths.anonymousProfileUrl),
+    if (widget.imageUrls!.length == 0) {
+      var img = Image.network(
+        NewNetworkService.getProfileImageUrl(BetaIconPaths.anonymousProfileUrl),
         scale: 1.0,
         fit: BoxFit.cover,
       );
@@ -707,7 +687,7 @@ class _PhotoViewState extends State<PhotoView> {
     for (int imageIndex = 0;
         imageIndex < widget.imageUrls!.length;
         imageIndex++) {
-      var img =  Image.network(
+      var img = Image.network(
         widget.imageUrls![imageIndex],
         scale: 1.0,
         fit: BoxFit.cover,
@@ -716,7 +696,6 @@ class _PhotoViewState extends State<PhotoView> {
       precacheImage(img.image, context);
       imagesList.add(img);
     }
-
   }
 
   @override

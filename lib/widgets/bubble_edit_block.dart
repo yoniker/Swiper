@@ -54,28 +54,31 @@ class _BubbleEditBlockState extends State<BubbleEditBlock> {
                     children:
                         widget.bubbles == null || widget.bubbles!.length == 0
                             ? emptyList
-                                .map((e) => Container(
-                                      margin: EdgeInsets.symmetric(
-                                          horizontal: 5, vertical: 5),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.grey, width: 1.5),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(
-                                            30,
+                                .map((e) => Opacity(
+                                      opacity: 0.3,
+                                      child: Container(
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 5, vertical: 5),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.grey, width: 1.5),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                              30,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10.0, vertical: 4),
-                                        child: Text(
-                                          e,
-                                          style: TextStyle(
-                                              fontFamily: 'Nunito',
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.grey),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10.0, vertical: 4),
+                                          child: Text(
+                                            e,
+                                            style: TextStyle(
+                                                fontFamily: 'Nunito',
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.grey),
+                                          ),
                                         ),
                                       ),
                                     ))
@@ -100,7 +103,8 @@ class _BubbleEditBlockState extends State<BubbleEditBlock> {
                                             horizontal: 10.0, vertical: 4),
                                         child: Text(
                                           e,
-                                          style: smallBoldedTitleBlack,
+                                          style: smallBoldedTitleBlack.copyWith(
+                                              color: Colors.blue),
                                         ),
                                       ),
                                     ))

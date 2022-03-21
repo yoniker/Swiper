@@ -33,7 +33,7 @@ const Color goldColorish = Color(0xFFC59533);
 const TextStyle defaultTextStyle = TextStyle(
   color: Colors.black,
   fontFamily: 'Nunito',
-  fontSize: 16,
+  fontSize: 17,
   fontWeight: FontWeight.w500,
 );
 

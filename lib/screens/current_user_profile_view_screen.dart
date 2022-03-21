@@ -1,3 +1,4 @@
+import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/profile_edit_screen.dart';
 import 'package:betabeta/services/new_networking.dart';
@@ -8,7 +9,6 @@ import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 class CurrentUserProfileViewScreen extends StatefulWidget {
   static const String routeName = '/user_profile_viewer';
@@ -39,10 +39,8 @@ class _CurrentUserProfileViewScreenState
         imageUrls: NewNetworkService.serverImagesUrl(
             SettingsData.instance.profileImagesUrls),
         location: SettingsData.instance.locationDescription,
-        height:
-            "TODO add height to current profile", //TODO add height to profile
-        jobTitle:
-            "TODO add job title to current profile", //TODO add job title to profile
+        height: "${SettingsData.instance.heightInCm}",
+        jobTitle: SettingsData.instance.jobTitle,
         compatibilityScore:
             1, //Compatibility scores is calculated between users.
         hotnessScore: 1);

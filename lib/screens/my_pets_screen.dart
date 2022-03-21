@@ -27,7 +27,7 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
       body: BubblesListWidget(
         bubbles: kPetsList,
         headline: 'Do you have pets?',
-        maxChoices: 5,
+        maxChoices: 4,
         initialValue: SettingsData.instance.pets,
         onValueChanged: (newPetsValue) {
           SettingsData.instance.pets = newPetsValue;

@@ -64,7 +64,7 @@ class LikeScale extends StatelessWidget {
               LinearGradient(
                 colors: [
                   mainAppColor02,
-                  defaultShadowColor,
+                  colorBlend01,
                 ],
                 stops: [
                   _val,

@@ -10,6 +10,7 @@ class TextEditBlock extends StatefulWidget {
       this.initialValue,
       this.maxLines = 1,
       this.minLines = 1,
+      this.maxCharacters = 50,
       this.onType,
       this.onTap,
       this.icon,
@@ -22,6 +23,7 @@ class TextEditBlock extends StatefulWidget {
   final IconData? icon;
   final int maxLines;
   final int minLines;
+  final int maxCharacters;
   final String? placeholder;
   final TextEditingController? controller;
   final TextInputType? keyboardType;
@@ -57,6 +59,7 @@ class _TextEditBlockState extends State<TextEditBlock> {
             readonly: widget.readOnly,
             onType: widget.onType,
             initialvalue: widget.initialValue,
+            maxCharacters: widget.maxCharacters,
             maxLines: widget.maxLines,
             hintText: widget.placeholder != null
                 ? ' ${widget.placeholder}'

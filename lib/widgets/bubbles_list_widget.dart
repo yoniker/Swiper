@@ -89,7 +89,10 @@ class _BubblesListWidgetState extends State<BubblesListWidget> {
                                     horizontal: 10.0, vertical: 4),
                                 child: Text(
                                   '$h',
-                                  style: smallBoldedTitleBlack,
+                                  style: pickedBubbles.contains(h)
+                                      ? smallBoldedTitleBlack.copyWith(
+                                          color: Colors.blue)
+                                      : smallBoldedTitleBlack,
                                 ),
                               ),
                             ),

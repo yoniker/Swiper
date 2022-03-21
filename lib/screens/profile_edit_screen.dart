@@ -22,7 +22,6 @@ import 'package:betabeta/widgets/profile_edit_block.dart';
 import 'package:betabeta/widgets/setting_edit_block.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
@@ -151,6 +150,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                     title: 'About me',
                     minLines: 4,
                     maxLines: 14,
+                    maxCharacters: 1000,
                     controller: aboutMeController,
                     onType: (value) {
                       SettingsData.instance.userDescription = value;
@@ -187,6 +187,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                   TextEditBlock(
                     showCursor: true,
                     title: 'Job title',
+                    maxLines: 1,
+                    maxCharacters: 20,
                     controller: jobTitleController,
                     onType: (val) {
                       SettingsData.instance.jobTitle = val;
@@ -196,6 +198,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                   TextEditBlock(
                     showCursor: true,
                     title: 'School',
+                    maxCharacters: 10,
+                    maxLines: 1,
                     controller: schoolController,
                     onType: (val) {
                       SettingsData.instance.school = val;

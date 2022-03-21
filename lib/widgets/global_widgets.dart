@@ -248,10 +248,7 @@ class GlobalWidgets {
                     alignment: Alignment.center,
                     padding: EdgeInsets.symmetric(vertical: 8.0),
                     child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateColor.resolveWith(
-                            (states) => Colors.white),
-                      ),
+                      style: ButtonStyle(),
                       onPressed: () {
                         // user has canceled the delete action.
                         Get.back();
