@@ -1,29 +1,29 @@
-import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/screens/children_screen.dart';
 import 'package:betabeta/screens/covid_screen.dart';
 import 'package:betabeta/screens/drinking_screen.dart';
 import 'package:betabeta/screens/education_screen.dart';
 import 'package:betabeta/screens/fitness_screen.dart';
 import 'package:betabeta/screens/my_hobbies_screen.dart';
+import 'package:betabeta/screens/my_pets_screen.dart';
 import 'package:betabeta/screens/orientation_edit_screen.dart';
 import 'package:betabeta/screens/pronouns_edit_screen.dart';
 import 'package:betabeta/screens/smoking_screen.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/utils/mixins.dart';
+import 'package:betabeta/widgets/bubble_edit_block.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/images_upload_widget.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
-import 'package:betabeta/widgets/onboarding/input_field.dart';
-import 'package:betabeta/widgets/profile_edit_block2.dart';
+import 'package:betabeta/widgets/onboarding/rounded_button.dart';
+import 'package:betabeta/widgets/profile_edit_block.dart';
 import 'package:betabeta/widgets/setting_edit_block.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'package:extended_image/extended_image.dart';
 import 'package:get/get.dart';
 
 /// The Implemntation of the Profile-screen
@@ -40,14 +40,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
     with MountedStateMixin {
   // --> All this information should be added to the data model.
   // this will be pre-filled with data from the server.
-  bool _incognitoMode = true;
-
-  String? _jobTitle = 'Please add';
-
-  String? _school = 'Please add';
-
-  bool _uploadingImage =
-      false; //Is image in the process of being uploaded? give user a visual cue
 
   @override
   initState() {
@@ -64,29 +56,63 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
     super.dispose();
   }
 
-  TextEditingController heightController =
-      TextEditingController(text: "cm (ft)");
-  TextEditingController genderController =
-      TextEditingController(text: SettingsData.instance.userGender);
-  TextEditingController orientationController =
-      TextEditingController(text: SettingsData.instance.preferredGender);
+  int heightOptions = 129;
+
   TextEditingController aboutMeController =
       TextEditingController(text: SettingsData.instance.userDescription);
-  int ft = 0;
-  int inches = 0;
-  String? cm;
+  TextEditingController schoolController =
+      TextEditingController(text: SettingsData.instance.school);
+  TextEditingController jobTitleController =
+      TextEditingController(text: SettingsData.instance.jobTitle);
 
-  cmToFeet(centimeters) {
-    double height = centimeters / 2.54;
-    double inch = height % 12;
-    double feet = height / 12;
-    return ("${feet.toInt()}' ${inch.toInt()}");
+  void updateHeight(int value) {
+    SettingsData.instance.heightInCm = value + startingCm;
   }
 
-  inchesToCm() {
-    int inchesTotal = (ft * 12) + inches;
-    cm = (inchesTotal * 2.54).toStringAsPrecision(5);
-    heightController.text = cm!;
+  void updateReligion(int value) {
+    SettingsData.instance.religion = kReligionsList[value];
+  }
+
+  void updateZodiac(int value) {
+    SettingsData.instance.zodiac = kZodiacsList[value];
+  }
+
+  choicesPopUp(List<String> choices, Function(int)? onChange) async {
+    FocusScope.of(context).requestFocus(new FocusNode());
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(10))),
+            height: 300,
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: CupertinoPicker(
+                      scrollController: FixedExtentScrollController(
+                          initialItem: choices.length ~/ 2),
+                      itemExtent: 50.0,
+                      onSelectedItemChanged: (onChange),
+                      children:
+                          choices.map((e) => Center(child: Text(e))).toList(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -94,192 +120,181 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
     return ListenerWidget(
       notifier: SettingsData.instance,
       builder: (context) {
-        return Scaffold(
-          backgroundColor: backgroundThemeColor,
-          appBar: CustomAppBar(
-            title: 'Edit Profile',
-            hasTopPadding: true,
-            showAppLogo: false,
-          ),
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Text(
-                    ' My pictures',
-                    style: smallBoldedTitleBlack,
+        return GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Scaffold(
+            backgroundColor: backgroundThemeColor,
+            appBar: CustomAppBar(
+              title: 'Edit Profile',
+              hasTopPadding: true,
+              showAppLogo: false,
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Text(
+                      ' My pictures',
+                      style: smallBoldedTitleBlack,
+                    ),
                   ),
-                ),
-                Center(
-                  child: ImagesUploadwidget(),
-                ),
-                TextEditBlock(
-                  keyboardType: TextInputType.multiline,
-                  showCursor: true,
-                  title: 'About me',
-                  minLines: 4,
-                  maxLines: 14,
-                  controller: aboutMeController,
-                  onType: (value) {
-                    SettingsData.instance.userDescription = value;
-                  },
-                ),
-                TextEditBlock(
-                  showCursor: true,
-                  title: 'Job title',
-                  initialValue: _jobTitle,
-                  onType: (val) {
-                    _jobTitle = val;
-                  },
-                ),
-                TextEditBlock(
-                  showCursor: true,
-                  title: 'School',
-                  initialValue: _school,
-                  onType: (val) {
-                    _school = val;
-                  },
-                ),
-                ProfileEditBlock2(
-                  title: 'Gender',
-                  icon: FontAwesomeIcons.userAlt,
-                  value: genderController.text.capitalizeFirst,
-                  onTap: () async {
-                    await Get.toNamed(PronounsEditScreen.routeName);
-                    genderController.text = SettingsData.instance.userGender;
-                  },
-                ),
-                ProfileEditBlock2(
-                  title: 'Height',
-                  icon: FontAwesomeIcons.ruler,
-                  value: heightController.text != 'cm (ft)'
-                      ? heightController.text
-                      : null,
-                  onTap: () {
-                    FocusScope.of(context).requestFocus(new FocusNode());
-                    showCupertinoModalPopup(
-                        context: context,
-                        builder: (context) {
-                          return Padding(
-                            padding: const EdgeInsets.all(30.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10))),
-                              height: 300,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    flex: 3,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: CupertinoPicker(
-                                        scrollController:
-                                            FixedExtentScrollController(
-                                                initialItem: 63),
-                                        itemExtent: 50.0,
-                                        onSelectedItemChanged: (int index) {
-                                          setState(() {
-                                            cm = (index + 91).toString();
-                                            heightController.text =
-                                                "$cm cm (${cmToFeet(index + 91)} ft)";
-                                          });
-                                        },
-                                        children: List.generate(129, (index) {
-                                          return Center(
-                                            child: Text(
-                                                '${index + 91} cm (${cmToFeet(index + 91)} ft)'),
-                                          );
-                                          return SizedBox();
-                                        }),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        });
-                  },
-                ),
-                ProfileEditBlock2(
-                  title: 'Fitness',
-                  icon: FontAwesomeIcons.dumbbell,
-                  onTap: () {
-                    Get.toNamed(FitnessScreen.routeName);
-                  },
-                ),
-                ProfileEditBlock2(
-                  title: 'Smoking',
-                  icon: FontAwesomeIcons.smoking,
-                  onTap: () {
-                    Get.toNamed(SmokingScreen.routeName);
-                  },
-                ),
-                ProfileEditBlock2(
-                  title: 'Drinking',
-                  icon: FontAwesomeIcons.wineGlassAlt,
-                  onTap: () {
-                    Get.toNamed(DrinkingScreen.routeName);
-                  },
-                ),
-                ProfileEditBlock2(
-                  title: 'Education',
-                  icon: FontAwesomeIcons.userGraduate,
-                  onTap: () {
-                    Get.toNamed(EducationScreen.routeName);
-                  },
-                ),
-                ProfileEditBlock2(
-                  title: 'Interested in',
-                  icon: FontAwesomeIcons.users,
-                  value: orientationController.text,
-                  onTap: () async {
-                    await Get.toNamed(OrientationEditScreen.routeName);
-                    orientationController.text =
-                        SettingsData.instance.preferredGender;
-                  },
-                ),
-                ProfileEditBlock2(
-                  title: 'Children',
-                  icon: FontAwesomeIcons.babyCarriage,
-                  onTap: () {
-                    Get.toNamed(KidsScreen.routeName);
-                  },
-                ),
-                ProfileEditBlock2(
-                  title: 'Covid Vaccine',
-                  icon: FontAwesomeIcons.syringe,
-                  onTap: () {
-                    Get.toNamed(CovidScreen.routeName);
-                  },
-                ),
-                ProfileEditBlock2(
-                  title: 'Location',
-                  icon: FontAwesomeIcons.globeAmericas,
-                  value: SettingsData.instance.locationDescription
-                      .split(',')
-                      .first,
-                  onTap: () {
-                    print(SettingsData.instance.locationDescription
-                        .split(',')
-                        .first);
-                  },
-                ),
-                TextEditBlock(
-                  title: 'My hobbies',
-                  readOnly: true,
-                  onTap: () {
-                    Get.toNamed(MyHobbiesScreen.routeName);
-                  },
-                ),
-                SizedBox(height: 20),
-              ],
+                  Center(
+                    child: ImagesUploadwidget(),
+                  ),
+                  TextEditBlock(
+                    keyboardType: TextInputType.multiline,
+                    showCursor: true,
+                    title: 'About me',
+                    minLines: 4,
+                    maxLines: 14,
+                    controller: aboutMeController,
+                    onType: (value) {
+                      SettingsData.instance.userDescription = value;
+                    },
+                  ),
+                  Divider(),
+                  ProfileEditBlock(
+                    title: 'Height',
+                    icon: FontAwesomeIcons.ruler,
+                    value: SettingsData.instance.heightInCm != 0
+                        ? '${SettingsData.instance.heightInCm} cm (${cmToFeet(SettingsData.instance.heightInCm)} ft)'
+                        : null,
+                    onTap: () {
+                      choicesPopUp(kHeightList, updateHeight);
+                    },
+                  ),
+                  ProfileEditBlock(
+                    title: 'Religion',
+                    icon: FontAwesomeIcons.prayingHands,
+                    value: SettingsData.instance.religion,
+                    onTap: () {
+                      choicesPopUp(kReligionsList, updateReligion);
+                    },
+                  ),
+                  ProfileEditBlock(
+                    title: 'Zodiac',
+                    icon: FontAwesomeIcons.starAndCrescent,
+                    value: SettingsData.instance.zodiac,
+                    onTap: () {
+                      choicesPopUp(kZodiacsList, updateZodiac);
+                    },
+                  ),
+                  Divider(),
+                  TextEditBlock(
+                    showCursor: true,
+                    title: 'Job title',
+                    controller: jobTitleController,
+                    onType: (val) {
+                      SettingsData.instance.jobTitle = val;
+                    },
+                  ),
+                  Divider(),
+                  TextEditBlock(
+                    showCursor: true,
+                    title: 'School',
+                    controller: schoolController,
+                    onType: (val) {
+                      SettingsData.instance.school = val;
+                    },
+                  ),
+                  Divider(),
+                  ProfileEditBlock(
+                    title: 'Education',
+                    icon: FontAwesomeIcons.graduationCap,
+                    value: SettingsData.instance.education,
+                    onTap: () {
+                      Get.toNamed(EducationScreen.routeName);
+                      FocusScope.of(context).unfocus();
+                    },
+                  ),
+                  ProfileEditBlock(
+                    title: 'Fitness',
+                    icon: FontAwesomeIcons.dumbbell,
+                    value: SettingsData.instance.fitness,
+                    onTap: () {
+                      Get.toNamed(FitnessScreen.routeName);
+                    },
+                  ),
+                  ProfileEditBlock(
+                    title: 'Smoking',
+                    icon: FontAwesomeIcons.smoking,
+                    value: SettingsData.instance.smoking,
+                    onTap: () {
+                      Get.toNamed(SmokingScreen.routeName);
+                    },
+                  ),
+                  ProfileEditBlock(
+                    title: 'Drinking',
+                    icon: FontAwesomeIcons.wineGlassAlt,
+                    value: SettingsData.instance.drinking,
+                    onTap: () {
+                      Get.toNamed(DrinkingScreen.routeName);
+                    },
+                  ),
+                  ProfileEditBlock(
+                    title: 'Children',
+                    icon: FontAwesomeIcons.babyCarriage,
+                    value: SettingsData.instance.children,
+                    onTap: () {
+                      Get.toNamed(KidsScreen.routeName);
+                    },
+                  ),
+                  ProfileEditBlock(
+                    title: 'Covid Vaccine',
+                    icon: FontAwesomeIcons.syringe,
+                    value: SettingsData.instance.covid_vaccine,
+                    onTap: () {
+                      Get.toNamed(CovidScreen.routeName);
+                    },
+                  ),
+                  Divider(),
+                  BubbleEditBlock(
+                    title: 'My hobbies',
+                    bubbles: SettingsData.instance.hobbies,
+                    onTap: () {
+                      Get.toNamed(MyHobbiesScreen.routeName);
+                    },
+                  ),
+                  BubbleEditBlock(
+                    title: 'My pets',
+                    bubbles: SettingsData.instance.pets,
+                    altEmptyBubbles: kEmptyPets,
+                    onTap: () {
+                      Get.toNamed(MyPetsScreen.routeName);
+
+                      //print(SettingsData.instance.hobbies);
+                    },
+                  ),
+                  ProfileEditBlock(
+                    title: 'Gender',
+                    icon: FontAwesomeIcons.userAlt,
+                    value: SettingsData.instance.userGender.capitalizeFirst,
+                    onTap: () {
+                      Get.toNamed(PronounsEditScreen.routeName);
+                    },
+                  ),
+                  ProfileEditBlock(
+                    title: 'Interested in',
+                    icon: FontAwesomeIcons.users,
+                    value: SettingsData.instance.preferredGender,
+                    onTap: () {
+                      Get.toNamed(OrientationEditScreen.routeName);
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: RoundedButton(
+                        name: 'Done',
+                        onTap: () {
+                          Navigator.pop(context);
+                        }),
+                  )
+                ],
+              ),
             ),
           ),
         );

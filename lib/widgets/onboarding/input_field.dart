@@ -63,7 +63,7 @@ class InputField extends StatelessWidget {
           controller: controller,
           onEditingComplete: () => FocusScope.of(context).unfocus(),
           readOnly: readonly,
-          cursorColor: Colors.black,
+          cursorColor: Colors.blue,
           initialValue: initialvalue,
           onTap: onTap,
           maxLines: maxLines,

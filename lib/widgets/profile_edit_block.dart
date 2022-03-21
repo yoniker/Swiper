@@ -1,15 +1,15 @@
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 /// Edit block that present the button in a different way
 
-class ProfileEditBlock2 extends StatefulWidget {
-  ProfileEditBlock2({
+class ProfileEditBlock extends StatefulWidget {
+  ProfileEditBlock({
     required this.title,
     this.value,
     this.onType,
+    this.showArrow = true,
     this.iconColor = Colors.black,
     this.onTap,
     this.icon,
@@ -18,14 +18,15 @@ class ProfileEditBlock2 extends StatefulWidget {
   final IconData? icon;
   final Color iconColor;
   final String? value;
-  void Function(String)? onType;
-  void Function()? onTap;
+  final bool showArrow;
+  final void Function(String)? onType;
+  final void Function()? onTap;
 
   @override
   _TextEditBlock2State createState() => _TextEditBlock2State();
 }
 
-class _TextEditBlock2State extends State<ProfileEditBlock2> {
+class _TextEditBlock2State extends State<ProfileEditBlock> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -53,28 +54,33 @@ class _TextEditBlock2State extends State<ProfileEditBlock2> {
             ),
             Row(
               children: [
-                widget.value == null
+                widget.value == 0 || widget.value == '' || widget.value == null
                     ? Text(
                         'Add',
                         style: smallTitleLighterBlack,
                       )
-                    : Text(
-                        widget.value!,
-                        style: smallBoldedTitleBlack,
-                        maxLines: 1,
-                        softWrap: false,
-                        overflow: TextOverflow.ellipsis,
+                    : SizedBox(
+                        width: 150,
+                        child: Text(
+                          widget.value!,
+                          textAlign: TextAlign.end,
+                          style: smallBoldedTitleBlack,
+                          maxLines: 1,
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                 SizedBox(
                   width: 5,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Icon(
-                    FontAwesomeIcons.chevronRight,
-                    color: Colors.black54,
-                  ),
-                )
+                if (widget.showArrow)
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Icon(
+                      FontAwesomeIcons.chevronRight,
+                      color: Colors.black54,
+                    ),
+                  )
               ],
             )
           ],

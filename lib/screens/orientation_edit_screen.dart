@@ -1,14 +1,9 @@
-import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/services/screen_size.dart';
+import 'package:betabeta/constants/enums.dart';
+import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/settings_model.dart';
-import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
-import 'package:betabeta/widgets/onboarding/rounded_button.dart';
+import 'package:betabeta/widgets/custom_app_bar.dart';
+import 'package:betabeta/widgets/questionnaire_widget.dart';
 import 'package:flutter/material.dart';
-
-import '../constants/enums.dart';
-import '../constants/onboarding_consts.dart';
-import '../widgets/custom_app_bar.dart';
-import '../widgets/onboarding/choice_button.dart';
 
 class OrientationEditScreen extends StatefulWidget {
   static const String routeName = '/orientation_edit_screen';
@@ -20,6 +15,11 @@ class OrientationEditScreen extends StatefulWidget {
 class _OrientationEditScreenState extends State<OrientationEditScreen> {
   PreferredGender? currentChoice;
   String whatWeShowText = '';
+  List<String> promotes = [
+    'We will only show you men',
+    'We will only show you women',
+    'We will show you everyone'
+  ];
 
   updateText() {
     if (SettingsData.instance.preferredGender == PreferredGender.Men.name) {
@@ -48,92 +48,12 @@ class _OrientationEditScreenState extends State<OrientationEditScreen> {
         title: 'Interested in',
       ),
       backgroundColor: kBackroundThemeColor,
-      body: Padding(
-        padding: const EdgeInsets.only(top: 20.0, left: 20, right: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            ConditionalParentWidget(
-              condition:
-                  ScreenSize.getSize(context) == ScreenSizeCategory.small,
-              conditionalBuilder: (Widget child) => FittedBox(
-                child: child,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: const Text(
-                      'Interested in?',
-                      style: titleStyle,
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  ChoiceButton(
-                    name: 'Men',
-                    onTap: () {
-                      setState(() {
-                        SettingsData.instance.preferredGender =
-                            PreferredGender.Men.name;
-                        whatWeShowText = 'We will only show you men';
-                      });
-                    },
-                    pressed: SettingsData.instance.preferredGender ==
-                        PreferredGender.Men.name,
-                  ),
-                  const SizedBox(height: 20),
-                  ChoiceButton(
-                      name: 'Women',
-                      onTap: () {
-                        setState(() {
-                          SettingsData.instance.preferredGender =
-                              PreferredGender.Women.name;
-                          whatWeShowText = 'We will only show you women';
-                        });
-                      },
-                      pressed: SettingsData.instance.preferredGender ==
-                          PreferredGender.Women.name),
-                  const SizedBox(height: 20),
-                  ChoiceButton(
-                      name: 'Everyone',
-                      onTap: () {
-                        setState(() {
-                          SettingsData.instance.preferredGender =
-                              PreferredGender.Everyone.name;
-                          whatWeShowText = 'We will show you everyone';
-                        });
-                      },
-                      pressed: SettingsData.instance.preferredGender ==
-                          PreferredGender.Everyone.name),
-                ],
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                RoundedButton(
-                    name: 'Save',
-                    onTap: () {
-                      Navigator.pop(context);
-                    }),
-                SizedBox(
-                  height: 5,
-                ),
-                FittedBox(
-                  child: Row(
-                    children: [
-                      const Icon(Icons.remove_red_eye_rounded,
-                          color: Colors.black54),
-                      const SizedBox(width: 10),
-                      Text(whatWeShowText, style: kSmallInfoStyle),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 10),
-              ],
-            )
-          ],
-        ),
+      body: QuestionnaireWidget(
+        choices: ['Men', 'Women', 'Everyone'],
+        headline: 'Interested in?',
+        promotes: promotes,
+        alwaysPressed: true,
+        initialChoice: SettingsData.instance.preferredGender,
       ),
     );
   }

@@ -215,10 +215,9 @@ class _MatchScreenState extends State<MatchScreen>
             trailing: Padding(
               padding: const EdgeInsets.only(right: 10),
               child: GestureDetector(
-                child: Icon(
-                  FontAwesomeIcons.slidersH,
-                  size: 25,
-                  color: Colors.black87,
+                child: Image.asset(
+                  'assets/images/settings.png',
+                  scale: 12,
                 ),
                 onTap: () async {
                   // hide the overlay.
@@ -276,11 +275,13 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
     super.initState();
   }
 
-  Widget _widgetWhenNoCardsExist(){
-    if(MatchEngine.instance.getServerSearchStatus == MatchSearchStatus.not_found){
-      return Center(child: Text('FOR NITZAN : DO A REASONABLR "NO MORE MATCHES FOUND" WIDGET HERE'));
+  Widget _widgetWhenNoCardsExist() {
+    if (MatchEngine.instance.getServerSearchStatus ==
+        MatchSearchStatus.not_found) {
+      return Center(
+          child: Text(
+              'FOR NITZAN : DO A REASONABLR "NO MORE MATCHES FOUND" WIDGET HERE'));
     }
-
 
     return SpinKitChasingDots(
       size: 20.0,
@@ -297,7 +298,8 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
         List<Match?> topEngineMatches = [
           if (MatchEngine.instance.currentMatch() != null)
             MatchEngine.instance.currentMatch(),
-          if (MatchEngine.instance.nextMatch() != null) MatchEngine.instance.nextMatch()
+          if (MatchEngine.instance.nextMatch() != null)
+            MatchEngine.instance.nextMatch()
         ];
 
         Widget _buildThumbIcon() {
@@ -354,9 +356,11 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
                       if (index == 0) {
                         //TODO index>0 should be impossible
                         if (info.direction == SwipeDirection.Left) {
-                          MatchEngine.instance.currentMatchDecision(Decision.nope);
+                          MatchEngine.instance
+                              .currentMatchDecision(Decision.nope);
                         } else if (info.direction == SwipeDirection.Right) {
-                          MatchEngine.instance.currentMatchDecision(Decision.like);
+                          MatchEngine.instance
+                              .currentMatchDecision(Decision.like);
                         }
                       }
                     },

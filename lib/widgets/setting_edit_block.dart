@@ -13,7 +13,7 @@ class TextEditBlock extends StatefulWidget {
       this.onType,
       this.onTap,
       this.icon,
-      this.keyboardType,
+      this.keyboardType = TextInputType.text,
       this.readOnly = false,
       this.showCursor = false,
       this.controller,
@@ -24,12 +24,12 @@ class TextEditBlock extends StatefulWidget {
   final int minLines;
   final String? placeholder;
   final TextEditingController? controller;
-  TextInputType? keyboardType = TextInputType.text;
-  bool readOnly;
-  bool showCursor;
-  String? initialValue;
-  void Function(String)? onType;
-  void Function()? onTap;
+  final TextInputType? keyboardType;
+  final bool readOnly;
+  final bool showCursor;
+  final String? initialValue;
+  final void Function(String)? onType;
+  final void Function()? onTap;
 
   @override
   _TextEditBlockState createState() => _TextEditBlockState();

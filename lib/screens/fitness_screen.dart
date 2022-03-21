@@ -28,8 +28,13 @@ class _FitnessScreen extends State<FitnessScreen> {
                 title: 'Fitness',
               ),
               body: QuestionnaireWidget(
-                  headline: 'How often do you work out?',
-                  choices: ['Active', 'Occasionally', 'Never']));
+                headline: 'How often do you work out?',
+                choices: ['Active', 'Occasionally', 'Never'],
+                initialChoice: SettingsData.instance.fitness,
+                onValueChanged: (newFitnessValue) {
+                  SettingsData.instance.fitness = newFitnessValue;
+                },
+              ));
         });
   }
 
