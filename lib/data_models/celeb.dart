@@ -5,16 +5,17 @@ class Celeb {
   final String? birthday;
   final String? description;
   final String? country;
-  List<String?>? imagesUrls;
+  List<String>? imagesUrls;
 
   Celeb({
     required this.celebName,
+    this.imagesUrls,
     this.name,
     this.aliases,
     this.birthday,
     this.description,
     this.country,
-    this.imagesUrls,
+
   });
 
   factory Celeb.fromJson(Map<String, dynamic> json) {

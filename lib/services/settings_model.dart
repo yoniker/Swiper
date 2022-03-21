@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/userid.dart';
-import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -269,19 +269,25 @@ class SettingsData extends ChangeNotifier {
     savePreferences(AUDITION_COUNT_KEY, newAuditionCount);
   }
 
-  String get filterName {
+  String get filterName{ //TODO remove public support?
     return _filterName;
   }
 
-  set filterName(String newFilterName) {
-    if (newFilterName == _filterName) {
-      return;
-    }
+   set filterName(String newFilterName){ //TODO remove public support
+    if(newFilterName==_filterName) {return;}
     _filterName = newFilterName;
     savePreferences(FILTER_NAME_KEY, newFilterName);
   }
 
-  String get filterDisplayImageUrl {
+  FilterType get filterType{
+    return FilterType.values.firstWhere((filter) => filter.name==_filterName,orElse:()=>FilterType.NONE);
+  }
+
+  set filterType(FilterType filterType){
+    this.filterName = filterType.name;
+  }
+
+  String get filterDisplayImageUrl{
     return _filterDisplayImageUrl;
   }
 
@@ -349,10 +355,6 @@ class SettingsData extends ChangeNotifier {
     _lastSync = newLastSync;
     savePreferences(LAST_SYNC_KEY, newLastSync,
         sendServer: false, resetMatchEngine: false);
-  }
-
-  UserId get id {
-    return UserId(id: _facebookId, userType: UserType.REAL_USER);
   }
 
   String get fcmToken {

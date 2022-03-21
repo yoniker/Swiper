@@ -2,6 +2,8 @@ import 'dart:collection';
 import 'dart:io';
 
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/screens/main_navigation_screen.dart';
+import 'package:betabeta/screens/voila_page.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/services/networking.dart';
@@ -42,12 +44,11 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
 
   void getFacesLinks() async {
     HashMap<String, dynamic> facesData = await NetworkHelper().getFacesCustomImageSearchLinks(
-        imageFileName: widget.imageFileName, userId: SettingsData.instance.id);
+        imageFileName: widget.imageFileName);
     String? status = facesData['status'];
     while (status == 'incomplete') {
       facesData = await NetworkHelper().getFacesCustomImageSearchLinks(
-          imageFileName: widget.imageFileName,
-          userId: SettingsData.instance.id);
+          imageFileName: widget.imageFileName);
       status = facesData[
           'status']; //TODO make sure we don't fuck the server with lots of requests
 
@@ -104,7 +105,7 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
                                 _facesLinks![_indexSelected];
                             navigator!.popUntil( (route) {
                               return route.settings.name ==
-                                  AdvancedSettingsScreen.routeName;
+                                  VoilaPage.routeName || route.settings.name == MainNavigationScreen.routeName;
                             }); //ModalRoute.withName(AdvancedSettingsScreen.routeName));
                           },
                     child: Column(

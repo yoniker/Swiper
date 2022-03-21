@@ -34,7 +34,7 @@ class NotificationsController{
     Map<String,dynamic> notificationData = json.jsonDecode(payload);
     if(notificationData[NOTIFICATION_TYPE]==NEW_MESSAGE_NOTIFICATION){
       String senderId = notificationData[SENDER_ID]!;
-      InfoUser? collocutor = ChatData().getUserById(senderId);
+      InfoUser? collocutor = ChatData.instance.getUserById(senderId);
 
       if(collocutor!=null){
         Get.toNamed(ChatScreen.getRouteWithUserId(collocutor.uid));

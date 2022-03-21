@@ -34,7 +34,7 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
 
 
   void updateChatData() {
-    List<InfoMessage> currentChatMessages = ChatData().messagesInConversation(conversationId);
+    List<InfoMessage> currentChatMessages = ChatData.instance.messagesInConversation(conversationId);
     _messages = currentChatMessages.map((message) => message.toUiMessage()).toList();
 
   }
@@ -46,19 +46,19 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
     });
 
     if(AppStateInfo.instance.appState==AppLifecycleState.resumed){
-      await ChatData().markConversationAsRead(conversationId);}
+      await ChatData.instance.markConversationAsRead(conversationId);}
   }
 
 
 
   @override
   void initState() {
-    InfoUser? userFound = ChatData().getUserById(widget.userid);
+    InfoUser? userFound = ChatData.instance.getUserById(widget.userid);
     if(userFound==null){Get.back();} //TODO on this kind of error another option is to put out a detailed error screen
     theUser = userFound!;
-    conversationId = ChatData().calculateConversationId(theUser.uid);
-    ChatData().markConversationAsRead(conversationId).then((_)
-    {ChatData().listenConversation(conversationId,listenConversation);
+    conversationId = ChatData.instance.calculateConversationId(theUser.uid);
+    ChatData.instance.markConversationAsRead(conversationId).then((_)
+    {ChatData.instance.listenConversation(conversationId,listenConversation);
     AppStateInfo.instance.addListener(listenConversation);
 
     }
@@ -81,16 +81,16 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
         user: types.User(id: SettingsData.instance.facebookId),
         showUserAvatars:true,
         onSendPressed: (text){
-          ChatData().sendMessage(theUser.uid,
+          ChatData.instance.sendMessage(theUser.uid,
               jsonEncode({"type":"text","content":"${text.text}"}));
         },
         messages: _messages,
         onMessageTap: (context,message){
-          ChatData().resendMessageIfError(conversationId, message.id);
+          ChatData.instance.resendMessageIfError(conversationId, message.id);
 
         },
         onMessageLongPress: (context,message){
-          ChatData().resendMessageIfError(conversationId, message.id);
+          ChatData.instance.resendMessageIfError(conversationId, message.id);
         },
 
 
@@ -100,7 +100,7 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
 
   @override
   void dispose() {
-    ChatData().removeListenerConversation(conversationId,listenConversation);
+    ChatData.instance.removeListenerConversation(conversationId,listenConversation);
     AppStateInfo.instance.removeListener(listenConversation);
     super.dispose();
   }

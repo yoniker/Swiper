@@ -24,7 +24,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
 
   @override
   void initState() {
-    ChatData().addListener(listen);
+    ChatData.instance.addListener(listen);
     super.initState();
   }
 
@@ -84,7 +84,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
 
   @override
   void dispose() {
-    ChatData().removeListener(listen);
+    ChatData.instance.removeListener(listen);
     super.dispose();
   }
 }

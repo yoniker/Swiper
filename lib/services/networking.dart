@@ -41,13 +41,13 @@ class NetworkHelper {
 
   NetworkHelper._internal();
 
-  static Future<List<String>?> getCeleblinks(String? celebName) async {
+  static Future<List<String>> getCeleblinks(String? celebName) async {
     Uri celebsLinkUri = Uri.https(SERVER_ADDR, 'celeblinks/$celebName');
     http.Response resp = await http.get(celebsLinkUri);
     if (resp.statusCode == 200) {
       //TODO think how to handle network errors
       var parsed = json.jsonDecode(resp.body);
-      List<String>? imagesLinks = parsed.cast<String>();
+      List<String> imagesLinks = parsed.cast<String>();
       return imagesLinks;
     }
 
@@ -99,6 +99,10 @@ class NetworkHelper {
     return imagesUrls.map((val) {
       return NetworkHelper.SERVER_ADDR + '/images/' + val;
     }).toList();
+  }
+
+  static String serverCelebImageUrl(String imageUrl){
+    return NetworkHelper.faceUrlToFullUrl(imageUrl);
   }
 
   postUserDecision({Decision? decision, Profile? otherUserProfile}) async {
@@ -158,12 +162,12 @@ class NetworkHelper {
   }
 
   Future<HashMap<String, dynamic>> getFacesCustomImageSearchLinks(
-      {String? imageFileName, UserId? userId}) async {
+      {String? imageFileName}) async {
     if (_facesCall != null) {
       return HashMap();
     }
     Uri facesLinkUri =
-        Uri.https(SERVER_ADDR, 'faces/${userId!.id}/$imageFileName');
+        Uri.https(SERVER_ADDR, 'faces/${SettingsData.instance.uid}/$imageFileName');
     _facesCall = http.get(facesLinkUri);
     if (DateTime.now().difference(_lastFacesImagesCall) <
         MIN_FACES_CALL_INTERVAL) {

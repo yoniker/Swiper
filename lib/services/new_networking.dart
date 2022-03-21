@@ -157,8 +157,8 @@ class NewNetworkService {
       SettingsData.EDUCATION_KEY :settings.education,
       SettingsData.CHILDREN_KEY : settings.children,
       SettingsData.COVID_VACCINE_KEY : settings.covid_vaccine,
-      SettingsData.HOBBIES_KEY: settings.hobbies.toString(),
-      SettingsData.PETS_KEY :settings.pets.toString(),
+      SettingsData.HOBBIES_KEY:json.jsonEncode(settings.hobbies.toString()) ,
+      SettingsData.PETS_KEY :json.jsonEncode(settings.pets.toString()),
       SettingsData.HEIGHT_IN_CM_KEY:settings.heightInCm.toString(),
 
     };
