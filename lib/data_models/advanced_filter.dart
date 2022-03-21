@@ -100,7 +100,7 @@ class AdvancedFilter {
     //
     return {
       'filter_index': filterIndex,
-      'filter_type': filterTypeToString(filterType),
+      'filter_type': filterType!.name,
       'audition_count': auditionCount,
       'celeb': selectedCeleb!.toJson(),
     };

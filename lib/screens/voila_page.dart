@@ -68,6 +68,12 @@ class _VoilaPageState extends State<VoilaPage> {
       );
     }
 
+    finally{
+      if(SettingsData.instance.filterDisplayImageUrl.length==0){
+        SettingsData.instance.filterType = FilterType.NONE;
+      }
+    }
+
     // un-block the UI.
     setState(() {
       isLoading = false;
@@ -238,10 +244,9 @@ class _VoilaPageState extends State<VoilaPage> {
                                           // });
 
                                           // Display an image picker Dilaogue.
-                                          setState(() {
                                             SettingsData.instance.filterType =
                                                 FilterType.CUSTOM_IMAGE;
-                                          });
+
                                           await GlobalWidgets
                                               .showImagePickerDialogue(
                                             context: context,

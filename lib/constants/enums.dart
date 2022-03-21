@@ -30,37 +30,9 @@ extension uiDescription on FilterType {
 enum ImageType { Celeb, Custom }
 
 /// CONVERT from String to FilterType.
-FilterType filterTypeFromString(String? filter) {
-  switch (filter) {
-    case 'select_celeb':
-      return FilterType.CELEB_IMAGE;
+FilterType filterTypeFromString(String? filterName) {
+  return FilterType.values.firstWhere((filter) => filter.name==filterName,orElse:()=>FilterType.NONE);
 
-    case 'use_taste':
-      return FilterType.USER_TASTE;
-
-    case 'none':
-      return FilterType.NONE;
-
-    default:
-      return FilterType.NONE;
-  }
 }
 
-/// CONVERT from FilterType to String.
-String filterTypeToString(FilterType? filterType) {
-  switch (filterType) {
-    case FilterType.CELEB_IMAGE:
-      return 'select_celeb';
-      ;
-    case FilterType.TEXT_SEARCH:
-      return 'text_search';
-    case FilterType.USER_TASTE:
-      return 'use_taste';
 
-    case FilterType.NONE:
-      return 'none';
-
-    default:
-      return 'none';
-  }
-}
