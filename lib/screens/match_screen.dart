@@ -14,6 +14,7 @@ import 'package:betabeta/widgets/gradient_text_widget.dart';
 import 'package:betabeta/widgets/image_filterview_widget.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/match_card.dart';
+import 'package:betabeta/widgets/text_search_view_widget.dart';
 import 'package:betabeta/widgets/voila_logo_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -111,13 +112,17 @@ class _MatchScreenState extends State<MatchScreen>
   Widget buildCenterWidget() {
     switch (SettingsData.instance.filterType) {
       case FilterType.TEXT_SEARCH:
-        return VoilaLogoWidget();
+        if (SettingsData.instance.textSearch.length > 0)
+          return TextSearchViewWidget(
+              animationController: _animationController);
+        break;
       case FilterType.CELEB_IMAGE:
       case FilterType.CUSTOM_IMAGE:
         return ImageFilterViewWidget(animationController: _animationController);
       default:
         return VoilaLogoWidget();
     }
+    return VoilaLogoWidget();
   }
 
   @override

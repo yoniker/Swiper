@@ -18,6 +18,7 @@ import 'package:betabeta/widgets/gradient_text_widget.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
+import 'package:betabeta/widgets/voila_logo_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -144,27 +145,7 @@ class _VoilaPageState extends State<VoilaPage> {
                         ),
                       ),
                       centerWidget: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: GradientText(
-                                'Voilà-dating',
-                                style: TextStyle(
-                                    overflow: TextOverflow.fade,
-                                    color: goldColorish,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold),
-                                gradient: LinearGradient(colors: [
-                                  Color(0XFFFBCE32),
-                                  Color(0XFFD2AB54),
-                                  Color(0XFFC3932F),
-                                ]),
-                              ),
-                            ),
-                          ],
-                        ),
+                        child: VoilaLogoWidget(),
                       ),
                       showAppLogo: false,
                       hasBackButton: false,

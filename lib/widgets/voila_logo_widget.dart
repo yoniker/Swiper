@@ -18,7 +18,7 @@ class VoilaLogoWidget extends StatelessWidget {
               fontSize: 25,
               fontWeight: FontWeight.bold),
           gradient: LinearGradient(colors: [
-            Color(0XFFFBCE32),
+            Color(0XFFC3932F),
             Color(0XFFD2AB54),
             Color(0XFFC3932F),
           ]),
