@@ -53,6 +53,7 @@ class SettingsData extends ChangeNotifier {
   static const String HOBBIES_KEY = 'hobbies';
   static const String PETS_KEY = 'pets';
   static const String HEIGHT_IN_CM_KEY = 'height_in_cm';
+  static const String TEXT_SEARCH_KEY = 'text_search';
 
   static const _debounceSettingsTime =
       Duration(seconds: 2); //Debounce time such that we notify listeners
@@ -99,6 +100,7 @@ class SettingsData extends ChangeNotifier {
   String _children = '';
   String _jobTitle = '';
   String _covid_vaccine = '';
+  String _textSearch = '';
   List<String> _hobbies = [];
   List<String> _pets = [];
   int _heightInCm = 0;
@@ -173,6 +175,7 @@ class SettingsData extends ChangeNotifier {
     _pets = sharedPreferences.getStringList(PETS_KEY) ?? _pets;
     _heightInCm = sharedPreferences.getInt(HEIGHT_IN_CM_KEY) ?? _heightInCm;
     _jobTitle = sharedPreferences.getString(JOB_TITLE_KEY) ?? _jobTitle;
+    _textSearch = sharedPreferences.getString(TEXT_SEARCH_KEY)??_textSearch;
     _readFromShared = true;
 
     return;
@@ -665,6 +668,19 @@ class SettingsData extends ChangeNotifier {
   set pets(List<String> newPets) {
     _pets = newPets;
     savePreferences(PETS_KEY, newPets, resetMatchEngine: false);
+  }
+
+
+  String get textSearch {
+    return _textSearch;
+  }
+
+  set textSearch(String newTextSearch) {
+    if (_textSearch == newTextSearch) {
+      return;
+    }
+    _textSearch = newTextSearch;
+    savePreferences(TEXT_SEARCH_KEY, newTextSearch);
   }
 
   int get heightInCm {
