@@ -7,6 +7,7 @@ import 'package:betabeta/screens/voila_page.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/services/networking.dart';
+import 'package:betabeta/widgets/bouncing_button.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/faces_widget.dart';
 import 'package:flutter/material.dart';
@@ -97,35 +98,46 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
                   child: Container(
                       //padding: EdgeInsets.all(10),
 
-                      child: TextButton(
-                    onPressed: _indexSelected == _notSelected
-                        ? null
-                        : () {
-                            SettingsData.instance.filterDisplayImageUrl =
-                                _facesLinks![_indexSelected];
-                            navigator!.popUntil( (route) {
-                              return route.settings.name ==
-                                  VoilaPage.routeName || route.settings.name == MainNavigationScreen.routeName;
-                            }); //ModalRoute.withName(AdvancedSettingsScreen.routeName));
-                          },
-                    child: Column(
-                      children: [
-                        Text(
-                          'Accept',
-                          style: TextStyle(
+                      child: BouncingButton(
+                        onTap: _indexSelected == _notSelected
+                            ? null
+                            : () {
+                          SettingsData.instance.filterDisplayImageUrl =
+                          _facesLinks![_indexSelected];
+                          print('set image to ${SettingsData.instance.filterDisplayImageUrl}');
+                          navigator!.popUntil( (route) {
+                            return route.settings.name ==
+                                VoilaPage.routeName || route.settings.name == MainNavigationScreen.routeName;
+                          }); //ModalRoute.withName(AdvancedSettingsScreen.routeName));
+                        } ,
+                        gradientColors: [Colors.white,Colors.white],
+                        duration: Duration(seconds: 1),
+                        isActive: !(_indexSelected == _notSelected),
+                        shouldBounce: !(_indexSelected == _notSelected),
+                        height: 45,
+                        width: 100,
+
+                        child: Column(
+                          children: [
+                            Text(
+                              'Accept',
+                              style: TextStyle(
+                                  color: _indexSelected == _notSelected
+                                      ? disabledColor
+                                      : linkColor),
+                            ),
+                            Icon(
+                              Icons.check,
                               color: _indexSelected == _notSelected
                                   ? disabledColor
-                                  : linkColor),
+                                  : Colors.green,
+                            )
+                          ],
                         ),
-                        Icon(
-                          Icons.check,
-                          color: _indexSelected == _notSelected
-                              ? disabledColor
-                              : Colors.green,
-                        )
-                      ],
-                    ),
-                  )),
+                      )
+
+
+                  ),
                 ),
               ],
             ),
