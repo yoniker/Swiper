@@ -69,15 +69,16 @@ class NewNetworkService {
   }
 
   static List<String> serverImagesUrl(List<String> imagesUrls) {
-
-    return imagesUrls.map((val) => NewNetworkService.getProfileImageUrl(val)).toList();
+    return imagesUrls
+        .map((val) => NewNetworkService.getProfileImageUrl(val))
+        .toList();
   }
 
   static String getProfileImageUrl(String shortUrl) {
-      if(shortUrl.contains('dummy/') && false){
-        return 'https://' + NetworkHelper.SERVER_ADDR+shortUrl;
-      }
-      return 'https://' + SERVER_ADDR +shortUrl;
+    if (shortUrl.contains('dummy/') && false) {
+      return 'https://' + NetworkHelper.SERVER_ADDR + shortUrl;
+    }
+    return 'https://' + SERVER_ADDR + shortUrl;
   }
 
   Future<List<String>?> getCurrentProfileImagesUrls() async {
@@ -135,7 +136,8 @@ class NewNetworkService {
       SettingsData.FILTER_DISPLAY_IMAGE_URL_KEY: settings.filterDisplayImageUrl,
       SettingsData.RADIUS_KEY: settings.radius.toString(),
       SettingsData.FCM_TOKEN_KEY: settings.fcmToken,
-      SettingsData.FACEBOOK_PROFILE_IMAGE_URL_KEY: settings.facebookProfileImageUrl,
+      SettingsData.FACEBOOK_PROFILE_IMAGE_URL_KEY:
+          settings.facebookProfileImageUrl,
       SettingsData.FACEBOOK_BIRTHDAY_KEY: settings.facebookBirthday,
       SettingsData.EMAIL_KEY: settings.email,
       SettingsData.USER_GENDER_KEY: settings.userGender,
@@ -145,22 +147,24 @@ class NewNetworkService {
       SettingsData.USER_RELATIONSHIP_TYPE_KEY: settings.relationshipType,
       SettingsData.LONGITUDE_KEY: settings.longitude.toString(),
       SettingsData.LATITUDE_KEY: settings.latitude.toString(),
-      SettingsData.SEARCH_DISTANCE_ENABLED_KEY:settings.searchDistanceEnabled.toString(),
-      SettingsData.GET_DUMMY_PROFILES_KEY:settings.showDummyProfiles.toString(),
-      SettingsData.JOB_TITLE_KEY:settings.jobTitle,
-      SettingsData.SCHOOL_KEY :settings.school,
-      SettingsData.RELIGION_KEY :settings.religion,
-      SettingsData.ZODIAC_KEY : settings.zodiac,
-      SettingsData.FITNESS_KEY : settings.fitness,
-      SettingsData.SMOKING_KEY :settings.smoking,
-      SettingsData.DRINKING_KEY : settings.drinking,
-      SettingsData.EDUCATION_KEY :settings.education,
-      SettingsData.CHILDREN_KEY : settings.children,
-      SettingsData.COVID_VACCINE_KEY : settings.covid_vaccine,
-      SettingsData.HOBBIES_KEY:json.jsonEncode(settings.hobbies.toString()) ,
-      SettingsData.PETS_KEY :json.jsonEncode(settings.pets.toString()),
-      SettingsData.HEIGHT_IN_CM_KEY:settings.heightInCm.toString(),
-
+      SettingsData.SEARCH_DISTANCE_ENABLED_KEY:
+          settings.searchDistanceEnabled.toString(),
+      SettingsData.GET_DUMMY_PROFILES_KEY:
+          settings.showDummyProfiles.toString(),
+      SettingsData.JOB_TITLE_KEY: settings.jobTitle,
+      SettingsData.SCHOOL_KEY: settings.school,
+      SettingsData.RELIGION_KEY: settings.religion,
+      SettingsData.ZODIAC_KEY: settings.zodiac,
+      SettingsData.FITNESS_KEY: settings.fitness,
+      SettingsData.SMOKING_KEY: settings.smoking,
+      SettingsData.DRINKING_KEY: settings.drinking,
+      SettingsData.EDUCATION_KEY: settings.education,
+      SettingsData.CHILDREN_KEY: settings.children,
+      SettingsData.COVID_VACCINE_KEY: settings.covid_vaccine,
+      SettingsData.HOBBIES_KEY: json.jsonEncode(settings.hobbies.toString()),
+      SettingsData.PETS_KEY: json.jsonEncode(settings.pets.toString()),
+      SettingsData.HEIGHT_IN_CM_KEY: settings.heightInCm.toString(),
+      SettingsData.TEXT_SEARCH_KEY: settings.textSearch,
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri = Uri.https(SERVER_ADDR, '/settings/${settings.uid}');
@@ -176,8 +180,6 @@ class NewNetworkService {
     }
   }
 
-
-
   //getMatches: Grab some matches and image links from the server
   dynamic getMatches() async {
     if (DateTime.now().difference(_lastMatchCall) < MIN_MATCHES_CALL_INTERVAL) {
@@ -186,19 +188,18 @@ class NewNetworkService {
     }
     _lastMatchCall = DateTime.now();
     Uri matchesUrl =
-    Uri.https(SERVER_ADDR, '/matches/${SettingsData.instance.uid}');
+        Uri.https(SERVER_ADDR, '/matches/${SettingsData.instance.uid}');
     http.Response response = await http.get(matchesUrl); //eg /12313?gender=Male
     if (response.statusCode != 200) {
       return null; //TODO error handling
     }
 
-    try{dynamic profilesSearchResult = jsonDecode(response.body);
-    return profilesSearchResult;
-    }
-    catch(e){
+    try {
+      dynamic profilesSearchResult = jsonDecode(response.body);
+      return profilesSearchResult;
+    } catch (e) {
       print('Error during parsing matches');
       return [];
     }
-
   }
 }
