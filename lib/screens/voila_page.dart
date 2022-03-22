@@ -39,7 +39,10 @@ class _VoilaPageState extends State<VoilaPage> {
   String textSearchTyped = '';
 
   /// Here is where the custom-picked image is being Posted and sent over Network.
-  void postCustomImageToNetwork(PickedFile chosenImage) async {
+  Future<void> postCustomImageToNetwork(PickedFile chosenImage) async {
+    for(int i=0; i<6;++i){
+      print('Before going to face selection filter was ${SettingsData.instance.filterType}');
+    }
     // block the UI
     setState(() {
       isLoading = true;
@@ -53,6 +56,7 @@ class _VoilaPageState extends State<VoilaPage> {
       await NetworkHelper().postFaceSearchImage(imageFileDetails);
 
       //
+
       await Get.toNamed(
         FaceSelectionScreen.routeName,
         arguments: FaceSelectionScreenArguments(
@@ -60,6 +64,9 @@ class _VoilaPageState extends State<VoilaPage> {
           imageFileName: imageFileDetails.item2,
         ),
       );
+      print(SettingsData.instance.filterType);
+      print(SettingsData.instance.filterDisplayImageUrl);
+      print('dor');
     } catch (exception) {
       print(exception);
 
@@ -227,25 +234,28 @@ class _VoilaPageState extends State<VoilaPage> {
                                             // Display an image picker Dilaogue.
                                             SettingsData.instance.filterType =
                                                 FilterType.CUSTOM_IMAGE;
-
+                                            SettingsData.instance.filterDisplayImageUrl = '';
+                                            bool imagePicked = false;
                                             await GlobalWidgets
                                                 .showImagePickerDialogue(
                                               context: context,
                                               onImagePicked: (imageFile) async {
+                                                imagePicked = true;
                                                 if (imageFile != null) {
-                                                  postCustomImageToNetwork(
+                                                  await postCustomImageToNetwork(
                                                       imageFile);
+                                                } else{
+                                                  SettingsData.instance.filterType = FilterType.NONE;
                                                 }
                                               },
                                             );
-                                            if (SettingsData
-                                                    .instance
-                                                    .filterDisplayImageUrl
-                                                    .length ==
-                                                0) {
+                                            if (!imagePicked) {
+                                              for(int i=0; i<6; ++i)
+                                              print('NO IMAGE PICKED,SETTING FILTER TO NOTHING');
                                               SettingsData.instance.filterType =
                                                   FilterType.NONE;
                                             }
+
                                           },
                                           info:
                                               'Discover picture \nlook-a-likes.'),

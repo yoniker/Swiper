@@ -309,7 +309,7 @@ class GlobalWidgets {
       }
     }
 
-    void _onImageButtonPressed(ImageSource source) async {
+    Future<void> _onImageButtonPressed(ImageSource source) async {
       // Initiate the pick Image Function.
       try {
         final pickedFile = await _picker.getImage(source: source);
@@ -360,11 +360,10 @@ class GlobalWidgets {
       required Widget icon,
     }) {
       return InkWell(
-        onTap: () {
+        onTap: () async {
           // Pop the dialogue and execute the image-picking Function.
+          await _onImageButtonPressed(source);
           Get.back();
-
-          _onImageButtonPressed(source);
         },
         child: Container(
           margin: const EdgeInsets.all(8.0),
