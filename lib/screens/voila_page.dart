@@ -269,8 +269,6 @@ class _VoilaPageState extends State<VoilaPage> {
                                               },
                                             );
                                             if (!imagePicked) {
-                                              for(int i=0; i<6; ++i)
-                                              print('NO IMAGE PICKED,SETTING FILTER TO NOTHING');
                                               SettingsData.instance.filterType =
                                                   FilterType.NONE;
                                             }

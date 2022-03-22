@@ -47,6 +47,7 @@ class _MatchScreenState extends State<MatchScreen>
         Future.delayed(
             Duration(milliseconds: _animationController.value == 0 ? 500 : 0),
             () {
+              if(mounted)
           _animationController
               .animateTo(_animationController.value == 0 ? 1 : 0);
         });
