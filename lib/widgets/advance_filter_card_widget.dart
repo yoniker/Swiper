@@ -1,9 +1,7 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/services/settings_model.dart';
-import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AdvanceFilterCard extends StatelessWidget {
   final AssetImage image;
@@ -36,7 +34,7 @@ class AdvanceFilterCard extends StatelessWidget {
           border: isActive == true
               ? Border.all(color: Color(0xFFC62828), width: 4)
               : Border.all(
-                  color: Color(0xFFC62828),
+                  color: Colors.transparent,
                   width:
                       0), //TODO submit a bug at flutter github if doesn't animate with null
           borderRadius: BorderRadius.all(
