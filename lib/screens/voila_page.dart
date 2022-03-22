@@ -16,6 +16,7 @@ import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/gradient_text_widget.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
+import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,7 @@ class VoilaPage extends StatefulWidget {
 class _VoilaPageState extends State<VoilaPage> {
   bool isLoading = false;
   bool isPressed = false;
+  String textSearchTyped = '';
 
   /// Here is where the custom-picked image is being Posted and sent over Network.
   void postCustomImageToNetwork(PickedFile chosenImage) async {
@@ -330,7 +332,34 @@ class _VoilaPageState extends State<VoilaPage> {
                                           .instance.filterDisplayImageUrl = '';
                                     });
                                   },
-                                  hasTextField: true,
+                                  child: AnimatedContainer(
+                                    width: 400,
+                                    height: SettingsData.instance.filterType !=
+                                            FilterType.TEXT_SEARCH
+                                        ? 0
+                                        : 54,
+                                    duration: const Duration(milliseconds: 300),
+                                    child: SingleChildScrollView(
+                                      child: InputField(
+                                        onType: (value) {
+                                          setState(() {
+                                            textSearchTyped = value;
+                                          });
+                                        },
+                                        onEditingComplete: () {},
+                                        onTapIcon: textSearchTyped.length > 0
+                                            ? () {
+                                                print('yoni is ihch');
+                                              }
+                                            : null,
+                                        hintText: ' Search...',
+                                        maxLines: 1,
+                                        maxCharacters: 10,
+                                        icon: Icons.search,
+                                        iconSize: 30,
+                                      ),
+                                    ),
+                                  ),
                                   isActive: SettingsData.instance.filterType ==
                                       FilterType.TEXT_SEARCH,
                                   image: AssetImage(

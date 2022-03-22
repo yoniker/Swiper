@@ -11,17 +11,17 @@ class AdvanceFilterCard extends StatelessWidget {
   final bool? comingSoon;
   final bool? showAI;
   final bool? isActive;
-  final bool? hasTextField;
   final Widget? button;
   final String info;
   final void Function()? onTap;
+  final Widget? child;
   AdvanceFilterCard(
       {required this.image,
       required this.title,
       required this.info,
+      this.child,
       this.comingSoon,
       this.showAI,
-      this.hasTextField = false,
       this.isActive = false,
       this.button,
       this.onTap});
@@ -35,7 +35,10 @@ class AdvanceFilterCard extends StatelessWidget {
         decoration: BoxDecoration(
           border: isActive == true
               ? Border.all(color: Color(0xFFC62828), width: 4)
-              : null,
+              : Border.all(
+                  color: Color(0xFFC62828),
+                  width:
+                      0), //TODO submit a bug at flutter github if doesn't animate with null
           borderRadius: BorderRadius.all(
             Radius.circular(10),
           ),
@@ -71,20 +74,7 @@ class AdvanceFilterCard extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 8.0),
                   child: title,
                 ),
-                if (hasTextField == true)
-                  AnimatedContainer(
-                    height: isActive == false ? 0 : 54,
-                    duration: const Duration(milliseconds: 500),
-                    child: SingleChildScrollView(
-                      child: InputField(
-                        hintText: ' Search...',
-                        maxLines: 1,
-                        maxCharacters: 10,
-                        icon: Icons.search,
-                        iconSize: 30,
-                      ),
-                    ),
-                  ),
+                if (child != null) Center(child: child!),
                 SizedBox(),
                 SizedBox(),
                 comingSoon == true

@@ -17,6 +17,7 @@ class InputField extends StatelessWidget {
       this.iconHeight = 1,
       this.iconSize,
       this.keyboardType = TextInputType.text,
+      this.onEditingComplete,
       this.maxLines = 1,
       this.minLines = 1,
       this.maxCharacters = 20,
@@ -29,6 +30,7 @@ class InputField extends StatelessWidget {
   final bool showCursor;
   final String? initialvalue;
   final void Function()? onTap;
+  final void Function()? onEditingComplete;
   final double iconHeight;
   final TextEditingController? controller;
   final List<TextInputFormatter>? formatters;
@@ -63,7 +65,10 @@ class InputField extends StatelessWidget {
           showCursor: showCursor,
           inputFormatters: formatters,
           controller: controller,
-          onEditingComplete: () => FocusScope.of(context).unfocus(),
+          onEditingComplete: () {
+            onEditingComplete?.call();
+            FocusScope.of(context).unfocus();
+          },
           readOnly: readonly,
           cursorColor: Colors.blue,
           initialValue: initialvalue,
@@ -82,7 +87,7 @@ class InputField extends StatelessWidget {
             suffixIcon: Padding(
               padding: EdgeInsets.only(right: 15, top: iconHeight),
               child: GestureDetector(
-                onTap: onTapIcon == null ? null : onTapIcon,
+                onTap: onTapIcon,
                 child: GestureDetector(
                   onTap: onTapIconDisable,
                   child: Icon(
