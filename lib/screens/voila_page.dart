@@ -20,7 +20,6 @@ import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
@@ -68,11 +67,9 @@ class _VoilaPageState extends State<VoilaPage> {
         context,
         message: 'An error occurred, please try again later!',
       );
-    } finally {
-      if (SettingsData.instance.filterDisplayImageUrl.length == 0) {
-        SettingsData.instance.filterType = FilterType.NONE;
-      }
     }
+
+
 
     // un-block the UI.
     setState(() {
@@ -255,12 +252,12 @@ class _VoilaPageState extends State<VoilaPage> {
                                                 postCustomImageToNetwork(
                                                     imageFile);
 
-                                                SettingsData
-                                                        .instance.filterType =
-                                                    FilterType.CUSTOM_IMAGE;
                                               }
                                             },
                                           );
+                                            if(SettingsData.instance.filterDisplayImageUrl.length==0){
+                                              SettingsData.instance.filterType = FilterType.NONE;
+                                            }
                                         },
                                         info:
                                             'Discover picture \nlook-a-likes.'),
