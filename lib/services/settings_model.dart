@@ -66,7 +66,7 @@ class SettingsData extends ChangeNotifier {
   int _minAge = 24;
   int _maxAge = 34;
   bool _readFromShared = false;
-  Timer? _debounce;
+  Timer? _debounceServer;
   int _auditionCount = 4;
   String _filterName = '';
   String _filterDisplayImageUrl = '';
@@ -703,18 +703,24 @@ class SettingsData extends ChangeNotifier {
 
   void savePreferences(String sharedPreferencesKey, dynamic newValue,
       {bool sendServer = true, bool resetMatchEngine = true}) async {
-
-      if (_debounce?.isActive ?? false) {
-        _debounce!.cancel();
+      if(sendServer){
+      if (_debounceServer?.isActive ?? false) {
+        _debounceServer!.cancel();
       }
-      _debounce = Timer(_debounceSettingsTime, () async {
-        if (_uid.length > 0 && sendServer) {
+      _debounceServer = Timer(_debounceSettingsTime, () async {
+        if (_uid.length > 0) {
           await NewNetworkService.instance.postUserSettings();
+          if (resetMatchEngine) {
+            MatchEngine.instance.clear();
+          }
         }
-        if (resetMatchEngine) {
-          MatchEngine.instance.clear();
-        }
-      });
+      });}
+      else if (resetMatchEngine){
+        MatchEngine.instance.clear();
+      }
+
+
+      }
 
     notifyListeners();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
