@@ -368,6 +368,7 @@ class _VoilaPageState extends State<VoilaPage> {
                                           maxCharacters: 10,
                                           icon: Icons.search,
                                           iconSize: 30,
+                                          initialvalue: SettingsData.instance.textSearch,
                                         ),
                                       ),
                                     ),
