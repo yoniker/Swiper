@@ -703,21 +703,19 @@ class SettingsData extends ChangeNotifier {
 
   void savePreferences(String sharedPreferencesKey, dynamic newValue,
       {bool sendServer = true, bool resetMatchEngine = true}) async {
-    if (sendServer) {
+
       if (_debounce?.isActive ?? false) {
         _debounce!.cancel();
       }
       _debounce = Timer(_debounceSettingsTime, () async {
-        if (_uid.length > 0) {
+        if (_uid.length > 0 && sendServer) {
           await NewNetworkService.instance.postUserSettings();
         }
-
+        if (resetMatchEngine) {
+          MatchEngine.instance.clear();
+        }
       });
-    }
 
-    if (resetMatchEngine) {
-      MatchEngine.instance.clear();
-    }
     notifyListeners();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (newValue is int) {
