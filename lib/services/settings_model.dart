@@ -676,9 +676,6 @@ class SettingsData extends ChangeNotifier {
   }
 
   set textSearch(String newTextSearch) {
-    if (_textSearch == newTextSearch) {
-      return;
-    }
     _textSearch = newTextSearch;
     savePreferences(TEXT_SEARCH_KEY, newTextSearch);
   }
@@ -714,10 +711,12 @@ class SettingsData extends ChangeNotifier {
         if (_uid.length > 0) {
           await NewNetworkService.instance.postUserSettings();
         }
-        if (resetMatchEngine) {
-          MatchEngine.instance.clear();
-        }
+
       });
+    }
+
+    if (resetMatchEngine) {
+      MatchEngine.instance.clear();
     }
     notifyListeners();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
