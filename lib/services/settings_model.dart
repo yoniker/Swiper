@@ -719,9 +719,6 @@ class SettingsData extends ChangeNotifier {
         MatchEngine.instance.clear();
       }
 
-
-      }
-
     notifyListeners();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (newValue is int) {

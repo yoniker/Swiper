@@ -86,10 +86,10 @@ class _MatchScreenState extends State<MatchScreen>
     super.initState();
     _animationController =
         AnimationController(vsync: this, duration: Duration(seconds: 5));
-    _animationController!.addListener(() {
+    _animationController.addListener(() {
       setState(() {});
     });
-    _animationController!.repeat(reverse: true);
+    _animationController.repeat(reverse: true);
 
     // Instantiate and Initialize the Animation Controller and the respective Animation.
     // _animationController = AnimationController(
@@ -104,7 +104,7 @@ class _MatchScreenState extends State<MatchScreen>
   void dispose() {
     // dispose the Animation Controller instance.
     // _animationController.dispose();
-    _animationController!.dispose();
+    _animationController.dispose();
 
     super.dispose();
   }
@@ -113,11 +113,11 @@ class _MatchScreenState extends State<MatchScreen>
     switch (SettingsData.instance.filterType) {
       case FilterType.TEXT_SEARCH:
         if (SettingsData.instance.textSearch.length > 0)
-          return TextSearchViewWidget(animationController: _animationController!);
+          return TextSearchViewWidget(animationController: _animationController);
         break;
       case FilterType.CELEB_IMAGE:
       case FilterType.CUSTOM_IMAGE:
-        return ImageFilterViewWidget(animationController: _animationController!);
+        return ImageFilterViewWidget(animationController: _animationController);
       default:
         return VoilaLogoWidget();
     }

@@ -346,7 +346,7 @@ class _VoilaPageState extends State<VoilaPage> {
                                             if (!hasFocus) {
                                               SettingsData.instance.textSearch =
                                                   textSearchTyped;
-                                              print(
+                                              for(int i=0; i<4; ++i) print(
                                                   'finished typing $textSearchTyped');
                                             }
                                           },
