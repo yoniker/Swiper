@@ -33,7 +33,7 @@ class _MatchScreenState extends State<MatchScreen>
   // Initialize the Animation Controller for the exposure of the revert button when a change
   // is discovered.
   // late AnimationController _animationController;
-  late final AnimationController _animationController = AnimationController(
+  late AnimationController _animationController = AnimationController(
       vsync: this, duration: const Duration(seconds: 1))
     //..repeat(reverse: true); // <-- comment this line
 
@@ -84,12 +84,12 @@ class _MatchScreenState extends State<MatchScreen>
   @override
   void initState() {
     super.initState();
-    _controller =
+    _animationController =
         AnimationController(vsync: this, duration: Duration(seconds: 5));
-    _controller!.addListener(() {
+    _animationController!.addListener(() {
       setState(() {});
     });
-    _controller!.repeat(reverse: true);
+    _animationController!.repeat(reverse: true);
 
     // Instantiate and Initialize the Animation Controller and the respective Animation.
     // _animationController = AnimationController(
@@ -104,7 +104,7 @@ class _MatchScreenState extends State<MatchScreen>
   void dispose() {
     // dispose the Animation Controller instance.
     // _animationController.dispose();
-    _controller!.dispose();
+    _animationController!.dispose();
 
     super.dispose();
   }
@@ -113,11 +113,11 @@ class _MatchScreenState extends State<MatchScreen>
     switch (SettingsData.instance.filterType) {
       case FilterType.TEXT_SEARCH:
         if (SettingsData.instance.textSearch.length > 0)
-          return TextSearchViewWidget(animationController: _controller!);
+          return TextSearchViewWidget(animationController: _animationController!);
         break;
       case FilterType.CELEB_IMAGE:
       case FilterType.CUSTOM_IMAGE:
-        return ImageFilterViewWidget(animationController: _controller!);
+        return ImageFilterViewWidget(animationController: _animationController!);
       default:
         return VoilaLogoWidget();
     }
