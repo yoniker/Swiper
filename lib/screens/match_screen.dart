@@ -1,16 +1,11 @@
-import 'dart:math' as math;
-
 import 'package:betabeta/constants/api_consts.dart';
-import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
-import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/circular_user_avatar.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
-import 'package:betabeta/widgets/gradient_text_widget.dart';
 import 'package:betabeta/widgets/image_filterview_widget.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/match_card.dart';
@@ -38,21 +33,8 @@ class _MatchScreenState extends State<MatchScreen>
   // Initialize the Animation Controller for the exposure of the revert button when a change
   // is discovered.
   // late AnimationController _animationController;
-  late final AnimationController _animationController = AnimationController(
-      vsync: this, duration: const Duration(seconds: 1))
-    //..repeat(reverse: true); // <-- comment this line
-
-    ..addStatusListener((AnimationStatus status) {
-      // <-- add listener
-      if (status == AnimationStatus.completed) {
-        Future.delayed(
-            Duration(milliseconds: _animationController.value == 0 ? 500 : 0),
-            () {
-          _animationController
-              .animateTo(_animationController.value == 0 ? 1 : 0);
-        });
-      }
-    });
+  AnimationController? _controller;
+  //..repeat(reverse: true); // <-- comment this line
 
   // Holds a boolean value whether or not to hide the MatchCard.
   //
@@ -88,7 +70,12 @@ class _MatchScreenState extends State<MatchScreen>
   @override
   void initState() {
     super.initState();
-    _animationController.forward(from: 0);
+    _controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 5));
+    _controller!.addListener(() {
+      setState(() {});
+    });
+    _controller!.repeat(reverse: true);
 
     // Instantiate and Initialize the Animation Controller and the respective Animation.
     // _animationController = AnimationController(
@@ -103,7 +90,7 @@ class _MatchScreenState extends State<MatchScreen>
   void dispose() {
     // dispose the Animation Controller instance.
     // _animationController.dispose();
-    _animationController.dispose();
+    _controller!.dispose();
 
     super.dispose();
   }
@@ -112,12 +99,11 @@ class _MatchScreenState extends State<MatchScreen>
     switch (SettingsData.instance.filterType) {
       case FilterType.TEXT_SEARCH:
         if (SettingsData.instance.textSearch.length > 0)
-          return TextSearchViewWidget(
-              animationController: _animationController);
+          return TextSearchViewWidget(animationController: _controller!);
         break;
       case FilterType.CELEB_IMAGE:
       case FilterType.CUSTOM_IMAGE:
-        return ImageFilterViewWidget(animationController: _animationController);
+        return ImageFilterViewWidget(animationController: _controller!);
       default:
         return VoilaLogoWidget();
     }

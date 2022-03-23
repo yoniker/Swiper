@@ -21,20 +21,15 @@ class ImageFilterViewWidget extends StatelessWidget {
                       SettingsData.instance.filterDisplayImageUrl),
                 ))),
         child: Stack(
-          alignment: Alignment.center,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Opacity(
-                  opacity: 0.8,
-                  child: AnimatedIcon(
-                      icon: AnimatedIcons.search_ellipsis,
-                      color: Colors.white,
-                      size: 30,
-                      progress: animationController),
-                )
-              ],
+            Positioned(
+              left: animationController.value * 60,
+              bottom: 2,
+              child: Icon(
+                Icons.search,
+                color: Colors.white.withOpacity(0.65),
+                size: 40,
+              ),
             )
           ],
         ),

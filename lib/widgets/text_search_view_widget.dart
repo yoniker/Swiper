@@ -1,6 +1,4 @@
-import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/services/settings_model.dart';
-import 'package:betabeta/widgets/gradient_text_widget.dart';
 import 'package:flutter/material.dart';
 
 class TextSearchViewWidget extends StatelessWidget {
@@ -19,7 +17,6 @@ class TextSearchViewWidget extends StatelessWidget {
           color: Colors.black.withOpacity(0.9),
         ),
         child: Stack(
-          alignment: Alignment.center,
           children: [
             Center(
               child: Padding(
@@ -34,18 +31,24 @@ class TextSearchViewWidget extends StatelessWidget {
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Opacity(
-                  opacity: 0.8,
-                  child: AnimatedIcon(
-                      icon: AnimatedIcons.search_ellipsis,
-                      color: Colors.white,
-                      size: 30,
-                      progress: animationController),
-                )
-              ],
+            Positioned(
+              left: animationController.value * 110,
+              bottom: 5,
+              child: Container(
+                decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    blurRadius: 5.0,
+                  ),
+                ]),
+                height: 35,
+                child: FittedBox(
+                  child: Icon(
+                    Icons.search,
+                    color: Colors.white.withOpacity(0.65),
+                  ),
+                ),
+              ),
             )
           ],
         ),
