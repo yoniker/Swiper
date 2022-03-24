@@ -57,6 +57,9 @@ class SettingsData extends ChangeNotifier {
 
   static const _debounceSettingsTime =
       Duration(seconds: 2); //Debounce time such that we notify listeners
+
+  static bool shouldResetMatchEngineAfterPosting = false; //This exists because of a situation where one send to server but dont reset engine overrode the send to server and reset (and matches were not reset)
+
   String _uid = '';
   String _name = '';
   String _facebookId = '';
@@ -704,14 +707,16 @@ class SettingsData extends ChangeNotifier {
   void savePreferences(String sharedPreferencesKey, dynamic newValue,
       {bool sendServer = true, bool resetMatchEngine = true}) async {
       if(sendServer){
+        shouldResetMatchEngineAfterPosting |= resetMatchEngine; //See the comment up in the def to understand why it's here
       if (_debounceServer?.isActive ?? false) {
         _debounceServer!.cancel();
       }
       _debounceServer = Timer(_debounceSettingsTime, () async {
         if (_uid.length > 0) {
           await NewNetworkService.instance.postUserSettings();
-          if (resetMatchEngine) {
+          if (shouldResetMatchEngineAfterPosting) {
             MatchEngine.instance.clear();
+            shouldResetMatchEngineAfterPosting = false;
           }
         }
       });}

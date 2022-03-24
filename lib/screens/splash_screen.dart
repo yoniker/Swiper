@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen>
     await NotificationsController.instance.initialize();
     await SettingsData.instance.readSettingsFromShared();
     if (SettingsData.instance.uid.length > 0) {
-      await LocationService.onInit();
+      await LocationService.instance.onInit();
     }
     MatchEngine.instance;
     await CelebsInfo.instance.getCelebsFromDatabase();

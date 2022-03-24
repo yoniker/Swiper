@@ -22,7 +22,7 @@ class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
   void enableLocation() async {
     var status = await LocationService.requestLocationCapability();
     if (status == LocationServiceStatus.enabled) {
-      LocationService.onInit();
+      LocationService.instance.onInit();
       Get.offAllNamed(OnboardingFlowController.nextRoute(
           LocationPermissionScreen.routeName));
     }
