@@ -40,8 +40,9 @@ class _VoilaPageState extends State<VoilaPage> {
 
   /// Here is where the custom-picked image is being Posted and sent over Network.
   Future<void> postCustomImageToNetwork(PickedFile chosenImage) async {
-    for(int i=0; i<6;++i){
-      print('Before going to face selection filter was ${SettingsData.instance.filterType}');
+    for (int i = 0; i < 6; ++i) {
+      print(
+          'Before going to face selection filter was ${SettingsData.instance.filterType}');
     }
     // block the UI
     setState(() {
@@ -234,7 +235,8 @@ class _VoilaPageState extends State<VoilaPage> {
                                             // Display an image picker Dilaogue.
                                             SettingsData.instance.filterType =
                                                 FilterType.CUSTOM_IMAGE;
-                                            SettingsData.instance.filterDisplayImageUrl = '';
+                                            SettingsData.instance
+                                                .filterDisplayImageUrl = '';
                                             bool imagePicked = false;
                                             await GlobalWidgets
                                                 .showImagePickerDialogue(
@@ -244,18 +246,20 @@ class _VoilaPageState extends State<VoilaPage> {
                                                 if (imageFile != null) {
                                                   await postCustomImageToNetwork(
                                                       imageFile);
-                                                } else{
-                                                  SettingsData.instance.filterType = FilterType.NONE;
+                                                } else {
+                                                  SettingsData
+                                                          .instance.filterType =
+                                                      FilterType.NONE;
                                                 }
                                               },
                                             );
                                             if (!imagePicked) {
-                                              for(int i=0; i<6; ++i)
-                                              print('NO IMAGE PICKED,SETTING FILTER TO NOTHING');
+                                              for (int i = 0; i < 6; ++i)
+                                                print(
+                                                    'NO IMAGE PICKED,SETTING FILTER TO NOTHING');
                                               SettingsData.instance.filterType =
                                                   FilterType.NONE;
                                             }
-
                                           },
                                           info:
                                               'Discover picture \nlook-a-likes.'),
@@ -367,7 +371,7 @@ class _VoilaPageState extends State<VoilaPage> {
                                               : null,
                                           hintText: ' Search...',
                                           maxLines: 1,
-                                          maxCharacters: 10,
+                                          maxCharacters: 17,
                                           icon: Icons.search,
                                           iconSize: 30,
                                         ),
