@@ -254,9 +254,6 @@ class _VoilaPageState extends State<VoilaPage> {
                                               },
                                             );
                                             if (!imagePicked) {
-                                              for (int i = 0; i < 6; ++i)
-                                                print(
-                                                    'NO IMAGE PICKED,SETTING FILTER TO NOTHING');
                                               SettingsData.instance.filterType =
                                                   FilterType.NONE;
                                             }
@@ -352,8 +349,9 @@ class _VoilaPageState extends State<VoilaPage> {
                                             if (!hasFocus) {
                                               SettingsData.instance.textSearch =
                                                   textSearchTyped;
-                                              print(
-                                                  'finished typing $textSearchTyped');
+                                              for (int i = 0; i < 4; ++i)
+                                                print(
+                                                    'finished typing $textSearchTyped');
                                             }
                                           },
                                           onType: (value) {
@@ -371,9 +369,11 @@ class _VoilaPageState extends State<VoilaPage> {
                                               : null,
                                           hintText: ' Search...',
                                           maxLines: 1,
-                                          maxCharacters: 17,
+                                          maxCharacters: 20,
                                           icon: Icons.search,
                                           iconSize: 30,
+                                          initialvalue:
+                                              SettingsData.instance.textSearch,
                                         ),
                                       ),
                                     ),

@@ -57,6 +57,9 @@ class SettingsData extends ChangeNotifier {
 
   static const _debounceSettingsTime =
       Duration(seconds: 2); //Debounce time such that we notify listeners
+
+  static bool shouldResetMatchEngineAfterPosting = false; //This exists because of a situation where one send to server but dont reset engine overrode the send to server and reset (and matches were not reset)
+
   String _uid = '';
   String _name = '';
   String _facebookId = '';
@@ -66,7 +69,7 @@ class SettingsData extends ChangeNotifier {
   int _minAge = 24;
   int _maxAge = 34;
   bool _readFromShared = false;
-  Timer? _debounce;
+  Timer? _debounceServer;
   int _auditionCount = 4;
   String _filterName = '';
   String _filterDisplayImageUrl = '';
@@ -676,9 +679,6 @@ class SettingsData extends ChangeNotifier {
   }
 
   set textSearch(String newTextSearch) {
-    if (_textSearch == newTextSearch) {
-      return;
-    }
     _textSearch = newTextSearch;
     savePreferences(TEXT_SEARCH_KEY, newTextSearch);
   }
@@ -706,19 +706,24 @@ class SettingsData extends ChangeNotifier {
 
   void savePreferences(String sharedPreferencesKey, dynamic newValue,
       {bool sendServer = true, bool resetMatchEngine = true}) async {
-    if (sendServer) {
-      if (_debounce?.isActive ?? false) {
-        _debounce!.cancel();
+      if(sendServer){
+        shouldResetMatchEngineAfterPosting |= resetMatchEngine; //See the comment up in the def to understand why it's here
+      if (_debounceServer?.isActive ?? false) {
+        _debounceServer!.cancel();
       }
-      _debounce = Timer(_debounceSettingsTime, () async {
+      _debounceServer = Timer(_debounceSettingsTime, () async {
         if (_uid.length > 0) {
           await NewNetworkService.instance.postUserSettings();
+          if (shouldResetMatchEngineAfterPosting) {
+            MatchEngine.instance.clear();
+            shouldResetMatchEngineAfterPosting = false;
+          }
         }
-        if (resetMatchEngine) {
-          MatchEngine.instance.clear();
-        }
-      });
-    }
+      });}
+      else if (resetMatchEngine){
+        MatchEngine.instance.clear();
+      }
+
     notifyListeners();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (newValue is int) {

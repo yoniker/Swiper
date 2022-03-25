@@ -8,6 +8,22 @@ enum LocationServiceStatus {
 }
 
 class LocationService {
+
+
+  LocationService._privateConstructor();
+
+  static final LocationService _instance = LocationService._privateConstructor();
+
+  static LocationService get instance => _instance;
+
+  static const Duration minTimeUpdateLocation = Duration(hours: 1);
+
+  DateTime lastUpdateDate = DateTime(2000);
+
+
+
+
+
   static Future<LocationServiceStatus> requestLocationCapability() async {
     Location location = new Location();
 
@@ -32,17 +48,26 @@ class LocationService {
     return LocationServiceStatus.enabled;
   }
 
-  static updateLocation(LocationData locationData) {
+   updateLocation(LocationData locationData) {
+
+    if(!(DateTime.now().difference(lastUpdateDate)>minTimeUpdateLocation)){
+      print('Too soon to update server');
+      return;
+    }
+
+
+
     if (locationData.longitude == null || locationData.latitude == null) {
       return;
     }
     SettingsData.instance.longitude = locationData.longitude!;
     SettingsData.instance.latitude = locationData.latitude!;
+    lastUpdateDate = DateTime.now();
     print(
         'UPDATED LOCATION TO  ${locationData.latitude!},${locationData.longitude!}');
   }
 
-  static void listenLocationChanges() {
+   void listenLocationChanges() {
     Location location = new Location();
     location.changeSettings(
         accuracy: LocationAccuracy.balanced, interval: 10000000);
@@ -63,9 +88,9 @@ class LocationService {
     return await location.getLocation();
   }
 
-  static onInit() async {
+   onInit() async {
     var location = await LocationService.getLocation();
-    LocationService.updateLocation(location);
-    LocationService.listenLocationChanges();
+    updateLocation(location);
+    listenLocationChanges();
   }
 }
