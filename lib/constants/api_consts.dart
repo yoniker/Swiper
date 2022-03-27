@@ -31,6 +31,8 @@ class API_CONSTS{
   static const String USER_COVID_VACCINE = 'covid_vaccine';
   static const String USER_HOBBIES = 'hobbies';
   static const String USER_PETS = 'pets';
+  static const String USER_IMAGES = 'images';
   static const String MATCH_STATUS = 'status';
+
   
 }

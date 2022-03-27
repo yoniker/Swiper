@@ -31,13 +31,23 @@ class InfoUserAdapter extends TypeAdapter<InfoUser> {
       compatibilityScore: fields[11] as double?,
       hotnessScore: fields[12] as double?,
       distance: fields[8] as double?,
+      pets: (fields[15] as List).cast<String>(),
+      drinking: fields[19] as String,
+      hobbies: (fields[14] as List).cast<String>(),
+      covidVaccine: fields[16] as String,
+      children: fields[17] as String,
+      education: fields[18] as String,
+      smoking: fields[20] as String,
+      fitness: fields[21] as String,
+      zodiac: fields[22] as String,
+      school: fields[23] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, InfoUser obj) {
     writer
-      ..writeByte(14)
+      ..writeByte(24)
       ..writeByte(0)
       ..write(obj.username)
       ..writeByte(1)
@@ -65,7 +75,27 @@ class InfoUserAdapter extends TypeAdapter<InfoUser> {
       ..writeByte(12)
       ..write(obj.hotnessScore)
       ..writeByte(13)
-      ..write(obj.religion);
+      ..write(obj.religion)
+      ..writeByte(14)
+      ..write(obj.hobbies)
+      ..writeByte(15)
+      ..write(obj.pets)
+      ..writeByte(16)
+      ..write(obj.covidVaccine)
+      ..writeByte(17)
+      ..write(obj.children)
+      ..writeByte(18)
+      ..write(obj.education)
+      ..writeByte(19)
+      ..write(obj.drinking)
+      ..writeByte(20)
+      ..write(obj.smoking)
+      ..writeByte(21)
+      ..write(obj.fitness)
+      ..writeByte(22)
+      ..write(obj.zodiac)
+      ..writeByte(23)
+      ..write(obj.school);
   }
 
   @override
