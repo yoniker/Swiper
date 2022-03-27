@@ -108,7 +108,7 @@ class MatchEngine extends ChangeNotifier {
       goToNextMatch();
     }
     notifyListeners();
-    NetworkHelper().postUserDecision(decision: decision,otherUserProfile: currentMatch.profile);
+    NewNetworkService.instance.postUserDecision(decision: decision,otherUserProfile: currentMatch.profile!);
     }
   }
 

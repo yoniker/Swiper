@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:betabeta/constants/api_consts.dart';
+import 'package:betabeta/models/match_engine.dart';
+import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/cache_service.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -193,13 +196,22 @@ class NewNetworkService {
     if (response.statusCode != 200) {
       return null; //TODO error handling
     }
-
-    try {
       dynamic profilesSearchResult = jsonDecode(response.body);
       return profilesSearchResult;
-    } catch (e) {
-      print('Error during parsing matches');
-      return [];
-    }
+
+  }
+
+
+  postUserDecision({required Decision decision,required  Profile otherUserProfile}) async {
+    Map<String, String?> toSend = {
+      API_CONSTS.DECIDER_ID_KEY: SettingsData.instance.uid,
+      API_CONSTS.DECIDEE_ID_KEY: otherUserProfile.userId!.id!,
+      API_CONSTS.DECISION_KEY: decision.name
+    };
+    String encoded = jsonEncode(toSend);
+    Uri postDecisionUri =
+    Uri.https(SERVER_ADDR, '/decision/${SettingsData.instance.uid}');
+    http.Response response = await http.post(postDecisionUri,
+        body: encoded); //TODO something if response wasnt 200
   }
 }

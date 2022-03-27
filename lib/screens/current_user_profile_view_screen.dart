@@ -39,7 +39,7 @@ class _CurrentUserProfileViewScreenState
         imageUrls: NewNetworkService.serverImagesUrl(
             SettingsData.instance.profileImagesUrls),
         location: SettingsData.instance.locationDescription,
-        height: "${SettingsData.instance.heightInCm}",
+        height: SettingsData.instance.heightInCm.toDouble(),
         jobTitle: SettingsData.instance.jobTitle,
         compatibilityScore:
             1, //Compatibility scores is calculated between users.

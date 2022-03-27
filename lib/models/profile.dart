@@ -10,7 +10,7 @@ class Profile {
   final String? location;
   final double? distance;
   final String? jobTitle;
-  final String? height;
+  final double? height;
   final double? compatibilityScore;
   final double? hotnessScore;
   final String? religion;
@@ -50,7 +50,7 @@ class Profile {
         location: match['location_description'],
         distance: match['distance'],
         jobTitle: match['job_title'],
-        height: match['height_in_cm'].toString(),
+        height: match['height_in_cm'],
         userId: userId,
         hotnessScore: match['hotness'] * 100,
         compatibilityScore: match['compatibility'] * 100,

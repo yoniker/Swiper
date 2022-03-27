@@ -294,7 +294,7 @@ class _MatchCardState extends State<MatchCard> {
             )),
       if (profile.height != null)
         BasicDetail(
-          detailText: '${cmToFeet(int.parse(profile.height!))} ft',
+          detailText: '${cmToFeet(profile.height!)} ft',
           detailIcon: FaIcon(
             FontAwesomeIcons.ruler,
             color: Colors.yellow[700],
