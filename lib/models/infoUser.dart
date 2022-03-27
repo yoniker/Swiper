@@ -79,18 +79,15 @@ class InfoUser{
         this.zodiac = json[API_CONSTS.USER_ZODIAC]??'',
         this.religion = json[API_CONSTS.USER_RELIGION]??'',
         this.school = json[API_CONSTS.USER_SCHOOL]??'',
-
-
-
-  this.hotnessScore =0,
-  this.compatibilityScore =0,
-  this.age =0,
-  this.description = '',
-  this.distance =0,
-  this.height =0,
-  this.location = '',
-  this.headline = '',
-  this.jobTitle = '',
+        this.description = json[API_CONSTS.USER_DESCRIPTION]??'',
+        this.headline = json[API_CONSTS.USER_DESCRIPTION]??'',
+        this.jobTitle = json[API_CONSTS.USER_JOB_TITLE]??'',
+        this.hotnessScore = json[API_CONSTS.USER_HOTNESS],
+        this.compatibilityScore = json[API_CONSTS.USER_COMPATABILITY],
+        this.age = json[API_CONSTS.USER_AGE],
+        this.distance = json[API_CONSTS.USER_LOCATION_DISTANCE],
+        this.location = json[API_CONSTS.USER_LOCATION_DESCRIPTION]??'',
+        this.height = json[API_CONSTS.USER_HEIGHT_IN_CM],
 
   this.matchChangedTime = json['match_changed_time']!=null? DateTime.fromMillisecondsSinceEpoch((json['match_changed_time']*1000).toInt()).toUtc():DateTime.now().toUtc();
 

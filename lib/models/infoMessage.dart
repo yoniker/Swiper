@@ -64,7 +64,7 @@ class InfoMessage {
     }
     //TODO jsonDecode(content)['type'] will determine how to treat the content value (is it an image url etc)
 
-    return types.TextMessage(author: author!.toUiUser(),createdAt: (createdTime*1000).toInt(),id:messageId,status: status,text: text!);
+    return types.TextMessage(author: author.toUiUser(),createdAt: (createdTime*1000).toInt(),id:messageId,status: status,text: text!);
   }
 
   types.Status calculateMessageStatus() {

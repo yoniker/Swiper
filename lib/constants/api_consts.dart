@@ -32,6 +32,10 @@ class API_CONSTS{
   static const String USER_HOBBIES = 'hobbies';
   static const String USER_PETS = 'pets';
   static const String USER_IMAGES = 'images';
+  static const String USER_AGE = 'age';
+  static const String USER_HOTNESS = 'hotness';
+  static const String USER_COMPATABILITY = 'compatibility';
+  static const String USER_LOCATION_DISTANCE = 'location_distance';
   static const String MATCH_STATUS = 'status';
 
   
