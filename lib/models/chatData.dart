@@ -229,6 +229,8 @@ class ChatData extends ChangeNotifier {
       if (theUser != null) {
         Get.toNamed(GotNewMatchScreen.routeName, arguments: theUser);
       }
+
+      return;
     }
 
     //If here then push notification is new message as all other notifications types were handled above this line
