@@ -19,7 +19,7 @@ class InfoUserAdapter extends TypeAdapter<InfoUser> {
     return InfoUser(
       username: fields[0] as String,
       uid: fields[1] as String,
-      matchChangedTime: fields[2] as DateTime,
+      matchChangedTime: fields[2] as DateTime?,
       imageUrls: (fields[3] as List?)?.cast<String>(),
       headline: fields[4] as String?,
       description: fields[5] as String?,

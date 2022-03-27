@@ -490,8 +490,14 @@ class ChatData extends ChangeNotifier {
 
   List<InfoUser> get users {
     var usersList = List<InfoUser>.from(usersBox.values);
-    usersList.sort((user1, user2) =>
-        user1.matchChangedTime.isAfter(user2.matchChangedTime) ? -1 : 1);
+    usersList.sort((user1, user2) {
+
+      if(user1.matchChangedTime!=null && user2.matchChangedTime!=null) {
+        return
+        user1.matchChangedTime!.isAfter(user2.matchChangedTime!) ? -1 : 1;}
+      return user1.username.compareTo(user2.username);
+
+    });
     return List.unmodifiable(usersList);
   }
 

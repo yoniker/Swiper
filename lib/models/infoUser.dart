@@ -13,7 +13,7 @@ class InfoUser{
   @HiveField(1)
   final String uid;
   @HiveField(2)
-  final DateTime matchChangedTime;
+  final DateTime? matchChangedTime;
   @HiveField(3)
   List<String>? imageUrls;
   @HiveField(4)
@@ -65,10 +65,10 @@ class InfoUser{
 
   });
   InfoUser.fromJson(Map json) :
-        this.uid = json[API_CONSTS.USER_UID_KEY]??'',
+        this.uid = json[API_CONSTS.USER_UID_KEY].toString(),
         this.hobbies=List<String>.from(jsonDecode( json[API_CONSTS.USER_HOBBIES]??jsonEncode([]))),
         this.pets = List<String>.from(jsonDecode( json[API_CONSTS.USER_PETS]??jsonEncode([]))),
-        this.imageUrls = List<String>.from(jsonDecode(json[API_CONSTS.USER_IMAGES]??jsonEncode([NewNetworkService.getImageProfileByUserId(json[API_CONSTS.USER_UID_KEY])]))),
+        this.imageUrls = List<String>.from(json[API_CONSTS.USER_IMAGES]??[NewNetworkService.getImageProfileByUserId(json[API_CONSTS.USER_UID_KEY])]),
         this.username = json[API_CONSTS.USER_NAME]??'',
         this.children = json[API_CONSTS.USER_CHILDREN]??'',
         this.education = json[API_CONSTS.USER_EDUCATION]??'',
@@ -88,7 +88,7 @@ class InfoUser{
         this.distance = json[API_CONSTS.USER_LOCATION_DISTANCE],
         this.location = json[API_CONSTS.USER_LOCATION_DESCRIPTION]??'',
         this.height = json[API_CONSTS.USER_HEIGHT_IN_CM],
-        this.matchChangedTime = json[API_CONSTS.USER_MATCH_CHANGED_TIME]!=null? DateTime.fromMillisecondsSinceEpoch((json[API_CONSTS.USER_MATCH_CHANGED_TIME]*1000).toInt()).toUtc():DateTime.now().toUtc();
+        this.matchChangedTime = json[API_CONSTS.USER_MATCH_CHANGED_TIME]!=null? DateTime.fromMillisecondsSinceEpoch((json[API_CONSTS.USER_MATCH_CHANGED_TIME]*1000).toInt()).toUtc():null;
 
 
   types.User toUiUser(){

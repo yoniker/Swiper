@@ -361,7 +361,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
                     },
                     cards: topEngineMatches.map<Widget>((match) {
                       return MatchCard(
-                        key: Key(match!.profile!.userId!.id!),
+                        key: Key(match!.profile!.uid),
                         profile: match.profile,
                         showCarousel: true,
                         clickable: true,

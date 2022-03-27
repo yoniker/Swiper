@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:betabeta/constants/api_consts.dart';
+import 'package:betabeta/models/infoUser.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/cache_service.dart';
@@ -202,10 +203,10 @@ class NewNetworkService {
   }
 
 
-  postUserDecision({required Decision decision,required  Profile otherUserProfile}) async {
+  postUserDecision({required Decision decision,required  InfoUser otherUserProfile}) async {
     Map<String, String?> toSend = {
       API_CONSTS.DECIDER_ID_KEY: SettingsData.instance.uid,
-      API_CONSTS.DECIDEE_ID_KEY: otherUserProfile.userId!.id!,
+      API_CONSTS.DECIDEE_ID_KEY: otherUserProfile.uid,
       API_CONSTS.DECISION_KEY: decision.name
     };
     String encoded = jsonEncode(toSend);
