@@ -88,8 +88,7 @@ class InfoUser{
         this.distance = json[API_CONSTS.USER_LOCATION_DISTANCE],
         this.location = json[API_CONSTS.USER_LOCATION_DESCRIPTION]??'',
         this.height = json[API_CONSTS.USER_HEIGHT_IN_CM],
-
-  this.matchChangedTime = json['match_changed_time']!=null? DateTime.fromMillisecondsSinceEpoch((json['match_changed_time']*1000).toInt()).toUtc():DateTime.now().toUtc();
+        this.matchChangedTime = json[API_CONSTS.USER_MATCH_CHANGED_TIME]!=null? DateTime.fromMillisecondsSinceEpoch((json[API_CONSTS.USER_MATCH_CHANGED_TIME]*1000).toInt()).toUtc():DateTime.now().toUtc();
 
 
   types.User toUiUser(){
