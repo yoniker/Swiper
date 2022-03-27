@@ -23,8 +23,8 @@ class ProfileDisplay extends StatelessWidget {
           margin: EdgeInsets.all(5.0),
           child: direction == Axis.vertical?Column(
               children:
-              [Container(margin:EdgeInsets.all(2.0),child: ProfileImageAvatar.network(url:userInfo.imageUrl,radius: radius,minRadius: minRadius,maxRadius: maxRadius,)),
-                Text(userInfo.name)
+              [Container(margin:EdgeInsets.all(2.0),child: ProfileImageAvatar.network(url:userInfo.imageUrls![0],radius: radius,minRadius: minRadius,maxRadius: maxRadius,)),
+                Text(userInfo.username)
               ]
           ):
           Row(
@@ -32,8 +32,8 @@ class ProfileDisplay extends StatelessWidget {
               [
 
                 Container(margin: EdgeInsets.all(2.0),
-                    child: ProfileImageAvatar.network(url:userInfo.imageUrl,radius:radius,minRadius: minRadius,maxRadius: maxRadius,)),
-                Text(userInfo.name)
+                    child: ProfileImageAvatar.network(url:userInfo.imageUrls![0],radius:radius,minRadius: minRadius,maxRadius: maxRadius,)),
+                Text(userInfo.username)
               ])
       ),
     );

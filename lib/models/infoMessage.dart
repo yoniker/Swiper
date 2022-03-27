@@ -49,7 +49,7 @@ class InfoMessage {
   types.TextMessage toUiMessage(){
     InfoUser? author = ChatData.instance.getUserById(userId);
     if(author==null){
-      author = InfoUser(imageUrl: '', name: '', uid: userId,changedTime: DateTime.now());
+      author = InfoUser(imageUrls: [], username: '', uid: userId,matchChangedTime: DateTime.now());
     }
     double createdTime = addedDate??changedDate??sentTime??0;
     types.Status status = calculateMessageStatus();

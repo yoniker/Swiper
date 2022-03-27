@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/models/infoConversation.dart';
 import 'package:betabeta/models/infoMessage.dart';
 import 'package:betabeta/models/infoMessageReceipt.dart';
@@ -35,7 +36,7 @@ Future<void> handleBackgroundMessage(RemoteMessage rawMessage) async {
       final InfoUser sender =
           InfoUser.fromJson(jsonDecode(message["sender_details"]));
       await NotificationsController.instance.showNewMessageNotification(
-          senderName: sender.name,
+          senderName: sender.username,
           senderId: sender.uid,
           showSnackIfResumed: false);
     }
@@ -241,7 +242,7 @@ class ChatData extends ChangeNotifier {
           InfoUser.fromJson(jsonDecode(message["sender_details"]));
       usersBox.put(sender.uid, sender); //Update users box
       NotificationsController.instance.showNewMessageNotification(
-          senderName: sender.name, senderId: senderId);
+          senderName: sender.username, senderId: senderId);
     }
     final InfoMessage messageReceived = InfoMessage.fromJson(message);
     addMessageToDB(messageReceived);
@@ -363,7 +364,7 @@ class ChatData extends ChangeNotifier {
   Future<void> updateUsersData(List<dynamic> unparsedUsers) async {
     for (var unparsedUser in unparsedUsers) {
       InfoUser user = InfoUser.fromJson(unparsedUser);
-      if (unparsedUser['status'] != 'active') {
+      if (unparsedUser[API_CONSTS.MATCH_STATUS] != 'active') {
         await usersBox.delete(user.uid);
       } else {
         await usersBox.put(user.uid, user);
@@ -490,7 +491,7 @@ class ChatData extends ChangeNotifier {
   List<InfoUser> get users {
     var usersList = List<InfoUser>.from(usersBox.values);
     usersList.sort((user1, user2) =>
-        user1.changedTime.isAfter(user2.changedTime) ? -1 : 1);
+        user1.matchChangedTime.isAfter(user2.matchChangedTime) ? -1 : 1);
     return List.unmodifiable(usersList);
   }
 

@@ -78,7 +78,7 @@ class _ConversationsPreviewWidgetState
                             CircleAvatar(
                               radius: 35.0,
                               backgroundImage: NetworkImage(collocutor != null
-                                  ? collocutor.imageUrl
+                                  ? collocutor.imageUrls![0]
                                   : ''),
                             ),
                             SizedBox(
@@ -89,7 +89,7 @@ class _ConversationsPreviewWidgetState
                               children: [
                                 Text(
                                   collocutor != null
-                                      ? collocutor.name.split(' ')[0]
+                                      ? collocutor.username.split(' ')[0]
                                       : '',
                                   style: TextStyle(
                                     color: Colors.black,

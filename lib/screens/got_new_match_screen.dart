@@ -30,7 +30,7 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen> {
         hasBackButton: true,
         customTitle: ProfileDisplay(theUser,minRadius: 10,maxRadius: 20,direction: Axis.horizontal,),
     ),
-    body: Center(child: Text('You got a new match with ${theUser.name}')),
+    body: Center(child: Text('You got a new match with ${theUser.username}')),
     );
   }
 }
