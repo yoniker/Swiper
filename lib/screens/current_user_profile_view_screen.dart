@@ -33,7 +33,7 @@ class _CurrentUserProfileViewScreenState
     int age = UtilsMethods.calculateAge(userBirthday);
 
     final dummyProfile = InfoUser(
-
+  imageUrls: SettingsData.instance.profileImagesUrls,
     children: SettingsData.instance.children,
       covidVaccine: SettingsData.instance.covid_vaccine,
       drinking: SettingsData.instance.drinking,
@@ -47,6 +47,9 @@ class _CurrentUserProfileViewScreenState
       username: SettingsData.instance.name,
       zodiac: SettingsData.instance.zodiac,
       matchChangedTime: DateTime.now(),
+      compatibilityScore: 1.0,
+      hotnessScore: 1.0,
+      description: SettingsData.instance.userDescription,
 
     );
     return Stack(alignment: Alignment.topLeft, children: [
