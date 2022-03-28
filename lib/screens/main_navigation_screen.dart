@@ -12,8 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class MainNavigationScreen extends StatefulWidget {
   static const int PROFILE_PAGE_INDEX = 0;
   static const int MATCHING_PAGE_INDEX = 1;
-  static const int LIKE_PAGE_INDEX = 2;
-  static const int CONVERSATIONS_PAGE_INDEX = 3;
+  static const int CONVERSATIONS_PAGE_INDEX = 2;
   static const String routeName = '/main_navigation_screen';
   static const String TAB_INDEX_PARAM = 'tab_index';
   MainNavigationScreen({Key? key}) : super(key: key);
