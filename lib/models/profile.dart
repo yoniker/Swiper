@@ -92,7 +92,7 @@ class Profile{
 
 
   types.User toUiUser(){
-    return types.User(id:uid,firstName:username,imageUrl: profileImage);
+    return types.User(id:uid,firstName:username,imageUrl: NewNetworkService.getProfileImageUrl(profileImage));
   }
 
   bool hasImages(){
@@ -100,7 +100,7 @@ class Profile{
   }
 
   String get profileImage{
-    if(this.hasImages()){return imageUrls![0];}
+    if(hasImages()){return imageUrls![0];}
     return NewNetworkService.shortProfileUrlImageById(uid);
   }
 

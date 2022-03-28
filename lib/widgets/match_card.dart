@@ -494,7 +494,7 @@ class _MatchCardState extends State<MatchCard> {
                     child: _buildBackground(context),
                   ),
                   ...buildMatchDetails(
-                    widget.profile!,
+                    widget.profile,
                     context: context,
                   ),
                   _matchControls(),

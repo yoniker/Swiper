@@ -78,7 +78,7 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
         customTitle: ProfileDisplay(theUser,minRadius: 10,maxRadius: 20,direction: Axis.horizontal,),
       ),
       body: Chat(
-        user: types.User(id: SettingsData.instance.facebookId),
+        user: types.User(id: SettingsData.instance.uid),
         showUserAvatars:true,
         onSendPressed: (text){
           ChatData.instance.sendMessage(theUser.uid,

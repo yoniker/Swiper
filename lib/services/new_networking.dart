@@ -71,16 +71,7 @@ class NewNetworkService {
     return  '/profile_image/$userId';
   }
 
-  static List<String> serverImagesUrl(List<String> imagesUrls) {
-    return imagesUrls
-        .map((val) => NewNetworkService.getProfileImageUrl(val))
-        .toList();
-  }
-
   static String getProfileImageUrl(String shortUrl) {
-    if (shortUrl.contains('dummy/') && false) {
-      return 'https://' + NetworkHelper.SERVER_ADDR + shortUrl;
-    }
     return 'https://' + SERVER_ADDR + shortUrl;
   }
 

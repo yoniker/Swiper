@@ -1,6 +1,7 @@
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/chat_screen.dart';
+import 'package:betabeta/services/new_networking.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -37,7 +38,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('My contacts',style: TextStyle(color: Colors.blueGrey,fontSize: 18.0,fontWeight: FontWeight.bold,letterSpacing: 1.0),),
+                Text('My matches',style: TextStyle(color: Colors.blueGrey,fontSize: 18.0,fontWeight: FontWeight.bold,letterSpacing: 1.0),),
                 IconButton(onPressed: (){}, icon: Icon(Icons.search),iconSize: 30.0,color: Colors.blueGrey,)
               ],),
           ),
@@ -59,7 +60,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
                         padding: const EdgeInsets.all(10.0),
                         child: Column(
                           children: [
-                            CircleAvatar(radius: 35.0,backgroundImage: NetworkImage(currentUser.profileImage),),
+                            CircleAvatar(radius: 35.0,backgroundImage: NetworkImage(NewNetworkService.getProfileImageUrl(currentUser.profileImage)),),
                             SizedBox(height: 6.0,),
                             Text(currentUser.username.split(' ')[0],style: TextStyle(color:Colors.blueGrey,fontSize: 16.0,fontWeight: FontWeight.w600),),
                           ],

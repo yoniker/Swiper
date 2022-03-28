@@ -3,6 +3,7 @@ import 'package:betabeta/models/infoConversation.dart';
 import 'package:betabeta/models/infoMessage.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/chat_screen.dart';
+import 'package:betabeta/services/new_networking.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -78,7 +79,7 @@ class _ConversationsPreviewWidgetState
                             CircleAvatar(
                               radius: 35.0,
                               backgroundImage: NetworkImage(collocutor != null
-                                  ? collocutor.profileImage
+                                  ? NewNetworkService.getProfileImageUrl(collocutor.profileImage)
                                   : ''),
                             ),
                             SizedBox(
