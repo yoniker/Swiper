@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'infoUser.dart';
+part of 'profile.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class InfoUserAdapter extends TypeAdapter<InfoUser> {
+class ProfileAdapter extends TypeAdapter<Profile> {
   @override
   final int typeId = 0;
 
   @override
-  InfoUser read(BinaryReader reader) {
+  Profile read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return InfoUser(
+    return Profile(
       username: fields[0] as String,
       uid: fields[1] as String,
       matchChangedTime: fields[2] as DateTime?,
@@ -45,7 +45,7 @@ class InfoUserAdapter extends TypeAdapter<InfoUser> {
   }
 
   @override
-  void write(BinaryWriter writer, InfoUser obj) {
+  void write(BinaryWriter writer, Profile obj) {
     writer
       ..writeByte(24)
       ..writeByte(0)
@@ -104,7 +104,7 @@ class InfoUserAdapter extends TypeAdapter<InfoUser> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is InfoUserAdapter &&
+      other is ProfileAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

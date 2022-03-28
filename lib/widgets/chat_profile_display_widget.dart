@@ -1,4 +1,4 @@
-import 'package:betabeta/models/infoUser.dart';
+import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class ProfileDisplay extends StatelessWidget {
   const ProfileDisplay(this.userInfo,{this.minRadius,this.maxRadius,this.radius,this.onTap,Key? key,this.direction=Axis.vertical}) : super(key: key);
-  final InfoUser userInfo;
+  final Profile userInfo;
   final GestureTapCallback? onTap;
   final Axis direction;
   final double? radius;

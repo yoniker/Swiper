@@ -1,6 +1,6 @@
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/infoMessage.dart';
-import 'package:betabeta/models/infoUser.dart';
+import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/services/app_state_info.dart';
 import 'package:betabeta/utils/mixins.dart';
@@ -30,7 +30,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
   List<types.Message> _messages = <types.Message>[];
   late String conversationId;
-  late InfoUser theUser;
+  late Profile theUser;
 
 
   void updateChatData() {
@@ -53,7 +53,7 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
 
   @override
   void initState() {
-    InfoUser? userFound = ChatData.instance.getUserById(widget.userid);
+    Profile? userFound = ChatData.instance.getUserById(widget.userid);
     if(userFound==null){Get.back();} //TODO on this kind of error another option is to put out a detailed error screen
     theUser = userFound!;
     conversationId = ChatData.instance.calculateConversationId(theUser.uid);

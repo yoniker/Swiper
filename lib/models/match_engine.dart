@@ -1,5 +1,4 @@
 import 'package:betabeta/constants/api_consts.dart';
-import 'package:betabeta/models/infoUser.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -57,7 +56,7 @@ class MatchEngine extends ChangeNotifier {
         }
         print('STATUS OF FINDING MATCHES IS $_serverMatchesSearchStatus');
         dynamic matches = matchesSearchResult[API_CONSTS.MATCHES_SEARCH_MATCHES_KEY];
-        List newProfiles = matches.map<InfoUser>((match){return InfoUser.fromJson(match);}).toList();
+        List newProfiles = matches.map<Profile>((match){return Profile.fromJson(match);}).toList();
         List<Match> newPotentialMatches=newProfiles.map<Match>((profile){return Match(profile: profile);}).toList();
         if (newPotentialMatches.length>0) {
           _matches.addAll(newPotentialMatches);
@@ -116,7 +115,7 @@ class MatchEngine extends ChangeNotifier {
 
 class Match extends ChangeNotifier {
 
-  final InfoUser? profile;
+  final Profile? profile;
   Decision decision = Decision.indecided;
 
   Match({this.profile});

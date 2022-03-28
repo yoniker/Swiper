@@ -1,6 +1,6 @@
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/infoMessageReceipt.dart';
-import 'package:betabeta/models/infoUser.dart';
+import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:convert';
@@ -47,7 +47,7 @@ class InfoMessage {
         receipts = InfoMessageReceipt.fromJson(json);
 
   types.TextMessage toUiMessage(){
-    InfoUser? author = ChatData.instance.getUserById(userId);
+    Profile? author = ChatData.instance.getUserById(userId);
     if(author==null){
       throw FormatException('Author not found in Database!');
 

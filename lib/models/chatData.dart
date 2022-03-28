@@ -5,7 +5,7 @@ import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/models/infoConversation.dart';
 import 'package:betabeta/models/infoMessage.dart';
 import 'package:betabeta/models/infoMessageReceipt.dart';
-import 'package:betabeta/models/infoUser.dart';
+import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/models/persistentMessagesData.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/chat_screen.dart';
@@ -33,8 +33,8 @@ Future<void> handleBackgroundMessage(RemoteMessage rawMessage) async {
   if (message['push_notification_type'] == 'new_message') {
     final String senderId = message['user_id'];
     if (senderId != SettingsData.instance.uid) {
-      final InfoUser sender =
-          InfoUser.fromJson(jsonDecode(message["sender_details"]));
+      final Profile sender =
+          Profile.fromJson(jsonDecode(message["sender_details"]));
       await NotificationsController.instance.showNewMessageNotification(
           senderName: sender.username,
           senderId: sender.uid,
@@ -69,7 +69,7 @@ void _handleMessageOpenedFromNotification(RemoteMessage message) async {
   await ChatData.instance.syncWithServer();
   //ChatData().addMessageToDB(messageReceived);
   if (messageReceived.userId != SettingsData.instance.uid) {
-    InfoUser? sender = ChatData.instance.getUserById(messageReceived.userId);
+    Profile? sender = ChatData.instance.getUserById(messageReceived.userId);
     AppStateInfo.instance.latestTabOnMainNavigation =
         MainNavigationScreen.CONVERSATIONS_PAGE_INDEX;
     Get.offAllNamed(MainNavigationScreen.routeName);
@@ -94,7 +94,7 @@ class ChatData extends ChangeNotifier {
     } catch (_) {}
     try {
       Hive.registerAdapter(
-          InfoUserAdapter()); //TODO should I initialize Hive within the singleton?
+          ProfileAdapter()); //TODO should I initialize Hive within the singleton?
       Hive.registerAdapter(InfoMessageAdapter());
       Hive.registerAdapter(InfoConversationAdapter());
       Hive.registerAdapter(InfoMessageReceiptAdapter());
@@ -102,7 +102,7 @@ class ChatData extends ChangeNotifier {
 
     try {
       await Hive.openBox<InfoConversation>(ChatData.CONVERSATIONS_BOXNAME);
-      await Hive.openBox<InfoUser>(ChatData.USERS_BOXNAME);
+      await Hive.openBox<Profile>(ChatData.USERS_BOXNAME);
     } catch (_) {}
   }
 
@@ -226,7 +226,7 @@ class ChatData extends ChangeNotifier {
     if (message['push_notification_type'] == 'new_match') {
       await syncWithServer();
       String? userId = message['user_id'];
-      InfoUser? theUser = userId == null ? null : getUserById(userId);
+      Profile? theUser = userId == null ? null : getUserById(userId);
       if (theUser != null) {
         Get.toNamed(GotNewMatchScreen.routeName, arguments: theUser);
       }
@@ -238,8 +238,8 @@ class ChatData extends ChangeNotifier {
     final String senderId = message['user_id'];
     if (senderId != SettingsData.instance.uid) {
       //Update Users Box
-      final InfoUser sender =
-          InfoUser.fromJson(jsonDecode(message["sender_details"]));
+      final Profile sender =
+          Profile.fromJson(jsonDecode(message["sender_details"]));
       usersBox.put(sender.uid, sender); //Update users box
       NotificationsController.instance.showNewMessageNotification(
           senderName: sender.username, senderId: senderId);
@@ -346,7 +346,7 @@ class ChatData extends ChangeNotifier {
   final Stream<dynamic> _fcmStream = createStream();
   final Box<InfoConversation> conversationsBox =
       Hive.box(CONVERSATIONS_BOXNAME);
-  final Box<InfoUser> usersBox = Hive.box(USERS_BOXNAME);
+  final Box<Profile> usersBox = Hive.box(USERS_BOXNAME);
 
   Future<void> removeOrphanConversations() async {
     var allConversations = conversationsBox.keys.toList();
@@ -363,7 +363,7 @@ class ChatData extends ChangeNotifier {
 
   Future<void> updateUsersData(List<dynamic> unparsedUsers) async {
     for (var unparsedUser in unparsedUsers) {
-      InfoUser user = InfoUser.fromJson(unparsedUser);
+      Profile user = Profile.fromJson(unparsedUser);
       if (unparsedUser[API_CONSTS.MATCH_STATUS] != 'active') {
         await usersBox.delete(user.uid);
       } else {
@@ -488,8 +488,8 @@ class ChatData extends ChangeNotifier {
     return SettingsData.instance.uid;
   }
 
-  List<InfoUser> get users {
-    var usersList = List<InfoUser>.from(usersBox.values);
+  List<Profile> get users {
+    var usersList = List<Profile>.from(usersBox.values);
     usersList.sort((user1, user2) {
 
       if(user1.matchChangedTime!=null && user2.matchChangedTime!=null) {
@@ -501,7 +501,7 @@ class ChatData extends ChangeNotifier {
     return List.unmodifiable(usersList);
   }
 
-  InfoUser? getUserById(String userId) {
+  Profile? getUserById(String userId) {
     return usersBox.get(userId);
   }
 

@@ -1,4 +1,4 @@
-import 'package:betabeta/models/infoUser.dart';
+import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/widgets/chat_profile_display_widget.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ class GotNewMatchScreen extends StatefulWidget {
 }
 
 class _GotNewMatchScreenState extends State<GotNewMatchScreen> {
-  late InfoUser theUser;
+  late Profile theUser;
 
 
   @override

@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:betabeta/constants/api_consts.dart';
-import 'package:betabeta/models/infoUser.dart';
-import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/services/cache_service.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -203,7 +202,7 @@ class NewNetworkService {
   }
 
 
-  postUserDecision({required Decision decision,required  InfoUser otherUserProfile}) async {
+  postUserDecision({required Decision decision,required  Profile otherUserProfile}) async {
     Map<String, String?> toSend = {
       API_CONSTS.DECIDER_ID_KEY: SettingsData.instance.uid,
       API_CONSTS.DECIDEE_ID_KEY: otherUserProfile.uid,

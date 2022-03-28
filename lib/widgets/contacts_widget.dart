@@ -1,5 +1,5 @@
 import 'package:betabeta/models/chatData.dart';
-import 'package:betabeta/models/infoUser.dart';
+import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,7 +12,7 @@ class ContactsWidget extends StatefulWidget {
 }
 
 class _ContactsWidgetState extends State<ContactsWidget> {
-  List<InfoUser> users = ChatData.instance.users;
+  List<Profile> users = ChatData.instance.users;
 
   void listenContacts(){setState(() {
     users = ChatData.instance.users;
@@ -48,7 +48,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
                   physics: BouncingScrollPhysics(),
                   itemCount: users.length,
                   itemBuilder: (context,index){
-                    InfoUser currentUser = users[index];
+                    Profile currentUser = users[index];
                     return GestureDetector(
                       onTap: (){
 
