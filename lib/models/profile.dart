@@ -13,55 +13,58 @@ class Profile{
   @HiveField(1)
   final String uid;
   @HiveField(2)
-  final DateTime? matchChangedTime;
+  DateTime? matchChangedTime;
   @HiveField(3)
   List<String>? imageUrls;
   @HiveField(4)
-  final String? headline;
+  String? headline;
   @HiveField(5)
-  final String? description;
+  String? description;
   @HiveField(6)
-  final int? age;
+  int? age;
   @HiveField(7)
-  final String? location;
+  String? location;
   @HiveField(8)
-  final double? distance;
+  double? distance;
   @HiveField(9)
-  final String? jobTitle;
+  String? jobTitle;
   @HiveField(10)
-  final double? height;
+  double? height;
   @HiveField(11)
-  final double? compatibilityScore;
+  double? compatibilityScore;
   @HiveField(12)
-  final double? hotnessScore;
+  double? hotnessScore;
   @HiveField(13)
-  final String? religion;
+  String? religion;
   @HiveField(14)
-  final List<String> hobbies;
+  List<String> hobbies;
   @HiveField(15)
-  final List<String> pets;
+  List<String> pets;
   @HiveField(16)
-  final String covidVaccine;
+  String covidVaccine;
   @HiveField(17)
-  final String children;
+  String children;
   @HiveField(18)
-  final String education;
+  String education;
   @HiveField(19)
-  final String drinking;
+  String drinking;
   @HiveField(20)
-  final String smoking;
+  String smoking;
   @HiveField(21)
-  final String fitness;
+  String fitness;
   @HiveField(22)
-  final String zodiac;
+  String zodiac;
   @HiveField(23)
-  final String school;
+  String school;
+  @HiveField(24)
+  DateTime? lastUpdate;
 
 
 
 
   Profile({required this.username,required this.uid,required this.matchChangedTime,this.imageUrls,this.headline,this.description,this.age,this.location,this.jobTitle,this.religion,this.height,this.compatibilityScore,this.hotnessScore,this.distance,
     required this.pets,required this.drinking,required this.hobbies,required this.covidVaccine,required this.children,required this.education,required this.smoking,required this.fitness,required this.zodiac,required this.school,
+    this.lastUpdate
 
   });
   Profile.fromJson(Map json) :
@@ -88,7 +91,8 @@ class Profile{
         this.distance = json[API_CONSTS.USER_LOCATION_DISTANCE],
         this.location = json[API_CONSTS.USER_LOCATION_DESCRIPTION]??'',
         this.height = json[API_CONSTS.USER_HEIGHT_IN_CM],
-        this.matchChangedTime = json[API_CONSTS.USER_MATCH_CHANGED_TIME]!=null? DateTime.fromMillisecondsSinceEpoch((json[API_CONSTS.USER_MATCH_CHANGED_TIME]*1000).toInt()).toUtc():null;
+        this.matchChangedTime = json[API_CONSTS.USER_MATCH_CHANGED_TIME]!=null? DateTime.fromMillisecondsSinceEpoch((json[API_CONSTS.USER_MATCH_CHANGED_TIME]*1000).toInt()).toUtc():null,
+        this.lastUpdate = DateTime.now();
 
 
   types.User toUiUser(){

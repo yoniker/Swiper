@@ -37,6 +37,10 @@ class API_CONSTS{
   static const String USER_COMPATABILITY = 'compatibility';
   static const String USER_LOCATION_DISTANCE = 'location_distance';
   static const String MATCH_STATUS = 'status';
+  //Possible results when asking for a single profile from server
+  static const String SINGLE_PROFILE_FOUND = 'found';
+  static const String SINGLE_PROFILE_NOT_FOUND = 'not_found';
+  static const String SINGLE_PROFILE_USER_DATA = 'user_data';
 
   
 }

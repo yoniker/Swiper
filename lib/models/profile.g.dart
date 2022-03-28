@@ -41,13 +41,14 @@ class ProfileAdapter extends TypeAdapter<Profile> {
       fitness: fields[21] as String,
       zodiac: fields[22] as String,
       school: fields[23] as String,
+      lastUpdate: fields[24] as DateTime?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Profile obj) {
     writer
-      ..writeByte(24)
+      ..writeByte(25)
       ..writeByte(0)
       ..write(obj.username)
       ..writeByte(1)
@@ -95,7 +96,9 @@ class ProfileAdapter extends TypeAdapter<Profile> {
       ..writeByte(22)
       ..write(obj.zodiac)
       ..writeByte(23)
-      ..write(obj.school);
+      ..write(obj.school)
+      ..writeByte(24)
+      ..write(obj.lastUpdate);
   }
 
   @override

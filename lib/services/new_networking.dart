@@ -205,4 +205,17 @@ class NewNetworkService {
     http.Response response = await http.post(postDecisionUri,
         body: encoded); //TODO something if response wasnt 200
   }
+
+  Future<Profile?> getSingleUserProfile(String userId)async{
+    Uri getUserUri = Uri.https(SERVER_ADDR, '/profile/$userId');
+    http.Response response = await http.get(getUserUri);
+    if(response.statusCode!=200){
+      return null; //TODO retry?
+    }
+    dynamic profileDataResult = jsonDecode(response.body);
+    if(profileDataResult[API_CONSTS.MATCH_STATUS] == API_CONSTS.SINGLE_PROFILE_NOT_FOUND){
+      return null;
+    }
+  return Profile.fromJson(profileDataResult[API_CONSTS.SINGLE_PROFILE_USER_DATA]);
+  }
 }

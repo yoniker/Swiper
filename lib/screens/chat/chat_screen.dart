@@ -63,9 +63,7 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
     ChatData.instance.markConversationAsRead(conversationId).then((_)
     {ChatData.instance.listenConversation(conversationId,listenConversation);
     AppStateInfo.instance.addListener(listenConversation);
-
     }
-
     );
     updateChatData();
     super.initState();
@@ -88,7 +86,7 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
         Text('You got matched $howLongAgoDescription ago'),
         GestureDetector(child: CircularUserAvatar(imageProvider: NetworkImage(NewNetworkService.getProfileImageUrl(theUser.profileImage)),radius: 40,),
         onTap: () {
-          Get.toNamed(OtherUserProfileScreen.routeName,arguments: theUser);},
+          Get.toNamed(OtherUserProfileScreen.routeName,arguments: theUser.uid);},
         )
       ],
     );
@@ -101,7 +99,11 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
       appBar: CustomAppBar(
         hasTopPadding: true,
         hasBackButton: true,
-        customTitle: ProfileDisplay(theUser,minRadius: 10,maxRadius: 20,direction: Axis.horizontal,),
+        customTitle: ProfileDisplay(theUser,minRadius: 10,maxRadius: 20,direction: Axis.horizontal,
+        onTap: (){
+      Get.toNamed(OtherUserProfileScreen.routeName,arguments: theUser.uid);
+      },
+        ),
       ),
       body: Column(
         children: [
