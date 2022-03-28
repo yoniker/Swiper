@@ -1,7 +1,7 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
-import 'package:betabeta/screens/conversations_screen.dart';
+import 'package:betabeta/screens/chat/conversations_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/voila_page.dart';
 import 'package:betabeta/services/app_state_info.dart';
