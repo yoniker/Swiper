@@ -47,11 +47,13 @@ class InfoMessage {
         receipts = InfoMessageReceipt.fromJson(json);
 
   types.TextMessage toUiMessage(){
-    Profile? author = ChatData.instance.getUserById(userId);
+    types.User? author;
+    if(userId==SettingsData.instance.uid){
+      author = types.User(id:SettingsData.instance.uid,firstName:SettingsData.instance.name,imageUrl: SettingsData.instance.profileImagesUrls[0]);
+    }
+    else {author = ChatData.instance.getUserById(userId)?.toUiUser();
     if(author==null){
-      throw FormatException('Author not found in Database!');
-
-      //author = InfoUser(imageUrls: [], username: '', uid: userId,matchChangedTime: DateTime.now());
+      throw FormatException('Author not found in Database!');}
     }
     double createdTime = addedDate??changedDate??sentTime??0;
     types.Status status = calculateMessageStatus();
@@ -64,7 +66,7 @@ class InfoMessage {
     }
     //TODO jsonDecode(content)['type'] will determine how to treat the content value (is it an image url etc)
 
-    return types.TextMessage(author: author.toUiUser(),createdAt: (createdTime*1000).toInt(),id:messageId,status: status,text: text!);
+    return types.TextMessage(author: author,createdAt: (createdTime*1000).toInt(),id:messageId,status: status,text: text!);
   }
 
   types.Status calculateMessageStatus() {
