@@ -1,7 +1,5 @@
-import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/profile_edit_screen.dart';
-import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/utils/utils_methods.dart';
 import 'package:betabeta/widgets/match_card.dart';
@@ -32,6 +30,7 @@ class _CurrentUserProfileViewScreenState
     int age = UtilsMethods.calculateAge(userBirthday);
 
     final dummyProfile = Profile(
+      age: age,
   imageUrls: SettingsData.instance.profileImagesUrls,
     children: SettingsData.instance.children,
       covidVaccine: SettingsData.instance.covid_vaccine,
