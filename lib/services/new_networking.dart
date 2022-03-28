@@ -66,9 +66,9 @@ class NewNetworkService {
     return;
   }
 
-  static String getImageProfileByUserId(String userId) {
+  static String shortProfileUrlImageById(String userId) {
     //Get the user's main profile image by her userId
-    return 'https://' + SERVER_ADDR + '/profile_image/$userId';
+    return  '/profile_image/$userId';
   }
 
   static List<String> serverImagesUrl(List<String> imagesUrls) {

@@ -20,13 +20,13 @@ import 'package:get/get.dart';
 class MatchCard extends StatefulWidget {
   MatchCard({
     Key? key,
-    this.profile,
+    required this.profile,
     this.clickable = true,
     this.showCarousel = true,
   }) : super(key: key);
 
   /// The profile of the match.
-  final Profile? profile;
+  final Profile profile;
 
   /// Whether or not the Match card can receive click gestures.
   final bool clickable;
@@ -56,7 +56,7 @@ class _MatchCardState extends State<MatchCard> {
         isClickable: widget.clickable,
         initialPhotoIndex: 0,
         descriptionHeightFraction: _isPotrait ? 0.2 : 0.4,
-        imageUrls: widget.profile!.imageUrls,
+        imageUrls: widget.profile.imageUrls,
         showCarousel: widget.showCarousel,
         descriptionWidget: _descriptionWidget(),
         carouselInactiveDotColor: inactiveDot,
@@ -105,7 +105,7 @@ class _MatchCardState extends State<MatchCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${widget.profile!.username}, ${widget.profile!.age}',
+              '${widget.profile.username}, ${widget.profile.age}',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: boldTextStyle.copyWith(
@@ -122,7 +122,7 @@ class _MatchCardState extends State<MatchCard> {
             ),
             Expanded(
               child: Text(
-                widget.profile!.headline ?? '',
+                widget.profile.headline ?? '',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: boldTextStyle.copyWith(
@@ -305,7 +305,6 @@ class _MatchCardState extends State<MatchCard> {
           detailText: '${profile.jobTitle}',
           detailIcon: FaIcon(FontAwesomeIcons.userTie, color: Colors.black),
         ),
-      if (profile.religion != null)
         Text(
           'Artificial Intelligence',
           style: subTitleStyle,
@@ -531,14 +530,9 @@ class PhotoView extends StatefulWidget {
     this.carouselBackgroundColor = Colors.transparent,
     this.onChanged,
   })  : assert(
-            initialPhotoIndex != null &&
                 initialPhotoIndex <= imageUrls!.length &&
                 initialPhotoIndex.isEven,
-            'The initialPhotoIndex cannot be "null" or negative. It must also be in the range of avaliable imageUrls (starting from `0`), Please supply a correct initialPhotoIndex or leave it as it is without supplying the parameter.'),
-        assert(showCarousel != null,
-            'The optional parameter `showCarousel` cannot be "null". Please set it to either true or false to either show the carousel widget or not.'),
-        assert(isClickable != null,
-            'The optional parameter `isClickable` cannot be "null". Please set it to either true or false to either make the PhotoView respond to touch Gestures or not.'),
+            'The initialPhotoIndex must be in the range of available imageUrls (starting from `0`), Please supply a correct initialPhotoIndex or leave it as it is without supplying the parameter.'),
         super(key: key);
 
   /// The index of the photo to display initially.

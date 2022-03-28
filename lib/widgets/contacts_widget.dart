@@ -59,7 +59,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
                         padding: const EdgeInsets.all(10.0),
                         child: Column(
                           children: [
-                            CircleAvatar(radius: 35.0,backgroundImage: NetworkImage(currentUser.imageUrls![0]),),
+                            CircleAvatar(radius: 35.0,backgroundImage: NetworkImage(currentUser.profileImage),),
                             SizedBox(height: 6.0,),
                             Text(currentUser.username.split(' ')[0],style: TextStyle(color:Colors.blueGrey,fontSize: 16.0,fontWeight: FontWeight.w600),),
                           ],

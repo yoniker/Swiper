@@ -78,7 +78,7 @@ class _ConversationsPreviewWidgetState
                             CircleAvatar(
                               radius: 35.0,
                               backgroundImage: NetworkImage(collocutor != null
-                                  ? collocutor.imageUrls![0]
+                                  ? collocutor.profileImage
                                   : ''),
                             ),
                             SizedBox(

@@ -68,7 +68,7 @@ class Profile{
         this.uid = json[API_CONSTS.USER_UID_KEY].toString(),
         this.hobbies=List<String>.from(jsonDecode( json[API_CONSTS.USER_HOBBIES]??jsonEncode([]))),
         this.pets = List<String>.from(jsonDecode( json[API_CONSTS.USER_PETS]??jsonEncode([]))),
-        this.imageUrls = List<String>.from(json[API_CONSTS.USER_IMAGES]??[NewNetworkService.getImageProfileByUserId(json[API_CONSTS.USER_UID_KEY])]),
+        this.imageUrls = json[API_CONSTS.USER_IMAGES]!=null?List<String>.from(json[API_CONSTS.USER_IMAGES]):null,
         this.username = json[API_CONSTS.USER_NAME]??'',
         this.children = json[API_CONSTS.USER_CHILDREN]??'',
         this.education = json[API_CONSTS.USER_EDUCATION]??'',
@@ -92,7 +92,16 @@ class Profile{
 
 
   types.User toUiUser(){
-    return types.User(id:uid,firstName:username,imageUrl: imageUrls![0]);
+    return types.User(id:uid,firstName:username,imageUrl: profileImage);
+  }
+
+  bool hasImages(){
+    return this.imageUrls!=null && this.imageUrls!.length>0;
+  }
+
+  String get profileImage{
+    if(this.hasImages()){return imageUrls![0];}
+    return NewNetworkService.shortProfileUrlImageById(uid);
   }
 
 }

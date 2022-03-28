@@ -23,7 +23,7 @@ class ProfileDisplay extends StatelessWidget {
           margin: EdgeInsets.all(5.0),
           child: direction == Axis.vertical?Column(
               children:
-              [Container(margin:EdgeInsets.all(2.0),child: ProfileImageAvatar.network(url:userInfo.imageUrls![0],radius: radius,minRadius: minRadius,maxRadius: maxRadius,)),
+              [Container(margin:EdgeInsets.all(2.0),child: ProfileImageAvatar.network(url:userInfo.profileImage,radius: radius,minRadius: minRadius,maxRadius: maxRadius,)),
                 Text(userInfo.username)
               ]
           ):
@@ -32,7 +32,7 @@ class ProfileDisplay extends StatelessWidget {
               [
 
                 Container(margin: EdgeInsets.all(2.0),
-                    child: ProfileImageAvatar.network(url:userInfo.imageUrls![0],radius:radius,minRadius: minRadius,maxRadius: maxRadius,)),
+                    child: ProfileImageAvatar.network(url:userInfo.profileImage,radius:radius,minRadius: minRadius,maxRadius: maxRadius,)),
                 Text(userInfo.username)
               ])
       ),
