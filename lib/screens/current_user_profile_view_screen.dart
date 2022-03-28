@@ -29,7 +29,7 @@ class _CurrentUserProfileViewScreenState
     DateTime userBirthday = DateTime.parse(Birthday);
     int age = UtilsMethods.calculateAge(userBirthday);
 
-    final dummyProfile = Profile(
+    final currentUserProfile = Profile(
       age: age,
   imageUrls: SettingsData.instance.profileImagesUrls,
     children: SettingsData.instance.children,
@@ -54,7 +54,7 @@ class _CurrentUserProfileViewScreenState
       Scaffold(
         // appBar: CustomAppBar(),
         body: MatchCard(
-            clickable: true, showCarousel: true, profile: dummyProfile),
+            clickable: true, showCarousel: true, profile: currentUserProfile),
       ),
       SafeArea(
         child: Padding(

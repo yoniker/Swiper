@@ -321,6 +321,7 @@ class _MatchCardState extends State<MatchCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if(profile.compatibilityScore!=null)
             DescriptionBanner(
               message: 'Personal preference',
               leading: Icon(
@@ -346,6 +347,7 @@ class _MatchCardState extends State<MatchCard> {
                 );
               },
             ),
+            if(profile.hotnessScore!=null)
             DescriptionBanner(
                 message: 'Compatibility',
                 overflow: null,
@@ -529,9 +531,9 @@ class PhotoView extends StatefulWidget {
     this.carouselInactiveDotColor = Colors.lightBlueAccent,
     this.carouselBackgroundColor = Colors.transparent,
     this.onChanged,
-  })  : assert(
-                initialPhotoIndex <= imageUrls!.length &&
-                initialPhotoIndex.isEven,
+  })  : assert(imageUrls==null ||
+      (initialPhotoIndex <= imageUrls.length &&
+                initialPhotoIndex.isEven),
             'The initialPhotoIndex must be in the range of available imageUrls (starting from `0`), Please supply a correct initialPhotoIndex or leave it as it is without supplying the parameter.'),
         super(key: key);
 
@@ -542,7 +544,7 @@ class PhotoView extends StatefulWidget {
   /// Defaults to `0`.
   final int initialPhotoIndex;
 
-  /// Wheter or not user can interact with the [PhotoView] to
+  /// Whether or not user can interact with the [PhotoView] to
   /// either move to the next page or the previous page.
   final bool isClickable;
 
@@ -668,7 +670,7 @@ class _PhotoViewState extends State<PhotoView> {
 
     // instantiate the carousel List
     carouselDots = <CarouselDot>[];
-    if (widget.imageUrls!.length == 0) {
+    if (widget.imageUrls ==null || widget.imageUrls!.length == 0) {
       var img = Image.network(
         NewNetworkService.getProfileImageUrl(BetaIconPaths.anonymousProfileUrl),
         scale: 1.0,
@@ -763,6 +765,7 @@ class _PhotoViewState extends State<PhotoView> {
   /// Note: use the `onChanged(int)` Function parameter of the [PhotoView]
   /// to get notified whenever a change occurs to the `index` of the [PhotoView].
   void moveToPhoto(int index) {
+    if(widget.imageUrls==null){return;}
     // check to verify that such index exists and is accepted.
     if (index <= widget.imageUrls!.length - 1 && !index.isNegative) {
       // switch to the new index.
@@ -792,6 +795,7 @@ class _PhotoViewState extends State<PhotoView> {
   Widget _carouselLayer() {
     // Generate a list of CarouselDots based on the length of the
     // `imageUrls` passed in the constructor body.
+    if(widget.imageUrls==null){return SizedBox();}
     var carousels = List.generate(widget.imageUrls!.length, (index) {
       return CarouselDot(
         key: Key(

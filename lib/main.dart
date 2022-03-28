@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/chat/chat_screen.dart';
+import 'package:betabeta/screens/chat/other_user_profile_screen.dart';
 import 'package:betabeta/screens/user_edit/children_screen.dart';
 import 'package:betabeta/screens/chat/conversations_screen.dart';
 import 'package:betabeta/screens/user_edit/covid_screen.dart';
@@ -174,7 +175,8 @@ void main() async {
         GetPage(name: DrinkingScreen.routeName, page: () => DrinkingScreen()),
         GetPage(name: CovidScreen.routeName, page: () => CovidScreen()),
         GetPage(name: EducationScreen.routeName, page: () => EducationScreen()),
-        GetPage(name: MyPetsScreen.routeName, page: () => MyPetsScreen())
+        GetPage(name: MyPetsScreen.routeName, page: () => MyPetsScreen()),
+        GetPage(name:OtherUserProfileScreen.routeName,page:()=>OtherUserProfileScreen())
       ],
       title: 'Voilà MVP',
       debugShowCheckedModeBanner: false,

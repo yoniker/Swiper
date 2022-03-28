@@ -459,6 +459,14 @@ class ChatData extends ChangeNotifier {
     return List.unmodifiable(allConversations);
   }
 
+  Set<String> get allConversationsParticipantsIds{
+    Set<String> participants = Set();
+    for(var conversation in conversations){
+      participants.addAll(conversation.participantsIds);
+    }
+    return Set.unmodifiable(participants);
+  }
+
   bool conversationRead(InfoConversation conversation) {
     if (conversation.messages.length == 0) {
       return true;
