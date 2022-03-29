@@ -1,6 +1,6 @@
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/infoMessageReceipt.dart';
-import 'package:betabeta/models/infoUser.dart';
+import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:convert';
@@ -47,9 +47,13 @@ class InfoMessage {
         receipts = InfoMessageReceipt.fromJson(json);
 
   types.TextMessage toUiMessage(){
-    InfoUser? author = ChatData.instance.getUserById(userId);
+    types.User? author;
+    if(userId==SettingsData.instance.uid){
+      author = types.User(id:SettingsData.instance.uid,firstName:SettingsData.instance.name,imageUrl: SettingsData.instance.profileImagesUrls[0]);
+    }
+    else {author = ChatData.instance.getUserById(userId)?.toUiUser();
     if(author==null){
-      author = InfoUser(imageUrl: '', name: '', uid: userId,changedTime: DateTime.now());
+      throw FormatException('Author not found in Database!');}
     }
     double createdTime = addedDate??changedDate??sentTime??0;
     types.Status status = calculateMessageStatus();
@@ -62,11 +66,11 @@ class InfoMessage {
     }
     //TODO jsonDecode(content)['type'] will determine how to treat the content value (is it an image url etc)
 
-    return types.TextMessage(author: author.toUiUser(),createdAt: (createdTime*1000).toInt(),id:messageId,status: status,text: text!);
+    return types.TextMessage(author: author,createdAt: (createdTime*1000).toInt(),id:messageId,status: status,text: text!);
   }
 
   types.Status calculateMessageStatus() {
-    if(userId == SettingsData.instance.facebookId){
+    if(userId == SettingsData.instance.uid){
       //current user is the one who sent the message
       if(messageStatus=='Uploading'){
         return types.Status.sending;
@@ -80,7 +84,7 @@ class InfoMessage {
       }
       //if other users read the message change status to read, otherwise sent
       for(var receiptUserId in receipts.keys){
-        if(receiptUserId!=SettingsData.instance.facebookId && receipts[receiptUserId]!.readTime>0){
+        if(receiptUserId!=SettingsData.instance.uid && receipts[receiptUserId]!.readTime>0){
           return types.Status.seen;
         }
 

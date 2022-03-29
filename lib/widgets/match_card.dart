@@ -1,8 +1,8 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/lists_consts.dart';
-import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/screens/full_image_screen.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/widgets/basic_detail.dart';
@@ -20,13 +20,13 @@ import 'package:get/get.dart';
 class MatchCard extends StatefulWidget {
   MatchCard({
     Key? key,
-    this.profile,
+    required this.profile,
     this.clickable = true,
     this.showCarousel = true,
   }) : super(key: key);
 
   /// The profile of the match.
-  final Profile? profile;
+  final Profile profile;
 
   /// Whether or not the Match card can receive click gestures.
   final bool clickable;
@@ -56,7 +56,7 @@ class _MatchCardState extends State<MatchCard> {
         isClickable: widget.clickable,
         initialPhotoIndex: 0,
         descriptionHeightFraction: _isPotrait ? 0.2 : 0.4,
-        imageUrls: widget.profile!.imageUrls,
+        imageUrls: widget.profile.imageUrls,
         showCarousel: widget.showCarousel,
         descriptionWidget: _descriptionWidget(),
         carouselInactiveDotColor: inactiveDot,
@@ -105,7 +105,7 @@ class _MatchCardState extends State<MatchCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${widget.profile!.username}, ${widget.profile!.age}',
+              '${widget.profile.username}, ${widget.profile.age}',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: boldTextStyle.copyWith(
@@ -122,7 +122,7 @@ class _MatchCardState extends State<MatchCard> {
             ),
             Expanded(
               child: Text(
-                widget.profile!.headline ?? '',
+                widget.profile.headline ?? '',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: boldTextStyle.copyWith(
@@ -232,7 +232,7 @@ class _MatchCardState extends State<MatchCard> {
                   scrollDirection: Axis.horizontal,
                   itemCount: _imageUrls.length,
                   itemBuilder: (cntx, index) {
-                    final String _url = _imageUrls[index];
+                    final String _url = NewNetworkService.getProfileImageUrl(_imageUrls[index]);
                     return GestureDetector(
                       onTap: () {
                         // pushToScreen(
@@ -294,7 +294,7 @@ class _MatchCardState extends State<MatchCard> {
             )),
       if (profile.height != null)
         BasicDetail(
-          detailText: '${cmToFeet(int.parse(profile.height!))} ft',
+          detailText: '${cmToFeet(profile.height!)} ft',
           detailIcon: FaIcon(
             FontAwesomeIcons.ruler,
             color: Colors.yellow[700],
@@ -305,7 +305,6 @@ class _MatchCardState extends State<MatchCard> {
           detailText: '${profile.jobTitle}',
           detailIcon: FaIcon(FontAwesomeIcons.userTie, color: Colors.black),
         ),
-      if (profile.religion != null)
         Text(
           'Artificial Intelligence',
           style: subTitleStyle,
@@ -322,6 +321,7 @@ class _MatchCardState extends State<MatchCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if(profile.compatibilityScore!=null)
             DescriptionBanner(
               message: 'Personal preference',
               leading: Icon(
@@ -347,6 +347,7 @@ class _MatchCardState extends State<MatchCard> {
                 );
               },
             ),
+            if(profile.hotnessScore!=null)
             DescriptionBanner(
                 message: 'Compatibility',
                 overflow: null,
@@ -495,7 +496,7 @@ class _MatchCardState extends State<MatchCard> {
                     child: _buildBackground(context),
                   ),
                   ...buildMatchDetails(
-                    widget.profile!,
+                    widget.profile,
                     context: context,
                   ),
                   _matchControls(),
@@ -530,15 +531,10 @@ class PhotoView extends StatefulWidget {
     this.carouselInactiveDotColor = Colors.lightBlueAccent,
     this.carouselBackgroundColor = Colors.transparent,
     this.onChanged,
-  })  : assert(
-            initialPhotoIndex != null &&
-                initialPhotoIndex <= imageUrls!.length &&
-                initialPhotoIndex.isEven,
-            'The initialPhotoIndex cannot be "null" or negative. It must also be in the range of avaliable imageUrls (starting from `0`), Please supply a correct initialPhotoIndex or leave it as it is without supplying the parameter.'),
-        assert(showCarousel != null,
-            'The optional parameter `showCarousel` cannot be "null". Please set it to either true or false to either show the carousel widget or not.'),
-        assert(isClickable != null,
-            'The optional parameter `isClickable` cannot be "null". Please set it to either true or false to either make the PhotoView respond to touch Gestures or not.'),
+  })  : assert(imageUrls==null ||
+      (initialPhotoIndex <= imageUrls.length &&
+                initialPhotoIndex.isEven),
+            'The initialPhotoIndex must be in the range of available imageUrls (starting from `0`), Please supply a correct initialPhotoIndex or leave it as it is without supplying the parameter.'),
         super(key: key);
 
   /// The index of the photo to display initially.
@@ -548,7 +544,7 @@ class PhotoView extends StatefulWidget {
   /// Defaults to `0`.
   final int initialPhotoIndex;
 
-  /// Wheter or not user can interact with the [PhotoView] to
+  /// Whether or not user can interact with the [PhotoView] to
   /// either move to the next page or the previous page.
   final bool isClickable;
 
@@ -674,7 +670,7 @@ class _PhotoViewState extends State<PhotoView> {
 
     // instantiate the carousel List
     carouselDots = <CarouselDot>[];
-    if (widget.imageUrls!.length == 0) {
+    if (widget.imageUrls ==null || widget.imageUrls!.length == 0) {
       var img = Image.network(
         NewNetworkService.getProfileImageUrl(BetaIconPaths.anonymousProfileUrl),
         scale: 1.0,
@@ -688,7 +684,7 @@ class _PhotoViewState extends State<PhotoView> {
         imageIndex < widget.imageUrls!.length;
         imageIndex++) {
       var img = Image.network(
-        widget.imageUrls![imageIndex],
+          NewNetworkService.getProfileImageUrl(widget.imageUrls![imageIndex]),
         scale: 1.0,
         fit: BoxFit.cover,
         //headers:{"Keep-Alive":"timeout=20"},
@@ -769,6 +765,7 @@ class _PhotoViewState extends State<PhotoView> {
   /// Note: use the `onChanged(int)` Function parameter of the [PhotoView]
   /// to get notified whenever a change occurs to the `index` of the [PhotoView].
   void moveToPhoto(int index) {
+    if(widget.imageUrls==null){return;}
     // check to verify that such index exists and is accepted.
     if (index <= widget.imageUrls!.length - 1 && !index.isNegative) {
       // switch to the new index.
@@ -798,6 +795,7 @@ class _PhotoViewState extends State<PhotoView> {
   Widget _carouselLayer() {
     // Generate a list of CarouselDots based on the length of the
     // `imageUrls` passed in the constructor body.
+    if(widget.imageUrls==null){return SizedBox();}
     var carousels = List.generate(widget.imageUrls!.length, (index) {
       return CarouselDot(
         key: Key(

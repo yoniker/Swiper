@@ -1,7 +1,5 @@
-import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/profile_edit_screen.dart';
-import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/utils/utils_methods.dart';
 import 'package:betabeta/widgets/match_card.dart';
@@ -31,24 +29,32 @@ class _CurrentUserProfileViewScreenState
     DateTime userBirthday = DateTime.parse(Birthday);
     int age = UtilsMethods.calculateAge(userBirthday);
 
-    final dummyProfile = Profile(
-        username: SettingsData.instance.name,
-        age: age,
-        headline: SettingsData.instance.userDescription,
-        description: SettingsData.instance.userDescription,
-        imageUrls: NewNetworkService.serverImagesUrl(
-            SettingsData.instance.profileImagesUrls),
-        location: SettingsData.instance.locationDescription,
-        height: "${SettingsData.instance.heightInCm}",
-        jobTitle: SettingsData.instance.jobTitle,
-        compatibilityScore:
-            1, //Compatibility scores is calculated between users.
-        hotnessScore: 1);
+    final currentUserProfile = Profile(
+      age: age,
+  imageUrls: SettingsData.instance.profileImagesUrls,
+    children: SettingsData.instance.children,
+      covidVaccine: SettingsData.instance.covid_vaccine,
+      drinking: SettingsData.instance.drinking,
+      uid: SettingsData.instance.uid,
+      education: SettingsData.instance.education,
+      fitness: SettingsData.instance.fitness,
+      hobbies: SettingsData.instance.hobbies,
+      school: SettingsData.instance.school,
+      smoking: SettingsData.instance.smoking,
+      pets: SettingsData.instance.pets,
+      username: SettingsData.instance.name,
+      zodiac: SettingsData.instance.zodiac,
+      matchChangedTime: DateTime.now(),
+      compatibilityScore: 1.0,
+      hotnessScore: 1.0,
+      description: SettingsData.instance.userDescription,
+
+    );
     return Stack(alignment: Alignment.topLeft, children: [
       Scaffold(
         // appBar: CustomAppBar(),
         body: MatchCard(
-            clickable: true, showCarousel: true, profile: dummyProfile),
+            clickable: true, showCarousel: true, profile: currentUserProfile),
       ),
       SafeArea(
         child: Padding(

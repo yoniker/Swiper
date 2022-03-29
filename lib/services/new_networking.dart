@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:betabeta/constants/api_consts.dart';
+import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/services/cache_service.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -63,21 +66,12 @@ class NewNetworkService {
     return;
   }
 
-  static String getImageProfileByUserId(String userId) {
+  static String shortProfileUrlImageById(String userId) {
     //Get the user's main profile image by her userId
-    return 'https://' + SERVER_ADDR + '/profile_image/$userId';
-  }
-
-  static List<String> serverImagesUrl(List<String> imagesUrls) {
-    return imagesUrls
-        .map((val) => NewNetworkService.getProfileImageUrl(val))
-        .toList();
+    return  '/profile_image/$userId';
   }
 
   static String getProfileImageUrl(String shortUrl) {
-    if (shortUrl.contains('dummy/') && false) {
-      return 'https://' + NetworkHelper.SERVER_ADDR + shortUrl;
-    }
     return 'https://' + SERVER_ADDR + shortUrl;
   }
 
@@ -161,8 +155,8 @@ class NewNetworkService {
       SettingsData.EDUCATION_KEY: settings.education,
       SettingsData.CHILDREN_KEY: settings.children,
       SettingsData.COVID_VACCINE_KEY: settings.covid_vaccine,
-      SettingsData.HOBBIES_KEY: json.jsonEncode(settings.hobbies.toString()),
-      SettingsData.PETS_KEY: json.jsonEncode(settings.pets.toString()),
+      SettingsData.HOBBIES_KEY: json.jsonEncode(settings.hobbies),
+      SettingsData.PETS_KEY: json.jsonEncode(settings.pets),
       SettingsData.HEIGHT_IN_CM_KEY: settings.heightInCm.toString(),
       SettingsData.TEXT_SEARCH_KEY: settings.textSearch,
     };
@@ -193,13 +187,50 @@ class NewNetworkService {
     if (response.statusCode != 200) {
       return null; //TODO error handling
     }
-
-    try {
       dynamic profilesSearchResult = jsonDecode(response.body);
       return profilesSearchResult;
-    } catch (e) {
-      print('Error during parsing matches');
-      return [];
+
+  }
+
+
+  postUserDecision({required Decision decision,required  Profile otherUserProfile}) async {
+    Map<String, String?> toSend = {
+      API_CONSTS.DECIDER_ID_KEY: SettingsData.instance.uid,
+      API_CONSTS.DECIDEE_ID_KEY: otherUserProfile.uid,
+      API_CONSTS.DECISION_KEY: decision.name
+    };
+    String encoded = jsonEncode(toSend);
+    Uri postDecisionUri =
+    Uri.https(SERVER_ADDR, '/decision/${SettingsData.instance.uid}');
+    http.Response response = await http.post(postDecisionUri,
+        body: encoded); //TODO something if response wasnt 200
+  }
+
+  Future<Profile?> getSingleUserProfile(String userId)async{
+    Uri getUserUri = Uri.https(SERVER_ADDR, '/profile/$userId');
+    http.Response response = await http.get(getUserUri);
+    if(response.statusCode!=200){
+      return null; //TODO retry?
     }
+    dynamic profileDataResult = jsonDecode(response.body);
+    if(profileDataResult[API_CONSTS.MATCH_STATUS] == API_CONSTS.SINGLE_PROFILE_NOT_FOUND){
+      return null;
+    }
+  return Profile.fromJson(profileDataResult[API_CONSTS.SINGLE_PROFILE_USER_DATA]);
+  }
+
+  Future<void> unmatch(String uid)async{
+    Uri unmatchUrl =
+    Uri.https(SERVER_ADDR, '/unmatch/${SettingsData.instance.uid}/$uid');
+    http.Response response = await http.get(unmatchUrl);
+    //TODO something if not 200
+    return;
+  }
+
+  Future<void> clearLikes()async{
+    Uri clearLikesUrl =
+    Uri.https(SERVER_ADDR, '/clear_likes/${SettingsData.instance.uid}');
+    http.Response response = await http.get(clearLikesUrl);
+    return;
   }
 }

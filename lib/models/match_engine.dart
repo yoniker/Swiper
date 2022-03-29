@@ -56,7 +56,7 @@ class MatchEngine extends ChangeNotifier {
         }
         print('STATUS OF FINDING MATCHES IS $_serverMatchesSearchStatus');
         dynamic matches = matchesSearchResult[API_CONSTS.MATCHES_SEARCH_MATCHES_KEY];
-        List newProfiles = matches.map<Profile>((match){return Profile.fromServer(match);}).toList();
+        List newProfiles = matches.map<Profile>((match){return Profile.fromJson(match);}).toList();
         List<Match> newPotentialMatches=newProfiles.map<Match>((profile){return Match(profile: profile);}).toList();
         if (newPotentialMatches.length>0) {
           _matches.addAll(newPotentialMatches);
@@ -108,7 +108,7 @@ class MatchEngine extends ChangeNotifier {
       goToNextMatch();
     }
     notifyListeners();
-    NetworkHelper().postUserDecision(decision: decision,otherUserProfile: currentMatch.profile);
+    NewNetworkService.instance.postUserDecision(decision: decision,otherUserProfile: currentMatch.profile!);
     }
   }
 

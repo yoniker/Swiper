@@ -1,10 +1,13 @@
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/infoMessage.dart';
-import 'package:betabeta/models/infoUser.dart';
+import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/screens/chat/other_user_profile_screen.dart';
+import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/services/app_state_info.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/chat_profile_display_widget.dart';
+import 'package:betabeta/widgets/circular_user_avatar.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
@@ -30,7 +33,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
   List<types.Message> _messages = <types.Message>[];
   late String conversationId;
-  late InfoUser theUser;
+  late Profile theUser;
 
 
   void updateChatData() {
@@ -53,19 +56,42 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
 
   @override
   void initState() {
-    InfoUser? userFound = ChatData.instance.getUserById(widget.userid);
+    Profile? userFound = ChatData.instance.getUserById(widget.userid);
     if(userFound==null){Get.back();} //TODO on this kind of error another option is to put out a detailed error screen
     theUser = userFound!;
     conversationId = ChatData.instance.calculateConversationId(theUser.uid);
     ChatData.instance.markConversationAsRead(conversationId).then((_)
     {ChatData.instance.listenConversation(conversationId,listenConversation);
     AppStateInfo.instance.addListener(listenConversation);
-
     }
-
     );
     updateChatData();
     super.initState();
+  }
+
+  Widget buildEmptyChatWidget(){
+    Profile? theUser = ChatData.instance.getUserById(widget.userid);
+    DateTime? matchTime = theUser?.matchChangedTime;
+    if(theUser==null || matchTime==null){
+      return SizedBox();
+    }
+
+    Duration howLongAgo= DateTime.now().difference(matchTime);
+    String howLongAgoDescription = howLongAgo.inDays>0? '${howLongAgo.inDays} days':'${howLongAgo.inHours} hours';
+
+    return Column(
+      children: [
+        Text('To Nitzan: show a widget for the case when there are no messages '),
+        Text('For example'),
+        Text('You got matched $howLongAgoDescription ago'),
+        GestureDetector(child: CircularUserAvatar(imageProvider: NetworkImage(NewNetworkService.getProfileImageUrl(theUser.profileImage)),radius: 40,),
+        onTap: () {
+          Get.toNamed(OtherUserProfileScreen.routeName,arguments: theUser.uid);},
+        ),
+
+
+      ],
+    );
   }
 
   @override
@@ -75,25 +101,41 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
       appBar: CustomAppBar(
         hasTopPadding: true,
         hasBackButton: true,
-        customTitle: ProfileDisplay(theUser,minRadius: 10,maxRadius: 20,direction: Axis.horizontal,),
+        customTitle: ProfileDisplay(theUser,minRadius: 10,maxRadius: 20,direction: Axis.horizontal,
+        onTap: (){
+      Get.toNamed(OtherUserProfileScreen.routeName,arguments: theUser.uid);
+      },
+        ),
+        trailing: TextButton(onPressed: ()async{
+          await ChatData.instance.unmatch(theUser.uid);
+          Get.back();
+        }, child: Text('Unmatch')),
       ),
-      body: Chat(
-        user: types.User(id: SettingsData.instance.facebookId),
-        showUserAvatars:true,
-        onSendPressed: (text){
-          ChatData.instance.sendMessage(theUser.uid,
-              jsonEncode({"type":"text","content":"${text.text}"}));
-        },
-        messages: _messages,
-        onMessageTap: (context,message){
-          ChatData.instance.resendMessageIfError(conversationId, message.id);
+      body: Column(
+        children: [
+          if(_messages.length==0) Expanded(flex:1,child: buildEmptyChatWidget()),
+          Expanded(
+            flex: 1,
+            child: Chat(
+              user: types.User(id: SettingsData.instance.uid),
+              showUserAvatars:true,
+              onSendPressed: (text){
+                ChatData.instance.sendMessage(theUser.uid,
+                    jsonEncode({"type":"text","content":"${text.text}"}));
+              },
+              messages: _messages,
+              onMessageTap: (context,message){
+                ChatData.instance.resendMessageIfError(conversationId, message.id);
 
-        },
-        onMessageLongPress: (context,message){
-          ChatData.instance.resendMessageIfError(conversationId, message.id);
-        },
+              },
+              onMessageLongPress: (context,message){
+                ChatData.instance.resendMessageIfError(conversationId, message.id);
+              },
 
 
+            ),
+          ),
+        ],
       ),
     );
   }

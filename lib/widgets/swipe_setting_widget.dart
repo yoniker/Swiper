@@ -5,6 +5,7 @@ import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/screens/splash_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/services/chat_networking.dart';
+import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/cupertino_range_slider.dart';
 import 'package:betabeta/widgets/dropdown_form_field.dart';
@@ -271,7 +272,13 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
                               },
                             ),
                           ],
-                        )
+                        ),
+                        TextButton(child: Text('Clear all my likes'),
+                        onPressed: ()async{
+                          await NewNetworkService.instance.clearLikes();
+                          Get.snackbar('Development mode', 'cleared all user choices');
+                        },
+                        ),
                       ],
                     ),
                   ),

@@ -1,12 +1,13 @@
-import 'package:betabeta/models/infoUser.dart';
+import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
 
 
 
 class ProfileDisplay extends StatelessWidget {
-  const ProfileDisplay(this.userInfo,{this.minRadius,this.maxRadius,this.radius,this.onTap,Key? key,this.direction=Axis.vertical}) : super(key: key);
-  final InfoUser userInfo;
+  const ProfileDisplay(this.profile,{this.minRadius,this.maxRadius,this.radius,this.onTap,Key? key,this.direction=Axis.vertical}) : super(key: key);
+  final Profile profile;
   final GestureTapCallback? onTap;
   final Axis direction;
   final double? radius;
@@ -23,8 +24,8 @@ class ProfileDisplay extends StatelessWidget {
           margin: EdgeInsets.all(5.0),
           child: direction == Axis.vertical?Column(
               children:
-              [Container(margin:EdgeInsets.all(2.0),child: ProfileImageAvatar.network(url:userInfo.imageUrl,radius: radius,minRadius: minRadius,maxRadius: maxRadius,)),
-                Text(userInfo.name)
+              [Container(margin:EdgeInsets.all(2.0),child: ProfileImageAvatar.network(url:profile.profileImage,radius: radius,minRadius: minRadius,maxRadius: maxRadius,)),
+                Text(profile.username)
               ]
           ):
           Row(
@@ -32,8 +33,8 @@ class ProfileDisplay extends StatelessWidget {
               [
 
                 Container(margin: EdgeInsets.all(2.0),
-                    child: ProfileImageAvatar.network(url:userInfo.imageUrl,radius:radius,minRadius: minRadius,maxRadius: maxRadius,)),
-                Text(userInfo.name)
+                    child: ProfileImageAvatar.network(url:NewNetworkService.getProfileImageUrl(profile.profileImage),radius:radius,minRadius: minRadius,maxRadius: maxRadius,)),
+                Text(profile.username)
               ])
       ),
     );

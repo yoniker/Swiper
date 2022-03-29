@@ -1,8 +1,9 @@
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/infoConversation.dart';
 import 'package:betabeta/models/infoMessage.dart';
-import 'package:betabeta/models/infoUser.dart';
-import 'package:betabeta/screens/chat_screen.dart';
+import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/screens/chat/chat_screen.dart';
+import 'package:betabeta/services/new_networking.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -50,7 +51,7 @@ class _ConversationsPreviewWidgetState
               itemBuilder: (context, index) {
                 InfoConversation conversation = conversations[index];
                 InfoMessage lastMessage = conversation.messages[0];
-                InfoUser? collocutor = ChatData.instance
+                Profile? collocutor = ChatData.instance
                     .getUserById(ChatData.instance.getCollocutorId(conversation));
                 bool messageWasRead = ChatData.instance.conversationRead(conversation);
                 return GestureDetector(
@@ -78,7 +79,7 @@ class _ConversationsPreviewWidgetState
                             CircleAvatar(
                               radius: 35.0,
                               backgroundImage: NetworkImage(collocutor != null
-                                  ? collocutor.imageUrl
+                                  ? NewNetworkService.getProfileImageUrl(collocutor.profileImage)
                                   : ''),
                             ),
                             SizedBox(
@@ -89,7 +90,7 @@ class _ConversationsPreviewWidgetState
                               children: [
                                 Text(
                                   collocutor != null
-                                      ? collocutor.name.split(' ')[0]
+                                      ? collocutor.username.split(' ')[0]
                                       : '',
                                   style: TextStyle(
                                     color: Colors.black,

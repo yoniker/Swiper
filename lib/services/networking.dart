@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'dart:convert' as json;
 import 'dart:math';
 
-import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/models/userid.dart';

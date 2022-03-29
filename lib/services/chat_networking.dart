@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:convert' as json;
 import 'package:betabeta/models/infoMessage.dart';
-import 'package:betabeta/models/infoUser.dart';
+import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:tuple/tuple.dart';
@@ -26,7 +26,7 @@ class ChatNetworkHelper {
 
   ChatNetworkHelper._internal();
 
-  static Future<List<InfoUser>> getAllUsers() async {
+  static Future<List<Profile>> getAllUsers() async {
     //TODO currently no one uses this method, remove if really redundant
     Uri usersLinkUri =
         Uri.https(SERVER_ADDR, 'users/${SettingsData.instance.uid}');
@@ -34,7 +34,7 @@ class ChatNetworkHelper {
     if (resp.statusCode == 200) {
       //TODO think how to handle network errors
       List<dynamic> parsed = json.jsonDecode(resp.body);
-      List<InfoUser> users = parsed.map((e) => InfoUser.fromJson(e)).toList();
+      List<Profile> users = parsed.map((e) => Profile.fromJson(e)).toList();
       return users;
     }
 

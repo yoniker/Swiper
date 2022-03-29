@@ -1,8 +1,8 @@
 
 import 'package:betabeta/models/chatData.dart';
-import 'package:betabeta/models/infoUser.dart';
-import 'package:betabeta/screens/chat_screen.dart';
-import 'package:betabeta/screens/conversations_screen.dart';
+import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/screens/chat/chat_screen.dart';
+import 'package:betabeta/screens/chat/conversations_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/services/app_state_info.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +34,7 @@ class NotificationsController{
     Map<String,dynamic> notificationData = json.jsonDecode(payload);
     if(notificationData[NOTIFICATION_TYPE]==NEW_MESSAGE_NOTIFICATION){
       String senderId = notificationData[SENDER_ID]!;
-      InfoUser? collocutor = ChatData.instance.getUserById(senderId);
+      Profile? collocutor = ChatData.instance.getUserById(senderId);
 
       if(collocutor!=null){
         Get.toNamed(ChatScreen.getRouteWithUserId(collocutor.uid));
