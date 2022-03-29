@@ -176,7 +176,9 @@ void main() async {
         GetPage(name: CovidScreen.routeName, page: () => CovidScreen()),
         GetPage(name: EducationScreen.routeName, page: () => EducationScreen()),
         GetPage(name: MyPetsScreen.routeName, page: () => MyPetsScreen()),
-        GetPage(name:OtherUserProfileScreen.routeName,page:()=>OtherUserProfileScreen())
+        GetPage(
+            name: OtherUserProfileScreen.routeName,
+            page: () => OtherUserProfileScreen())
       ],
       title: 'Voilà MVP',
       debugShowCheckedModeBanner: false,

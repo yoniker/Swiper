@@ -35,7 +35,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     required String subPageTitle,
     this.titleTextColor = Colors.blue,
     this.centerTitle = false,
-    this.backgroundColor = backgroundThemeColor,
+    this.backgroundColor = Colors.white,
     this.hasBackButton = true,
     this.hasTopPadding = false,
     this.showAppLogo = true,

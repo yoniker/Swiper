@@ -1,5 +1,7 @@
 import 'package:betabeta/constants/api_consts.dart';
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
+import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
@@ -9,10 +11,12 @@ import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/image_filterview_widget.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/match_card.dart';
+import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:betabeta/widgets/text_search_view_widget.dart';
 import 'package:betabeta/widgets/voila_logo_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:tcard/tcard.dart';
 
@@ -43,9 +47,9 @@ class _MatchScreenState extends State<MatchScreen>
         Future.delayed(
             Duration(milliseconds: _animationController.value == 0 ? 500 : 0),
             () {
-              if(mounted)
-          _animationController
-              .animateTo(_animationController.value == 0 ? 1 : 0);
+          if (mounted)
+            _animationController
+                .animateTo(_animationController.value == 0 ? 1 : 0);
         });
       }
     });
@@ -113,7 +117,8 @@ class _MatchScreenState extends State<MatchScreen>
     switch (SettingsData.instance.filterType) {
       case FilterType.TEXT_SEARCH:
         if (SettingsData.instance.textSearch.length > 0)
-          return TextSearchViewWidget(animationController: _animationController);
+          return TextSearchViewWidget(
+              animationController: _animationController);
         break;
       case FilterType.CELEB_IMAGE:
       case FilterType.CUSTOM_IMAGE:
@@ -258,15 +263,23 @@ class MatchCardBuilder extends StatefulWidget {
 }
 
 //
-class _MatchCardBuilderState extends State<MatchCardBuilder> {
+class _MatchCardBuilderState extends State<MatchCardBuilder>
+    with SingleTickerProviderStateMixin {
   double bottomCardScale = 0.95;
   Offset bottomCardOffset = Offset(0.0, 1.7);
   SwipeDirection? currentJudgment;
   late double currentInterpolation;
+  late AnimationController _animation =
+      AnimationController(vsync: this, duration: const Duration(seconds: 1));
 
   @override
   void initState() {
-    // TODO: implement initState
+    _animation =
+        AnimationController(vsync: this, duration: Duration(seconds: 10));
+    _animation.addListener(() {
+      setState(() {});
+    });
+    _animation.repeat(reverse: true);
     super.initState();
   }
 
@@ -274,8 +287,50 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
     if (MatchEngine.instance.getServerSearchStatus ==
         MatchSearchStatus.not_found) {
       return Center(
-          child: Text(
-              'FOR NITZAN : DO A REASONABLR "NO MORE MATCHES FOUND" WIDGET HERE'));
+          child: Padding(
+        padding: const EdgeInsets.all(60.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Transform.rotate(
+              angle: _animation.value * 10,
+              child: Icon(
+                Icons.radar_outlined,
+                size: 100,
+                color: Colors.black12,
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              'No matches found with your current preferences. Check again soon to see new people.',
+              style: kSmallInfoStyle.copyWith(color: Colors.black26),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            RoundedButton(
+              name: 'Deactivate filters',
+              onTap: () {
+                SettingsData.instance.filterType = FilterType.NONE;
+                SettingsData.instance.filterDisplayImageUrl = '';
+              },
+            ),
+            TextButton(
+              onPressed: () {
+                Get.toNamed(SwipeSettingsScreen.routeName);
+              },
+              child: Text(
+                'View preferences',
+                style:
+                    kButtonText.copyWith(decoration: TextDecoration.underline),
+              ),
+            )
+          ],
+        ),
+      ));
     }
 
     return SpinKitChasingDots(
@@ -373,5 +428,11 @@ class _MatchCardBuilderState extends State<MatchCardBuilder> {
               );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _animation.dispose();
+    super.dispose();
   }
 }
