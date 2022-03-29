@@ -218,4 +218,19 @@ class NewNetworkService {
     }
   return Profile.fromJson(profileDataResult[API_CONSTS.SINGLE_PROFILE_USER_DATA]);
   }
+
+  Future<void> unmatch(String uid)async{
+    Uri unmatchUrl =
+    Uri.https(SERVER_ADDR, '/unmatch/${SettingsData.instance.uid}/$uid');
+    http.Response response = await http.get(unmatchUrl);
+    //TODO something if not 200
+    return;
+  }
+
+  Future<void> clearLikes()async{
+    Uri clearLikesUrl =
+    Uri.https(SERVER_ADDR, '/clear_likes/${SettingsData.instance.uid}');
+    http.Response response = await http.get(clearLikesUrl);
+    return;
+  }
 }

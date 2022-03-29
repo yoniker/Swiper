@@ -87,7 +87,9 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
         GestureDetector(child: CircularUserAvatar(imageProvider: NetworkImage(NewNetworkService.getProfileImageUrl(theUser.profileImage)),radius: 40,),
         onTap: () {
           Get.toNamed(OtherUserProfileScreen.routeName,arguments: theUser.uid);},
-        )
+        ),
+
+
       ],
     );
   }
@@ -104,6 +106,10 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
       Get.toNamed(OtherUserProfileScreen.routeName,arguments: theUser.uid);
       },
         ),
+        trailing: TextButton(onPressed: ()async{
+          await ChatData.instance.unmatch(theUser.uid);
+          Get.back();
+        }, child: Text('Unmatch')),
       ),
       body: Column(
         children: [

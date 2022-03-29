@@ -627,4 +627,9 @@ class ChatData extends ChangeNotifier {
 
   }
 
+  Future<void> unmatch(String uid)async{
+    if(uid==SettingsData.instance.uid){return;}
+    await NewNetworkService.instance.unmatch(uid);
+  }
+
 }
