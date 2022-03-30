@@ -2,8 +2,9 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/lists_consts.dart';
 import 'package:flutter/material.dart';
 
-class BubbleEditBlock extends StatefulWidget {
-  BubbleEditBlock({this.title, this.bubbles, this.onTap, this.altEmptyBubbles});
+class BubbleBlockViewer extends StatefulWidget {
+  BubbleBlockViewer(
+      {this.title, this.bubbles, this.onTap, this.altEmptyBubbles});
 
   final String? title;
   final List<String>? bubbles;
@@ -11,10 +12,10 @@ class BubbleEditBlock extends StatefulWidget {
   final List<String>? altEmptyBubbles;
 
   @override
-  State<BubbleEditBlock> createState() => _BubbleEditBlockState();
+  State<BubbleBlockViewer> createState() => _BubbleBlockViewerState();
 }
 
-class _BubbleEditBlockState extends State<BubbleEditBlock> {
+class _BubbleBlockViewerState extends State<BubbleBlockViewer> {
   List<String> emptyList = List.from(kEmptyBubbles);
 
   @override
@@ -31,10 +32,11 @@ class _BubbleEditBlockState extends State<BubbleEditBlock> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            ' ${widget.title}',
-            style: smallBoldedTitleBlack,
-          ),
+          if (widget.title != null)
+            Text(
+              ' ${widget.title}',
+              style: smallBoldedTitleBlack,
+            ),
           SizedBox(
             height: 5,
           ),

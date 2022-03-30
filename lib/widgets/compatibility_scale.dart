@@ -71,7 +71,7 @@ class CompatibilityScale extends StatelessWidget {
                   LinearGradient(
                     colors: [
                       mainAppColor02,
-                      Colors.blueAccent,
+                      Colors.orange,
                     ],
                     stops: [
                       _val,

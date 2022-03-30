@@ -256,14 +256,14 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                     },
                   ),
                   Divider(),
-                  BubbleEditBlock(
+                  BubbleBlockViewer(
                     title: 'My hobbies',
                     bubbles: SettingsData.instance.hobbies,
                     onTap: () {
                       Get.toNamed(MyHobbiesScreen.routeName);
                     },
                   ),
-                  BubbleEditBlock(
+                  BubbleBlockViewer(
                     title: 'My pets',
                     bubbles: SettingsData.instance.pets,
                     altEmptyBubbles: kEmptyPets,
@@ -305,6 +305,4 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
       },
     );
   }
-
-
 }

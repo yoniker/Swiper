@@ -6,6 +6,7 @@ import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/screens/full_image_screen.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/widgets/basic_detail.dart';
+import 'package:betabeta/widgets/bubble_edit_block.dart';
 import 'package:betabeta/widgets/compatibility_scale.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/like_scale.dart';
@@ -99,6 +100,32 @@ class _MatchCardState extends State<MatchCard> {
       return clampedValue;
     }
 
+    String userLookingFor() {
+      if (widget.profile.showUserGender == true) {
+        if (widget.profile.userGender == 'male' &&
+            widget.profile.preferredGender == 'Men') {
+          return '♂️🌈';
+        }
+        if (widget.profile.userGender == 'male' &&
+            widget.profile.preferredGender == 'Women') {
+          return '♂️';
+        }
+        if (widget.profile.userGender == 'female' &&
+            widget.profile.preferredGender == 'Men') {
+          return '♀️';
+        }
+        if (widget.profile.userGender == 'female' &&
+            widget.profile.preferredGender == 'Women') {
+          return '♀️🌈';
+        }
+        if (widget.profile.userGender == 'other') {
+          return '⚧️';
+        }
+      }
+
+      return '';
+    }
+
     // construct the Widget.
     return Align(
       alignment: Alignment.centerLeft,
@@ -111,20 +138,22 @@ class _MatchCardState extends State<MatchCard> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  '${widget.profile.username}, ${widget.profile.age}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: boldTextStyle.copyWith(
-                    shadows: [
-                      Shadow(
-                        blurRadius: 17.0,
-                        color: Colors.black,
-                        offset: Offset(-2.0, 2.0),
-                      ),
-                    ],
-                    color: Colors.white,
-                    fontSize: getRelativeTextSize(25),
+                Flexible(
+                  child: Text(
+                    '${widget.profile.username}, ${widget.profile.age}  ${userLookingFor()}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: boldTextStyle.copyWith(
+                      shadows: [
+                        Shadow(
+                          blurRadius: 17.0,
+                          color: Colors.black,
+                          offset: Offset(-2.0, 2.0),
+                        ),
+                      ],
+                      color: Colors.white,
+                      fontSize: getRelativeTextSize(25),
+                    ),
                   ),
                 ),
               ],
@@ -194,11 +223,6 @@ class _MatchCardState extends State<MatchCard> {
     // Return a List of Widgets.
     return [
       SizedBox(height: 16.0),
-      Text(
-        'Background',
-        style: subTitleStyle,
-      ),
-      _buildDivider(),
       if (profile.jobTitle != '')
         BasicDetail(
           detailText: '${profile.jobTitle}',
@@ -221,20 +245,6 @@ class _MatchCardState extends State<MatchCard> {
             size: 21,
           ),
         ),
-      Text(
-        'About me',
-        style: subTitleStyle,
-      ),
-      _buildDivider(),
-      Container(
-        margin: EdgeInsets.symmetric(horizontal: 5),
-        child: Text(
-          (profile.description != null)
-              ? profile.description!
-              : 'No Description available',
-          style: defaultTextStyle,
-        ),
-      ),
       SizedBox(height: 20),
       Text(
         'Profile Images',
@@ -318,33 +328,33 @@ class _MatchCardState extends State<MatchCard> {
         ),
       ),
       Text(
-        'Lifestyle',
+        'About me',
         style: subTitleStyle,
       ),
       _buildDivider(),
-      Wrap(
-        direction: Axis.horizontal,
-        children: [
-          if (profile.fitness != '')
-            BasicDetail(
-              detailIcon: FaIcon(FontAwesomeIcons.dumbbell),
-              detailText: '${profile.fitness}',
-            ),
-          if (profile.drinking != '')
-            BasicDetail(
-              detailText: '${profile.drinking}',
-              detailIcon: FaIcon(
-                FontAwesomeIcons.glassMartiniAlt,
-                size: 25,
-              ),
-            ),
-          if (profile.smoking != '')
-            BasicDetail(
-              detailText: '${profile.smoking}',
-              detailIcon: FaIcon(FontAwesomeIcons.smoking),
-            )
-        ],
+      Container(
+        margin: EdgeInsets.symmetric(horizontal: 5),
+        child: Text(
+          (profile.description != null)
+              ? profile.description!
+              : 'No Description available',
+          style: defaultTextStyle,
+        ),
       ),
+      SizedBox(height: 20),
+      if (widget.profile.hobbies.length != 0)
+        Column(
+          children: [
+            Text(
+              'Hobbies',
+              style: subTitleStyle,
+            ),
+            _buildDivider(),
+            BubbleBlockViewer(
+              bubbles: widget.profile.hobbies,
+            ),
+          ],
+        ),
       Text(
         'Basic Info',
         style: subTitleStyle,
@@ -385,6 +395,49 @@ class _MatchCardState extends State<MatchCard> {
             ),
         ],
       ),
+      SizedBox(height: 20),
+      if (widget.profile.pets.length != 0)
+        Column(
+          children: [
+            Text(
+              'Pets',
+              style: subTitleStyle,
+            ),
+            _buildDivider(),
+            BubbleBlockViewer(
+              bubbles: widget.profile.pets,
+            ),
+          ],
+        ),
+      Text(
+        'Lifestyle',
+        style: subTitleStyle,
+      ),
+      _buildDivider(),
+      Wrap(
+        direction: Axis.horizontal,
+        children: [
+          if (profile.fitness != '')
+            BasicDetail(
+              detailIcon: FaIcon(FontAwesomeIcons.dumbbell),
+              detailText: '${profile.fitness}',
+            ),
+          if (profile.drinking != '')
+            BasicDetail(
+              detailText: '${profile.drinking}',
+              detailIcon: FaIcon(
+                FontAwesomeIcons.glassMartiniAlt,
+                size: 25,
+              ),
+            ),
+          if (profile.smoking != '')
+            BasicDetail(
+              detailText: '${profile.smoking}',
+              detailIcon: FaIcon(FontAwesomeIcons.smoking),
+            )
+        ],
+      ),
+      SizedBox(height: 20),
       Text(
         'Artificial Intelligence',
         style: subTitleStyle,

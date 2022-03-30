@@ -52,6 +52,9 @@ class _OrientationEditScreenState extends State<OrientationEditScreen> {
         choices: ['Men', 'Women', 'Everyone'],
         headline: 'Interested in?',
         promotes: promotes,
+        onValueChanged: (newPrefferedGender) {
+          SettingsData.instance.preferredGender = newPrefferedGender;
+        },
         alwaysPressed: true,
         initialChoice: SettingsData.instance.preferredGender,
       ),
