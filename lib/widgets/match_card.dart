@@ -381,17 +381,26 @@ class _MatchCardState extends State<MatchCard> {
           if (profile.religion != null)
             BasicDetail(
               detailText: '${profile.religion}',
-              detailIcon: FaIcon(FontAwesomeIcons.prayingHands),
+              detailIcon: FaIcon(
+                FontAwesomeIcons.prayingHands,
+                color: Colors.yellow,
+              ),
             ),
           if (profile.zodiac != '')
             BasicDetail(
               detailText: '${profile.zodiac}',
-              detailIcon: FaIcon(FontAwesomeIcons.starAndCrescent),
+              detailIcon: FaIcon(
+                FontAwesomeIcons.starAndCrescent,
+                color: Colors.blueGrey,
+              ),
             ),
           if (profile.children != '')
             BasicDetail(
               detailText: '${profile.children}',
-              detailIcon: FaIcon(FontAwesomeIcons.babyCarriage),
+              detailIcon: FaIcon(
+                FontAwesomeIcons.babyCarriage,
+                color: Colors.purple,
+              ),
             ),
         ],
       ),
@@ -548,38 +557,27 @@ class _MatchCardState extends State<MatchCard> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            InkWell(
-              borderRadius: BorderRadius.circular(15.0),
-              child: GlobalWidgets.assetImageToIcon(
-                BetaIconPaths.dislikeMatchIcon,
-                scale: 4.0,
-              ),
+            GestureDetector(
               onTap: () {
                 MatchEngine.instance.currentMatchDecision(Decision.nope);
                 print('nope pressed');
               },
-            ),
-            InkWell(
-              borderRadius: BorderRadius.circular(15.0),
-              child: GlobalWidgets.assetImageToIcon(
-                BetaIconPaths.likeMatchIcon,
-                // The scale is kid of backwards.
-                scale: 3.75,
+              child: Icon(
+                Icons.thumb_down,
+                color: Colors.red,
+                size: 40,
               ),
+            ),
+            GestureDetector(
               onTap: () {
                 MatchEngine.instance.currentMatchDecision(Decision.like);
-                print('like pressed');
+                print('yes pressed');
               },
-            ),
-            InkWell(
-              borderRadius: BorderRadius.circular(15.0),
-              child: GlobalWidgets.assetImageToIcon(
-                BetaIconPaths.draftMesssageIcon,
-                scale: 4.0,
+              child: Icon(
+                Icons.thumb_up_sharp,
+                color: Colors.green,
+                size: 40,
               ),
-              onTap: () {
-                // Call a Function to open a chat Tab to chat with the match
-              },
             ),
           ],
         ),
