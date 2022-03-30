@@ -48,6 +48,9 @@ class _CurrentUserProfileViewScreenState
       compatibilityScore: 1.0,
       hotnessScore: 1.0,
       description: SettingsData.instance.userDescription,
+      preferredGender: SettingsData.instance.preferredGender,
+      userGender: SettingsData.instance.userGender,
+      showUserGender: SettingsData.instance.showUserGender
 
     );
     return Stack(alignment: Alignment.topLeft, children: [
