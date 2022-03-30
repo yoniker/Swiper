@@ -1,3 +1,4 @@
+import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/models/celebs_info_model.dart';
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/match_engine.dart';
@@ -64,8 +65,8 @@ class _SplashScreenState extends State<SplashScreen>
         print('Got the token $token');
         if (token != null) {
           await SettingsData.instance.readSettingsFromShared();
-          if (SettingsData.instance.fcmToken != token) {
-            print('updating fcm token..');
+          if (SettingsData.instance.uid .length>0) {
+            print('sending fcm token to server...');
             SettingsData.instance.fcmToken = token;
           }
           return;

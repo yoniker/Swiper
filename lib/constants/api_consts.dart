@@ -48,5 +48,9 @@ class API_CONSTS{
   static const String ALREADY_REGISTERED = 'already_registered';
   static const String STATUS = 'status';
   static const String USER_DATA = 'user_data';
+  //Possible notification types and fields
+  static const String PUSH_NOTIFICATION_TYPE_KEY = 'push_notification_type';
+  static const String PUSH_NOTIFICATION_NEW_MATCH = 'new_match';
+  static const String PUSH_NOTIFICATION_NEW_MESSAGE = 'new_message';
   
 }

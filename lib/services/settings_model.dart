@@ -148,6 +148,7 @@ class SettingsData extends ChangeNotifier {
 
 
   Future<void> readSettingsFromShared() async {
+    if(_readFromShared == true) {return;}
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     _preferredGender =
         sharedPreferences.getString(PREFERRED_GENDER_KEY) ?? _preferredGender;
