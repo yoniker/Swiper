@@ -226,7 +226,7 @@ class SettingsData extends ChangeNotifier {
 
 
 
-  void updateFromServer(Map<dynamic,dynamic> userData){
+  void updateFromServerData(Map<dynamic,dynamic> userData){
       _uid = userData[SettingsData.FIREBASE_UID_KEY] ?? _uid;
     _preferredGender = userData[PREFERRED_GENDER_KEY] ?? _preferredGender;
     _name = userData[NAME_KEY] ?? _name;

@@ -10,7 +10,7 @@ enum FilterType {
   NONE,
 }
 
-enum serverRegistrationStatus{
+enum ServerRegistrationStatus{
   already_registered,
   new_register
 }

@@ -165,7 +165,7 @@ class _ImagesUploadwidgetState extends State<ImagesUploadwidget> {
                               await NewNetworkService.instance
                                   .deleteProfileImage(
                                       _profileImagesUrls[index]);
-                              await _syncProfileImagesFromServer();
+                              await NewNetworkService.instance.syncCurrentProfileImagesUrls();
                             },
                             onImagePicked: (pickedImage) async {
                               setState(() {
@@ -176,17 +176,11 @@ class _ImagesUploadwidgetState extends State<ImagesUploadwidget> {
                               setState(() {
                                 _uploadingImage = false;
                               });
-                              await _syncProfileImagesFromServer();
+                              await NewNetworkService.instance.syncCurrentProfileImagesUrls();
                             }),
                       )));
         });
   }
 
-  Future<void> _syncProfileImagesFromServer() async {
-    var profileImagesUrls =
-        await NewNetworkService.instance.getCurrentProfileImagesUrls();
-    if (profileImagesUrls != null) {
-      SettingsData.instance.profileImagesUrls = profileImagesUrls;
-    }
-  }
+
 }

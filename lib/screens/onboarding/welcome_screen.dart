@@ -31,8 +31,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   late VideoPlayerController _controller;
   bool currentlyTryingToLogin = false;
 
-  _continueIfLoggedIn() async {
+  _continueIfLoggedIn(ServerRegistrationStatus currentStatus) async {
     await SettingsData.instance.readSettingsFromShared();
+    if(currentStatus == ServerRegistrationStatus.already_registered){
+      await NewNetworkService.instance.syncCurrentProfileImagesUrls();
+      Get.offAllNamed(MainNavigationScreen.routeName);
+      return;
+    }
+
     if (SettingsData.instance.readFromShared! &&
         SettingsData.instance.uid.length > 0) {
       Get.offAllNamed(
@@ -40,22 +46,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     }
   }
 
-  void skipLogin(
-      //This function is so that development won't be hindered by the existence of onboarding
-
-      ) {
-    SettingsData.instance.uid = Random().nextInt(999999).toString();
-    SettingsData.instance.name = 'Lamer Admin';
-    SettingsData.instance.userDescription = 'Lamer was fed by Tzippi';
-    Get.offAllNamed(MainNavigationScreen.routeName);
-  }
-
-  Future<void> _saveUid() async {
+  Future<ServerRegistrationStatus> _registerUserAtServer() async {
     var idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
     String uid = FirebaseAuth.instance.currentUser!.uid;
-    serverRegistrationStatus currentRegistrationStatus =
+    ServerRegistrationStatus currentRegistrationStatus =
         await NewNetworkService.instance.registerUid(firebaseIdToken: idToken!);
-    //TODO don't go to onboarding if the user is already registered
+    return currentRegistrationStatus;
 
   }
 
@@ -68,8 +64,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       await LoginsService.instance.getFacebookUserData();
       await LoginsService.signInUser(
           credential: LoginsService.instance.facebookCredential!);
-      await _saveUid();
-      await _continueIfLoggedIn();
+      ServerRegistrationStatus currentServerRegistrationStatus = await _registerUserAtServer();
+      await _continueIfLoggedIn(currentServerRegistrationStatus);
     }
     setState(() {
       currentlyTryingToLogin = false;
@@ -194,19 +190,22 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    GestureDetector(
+                                    TextButton(
                                       child: Text(
                                         'Terms of Service',
                                         style: kSmallInfoStyleUnderlineWhite,
                                       ),
-                                      onTap: () {
-                                        skipLogin();
+                                      onPressed: () {
+                                        //TODO show terms of service
                                       },
                                     ),
                                     SizedBox(width: 20),
-                                    Text(
-                                      'Privacy Policy',
-                                      style: kSmallInfoStyleUnderlineWhite,
+                                    TextButton(
+                                      onPressed: (){},//TODO show privacy policy
+                                      child: Text(
+                                        'Privacy Policy',
+                                        style: kSmallInfoStyleUnderlineWhite,
+                                      ),
                                     ),
                                   ],
                                 )

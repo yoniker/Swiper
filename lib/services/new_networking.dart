@@ -76,14 +76,16 @@ class NewNetworkService {
     return 'https://' + SERVER_ADDR + shortUrl;
   }
 
-  Future<List<String>?> getCurrentProfileImagesUrls() async {
+  Future<void> syncCurrentProfileImagesUrls() async {
     Uri countUri = Uri.https(
         SERVER_ADDR, '/profile_images/get_urls/${SettingsData.instance.uid}/');
     var response = await http.get(countUri);
     if (response.statusCode == 200) {
       var parsed = json.jsonDecode(response.body);
       List<String>? imagesLinks = parsed.cast<String>();
-      return imagesLinks;
+      if (imagesLinks != null) {
+        SettingsData.instance.profileImagesUrls = imagesLinks;
+      }
     }
   }
 
@@ -236,7 +238,7 @@ class NewNetworkService {
     return;
   }
 
-   Future<serverRegistrationStatus> registerUid({required String firebaseIdToken}) async {
+   Future<ServerRegistrationStatus> registerUid({required String firebaseIdToken}) async {
     Uri verifyTokenUri = Uri.https(SERVER_ADDR, '/register_firebase_uid');
     http.Response response = await http
         .get(verifyTokenUri, headers: {'firebase_id_token': firebaseIdToken});
@@ -248,13 +250,13 @@ class NewNetworkService {
 
     if(decodedResponse[API_CONSTS.STATUS]==API_CONSTS.ALREADY_REGISTERED){
 
-      SettingsData.instance.updateFromServer(decodedResponse[API_CONSTS.USER_DATA]);
-      return serverRegistrationStatus.already_registered;
+      SettingsData.instance.updateFromServerData(decodedResponse[API_CONSTS.USER_DATA]);
+      return ServerRegistrationStatus.already_registered;
     }
     //The only possible response now is that the user is newly registered - so had to go through onboarding
     //if(decodedResponse[API_CONSTS.STATUS]==API_CONSTS.NEW_REGISTER){
       SettingsData.instance.uid = decodedResponse[API_CONSTS.USER_DATA][SettingsData.FIREBASE_UID_KEY];
-      return serverRegistrationStatus.new_register;
+      return ServerRegistrationStatus.new_register;
     //}
 
 
