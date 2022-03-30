@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/models/loginService.dart';
 import 'package:betabeta/screens/onboarding/phone_screen.dart';
+import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
@@ -51,16 +53,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Future<void> _saveUid() async {
     var idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
     String uid = FirebaseAuth.instance.currentUser!.uid;
-    String serverUid =
-        await ChatNetworkHelper.registerUid(firebaseIdToken: idToken!);
-    //TODO support existing accounts : check with the server if the uid already existed,and if so load the user's details from the server
-    if (uid != serverUid) {
-      print(
-          'The uid in server is different from client, something weird is going on!');
-      //TODO something about it?
-    }
-    SettingsData.instance.uid = uid;
-    print('Registered the uid $uid');
+    serverRegistrationStatus currentRegistrationStatus =
+        await NewNetworkService.instance.registerUid(firebaseIdToken: idToken!);
+    //TODO don't go to onboarding if the user is already registered
+
   }
 
   _tryLoginFacebook() async {

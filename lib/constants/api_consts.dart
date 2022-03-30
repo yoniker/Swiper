@@ -41,6 +41,11 @@ class API_CONSTS{
   static const String SINGLE_PROFILE_FOUND = 'found';
   static const String SINGLE_PROFILE_NOT_FOUND = 'not_found';
   static const String SINGLE_PROFILE_USER_DATA = 'user_data';
+  //Possible registration responses
+  static const String NEW_REGISTER = 'new_register';
+  static const String ALREADY_REGISTERED = 'already_registered';
+  static const String STATUS = 'status';
+  static const String USER_DATA = 'user_data';
 
   
 }

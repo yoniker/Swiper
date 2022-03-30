@@ -5,6 +5,7 @@ import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/services/cache_service.dart';
 import 'package:betabeta/services/networking.dart';
+import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -159,6 +160,7 @@ class NewNetworkService {
       SettingsData.PETS_KEY: json.jsonEncode(settings.pets),
       SettingsData.HEIGHT_IN_CM_KEY: settings.heightInCm.toString(),
       SettingsData.TEXT_SEARCH_KEY: settings.textSearch,
+      SettingsData.REGISTRATION_STATUS_KEY: settings.registrationStatus
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri = Uri.https(SERVER_ADDR, '/settings/${settings.uid}');
@@ -234,7 +236,7 @@ class NewNetworkService {
     return;
   }
 
-  static Future<String> registerUid({required String firebaseIdToken}) async {
+   Future<serverRegistrationStatus> registerUid({required String firebaseIdToken}) async {
     Uri verifyTokenUri = Uri.https(SERVER_ADDR, '/register_firebase_uid');
     http.Response response = await http
         .get(verifyTokenUri, headers: {'firebase_id_token': firebaseIdToken});
@@ -243,7 +245,20 @@ class NewNetworkService {
     }
 
     var decodedResponse= json.jsonDecode(response.body);
-    print('Dor');
-    return 'King';
+
+    if(decodedResponse[API_CONSTS.STATUS]==API_CONSTS.ALREADY_REGISTERED){
+
+      SettingsData.instance.updateFromServer(decodedResponse[API_CONSTS.USER_DATA]);
+      return serverRegistrationStatus.already_registered;
+    }
+    //The only possible response now is that the user is newly registered - so had to go through onboarding
+    //if(decodedResponse[API_CONSTS.STATUS]==API_CONSTS.NEW_REGISTER){
+      SettingsData.instance.uid = decodedResponse[API_CONSTS.USER_DATA][SettingsData.FIREBASE_UID_KEY];
+      return serverRegistrationStatus.new_register;
+    //}
+
+
+
+
   }
 }
