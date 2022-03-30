@@ -23,6 +23,7 @@ class MatchCard extends StatefulWidget {
     required this.profile,
     this.clickable = true,
     this.showCarousel = true,
+    this.showActionButtons = true,
   }) : super(key: key);
 
   /// The profile of the match.
@@ -33,6 +34,9 @@ class MatchCard extends StatefulWidget {
 
   /// Whether to show the carousel or not.
   final bool showCarousel;
+
+  /// Whether to show the action buttons or not.
+  final bool showActionButtons;
 
   @override
   _MatchCardState createState() => _MatchCardState();
@@ -104,25 +108,30 @@ class _MatchCardState extends State<MatchCard> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '${widget.profile.username}, ${widget.profile.age}',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: boldTextStyle.copyWith(
-                shadows: [
-                  Shadow(
-                    blurRadius: 17.0,
-                    color: Colors.black,
-                    offset: Offset(-2.0, 2.0),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  '${widget.profile.username}, ${widget.profile.age}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: boldTextStyle.copyWith(
+                    shadows: [
+                      Shadow(
+                        blurRadius: 17.0,
+                        color: Colors.black,
+                        offset: Offset(-2.0, 2.0),
+                      ),
+                    ],
+                    color: Colors.white,
+                    fontSize: getRelativeTextSize(25),
                   ),
-                ],
-                color: Colors.white,
-                fontSize: getRelativeTextSize(25),
-              ),
+                ),
+              ],
             ),
             Expanded(
               child: Text(
-                widget.profile.headline ?? '',
+                widget.profile.description ?? '',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: boldTextStyle.copyWith(
@@ -133,7 +142,7 @@ class _MatchCardState extends State<MatchCard> {
                       offset: Offset(-2.0, 2.0),
                     ),
                   ],
-                  color: Colors.white,
+                  color: Colors.white70,
                   fontSize: getRelativeTextSize(20),
                 ),
               ),
@@ -186,6 +195,33 @@ class _MatchCardState extends State<MatchCard> {
     return [
       SizedBox(height: 16.0),
       Text(
+        'Background',
+        style: subTitleStyle,
+      ),
+      _buildDivider(),
+      if (profile.jobTitle != '')
+        BasicDetail(
+          detailText: '${profile.jobTitle}',
+          detailIcon: FaIcon(FontAwesomeIcons.userTie),
+        ),
+      if (profile.school != '')
+        BasicDetail(
+          detailText: 'School: ${profile.school}',
+          detailIcon: FaIcon(
+            FontAwesomeIcons.school,
+            size: 18,
+            color: Colors.black,
+          ),
+        ),
+      if (profile.education != '')
+        BasicDetail(
+          detailText: 'Education: ${profile.education}',
+          detailIcon: FaIcon(
+            FontAwesomeIcons.graduationCap,
+            size: 21,
+          ),
+        ),
+      Text(
         'About me',
         style: subTitleStyle,
       ),
@@ -232,7 +268,8 @@ class _MatchCardState extends State<MatchCard> {
                   scrollDirection: Axis.horizontal,
                   itemCount: _imageUrls.length,
                   itemBuilder: (cntx, index) {
-                    final String _url = NewNetworkService.getProfileImageUrl(_imageUrls[index]);
+                    final String _url =
+                        NewNetworkService.getProfileImageUrl(_imageUrls[index]);
                     return GestureDetector(
                       onTap: () {
                         // pushToScreen(
@@ -257,7 +294,7 @@ class _MatchCardState extends State<MatchCard> {
                         child: AspectRatio(
                           aspectRatio: 1 / 1,
                           child: Card(
-                            margin: EdgeInsets.all(6.0),
+                            margin: EdgeInsets.all(0.0),
                             clipBehavior: Clip.antiAlias,
                             elevation: 2.1,
                             shape: RoundedRectangleBorder(
@@ -281,34 +318,77 @@ class _MatchCardState extends State<MatchCard> {
         ),
       ),
       Text(
+        'Lifestyle',
+        style: subTitleStyle,
+      ),
+      _buildDivider(),
+      Wrap(
+        direction: Axis.horizontal,
+        children: [
+          if (profile.fitness != '')
+            BasicDetail(
+              detailIcon: FaIcon(FontAwesomeIcons.dumbbell),
+              detailText: '${profile.fitness}',
+            ),
+          if (profile.drinking != '')
+            BasicDetail(
+              detailText: '${profile.drinking}',
+              detailIcon: FaIcon(
+                FontAwesomeIcons.glassMartiniAlt,
+                size: 25,
+              ),
+            ),
+          if (profile.smoking != '')
+            BasicDetail(
+              detailText: '${profile.smoking}',
+              detailIcon: FaIcon(FontAwesomeIcons.smoking),
+            )
+        ],
+      ),
+      Text(
         'Basic Info',
         style: subTitleStyle,
       ),
       _buildDivider(),
-      if (profile.location != null)
-        BasicDetail(
-            detailText: '${profile.location}',
-            detailIcon: FaIcon(
-              FontAwesomeIcons.mapMarkedAlt,
-              color: Colors.red,
-            )),
-      if (profile.height != null)
-        BasicDetail(
-          detailText: '${cmToFeet(profile.height!)} ft',
-          detailIcon: FaIcon(
-            FontAwesomeIcons.ruler,
-            color: Colors.yellow[700],
-          ),
-        ),
-      if (profile.jobTitle != null)
-        BasicDetail(
-          detailText: '${profile.jobTitle}',
-          detailIcon: FaIcon(FontAwesomeIcons.userTie, color: Colors.black),
-        ),
-        Text(
-          'Artificial Intelligence',
-          style: subTitleStyle,
-        ),
+      Wrap(
+        direction: Axis.horizontal,
+        children: [
+          if (profile.location != null)
+            BasicDetail(
+                detailText: '${profile.location}',
+                detailIcon: FaIcon(
+                  FontAwesomeIcons.mapMarkedAlt,
+                  color: Colors.red,
+                )),
+          if (profile.height != 0)
+            BasicDetail(
+              detailText: '${cmToFeet(profile.height!)} ft',
+              detailIcon: FaIcon(
+                FontAwesomeIcons.ruler,
+                color: Colors.yellow[700],
+              ),
+            ),
+          if (profile.religion != null)
+            BasicDetail(
+              detailText: '${profile.religion}',
+              detailIcon: FaIcon(FontAwesomeIcons.prayingHands),
+            ),
+          if (profile.zodiac != '')
+            BasicDetail(
+              detailText: '${profile.zodiac}',
+              detailIcon: FaIcon(FontAwesomeIcons.starAndCrescent),
+            ),
+          if (profile.children != '')
+            BasicDetail(
+              detailText: '${profile.children}',
+              detailIcon: FaIcon(FontAwesomeIcons.babyCarriage),
+            ),
+        ],
+      ),
+      Text(
+        'Artificial Intelligence',
+        style: subTitleStyle,
+      ),
       _buildDivider(),
       Container(
         alignment: Alignment.centerLeft,
@@ -321,58 +401,58 @@ class _MatchCardState extends State<MatchCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if(profile.compatibilityScore!=null)
-            DescriptionBanner(
-              message: 'Personal preference',
-              leading: Icon(
-                Icons.info,
-                color: Colors.blue,
-              ),
-              overflow: null,
-              constraints: BoxConstraints(
-                minHeight: 75.0,
-                maxHeight: 90.5,
-                maxWidth: MediaQuery.of(context).size.width,
-              ),
-              trailing: CompatibilityScale(
-                value: profile.compatibilityScore!,
-                startValue: 20.0,
-              ),
-              onTap: () async {
-                await GlobalWidgets.showAlertDialogue(
-                  context,
-                  title: 'Info',
-                  message:
-                      'The probability that you will like the current profile, according to Alex,your AI which learnt your personal taste.',
-                );
-              },
-            ),
-            if(profile.hotnessScore!=null)
-            DescriptionBanner(
-                message: 'Compatibility',
+            if (profile.compatibilityScore != null)
+              DescriptionBanner(
+                message: 'Personal preference',
+                leading: Icon(
+                  Icons.info,
+                  color: Colors.blue,
+                ),
                 overflow: null,
                 constraints: BoxConstraints(
                   minHeight: 75.0,
                   maxHeight: 90.5,
                   maxWidth: MediaQuery.of(context).size.width,
                 ),
-                leading: Icon(
-                  Icons.info,
-                  color: Colors.blue,
+                trailing: CompatibilityScale(
+                  value: profile.compatibilityScore!,
+                  startValue: 20.0,
                 ),
-                trailing: LikeScale(value: profile.hotnessScore!),
                 onTap: () async {
-                  try {
-                    await GlobalWidgets.showAlertDialogue(
-                      context,
-                      title: 'Info',
-                      message:
-                          'The probability that you will be a good match, according to Chris. Chris is an AI which was trained on millions of successful couples!',
-                    );
-                  } catch (e, s) {
-                    print(s);
-                  }
-                }),
+                  await GlobalWidgets.showAlertDialogue(
+                    context,
+                    title: 'Info',
+                    message:
+                        'The probability that you will like the current profile, according to Alex,your AI which learnt your personal taste.',
+                  );
+                },
+              ),
+            if (profile.hotnessScore != null)
+              DescriptionBanner(
+                  message: 'Compatibility',
+                  overflow: null,
+                  constraints: BoxConstraints(
+                    minHeight: 75.0,
+                    maxHeight: 90.5,
+                    maxWidth: MediaQuery.of(context).size.width,
+                  ),
+                  leading: Icon(
+                    Icons.info,
+                    color: Colors.blue,
+                  ),
+                  trailing: LikeScale(value: profile.hotnessScore!),
+                  onTap: () async {
+                    try {
+                      await GlobalWidgets.showAlertDialogue(
+                        context,
+                        title: 'Info',
+                        message:
+                            'The probability that you will be a good match, according to Chris. Chris is an AI which was trained on millions of successful couples!',
+                      );
+                    } catch (e, s) {
+                      print(s);
+                    }
+                  }),
           ],
         ),
       ),
@@ -499,7 +579,7 @@ class _MatchCardState extends State<MatchCard> {
                     widget.profile,
                     context: context,
                   ),
-                  _matchControls(),
+                  if (widget.showActionButtons) _matchControls(),
                 ],
               ),
             ),
@@ -531,9 +611,10 @@ class PhotoView extends StatefulWidget {
     this.carouselInactiveDotColor = Colors.lightBlueAccent,
     this.carouselBackgroundColor = Colors.transparent,
     this.onChanged,
-  })  : assert(imageUrls==null ||
-      (initialPhotoIndex <= imageUrls.length &&
-                initialPhotoIndex.isEven),
+  })  : assert(
+            imageUrls == null ||
+                (initialPhotoIndex <= imageUrls.length &&
+                    initialPhotoIndex.isEven),
             'The initialPhotoIndex must be in the range of available imageUrls (starting from `0`), Please supply a correct initialPhotoIndex or leave it as it is without supplying the parameter.'),
         super(key: key);
 
@@ -670,7 +751,7 @@ class _PhotoViewState extends State<PhotoView> {
 
     // instantiate the carousel List
     carouselDots = <CarouselDot>[];
-    if (widget.imageUrls ==null || widget.imageUrls!.length == 0) {
+    if (widget.imageUrls == null || widget.imageUrls!.length == 0) {
       var img = Image.network(
         NewNetworkService.getProfileImageUrl(BetaIconPaths.anonymousProfileUrl),
         scale: 1.0,
@@ -684,7 +765,7 @@ class _PhotoViewState extends State<PhotoView> {
         imageIndex < widget.imageUrls!.length;
         imageIndex++) {
       var img = Image.network(
-          NewNetworkService.getProfileImageUrl(widget.imageUrls![imageIndex]),
+        NewNetworkService.getProfileImageUrl(widget.imageUrls![imageIndex]),
         scale: 1.0,
         fit: BoxFit.cover,
         //headers:{"Keep-Alive":"timeout=20"},
@@ -765,7 +846,9 @@ class _PhotoViewState extends State<PhotoView> {
   /// Note: use the `onChanged(int)` Function parameter of the [PhotoView]
   /// to get notified whenever a change occurs to the `index` of the [PhotoView].
   void moveToPhoto(int index) {
-    if(widget.imageUrls==null){return;}
+    if (widget.imageUrls == null) {
+      return;
+    }
     // check to verify that such index exists and is accepted.
     if (index <= widget.imageUrls!.length - 1 && !index.isNegative) {
       // switch to the new index.
@@ -795,7 +878,9 @@ class _PhotoViewState extends State<PhotoView> {
   Widget _carouselLayer() {
     // Generate a list of CarouselDots based on the length of the
     // `imageUrls` passed in the constructor body.
-    if(widget.imageUrls==null){return SizedBox();}
+    if (widget.imageUrls == null) {
+      return SizedBox();
+    }
     var carousels = List.generate(widget.imageUrls!.length, (index) {
       return CarouselDot(
         key: Key(
