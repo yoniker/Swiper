@@ -5,6 +5,7 @@ import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/services/cache_service.dart';
 import 'package:betabeta/services/networking.dart';
+import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -75,14 +76,16 @@ class NewNetworkService {
     return 'https://' + SERVER_ADDR + shortUrl;
   }
 
-  Future<List<String>?> getCurrentProfileImagesUrls() async {
+  Future<void> syncCurrentProfileImagesUrls() async {
     Uri countUri = Uri.https(
         SERVER_ADDR, '/profile_images/get_urls/${SettingsData.instance.uid}/');
     var response = await http.get(countUri);
     if (response.statusCode == 200) {
       var parsed = json.jsonDecode(response.body);
       List<String>? imagesLinks = parsed.cast<String>();
-      return imagesLinks;
+      if (imagesLinks != null) {
+        SettingsData.instance.profileImagesUrls = imagesLinks;
+      }
     }
   }
 
@@ -159,6 +162,7 @@ class NewNetworkService {
       SettingsData.PETS_KEY: json.jsonEncode(settings.pets),
       SettingsData.HEIGHT_IN_CM_KEY: settings.heightInCm.toString(),
       SettingsData.TEXT_SEARCH_KEY: settings.textSearch,
+      SettingsData.REGISTRATION_STATUS_KEY: settings.registrationStatus
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri = Uri.https(SERVER_ADDR, '/settings/${settings.uid}');
@@ -232,5 +236,31 @@ class NewNetworkService {
     Uri.https(SERVER_ADDR, '/clear_likes/${SettingsData.instance.uid}');
     http.Response response = await http.get(clearLikesUrl);
     return;
+  }
+
+   Future<ServerRegistrationStatus> registerUid({required String firebaseIdToken}) async {
+    Uri verifyTokenUri = Uri.https(SERVER_ADDR, '/register_firebase_uid');
+    http.Response response = await http
+        .get(verifyTokenUri, headers: {'firebase_id_token': firebaseIdToken});
+    if (response.statusCode != 200) {
+      //TODO throw error (bad jwt? server down?)
+    }
+
+    var decodedResponse= json.jsonDecode(response.body);
+
+    if(decodedResponse[API_CONSTS.STATUS]==API_CONSTS.ALREADY_REGISTERED){
+
+      SettingsData.instance.updateFromServerData(decodedResponse[API_CONSTS.USER_DATA]);
+      return ServerRegistrationStatus.already_registered;
+    }
+    //The only possible response now is that the user is newly registered - so had to go through onboarding
+    //if(decodedResponse[API_CONSTS.STATUS]==API_CONSTS.NEW_REGISTER){
+      SettingsData.instance.uid = decodedResponse[API_CONSTS.USER_DATA][SettingsData.FIREBASE_UID_KEY];
+      return ServerRegistrationStatus.new_register;
+    //}
+
+
+
+
   }
 }

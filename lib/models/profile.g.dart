@@ -42,13 +42,16 @@ class ProfileAdapter extends TypeAdapter<Profile> {
       zodiac: fields[22] as String,
       school: fields[23] as String,
       lastUpdate: fields[24] as DateTime?,
+      preferredGender: fields[25] as String,
+      userGender: fields[26] as String,
+      showUserGender: fields[27] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, Profile obj) {
     writer
-      ..writeByte(25)
+      ..writeByte(28)
       ..writeByte(0)
       ..write(obj.username)
       ..writeByte(1)
@@ -98,7 +101,13 @@ class ProfileAdapter extends TypeAdapter<Profile> {
       ..writeByte(23)
       ..write(obj.school)
       ..writeByte(24)
-      ..write(obj.lastUpdate);
+      ..write(obj.lastUpdate)
+      ..writeByte(25)
+      ..write(obj.preferredGender)
+      ..writeByte(26)
+      ..write(obj.userGender)
+      ..writeByte(27)
+      ..write(obj.showUserGender);
   }
 
   @override

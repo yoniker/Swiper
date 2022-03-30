@@ -3,7 +3,6 @@ import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/images_upload_widget.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
-import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
 import 'package:betabeta/widgets/onboarding/progress_bar.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/cupertino.dart';

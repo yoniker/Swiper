@@ -46,7 +46,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
 
     // this makes sure that if the state is not yet mounted, we don't end up calling setState
     // but instead push the function forward to the addPostFrameCallback function.
-    _syncProfileImagesFromServer();
+    NewNetworkService.instance.syncCurrentProfileImagesUrls();
   }
 
   @override
@@ -306,11 +306,5 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
     );
   }
 
-  Future<void> _syncProfileImagesFromServer() async {
-    var profileImagesUrls =
-        await NewNetworkService.instance.getCurrentProfileImagesUrls();
-    if (profileImagesUrls != null) {
-      SettingsData.instance.profileImagesUrls = profileImagesUrls;
-    }
-  }
+
 }

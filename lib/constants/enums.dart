@@ -10,6 +10,11 @@ enum FilterType {
   NONE,
 }
 
+enum ServerRegistrationStatus{
+  already_registered,
+  new_register
+}
+
 extension uiDescription on FilterType {
   String get description {
     switch (this) {

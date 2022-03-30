@@ -41,24 +41,6 @@ class ChatNetworkHelper {
     return [];
   }
 
-  static postUserSettings() async {
-    SettingsData settings = SettingsData.instance;
-    Map<String, String> toSend = {
-      SettingsData.NAME_KEY: settings.name,
-      SettingsData.FCM_TOKEN_KEY: settings.fcmToken,
-      SettingsData.FIREBASE_UID_KEY: settings.uid,
-      SettingsData.FACEBOOK_PROFILE_IMAGE_URL_KEY:
-          settings.facebookProfileImageUrl,
-    };
-    String encoded = jsonEncode(toSend);
-    Uri postSettingsUri = Uri.https(SERVER_ADDR, '/register/${settings.uid}');
-    http.Response response = await http.post(postSettingsUri,
-        body: encoded); //TODO something if response wasnt 200
-    if (response.statusCode == 200) {
-      SettingsData.instance.registered = true;
-    }
-  }
-
   static Future<TaskResult> sendMessage(String uid,
       String startingConversationContent, double senderEpochTime) async {
     Map<String, dynamic> toSend = {

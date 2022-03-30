@@ -38,11 +38,9 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   void _syncFromServer() async {
-    final List<String>? _resp =
-        await NewNetworkService.instance.getCurrentProfileImagesUrls();
-    if (_resp != null) {
-      SettingsData.instance.profileImagesUrls = _resp;
-    }
+
+        await NewNetworkService.instance.syncCurrentProfileImagesUrls();
+
   }
 
   // builds the profile picture display.
