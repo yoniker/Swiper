@@ -222,7 +222,7 @@ class _PronounScreenState extends State<PronounScreen> {
                                 : () {
                                     saveSelectedGender();
                                     Get.offAllNamed(
-                                        OnboardingFlowController.nextRoute(
+                                        OnboardingFlowController.instance.nextRoute(
                                             PronounScreen.routeName));
                                   })
                       ],

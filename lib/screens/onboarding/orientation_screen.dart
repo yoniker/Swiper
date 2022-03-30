@@ -104,7 +104,7 @@ class _OrientationScreenState extends State<OrientationScreen> {
                               SettingsData.instance.preferredGender =
                                   currentChoice!.name;
                               Get.offAllNamed(
-                                  OnboardingFlowController.nextRoute(
+                                  OnboardingFlowController.instance.nextRoute(
                                       OrientationScreen.routeName));
                               ;
                             }

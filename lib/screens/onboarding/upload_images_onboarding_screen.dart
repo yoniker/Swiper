@@ -99,7 +99,7 @@ class _UploadImagesOnboardingScreenState
                       onTap: SettingsData.instance.profileImagesUrls.length != 0
                           ? () {
                               Get.offAllNamed(
-                                  OnboardingFlowController.nextRoute(
+                                  OnboardingFlowController.instance.nextRoute(
                                       UploadImagesOnboardingScreen.routeName));
                             }
                           : null,

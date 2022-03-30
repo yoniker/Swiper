@@ -47,7 +47,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
                 PhoneNumberCollector(
                   //TODO Yoni add phone login logic
                   onTap: () {
-                    Get.offAllNamed(OnboardingFlowController.nextRoute(
+                    Get.offAllNamed(OnboardingFlowController.instance.nextRoute(
                         PhoneScreen.routeName));
                   },
                 )

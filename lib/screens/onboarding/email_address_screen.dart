@@ -84,7 +84,7 @@ class _EmailAddressScreenState extends State<EmailAddressScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Get.offAllNamed(OnboardingFlowController.nextRoute(
+                            Get.offAllNamed(OnboardingFlowController.instance.nextRoute(
                                 EmailAddressScreen.routeName));
                           },
                           child: const Text(
@@ -99,7 +99,7 @@ class _EmailAddressScreenState extends State<EmailAddressScreen> {
                         onTap: () {
                           if (isValid(userEmail)) {
                             SettingsData.instance.email = userEmail;
-                            Get.offAllNamed(OnboardingFlowController.nextRoute(
+                            Get.offAllNamed(OnboardingFlowController.instance.nextRoute(
                                 EmailAddressScreen.routeName));
                           } else {
                             showCupertinoDialog(

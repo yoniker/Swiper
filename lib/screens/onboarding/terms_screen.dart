@@ -135,7 +135,7 @@ class _TermsScreenState extends State<TermsScreen> {
                   elevation: 0,
                   name: 'I Agree',
                   onTap: () {
-                    Get.offAllNamed(OnboardingFlowController.nextRoute(
+                    Get.offAllNamed(OnboardingFlowController.instance.nextRoute(
                         TermsScreen.routeName));
                   },
                 ),

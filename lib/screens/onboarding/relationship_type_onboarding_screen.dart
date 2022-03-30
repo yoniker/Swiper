@@ -136,7 +136,7 @@ class _RelationshipTypeOnboardingScreenState
                         ? () {
                             SettingsData.instance.relationshipType =
                                 currentChoice!.name;
-                            Get.offAllNamed(OnboardingFlowController.nextRoute(
+                            Get.offAllNamed(OnboardingFlowController.instance.nextRoute(
                                 RelationshipTypeOnboardingScreen.routeName));
                           }
                         : null)

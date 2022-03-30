@@ -92,7 +92,7 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                                   SettingsData.instance.userDescription =
                                       aboutMeText;
                                   Get.offAllNamed(
-                                      OnboardingFlowController.nextRoute(
+                                      OnboardingFlowController.instance.nextRoute(
                                           AboutMeOnboardingScreen.routeName));
                                 },
                           onTapIconDisable: charactersLeft <= 0
@@ -142,7 +142,7 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                                   SettingsData.instance.userDescription =
                                       aboutMeText;
                                   Get.offAllNamed(
-                                      OnboardingFlowController.nextRoute(
+                                      OnboardingFlowController.instance.nextRoute(
                                           AboutMeOnboardingScreen.routeName));
                                 }),
                     )

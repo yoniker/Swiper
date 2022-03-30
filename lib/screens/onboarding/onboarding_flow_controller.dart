@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:betabeta/constants/enums.dart';
+import 'package:betabeta/services/notifications_controller.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/onboarding/about_me_screen.dart';
@@ -18,7 +20,17 @@ import 'package:betabeta/screens/onboarding/upload_images_onboarding_screen.dart
 import 'package:betabeta/screens/onboarding/welcome_screen.dart';
 
 class OnboardingFlowController {
-  static const List<String> onboardingFlow = [
+  List<String> chosenOnboradingFlow;
+  OnboardingFlowController._privateConstructor():chosenOnboradingFlow=fullOnboardingFlow;
+
+  
+  
+  
+  static final OnboardingFlowController _instance = OnboardingFlowController._privateConstructor();
+
+  static OnboardingFlowController get instance => _instance;
+
+  static const List<String> fullOnboardingFlow = [
     WelcomeScreen.routeName,
     PhoneScreen.routeName,
     NotificationsPermissionScreen.routeName,
@@ -36,17 +48,36 @@ class OnboardingFlowController {
     MainNavigationScreen.routeName
   ];
 
-  static String nextRoute(String currentRoute) {
+  void setOnboardingPath(ServerRegistrationStatus loginStatus){
+    if(loginStatus==ServerRegistrationStatus.new_register){
+      chosenOnboradingFlow=fullOnboardingFlow;
+      return;
+    }
+    if(loginStatus==ServerRegistrationStatus.already_registered){
+
+      chosenOnboradingFlow = [];
+      if(!Platform.isAndroid){
+        chosenOnboradingFlow.add(NotificationsPermissionScreen.routeName);
+      }
+      chosenOnboradingFlow.add(LocationPermissionScreen.routeName);
+      chosenOnboradingFlow.add(MainNavigationScreen.routeName);
+
+    }
+
+
+  }
+
+  String nextRoute(String currentRoute) {
     String candidateNextScreen =
-        onboardingFlow[onboardingFlow.indexOf(currentRoute) + 1];
+    chosenOnboradingFlow[chosenOnboradingFlow.indexOf(currentRoute) + 1];
     while (true) {
       if ((candidateNextScreen == EmailAddressScreen.routeName &&
               SettingsData.instance.email.length > 0) //There is email
           ||
-          (candidateNextScreen == NotificationsPermissionScreen.routeName &&
-              Platform.isAndroid)) {
+          (candidateNextScreen == NotificationsPermissionScreen.routeName && Platform.isAndroid)) //notification permissions for Android isn't needed
+      {
         candidateNextScreen =
-            onboardingFlow[onboardingFlow.indexOf(candidateNextScreen) + 1];
+        chosenOnboradingFlow[chosenOnboradingFlow.indexOf(candidateNextScreen) + 1];
         continue;
       }
       break;
