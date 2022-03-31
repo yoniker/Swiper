@@ -51,7 +51,7 @@ Future<void> handleBackgroundMessage(RemoteMessage rawMessage) async {
 }
 
 Future<bool> setupInteractedMessage() async {
-  bool notificationFromTerminatedState = false;
+  bool navigationNotificationInteraction = false;
   // Get any messages which caused the application to open from
   // a terminated state.
   RemoteMessage? initialMessage =
@@ -60,23 +60,23 @@ Future<bool> setupInteractedMessage() async {
   // If the message also contains a data property with a "type" of "chat",
   // navigate to a chat screen
   if (initialMessage != null) {
-    notificationFromTerminatedState = true;
-    _handleMessageOpenedFromNotification(initialMessage);
+  navigationNotificationInteraction = await _handleMessageOpenedFromNotification(initialMessage);
   }
 
   // Also handle any interaction when the app is in the background via a
   // Stream listener
   FirebaseMessaging.onMessageOpenedApp
       .listen(_handleMessageOpenedFromNotification);
-  return notificationFromTerminatedState;
+  return navigationNotificationInteraction;
 }
 
-void _handleMessageOpenedFromNotification(RemoteMessage message) async {
+Future<bool> _handleMessageOpenedFromNotification(RemoteMessage message) async {
   await ChatData.instance.syncWithServer();
   var messageData = message.data;
   if(messageData[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY]==API_CONSTS.PUSH_NOTIFICATION_NEW_MATCH){
     AppStateInfo.instance.latestTabOnMainNavigation = MainNavigationScreen.CONVERSATIONS_PAGE_INDEX;
     Get.offAllNamed(MainNavigationScreen.routeName);
+    return true;
   }
 
   if(messageData[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY]==API_CONSTS.PUSH_NOTIFICATION_NEW_MESSAGE){
@@ -89,8 +89,11 @@ void _handleMessageOpenedFromNotification(RemoteMessage message) async {
     Get.offAllNamed(MainNavigationScreen.routeName);
     if (sender != null) {
       Get.toNamed(ChatScreen.getRouteWithUserId(sender.uid));
+      return true;
     }
   }}
+
+  return false;
 }
 
 class ChatData extends ChangeNotifier {
@@ -328,7 +331,7 @@ class ChatData extends ChangeNotifier {
   }
 
   Future<bool> onInitApp() async {
-    //Returns true if there's a notification interaction from terminated state
+    //Returns true if there's a notification navigation thx to interaction from terminated state
     updateFcmToken();
     await syncWithServer(); //Sync with the server as soon as the app starts
     setupStreams();

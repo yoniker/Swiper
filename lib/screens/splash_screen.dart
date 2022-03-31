@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation sizeAnimation;
-  bool notificationExists = false;
+  bool navigatedFromNotification = false;
   @override
   void initState() {
     _controller = AnimationController(
@@ -59,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen>
     //Stuff we want to do only if the user is already registered
 
     MatchEngine.instance;
-    notificationExists = await ChatData.instance.onInitApp();
+    navigatedFromNotification = await ChatData.instance.onInitApp();
   }
 
 
@@ -80,11 +80,17 @@ class _SplashScreenState extends State<SplashScreen>
   // loads in the shared preference.
   void _load() async {
     final routeTo = await _chooseRoute();
-    await _initializeApp();
-    if(routeTo==MainNavigationScreen.routeName)
-    {await _initAppAlreadyRegistered();}
+    try {
+      await _initializeApp();
+      if (routeTo == MainNavigationScreen.routeName) {
+        await _initAppAlreadyRegistered();
+      }
+    }
+    catch (e) {
+      print('There was an error at initialization $e');
+    }
 
-    if (!notificationExists) {
+    if (!navigatedFromNotification) {
       Get.offAllNamed(routeTo);
     } //If notification exists, the assumption is that navigation was handled already.
     await NotificationsController.instance.cancelAllNotifications();
