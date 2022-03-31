@@ -2,6 +2,7 @@ import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/infoMessage.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/chat/other_user_profile_screen.dart';
+import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/services/app_state_info.dart';
@@ -39,6 +40,13 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
   void updateChatData() {
     List<InfoMessage> currentChatMessages = ChatData.instance.messagesInConversation(conversationId);
     _messages = currentChatMessages.map((message) => message.toUiMessage()).toList();
+    //Let's see if we are still matched with the user. If not, let's go back to main screen (notice that at this point we might be looking at the other user's profile)
+    Profile? userFound = ChatData.instance.getUserById(widget.userid);
+    if(userFound==null && mounted){
+      Get.snackbar('Match not found!', 'match not found!');
+      Get.offAllNamed(MainNavigationScreen.routeName);
+
+    }
 
   }
 
@@ -57,7 +65,10 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
   @override
   void initState() {
     Profile? userFound = ChatData.instance.getUserById(widget.userid);
-    if(userFound==null){Get.back();} //TODO on this kind of error another option is to put out a detailed error screen
+    if(userFound==null){
+      Get.snackbar('Match not found!', 'match not found!');
+      Get.offAllNamed(MainNavigationScreen.routeName);
+      } //TODO on this kind of error another option is to put out a detailed error screen
     theUser = userFound!;
     conversationId = ChatData.instance.calculateConversationId(theUser.uid);
     ChatData.instance.markConversationAsRead(conversationId).then((_)

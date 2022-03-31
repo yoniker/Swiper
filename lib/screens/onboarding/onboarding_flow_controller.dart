@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:betabeta/constants/enums.dart';
+import 'package:betabeta/models/chatData.dart';
+import 'package:betabeta/models/match_engine.dart';
+import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/notifications_controller.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
@@ -82,7 +85,11 @@ class OnboardingFlowController {
       }
       break;
     }
-
+    if(candidateNextScreen==MainNavigationScreen.routeName){
+      NewNetworkService.instance.syncCurrentProfileImagesUrls();
+      ChatData.instance.syncWithServer();
+      MatchEngine.instance.clear();
+    }
     return candidateNextScreen;
   }
 }
