@@ -226,6 +226,7 @@ class ChatData extends ChangeNotifier {
   }
 
   void handlePushData(message) async {
+
     if (message['push_notification_type'] == 'new_read_receipt') {
       //TODO for now just sync with server "everything" there is to sync. Of course,this can be improved if and when necessary
       syncWithServer();
@@ -244,6 +245,8 @@ class ChatData extends ChangeNotifier {
       if (theUser != null) {
         Get.toNamed(GotNewMatchScreen.routeName, arguments: theUser);
       }
+
+      NotificationsController.instance.showNewMatchNotification(matchedPersonId: userId);
 
       return;
     }

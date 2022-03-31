@@ -173,8 +173,12 @@ class NotificationsController{
       return; //Never show notifications if the app is resumed
     }
 
+
+
     Map<String,String> payloadData = {
-      NOTIFICATION_TYPE:API_CONSTS.PUSH_NOTIFICATION_NEW_MATCH,};
+      NOTIFICATION_TYPE:API_CONSTS.PUSH_NOTIFICATION_NEW_MATCH,
+
+    };
     if(matchedPersonId!=null) {
       payloadData[API_CONSTS.PUSH_NOTIFICATION_USER_ID] = matchedPersonId;
     }
