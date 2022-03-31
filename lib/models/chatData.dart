@@ -43,6 +43,11 @@ Future<void> handleBackgroundMessage(RemoteMessage rawMessage) async {
           showSnackIfResumed: false);
     }
   }
+
+  if (message[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY] == API_CONSTS.PUSH_NOTIFICATION_NEW_MATCH) {
+    final String? matchedPersonId = message[API_CONSTS.PUSH_NOTIFICATION_USER_ID];
+    await NotificationsController.instance.showNewMatchNotification(matchedPersonId:matchedPersonId,showSnackIfResumed: false);
+  }
 }
 
 Future<bool> setupInteractedMessage() async {
@@ -232,7 +237,7 @@ class ChatData extends ChangeNotifier {
       syncWithServer();
       return;
     }
-    if (message['push_notification_type'] == 'new_match') {
+    if (message[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY] == API_CONSTS.PUSH_NOTIFICATION_NEW_MATCH) {
       await syncWithServer();
       String? userId = message['user_id'];
       Profile? theUser = userId == null ? null : getUserById(userId);
