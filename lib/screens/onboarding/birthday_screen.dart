@@ -123,8 +123,7 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
                                             SettingsData.instance.userBirthday =
                                                 selectedDate.toString();
                                             Get.offAllNamed(
-                                                OnboardingFlowController
-                                                    .nextRoute(
+                                                OnboardingFlowController.instance.nextRoute(
                                                         BirthdayOnboardingScreen
                                                             .routeName));
                                           },

@@ -33,17 +33,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   _continueIfLoggedIn(ServerRegistrationStatus currentStatus) async {
     await SettingsData.instance.readSettingsFromShared();
-    if(currentStatus == ServerRegistrationStatus.already_registered){
-      await NewNetworkService.instance.syncCurrentProfileImagesUrls();
-      Get.offAllNamed(MainNavigationScreen.routeName);
+
+    if (SettingsData.instance.readFromShared! &&
+        !(SettingsData.instance.uid.length > 0)){
+      print('THERE IS NO UID AT CONTINUE IF LOGGED IN, SO NOT LOGGING IN...');
       return;
     }
 
-    if (SettingsData.instance.readFromShared! &&
-        SettingsData.instance.uid.length > 0) {
-      Get.offAllNamed(
-          OnboardingFlowController.nextRoute(WelcomeScreen.routeName));
+    if(currentStatus == ServerRegistrationStatus.already_registered){
+      await NewNetworkService.instance.syncCurrentProfileImagesUrls();
     }
+    OnboardingFlowController.instance.setOnboardingPath(currentStatus);
+
+      Get.offAllNamed(
+          OnboardingFlowController.instance.nextRoute(WelcomeScreen.routeName));
+
   }
 
   Future<ServerRegistrationStatus> _registerUserAtServer() async {
@@ -162,7 +166,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 onTap: () {
                                   //TODO Apple login logic
                                   Get.offAllNamed(
-                                      OnboardingFlowController.nextRoute(
+                                      OnboardingFlowController.instance.nextRoute(
                                           WelcomeScreen.routeName));
                                 },
                                 icon: Icons.apple_rounded),
@@ -175,7 +179,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               color: Colors.transparent,
                               onTap: () {
                                 Get.offAllNamed(
-                                    OnboardingFlowController.nextRoute(
+                                    OnboardingFlowController.instance.nextRoute(
                                         PhoneScreen.routeName));
                               }),
                           Center(

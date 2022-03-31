@@ -31,7 +31,8 @@ Future<void> handleBackgroundMessage(RemoteMessage rawMessage) async {
   await SettingsData.instance.readSettingsFromShared();
   await NotificationsController.instance.initialize();
   var message = rawMessage.data;
-  if (message['push_notification_type'] == 'new_message') {
+  print('at handle background message,message is ${message}');
+  if (message[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY] == API_CONSTS.PUSH_NOTIFICATION_NEW_MESSAGE) {
     final String senderId = message['user_id'];
     if (senderId != SettingsData.instance.uid) {
       final Profile sender =
@@ -41,6 +42,11 @@ Future<void> handleBackgroundMessage(RemoteMessage rawMessage) async {
           senderId: sender.uid,
           showSnackIfResumed: false);
     }
+  }
+
+  if (message[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY] == API_CONSTS.PUSH_NOTIFICATION_NEW_MATCH) {
+    final String? matchedPersonId = message[API_CONSTS.PUSH_NOTIFICATION_USER_ID];
+    await NotificationsController.instance.showNewMatchNotification(matchedPersonId:matchedPersonId,showSnackIfResumed: false);
   }
 }
 
@@ -66,9 +72,16 @@ Future<bool> setupInteractedMessage() async {
 }
 
 void _handleMessageOpenedFromNotification(RemoteMessage message) async {
-  final InfoMessage messageReceived = InfoMessage.fromJson(message.data);
   await ChatData.instance.syncWithServer();
-  //ChatData().addMessageToDB(messageReceived);
+  var messageData = message.data;
+  if(messageData[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY]==API_CONSTS.PUSH_NOTIFICATION_NEW_MATCH){
+    AppStateInfo.instance.latestTabOnMainNavigation = MainNavigationScreen.CONVERSATIONS_PAGE_INDEX;
+    Get.offAllNamed(MainNavigationScreen.routeName);
+  }
+
+  if(messageData[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY]==API_CONSTS.PUSH_NOTIFICATION_NEW_MESSAGE){
+
+  final InfoMessage messageReceived = InfoMessage.fromJson(message.data);
   if (messageReceived.userId != SettingsData.instance.uid) {
     Profile? sender = ChatData.instance.getUserById(messageReceived.userId);
     AppStateInfo.instance.latestTabOnMainNavigation =
@@ -77,7 +90,7 @@ void _handleMessageOpenedFromNotification(RemoteMessage message) async {
     if (sender != null) {
       Get.toNamed(ChatScreen.getRouteWithUserId(sender.uid));
     }
-  }
+  }}
 }
 
 class ChatData extends ChangeNotifier {
@@ -213,6 +226,7 @@ class ChatData extends ChangeNotifier {
   }
 
   void handlePushData(message) async {
+
     if (message['push_notification_type'] == 'new_read_receipt') {
       //TODO for now just sync with server "everything" there is to sync. Of course,this can be improved if and when necessary
       syncWithServer();
@@ -224,13 +238,15 @@ class ChatData extends ChangeNotifier {
       syncWithServer();
       return;
     }
-    if (message['push_notification_type'] == 'new_match') {
+    if (message[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY] == API_CONSTS.PUSH_NOTIFICATION_NEW_MATCH) {
       await syncWithServer();
       String? userId = message['user_id'];
       Profile? theUser = userId == null ? null : getUserById(userId);
       if (theUser != null) {
         Get.toNamed(GotNewMatchScreen.routeName, arguments: theUser);
       }
+
+      NotificationsController.instance.showNewMatchNotification(matchedPersonId: userId);
 
       return;
     }

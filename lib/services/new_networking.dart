@@ -4,7 +4,6 @@ import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/models/match_engine.dart';
 import 'package:betabeta/services/cache_service.dart';
-import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:http/http.dart' as http;

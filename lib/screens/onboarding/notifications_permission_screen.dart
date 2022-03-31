@@ -60,7 +60,7 @@ class _NotificationsState extends State<NotificationsPermissionScreen> {
                           print(
                               'RESULT OF GETTING NOTIFICATIONS PERMISSIONS IS $result');
                         }
-                        Get.offAllNamed(OnboardingFlowController.nextRoute(
+                        Get.offAllNamed(OnboardingFlowController.instance.nextRoute(
                             NotificationsPermissionScreen.routeName));
                       },
                     ),
@@ -68,7 +68,7 @@ class _NotificationsState extends State<NotificationsPermissionScreen> {
                     GestureDetector(
                       onTap: () {
                         //TODO user refused notifications,save if needed
-                        Get.offAllNamed(OnboardingFlowController.nextRoute(
+                        Get.offAllNamed(OnboardingFlowController.instance.nextRoute(
                             NotificationsPermissionScreen.routeName));
                       },
                       child: Text(

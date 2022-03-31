@@ -1,6 +1,8 @@
+import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/models/celebs_info_model.dart';
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/match_engine.dart';
+import 'package:betabeta/services/app_state_info.dart';
 import 'package:betabeta/services/location_service.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
@@ -44,6 +46,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<bool> _initializeApp() async {
     //TODO support error states
+    AppStateInfo.instance;
     await ChatData.initDB();
     await NotificationsController.instance.initialize();
     await SettingsData.instance.readSettingsFromShared();
@@ -64,8 +67,8 @@ class _SplashScreenState extends State<SplashScreen>
         print('Got the token $token');
         if (token != null) {
           await SettingsData.instance.readSettingsFromShared();
-          if (SettingsData.instance.fcmToken != token) {
-            print('updating fcm token..');
+          if (SettingsData.instance.uid .length>0) {
+            print('sending fcm token to server...');
             SettingsData.instance.fcmToken = token;
           }
           return;

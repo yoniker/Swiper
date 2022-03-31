@@ -1,8 +1,8 @@
 
+import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/chat/chat_screen.dart';
-import 'package:betabeta/screens/chat/conversations_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/services/app_state_info.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +22,27 @@ class NotificationsController{
   static const String NEW_MESSAGE_NOTIFICATION = 'new_message_notification';
   static const String NOTIFICATION_TYPE = 'notification_type';
   static const String SENDER_ID = 'sender_id';
+
+  static const AndroidNotificationDetails _androidNotificationDetails =
+  AndroidNotificationDetails(
+    'Voilà Dating channel ID',
+    'Voilà Dating channel name',
+    channelDescription: 'DorChat channel description',
+    playSound: true,
+    priority: Priority.high,
+    importance: Importance.high,
+  );
+
+  static const IOSNotificationDetails _iOSNotificationDetails =
+  IOSNotificationDetails(threadIdentifier: 'Voila_thread_id');
+
+
+  static const NotificationDetails platformChannelSpecifics =
+  NotificationDetails(
+      android: _androidNotificationDetails,
+      iOS: _iOSNotificationDetails);
+
+
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
 
@@ -117,24 +138,7 @@ class NotificationsController{
       return; //Never show notifications if the app is resumed
     } 
     
-    const AndroidNotificationDetails _androidNotificationDetails =
-    AndroidNotificationDetails(
-      'Voilà Dating channel ID',
-      'Voilà Dating channel name',
-      channelDescription: 'DorChat channel description',
-      playSound: true,
-      priority: Priority.high,
-      importance: Importance.high,
-    );
 
-    const IOSNotificationDetails _iOSNotificationDetails =
-    IOSNotificationDetails(threadIdentifier: 'Voila_thread_id');
-
-
-    const NotificationDetails platformChannelSpecifics =
-    NotificationDetails(
-        android: _androidNotificationDetails,
-        iOS: _iOSNotificationDetails);
 
     Map<String,String> payloadData = {
       NOTIFICATION_TYPE:NEW_MESSAGE_NOTIFICATION,
@@ -152,7 +156,47 @@ class NotificationsController{
   }
 
 
+  Future<void> showNewMatchNotification(
+
+      {String? matchedPersonId,bool showSnackIfResumed=true}
+      )async{
+    if(AppStateInfo.instance.appState==AppLifecycleState.resumed){ //The app is in the foreground. Let's see what to do
+      if(showSnackIfResumed){
+        Get.snackbar("You got a new match!", 'You got a new match',duration: Duration(seconds: 3),
+            onTap: (snackBar){
+              AppStateInfo.instance.latestTabOnMainNavigation = MainNavigationScreen.CONVERSATIONS_PAGE_INDEX;
+              Get.offAllNamed(MainNavigationScreen.routeName);
+            });
+      }
+
+
+      return; //Never show notifications if the app is resumed
+    }
 
 
 
-}
+    Map<String,String> payloadData = {
+      NOTIFICATION_TYPE:API_CONSTS.PUSH_NOTIFICATION_NEW_MATCH,
+
+    };
+    if(matchedPersonId!=null) {
+      payloadData[API_CONSTS.PUSH_NOTIFICATION_USER_ID] = matchedPersonId;
+    }
+    await flutterLocalNotificationsPlugin.cancelAll(); //Clear all  notifications before showing current notification
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Voilà Dating',
+      'You got a new match!',
+      platformChannelSpecifics,
+      payload: json.jsonEncode(payloadData),
+    );
+
+
+
+  }
+
+
+
+
+
+  }
