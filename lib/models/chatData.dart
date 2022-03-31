@@ -100,6 +100,27 @@ class ChatData extends ChangeNotifier {
   Map<String, double> markingConversation = {};
   StreamSubscription? _fcmSubscription, _websocketSubscription;
 
+
+
+  static Future<void> updateFcmToken() async {
+    while (true) {
+      try {
+        String? token = await FirebaseMessaging.instance.getToken();
+        print('Got the token $token');
+        if (token != null) {
+          await SettingsData.instance.readSettingsFromShared();
+          if (SettingsData.instance.uid .length>0) {
+            print('sending fcm token to server...');
+            SettingsData.instance.fcmToken = token;
+          }
+          return;
+        }
+      } catch (val) {
+        print('caught $val');
+      }
+    }
+  }
+
   static Future<void> initDB() async {
     //The following try-catch blocks are a bad code practice and are here because onBackground(..) handler sometimes tries to register adapters again
     //TODO check when exactly onbackground does an exception and when it's ok and remove the "bad code practice".
@@ -308,6 +329,7 @@ class ChatData extends ChangeNotifier {
 
   Future<bool> onInitApp() async {
     //Returns true if there's a notification interaction from terminated state
+    updateFcmToken();
     await syncWithServer(); //Sync with the server as soon as the app starts
     setupStreams();
     return await setupInteractedMessage();

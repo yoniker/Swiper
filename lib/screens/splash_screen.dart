@@ -28,6 +28,7 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation sizeAnimation;
+  bool notificationExists = false;
   @override
   void initState() {
     _controller = AnimationController(
@@ -44,48 +45,32 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
   }
 
-  Future<bool> _initializeApp() async {
-    //TODO support error states
+  Future<void> _initializeApp() async {
+    //initialize the app when user is already logged in
     AppStateInfo.instance;
-    await ChatData.initDB();
     await NotificationsController.instance.initialize();
+    await ChatData.initDB();
     await SettingsData.instance.readSettingsFromShared();
-    if (SettingsData.instance.uid.length > 0) {
-      await LocationService.instance.onInit();
-    }
-    MatchEngine.instance;
     await CelebsInfo.instance.getCelebsFromDatabase();
-    bool notificationFromTerminated = await ChatData.instance.onInitApp();
-    updateFcmToken();
-    return notificationFromTerminated;
+
   }
 
-  Future<void> updateFcmToken() async {
-    while (true) {
-      try {
-        String? token = await FirebaseMessaging.instance.getToken();
-        print('Got the token $token');
-        if (token != null) {
-          await SettingsData.instance.readSettingsFromShared();
-          if (SettingsData.instance.uid .length>0) {
-            print('sending fcm token to server...');
-            SettingsData.instance.fcmToken = token;
-          }
-          return;
-        }
-      } catch (val) {
-        print('caught $val');
-      }
-    }
+  Future<void> _initAppAlreadyRegistered() async{
+    //Stuff we want to do only if the user is already registered
+
+    MatchEngine.instance;
+    notificationExists = await ChatData.instance.onInitApp();
   }
 
-  Future<String> _routeTo() async {
-    SettingsData settings = SettingsData.instance;
+
+
+  Future<String> _chooseRoute() async {
+    
     // we are making sure that if the user is already logged in at a time and i.e. sharedPreferences data exist
     // we move to the Main-navigation screen otherwise we move to the LoginScreen.
-    //
-    // This is the standard way of creating a splash-screen for an Application.
-    if (settings.readFromShared! && settings.uid.length > 0) {
+    
+    await SettingsData.instance.readSettingsFromShared();
+    if (SettingsData.instance.uid.length>0 && SettingsData.instance.registrationStatus==API_CONSTS.ALREADY_REGISTERED) {
       return MainNavigationScreen.routeName;
     }
 
@@ -94,11 +79,14 @@ class _SplashScreenState extends State<SplashScreen>
 
   // loads in the shared preference.
   void _load() async {
-    bool navigatedToChatScreen = await _initializeApp();
-    final routeTo = await _routeTo();
-    if (!navigatedToChatScreen) {
+    final routeTo = await _chooseRoute();
+    await _initializeApp();
+    if(routeTo==MainNavigationScreen.routeName)
+    {await _initAppAlreadyRegistered();}
+
+    if (!notificationExists) {
       Get.offAllNamed(routeTo);
-    }
+    } //If notification exists, the assumption is that navigation was handled already.
     await NotificationsController.instance.cancelAllNotifications();
   }
 
