@@ -2,6 +2,7 @@ import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/infoMessage.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/chat/other_user_profile_screen.dart';
+import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/services/app_state_info.dart';
@@ -16,13 +17,14 @@ import 'dart:convert';
 import 'package:get/get.dart';
 
 class ChatScreen extends StatefulWidget {
-  ChatScreen({Key? key}) :userid=Get.parameters[USERID_PARAM]??'no_user_param_found',super(key: key);
+  ChatScreen({Key? key})
+      : userid = Get.parameters[USERID_PARAM] ?? 'no_user_param_found',
+        super(key: key);
   static const String routeName = '/chat_screen';
   static const String USERID_PARAM = "user_id";
-  static String getRouteWithUserId(String userid){
-    return routeName+'?$USERID_PARAM=$userid';
+  static String getRouteWithUserId(String userid) {
+    return routeName + '?$USERID_PARAM=$userid';
   }
-
 
   final String userid;
 
@@ -30,109 +32,129 @@ class ChatScreen extends StatefulWidget {
   _ChatScreenState createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
+class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
   List<types.Message> _messages = <types.Message>[];
   late String conversationId;
   late Profile theUser;
 
-
   void updateChatData() {
-    List<InfoMessage> currentChatMessages = ChatData.instance.messagesInConversation(conversationId);
-    _messages = currentChatMessages.map((message) => message.toUiMessage()).toList();
-
+    List<InfoMessage> currentChatMessages =
+        ChatData.instance.messagesInConversation(conversationId);
+    _messages =
+        currentChatMessages.map((message) => message.toUiMessage()).toList();
+    //Let's see if we are still matched with the user. If not, let's go back to main screen (notice that at this point we might be looking at the other user's profile)
+    Profile? userFound = ChatData.instance.getUserById(widget.userid);
+    if (userFound == null && mounted) {
+      Get.snackbar('Match not found!', 'match not found!');
+      Get.offAllNamed(MainNavigationScreen.routeName);
+    }
   }
 
-  void listenConversation()async{
-    setStateIfMounted((){
+  void listenConversation() async {
+    setStateIfMounted(() {
       updateChatData();
-
     });
 
-    if(AppStateInfo.instance.appState==AppLifecycleState.resumed){
-      await ChatData.instance.markConversationAsRead(conversationId);}
+    if (AppStateInfo.instance.appState == AppLifecycleState.resumed) {
+      await ChatData.instance.markConversationAsRead(conversationId);
+    }
   }
-
-
 
   @override
   void initState() {
     Profile? userFound = ChatData.instance.getUserById(widget.userid);
-    if(userFound==null){Get.back();} //TODO on this kind of error another option is to put out a detailed error screen
+    if (userFound == null) {
+      Get.snackbar('Match not found!', 'match not found!');
+      Get.offAllNamed(MainNavigationScreen.routeName);
+    } //TODO on this kind of error another option is to put out a detailed error screen
     theUser = userFound!;
     conversationId = ChatData.instance.calculateConversationId(theUser.uid);
-    ChatData.instance.markConversationAsRead(conversationId).then((_)
-    {ChatData.instance.listenConversation(conversationId,listenConversation);
-    AppStateInfo.instance.addListener(listenConversation);
-    }
-    );
+    ChatData.instance.markConversationAsRead(conversationId).then((_) {
+      ChatData.instance.listenConversation(conversationId, listenConversation);
+      AppStateInfo.instance.addListener(listenConversation);
+    });
     updateChatData();
     super.initState();
   }
 
-  Widget buildEmptyChatWidget(){
+  Widget buildEmptyChatWidget() {
     Profile? theUser = ChatData.instance.getUserById(widget.userid);
     DateTime? matchTime = theUser?.matchChangedTime;
-    if(theUser==null || matchTime==null){
+    if (theUser == null || matchTime == null) {
       return SizedBox();
     }
 
-    Duration howLongAgo= DateTime.now().difference(matchTime);
-    String howLongAgoDescription = howLongAgo.inDays>0? '${howLongAgo.inDays} days':'${howLongAgo.inHours} hours';
+    Duration howLongAgo = DateTime.now().difference(matchTime);
+    String howLongAgoDescription = howLongAgo.inDays > 0
+        ? '${howLongAgo.inDays} days'
+        : '${howLongAgo.inHours} hours';
 
     return Column(
       children: [
-        Text('To Nitzan: show a widget for the case when there are no messages '),
+        Text(
+            'To Nitzan: show a widget for the case when there are no messages '),
         Text('For example'),
         Text('You got matched $howLongAgoDescription ago'),
-        GestureDetector(child: CircularUserAvatar(imageProvider: NetworkImage(NewNetworkService.getProfileImageUrl(theUser.profileImage)),radius: 40,),
-        onTap: () {
-          Get.toNamed(OtherUserProfileScreen.routeName,arguments: theUser.uid);},
+        GestureDetector(
+          child: CircularUserAvatar(
+            imageProvider: NetworkImage(
+                NewNetworkService.getProfileImageUrl(theUser.profileImage)),
+            radius: 40,
+          ),
+          onTap: () {
+            Get.toNamed(OtherUserProfileScreen.routeName,
+                arguments: theUser.uid);
+          },
         ),
-
-
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: CustomAppBar(
         hasTopPadding: true,
         hasBackButton: true,
-        customTitle: ProfileDisplay(theUser,minRadius: 10,maxRadius: 20,direction: Axis.horizontal,
-        onTap: (){
-      Get.toNamed(OtherUserProfileScreen.routeName,arguments: theUser.uid);
-      },
+        customTitle: ProfileDisplay(
+          theUser,
+          minRadius: 10,
+          maxRadius: 20,
+          direction: Axis.horizontal,
+          onTap: () {
+            Get.toNamed(OtherUserProfileScreen.routeName,
+                arguments: theUser.uid);
+          },
         ),
-        trailing: TextButton(onPressed: ()async{
-          await ChatData.instance.unmatch(theUser.uid);
-          Get.back();
-        }, child: Text('Unmatch')),
+        trailing: TextButton(
+            onPressed: () async {
+              await ChatData.instance.unmatch(theUser.uid);
+              Get.back();
+            },
+            child: Text('Unmatch')),
       ),
       body: Column(
         children: [
-          if(_messages.length==0) Expanded(flex:1,child: buildEmptyChatWidget()),
+          if (_messages.length == 0)
+            Expanded(flex: 1, child: buildEmptyChatWidget()),
           Expanded(
             flex: 1,
             child: Chat(
               user: types.User(id: SettingsData.instance.uid),
-              showUserAvatars:true,
-              onSendPressed: (text){
+              showUserAvatars: true,
+              onSendPressed: (text) {
                 ChatData.instance.sendMessage(theUser.uid,
-                    jsonEncode({"type":"text","content":"${text.text}"}));
+                    jsonEncode({"type": "text", "content": "${text.text}"}));
               },
               messages: _messages,
-              onMessageTap: (context,message){
-                ChatData.instance.resendMessageIfError(conversationId, message.id);
-
+              onMessageTap: (context, message) {
+                ChatData.instance
+                    .resendMessageIfError(conversationId, message.id);
               },
-              onMessageLongPress: (context,message){
-                ChatData.instance.resendMessageIfError(conversationId, message.id);
+              onMessageLongPress: (context, message) {
+                ChatData.instance
+                    .resendMessageIfError(conversationId, message.id);
               },
-
-
             ),
           ),
         ],
@@ -142,7 +164,8 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin{
 
   @override
   void dispose() {
-    ChatData.instance.removeListenerConversation(conversationId,listenConversation);
+    ChatData.instance
+        .removeListenerConversation(conversationId, listenConversation);
     AppStateInfo.instance.removeListener(listenConversation);
     super.dispose();
   }

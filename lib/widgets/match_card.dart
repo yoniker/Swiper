@@ -364,6 +364,13 @@ class _MatchCardState extends State<MatchCard> {
       Wrap(
         direction: Axis.horizontal,
         children: [
+          BasicDetail(
+            detailText: '${widget.profile.userGender}',
+            detailIcon: FaIcon(
+              FontAwesomeIcons.userFriends,
+              color: Colors.blueAccent,
+            ),
+          ),
           if (widget.profile.location != null && widget.profile.location != '')
             BasicDetail(
                 detailText: '${widget.profile.location}',
@@ -419,10 +426,13 @@ class _MatchCardState extends State<MatchCard> {
             ),
           ],
         ),
-      Text(
-        'Lifestyle',
-        style: subTitleStyle,
-      ),
+      if (widget.profile.fitness != '' ||
+          widget.profile.drinking != '' ||
+          widget.profile.smoking != '')
+        Text(
+          'Lifestyle',
+          style: subTitleStyle,
+        ),
       _buildDivider(),
       Wrap(
         direction: Axis.horizontal,

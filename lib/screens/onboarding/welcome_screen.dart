@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/loginService.dart';
 import 'package:betabeta/screens/onboarding/phone_screen.dart';
 import 'package:betabeta/services/new_networking.dart';
@@ -37,9 +38,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       return;
     }
 
-    if (currentStatus == ServerRegistrationStatus.already_registered) {
-      await NewNetworkService.instance.syncCurrentProfileImagesUrls();
-    }
     OnboardingFlowController.instance.setOnboardingPath(currentStatus);
 
     Get.offAllNamed(

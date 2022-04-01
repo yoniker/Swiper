@@ -160,3 +160,20 @@ const LinearGradient mainColorGradient = const LinearGradient(
     mainAppColor02,
   ],
 );
+
+const colorizeColors = [
+  Color(0XFFFECA00),
+  Color(0XFF824E02),
+  Color(0XFFFECA00),
+  Color(0XFFAC7A00),
+  Color(0XFFDDA900)
+];
+
+const colorizeTextStyle =
+    TextStyle(fontSize: 40.0, fontFamily: 'LuckiestGuy', shadows: [
+  Shadow(
+    blurRadius: 15.0,
+    color: Colors.black,
+    offset: Offset(-2.0, 2.0),
+  ),
+]);

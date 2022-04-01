@@ -48,108 +48,108 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
     double heightWithoutSafeArea = height - padding.top - padding.bottom;
 
     return SafeArea(
-      child: RawScrollbar(
-        isAlwaysShown: true,
-        thumbColor: Colors.black54,
-        thickness: 5,
-        child: ConditionalParentWidget(
-          condition: ScreenSize.getSize(context) == ScreenSizeCategory.small,
-          conditionalBuilder: (Widget child) => SingleChildScrollView(
+      child: ConditionalParentWidget(
+        condition: ScreenSize.getSize(context) == ScreenSizeCategory.small,
+        conditionalBuilder: (Widget child) => RawScrollbar(
+          isAlwaysShown: true,
+          thumbColor: Colors.black54,
+          thickness: 5,
+          child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: SizedBox(
               height: height * 0.92,
               child: child,
             ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ConditionalParentWidget(
-                  condition:
-                      ScreenSize.getSize(context) == ScreenSizeCategory.small,
-                  conditionalBuilder: (Widget child) => FittedBox(
-                    child: child,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (widget.headline != null)
-                        Text(
-                          widget.headline!,
-                          style: titleStyle,
-                        ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Column(
-                        children: widget.choices
-                            .map((choiceTitle) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 20.0),
-                                  child: ChoiceButton(
-                                    name: '$choiceTitle',
-                                    onTap: () {
-                                      widget.alwaysPressed != true
-                                          ? setState(() {
-                                              if (currentUserChoice !=
-                                                  choiceTitle) {
-                                                currentUserChoice = choiceTitle;
-                                              } else {
-                                                currentUserChoice = '';
-                                              }
-                                              ;
-                                            })
-                                          : setState(() {
-                                              (currentUserChoice = choiceTitle);
-                                              promote = widget.promotes![widget
-                                                  .choices
-                                                  .indexOf(choiceTitle)];
-                                            });
-
-                                      if (currentUserChoice != null) {
-                                        widget.onValueChanged
-                                            ?.call(currentUserChoice!);
-                                      }
-                                    },
-                                    pressed: currentUserChoice == choiceTitle,
-                                  ),
-                                ))
-                            .toList(),
-                      ),
-                    ],
-                  ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ConditionalParentWidget(
+                condition:
+                    ScreenSize.getSize(context) == ScreenSizeCategory.small,
+                conditionalBuilder: (Widget child) => FittedBox(
+                  child: child,
                 ),
-                Column(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    RoundedButton(
-                      name: 'Save',
-                      onTap: () {
-                        if (widget.onSave != null) {
-                          widget.onSave!.call();
-                        } else {
-                          Get.back();
-                        }
-                      },
-                    ),
-                    if (promote != '')
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: FittedBox(
-                          child: Row(
-                            children: [
-                              const Icon(Icons.remove_red_eye_rounded,
-                                  color: Colors.black54),
-                              const SizedBox(width: 10),
-                              Text(promote, style: kSmallInfoStyle),
-                            ],
-                          ),
-                        ),
+                    if (widget.headline != null)
+                      Text(
+                        widget.headline!,
+                        style: titleStyle,
                       ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Column(
+                      children: widget.choices
+                          .map((choiceTitle) => Padding(
+                                padding: const EdgeInsets.only(bottom: 20.0),
+                                child: ChoiceButton(
+                                  name: '$choiceTitle',
+                                  onTap: () {
+                                    widget.alwaysPressed != true
+                                        ? setState(() {
+                                            if (currentUserChoice !=
+                                                choiceTitle) {
+                                              currentUserChoice = choiceTitle;
+                                            } else {
+                                              currentUserChoice = '';
+                                            }
+                                            ;
+                                          })
+                                        : setState(() {
+                                            (currentUserChoice = choiceTitle);
+                                            promote = widget.promotes![widget
+                                                .choices
+                                                .indexOf(choiceTitle)];
+                                          });
+
+                                    if (currentUserChoice != null) {
+                                      widget.onValueChanged
+                                          ?.call(currentUserChoice!);
+                                    }
+                                  },
+                                  pressed: currentUserChoice == choiceTitle,
+                                ),
+                              ))
+                          .toList(),
+                    ),
                   ],
                 ),
-              ],
-            ),
+              ),
+              Column(
+                children: [
+                  RoundedButton(
+                    name: 'Save',
+                    onTap: () {
+                      if (widget.onSave != null) {
+                        widget.onSave!.call();
+                      } else {
+                        Get.back();
+                      }
+                    },
+                  ),
+                  if (promote != '')
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: FittedBox(
+                        child: Row(
+                          children: [
+                            const Icon(Icons.remove_red_eye_rounded,
+                                color: Colors.black54),
+                            const SizedBox(width: 10),
+                            Text(promote, style: kSmallInfoStyle),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
