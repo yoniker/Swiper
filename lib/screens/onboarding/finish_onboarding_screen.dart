@@ -1,6 +1,6 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
-import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
+import 'package:betabeta/services/onboarding_flow_controller.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

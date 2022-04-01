@@ -1,7 +1,7 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/onboarding/get_name_screen.dart';
-import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
+import 'package:betabeta/services/onboarding_flow_controller.dart';
 import 'package:betabeta/screens/onboarding/pronouns_screen.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/utils/utils_methods.dart';
