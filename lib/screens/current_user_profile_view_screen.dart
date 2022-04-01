@@ -77,24 +77,25 @@ class _CurrentUserProfileViewScreenState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   FloatingActionButton(
-                      elevation: 30,
-                      backgroundColor: Colors.transparent,
-                      child: Icon(
-                        FontAwesomeIcons.chevronLeft,
-                        // shadows: [
-                        //   Shadow(
-                        //     blurRadius: 17.0,
-                        //     color: Colors.black,
-                        //     offset: Offset(-2.0, 2.0),
-                        //   ),
-                        // ],
-                        size: 40,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        print(SettingsData.instance.showUserGender);
-                      }),
+                    elevation: 30,
+                    backgroundColor: Colors.transparent,
+                    child: Icon(
+                      FontAwesomeIcons.chevronLeft,
+                      // shadows: [
+                      //   Shadow(
+                      //     blurRadius: 17.0,
+                      //     color: Colors.black,
+                      //     offset: Offset(-2.0, 2.0),
+                      //   ),
+                      // ],
+                      size: 40,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                      print(SettingsData.instance.showUserGender);
+                    },
+                  ),
                   SizedBox(
                     width: 100,
                     child: RoundedButton(

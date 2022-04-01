@@ -223,14 +223,14 @@ class _MatchCardState extends State<MatchCard> {
     // Return a List of Widgets.
     return [
       SizedBox(height: 16.0),
-      if (profile.jobTitle != '')
+      if (widget.profile.jobTitle != '' && widget.profile.jobTitle != null)
         BasicDetail(
-          detailText: '${profile.jobTitle}',
+          detailText: '${widget.profile.jobTitle}',
           detailIcon: FaIcon(FontAwesomeIcons.userTie),
         ),
-      if (profile.school != '')
+      if (widget.profile.school != '')
         BasicDetail(
-          detailText: 'School: ${profile.school}',
+          detailText: 'School: ${widget.profile.school}',
           detailIcon: FaIcon(
             FontAwesomeIcons.school,
             size: 18,
@@ -239,7 +239,7 @@ class _MatchCardState extends State<MatchCard> {
         ),
       if (profile.education != '')
         BasicDetail(
-          detailText: 'Education: ${profile.education}',
+          detailText: 'Education: ${widget.profile.education}',
           detailIcon: FaIcon(
             FontAwesomeIcons.graduationCap,
             size: 21,
@@ -335,8 +335,9 @@ class _MatchCardState extends State<MatchCard> {
       Container(
         margin: EdgeInsets.symmetric(horizontal: 5),
         child: Text(
-          (profile.description != null)
-              ? profile.description!
+          (widget.profile.description != null &&
+                  widget.profile.description != '')
+              ? widget.profile.description!
               : 'No Description available',
           style: defaultTextStyle,
         ),
@@ -363,40 +364,40 @@ class _MatchCardState extends State<MatchCard> {
       Wrap(
         direction: Axis.horizontal,
         children: [
-          if (profile.location != null)
+          if (widget.profile.location != null && widget.profile.location != '')
             BasicDetail(
-                detailText: '${profile.location}',
+                detailText: '${widget.profile.location}',
                 detailIcon: FaIcon(
                   FontAwesomeIcons.mapMarkedAlt,
                   color: Colors.red,
                 )),
-          if (profile.height != 0)
+          if (widget.profile.height != 0 && widget.profile.height != null)
             BasicDetail(
-              detailText: '${cmToFeet(profile.height!)} ft',
+              detailText: '${cmToFeet(widget.profile.height!)} ft',
               detailIcon: FaIcon(
                 FontAwesomeIcons.ruler,
                 color: Colors.yellow[700],
               ),
             ),
-          if (profile.religion != null)
+          if (widget.profile.religion != '' && widget.profile.religion != null)
             BasicDetail(
-              detailText: '${profile.religion}',
+              detailText: '${widget.profile.religion}',
               detailIcon: FaIcon(
                 FontAwesomeIcons.prayingHands,
                 color: Colors.yellow,
               ),
             ),
-          if (profile.zodiac != '')
+          if (widget.profile.zodiac != '')
             BasicDetail(
-              detailText: '${profile.zodiac}',
+              detailText: '${widget.profile.zodiac}',
               detailIcon: FaIcon(
                 FontAwesomeIcons.starAndCrescent,
                 color: Colors.blueGrey,
               ),
             ),
-          if (profile.children != '')
+          if (widget.profile.children != '')
             BasicDetail(
-              detailText: '${profile.children}',
+              detailText: '${widget.profile.children}',
               detailIcon: FaIcon(
                 FontAwesomeIcons.babyCarriage,
                 color: Colors.purple,
@@ -426,22 +427,22 @@ class _MatchCardState extends State<MatchCard> {
       Wrap(
         direction: Axis.horizontal,
         children: [
-          if (profile.fitness != '')
+          if (widget.profile.fitness != '')
             BasicDetail(
               detailIcon: FaIcon(FontAwesomeIcons.dumbbell),
-              detailText: '${profile.fitness}',
+              detailText: '${widget.profile.fitness}',
             ),
-          if (profile.drinking != '')
+          if (widget.profile.drinking != '')
             BasicDetail(
-              detailText: '${profile.drinking}',
+              detailText: '${widget.profile.drinking}',
               detailIcon: FaIcon(
                 FontAwesomeIcons.glassMartiniAlt,
                 size: 25,
               ),
             ),
-          if (profile.smoking != '')
+          if (widget.profile.smoking != '')
             BasicDetail(
-              detailText: '${profile.smoking}',
+              detailText: '${widget.profile.smoking}',
               detailIcon: FaIcon(FontAwesomeIcons.smoking),
             )
         ],
