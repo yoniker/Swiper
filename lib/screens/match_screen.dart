@@ -329,7 +329,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
                       onTap: () {
                         Get.toNamed(SwipeSettingsScreen.routeName);
                       },
-                      name: 'Expend search',
+                      name: 'Expand search',
                     )
             ],
           ),
