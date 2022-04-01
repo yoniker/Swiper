@@ -1,8 +1,8 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
-import 'package:betabeta/screens/onboarding/location_permission_screen.dart';
 import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
 import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
 import 'package:betabeta/widgets/onboarding/phone_number_collector.dart';
+import 'package:country_code_picker/country_code.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,6 +16,8 @@ class PhoneScreen extends StatefulWidget {
 
 class _PhoneScreenState extends State<PhoneScreen> {
   int dropDownValue = 1;
+  String? number;
+  CountryCode? countryCode;
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +47,20 @@ class _PhoneScreenState extends State<PhoneScreen> {
                   height: 30,
                 ),
                 PhoneNumberCollector(
+                  onChange: (enteredNumber) {
+                    countryCode != null
+                        ? number = '$countryCode $enteredNumber'
+                        : number = '+1 $enteredNumber';
+                    print(number);
+                  },
+                  onCountryPick: (newCode) {
+                    countryCode = newCode;
+                  },
+
                   //TODO Yoni add phone login logic
                   onTap: () {
-                    Get.offAllNamed(OnboardingFlowController.instance.nextRoute(
-                        PhoneScreen.routeName));
+                    Get.offAllNamed(OnboardingFlowController.instance
+                        .nextRoute(PhoneScreen.routeName));
                   },
                 )
               ],

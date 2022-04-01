@@ -6,9 +6,7 @@ import 'package:betabeta/models/loginService.dart';
 import 'package:betabeta/screens/onboarding/phone_screen.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
-import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
-import 'package:betabeta/services/chat_networking.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
 import 'package:betabeta/widgets/onboarding/loading_indicator.dart';
@@ -17,7 +15,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
-import 'dart:math';
 
 class WelcomeScreen extends StatefulWidget {
   static const String routeName = '/welcome_screen';
@@ -35,19 +32,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     await SettingsData.instance.readSettingsFromShared();
 
     if (SettingsData.instance.readFromShared! &&
-        !(SettingsData.instance.uid.length > 0)){
+        !(SettingsData.instance.uid.length > 0)) {
       print('THERE IS NO UID AT CONTINUE IF LOGGED IN, SO NOT LOGGING IN...');
       return;
     }
 
-    if(currentStatus == ServerRegistrationStatus.already_registered){
+    if (currentStatus == ServerRegistrationStatus.already_registered) {
       await NewNetworkService.instance.syncCurrentProfileImagesUrls();
     }
     OnboardingFlowController.instance.setOnboardingPath(currentStatus);
 
-      Get.offAllNamed(
-          OnboardingFlowController.instance.nextRoute(WelcomeScreen.routeName));
-
+    Get.offAllNamed(
+        OnboardingFlowController.instance.nextRoute(WelcomeScreen.routeName));
   }
 
   Future<ServerRegistrationStatus> _registerUserAtServer() async {
@@ -56,7 +52,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     ServerRegistrationStatus currentRegistrationStatus =
         await NewNetworkService.instance.registerUid(firebaseIdToken: idToken!);
     return currentRegistrationStatus;
-
   }
 
   _tryLoginFacebook() async {
@@ -68,7 +63,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       await LoginsService.instance.getFacebookUserData();
       await LoginsService.signInUser(
           credential: LoginsService.instance.facebookCredential!);
-      ServerRegistrationStatus currentServerRegistrationStatus = await _registerUserAtServer();
+      ServerRegistrationStatus currentServerRegistrationStatus =
+          await _registerUserAtServer();
       await _continueIfLoggedIn(currentServerRegistrationStatus);
     }
     setState(() {
@@ -165,9 +161,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 color: Colors.white,
                                 onTap: () {
                                   //TODO Apple login logic
-                                  Get.offAllNamed(
-                                      OnboardingFlowController.instance.nextRoute(
-                                          WelcomeScreen.routeName));
+                                  Get.offAllNamed(OnboardingFlowController
+                                      .instance
+                                      .nextRoute(WelcomeScreen.routeName));
                                 },
                                 icon: Icons.apple_rounded),
                           SizedBox(
@@ -178,9 +174,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               icon: Icons.phone_android,
                               color: Colors.transparent,
                               onTap: () {
-                                Get.offAllNamed(
-                                    OnboardingFlowController.instance.nextRoute(
-                                        PhoneScreen.routeName));
+                                Get.offAllNamed(OnboardingFlowController
+                                    .instance
+                                    .nextRoute(PhoneScreen.routeName));
                               }),
                           Center(
                             child: Column(
@@ -205,7 +201,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                     ),
                                     SizedBox(width: 20),
                                     TextButton(
-                                      onPressed: (){},//TODO show privacy policy
+                                      onPressed:
+                                          () {}, //TODO show privacy policy
                                       child: Text(
                                         'Privacy Policy',
                                         style: kSmallInfoStyleUnderlineWhite,
