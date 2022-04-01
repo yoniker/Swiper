@@ -1,17 +1,21 @@
 import 'dart:async';
 
 import 'package:betabeta/constants/onboarding_consts.dart';
-import 'package:betabeta/services/loginService.dart';
+import 'package:betabeta/services/new_networking.dart';
+import 'package:betabeta/services/onboarding_flow_controller.dart';
 import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
 import 'package:betabeta/widgets/onboarding/phone_number_collector.dart';
 import 'package:country_code_picker/country_code.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:pinput/pinput.dart';
 
 class PhoneScreen extends StatefulWidget {
   static const String routeName = '/phoneScreen';
+  static const int verificationCodeLength = 6;
+  static const String INVALID_SMS_CODE = 'invalid-verification-code';
 
   const PhoneScreen({Key? key}) : super(key: key);
   @override
@@ -20,36 +24,35 @@ class PhoneScreen extends StatefulWidget {
 
 class _PhoneScreenState extends State<PhoneScreen> {
   int dropDownValue = 1;
-  bool _onEditing = true;
   String? phoneNumberEntered;
   CountryCode? countryCode;
   String? _smsCode;
   PhoneAuthCredential? _phoneCredential;
   bool showVerificationWidget = false;
-  static const int verificationCodeLength = 6;
+  bool showBadCodeMessage = false;
   String? _verificationId;
+  final pinController = TextEditingController();
+  final pinFocusNode = FocusNode();
   
 
 
-  void tryLoginPhone({String phoneNumber='+972556671457'}){
-    //This is a partial process eg in the best case scenario we will have a cre
+  void tryLoginPhone({required String phoneNumber}){
      FirebaseAuth.instance.verifyPhoneNumber(
       //Nitzan +1 416 8766549
       phoneNumber: phoneNumber,
 
       verificationCompleted: (PhoneAuthCredential credential) {
-        Get.snackbar('Success', 'Success').show();
         _phoneCredential = credential;
+        tryLinkPhone();
         
       },
 
 
       verificationFailed: (FirebaseAuthException e) {
-        Get.snackbar('Login failed', e.toString(),duration: Duration(seconds: 15)).show(); //TODO show the user the error in the UI
+        Get.snackbar('Login failed', e.toString(),duration: Duration(seconds: 15)).show(); //TODO show the user the error e in the UI
         _phoneCredential = null;
       },
       codeSent: (String verificationId, int? resendToken) async { //When Firebase sends an SMS code to the device,
-        //await _getCredentialPhone(verificationId:verificationId);
         _verificationId = verificationId;
         setState(() {
           showVerificationWidget = true;
@@ -71,30 +74,76 @@ class _PhoneScreenState extends State<PhoneScreen> {
   }
 
 
-  void tryVerificationCode(){
+  void tryVerificationCode()async{
     if(_verificationId==null){
       Get.snackbar('empty verification id', 'empty verification id',duration: Duration(seconds: 10));//Without a bug, should never be here
       return;
     }
     
-    if(_smsCode==null ||_smsCode!.length!=verificationCodeLength){
+    if(_smsCode==null ||_smsCode!.length!=PhoneScreen.verificationCodeLength){
       Get.snackbar('Bad length verification', 'Bad length verificatione',duration: Duration(seconds: 10)); //TODO show this in UI
+      setState(() {
+        showBadCodeMessage = true;
+      });
       return;
     }
 
 
     
      _phoneCredential = PhoneAuthProvider.credential(verificationId: _verificationId!, smsCode: _smsCode!);
-    Get.snackbar('Credential exists', 'credential exists',duration: Duration(seconds: 10)); //TODO show this in UI
-  setState(() {
+    print('trying to link phone...');
+    await tryLinkPhone();
 
-  });
+    
   }
+
+
+  Future<void> tryLinkPhone()async{
+    //Try to link the phone with user. If successful,move on to next screen in onboarding
+    try {
+    UserCredential? resultOfLinking = await FirebaseAuth.instance.currentUser
+        ?.linkWithCredential(_phoneCredential!);
+    String? currentTokenId = await FirebaseAuth.instance.currentUser?.getIdToken();
+    await NewNetworkService.instance.verifyToken(firebaseIdToken: currentTokenId!); //TODO API in server which gets all the info from user's token (and later produces a JWT)
+    Get.snackbar('Would go next screen here', 'Would go next screen here');
+      Get.offAllNamed(OnboardingFlowController.instance.nextRoute(PhoneScreen.routeName));
+  }
+  on FirebaseAuthException catch (exception){
+    if(exception.code==PhoneScreen.INVALID_SMS_CODE){
+      Get.snackbar('Wrong sms code', 'Wrong sms code',duration: Duration(seconds: 10)); //TODO show this in UI
+      setState(() {
+        showBadCodeMessage = true;
+      });
+    }
+
+  }}
 
 
 
 
   Widget _buildVerificationWidget(){
+    final cursor = Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        width: 21,
+        height: 1,
+        margin: EdgeInsets.only(bottom: 12),
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(68, 73, 80, 1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    );
+    final defaultPinTheme = PinTheme(
+      width: 60,
+      height: 64,
+      textStyle: GoogleFonts.poppins(
+          fontSize: 20, color: Color.fromRGBO(70, 69, 66, 1)),
+      decoration: BoxDecoration(
+        color: Color.fromRGBO(116, 117, 120, 0.37),
+        borderRadius: BorderRadius.circular(24),
+      ),
+    );
     return Column(
       children: <Widget>[
         Padding(
@@ -106,40 +155,41 @@ class _PhoneScreenState extends State<PhoneScreen> {
             ),
           ),
         ),
-        VerificationCode(
-          textStyle: TextStyle(fontSize: 20.0, color: Colors.red[900]),
-          keyboardType: TextInputType.number,
-          underlineColor: Colors.amber, // If this is null it will use primaryColor: Colors.red from Theme
-          length: verificationCodeLength,
-          cursorColor: Colors.blue, // If this is null it will default to the ambient
-          // clearAll is NOT required, you can delete it
-          // takes any widget, so you can implement your design
-          clearAll: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'clear all',
-              style: TextStyle(fontSize: 14.0, decoration: TextDecoration.underline, color: Colors.blue[700]),
+        Pinput(
+          length: PhoneScreen.verificationCodeLength,
+          controller: pinController,
+          focusNode: pinFocusNode,
+          defaultPinTheme: defaultPinTheme,
+          separator: SizedBox(width: 16),
+          focusedPinTheme: defaultPinTheme.copyWith(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: Color.fromRGBO(0, 0, 0, 0.05999999865889549),
+                  offset: Offset(0, 3),
+                  blurRadius: 16,
+                )
+              ],
             ),
           ),
-          onCompleted: (String value) {
-            setState(() {
-              _smsCode = value;
-              tryVerificationCode();
-            });
+          onCompleted: (pin){
+            print('onCompleted $pin');
+            _smsCode = pin;
+            print('will try to verify with $pin');
+            tryVerificationCode();
           },
-          onEditing: (bool value) {
-            setState(() {
-              _onEditing = value;
-            });
-            if (!_onEditing) FocusScope.of(context).unfocus();
+          onSubmitted: (String pin){
+            print('onSubmit $pin');
+            _smsCode = pin;
+            print('will try to verify with $pin');
+            tryVerificationCode();
+
           },
+          showCursor: true,
+          cursor: cursor,
         ),
-        Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Center(
-            child: _onEditing ? Text('Please enter full code') : Text('Your code: $_smsCode'),
-          ),
-        )
       ],
     );
   }
@@ -186,17 +236,15 @@ class _PhoneScreenState extends State<PhoneScreen> {
                   onCountryPick: (newCode) {
                     countryCode = newCode;
                   },
-
-                  //TODO Yoni add phone login logic
                   onTap: () {
                     if(phoneNumberEntered!=null && phoneNumberEntered!.length>0){
                     tryLoginPhone(phoneNumber: phoneNumberEntered!);}
                     print('pressed next with phone number as $phoneNumberEntered');
-                    // Get.offAllNamed(OnboardingFlowController.instance
-                    //     .nextRoute(PhoneScreen.routeName));
+
                   },
                 ),
                 if(showVerificationWidget) _buildVerificationWidget(),
+                if(showBadCodeMessage) Text('Wrong verification code',style: TextStyle(color: Colors.red),)
               ],
             ),
             Column(
@@ -214,5 +262,12 @@ class _PhoneScreenState extends State<PhoneScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    pinController.dispose();
+    pinFocusNode.dispose();
+    super.dispose();
   }
 }

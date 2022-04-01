@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:betabeta/services/settings_model.dart';
-import 'package:betabeta/screens/onboarding/verification_code_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -41,67 +40,6 @@ class LoginsService{
   OAuthCredential? get facebookCredential =>_facebookCredential;
 
 
-  Future<void> _getCredentialPhone({required String verificationId})async{
-  dynamic userInput = await Get.toNamed(VerificationCodeScreen.routeName);
-  String? codeFromUser = userInput is String?userInput:null;
-  if(codeFromUser==null || codeFromUser.length!=VerificationCodeScreen.verificationCodeLength){
-  //TODO verification code from user can't be legal so show that to the user. for now I will just present a snackbar
-  Get.snackbar('Verification code not complete', 'Verification code not complete',duration: Duration(seconds: 10));
-  _phoneCredential = null;
-  _phoneLoginState = LoginState.WrongPassword;
-  return;
-  }
-
-  // Create a PhoneAuthCredential with the code
-  PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: codeFromUser);
-  _phoneCredential = credential;
-  _phoneLoginState = LoginState.Success; //Remember that we still didn't verify the code the user entered was correct
-
-  }
-
-
-   Future<LoginState> tryLoginPhone({String phoneNumber='+972556671457'})async{
-    //This is a partial process eg in the best case scenario we will have a cre
-    LoginState loginState = LoginState.InProcess;
-    Completer completer = Completer<bool>();
-    await FirebaseAuth.instance.verifyPhoneNumber(
-      //Nitzan +1 416 8766549
-      phoneNumber: phoneNumber, //TODO get number from user (go to appropriate screen etc)
-
-      verificationCompleted: (PhoneAuthCredential credential) {
-        Get.snackbar('Success', 'Success').show();
-        _phoneCredential = credential;
-        loginState = LoginState.Success;
-        completer.complete(true);
-      },
-
-
-      verificationFailed: (FirebaseAuthException e) {
-        Get.snackbar('Login failed', e.toString(),duration: Duration(seconds: 15)).show(); //TODO show the user the error in a different way
-        _phoneCredential = null;
-        completer.complete(true);
-      },
-      codeSent: (String verificationId, int? resendToken) async {
-        await _getCredentialPhone(verificationId:verificationId);
-        completer.complete(true);
-      },
-
-      codeAutoRetrievalTimeout: (String verificationId) async {
-        //TODO this method is called after timeout where a phone couldn't find the sms sent to it. Should show the user something?
-        if(!completer.isCompleted){
-          await _getCredentialPhone(verificationId:verificationId);
-        completer.complete(true);
-        }
-
-
-      },
-    );
-
-    await completer.future; //For the motivation to use it, See https://github.com/FirebaseExtended/flutterfire/issues/3239
-    return loginState;
-
-  }
-  
    Future<void> saveInfoFacebookUser()async{
     //Save some info about the user in our app. Do it only while onboarding eg we don't have this info already
     if(_facebookLoginState!=LoginState.Success) {return;}

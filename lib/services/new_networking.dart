@@ -262,4 +262,24 @@ class NewNetworkService {
 
 
   }
+
+
+
+  Future<void> verifyToken({required String firebaseIdToken}) async {
+    Uri verifyTokenUri = Uri.https(SERVER_ADDR, '/verify_token');
+    http.Response response = await http
+        .get(verifyTokenUri, headers: {'firebase_id_token': firebaseIdToken});
+    if (response.statusCode != 200) {
+      //TODO throw error (bad jwt? server down?)
+    }
+
+    var decodedResponse= json.jsonDecode(response.body);
+
+    return;
+    //}
+
+
+
+
+  }
 }
