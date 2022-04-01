@@ -40,6 +40,8 @@ class LoginsService{
   OAuthCredential? get facebookCredential =>_facebookCredential;
 
 
+
+  
    Future<void> saveInfoFacebookUser()async{
     //Save some info about the user in our app. Do it only while onboarding eg we don't have this info already
     if(_facebookLoginState!=LoginState.Success) {return;}
@@ -127,6 +129,11 @@ class LoginsService{
       return null;
     }
 
+
+  }
+
+
+  Future<void> setPhoneCredential()async{
 
   }
 

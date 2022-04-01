@@ -32,7 +32,6 @@ import 'package:betabeta/screens/onboarding/phone_screen.dart';
 import 'package:betabeta/screens/onboarding/pronouns_screen.dart';
 import 'package:betabeta/screens/onboarding/terms_screen.dart';
 import 'package:betabeta/screens/onboarding/upload_images_onboarding_screen.dart';
-import 'package:betabeta/screens/onboarding/verification_code_screen.dart';
 import 'package:betabeta/screens/onboarding/welcome_screen.dart';
 import 'package:betabeta/screens/user_edit/orientation_edit_screen.dart';
 import 'package:betabeta/screens/profile_edit_screen.dart';
@@ -155,9 +154,6 @@ void main() async {
         GetPage(name: FullImageScreen.routeName, page: () => FullImageScreen()),
         GetPage(
             name: GotNewMatchScreen.routeName, page: () => GotNewMatchScreen()),
-        GetPage(
-            name: VerificationCodeScreen.routeName,
-            page: () => VerificationCodeScreen()),
         GetPage(name: VoilaPage.routeName, page: () => VoilaPage()),
         GetPage(
             name: CurrentUserProfileViewScreen.routeName,
