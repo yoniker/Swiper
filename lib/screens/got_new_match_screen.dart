@@ -1,14 +1,8 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/constants/onboarding_consts.dart';
-import 'package:betabeta/models/infoConversation.dart';
 import 'package:betabeta/models/profile.dart';
-import 'package:betabeta/screens/chat/chat_screen.dart';
 import 'package:betabeta/screens/chat/conversations_screen.dart';
-import 'package:betabeta/widgets/chat_profile_display_widget.dart';
-import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/match_card.dart';
-import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -26,18 +20,25 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen>
   late Profile theUser;
   late AnimationController _controller;
   late Animation animation;
+  late Animation secondAnimation;
 
   @override
   void initState() {
     theUser = Get.arguments;
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 2),
+      duration: Duration(milliseconds: 1500),
     );
     animation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Interval(0.6, 1, curve: Curves.fastOutSlowIn),
+        curve: Interval(0.5, 1, curve: Curves.fastOutSlowIn),
+      ),
+    );
+    secondAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Interval(0.4, 1, curve: Curves.fastOutSlowIn),
       ),
     );
     _controller.forward();
@@ -103,19 +104,19 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen>
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Center(
-                  child: SizedBox(
-                    height: animation.value * 100,
-                    child: FittedBox(
-                      child: Column(
-                        children: [
-                          AnimatedTextKit(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: animation.value * 32,
+                        child: FittedBox(
+                          child: AnimatedTextKit(
                             isRepeatingAnimation: true,
                             repeatForever: true,
                             pause: Duration(milliseconds: 1),
                             animatedTexts: [
                               ColorizeAnimatedText(
                                 'You & ${theUser.username}',
-                                speed: Duration(seconds: 1),
+                                speed: Duration(seconds: 2),
                                 textStyle:
                                     colorizeTextStyle.copyWith(fontSize: 20),
                                 colors: colorizeColors,
@@ -123,21 +124,27 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen>
                               ),
                             ],
                           ),
-                          AnimatedTextKit(
+                        ),
+                      ),
+                      SizedBox(
+                        height: secondAnimation.value * 66,
+                        child: FittedBox(
+                          child: AnimatedTextKit(
+                            pause: Duration(milliseconds: 1),
                             isRepeatingAnimation: true,
                             repeatForever: true,
                             animatedTexts: [
                               ColorizeAnimatedText(
                                 'MATCHED!',
                                 textStyle: colorizeTextStyle,
-                                speed: Duration(seconds: 1),
+                                speed: Duration(seconds: 2),
                                 colors: colorizeColors,
                               )
                             ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
                 GestureDetector(
@@ -169,8 +176,8 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen>
                               flex: 1,
                               child: AnimatedContainer(
                                 duration: Duration(seconds: 1),
-                                height: _controller.isCompleted ? 30 : 0,
-                                width: _controller.isCompleted ? 30 : 0,
+                                height: secondAnimation.isCompleted ? 30 : 0,
+                                width: secondAnimation.isCompleted ? 30 : 0,
                                 child: SingleChildScrollView(
                                   child: Icon(
                                     FontAwesomeIcons.sms,
@@ -184,7 +191,7 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen>
                         ),
                       ),
                     ),
-                    height: _controller.isCompleted ? 60 : 0,
+                    height: _controller.isCompleted ? 65 : 0,
                     width: _controller.isCompleted ? 600 : 0,
                     curve: Curves.easeIn,
                     decoration: BoxDecoration(
