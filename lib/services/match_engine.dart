@@ -1,9 +1,9 @@
 import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/services/location_service.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:flutter/widgets.dart';
-import 'package:betabeta/services/networking.dart';
 import 'dart:collection';
 
 class MatchEngine extends ChangeNotifier {
@@ -13,9 +13,10 @@ class MatchEngine extends ChangeNotifier {
   bool? addedMoreProfiles;
   Future? matchesBeingGotten; //See https://stackoverflow.com/questions/63402499/flutter-how-not-to-call-the-same-service-over-and-over/63402620?noredirect=1#comment112113319_63402620
   MatchSearchStatus _serverMatchesSearchStatus = MatchSearchStatus.empty;
-  LocationCountStatus _locationCountStatus = LocationCountStatus.initial_state;
+  LocationCountResponse _locationCountData = LocationCountResponse(status: LocationCountStatus.initial_state);
   Future? countLocationBeingFetches;
   DateTime lastLocationCheck = DateTime(1990);
+  bool listeningToLocation = false;
   static const Duration minIntervalWaitLocation = Duration(minutes: 5);
 
 
@@ -78,27 +79,62 @@ class MatchEngine extends ChangeNotifier {
 
   }
 
-  Future<void> getLocationStatusFromServer()async{
-    var e = await NewNetworkService.instance.getCountUsersByLocation();
-    print('dor');
 
+  LocationCountStatus get locationCountStatus{
+    return _locationCountData.status;
   }
+
   
   MatchSearchStatus get getServerSearchStatus{
     return _serverMatchesSearchStatus;
   }
 
-  void addMatchesIfNeeded(){
+
+  void locationListener(){
+    addMatchesIfNeeded();
+  }
+
+
+  Future<void> updateLocationCountData() async{
+    await SettingsData.instance.readSettingsFromShared();
+
+
+    if(_locationCountData.status==LocationCountStatus.initial_state || _locationCountData.status == LocationCountStatus.not_enough_users || _locationCountData.status== LocationCountStatus.unknown_location){
+      if(_locationCountData == LocationCountStatus.not_enough_users && DateTime.now().difference(lastLocationCheck)<minIntervalWaitLocation){
+        print('Too soon to check again user location!');
+        return;
+      }
+      if(SettingsData.instance.longitude==0 && SettingsData.instance.latitude==0){
+        print('No user info about location,so no point in addressing the server');
+        _locationCountData = LocationCountResponse(status: LocationCountStatus.unknown_location);
+        if(!listeningToLocation){LocationService.instance.addListener(locationListener);
+        listeningToLocation = true;}
+        return;
+      }
+      _locationCountData = await NewNetworkService.instance.getCountUsersByLocation();
+
+    }
+  }
+
+  void addMatchesIfNeeded()async{
+
     if(this.length()>=MINIMUM_CACHED_PROFILES){
       print('no more matches are needed,length is ${this.length()}');
       return;
     }
 
-    if(_locationCountStatus==LocationCountStatus.initial_state || _locationCountStatus == LocationCountStatus.not_enough_users){
-      getLocationStatusFromServer();
+
+    await updateLocationCountData();
+    if(_locationCountData.status!=LocationCountStatus.enough_users){
+     print('location count status is ${_locationCountData.status} so not getting users');
+      return;
     }
 
-      getMoreMatchesFromServer();
+    if(listeningToLocation){
+      LocationService.instance.removeListener(locationListener);
+    }
+
+      await getMoreMatchesFromServer();
     }
 
 

@@ -1,4 +1,5 @@
 import 'package:betabeta/services/settings_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:location/location.dart';
 
 enum LocationServiceStatus {
@@ -7,7 +8,7 @@ enum LocationServiceStatus {
   userNotGrantedPermission
 }
 
-class LocationService {
+class LocationService extends ChangeNotifier{
 
 
   LocationService._privateConstructor();
@@ -18,7 +19,7 @@ class LocationService {
 
   static const Duration minTimeUpdateLocation = Duration(hours: 1);
 
-  DateTime lastUpdateDate = DateTime(2000);
+  DateTime lastUpdateDate = DateTime(1990);
 
 
 
@@ -65,12 +66,13 @@ class LocationService {
     lastUpdateDate = DateTime.now();
     print(
         'UPDATED LOCATION TO  ${locationData.latitude!},${locationData.longitude!}');
+    notifyListeners();
   }
 
-   void listenLocationChanges() {
+   void _listenLocationChanges() {
     Location location = new Location();
     location.changeSettings(
-        accuracy: LocationAccuracy.balanced, interval: 10000000);
+        accuracy: LocationAccuracy.balanced, interval: 1000);
     location.onLocationChanged.listen((data) {
       print('location listener triggered update');
       updateLocation(data);
@@ -91,6 +93,6 @@ class LocationService {
    onInit() async {
     var location = await LocationService.getLocation();
     updateLocation(location);
-    listenLocationChanges();
+    _listenLocationChanges();
   }
 }
