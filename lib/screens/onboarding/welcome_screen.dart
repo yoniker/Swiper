@@ -51,7 +51,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return currentRegistrationStatus;
   }
 
-  _tryLoginFacebook() async {
+  _tryFacebookLogin() async {
     setState(() {
       currentlyTryingToLogin = true;
     });
@@ -67,6 +67,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     setState(() {
       currentlyTryingToLogin = false;
     });
+  }
+
+  _tryAppleLogin() async {
+    setState(() {
+      currentlyTryingToLogin = true;
+    });
+    UserCredential? credential = await LoginsService.instance.signInWithApple();
+    if(credential!=null){ //TODO replace condition with "apple login failed".
+    ServerRegistrationStatus currentServerRegistrationStatus = await _registerUserAtServer();
+    await _continueIfLoggedIn(currentServerRegistrationStatus);}
+    setState(() {
+      currentlyTryingToLogin = false;
+    });
+
   }
 
   @override
@@ -140,7 +154,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               setState(() {
                                 currentlyTryingToLogin = true;
                               });
-                              await _tryLoginFacebook();
+                              await _tryFacebookLogin();
                               setState(() {
                                 currentlyTryingToLogin = false;
                               });
@@ -156,11 +170,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 name: 'Continue with Apple      ',
                                 showBorder: false,
                                 color: Colors.white,
-                                onTap: () {
+                                onTap: () async{
                                   //TODO Apple login logic
-                                  Get.offAllNamed(OnboardingFlowController
-                                      .instance
-                                      .nextRoute(WelcomeScreen.routeName));
+                                  _tryAppleLogin();
+
+                                  // Get.offAllNamed(OnboardingFlowController
+                                  //     .instance
+                                  //     .nextRoute(WelcomeScreen.routeName));
                                 },
                                 icon: Icons.apple_rounded),
                           SizedBox(
