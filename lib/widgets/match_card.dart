@@ -19,13 +19,14 @@ import 'package:get/get.dart';
 /// match unto the screen.
 ///
 class MatchCard extends StatefulWidget {
-  MatchCard({
-    Key? key,
-    required this.profile,
-    this.clickable = true,
-    this.showCarousel = true,
-    this.showActionButtons = true,
-  }) : super(key: key);
+  MatchCard(
+      {Key? key,
+      required this.profile,
+      this.clickable = true,
+      this.showCarousel = true,
+      this.showActionButtons = true,
+      this.showAI = true})
+      : super(key: key);
 
   /// The profile of the match.
   final Profile profile;
@@ -38,6 +39,9 @@ class MatchCard extends StatefulWidget {
 
   /// Whether to show the action buttons or not.
   final bool showActionButtons;
+
+  /// Whether to show AI title
+  final bool showAI;
 
   @override
   _MatchCardState createState() => _MatchCardState();
@@ -223,14 +227,14 @@ class _MatchCardState extends State<MatchCard> {
     // Return a List of Widgets.
     return [
       SizedBox(height: 16.0),
-      if (profile.jobTitle != '')
+      if (widget.profile.jobTitle != '' && widget.profile.jobTitle != null)
         BasicDetail(
-          detailText: '${profile.jobTitle}',
+          detailText: '${widget.profile.jobTitle}',
           detailIcon: FaIcon(FontAwesomeIcons.userTie),
         ),
-      if (profile.school != '')
+      if (widget.profile.school != '')
         BasicDetail(
-          detailText: 'School: ${profile.school}',
+          detailText: 'School: ${widget.profile.school}',
           detailIcon: FaIcon(
             FontAwesomeIcons.school,
             size: 18,
@@ -239,7 +243,7 @@ class _MatchCardState extends State<MatchCard> {
         ),
       if (profile.education != '')
         BasicDetail(
-          detailText: 'Education: ${profile.education}',
+          detailText: 'Education: ${widget.profile.education}',
           detailIcon: FaIcon(
             FontAwesomeIcons.graduationCap,
             size: 21,
@@ -335,8 +339,9 @@ class _MatchCardState extends State<MatchCard> {
       Container(
         margin: EdgeInsets.symmetric(horizontal: 5),
         child: Text(
-          (profile.description != null)
-              ? profile.description!
+          (widget.profile.description != null &&
+                  widget.profile.description != '')
+              ? widget.profile.description!
               : 'No Description available',
           style: defaultTextStyle,
         ),
@@ -363,40 +368,47 @@ class _MatchCardState extends State<MatchCard> {
       Wrap(
         direction: Axis.horizontal,
         children: [
-          if (profile.location != null)
+          BasicDetail(
+            detailText: '${widget.profile.userGender}',
+            detailIcon: FaIcon(
+              FontAwesomeIcons.userFriends,
+              color: Colors.blueAccent,
+            ),
+          ),
+          if (widget.profile.location != null && widget.profile.location != '')
             BasicDetail(
-                detailText: '${profile.location}',
+                detailText: '${widget.profile.location}',
                 detailIcon: FaIcon(
                   FontAwesomeIcons.mapMarkedAlt,
                   color: Colors.red,
                 )),
-          if (profile.height != 0)
+          if (widget.profile.height != 0 && widget.profile.height != null)
             BasicDetail(
-              detailText: '${cmToFeet(profile.height!)} ft',
+              detailText: '${cmToFeet(widget.profile.height!)} ft',
               detailIcon: FaIcon(
                 FontAwesomeIcons.ruler,
                 color: Colors.yellow[700],
               ),
             ),
-          if (profile.religion != null)
+          if (widget.profile.religion != '' && widget.profile.religion != null)
             BasicDetail(
-              detailText: '${profile.religion}',
+              detailText: '${widget.profile.religion}',
               detailIcon: FaIcon(
                 FontAwesomeIcons.prayingHands,
                 color: Colors.yellow,
               ),
             ),
-          if (profile.zodiac != '')
+          if (widget.profile.zodiac != '')
             BasicDetail(
-              detailText: '${profile.zodiac}',
+              detailText: '${widget.profile.zodiac}',
               detailIcon: FaIcon(
                 FontAwesomeIcons.starAndCrescent,
                 color: Colors.blueGrey,
               ),
             ),
-          if (profile.children != '')
+          if (widget.profile.children != '')
             BasicDetail(
-              detailText: '${profile.children}',
+              detailText: '${widget.profile.children}',
               detailIcon: FaIcon(
                 FontAwesomeIcons.babyCarriage,
                 color: Colors.purple,
@@ -418,40 +430,44 @@ class _MatchCardState extends State<MatchCard> {
             ),
           ],
         ),
-      Text(
-        'Lifestyle',
-        style: subTitleStyle,
-      ),
+      if (widget.profile.fitness != '' ||
+          widget.profile.drinking != '' ||
+          widget.profile.smoking != '')
+        Text(
+          'Lifestyle',
+          style: subTitleStyle,
+        ),
       _buildDivider(),
       Wrap(
         direction: Axis.horizontal,
         children: [
-          if (profile.fitness != '')
+          if (widget.profile.fitness != '')
             BasicDetail(
               detailIcon: FaIcon(FontAwesomeIcons.dumbbell),
-              detailText: '${profile.fitness}',
+              detailText: '${widget.profile.fitness}',
             ),
-          if (profile.drinking != '')
+          if (widget.profile.drinking != '')
             BasicDetail(
-              detailText: '${profile.drinking}',
+              detailText: '${widget.profile.drinking}',
               detailIcon: FaIcon(
                 FontAwesomeIcons.glassMartiniAlt,
                 size: 25,
               ),
             ),
-          if (profile.smoking != '')
+          if (widget.profile.smoking != '')
             BasicDetail(
-              detailText: '${profile.smoking}',
+              detailText: '${widget.profile.smoking}',
               detailIcon: FaIcon(FontAwesomeIcons.smoking),
             )
         ],
       ),
       SizedBox(height: 20),
-      Text(
-        'Artificial Intelligence',
-        style: subTitleStyle,
-      ),
-      _buildDivider(),
+      if (widget.showAI != false)
+        Text(
+          'Artificial Intelligence',
+          style: subTitleStyle,
+        ),
+      if (widget.showAI != false) _buildDivider(),
       Container(
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.only(

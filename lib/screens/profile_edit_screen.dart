@@ -248,7 +248,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                     },
                   ),
                   ProfileEditBlock(
-                    title: 'Covid Vaccine',
+                    title: 'Covid',
                     icon: FontAwesomeIcons.syringe,
                     value: SettingsData.instance.covid_vaccine,
                     onTap: () {

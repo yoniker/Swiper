@@ -49,7 +49,12 @@ class _TextEditBlock2State extends State<ProfileEditBlock> {
                 SizedBox(
                   width: 5,
                 ),
-                Text(' ${widget.title}', style: smallBoldedTitleBlack),
+                Text(
+                  ' ${widget.title}',
+                  style: smallBoldedTitleBlack,
+                  overflow: TextOverflow.fade,
+                  maxLines: 1,
+                ),
               ],
             ),
             Row(
@@ -59,7 +64,7 @@ class _TextEditBlock2State extends State<ProfileEditBlock> {
                         'Add',
                         style: smallTitleLighterBlack,
                       )
-                    : SizedBox(
+                    : Container(
                         width: 150,
                         child: Text(
                           widget.value!,

@@ -24,7 +24,6 @@ class MainNavigationScreen extends StatefulWidget {
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _selectedTabIndex = 0;
   // create a pageController variable to control the varoius pages
-  PageController? _pageController;
 
   // List of pages.
   List<Widget> pages = <Widget>[
@@ -37,17 +36,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   ];
 
   /// builds the widget's body.
-  PageView _body() {
-    return PageView(
-      pageSnapping: false,
-      controller: _pageController,
+  IndexedStack _body() {
+    return IndexedStack(
       // This prevents user from being able to manually swipe to
       // another page.
-      physics: NeverScrollableScrollPhysics(),
       children: pages,
-      onPageChanged: (index) {
-        switchTab(index);
-      },
+      index: _selectedTabIndex,
     );
   }
 
@@ -66,13 +60,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     _selectedTabIndex = AppStateInfo.instance.latestTabOnMainNavigation;
 
     // initialize the pageController with necessary values.
-    _pageController = PageController(initialPage: _selectedTabIndex);
   }
 
   @override
   void dispose() {
     // dispose off the pageController we created for our pages
-    _pageController!.dispose();
     super.dispose();
   }
 
@@ -105,7 +97,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               switchTab(index);
 
               // then jump to the new page.
-              _pageController!.jumpToPage(index);
             },
             items: [
               BottomNavigationBarItem(

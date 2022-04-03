@@ -19,9 +19,7 @@ import 'package:betabeta/services/service_websocket.dart';
 import 'package:get/get.dart';
 import 'package:tuple/tuple.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:convert';
 
@@ -32,7 +30,8 @@ Future<void> handleBackgroundMessage(RemoteMessage rawMessage) async {
   await NotificationsController.instance.initialize();
   var message = rawMessage.data;
   print('at handle background message,message is ${message}');
-  if (message[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY] == API_CONSTS.PUSH_NOTIFICATION_NEW_MESSAGE) {
+  if (message[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY] ==
+      API_CONSTS.PUSH_NOTIFICATION_NEW_MESSAGE) {
     final String senderId = message['user_id'];
     if (senderId != SettingsData.instance.uid) {
       final Profile sender =
@@ -44,9 +43,12 @@ Future<void> handleBackgroundMessage(RemoteMessage rawMessage) async {
     }
   }
 
-  if (message[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY] == API_CONSTS.PUSH_NOTIFICATION_NEW_MATCH) {
-    final String? matchedPersonId = message[API_CONSTS.PUSH_NOTIFICATION_USER_ID];
-    await NotificationsController.instance.showNewMatchNotification(matchedPersonId:matchedPersonId,showSnackIfResumed: false);
+  if (message[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY] ==
+      API_CONSTS.PUSH_NOTIFICATION_NEW_MATCH) {
+    final String? matchedPersonId =
+        message[API_CONSTS.PUSH_NOTIFICATION_USER_ID];
+    await NotificationsController.instance.showNewMatchNotification(
+        matchedPersonId: matchedPersonId, showSnackIfResumed: false);
   }
 }
 
@@ -60,7 +62,8 @@ Future<bool> setupInteractedMessage() async {
   // If the message also contains a data property with a "type" of "chat",
   // navigate to a chat screen
   if (initialMessage != null) {
-  navigationNotificationInteraction = await _handleMessageOpenedFromNotification(initialMessage);
+    navigationNotificationInteraction =
+        await _handleMessageOpenedFromNotification(initialMessage);
   }
 
   // Also handle any interaction when the app is in the background via a
@@ -73,25 +76,28 @@ Future<bool> setupInteractedMessage() async {
 Future<bool> _handleMessageOpenedFromNotification(RemoteMessage message) async {
   await ChatData.instance.syncWithServer();
   var messageData = message.data;
-  if(messageData[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY]==API_CONSTS.PUSH_NOTIFICATION_NEW_MATCH){
-    AppStateInfo.instance.latestTabOnMainNavigation = MainNavigationScreen.CONVERSATIONS_PAGE_INDEX;
+  if (messageData[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY] ==
+      API_CONSTS.PUSH_NOTIFICATION_NEW_MATCH) {
+    AppStateInfo.instance.latestTabOnMainNavigation =
+        MainNavigationScreen.CONVERSATIONS_PAGE_INDEX;
     Get.offAllNamed(MainNavigationScreen.routeName);
     return true;
   }
 
-  if(messageData[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY]==API_CONSTS.PUSH_NOTIFICATION_NEW_MESSAGE){
-
-  final InfoMessage messageReceived = InfoMessage.fromJson(message.data);
-  if (messageReceived.userId != SettingsData.instance.uid) {
-    Profile? sender = ChatData.instance.getUserById(messageReceived.userId);
-    AppStateInfo.instance.latestTabOnMainNavigation =
-        MainNavigationScreen.CONVERSATIONS_PAGE_INDEX;
-    Get.offAllNamed(MainNavigationScreen.routeName);
-    if (sender != null) {
-      Get.toNamed(ChatScreen.getRouteWithUserId(sender.uid));
-      return true;
+  if (messageData[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY] ==
+      API_CONSTS.PUSH_NOTIFICATION_NEW_MESSAGE) {
+    final InfoMessage messageReceived = InfoMessage.fromJson(message.data);
+    if (messageReceived.userId != SettingsData.instance.uid) {
+      Profile? sender = ChatData.instance.getUserById(messageReceived.userId);
+      AppStateInfo.instance.latestTabOnMainNavigation =
+          MainNavigationScreen.CONVERSATIONS_PAGE_INDEX;
+      Get.offAllNamed(MainNavigationScreen.routeName);
+      if (sender != null) {
+        Get.toNamed(ChatScreen.getRouteWithUserId(sender.uid));
+        return true;
+      }
     }
-  }}
+  }
 
   return false;
 }
@@ -103,8 +109,6 @@ class ChatData extends ChangeNotifier {
   Map<String, double> markingConversation = {};
   StreamSubscription? _fcmSubscription, _websocketSubscription;
 
-
-
   static Future<void> updateFcmToken() async {
     while (true) {
       try {
@@ -112,7 +116,7 @@ class ChatData extends ChangeNotifier {
         print('Got the token $token');
         if (token != null) {
           await SettingsData.instance.readSettingsFromShared();
-          if (SettingsData.instance.uid .length>0) {
+          if (SettingsData.instance.uid.length > 0) {
             print('sending fcm token to server...');
             SettingsData.instance.fcmToken = token;
           }
@@ -250,7 +254,6 @@ class ChatData extends ChangeNotifier {
   }
 
   void handlePushData(message) async {
-
     if (message['push_notification_type'] == 'new_read_receipt') {
       //TODO for now just sync with server "everything" there is to sync. Of course,this can be improved if and when necessary
       syncWithServer();
@@ -262,15 +265,20 @@ class ChatData extends ChangeNotifier {
       syncWithServer();
       return;
     }
-    if (message[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY] == API_CONSTS.PUSH_NOTIFICATION_NEW_MATCH) {
+    if (message[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY] ==
+        API_CONSTS.PUSH_NOTIFICATION_NEW_MATCH) {
       await syncWithServer();
       String? userId = message['user_id'];
       Profile? theUser = userId == null ? null : getUserById(userId);
       if (theUser != null) {
-        Get.toNamed(GotNewMatchScreen.routeName, arguments: theUser);
+        await ChatData.instance.updateUserData(theUser
+            .uid); //TODO this is not optimal, update server such that it sends all relevant user info.
+        Get.toNamed(GotNewMatchScreen.routeName,
+            arguments: getUserById(theUser.uid));
       }
 
-      NotificationsController.instance.showNewMatchNotification(matchedPersonId: userId);
+      NotificationsController.instance
+          .showNewMatchNotification(matchedPersonId: userId);
 
       return;
     }
@@ -383,6 +391,7 @@ class ChatData extends ChangeNotifier {
       }
     }
   }
+
   static ChatData get instance => _instance;
 
   final Stream<dynamic> _fcmStream = createStream();
@@ -501,9 +510,9 @@ class ChatData extends ChangeNotifier {
     return List.unmodifiable(allConversations);
   }
 
-  Set<String> get allConversationsParticipantsIds{
+  Set<String> get allConversationsParticipantsIds {
     Set<String> participants = Set();
-    for(var conversation in conversations){
+    for (var conversation in conversations) {
       participants.addAll(conversation.participantsIds);
     }
     return Set.unmodifiable(participants);
@@ -541,12 +550,12 @@ class ChatData extends ChangeNotifier {
   List<Profile> get users {
     var usersList = List<Profile>.from(usersBox.values);
     usersList.sort((user1, user2) {
-
-      if(user1.matchChangedTime!=null && user2.matchChangedTime!=null) {
-        return
-        user1.matchChangedTime!.isAfter(user2.matchChangedTime!) ? -1 : 1;}
+      if (user1.matchChangedTime != null && user2.matchChangedTime != null) {
+        return user1.matchChangedTime!.isAfter(user2.matchChangedTime!)
+            ? -1
+            : 1;
+      }
       return user1.username.compareTo(user2.username);
-
     });
     return List.unmodifiable(usersList);
   }
@@ -651,26 +660,38 @@ class ChatData extends ChangeNotifier {
     }
   }
 
-
-  Future<void> updateUserData(String uid)async{
-
-    Profile? profileFromServer = await NewNetworkService.instance.getSingleUserProfile(uid);
-    if(profileFromServer!=null){
+  Future<void> updateUserData(String uid) async {
+    Profile? profileFromServer =
+        await NewNetworkService.instance.getSingleUserProfile(uid);
+    if (profileFromServer != null) {
       Profile? currentProfile = usersBox.get(uid);
-      profileFromServer.matchChangedTime = profileFromServer.matchChangedTime??currentProfile?.matchChangedTime;
-      profileFromServer.age = profileFromServer.age?? currentProfile?.age;
-      profileFromServer.distance = profileFromServer.distance ?? currentProfile?.distance;
-      profileFromServer.hotnessScore = profileFromServer.hotnessScore ?? currentProfile?.hotnessScore;
-      profileFromServer.location = profileFromServer.location ?? currentProfile?.location;
+      profileFromServer.matchChangedTime = profileFromServer.matchChangedTime ??
+          currentProfile?.matchChangedTime;
+      profileFromServer.age = profileFromServer.age ?? currentProfile?.age;
+      profileFromServer.distance =
+          profileFromServer.distance ?? currentProfile?.distance;
+      profileFromServer.hotnessScore =
+          profileFromServer.hotnessScore ?? currentProfile?.hotnessScore;
+      profileFromServer.location =
+          profileFromServer.location ?? currentProfile?.location;
       usersBox.put(uid, profileFromServer);
       notifyListeners();
     }
-
   }
 
-  Future<void> unmatch(String uid)async{
-    if(uid==SettingsData.instance.uid){return;}
+  Future<void> updateAllUsersData() async {
+    //TODO This isn't an optimal solution.
+    //TODO At the very least, for each user remember the last update time, and don't update if that time was "very recent".
+    for (var user in users) {
+      await ChatData.instance.updateUserData(user.uid);
+    }
+    notifyListeners();
+  }
+
+  Future<void> unmatch(String uid) async {
+    if (uid == SettingsData.instance.uid) {
+      return;
+    }
     await NewNetworkService.instance.unmatch(uid);
   }
-
 }

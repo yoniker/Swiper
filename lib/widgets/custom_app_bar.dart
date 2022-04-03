@@ -114,61 +114,58 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Material(
       color: backgroundColor,
       elevation: elevation,
-      child: Padding(
-        padding: (hasTopPadding)
+      child: Container(
+        margin: (hasTopPadding)
             ? EdgeInsets.only(top: topPadding)
             : EdgeInsets.zero,
+        padding: EdgeInsets.symmetric(horizontal: 5.0),
         child: Container(
-          margin: EdgeInsets.only(top: 5.0),
-          padding: EdgeInsets.symmetric(horizontal: 5.0),
-          child: Container(
-            child: Stack(children: [
-              if (centerWidget != null) centerWidget!,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      if (hasBackButton)
-                        InkWell(
-                          splashColor: mainAppColor02.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(8.0),
-                          onTap: () {
-                            Get.back();
-                          },
-                          child: GlobalWidgets.assetImageToIcon(
-                            'assets/images/back_arrow.png',
-                          ),
+          child: Stack(children: [
+            if (centerWidget != null) centerWidget!,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    if (hasBackButton)
+                      InkWell(
+                        splashColor: mainAppColor02.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(8.0),
+                        onTap: () {
+                          Get.back();
+                        },
+                        child: GlobalWidgets.assetImageToIcon(
+                          'assets/images/back_arrow.png',
                         ),
-                      customTitle ??
-                          Padding(
-                            padding: EdgeInsets.only(left: 10.0),
-                            child: Text(
-                              title!,
-                              style: TextStyle(
-                                color: titleTextColor,
-                                fontSize: 22,
-                                fontFamily: 'Nunito',
-                                fontWeight: FontWeight.w700,
-                              ),
+                      ),
+                    customTitle ??
+                        Padding(
+                          padding: EdgeInsets.only(left: 10.0),
+                          child: Text(
+                            title!,
+                            style: TextStyle(
+                              color: titleTextColor,
+                              fontSize: 22,
+                              fontFamily: 'Nunito',
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                    ],
-                  ),
-                  if (showAppLogo)
-                    GlobalWidgets.assetImageToIcon(
-                        'https://picsum.photos/200/300'),
-                  Padding(
-                    padding: EdgeInsets.only(right: trailingPad),
-                    child: trailing,
-                  ),
-                  // show App Logo.
-                ],
-              ),
-            ]),
-          ),
+                        ),
+                  ],
+                ),
+                if (showAppLogo)
+                  GlobalWidgets.assetImageToIcon(
+                      'https://picsum.photos/200/300'),
+                Padding(
+                  padding: EdgeInsets.only(right: trailingPad),
+                  child: trailing,
+                ),
+                // show App Logo.
+              ],
+            ),
+          ]),
         ),
       ),
     );
