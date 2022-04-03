@@ -19,13 +19,14 @@ import 'package:get/get.dart';
 /// match unto the screen.
 ///
 class MatchCard extends StatefulWidget {
-  MatchCard({
-    Key? key,
-    required this.profile,
-    this.clickable = true,
-    this.showCarousel = true,
-    this.showActionButtons = true,
-  }) : super(key: key);
+  MatchCard(
+      {Key? key,
+      required this.profile,
+      this.clickable = true,
+      this.showCarousel = true,
+      this.showActionButtons = true,
+      this.showAI = true})
+      : super(key: key);
 
   /// The profile of the match.
   final Profile profile;
@@ -38,6 +39,9 @@ class MatchCard extends StatefulWidget {
 
   /// Whether to show the action buttons or not.
   final bool showActionButtons;
+
+  /// Whether to show AI title
+  final bool showAI;
 
   @override
   _MatchCardState createState() => _MatchCardState();
@@ -458,11 +462,12 @@ class _MatchCardState extends State<MatchCard> {
         ],
       ),
       SizedBox(height: 20),
-      Text(
-        'Artificial Intelligence',
-        style: subTitleStyle,
-      ),
-      _buildDivider(),
+      if (widget.showAI != false)
+        Text(
+          'Artificial Intelligence',
+          style: subTitleStyle,
+        ),
+      if (widget.showAI != false) _buildDivider(),
       Container(
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.only(

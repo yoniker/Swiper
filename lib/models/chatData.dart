@@ -19,9 +19,7 @@ import 'package:betabeta/services/service_websocket.dart';
 import 'package:get/get.dart';
 import 'package:tuple/tuple.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:convert';
 
@@ -679,6 +677,15 @@ class ChatData extends ChangeNotifier {
       usersBox.put(uid, profileFromServer);
       notifyListeners();
     }
+  }
+
+  Future<void> updateAllUsersData() async {
+    //TODO This isn't an optimal solution.
+    //TODO At the very least, for each user remember the last update time, and don't update if that time was "very recent".
+    for (var user in users) {
+      await ChatData.instance.updateUserData(user.uid);
+    }
+    notifyListeners();
   }
 
   Future<void> unmatch(String uid) async {

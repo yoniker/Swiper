@@ -1,5 +1,4 @@
 import 'package:betabeta/constants/api_consts.dart';
-import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/models/match_engine.dart';
@@ -16,7 +15,6 @@ import 'package:betabeta/widgets/text_search_view_widget.dart';
 import 'package:betabeta/widgets/voila_logo_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:tcard/tcard.dart';
 
@@ -71,18 +69,12 @@ class _MatchScreenState extends State<MatchScreen>
   //
   // Whenever you wish to push to a new route consider using the "pushToScreen" method defined
   // in the class below.
-  bool _matchCardIsVisible = true;
 
   /// Make the MatchCard Invisible by setting the variable "_matchCardIsVisible"
   /// to false.
   ///
   /// Note: This should be called whenever you are planning to Navigate from this Screen to a new
   /// one.
-  void setMatchCardVisibility([bool visibility = false]) {
-    setState(() {
-      _matchCardIsVisible = visibility;
-    });
-  }
 
   // initState Declaration.
   @override
@@ -219,12 +211,8 @@ class _MatchScreenState extends State<MatchScreen>
                   'assets/images/settings.png',
                   scale: 12,
                 ),
-                onTap: () async {
-                  // hide the overlay.
-                  setMatchCardVisibility(false); //TODO Review this
-                  var value = await Get.toNamed(SwipeSettingsScreen.routeName);
-                  // make the match card visible.
-                  setMatchCardVisibility(true);
+                onTap: () {
+                  Get.toNamed(SwipeSettingsScreen.routeName);
                 },
               ),
             ),
@@ -234,14 +222,7 @@ class _MatchScreenState extends State<MatchScreen>
           // Wrap in expanded to allow the card to take up the maximum
           // possible space.
           Expanded(
-            child: Visibility(
-              visible: _matchCardIsVisible,
-              child: MatchCardBuilder(
-                setMatchCardVisibility: (value) {
-                  setMatchCardVisibility(value);
-                },
-              ),
-            ),
+            child: MatchCardBuilder(),
           ),
         ],
       ),
@@ -251,10 +232,8 @@ class _MatchScreenState extends State<MatchScreen>
 
 /// The card Widget used to display match Information.
 class MatchCardBuilder extends StatefulWidget {
-  MatchCardBuilder({Key? key, required this.setMatchCardVisibility})
-      : super(key: key);
+  MatchCardBuilder({Key? key}) : super(key: key);
 
-  final void Function(bool) setMatchCardVisibility;
   final maxThumbOpacity =
       0.7; // Max opacity of the thumbs feedback (when swiping left/right)
 

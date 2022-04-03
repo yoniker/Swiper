@@ -52,20 +52,13 @@ const TextStyle titleStyle = TextStyle(
 );
 
 const TextStyle subTitleStyle = TextStyle(
-  color: Colors.black,
+  color: Colors.black87,
   fontFamily: 'Nunito',
-  fontSize: 18,
-  fontWeight: FontWeight.w700,
+  fontSize: 16,
+  fontWeight: FontWeight.w600,
 );
 
 const TextStyle subHeaderStyle = TextStyle(
-  color: Colors.black,
-  fontFamily: 'Nunito',
-  fontSize: 15,
-  fontWeight: FontWeight.w500,
-);
-
-const TextStyle mediumCharStyle = TextStyle(
   color: Colors.black,
   fontFamily: 'Nunito',
   fontSize: 15,

@@ -74,6 +74,7 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen>
             clickable: true,
             showCarousel: true,
             showActionButtons: false,
+            showAI: false,
           ),
           SafeArea(
             child: Padding(
@@ -180,9 +181,9 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen>
                                 width: secondAnimation.isCompleted ? 30 : 0,
                                 child: SingleChildScrollView(
                                   child: Icon(
-                                    FontAwesomeIcons.sms,
-                                    size: 30,
-                                    color: Colors.black54,
+                                    FontAwesomeIcons.facebookMessenger,
+                                    size: 28,
+                                    color: Colors.black45,
                                   ),
                                 ),
                               ),

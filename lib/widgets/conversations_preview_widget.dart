@@ -1,3 +1,4 @@
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/infoConversation.dart';
 import 'package:betabeta/models/infoMessage.dart';
@@ -8,7 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ConversationsPreviewWidget extends StatefulWidget {
-  const ConversationsPreviewWidget({Key? key}) : super(key: key);
+  ConversationsPreviewWidget({this.search = ''});
+
+  final String search;
 
   @override
   _ConversationsPreviewWidgetState createState() =>
@@ -33,27 +36,32 @@ class _ConversationsPreviewWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30.0),
-              topRight: Radius.circular(30.0),
-            )),
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30.0),
-            topRight: Radius.circular(30.0),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Text(
+            'Conversations',
+            style: boldTextStyle,
           ),
-          child: ListView.builder(
-              itemCount: conversations.length,
-              itemBuilder: (context, index) {
-                InfoConversation conversation = conversations[index];
-                InfoMessage lastMessage = conversation.messages[0];
-                Profile? collocutor = ChatData.instance
-                    .getUserById(ChatData.instance.getCollocutorId(conversation));
-                bool messageWasRead = ChatData.instance.conversationRead(conversation);
+        ),
+        ListView.builder(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            itemCount: conversations.length,
+            itemBuilder: (context, index) {
+              double commonHeight = 100;
+              InfoConversation conversation = conversations[index];
+              InfoMessage lastMessage = conversation.messages[0];
+              Profile? collocutor = ChatData.instance
+                  .getUserById(ChatData.instance.getCollocutorId(conversation));
+              bool messageWasRead =
+                  ChatData.instance.conversationRead(conversation);
+              if (collocutor != null) if (collocutor.username
+                  .split(' ')[0]
+                  .toLowerCase()
+                  .contains(widget.search))
                 return GestureDetector(
                   onTap: () {
                     if (collocutor != null) {
@@ -63,56 +71,78 @@ class _ConversationsPreviewWidgetState
                   },
                   child: Container(
                     decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+
+                            blurRadius: 5,
+                            offset:
+                                Offset(-2.0, 2.0), // changes position of shadow
+                          ),
+                        ],
                         color:
-                            messageWasRead ? Colors.white : Color(0xFFFFEFEE),
+                            messageWasRead ? Colors.grey[50] : Colors.blue[50],
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(20.0),
                             bottomRight: Radius.circular(20.0))),
-                    margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 20.0),
+                    margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 10.0),
                     padding:
-                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                        EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           children: [
-                            CircleAvatar(
-                              radius: 35.0,
-                              backgroundImage: NetworkImage(collocutor != null
-                                  ? NewNetworkService.getProfileImageUrl(collocutor.profileImage)
-                                  : ''),
+                            Container(
+                              height: commonHeight,
+                              width: 80,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  image: DecorationImage(
+                                      image: NetworkImage(collocutor != null
+                                          ? NewNetworkService
+                                              .getProfileImageUrl(
+                                                  collocutor.profileImage)
+                                          : ''),
+                                      fit: BoxFit.cover)),
                             ),
                             SizedBox(
                               width: 10.0,
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  collocutor != null
-                                      ? collocutor.username.split(' ')[0]
-                                      : '',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.bold,
+                            Container(
+                              height: commonHeight,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    collocutor != null
+                                        ? collocutor.username.split(' ')[0] +
+                                            collocutor.age.toString()
+                                        : '',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 5.0,
-                                ),
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.45,
-                                  child: Text(lastMessage.toUiMessage().text,
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 15.0,
-                                        fontWeight: FontWeight.w600,
-                                        overflow: TextOverflow.ellipsis,
-                                      )),
-                                ),
-                              ],
+                                  SizedBox(
+                                    height: 5.0,
+                                  ),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.45,
+                                    child: Text(lastMessage.toUiMessage().text,
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.w600,
+                                          overflow: TextOverflow.ellipsis,
+                                        )),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -135,9 +165,9 @@ class _ConversationsPreviewWidgetState
                     ),
                   ),
                 );
-              }),
-        ),
-      ),
+              return SizedBox();
+            }),
+      ],
     );
   }
 

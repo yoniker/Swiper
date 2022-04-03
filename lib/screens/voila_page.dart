@@ -14,7 +14,6 @@ import 'package:betabeta/widgets/advance_filter_card_widget.dart';
 import 'package:betabeta/widgets/circular_user_avatar.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
-import 'package:betabeta/widgets/gradient_text_widget.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
@@ -120,54 +119,55 @@ class _VoilaPageState extends State<VoilaPage> {
               FocusScope.of(context).unfocus();
             },
             child: Container(
-              child: Padding(
-                padding: MediaQuery.of(context).padding,
-                child: Column(
-                  children: [
-                    CustomAppBar(
-                      titleTextColor: Colors.black,
-                      customTitle: Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Get.toNamed(ProfileScreen.routeName);
-                                },
-                                child: CircularUserAvatar(
-                                  backgroundColor: Colors.grey,
-                                ),
+              color: Colors.white,
+              child: Column(
+                children: [
+                  CustomAppBar(
+                    hasTopPadding: true,
+                    titleTextColor: Colors.black,
+                    customTitle: Container(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                Get.toNamed(ProfileScreen.routeName);
+                              },
+                              child: CircularUserAvatar(
+                                backgroundColor: Colors.grey,
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      centerWidget: Center(
-                        child: VoilaLogoWidget(),
-                      ),
-                      showAppLogo: false,
-                      hasBackButton: false,
-                      trailing: Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: GestureDetector(
-                          child: Image.asset(
-                            'assets/images/settings.png',
-                            scale: 12,
                           ),
-                          onTap: () {
-                            Get.toNamed(SwipeSettingsScreen.routeName);
-                          },
-                        ),
+                        ],
                       ),
                     ),
-                    Container(
-                      child: Expanded(
-                        child: SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+                    centerWidget: Center(
+                      child: VoilaLogoWidget(),
+                    ),
+                    showAppLogo: false,
+                    hasBackButton: false,
+                    trailing: Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: GestureDetector(
+                        child: Image.asset(
+                          'assets/images/settings.png',
+                          scale: 12,
+                        ),
+                        onTap: () {
+                          Get.toNamed(SwipeSettingsScreen.routeName);
+                        },
+                      ),
+                    ),
+                  ),
+                  Container(
+                    child: Expanded(
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Container(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
@@ -483,8 +483,8 @@ class _VoilaPageState extends State<VoilaPage> {
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );
