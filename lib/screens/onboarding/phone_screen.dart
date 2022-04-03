@@ -16,6 +16,7 @@ class PhoneScreen extends StatefulWidget {
   static const String routeName = '/phoneScreen';
   static const int verificationCodeLength = 6;
   static const String INVALID_SMS_CODE = 'invalid-verification-code';
+  static const String ALREADY_LINKED_MESSAGE = 'com.google.firebase.FirebaseException: User has already been linked to the given provider.';
 
   const PhoneScreen({Key? key}) : super(key: key);
   @override
@@ -102,9 +103,6 @@ class _PhoneScreenState extends State<PhoneScreen> {
     try {
     UserCredential? resultOfLinking = await FirebaseAuth.instance.currentUser
         ?.linkWithCredential(_phoneCredential!);
-    String? currentTokenId = await FirebaseAuth.instance.currentUser?.getIdToken();
-    await NewNetworkService.instance.verifyToken(firebaseIdToken: currentTokenId!); //TODO API in server which gets all the info from user's token (and later produces a JWT)
-    Get.offAllNamed(OnboardingFlowController.instance.nextRoute(PhoneScreen.routeName));
   }
   on FirebaseAuthException catch (exception){
     if(exception.code==PhoneScreen.INVALID_SMS_CODE){
@@ -112,9 +110,19 @@ class _PhoneScreenState extends State<PhoneScreen> {
       setState(() {
         showBadCodeMessage = true;
       });
+      return;
+    }
+    if(exception.message == PhoneScreen.ALREADY_LINKED_MESSAGE){
+      //Do nothing - everything is fine (user was already linked with this phone).
     }
 
-  }}
+  }
+    String? currentTokenId = await FirebaseAuth.instance.currentUser?.getIdToken();
+    await NewNetworkService.instance.verifyToken(firebaseIdToken: currentTokenId!); //TODO API in server which gets all the info from user's token (and later produces a JWT)
+    Get.offAllNamed(OnboardingFlowController.instance.nextRoute(PhoneScreen.routeName));
+
+
+  }
 
 
 

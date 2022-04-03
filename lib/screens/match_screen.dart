@@ -2,7 +2,7 @@ import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
-import 'package:betabeta/models/match_engine.dart';
+import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/services/settings_model.dart';

@@ -1,7 +1,7 @@
 import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/models/celebs_info_model.dart';
 import 'package:betabeta/models/chatData.dart';
-import 'package:betabeta/models/match_engine.dart';
+import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/services/app_state_info.dart';
 import 'package:betabeta/services/location_service.dart';
 import 'package:betabeta/services/settings_model.dart';

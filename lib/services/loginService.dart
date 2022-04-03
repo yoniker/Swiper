@@ -191,9 +191,4 @@ class LoginsService{
 
   }
 
-
-  Future<void> setPhoneCredential()async{
-
-  }
-
 }

@@ -11,10 +11,18 @@ class MatchEngine extends ChangeNotifier {
   Queue<Match> _previousMatches; //This will be a stack
   Queue<Match> _matches;
   bool? addedMoreProfiles;
-  Future? itemsBeingGotten; //See https://stackoverflow.com/questions/63402499/flutter-how-not-to-call-the-same-service-over-and-over/63402620?noredirect=1#comment112113319_63402620
+  Future? matchesBeingGotten; //See https://stackoverflow.com/questions/63402499/flutter-how-not-to-call-the-same-service-over-and-over/63402620?noredirect=1#comment112113319_63402620
   MatchSearchStatus _serverMatchesSearchStatus = MatchSearchStatus.empty;
+  LocationCountStatus _locationCountStatus = LocationCountStatus.initial_state;
+  Future? countLocationBeingFetches;
+  DateTime lastLocationCheck = DateTime(1990);
+  static const Duration minIntervalWaitLocation = Duration(minutes: 5);
+
+
+
   MatchEngine._privateConstructor():_matches=Queue<Match>(),_previousMatches=Queue<Match>(){
-        addMatchesIfNeeded();
+    addMatchesIfNeeded();
+
       }
   static final MatchEngine _instance = MatchEngine._privateConstructor();
 
@@ -42,12 +50,12 @@ class MatchEngine extends ChangeNotifier {
     if(_serverMatchesSearchStatus==MatchSearchStatus.not_found){
       print('Not getting more matches from server since nothing was found!');
       return;}
-    if (! (itemsBeingGotten == null && _matches.length < MINIMUM_CACHED_PROFILES)) {
+    if (! (matchesBeingGotten == null && _matches.length < MINIMUM_CACHED_PROFILES)) {
       return;}
-    if(SettingsData.instance.uid ==null || SettingsData.instance.uid.length<=0){return;}
+    if(SettingsData.instance.uid.length<=0){return;}
       try {
-        itemsBeingGotten = NewNetworkService.instance.getMatches();
-        dynamic matchesSearchResult = await itemsBeingGotten;
+        matchesBeingGotten = NewNetworkService.instance.getMatches();
+        dynamic matchesSearchResult = await matchesBeingGotten;
         if(matchesSearchResult==null){return;}
         MatchSearchStatus newStatus = MatchSearchStatus.values.firstWhere((s) => s.name==matchesSearchResult[API_CONSTS.MATCHES_SEARCH_STATUS_KEY],orElse:()=>MatchSearchStatus.empty) ;
         if (_serverMatchesSearchStatus!=newStatus){
@@ -63,10 +71,16 @@ class MatchEngine extends ChangeNotifier {
           notifyListeners();
         }
       } finally {
-        itemsBeingGotten = null;
+        matchesBeingGotten = null;
         addMatchesIfNeeded();
       }
 
+
+  }
+
+  Future<void> getLocationStatusFromServer()async{
+    var e = await NewNetworkService.instance.getCountUsersByLocation();
+    print('dor');
 
   }
   
@@ -75,11 +89,18 @@ class MatchEngine extends ChangeNotifier {
   }
 
   void addMatchesIfNeeded(){
-    if(this.length()<MINIMUM_CACHED_PROFILES){
+    if(this.length()>=MINIMUM_CACHED_PROFILES){
+      print('no more matches are needed,length is ${this.length()}');
+      return;
+    }
+
+    if(_locationCountStatus==LocationCountStatus.initial_state || _locationCountStatus == LocationCountStatus.not_enough_users){
+      getLocationStatusFromServer();
+    }
+
       getMoreMatchesFromServer();
     }
-    else{print('no more matches are needed,length is ${this.length()}');}//TODO use user's settings instead of a hardcoded value
-  }
+
 
   void goToNextMatch() {
     print('go to next match called,decision is ${currentMatch()!.decision}');
@@ -102,7 +123,7 @@ class MatchEngine extends ChangeNotifier {
 
   currentMatchDecision(Decision decision,{bool nextMatch:true}){
     Match currentMatch=this.currentMatch()!;
-    if(currentMatch!=null && currentMatch.decision == Decision.indecided){
+    if(currentMatch.decision == Decision.indecided){
       currentMatch.decision = decision;}
     if(nextMatch){
       goToNextMatch();

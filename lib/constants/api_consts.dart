@@ -2,6 +2,17 @@ enum MatchSearchStatus{
 found,not_found,searching,empty
 }
 
+enum LocationCountStatus{ //Possible responses from Location count request
+unknown_location, enough_users,not_enough_users, initial_state
+}
+
+class LocationCountResponse{
+  LocationCountStatus status;
+  int? requiredNumUsers;
+  int? currentNumUsers;
+  LocationCountResponse({required this.status,this.currentNumUsers,this.requiredNumUsers});
+}
+
 class API_CONSTS{
   static const String MATCHES_SEARCH_STATUS_KEY = 'status';
   static const String MATCHES_SEARCH_MATCHES_KEY = 'matches';
@@ -53,5 +64,8 @@ class API_CONSTS{
   static const String PUSH_NOTIFICATION_NEW_MATCH = 'new_match';
   static const String PUSH_NOTIFICATION_NEW_MESSAGE = 'new_message';
   static const String PUSH_NOTIFICATION_USER_ID = 'user_id';
-  
+  //Possible location count responses
+  static const String LOCATION_STATUS_KEY = 'status';
+  static const String LOCATION_REQUIRED_USERS = 'required_num';
+  static const String LOCATION_CURRENT_USERS = 'current_num';
 }
