@@ -23,7 +23,6 @@ class PhoneScreen extends StatefulWidget {
 }
 
 class _PhoneScreenState extends State<PhoneScreen> {
-  int dropDownValue = 1;
   String? phoneNumberEntered;
   CountryCode? countryCode;
   String? _smsCode;
@@ -81,7 +80,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
     }
     
     if(_smsCode==null ||_smsCode!.length!=PhoneScreen.verificationCodeLength){
-      Get.snackbar('Bad length verification', 'Bad length verificatione',duration: Duration(seconds: 10)); //TODO show this in UI
+      Get.snackbar('Bad length verification', 'Bad length verification',duration: Duration(seconds: 10)); //TODO show this in UI
       setState(() {
         showBadCodeMessage = true;
       });
@@ -105,8 +104,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
         ?.linkWithCredential(_phoneCredential!);
     String? currentTokenId = await FirebaseAuth.instance.currentUser?.getIdToken();
     await NewNetworkService.instance.verifyToken(firebaseIdToken: currentTokenId!); //TODO API in server which gets all the info from user's token (and later produces a JWT)
-    Get.snackbar('Would go next screen here', 'Would go next screen here');
-      Get.offAllNamed(OnboardingFlowController.instance.nextRoute(PhoneScreen.routeName));
+    Get.offAllNamed(OnboardingFlowController.instance.nextRoute(PhoneScreen.routeName));
   }
   on FirebaseAuthException catch (exception){
     if(exception.code==PhoneScreen.INVALID_SMS_CODE){

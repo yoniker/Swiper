@@ -257,10 +257,6 @@ class NewNetworkService {
       SettingsData.instance.uid = decodedResponse[API_CONSTS.USER_DATA][SettingsData.FIREBASE_UID_KEY];
       return ServerRegistrationStatus.new_register;
     //}
-
-
-
-
   }
 
 
