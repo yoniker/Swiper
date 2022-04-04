@@ -14,7 +14,6 @@ class MatchEngine extends ChangeNotifier {
   Future? matchesBeingGotten; //See https://stackoverflow.com/questions/63402499/flutter-how-not-to-call-the-same-service-over-and-over/63402620?noredirect=1#comment112113319_63402620
   MatchSearchStatus _serverMatchesSearchStatus = MatchSearchStatus.empty;
   LocationCountData _locationCountData = LocationCountData(status: LocationCountStatus.initial_state);
-  Future? countLocationBeingFetches;
   DateTime lastLocationCheck = DateTime(1990);
   bool listeningToLocation = false;
   static const Duration minIntervalWaitLocation = Duration(minutes: 5);
