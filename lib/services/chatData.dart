@@ -324,7 +324,7 @@ class ChatData extends ChangeNotifier {
     List<dynamic> unparsedUsers = newData.item2;
     await updateUsersData(unparsedUsers);
     await removeOrphanConversations();
-    print('got ${newMessages.length} new messages from server while syncing');
+    //print('got ${newMessages.length} new messages from server while syncing');
     double maxTimestampSeen = 0.0;
     for (final message in newMessages) {
       addMessageToDB(message);
@@ -440,6 +440,7 @@ class ChatData extends ChangeNotifier {
         await updateUserBox(user.uid,user);
       }
     }
+    updateAllUsersDataFromServer();
   }
 
   void sendMessage(String otherUserId, String messageContent,
@@ -705,7 +706,7 @@ class ChatData extends ChangeNotifier {
     }
   }
 
-  Future<void> updateAllUsersData() async {
+  Future<void> updateAllUsersDataFromServer() async {
     //TODO This isn't an optimal solution.
     //TODO At the very least, for each user remember the last update time, and don't update if that time was "very recent".
     for (var user in users) {

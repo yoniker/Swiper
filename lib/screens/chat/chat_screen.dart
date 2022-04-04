@@ -70,10 +70,9 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
     } //TODO on this kind of error another option is to put out a detailed error screen
     theUser = userFound!;
     conversationId = ChatData.instance.calculateConversationId(theUser.uid);
-    ChatData.instance.markConversationAsRead(conversationId).then((_) {
+    ChatData.instance.markConversationAsRead(conversationId);
       ChatData.instance.listenConversation(conversationId, listenConversation);
-      AppStateInfo.instance.addListener(listenConversation);
-    });
+      //AppStateInfo.instance.addListener(listenConversation);
     updateChatData();
     super.initState();
   }
@@ -175,7 +174,7 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
   void dispose() {
     ChatData.instance
         .removeListenerConversation(conversationId, listenConversation);
-    AppStateInfo.instance.removeListener(listenConversation);
+    //AppStateInfo.instance.removeListener(listenConversation);
     super.dispose();
   }
 }

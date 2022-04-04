@@ -27,7 +27,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
   @override
   void initState() {
     ChatData.instance
-        .updateAllUsersData(); //TODO not optimal,see chatdata for more info
+        .updateAllUsersDataFromServer(); //TODO not optimal,see chatdata for more info
     ChatData.instance.addListener(listen);
     super.initState();
   }
