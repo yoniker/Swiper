@@ -60,6 +60,7 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
     }
   }
 
+
   @override
   void initState() {
     Profile? userFound = ChatData.instance.getUserById(widget.userid);
