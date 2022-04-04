@@ -82,7 +82,11 @@ class _ContactsWidgetState extends State<ContactsWidget> {
                         ),
                         Text(
                           currentUser.username.split(' ')[0],
-                          style: subTitleStyle,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),

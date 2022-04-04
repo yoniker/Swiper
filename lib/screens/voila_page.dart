@@ -119,7 +119,7 @@ class _VoilaPageState extends State<VoilaPage> {
               FocusScope.of(context).unfocus();
             },
             child: Container(
-              color: Colors.white,
+              color: Colors.white70,
               child: Column(
                 children: [
                   CustomAppBar(
