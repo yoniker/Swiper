@@ -5,6 +5,7 @@ import 'package:betabeta/screens/chat/conversations_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/voila_page.dart';
 import 'package:betabeta/services/app_state_info.dart';
+import 'package:animations/animations.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -36,12 +37,25 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   ];
 
   /// builds the widget's body.
-  IndexedStack _body() {
-    return IndexedStack(
-      // This prevents user from being able to manually swipe to
-      // another page.
-      children: pages,
-      index: _selectedTabIndex,
+  PageTransitionSwitcher _body() {
+    return PageTransitionSwitcher(
+      reverse: _selectedTabIndex == 0,
+      duration: Duration(seconds: 1),
+      transitionBuilder: (widget, ani1, ani2) {
+        return SharedAxisTransition(
+          animation: ani1,
+          transitionType: SharedAxisTransitionType.horizontal,
+          secondaryAnimation: ani2,
+          child: widget,
+        );
+      },
+      child: IndexedStack(
+        // This prevents user from being able to manually swipe to
+        // another page.
+
+        children: pages,
+        index: _selectedTabIndex,
+      ),
     );
   }
 

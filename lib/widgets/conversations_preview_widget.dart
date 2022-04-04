@@ -8,6 +8,8 @@ import 'package:betabeta/services/new_networking.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../constants/lists_consts.dart';
+
 class ConversationsPreviewWidget extends StatefulWidget {
   ConversationsPreviewWidget({this.search = ''});
 
@@ -51,13 +53,15 @@ class _ConversationsPreviewWidgetState
             shrinkWrap: true,
             itemCount: conversations.length,
             itemBuilder: (context, index) {
-              double commonHeight = 100;
+              double commonHeight = 80;
               InfoConversation conversation = conversations[index];
               InfoMessage lastMessage = conversation.messages[0];
               Profile? collocutor = ChatData.instance
                   .getUserById(ChatData.instance.getCollocutorId(conversation));
               bool messageWasRead =
                   ChatData.instance.conversationRead(conversation);
+              // String heightInFeet =
+              //     'Height: ${cmToFeet(collocutor?.height)} ft';
               if (collocutor != null) if (collocutor.username
                   .split(' ')[0]
                   .toLowerCase()
@@ -90,12 +94,13 @@ class _ConversationsPreviewWidgetState
                         EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
                             Container(
                               height: commonHeight,
-                              width: 80,
+                              width: 60,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(10),
@@ -115,32 +120,50 @@ class _ConversationsPreviewWidgetState
                               height: commonHeight,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    collocutor != null
-                                        ? collocutor.username.split(' ')[0] +
-                                            collocutor.age.toString()
-                                        : '',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 15.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 5.0,
-                                  ),
-                                  Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.45,
-                                    child: Text(lastMessage.toUiMessage().text,
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        collocutor != null
+                                            ? collocutor.username.split(' ')[0]
+                                            : '',
                                         style: TextStyle(
-                                          color: Colors.grey,
+                                          color: Colors.black,
                                           fontSize: 15.0,
-                                          fontWeight: FontWeight.w600,
-                                          overflow: TextOverflow.ellipsis,
-                                        )),
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5.0,
+                                      ),
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.45,
+                                        child: Text(
+                                            lastMessage.toUiMessage().text,
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.w600,
+                                              overflow: TextOverflow.ellipsis,
+                                            )),
+                                      ),
+                                    ],
                                   ),
+                                  Text(
+                                    'Age: ${collocutor.age}',
+                                    style: TextStyle(
+                                      color: Colors.blueGrey[400],
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.w600,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  )
                                 ],
                               ),
                             ),

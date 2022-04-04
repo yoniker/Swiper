@@ -1,4 +1,5 @@
 import 'package:betabeta/constants/api_consts.dart';
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/models/match_engine.dart';
@@ -123,108 +124,114 @@ class _MatchScreenState extends State<MatchScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: MediaQuery.of(context).padding,
-      child: Column(
-        children: [
-          CustomAppBar(
-            centerWidget: buildCenterWidget(),
-            customTitle: Container(
-              padding: EdgeInsets.only(left: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  // ListenerWidget(
-                  //   notifier: MatchEngine.instance,
-                  //   builder: (context) {
-                  //     print('Listener on match screen called!');
-                  //     // Widget dor = InkWell(
-                  //     //   borderRadius: BorderRadius.circular(16.0),
-                  //     //   child: Padding(
-                  //     //     padding: EdgeInsets.only(right: 20.0),
-                  //     //     child: Transform(
-                  //     //       alignment: Alignment.centerRight,
-                  //     //       transform: Matrix4.rotationY(math.pi),
-                  //     //       child: Icon(
-                  //     //         Icons.refresh,
-                  //     //         size: 24.0,
-                  //     //         color: colorBlend01,
-                  //     //       ),
-                  //     //     ),
-                  //     //   ),
-                  //     //   onTap: () {
-                  //     //     MatchEngine.instance.goBack();
-                  //     //   },
-                  //     // );
-                  //     // if (MatchEngine.instance.previousMatchExists()) {
-                  //     //   _animationController.forward();
-                  //     // } else {
-                  //     //   _animationController.reverse();
-                  //     // }
-                  //     //
-                  //     // //
-                  //     // double getAnimatedValue(num value) {
-                  //     //   return _animationController.value * value;
-                  //     // }
-                  //
-                  //     // return AnimatedBuilder(
-                  //     //   animation: _animationController,
-                  //     //   child: dor,
-                  //     //   builder: (context, child) {
-                  //     //     return Opacity(
-                  //     //       opacity: getAnimatedValue(1.0),
-                  //     //       child: Container(
-                  //     //         width: getAnimatedValue(30.0),
-                  //     //         child: child,
-                  //     //         transform: Matrix4.identity()
-                  //     //           ..setTranslationRaw(
-                  //     //             getAnimatedValue(1.0),
-                  //     //             0.0,
-                  //     //             0.0,
-                  //     //           ),
-                  //     //       ),
-                  //     //     );
-                  //     //   },
-                  //     // );
-                  //   },
-                  // ),
-                  Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        Get.toNamed(ProfileScreen.routeName);
-                      },
-                      child: CircularUserAvatar(
-                        backgroundColor: Colors.grey,
+    return Container(
+      color: backgroundThemeColor,
+      child: Padding(
+        padding: MediaQuery.of(context).padding,
+        child: Container(
+          color: Colors.white70,
+          child: Column(
+            children: [
+              CustomAppBar(
+                centerWidget: buildCenterWidget(),
+                customTitle: Container(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      // ListenerWidget(
+                      //   notifier: MatchEngine.instance,
+                      //   builder: (context) {
+                      //     print('Listener on match screen called!');
+                      //     // Widget dor = InkWell(
+                      //     //   borderRadius: BorderRadius.circular(16.0),
+                      //     //   child: Padding(
+                      //     //     padding: EdgeInsets.only(right: 20.0),
+                      //     //     child: Transform(
+                      //     //       alignment: Alignment.centerRight,
+                      //     //       transform: Matrix4.rotationY(math.pi),
+                      //     //       child: Icon(
+                      //     //         Icons.refresh,
+                      //     //         size: 24.0,
+                      //     //         color: colorBlend01,
+                      //     //       ),
+                      //     //     ),
+                      //     //   ),
+                      //     //   onTap: () {
+                      //     //     MatchEngine.instance.goBack();
+                      //     //   },
+                      //     // );
+                      //     // if (MatchEngine.instance.previousMatchExists()) {
+                      //     //   _animationController.forward();
+                      //     // } else {
+                      //     //   _animationController.reverse();
+                      //     // }
+                      //     //
+                      //     // //
+                      //     // double getAnimatedValue(num value) {
+                      //     //   return _animationController.value * value;
+                      //     // }
+                      //
+                      //     // return AnimatedBuilder(
+                      //     //   animation: _animationController,
+                      //     //   child: dor,
+                      //     //   builder: (context, child) {
+                      //     //     return Opacity(
+                      //     //       opacity: getAnimatedValue(1.0),
+                      //     //       child: Container(
+                      //     //         width: getAnimatedValue(30.0),
+                      //     //         child: child,
+                      //     //         transform: Matrix4.identity()
+                      //     //           ..setTranslationRaw(
+                      //     //             getAnimatedValue(1.0),
+                      //     //             0.0,
+                      //     //             0.0,
+                      //     //           ),
+                      //     //       ),
+                      //     //     );
+                      //     //   },
+                      //     // );
+                      //   },
+                      // ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Get.toNamed(ProfileScreen.routeName);
+                          },
+                          child: CircularUserAvatar(
+                            backgroundColor: Colors.grey,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            showAppLogo: false,
-            hasBackButton: false,
-            trailing: Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: GestureDetector(
-                child: Image.asset(
-                  'assets/images/settings.png',
-                  scale: 12,
                 ),
-                onTap: () {
-                  Get.toNamed(SwipeSettingsScreen.routeName);
-                },
+                showAppLogo: false,
+                hasBackButton: false,
+                trailing: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: GestureDetector(
+                    child: Image.asset(
+                      'assets/images/settings.png',
+                      scale: 12,
+                    ),
+                    onTap: () {
+                      Get.toNamed(SwipeSettingsScreen.routeName);
+                    },
+                  ),
+                ),
               ),
-            ),
-          ),
 
-          // create the card stack.
-          // Wrap in expanded to allow the card to take up the maximum
-          // possible space.
-          Expanded(
-            child: MatchCardBuilder(),
+              // create the card stack.
+              // Wrap in expanded to allow the card to take up the maximum
+              // possible space.
+              Expanded(
+                child: MatchCardBuilder(),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

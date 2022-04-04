@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // This is a list of colors and gradients.
@@ -62,7 +61,7 @@ const TextStyle subHeaderStyle = TextStyle(
   color: Colors.black,
   fontFamily: 'Nunito',
   fontSize: 15,
-  fontWeight: FontWeight.w500,
+  fontWeight: FontWeight.w600,
 );
 
 const TextStyle smallCharStyle = TextStyle(

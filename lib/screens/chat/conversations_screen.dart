@@ -1,3 +1,4 @@
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/utils/mixins.dart';
@@ -40,8 +41,9 @@ class _ConversationsScreenState extends State<ConversationsScreen>
         FocusScope.of(context).unfocus();
       },
       child: Container(
-        color: Colors.white,
+        color: Colors.white70,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CustomAppBar(
               hasTopPadding: true,
@@ -93,6 +95,13 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                     borderSide: BorderSide(width: 1, color: Colors.black26),
                   ),
                 ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0, top: 10),
+              child: Text(
+                'Match pool',
+                style: boldTextStyle,
               ),
             ),
             ContactsWidget(

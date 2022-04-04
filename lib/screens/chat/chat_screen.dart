@@ -90,6 +90,7 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
         : '${howLongAgo.inHours} hours';
 
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
             'To Nitzan: show a widget for the case when there are no messages '),
@@ -131,7 +132,14 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
               await ChatData.instance.unmatch(theUser.uid);
               Get.back();
             },
-            child: Text('Unmatch')),
+            child: Text(
+              'Unmatch',
+              style: TextStyle(
+                color: Colors.red[900],
+                fontSize: 15.0,
+                fontWeight: FontWeight.bold,
+              ),
+            )),
       ),
       body: Column(
         children: [
