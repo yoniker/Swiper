@@ -40,77 +40,79 @@ class _ConversationsScreenState extends State<ConversationsScreen>
       onTap: () {
         FocusScope.of(context).unfocus();
       },
-      child: Container(
-        color: Colors.white70,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomAppBar(
-              hasTopPadding: true,
-              titleTextColor: Colors.black,
-              customTitle: Container(
-                padding: EdgeInsets.only(left: 10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          Get.toNamed(ProfileScreen.routeName);
-                        },
-                        child: CircularUserAvatar(
-                          backgroundColor: Colors.grey,
+      child: SingleChildScrollView(
+        child: Container(
+          color: Colors.white70,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomAppBar(
+                hasTopPadding: true,
+                titleTextColor: Colors.black,
+                customTitle: Container(
+                  padding: EdgeInsets.only(left: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Get.toNamed(ProfileScreen.routeName);
+                          },
+                          child: CircularUserAvatar(
+                            backgroundColor: Colors.grey,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
+                centerWidget: Center(
+                  child: VoilaLogoWidget(),
+                ),
+                showAppLogo: false,
+                hasBackButton: false,
               ),
-              centerWidget: Center(
-                child: VoilaLogoWidget(),
-              ),
-              showAppLogo: false,
-              hasBackButton: false,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: TextFormField(
-                onChanged: (newProfileName) {
-                  setState(() {
-                    searchProfile = newProfileName;
-                  });
-                },
-                textCapitalization: TextCapitalization.sentences,
-                maxLines: 1,
-                maxLength: 15,
-                style: const TextStyle(fontSize: 20, color: Colors.black87),
-                decoration: InputDecoration(
-                  counterText: '',
-                  suffixIcon: Icon(Icons.search),
-                  hintStyle:
-                      const TextStyle(color: Colors.black26, fontSize: 18),
-                  hintText: ' Search my matches',
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(width: 1, color: Colors.black26),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                child: TextFormField(
+                  onChanged: (newProfileName) {
+                    setState(() {
+                      searchProfile = newProfileName;
+                    });
+                  },
+                  textCapitalization: TextCapitalization.sentences,
+                  maxLines: 1,
+                  maxLength: 15,
+                  style: const TextStyle(fontSize: 20, color: Colors.black87),
+                  decoration: InputDecoration(
+                    counterText: '',
+                    suffixIcon: Icon(Icons.search),
+                    hintStyle:
+                        const TextStyle(color: Colors.black26, fontSize: 18),
+                    hintText: ' Search my matches',
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(width: 1, color: Colors.black26),
+                    ),
                   ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0, top: 10),
-              child: Text(
-                'Match pool',
-                style: boldTextStyle,
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0, top: 10),
+                child: Text(
+                  'Match pool',
+                  style: boldTextStyle,
+                ),
               ),
-            ),
-            ContactsWidget(
-              search: searchProfile.toLowerCase(),
-            ),
-            ConversationsPreviewWidget(
-              search: searchProfile.toLowerCase(),
-            ),
-          ],
+              ContactsWidget(
+                search: searchProfile.toLowerCase(),
+              ),
+              ConversationsPreviewWidget(
+                search: searchProfile.toLowerCase(),
+              ),
+            ],
+          ),
         ),
       ),
     );

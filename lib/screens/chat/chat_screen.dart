@@ -1,3 +1,4 @@
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/infoMessage.dart';
 import 'package:betabeta/models/profile.dart';
@@ -36,6 +37,7 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
   List<types.Message> _messages = <types.Message>[];
   late String conversationId;
   late Profile theUser;
+  late String typedMessage;
 
   void updateChatData() {
     List<InfoMessage> currentChatMessages =
@@ -68,6 +70,7 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
       Get.offAllNamed(MainNavigationScreen.routeName);
     } //TODO on this kind of error another option is to put out a detailed error screen
     theUser = userFound!;
+    typedMessage = '';
     conversationId = ChatData.instance.calculateConversationId(theUser.uid);
     ChatData.instance.markConversationAsRead(conversationId).then((_) {
       ChatData.instance.listenConversation(conversationId, listenConversation);
@@ -85,29 +88,56 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
     }
 
     Duration howLongAgo = DateTime.now().difference(matchTime);
-    String howLongAgoDescription = howLongAgo.inDays > 0
-        ? '${howLongAgo.inDays} days'
-        : '${howLongAgo.inHours} hours';
+    String howLongAgoDescription() {
+      if (howLongAgo.inDays > 0) return '${howLongAgo.inDays} days ago';
+      if (howLongAgo.inHours > 0) return '${howLongAgo.inHours} hours ago';
+      return '${howLongAgo.inMinutes} minutes ago';
+    }
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-            'To Nitzan: show a widget for the case when there are no messages '),
-        Text('For example'),
-        Text('You got matched $howLongAgoDescription ago'),
-        GestureDetector(
-          child: CircularUserAvatar(
-            imageProvider: NetworkImage(
-                NewNetworkService.getProfileImageUrl(theUser.profileImage)),
-            radius: 40,
+    return Container(
+      color: Colors.white,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'You matched with ',
+                style: TextStyle(fontSize: 20, color: Colors.black54),
+              ),
+              Text(
+                theUser.username,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Colors.black.withOpacity(0.6)),
+              ),
+            ],
           ),
-          onTap: () {
-            Get.toNamed(OtherUserProfileScreen.routeName,
-                arguments: theUser.uid);
-          },
-        ),
-      ],
+          SizedBox(
+            height: 20,
+          ),
+          GestureDetector(
+            child: CircularUserAvatar(
+              imageProvider: NetworkImage(
+                  NewNetworkService.getProfileImageUrl(theUser.profileImage)),
+              radius: 90,
+            ),
+            onTap: () {
+              Get.toNamed(OtherUserProfileScreen.routeName,
+                  arguments: theUser.uid);
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            howLongAgoDescription(),
+            style: TextStyle(fontSize: 20, color: Colors.black54),
+          )
+        ],
+      ),
     );
   }
 
@@ -144,10 +174,27 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
       body: Column(
         children: [
           if (_messages.length == 0)
-            Expanded(flex: 1, child: buildEmptyChatWidget()),
+            Expanded(flex: 4, child: buildEmptyChatWidget()),
           Expanded(
             flex: 1,
             child: Chat(
+              theme: DefaultChatTheme(
+                inputMargin: EdgeInsets.all(10),
+                inputPadding: EdgeInsets.all(10),
+                inputBackgroundColor: Colors.transparent,
+                inputContainerDecoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey, width: 1.5),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20),
+                  ),
+                ),
+                inputTextColor: Colors.black87,
+                inputTextCursorColor: Colors.blue,
+              ),
+              // customBottomWidget: TextField(
+              //   onChanged: (newMessage){typedMessage = newMessage;},
+              // ),
+              emptyState: SizedBox(),
               user: types.User(id: SettingsData.instance.uid),
               showUserAvatars: true,
               onSendPressed: (text) {
