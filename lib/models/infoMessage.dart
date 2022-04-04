@@ -1,4 +1,4 @@
-import 'package:betabeta/models/chatData.dart';
+import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/models/infoMessageReceipt.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/settings_model.dart';

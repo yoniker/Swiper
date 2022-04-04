@@ -26,21 +26,6 @@ class ChatNetworkHelper {
 
   ChatNetworkHelper._internal();
 
-  static Future<List<Profile>> getAllUsers() async {
-    //TODO currently no one uses this method, remove if really redundant
-    Uri usersLinkUri =
-        Uri.https(SERVER_ADDR, 'users/${SettingsData.instance.uid}');
-    http.Response resp = await http.get(usersLinkUri);
-    if (resp.statusCode == 200) {
-      //TODO think how to handle network errors
-      List<dynamic> parsed = json.jsonDecode(resp.body);
-      List<Profile> users = parsed.map((e) => Profile.fromJson(e)).toList();
-      return users;
-    }
-
-    return [];
-  }
-
   static Future<TaskResult> sendMessage(String uid,
       String startingConversationContent, double senderEpochTime) async {
     Map<String, dynamic> toSend = {

@@ -73,7 +73,7 @@ class Profile{
     this.lastUpdate,required this.preferredGender,required this.userGender,required this.showUserGender
 
   });
-  Profile.fromJson(Map json) :
+  Profile.fromJson(Map json,{DateTime? lastUpdateTime}) :
         this.uid = json[API_CONSTS.USER_UID_KEY].toString(),
         this.hobbies=List<String>.from(jsonDecode( json[API_CONSTS.USER_HOBBIES]??jsonEncode([]))),
         this.pets = List<String>.from(jsonDecode( json[API_CONSTS.USER_PETS]??jsonEncode([]))),
@@ -101,7 +101,7 @@ class Profile{
         this.showUserGender = json[API_CONSTS.SHOW_USER_GENDER_KEY]!=null && json[API_CONSTS.SHOW_USER_GENDER_KEY]=='true',
         this.preferredGender = json[API_CONSTS.PREFERRED_GENDER_KEY]??'',
         this.matchChangedTime = json[API_CONSTS.USER_MATCH_CHANGED_TIME]!=null? DateTime.fromMillisecondsSinceEpoch((json[API_CONSTS.USER_MATCH_CHANGED_TIME]*1000).toInt()).toUtc():null,
-        this.lastUpdate = DateTime.now();
+        this.lastUpdate = lastUpdateTime??DateTime(1990);
 
 
   types.User toUiUser(){
