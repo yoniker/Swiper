@@ -13,7 +13,7 @@ class MatchEngine extends ChangeNotifier {
   bool? addedMoreProfiles;
   Future? matchesBeingGotten; //See https://stackoverflow.com/questions/63402499/flutter-how-not-to-call-the-same-service-over-and-over/63402620?noredirect=1#comment112113319_63402620
   MatchSearchStatus _serverMatchesSearchStatus = MatchSearchStatus.empty;
-  LocationCountResponse _locationCountData = LocationCountResponse(status: LocationCountStatus.initial_state);
+  LocationCountData _locationCountData = LocationCountData(status: LocationCountStatus.initial_state);
   Future? countLocationBeingFetches;
   DateTime lastLocationCheck = DateTime(1990);
   bool listeningToLocation = false;
@@ -80,8 +80,8 @@ class MatchEngine extends ChangeNotifier {
   }
 
 
-  LocationCountStatus get locationCountStatus{
-    return _locationCountData.status;
+  LocationCountData get locationCountData{
+    return LocationCountData.clone(_locationCountData); //So that we will not change it by a mistake
   }
 
   
@@ -106,7 +106,7 @@ class MatchEngine extends ChangeNotifier {
       }
       if(SettingsData.instance.longitude==0 && SettingsData.instance.latitude==0){
         print('No user info about location,so no point in addressing the server');
-        _locationCountData = LocationCountResponse(status: LocationCountStatus.unknown_location);
+        _locationCountData = LocationCountData(status: LocationCountStatus.unknown_location);
         if(!listeningToLocation){LocationService.instance.addListener(locationListener);
         listeningToLocation = true;}
         return;

@@ -176,7 +176,7 @@ flutter:
 
     - family: LuckiestGuy
       fonts:
-        - asset: assets/fonts/luckiestGuy-Regular.ttf
+        - asset: assets/fonts/LuckiestGuy-Regular.ttf
           weight: 500
 
 

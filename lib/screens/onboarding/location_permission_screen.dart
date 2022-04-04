@@ -20,7 +20,7 @@ class LocationPermissionScreen extends StatefulWidget {
 
 class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
   void enableLocation() async {
-    var status = await LocationService.requestLocationCapability();
+    var status = await LocationService.instance.requestLocationCapability();
     if (status == LocationServiceStatus.enabled) {
       LocationService.instance.onInit();
       Get.offAllNamed(OnboardingFlowController.instance.nextRoute(

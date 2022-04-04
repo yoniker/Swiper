@@ -6,11 +6,13 @@ enum LocationCountStatus{ //Possible responses from Location count request
 unknown_location, enough_users,not_enough_users, initial_state
 }
 
-class LocationCountResponse{
+class LocationCountData{
   LocationCountStatus status;
   int? requiredNumUsers;
   int? currentNumUsers;
-  LocationCountResponse({required this.status,this.currentNumUsers,this.requiredNumUsers});
+  LocationCountData({required this.status,this.currentNumUsers,this.requiredNumUsers});
+  LocationCountData.clone(LocationCountData copiedData): this(status: copiedData.status,requiredNumUsers: copiedData.requiredNumUsers,currentNumUsers: copiedData.currentNumUsers);
+
 }
 
 class API_CONSTS{

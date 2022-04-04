@@ -276,27 +276,27 @@ class NewNetworkService {
 
   }
 
-  Future<LocationCountResponse> getCountUsersByLocation()async{
+  Future<LocationCountData> getCountUsersByLocation()async{
     Uri countUsersByLocationUri = Uri.https(SERVER_ADDR, '/users_in_location/${SettingsData.instance.uid}');
     http.Response response = await http.get(countUsersByLocationUri);
     if(response.statusCode!=200){
-      return LocationCountResponse(status: LocationCountStatus.initial_state);
+      return LocationCountData(status: LocationCountStatus.initial_state);
     }
     try{
       var decodedResponse = jsonDecode(response.body);
       LocationCountStatus status = LocationCountStatus.values.firstWhere((status_option) => status_option.name == decodedResponse[API_CONSTS.LOCATION_STATUS_KEY],orElse: ()=>LocationCountStatus.initial_state);
       //Here there should be just enough users or not enough users + data
       if(status==LocationCountStatus.enough_users){
-        return LocationCountResponse(status: status);
+        return LocationCountData(status: status);
       }
       //Here only if there are enough users so:
       int requiredUsers = decodedResponse[API_CONSTS.LOCATION_REQUIRED_USERS];
       int currentNumUsers = decodedResponse[API_CONSTS.LOCATION_CURRENT_USERS];
-      return LocationCountResponse(status: status,currentNumUsers: currentNumUsers,requiredNumUsers: requiredUsers);
+      return LocationCountData(status: status,currentNumUsers: currentNumUsers,requiredNumUsers: requiredUsers);
 
     }
     catch(e){
-      return LocationCountResponse(status: LocationCountStatus.initial_state);
+      return LocationCountData(status: LocationCountStatus.initial_state);
     }
 
   }

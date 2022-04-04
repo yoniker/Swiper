@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:location/location.dart';
 
 enum LocationServiceStatus {
+  initializing,
   enabled,
   serviceDisabled,
   userNotGrantedPermission
@@ -21,11 +22,13 @@ class LocationService extends ChangeNotifier{
 
   DateTime lastUpdateDate = DateTime(1990);
 
+  LocationServiceStatus _status = LocationServiceStatus.initializing;
 
 
 
 
-  static Future<LocationServiceStatus> requestLocationCapability() async {
+
+  Future<LocationServiceStatus> requestUpdateLocationCapability()async{
     Location location = new Location();
 
     bool _serviceEnabled;
@@ -48,6 +51,14 @@ class LocationService extends ChangeNotifier{
     }
     return LocationServiceStatus.enabled;
   }
+
+   Future<LocationServiceStatus> requestLocationCapability() async {
+    _status = await requestUpdateLocationCapability();
+    return _status;
+  }
+
+  LocationServiceStatus get serviceStatus => _status;
+
 
    updateLocation(LocationData locationData) {
 
@@ -79,9 +90,9 @@ class LocationService extends ChangeNotifier{
     });
   }
 
-  static Future<LocationData> getLocation() async {
+  Future<LocationData> getLocation() async {
     LocationServiceStatus status =
-        await LocationService.requestLocationCapability();
+        await requestLocationCapability();
     if (status != LocationServiceStatus.enabled) {
       throw Exception(
           'Location service not enabled when get location was called!');
@@ -91,7 +102,7 @@ class LocationService extends ChangeNotifier{
   }
 
    onInit() async {
-    var location = await LocationService.getLocation();
+    var location = await getLocation();
     updateLocation(location);
     _listenLocationChanges();
   }
