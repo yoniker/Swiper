@@ -155,14 +155,35 @@ class _ConversationsPreviewWidgetState
                                       ),
                                     ],
                                   ),
-                                  Text(
-                                    'Age: ${collocutor.age}',
-                                    style: TextStyle(
-                                      color: Colors.blueGrey[400],
-                                      fontSize: 15.0,
-                                      fontWeight: FontWeight.w600,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        collocutor.age != null
+                                            ? 'Age: ${collocutor.age}'
+                                            : '',
+                                        style: TextStyle(
+                                          color: Colors.blueGrey[400],
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.w600,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        collocutor.height != null &&
+                                                collocutor.height != 0
+                                            ? 'Height: ${cmToFeet(collocutor.height)} ft'
+                                            : '',
+                                        style: TextStyle(
+                                          color: Colors.blueGrey[400],
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.w600,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      )
+                                    ],
                                   )
                                 ],
                               ),
@@ -170,20 +191,25 @@ class _ConversationsPreviewWidgetState
                           ],
                         ),
                         if (!messageWasRead)
-                          Container(
-                              width: 40,
-                              height: 20,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  color: Colors.red),
-                              alignment: Alignment.center,
-                              child: Text(
-                                'NEW',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.bold),
-                              )),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                  width: 60,
+                                  height: 25,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      color: Colors.red[800]),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    'NEW',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.bold),
+                                  )),
+                            ],
+                          ),
                       ],
                     ),
                   ),
