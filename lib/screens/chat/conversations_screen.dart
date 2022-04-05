@@ -36,11 +36,12 @@ class _ConversationsScreenState extends State<ConversationsScreen>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: SingleChildScrollView(
+    return SafeArea(
+      top: false,
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
         child: Container(
           color: Colors.white70,
           child: Column(
@@ -74,43 +75,56 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                 showAppLogo: false,
                 hasBackButton: false,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                child: TextFormField(
-                  onChanged: (newProfileName) {
-                    setState(() {
-                      searchProfile = newProfileName;
-                    });
-                  },
-                  textCapitalization: TextCapitalization.sentences,
-                  maxLines: 1,
-                  maxLength: 15,
-                  style: const TextStyle(fontSize: 20, color: Colors.black87),
-                  decoration: InputDecoration(
-                    counterText: '',
-                    suffixIcon: Icon(Icons.search),
-                    hintStyle:
-                        const TextStyle(color: Colors.black26, fontSize: 18),
-                    hintText: ' Search my matches',
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(width: 1, color: Colors.black26),
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: TextFormField(
+                    onChanged: (newProfileName) {
+                      setState(() {
+                        searchProfile = newProfileName;
+                      });
+                    },
+                    textCapitalization: TextCapitalization.sentences,
+                    maxLines: 1,
+                    maxLength: 15,
+                    style: const TextStyle(fontSize: 20, color: Colors.black87),
+                    decoration: InputDecoration(
+                      counterText: '',
+                      suffixIcon: Icon(Icons.search),
+                      hintStyle:
+                          const TextStyle(color: Colors.black26, fontSize: 18),
+                      hintText: ' Search my matches',
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(width: 1, color: Colors.black26),
+                      ),
                     ),
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10.0, top: 10),
-                child: Text(
-                  'Match pool',
-                  style: boldTextStyle,
+              Container(
+                child: Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10.0, top: 10),
+                          child: Text(
+                            'My Matches',
+                            style: boldTextStyle,
+                          ),
+                        ),
+                        ContactsWidget(
+                          search: searchProfile.toLowerCase(),
+                        ),
+                        ConversationsPreviewWidget(
+                          search: searchProfile.toLowerCase(),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-              ContactsWidget(
-                search: searchProfile.toLowerCase(),
-              ),
-              ConversationsPreviewWidget(
-                search: searchProfile.toLowerCase(),
-              ),
+              )
             ],
           ),
         ),

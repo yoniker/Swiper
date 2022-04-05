@@ -49,6 +49,7 @@ class _ConversationsPreviewWidgetState
           ),
         ),
         ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
             padding: EdgeInsets.zero,
             shrinkWrap: true,
             itemCount: conversations.length,
@@ -127,15 +128,30 @@ class _ConversationsPreviewWidgetState
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        collocutor != null
-                                            ? collocutor.username.split(' ')[0]
-                                            : '',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            collocutor != null
+                                                ? collocutor.username
+                                                    .split(' ')[0]
+                                                : '',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            collocutor.age != null
+                                                ? ', ${collocutor.age}'
+                                                : '',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15.0,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                       SizedBox(
                                         height: 5.0,
@@ -157,17 +173,6 @@ class _ConversationsPreviewWidgetState
                                   ),
                                   Row(
                                     children: [
-                                      Text(
-                                        collocutor.age != null
-                                            ? 'Age: ${collocutor.age}'
-                                            : '',
-                                        style: TextStyle(
-                                          color: Colors.blueGrey[400],
-                                          fontSize: 15.0,
-                                          fontWeight: FontWeight.w600,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
                                       SizedBox(
                                         width: 10,
                                       ),
@@ -191,25 +196,20 @@ class _ConversationsPreviewWidgetState
                           ],
                         ),
                         if (!messageWasRead)
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                  width: 60,
-                                  height: 25,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      color: Colors.red[800]),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    'NEW',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                            ],
-                          ),
+                          Container(
+                              width: 60,
+                              height: 25,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  color: Colors.red[800]),
+                              alignment: Alignment.center,
+                              child: Text(
+                                'NEW',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15.0,
+                                    fontWeight: FontWeight.bold),
+                              )),
                       ],
                     ),
                   ),

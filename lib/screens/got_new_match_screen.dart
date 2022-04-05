@@ -1,6 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/screens/chat/chat_screen.dart';
 import 'package:betabeta/screens/chat/conversations_screen.dart';
 import 'package:betabeta/widgets/match_card.dart';
 import 'package:flutter/material.dart';
@@ -150,7 +151,8 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen>
                 ),
                 GestureDetector(
                   onTap: () {
-                    Get.offAndToNamed(ConversationsScreen.routeName);
+                    Get.offAndToNamed(
+                        ChatScreen.getRouteWithUserId(theUser.uid));
 
                     /// ToDo need to get to user match chat directly
                   },

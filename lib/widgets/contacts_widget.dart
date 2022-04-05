@@ -92,7 +92,11 @@ class _ContactsWidgetState extends State<ContactsWidget> {
                     ),
                   ),
                 );
-              return SizedBox();
+              return CircleAvatar(
+                radius: 35,
+                backgroundColor: Colors.grey[200],
+                child: Text('No matches'),
+              );
             }));
   }
 

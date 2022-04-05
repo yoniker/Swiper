@@ -178,6 +178,13 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
           Expanded(
             flex: 1,
             child: Chat(
+              customBottomWidget: Input(
+                onSendPressed: (text) {
+                  ChatData.instance.sendMessage(theUser.uid,
+                      jsonEncode({"type": "text", "content": "${text.text}"}));
+                },
+                sendButtonVisibilityMode: SendButtonVisibilityMode.editing,
+              ),
               theme: DefaultChatTheme(
                 inputMargin: EdgeInsets.all(10),
                 inputPadding: EdgeInsets.all(10),
