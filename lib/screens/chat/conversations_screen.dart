@@ -105,15 +105,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                 child: Expanded(
                   child: SingleChildScrollView(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10.0, top: 10),
-                          child: Text(
-                            'My Matches',
-                            style: boldTextStyle,
-                          ),
-                        ),
                         ContactsWidget(
                           search: searchProfile.toLowerCase(),
                         ),

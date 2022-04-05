@@ -23,7 +23,7 @@ class MainNavigationScreen extends StatefulWidget {
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  int _selectedTabIndex = 0;
+  static int selectedTabIndex = 0;
   // create a pageController variable to control the varoius pages
 
   // List of pages.
@@ -39,7 +39,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   /// builds the widget's body.
   PageTransitionSwitcher _body() {
     return PageTransitionSwitcher(
-      reverse: _selectedTabIndex == 0,
+      reverse: selectedTabIndex == 0,
       duration: Duration(seconds: 1),
       transitionBuilder: (widget, ani1, ani2) {
         return SharedAxisTransition(
@@ -54,7 +54,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         // another page.
 
         children: pages,
-        index: _selectedTabIndex,
+        index: selectedTabIndex,
       ),
     );
   }
@@ -63,7 +63,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     //<debug>
     print('GOING TO PAGE:- index ~$index');
     setState(() {
-      _selectedTabIndex = index;
+      selectedTabIndex = index;
     });
   }
 
@@ -71,7 +71,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   void initState() {
     super.initState();
     // initialize the `_selectedTabIndex` variable with the value provided by appstate
-    _selectedTabIndex = AppStateInfo.instance.latestTabOnMainNavigation;
+    selectedTabIndex = AppStateInfo.instance.latestTabOnMainNavigation;
 
     // initialize the pageController with necessary values.
   }
@@ -85,7 +85,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     AppStateInfo.instance.latestTabOnMainNavigation =
-        _selectedTabIndex; //TODO ugly as I mentioned at the comments at the Appstate,switch with a better solution when available
+        selectedTabIndex; //TODO ugly as I mentioned at the comments at the Appstate,switch with a better solution when available
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -102,11 +102,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               fontSize: 13.0,
             ),
             selectedItemColor:
-                _selectedTabIndex == 1 ? goldColorish : mainAppColor02,
+                selectedTabIndex == 1 ? goldColorish : mainAppColor02,
             unselectedItemColor: unselectedTabColor,
             showUnselectedLabels: true,
             elevation: 0.0,
-            currentIndex: _selectedTabIndex,
+            currentIndex: selectedTabIndex,
             onTap: (index) {
               switchTab(index);
 

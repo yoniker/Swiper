@@ -2,7 +2,6 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/chat/chat_screen.dart';
-import 'package:betabeta/screens/chat/conversations_screen.dart';
 import 'package:betabeta/widgets/match_card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
