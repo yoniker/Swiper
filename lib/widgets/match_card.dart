@@ -2,7 +2,7 @@ import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/models/profile.dart';
-import 'package:betabeta/models/match_engine.dart';
+import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/screens/full_image_screen.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/widgets/basic_detail.dart';

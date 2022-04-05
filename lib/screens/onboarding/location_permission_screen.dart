@@ -1,5 +1,5 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
-import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
+import 'package:betabeta/services/onboarding_flow_controller.dart';
 import 'package:betabeta/services/location_service.dart';
 import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
@@ -20,7 +20,7 @@ class LocationPermissionScreen extends StatefulWidget {
 
 class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
   void enableLocation() async {
-    var status = await LocationService.requestLocationCapability();
+    var status = await LocationService.instance.requestLocationCapability();
     if (status == LocationServiceStatus.enabled) {
       LocationService.instance.onInit();
       Get.offAllNamed(OnboardingFlowController.instance.nextRoute(

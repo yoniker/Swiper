@@ -2,12 +2,11 @@ import 'dart:io';
 
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
-import 'package:betabeta/models/chatData.dart';
-import 'package:betabeta/models/loginService.dart';
 import 'package:betabeta/screens/onboarding/phone_screen.dart';
+import 'package:betabeta/services/loginService.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
-import 'package:betabeta/screens/onboarding/onboarding_flow_controller.dart';
+import 'package:betabeta/services/onboarding_flow_controller.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
 import 'package:betabeta/widgets/onboarding/loading_indicator.dart';
@@ -37,7 +36,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       print('THERE IS NO UID AT CONTINUE IF LOGGED IN, SO NOT LOGGING IN...');
       return;
     }
-
+    
     OnboardingFlowController.instance.setOnboardingPath(currentStatus);
 
     Get.offAllNamed(
@@ -52,7 +51,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return currentRegistrationStatus;
   }
 
-  _tryLoginFacebook() async {
+  _tryFacebookLogin() async {
     setState(() {
       currentlyTryingToLogin = true;
     });
@@ -68,6 +67,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     setState(() {
       currentlyTryingToLogin = false;
     });
+  }
+
+  _tryAppleLogin() async {
+    setState(() {
+      currentlyTryingToLogin = true;
+    });
+    UserCredential? credential = await LoginsService.instance.signInWithApple();
+    if(credential!=null){ //TODO replace condition with "apple login failed".
+    ServerRegistrationStatus currentServerRegistrationStatus = await _registerUserAtServer();
+    await _continueIfLoggedIn(currentServerRegistrationStatus);}
+    setState(() {
+      currentlyTryingToLogin = false;
+    });
+
   }
 
   @override
@@ -141,7 +154,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               setState(() {
                                 currentlyTryingToLogin = true;
                               });
-                              await _tryLoginFacebook();
+                              await _tryFacebookLogin();
                               setState(() {
                                 currentlyTryingToLogin = false;
                               });
@@ -157,11 +170,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 name: 'Continue with Apple      ',
                                 showBorder: false,
                                 color: Colors.white,
-                                onTap: () {
+                                onTap: () async{
                                   //TODO Apple login logic
-                                  Get.offAllNamed(OnboardingFlowController
-                                      .instance
-                                      .nextRoute(WelcomeScreen.routeName));
+                                  _tryAppleLogin();
+
+                                  // Get.offAllNamed(OnboardingFlowController
+                                  //     .instance
+                                  //     .nextRoute(WelcomeScreen.routeName));
                                 },
                                 icon: Icons.apple_rounded),
                           SizedBox(

@@ -105,6 +105,7 @@ Future<bool> _handleMessageOpenedFromNotification(RemoteMessage message) async {
 class ChatData extends ChangeNotifier {
   static const CONVERSATIONS_BOXNAME = 'conversations';
   static const USERS_BOXNAME = 'users';
+  static const Duration minTimeDiffForUserUpdate = Duration(hours: 1);
   Map<String, Tuple2<ValueListenable<Box>, int>> listenedValues = {};
   Map<String, double> markingConversation = {};
   StreamSubscription? _fcmSubscription, _websocketSubscription;
@@ -146,6 +147,21 @@ class ChatData extends ChangeNotifier {
       await Hive.openBox<InfoConversation>(ChatData.CONVERSATIONS_BOXNAME);
       await Hive.openBox<Profile>(ChatData.USERS_BOXNAME);
     } catch (_) {}
+  }
+
+  Future<void> updateUserBox(String uid,Profile newProfileInformation)async{
+    Profile? currentUserProfile = usersBox.get(uid);
+    if(currentUserProfile!=null && currentUserProfile.lastUpdate!=null && DateTime.now().difference(currentUserProfile.lastUpdate!)<minTimeDiffForUserUpdate){
+      return; //Don't overwrite updated profiles
+    }
+
+    if(currentUserProfile!=null && newProfileInformation.lastUpdate!=null && currentUserProfile.lastUpdate!=null && newProfileInformation.lastUpdate!.compareTo(currentUserProfile.lastUpdate!)<0){
+      return;
+    }
+    for(int i=0; i<100;++i){
+      print('HAHAHAHAHA DOR');
+    }
+    await usersBox.put(uid, newProfileInformation);
   }
 
   List<String> participantsFromConversationId(String conversationId) {
@@ -271,7 +287,7 @@ class ChatData extends ChangeNotifier {
       String? userId = message['user_id'];
       Profile? theUser = userId == null ? null : getUserById(userId);
       if (theUser != null) {
-        await ChatData.instance.updateUserData(theUser
+        await ChatData.instance.updateUserDataFromServer(theUser
             .uid); //TODO this is not optimal, update server such that it sends all relevant user info.
         Get.toNamed(GotNewMatchScreen.routeName,
             arguments: getUserById(theUser.uid));
@@ -283,13 +299,15 @@ class ChatData extends ChangeNotifier {
       return;
     }
 
+    
+
     //If here then push notification is new message as all other notifications types were handled above this line
     final String senderId = message['user_id'];
     if (senderId != SettingsData.instance.uid) {
       //Update Users Box
       final Profile sender =
           Profile.fromJson(jsonDecode(message["sender_details"]));
-      usersBox.put(sender.uid, sender); //Update users box
+      updateUserBox(sender.uid,sender); 
       NotificationsController.instance.showNewMessageNotification(
           senderName: sender.username, senderId: senderId);
     }
@@ -306,7 +324,7 @@ class ChatData extends ChangeNotifier {
     List<dynamic> unparsedUsers = newData.item2;
     await updateUsersData(unparsedUsers);
     await removeOrphanConversations();
-    print('got ${newMessages.length} new messages from server while syncing');
+    //print('got ${newMessages.length} new messages from server while syncing');
     double maxTimestampSeen = 0.0;
     for (final message in newMessages) {
       addMessageToDB(message);
@@ -414,13 +432,15 @@ class ChatData extends ChangeNotifier {
 
   Future<void> updateUsersData(List<dynamic> unparsedUsers) async {
     for (var unparsedUser in unparsedUsers) {
-      Profile user = Profile.fromJson(unparsedUser);
+      Profile user = Profile.fromJson(unparsedUser,lastUpdateTime: DateTime(1990));
       if (unparsedUser[API_CONSTS.MATCH_STATUS] != 'active') {
         await usersBox.delete(user.uid);
       } else {
-        await usersBox.put(user.uid, user);
+        Profile? currentUserProfile = usersBox.get(user.uid);
+        await updateUserBox(user.uid,user);
       }
     }
+    updateAllUsersDataFromServer();
   }
 
   void sendMessage(String otherUserId, String messageContent,
@@ -660,7 +680,13 @@ class ChatData extends ChangeNotifier {
     }
   }
 
-  Future<void> updateUserData(String uid) async {
+  Future<void> updateUserDataFromServer(String uid,{bool forceUpdate=false}) async {
+    Profile? currentProfile = usersBox.get(uid);
+    if(currentProfile!=null && currentProfile.lastUpdate!=null &&
+        DateTime.now().difference(currentProfile.lastUpdate!)<minTimeDiffForUserUpdate &&
+        forceUpdate!=true){
+      return;
+    }
     Profile? profileFromServer =
         await NewNetworkService.instance.getSingleUserProfile(uid);
     if (profileFromServer != null) {
@@ -674,16 +700,17 @@ class ChatData extends ChangeNotifier {
           profileFromServer.hotnessScore ?? currentProfile?.hotnessScore;
       profileFromServer.location =
           profileFromServer.location ?? currentProfile?.location;
+      profileFromServer.lastUpdate = DateTime.now();
       usersBox.put(uid, profileFromServer);
       notifyListeners();
     }
   }
 
-  Future<void> updateAllUsersData() async {
+  Future<void> updateAllUsersDataFromServer() async {
     //TODO This isn't an optimal solution.
     //TODO At the very least, for each user remember the last update time, and don't update if that time was "very recent".
     for (var user in users) {
-      await ChatData.instance.updateUserData(user.uid);
+      await ChatData.instance.updateUserDataFromServer(user.uid);
     }
     notifyListeners();
   }

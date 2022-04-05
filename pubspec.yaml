@@ -60,7 +60,6 @@ dependencies:
   flutter_local_notifications: ^9.1.5
   connectivity_plus: ^2.1.0
   firebase_auth: ^3.3.6
-  flutter_verification_code: ^1.1.2+1
   video_player: ^2.2.18
   country_code_picker: ^2.0.2
   animated_text_kit: ^4.2.1
@@ -68,6 +67,10 @@ dependencies:
   location: ^4.3.0
   csc_picker: ^0.2.6
   extended_image: ^6.0.1
+  pinput: ^2.2.5
+  google_fonts: ^2.3.1
+  sign_in_with_apple: ^3.3.0
+  crypto: ^3.0.1
       # publish_to: 'none'
 dependency_overrides:
   photo_view:
@@ -174,7 +177,7 @@ flutter:
 
     - family: LuckiestGuy
       fonts:
-        - asset: assets/fonts/luckiestGuy-Regular.ttf
+        - asset: assets/fonts/LuckiestGuy-Regular.ttf
           weight: 500
 
 

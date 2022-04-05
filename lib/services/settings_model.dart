@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:betabeta/constants/enums.dart';
-import 'package:betabeta/models/match_engine.dart';
+import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

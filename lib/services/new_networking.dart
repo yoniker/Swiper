@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/models/profile.dart';
-import 'package:betabeta/models/match_engine.dart';
+import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/services/cache_service.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -257,9 +257,47 @@ class NewNetworkService {
       SettingsData.instance.uid = decodedResponse[API_CONSTS.USER_DATA][SettingsData.FIREBASE_UID_KEY];
       return ServerRegistrationStatus.new_register;
     //}
+  }
 
 
 
+  Future<void> verifyToken({required String firebaseIdToken}) async {
+    Uri verifyTokenUri = Uri.https(SERVER_ADDR, '/verify_token');
+    http.Response response = await http
+        .get(verifyTokenUri, headers: {'firebase_id_token': firebaseIdToken});
+    if (response.statusCode != 200) {
+      //TODO throw error (bad jwt? server down?)
+    }
+
+    var decodedResponse= json.jsonDecode(response.body);
+
+    return;
+    //}
+
+  }
+
+  Future<LocationCountData> getCountUsersByLocation()async{
+    Uri countUsersByLocationUri = Uri.https(SERVER_ADDR, '/users_in_location/${SettingsData.instance.uid}');
+    http.Response response = await http.get(countUsersByLocationUri);
+    if(response.statusCode!=200){
+      return LocationCountData(status: LocationCountStatus.initial_state);
+    }
+    try{
+      var decodedResponse = jsonDecode(response.body);
+      LocationCountStatus status = LocationCountStatus.values.firstWhere((status_option) => status_option.name == decodedResponse[API_CONSTS.LOCATION_STATUS_KEY],orElse: ()=>LocationCountStatus.initial_state);
+      //Here there should be just enough users or not enough users + data
+      if(status==LocationCountStatus.enough_users){
+        return LocationCountData(status: status);
+      }
+      //Here only if there are enough users so:
+      int requiredUsers = decodedResponse[API_CONSTS.LOCATION_REQUIRED_USERS];
+      int currentNumUsers = decodedResponse[API_CONSTS.LOCATION_CURRENT_USERS];
+      return LocationCountData(status: status,currentNumUsers: currentNumUsers,requiredNumUsers: requiredUsers);
+
+    }
+    catch(e){
+      return LocationCountData(status: LocationCountStatus.initial_state);
+    }
 
   }
 }

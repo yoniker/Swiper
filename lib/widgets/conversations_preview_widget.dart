@@ -1,5 +1,5 @@
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/models/chatData.dart';
+import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/models/infoConversation.dart';
 import 'package:betabeta/models/infoMessage.dart';
 import 'package:betabeta/models/profile.dart';

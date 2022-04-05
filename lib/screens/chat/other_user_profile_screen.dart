@@ -1,4 +1,4 @@
-import 'package:betabeta/models/chatData.dart';
+import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/match_card.dart';
@@ -26,7 +26,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
         profileToShow.lastUpdate == null ||
         DateTime.now().difference(profileToShow.lastUpdate!) >
             OtherUserProfileScreen.minDurationForUpdate) {
-      ChatData.instance.updateUserData(widget.userId);
+      ChatData.instance.updateUserDataFromServer(widget.userId);
     }
     super.initState();
   }

@@ -1,13 +1,15 @@
 import 'package:betabeta/services/settings_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:location/location.dart';
 
 enum LocationServiceStatus {
+  initializing,
   enabled,
   serviceDisabled,
   userNotGrantedPermission
 }
 
-class LocationService {
+class LocationService extends ChangeNotifier{
 
 
   LocationService._privateConstructor();
@@ -18,13 +20,15 @@ class LocationService {
 
   static const Duration minTimeUpdateLocation = Duration(hours: 1);
 
-  DateTime lastUpdateDate = DateTime(2000);
+  DateTime lastUpdateDate = DateTime(1990);
+
+  LocationServiceStatus _status = LocationServiceStatus.initializing;
 
 
 
 
 
-  static Future<LocationServiceStatus> requestLocationCapability() async {
+  Future<LocationServiceStatus> requestUpdateLocationCapability()async{
     Location location = new Location();
 
     bool _serviceEnabled;
@@ -48,6 +52,14 @@ class LocationService {
     return LocationServiceStatus.enabled;
   }
 
+   Future<LocationServiceStatus> requestLocationCapability() async {
+    _status = await requestUpdateLocationCapability();
+    return _status;
+  }
+
+  LocationServiceStatus get serviceStatus => _status;
+
+
    updateLocation(LocationData locationData) {
 
     if(!(DateTime.now().difference(lastUpdateDate)>minTimeUpdateLocation)){
@@ -65,21 +77,22 @@ class LocationService {
     lastUpdateDate = DateTime.now();
     print(
         'UPDATED LOCATION TO  ${locationData.latitude!},${locationData.longitude!}');
+    notifyListeners();
   }
 
-   void listenLocationChanges() {
+   void _listenLocationChanges() {
     Location location = new Location();
     location.changeSettings(
-        accuracy: LocationAccuracy.balanced, interval: 10000000);
+        accuracy: LocationAccuracy.balanced, interval: 1000);
     location.onLocationChanged.listen((data) {
       print('location listener triggered update');
       updateLocation(data);
     });
   }
 
-  static Future<LocationData> getLocation() async {
+  Future<LocationData> getLocation() async {
     LocationServiceStatus status =
-        await LocationService.requestLocationCapability();
+        await requestLocationCapability();
     if (status != LocationServiceStatus.enabled) {
       throw Exception(
           'Location service not enabled when get location was called!');
@@ -89,8 +102,8 @@ class LocationService {
   }
 
    onInit() async {
-    var location = await LocationService.getLocation();
+    var location = await getLocation();
     updateLocation(location);
-    listenLocationChanges();
+    _listenLocationChanges();
   }
 }

@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/constants/enums.dart';
-import 'package:betabeta/models/chatData.dart';
-import 'package:betabeta/models/match_engine.dart';
+import 'package:betabeta/services/chatData.dart';
+import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';

@@ -1,9 +1,9 @@
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/models/chatData.dart';
 import 'package:betabeta/models/infoMessage.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/chat/other_user_profile_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
+import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/services/app_state_info.dart';
@@ -62,6 +62,7 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
     }
   }
 
+
   @override
   void initState() {
     Profile? userFound = ChatData.instance.getUserById(widget.userid);
@@ -72,10 +73,9 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
     theUser = userFound!;
     typedMessage = '';
     conversationId = ChatData.instance.calculateConversationId(theUser.uid);
-    ChatData.instance.markConversationAsRead(conversationId).then((_) {
+    ChatData.instance.markConversationAsRead(conversationId);
       ChatData.instance.listenConversation(conversationId, listenConversation);
-      AppStateInfo.instance.addListener(listenConversation);
-    });
+      //AppStateInfo.instance.addListener(listenConversation);
     updateChatData();
     super.initState();
   }
@@ -228,7 +228,7 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
   void dispose() {
     ChatData.instance
         .removeListenerConversation(conversationId, listenConversation);
-    AppStateInfo.instance.removeListener(listenConversation);
+    //AppStateInfo.instance.removeListener(listenConversation);
     super.dispose();
   }
 }
