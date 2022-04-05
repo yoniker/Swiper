@@ -1,4 +1,4 @@
-package com.how_look.betabeta;
+package com.voiladating.Voila;
 
 import android.os.Bundle;
 import io.flutter.embedding.android.FlutterActivity;

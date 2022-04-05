@@ -1,4 +1,4 @@
-package com.how_look.swiper
+package com.voiladating.Voila
 
 import io.flutter.embedding.android.FlutterActivity
 
