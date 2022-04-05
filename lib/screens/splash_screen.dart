@@ -8,10 +8,8 @@ import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/onboarding/welcome_screen.dart';
 import 'package:betabeta/services/notifications_controller.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 
 /// This is the first root of the Application from here
 /// we navigate to other routes.
@@ -52,25 +50,23 @@ class _SplashScreenState extends State<SplashScreen>
     await ChatData.initDB();
     await SettingsData.instance.readSettingsFromShared();
     await CelebsInfo.instance.getCelebsFromDatabase();
-
   }
 
-  Future<void> _initAppAlreadyRegistered() async{
+  Future<void> _initAppAlreadyRegistered() async {
     //Stuff we want to do only if the user is already registered
-
+    LocationService.instance.onInit();
     MatchEngine.instance;
     navigatedFromNotification = await ChatData.instance.onInitApp();
   }
 
-
-
   Future<String> _chooseRoute() async {
-    
     // we are making sure that if the user is already logged in at a time and i.e. sharedPreferences data exist
     // we move to the Main-navigation screen otherwise we move to the LoginScreen.
-    
+
     await SettingsData.instance.readSettingsFromShared();
-    if (SettingsData.instance.uid.length>0 && SettingsData.instance.registrationStatus==API_CONSTS.ALREADY_REGISTERED) {
+    if (SettingsData.instance.uid.length > 0 &&
+        SettingsData.instance.registrationStatus ==
+            API_CONSTS.ALREADY_REGISTERED) {
       return MainNavigationScreen.routeName;
     }
 
@@ -85,8 +81,7 @@ class _SplashScreenState extends State<SplashScreen>
       if (routeTo == MainNavigationScreen.routeName) {
         await _initAppAlreadyRegistered();
       }
-    }
-    catch (e) {
+    } catch (e) {
       print('There was an error at initialization $e');
     }
 

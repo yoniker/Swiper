@@ -13,7 +13,6 @@ import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:betabeta/widgets/thumb_button.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -38,9 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   void _syncFromServer() async {
-
-        await NewNetworkService.instance.syncCurrentProfileImagesUrls();
-
+    await NewNetworkService.instance.syncCurrentProfileImagesUrls();
   }
 
   // builds the profile picture display.

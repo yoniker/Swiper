@@ -197,19 +197,17 @@ class _ConversationsPreviewWidgetState
                         ),
                         if (!messageWasRead)
                           Container(
-                              width: 60,
-                              height: 25,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  color: Colors.red[800]),
-                              alignment: Alignment.center,
-                              child: Text(
-                                'NEW',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15.0,
-                                    fontWeight: FontWeight.bold),
-                              )),
+                            width: 50,
+                            height: 25,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5.0),
+                                color: Colors.blue),
+                            alignment: Alignment.center,
+                            child: Icon(
+                              Icons.mail,
+                              color: Colors.white,
+                            ),
+                          ),
                       ],
                     ),
                   ),

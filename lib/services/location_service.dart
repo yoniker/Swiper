@@ -9,12 +9,11 @@ enum LocationServiceStatus {
   userNotGrantedPermission
 }
 
-class LocationService extends ChangeNotifier{
-
-
+class LocationService extends ChangeNotifier {
   LocationService._privateConstructor();
 
-  static final LocationService _instance = LocationService._privateConstructor();
+  static final LocationService _instance =
+      LocationService._privateConstructor();
 
   static LocationService get instance => _instance;
 
@@ -24,11 +23,7 @@ class LocationService extends ChangeNotifier{
 
   LocationServiceStatus _status = LocationServiceStatus.initializing;
 
-
-
-
-
-  Future<LocationServiceStatus> requestUpdateLocationCapability()async{
+  Future<LocationServiceStatus> requestUpdateLocationCapability() async {
     Location location = new Location();
 
     bool _serviceEnabled;
@@ -52,22 +47,18 @@ class LocationService extends ChangeNotifier{
     return LocationServiceStatus.enabled;
   }
 
-   Future<LocationServiceStatus> requestLocationCapability() async {
+  Future<LocationServiceStatus> requestLocationCapability() async {
     _status = await requestUpdateLocationCapability();
     return _status;
   }
 
   LocationServiceStatus get serviceStatus => _status;
 
-
-   updateLocation(LocationData locationData) {
-
-    if(!(DateTime.now().difference(lastUpdateDate)>minTimeUpdateLocation)){
+  updateLocation(LocationData locationData) {
+    if (!(DateTime.now().difference(lastUpdateDate) > minTimeUpdateLocation)) {
       print('Too soon to update server');
       return;
     }
-
-
 
     if (locationData.longitude == null || locationData.latitude == null) {
       return;
@@ -80,7 +71,7 @@ class LocationService extends ChangeNotifier{
     notifyListeners();
   }
 
-   void _listenLocationChanges() {
+  void _listenLocationChanges() {
     Location location = new Location();
     location.changeSettings(
         accuracy: LocationAccuracy.balanced, interval: 1000);
@@ -90,20 +81,20 @@ class LocationService extends ChangeNotifier{
     });
   }
 
-  Future<LocationData> getLocation() async {
-    LocationServiceStatus status =
-        await requestLocationCapability();
+  Future<LocationData?> getLocation() async {
+    LocationServiceStatus status = await requestLocationCapability();
     if (status != LocationServiceStatus.enabled) {
-      throw Exception(
-          'Location service not enabled when get location was called!');
+      return null;
     }
     Location location = new Location();
     return await location.getLocation();
   }
 
-   onInit() async {
+  onInit() async {
     var location = await getLocation();
-    updateLocation(location);
+    if (location != null) {
+      updateLocation(location);
+    }
     _listenLocationChanges();
   }
 }

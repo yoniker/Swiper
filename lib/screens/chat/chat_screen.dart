@@ -62,7 +62,6 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
     }
   }
 
-
   @override
   void initState() {
     Profile? userFound = ChatData.instance.getUserById(widget.userid);
@@ -74,8 +73,8 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
     typedMessage = '';
     conversationId = ChatData.instance.calculateConversationId(theUser.uid);
     ChatData.instance.markConversationAsRead(conversationId);
-      ChatData.instance.listenConversation(conversationId, listenConversation);
-      //AppStateInfo.instance.addListener(listenConversation);
+    ChatData.instance.listenConversation(conversationId, listenConversation);
+    //AppStateInfo.instance.addListener(listenConversation);
     updateChatData();
     super.initState();
   }
@@ -178,13 +177,8 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
           Expanded(
             flex: 1,
             child: Chat(
-              customBottomWidget: Input(
-                onSendPressed: (text) {
-                  ChatData.instance.sendMessage(theUser.uid,
-                      jsonEncode({"type": "text", "content": "${text.text}"}));
-                },
-                sendButtonVisibilityMode: SendButtonVisibilityMode.editing,
-              ),
+              l10n: ChatL10nEn(inputPlaceholder: ' Send a message'),
+
               theme: DefaultChatTheme(
                 inputMargin: EdgeInsets.all(10),
                 inputPadding: EdgeInsets.all(10),
