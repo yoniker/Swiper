@@ -4,6 +4,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/data_models/celeb.dart';
+import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -32,7 +33,8 @@ class VoilaPage extends StatefulWidget {
   State<VoilaPage> createState() => _VoilaPageState();
 }
 
-class _VoilaPageState extends State<VoilaPage> {
+class _VoilaPageState extends State<VoilaPage>
+    with AutomaticKeepAliveClientMixin {
   bool isLoading = false;
   bool isPressed = false;
   String textSearchTyped = '';
@@ -124,46 +126,6 @@ class _VoilaPageState extends State<VoilaPage> {
                 color: Colors.white70,
                 child: Column(
                   children: [
-                    CustomAppBar(
-                      hasTopPadding: true,
-                      titleTextColor: Colors.black,
-                      customTitle: Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Get.toNamed(ProfileScreen.routeName);
-                                },
-                                child: CircularUserAvatar(
-                                  backgroundColor: Colors.grey,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      centerWidget: Center(
-                        child: VoilaLogoWidget(),
-                      ),
-                      showAppLogo: false,
-                      hasBackButton: false,
-                      trailing: Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: GestureDetector(
-                          child: Image.asset(
-                            'assets/images/settings.png',
-                            scale: 12,
-                          ),
-                          onTap: () {
-                            Get.toNamed(SwipeSettingsScreen.routeName);
-                          },
-                        ),
-                      ),
-                    ),
                     Container(
                       child: Expanded(
                         child: SingleChildScrollView(
@@ -212,117 +174,6 @@ class _VoilaPageState extends State<VoilaPage> {
                                     )
                                   ],
                                 ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: AdvanceFilterCard(
-                                          isActive: SettingsData
-                                                  .instance.filterType ==
-                                              FilterType.CUSTOM_IMAGE,
-                                          image: AssetImage(
-                                              'assets/images/picture5.jpg'),
-                                          title: Text(
-                                            FilterType.CUSTOM_IMAGE.description,
-                                            style: titleStyleWhite,
-                                          ),
-                                          onTap: () async {
-                                            // Direct user to the custom Selection Page.
-                                            // await Navigator.pushNamed(context,
-                                            //     ImageSourceSelectionScreen.routeName);
-                                            // setState(() { //Make flutter rebuild the widget, as the image might have changed
-
-                                            // });
-
-                                            // Display an image picker Dilaogue.
-                                            SettingsData.instance.filterType =
-                                                FilterType.CUSTOM_IMAGE;
-                                            SettingsData.instance
-                                                .filterDisplayImageUrl = '';
-                                            bool imagePicked = false;
-                                            await GlobalWidgets
-                                                .showImagePickerDialogue(
-                                              context: context,
-                                              onImagePicked: (imageFile) async {
-                                                imagePicked = true;
-                                                if (imageFile != null) {
-                                                  await postCustomImageToNetwork(
-                                                      imageFile);
-                                                } else {
-                                                  SettingsData
-                                                          .instance.filterType =
-                                                      FilterType.NONE;
-                                                }
-                                              },
-                                            );
-                                            if (!imagePicked) {
-                                              SettingsData.instance.filterType =
-                                                  FilterType.NONE;
-                                            }
-                                          },
-                                          info:
-                                              'Discover picture \nlook-a-likes.'),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Expanded(
-                                      child: AdvanceFilterCard(
-                                          image: AssetImage(
-                                              'assets/images/celeb3.jpg'),
-                                          isActive: SettingsData
-                                                  .instance.filterType ==
-                                              FilterType.CELEB_IMAGE,
-                                          onTap: () async {
-                                            var selectedCeleb =
-                                                await Get.toNamed(
-                                                    ScreenCelebritySelection
-                                                        .routeName);
-                                            SettingsData.instance.filterType =
-                                                FilterType.CELEB_IMAGE;
-                                            // Set the `_selectedCeleb` variable to the newly selected
-                                            // celebrity from the [CelebritySelectionScreen] page given that it is not null.
-                                            if (selectedCeleb != null) {
-                                              _selectedCeleb =
-                                                  selectedCeleb as Celeb;
-                                              SettingsData.instance.celebId =
-                                                  _selectedCeleb.celebName;
-                                              SettingsData.instance.filterType =
-                                                  FilterType.CELEB_IMAGE;
-                                              if (_selectedCeleb.imagesUrls !=
-                                                      null &&
-                                                  _selectedCeleb
-                                                          .imagesUrls!.length >
-                                                      0) {
-                                                SettingsData.instance
-                                                        .filterDisplayImageUrl =
-                                                    _selectedCeleb
-                                                        .imagesUrls![0];
-                                              } else {
-                                                SettingsData.instance
-                                                    .filterDisplayImageUrl = '';
-                                              }
-                                            } else {
-                                              SettingsData.instance
-                                                  .filterDisplayImageUrl = '';
-                                              SettingsData.instance.celebId =
-                                                  '';
-                                              SettingsData.instance.filterType =
-                                                  FilterType.NONE;
-                                              //No celebrity selected
-                                            }
-                                          },
-                                          title: Text(
-                                            FilterType.CELEB_IMAGE.description,
-                                            style: titleStyleWhite,
-                                          ),
-                                          info:
-                                              'Discover celebrity \nlook-a-likes.'),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
                                 AdvanceFilterCard(
                                     onTap: () {
                                       setState(
@@ -353,6 +204,15 @@ class _VoilaPageState extends State<VoilaPage> {
                                               for (int i = 0; i < 4; ++i)
                                                 print(
                                                     'finished typing $textSearchTyped');
+                                              MainNavigationScreen
+                                                  .pageController
+                                                  .animateToPage(
+                                                      MainNavigationScreen
+                                                          .MATCHING_PAGE_INDEX,
+                                                      duration: Duration(
+                                                          milliseconds: 300),
+                                                      curve:
+                                                          Curves.fastOutSlowIn);
                                             }
                                           },
                                           onType: (value) {
@@ -430,6 +290,127 @@ class _VoilaPageState extends State<VoilaPage> {
                                   children: [
                                     Expanded(
                                       child: AdvanceFilterCard(
+                                          isActive: SettingsData
+                                                  .instance.filterType ==
+                                              FilterType.CUSTOM_IMAGE,
+                                          image: AssetImage(
+                                              'assets/images/picture5.jpg'),
+                                          title: Text(
+                                            FilterType.CUSTOM_IMAGE.description,
+                                            style: titleStyleWhite,
+                                          ),
+                                          onTap: () async {
+                                            SettingsData.instance
+                                                .filterDisplayImageUrl = '';
+                                            bool imagePicked = false;
+                                            await GlobalWidgets
+                                                .showImagePickerDialogue(
+                                              context: context,
+                                              onImagePicked: (imageFile) async {
+                                                imagePicked = true;
+                                                if (imageFile != null) {
+                                                  await postCustomImageToNetwork(
+                                                      imageFile);
+                                                  SettingsData
+                                                          .instance.filterType =
+                                                      FilterType.CUSTOM_IMAGE;
+                                                  MainNavigationScreen
+                                                      .pageController
+                                                      .animateToPage(
+                                                          MainNavigationScreen
+                                                              .MATCHING_PAGE_INDEX,
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  300),
+                                                          curve: Curves
+                                                              .fastOutSlowIn);
+                                                } else {
+                                                  SettingsData
+                                                          .instance.filterType =
+                                                      FilterType.NONE;
+                                                }
+                                              },
+                                            );
+                                            if (!imagePicked) {
+                                              SettingsData.instance.filterType =
+                                                  FilterType.NONE;
+                                            }
+                                          },
+                                          info:
+                                              'Discover picture \nlook-a-likes.'),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Expanded(
+                                      child: AdvanceFilterCard(
+                                          image: AssetImage(
+                                              'assets/images/celeb3.jpg'),
+                                          isActive: SettingsData
+                                                  .instance.filterType ==
+                                              FilterType.CELEB_IMAGE,
+                                          onTap: () async {
+                                            var selectedCeleb =
+                                                await Get.toNamed(
+                                                    ScreenCelebritySelection
+                                                        .routeName);
+                                            SettingsData.instance.filterType =
+                                                FilterType.CELEB_IMAGE;
+                                            // Set the `_selectedCeleb` variable to the newly selected
+                                            // celebrity from the [CelebritySelectionScreen] page given that it is not null.
+                                            if (selectedCeleb != null) {
+                                              _selectedCeleb =
+                                                  selectedCeleb as Celeb;
+                                              SettingsData.instance.celebId =
+                                                  _selectedCeleb.celebName;
+                                              SettingsData.instance.filterType =
+                                                  FilterType.CELEB_IMAGE;
+                                              if (_selectedCeleb.imagesUrls !=
+                                                      null &&
+                                                  _selectedCeleb
+                                                          .imagesUrls!.length >
+                                                      0) {
+                                                SettingsData.instance
+                                                        .filterDisplayImageUrl =
+                                                    _selectedCeleb
+                                                        .imagesUrls![0];
+                                                MainNavigationScreen
+                                                    .pageController
+                                                    .animateToPage(0,
+                                                        duration: Duration(
+                                                            milliseconds: 300),
+                                                        curve: Curves
+                                                            .fastOutSlowIn);
+                                              } else {
+                                                SettingsData.instance
+                                                    .filterDisplayImageUrl = '';
+                                              }
+                                            } else {
+                                              SettingsData.instance
+                                                  .filterDisplayImageUrl = '';
+                                              SettingsData.instance.celebId =
+                                                  '';
+                                              SettingsData.instance.filterType =
+                                                  FilterType.NONE;
+                                              //No celebrity selected
+                                            }
+                                          },
+                                          title: Text(
+                                            FilterType.CELEB_IMAGE.description,
+                                            style: titleStyleWhite,
+                                          ),
+                                          info:
+                                              'Discover celebrity \nlook-a-likes.'),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: AdvanceFilterCard(
                                           onTap: () {
                                             inDevelopmentPopUp();
                                           },
@@ -491,4 +472,7 @@ class _VoilaPageState extends State<VoilaPage> {
           );
         });
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

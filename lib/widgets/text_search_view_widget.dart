@@ -1,10 +1,42 @@
 import 'package:betabeta/services/settings_model.dart';
 import 'package:flutter/material.dart';
 
-class TextSearchViewWidget extends StatelessWidget {
-  const TextSearchViewWidget({Key? key, required this.animationController})
-      : super(key: key);
-  final Animation<double> animationController;
+class TextSearchViewWidget extends StatefulWidget {
+  const TextSearchViewWidget({Key? key}) : super(key: key);
+
+  @override
+  State<TextSearchViewWidget> createState() => _TextSearchViewWidgetState();
+}
+
+class _TextSearchViewWidgetState extends State<TextSearchViewWidget>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _searchAnimation;
+
+  @override
+  void initState() {
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 3))
+          ..forward()
+          ..addListener(() {
+            setState(() {});
+            if (_animationController.isCompleted) {
+              _animationController.repeat(reverse: true);
+            }
+          });
+    _searchAnimation =
+        Tween<double>(begin: 1, end: 110).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.fastOutSlowIn,
+    ));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +64,7 @@ class TextSearchViewWidget extends StatelessWidget {
               ),
             ),
             Positioned(
-              left: animationController.value * 110,
+              left: _searchAnimation.value,
               bottom: 5,
               child: Container(
                 decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [

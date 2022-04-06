@@ -1,30 +1,43 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/screens/chat/conversations_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
+import 'package:betabeta/screens/profile_screen.dart';
+import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/screens/voila_page.dart';
 import 'package:betabeta/services/app_state_info.dart';
-import 'package:animations/animations.dart';
+import 'package:betabeta/services/settings_model.dart';
+import 'package:betabeta/widgets/circular_user_avatar.dart';
+import 'package:betabeta/widgets/custom_app_bar.dart';
+import 'package:betabeta/widgets/image_filterview_widget.dart';
+import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
+import 'package:betabeta/widgets/text_search_view_widget.dart';
+import 'package:betabeta/widgets/voila_logo_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 
 class MainNavigationScreen extends StatefulWidget {
-  static const int PROFILE_PAGE_INDEX = 0;
-  static const int MATCHING_PAGE_INDEX = 1;
+  static const int VOILA_PAGE_INDEX = 1;
+  static const int MATCHING_PAGE_INDEX = 0;
   static const int CONVERSATIONS_PAGE_INDEX = 2;
   static const String routeName = '/main_navigation_screen';
   static const String TAB_INDEX_PARAM = 'tab_index';
+  static late PageController pageController;
   MainNavigationScreen({Key? key}) : super(key: key);
 
   @override
   _MainNavigationScreenState createState() => _MainNavigationScreenState();
 }
 
-class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  int _selectedTabIndex = 0;
+class _MainNavigationScreenState extends State<MainNavigationScreen>
+    with SingleTickerProviderStateMixin {
+  static int selectedTabIndex = 0;
   // create a pageController variable to control the varoius pages
+  late AnimationController _animationController;
 
   // List of pages.
   List<Widget> pages = <Widget>[
@@ -36,60 +49,103 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     ConversationsScreen(),
   ];
 
-  /// builds the widget's body.
-  PageTransitionSwitcher _body() {
-    return PageTransitionSwitcher(
-      reverse: _selectedTabIndex == 0,
-      duration: Duration(seconds: 1),
-      transitionBuilder: (widget, ani1, ani2) {
-        return SharedAxisTransition(
-          animation: ani1,
-          transitionType: SharedAxisTransitionType.horizontal,
-          secondaryAnimation: ani2,
-          child: widget,
-        );
-      },
-      child: IndexedStack(
-        // This prevents user from being able to manually swipe to
-        // another page.
+  Widget buildCenterWidget() {
+    switch (SettingsData.instance.filterType) {
+      case FilterType.TEXT_SEARCH:
+        if (SettingsData.instance.textSearch.length > 0)
+          return TextSearchViewWidget();
+        break;
+      case FilterType.CELEB_IMAGE:
+      case FilterType.CUSTOM_IMAGE:
+        return ImageFilterViewWidget();
+      default:
+        return VoilaLogoWidget();
+    }
+    return VoilaLogoWidget();
+  }
 
-        children: pages,
-        index: _selectedTabIndex,
-      ),
+  /// builds the widget's body.
+  PageView _body() {
+    return PageView(
+      physics: NeverScrollableScrollPhysics(),
+      children: pages,
+      controller: MainNavigationScreen.pageController,
+      onPageChanged: (page) {
+        setState(() {
+          selectedTabIndex = page;
+        });
+      },
     );
   }
 
   void switchTab(int index) {
     //<debug>
     print('GOING TO PAGE:- index ~$index');
-    setState(() {
-      _selectedTabIndex = index;
-    });
+    MainNavigationScreen.pageController.animateToPage(index,
+        duration: Duration(milliseconds: 300), curve: Curves.fastOutSlowIn);
   }
 
   @override
   void initState() {
     super.initState();
+
     // initialize the `_selectedTabIndex` variable with the value provided by appstate
-    _selectedTabIndex = AppStateInfo.instance.latestTabOnMainNavigation;
+    selectedTabIndex = AppStateInfo.instance.latestTabOnMainNavigation;
+    MainNavigationScreen.pageController =
+        PageController(initialPage: selectedTabIndex);
 
     // initialize the pageController with necessary values.
   }
 
   @override
-  void dispose() {
-    // dispose off the pageController we created for our pages
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    print('Building main navigation screen!!!!!!!!!!!!!!');
     AppStateInfo.instance.latestTabOnMainNavigation =
-        _selectedTabIndex; //TODO ugly as I mentioned at the comments at the Appstate,switch with a better solution when available
+        selectedTabIndex; //TODO ugly as I mentioned at the comments at the Appstate,switch with a better solution when available
     return Stack(
       fit: StackFit.expand,
       children: [
         Scaffold(
+          appBar: CustomAppBar(
+            centerWidget: ListenerWidget(
+                notifier: SettingsData.instance,
+                builder: (BuildContext) {
+                  return buildCenterWidget();
+                }),
+            hasTopPadding: true,
+            hasBackButton: false,
+            customTitle: Container(
+              padding: EdgeInsets.only(left: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.toNamed(ProfileScreen.routeName);
+                      },
+                      child: CircularUserAvatar(
+                        backgroundColor: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            trailing: Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: GestureDetector(
+                child: Image.asset(
+                  'assets/images/settings.png',
+                  scale: 12,
+                ),
+                onTap: () {
+                  Get.toNamed(SwipeSettingsScreen.routeName);
+                },
+              ),
+            ),
+          ),
           backgroundColor: kBackroundThemeColor,
           body: _body(),
           extendBody: true,
@@ -102,11 +158,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               fontSize: 13.0,
             ),
             selectedItemColor:
-                _selectedTabIndex == 1 ? goldColorish : mainAppColor02,
+                selectedTabIndex == 1 ? goldColorish : mainAppColor02,
             unselectedItemColor: unselectedTabColor,
             showUnselectedLabels: true,
             elevation: 0.0,
-            currentIndex: _selectedTabIndex,
+            currentIndex: selectedTabIndex,
             onTap: (index) {
               switchTab(index);
 

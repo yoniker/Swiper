@@ -43,10 +43,50 @@ class _ConversationsPreviewWidgetState
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Text(
-            'Conversations',
-            style: boldTextStyle,
-          ),
+          child: conversations.length != 0
+              ? Text(
+                  'Conversations',
+                  style: boldTextStyle,
+                )
+              : Center(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 60,
+                      ),
+                      Stack(
+                        children: [
+                          Image.asset(
+                            'assets/images/speechBubble2.png',
+                            scale: 2.5,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 70.0, top: 30),
+                            child: Image.asset(
+                              'assets/images/speechBubble.gif',
+                              scale: 2.3,
+                            ),
+                          )
+                        ],
+                      ),
+                      Text(
+                        'Find your conversations here',
+
+                        ///ToDo find a similar short phrase
+                        style: titleStyle,
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        'Start a chat from your matches!',
+                        textAlign: TextAlign.center,
+                        style: subTitleStyle.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: Colors.black.withOpacity(0.65)),
+                      )
+                    ],
+                  ),
+                ),
         ),
         ListView.builder(
             physics: NeverScrollableScrollPhysics(),
@@ -212,7 +252,7 @@ class _ConversationsPreviewWidgetState
                     ),
                   ),
                 );
-              return SizedBox();
+              return Container();
             }),
       ],
     );

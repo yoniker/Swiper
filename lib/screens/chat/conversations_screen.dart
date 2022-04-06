@@ -19,7 +19,7 @@ class ConversationsScreen extends StatefulWidget {
 }
 
 class _ConversationsScreenState extends State<ConversationsScreen>
-    with MountedStateMixin {
+    with MountedStateMixin, AutomaticKeepAliveClientMixin {
   void listen() {
     setStateIfMounted(() {});
   }
@@ -47,34 +47,34 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CustomAppBar(
-                hasTopPadding: true,
-                titleTextColor: Colors.black,
-                customTitle: Container(
-                  padding: EdgeInsets.only(left: 10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            Get.toNamed(ProfileScreen.routeName);
-                          },
-                          child: CircularUserAvatar(
-                            backgroundColor: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                centerWidget: Center(
-                  child: VoilaLogoWidget(),
-                ),
-                showAppLogo: false,
-                hasBackButton: false,
-              ),
+              // CustomAppBar(
+              //   hasTopPadding: true,
+              //   titleTextColor: Colors.black,
+              //   customTitle: Container(
+              //     padding: EdgeInsets.only(left: 10.0),
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //       children: [
+              //         Padding(
+              //           padding: const EdgeInsets.all(4.0),
+              //           child: GestureDetector(
+              //             onTap: () {
+              //               Get.toNamed(ProfileScreen.routeName);
+              //             },
+              //             child: CircularUserAvatar(
+              //               backgroundColor: Colors.grey,
+              //             ),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              //   centerWidget: Center(
+              //     child: VoilaLogoWidget(),
+              //   ),
+              //   showAppLogo: false,
+              //   hasBackButton: false,
+              // ),
               Container(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
@@ -105,15 +105,8 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                 child: Expanded(
                   child: SingleChildScrollView(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10.0, top: 10),
-                          child: Text(
-                            'My Matches',
-                            style: boldTextStyle,
-                          ),
-                        ),
                         ContactsWidget(
                           search: searchProfile.toLowerCase(),
                         ),
@@ -137,4 +130,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     ChatData.instance.removeListener(listen);
     super.dispose();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

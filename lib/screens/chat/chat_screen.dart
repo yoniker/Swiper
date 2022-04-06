@@ -159,7 +159,6 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
         trailing: TextButton(
             onPressed: () async {
               await ChatData.instance.unmatch(theUser.uid);
-              Get.back();
             },
             child: Text(
               'Unmatch',
