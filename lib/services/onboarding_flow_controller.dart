@@ -35,7 +35,7 @@ class OnboardingFlowController {
 
   static const List<String> fullOnboardingFlow = [
     WelcomeScreen.routeName,
-    PhoneScreen.routeName,
+    //PhoneScreen.routeName,
     NotificationsPermissionScreen.routeName,
     TermsScreen.routeName,
     GetNameScreen.routeName,
