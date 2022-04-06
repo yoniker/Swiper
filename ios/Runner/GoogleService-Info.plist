@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>161944761277-802ddmjn29240cmoonl2nut5vlid77vi.apps.googleusercontent.com</string>
+	<string>161944761277-go8uisl0sec6nanrrfpavef2sfbtscla.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.161944761277-802ddmjn29240cmoonl2nut5vlid77vi</string>
+	<string>com.googleusercontent.apps.161944761277-go8uisl0sec6nanrrfpavef2sfbtscla</string>
 	<key>API_KEY</key>
 	<string>AIzaSyDx7k_PAPpuU93Mzge0dADUUPxx0c2-CoM</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,21 +13,21 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.how-look.swiper</string>
+	<string>com.voiladating.Voila</string>
 	<key>PROJECT_ID</key>
 	<string>swiper-db2c5</string>
 	<key>STORAGE_BUCKET</key>
 	<string>swiper-db2c5.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:161944761277:ios:acedd223d6943e62e158d4</string>
 </dict>
