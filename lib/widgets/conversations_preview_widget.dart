@@ -52,7 +52,7 @@ class _ConversationsPreviewWidgetState
                   child: Column(
                     children: [
                       SizedBox(
-                        height: 40,
+                        height: 60,
                       ),
                       Stack(
                         children: [
@@ -80,10 +80,9 @@ class _ConversationsPreviewWidgetState
                         'Start a chat from your matches!',
                         textAlign: TextAlign.center,
                         style: subTitleStyle.copyWith(
-                            decoration: TextDecoration.underline,
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
-                            color: Colors.black54),
+                            color: Colors.black.withOpacity(0.65)),
                       )
                     ],
                   ),

@@ -89,7 +89,7 @@ class _ContactsWidgetState extends State<ContactsWidget>
   @override
   Widget build(BuildContext context) {
     int maleOrFemaleImage =
-        SettingsData.instance.preferredGender == 'Men' ? 2 : 1;
+        SettingsData.instance.preferredGender == 'Women' ? 2 : 1;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -221,7 +221,7 @@ class _ContactsWidgetState extends State<ContactsWidget>
                               ),
                             ),
                             Text(
-                              'go get \'em 😉',
+                              'Go get \'em 😉',
                               style: subTitleStyle.copyWith(
                                   fontWeight: FontWeight.bold),
                             )

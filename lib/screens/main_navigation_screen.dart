@@ -22,7 +22,8 @@ class MainNavigationScreen extends StatefulWidget {
   _MainNavigationScreenState createState() => _MainNavigationScreenState();
 }
 
-class _MainNavigationScreenState extends State<MainNavigationScreen> {
+class _MainNavigationScreenState extends State<MainNavigationScreen>
+    with SingleTickerProviderStateMixin {
   static int selectedTabIndex = 0;
   // create a pageController variable to control the varoius pages
 
@@ -59,6 +60,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     );
   }
 
+  late TabController _tabController;
+
   void switchTab(int index) {
     //<debug>
     print('GOING TO PAGE:- index ~$index');
@@ -72,6 +75,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     super.initState();
     // initialize the `_selectedTabIndex` variable with the value provided by appstate
     selectedTabIndex = AppStateInfo.instance.latestTabOnMainNavigation;
+    _tabController = TabController(vsync: this, length: 3);
 
     // initialize the pageController with necessary values.
   }
