@@ -4,6 +4,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/data_models/celeb.dart';
+import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -125,46 +126,6 @@ class _VoilaPageState extends State<VoilaPage>
                 color: Colors.white70,
                 child: Column(
                   children: [
-                    // CustomAppBar(
-                    //   hasTopPadding: true,
-                    //   titleTextColor: Colors.black,
-                    //   customTitle: Container(
-                    //     padding: EdgeInsets.only(left: 10.0),
-                    //     child: Row(
-                    //       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    //       children: [
-                    //         Padding(
-                    //           padding: const EdgeInsets.all(4.0),
-                    //           child: GestureDetector(
-                    //             onTap: () {
-                    //               Get.toNamed(ProfileScreen.routeName);
-                    //             },
-                    //             child: CircularUserAvatar(
-                    //               backgroundColor: Colors.grey,
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    //   centerWidget: Center(
-                    //     child: VoilaLogoWidget(),
-                    //   ),
-                    //   showAppLogo: false,
-                    //   hasBackButton: false,
-                    //   trailing: Padding(
-                    //     padding: const EdgeInsets.only(right: 10),
-                    //     child: GestureDetector(
-                    //       child: Image.asset(
-                    //         'assets/images/settings.png',
-                    //         scale: 12,
-                    //       ),
-                    //       onTap: () {
-                    //         Get.toNamed(SwipeSettingsScreen.routeName);
-                    //       },
-                    //     ),
-                    //   ),
-                    // ),
                     Container(
                       child: Expanded(
                         child: SingleChildScrollView(
@@ -227,18 +188,6 @@ class _VoilaPageState extends State<VoilaPage>
                                             style: titleStyleWhite,
                                           ),
                                           onTap: () async {
-                                            // Direct user to the custom Selection Page.
-                                            // await Navigator.pushNamed(context,
-                                            //     ImageSourceSelectionScreen.routeName);
-                                            // setState(() { //Make flutter rebuild the widget, as the image might have changed
-
-                                            // });
-
-                                            // Display an image picker Dilaogue.
-                                            SettingsData.instance.filterType =
-                                                FilterType.CUSTOM_IMAGE;
-                                            SettingsData.instance
-                                                .filterDisplayImageUrl = '';
                                             bool imagePicked = false;
                                             await GlobalWidgets
                                                 .showImagePickerDialogue(
@@ -248,6 +197,19 @@ class _VoilaPageState extends State<VoilaPage>
                                                 if (imageFile != null) {
                                                   await postCustomImageToNetwork(
                                                       imageFile);
+                                                  SettingsData
+                                                          .instance.filterType =
+                                                      FilterType.CUSTOM_IMAGE;
+                                                  SettingsData.instance
+                                                      .filterDisplayImageUrl = '';
+                                                  MainNavigationScreen
+                                                      .pageController
+                                                      .animateToPage(0,
+                                                          duration: Duration(
+                                                              milliseconds:
+                                                                  200),
+                                                          curve: Curves
+                                                              .fastOutSlowIn);
                                                 } else {
                                                   SettingsData
                                                           .instance.filterType =
@@ -298,6 +260,13 @@ class _VoilaPageState extends State<VoilaPage>
                                                         .filterDisplayImageUrl =
                                                     _selectedCeleb
                                                         .imagesUrls![0];
+                                                MainNavigationScreen
+                                                    .pageController
+                                                    .animateToPage(0,
+                                                        duration: Duration(
+                                                            milliseconds: 300),
+                                                        curve: Curves
+                                                            .fastOutSlowIn);
                                               } else {
                                                 SettingsData.instance
                                                     .filterDisplayImageUrl = '';

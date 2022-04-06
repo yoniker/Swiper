@@ -1,15 +1,24 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/screens/chat/conversations_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
+import 'package:betabeta/screens/profile_screen.dart';
+import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/screens/voila_page.dart';
 import 'package:betabeta/services/app_state_info.dart';
-import 'package:animations/animations.dart';
+import 'package:betabeta/services/settings_model.dart';
+import 'package:betabeta/widgets/circular_user_avatar.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
+import 'package:betabeta/widgets/image_filterview_widget.dart';
+import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
+import 'package:betabeta/widgets/text_search_view_widget.dart';
+import 'package:betabeta/widgets/voila_logo_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   static const int PROFILE_PAGE_INDEX = 0;
@@ -25,9 +34,10 @@ class MainNavigationScreen extends StatefulWidget {
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen>
-    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+    with SingleTickerProviderStateMixin {
   static int selectedTabIndex = 0;
   // create a pageController variable to control the varoius pages
+  late AnimationController _animationController;
 
   // List of pages.
   List<Widget> pages = <Widget>[
@@ -38,6 +48,21 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     VoilaPage(),
     ConversationsScreen(),
   ];
+
+  Widget buildCenterWidget() {
+    switch (SettingsData.instance.filterType) {
+      case FilterType.TEXT_SEARCH:
+        if (SettingsData.instance.textSearch.length > 0)
+          return TextSearchViewWidget();
+        break;
+      case FilterType.CELEB_IMAGE:
+      case FilterType.CUSTOM_IMAGE:
+        return ImageFilterViewWidget();
+      default:
+        return VoilaLogoWidget();
+    }
+    return VoilaLogoWidget();
+  }
 
   /// builds the widget's body.
   PageView _body() {
@@ -63,17 +88,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
   @override
   void initState() {
     super.initState();
+
     // initialize the `_selectedTabIndex` variable with the value provided by appstate
     selectedTabIndex = AppStateInfo.instance.latestTabOnMainNavigation;
     MainNavigationScreen.pageController = PageController(initialPage: 1);
 
     // initialize the pageController with necessary values.
-  }
-
-  @override
-  void dispose() {
-    // dispose off the pageController we created for our pages
-    super.dispose();
   }
 
   @override
@@ -85,6 +105,46 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
       fit: StackFit.expand,
       children: [
         Scaffold(
+          appBar: CustomAppBar(
+            centerWidget: ListenerWidget(
+                notifier: SettingsData.instance,
+                builder: (BuildContext) {
+                  return buildCenterWidget();
+                }),
+            hasTopPadding: true,
+            hasBackButton: false,
+            customTitle: Container(
+              padding: EdgeInsets.only(left: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.toNamed(ProfileScreen.routeName);
+                      },
+                      child: CircularUserAvatar(
+                        backgroundColor: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            trailing: Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: GestureDetector(
+                child: Image.asset(
+                  'assets/images/settings.png',
+                  scale: 12,
+                ),
+                onTap: () {
+                  Get.toNamed(SwipeSettingsScreen.routeName);
+                },
+              ),
+            ),
+          ),
           backgroundColor: kBackroundThemeColor,
           body: _body(),
           extendBody: true,
@@ -147,8 +207,4 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
       ],
     );
   }
-
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
 }
