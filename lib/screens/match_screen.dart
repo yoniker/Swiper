@@ -28,7 +28,7 @@ class MatchScreen extends StatefulWidget {
 }
 
 class _MatchScreenState extends State<MatchScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   // Todo: Add the implementation for detecting the changeCount.
   // holds a boolean value whether or not a user can undo his/her previous Match Decision.
   bool canUndo = false;
@@ -235,6 +235,9 @@ class _MatchScreenState extends State<MatchScreen>
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 /// The card Widget used to display match Information.
@@ -270,30 +273,40 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
   }
 
   Widget _widgetWhenNoCardsExist() {
-
-    if(MatchEngine.instance.locationCountData.status==LocationCountStatus.not_enough_users){
-      int? requiredNumUsers,currentNumUsers;
-      requiredNumUsers = MatchEngine.instance.locationCountData.requiredNumUsers;
+    if (MatchEngine.instance.locationCountData.status ==
+        LocationCountStatus.not_enough_users) {
+      int? requiredNumUsers, currentNumUsers;
+      requiredNumUsers =
+          MatchEngine.instance.locationCountData.requiredNumUsers;
       currentNumUsers = MatchEngine.instance.locationCountData.currentNumUsers;
-      double percents = (currentNumUsers??0)/(requiredNumUsers??250)*100;
+      double percents =
+          (currentNumUsers ?? 0) / (requiredNumUsers ?? 250) * 100;
       return Column(
         children: [
-          Text('For Nitzan: Put something here when there are not enough users'),
-        Text('For example: '),
-    Text('Current number of users is $currentNumUsers'),
+          Text(
+              'For Nitzan: Put something here when there are not enough users'),
+          Text('For example: '),
+          Text('Current number of users is $currentNumUsers'),
           Text(' number of users is $requiredNumUsers'),
           Text('In Percents it is $percents')
-
         ],
       );
     }
 
-    if(MatchEngine.instance.locationCountData.status==LocationCountStatus.unknown_location){
-      return Center(child: Text('For Nitzan: Show widget when user location is unknown (maybe encourage him to activate gps?)'),);
+    if (MatchEngine.instance.locationCountData.status ==
+        LocationCountStatus.unknown_location) {
+      return Center(
+        child: Text(
+            'For Nitzan: Show widget when user location is unknown (maybe encourage him to activate gps?)'),
+      );
     }
 
-    if(MatchEngine.instance.locationCountData.status == LocationCountStatus.initial_state){
-      return Center(child: Text('For Nitzan: Show something when initializing (didnt get a response from server yet regrading how many users are in our area,are there enough etc)'),);
+    if (MatchEngine.instance.locationCountData.status ==
+        LocationCountStatus.initial_state) {
+      return Center(
+        child: Text(
+            'For Nitzan: Show something when initializing (didnt get a response from server yet regrading how many users are in our area,are there enough etc)'),
+      );
     }
 
     if (MatchEngine.instance.getServerSearchStatus ==

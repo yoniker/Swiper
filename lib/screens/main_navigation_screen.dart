@@ -23,7 +23,7 @@ class MainNavigationScreen extends StatefulWidget {
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   static int selectedTabIndex = 0;
   // create a pageController variable to control the varoius pages
 
@@ -38,36 +38,26 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
   ];
 
   /// builds the widget's body.
-  PageTransitionSwitcher _body() {
-    return PageTransitionSwitcher(
-      reverse: selectedTabIndex == 0,
-      duration: Duration(seconds: 1),
-      transitionBuilder: (widget, ani1, ani2) {
-        return SharedAxisTransition(
-          animation: ani1,
-          transitionType: SharedAxisTransitionType.horizontal,
-          secondaryAnimation: ani2,
-          child: widget,
-        );
+  PageView _body() {
+    return PageView(
+      physics: NeverScrollableScrollPhysics(),
+      children: pages,
+      controller: _pageController,
+      onPageChanged: (page) {
+        setState(() {
+          selectedTabIndex = page;
+        });
       },
-      child: IndexedStack(
-        // This prevents user from being able to manually swipe to
-        // another page.
-
-        children: pages,
-        index: selectedTabIndex,
-      ),
     );
   }
 
-  late TabController _tabController;
+  late PageController _pageController;
 
   void switchTab(int index) {
     //<debug>
     print('GOING TO PAGE:- index ~$index');
-    setState(() {
-      selectedTabIndex = index;
-    });
+    _pageController.animateToPage(index,
+        duration: Duration(milliseconds: 300), curve: Curves.fastOutSlowIn);
   }
 
   @override
@@ -75,7 +65,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     super.initState();
     // initialize the `_selectedTabIndex` variable with the value provided by appstate
     selectedTabIndex = AppStateInfo.instance.latestTabOnMainNavigation;
-    _tabController = TabController(vsync: this, length: 3);
+    _pageController = PageController(initialPage: 1);
 
     // initialize the pageController with necessary values.
   }
@@ -88,6 +78,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
 
   @override
   Widget build(BuildContext context) {
+    print('Building main navigation bar!!!!!!!!!!!!!!');
     AppStateInfo.instance.latestTabOnMainNavigation =
         selectedTabIndex; //TODO ugly as I mentioned at the comments at the Appstate,switch with a better solution when available
     return Stack(
@@ -156,4 +147,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
       ],
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

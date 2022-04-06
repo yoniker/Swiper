@@ -32,7 +32,8 @@ class VoilaPage extends StatefulWidget {
   State<VoilaPage> createState() => _VoilaPageState();
 }
 
-class _VoilaPageState extends State<VoilaPage> {
+class _VoilaPageState extends State<VoilaPage>
+    with AutomaticKeepAliveClientMixin {
   bool isLoading = false;
   bool isPressed = false;
   String textSearchTyped = '';
@@ -491,4 +492,7 @@ class _VoilaPageState extends State<VoilaPage> {
           );
         });
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

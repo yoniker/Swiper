@@ -19,7 +19,7 @@ class ConversationsScreen extends StatefulWidget {
 }
 
 class _ConversationsScreenState extends State<ConversationsScreen>
-    with MountedStateMixin {
+    with MountedStateMixin, AutomaticKeepAliveClientMixin {
   void listen() {
     setStateIfMounted(() {});
   }
@@ -130,4 +130,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
     ChatData.instance.removeListener(listen);
     super.dispose();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
