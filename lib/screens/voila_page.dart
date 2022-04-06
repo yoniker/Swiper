@@ -125,46 +125,46 @@ class _VoilaPageState extends State<VoilaPage>
                 color: Colors.white70,
                 child: Column(
                   children: [
-                    CustomAppBar(
-                      hasTopPadding: true,
-                      titleTextColor: Colors.black,
-                      customTitle: Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Get.toNamed(ProfileScreen.routeName);
-                                },
-                                child: CircularUserAvatar(
-                                  backgroundColor: Colors.grey,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      centerWidget: Center(
-                        child: VoilaLogoWidget(),
-                      ),
-                      showAppLogo: false,
-                      hasBackButton: false,
-                      trailing: Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: GestureDetector(
-                          child: Image.asset(
-                            'assets/images/settings.png',
-                            scale: 12,
-                          ),
-                          onTap: () {
-                            Get.toNamed(SwipeSettingsScreen.routeName);
-                          },
-                        ),
-                      ),
-                    ),
+                    // CustomAppBar(
+                    //   hasTopPadding: true,
+                    //   titleTextColor: Colors.black,
+                    //   customTitle: Container(
+                    //     padding: EdgeInsets.only(left: 10.0),
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    //       children: [
+                    //         Padding(
+                    //           padding: const EdgeInsets.all(4.0),
+                    //           child: GestureDetector(
+                    //             onTap: () {
+                    //               Get.toNamed(ProfileScreen.routeName);
+                    //             },
+                    //             child: CircularUserAvatar(
+                    //               backgroundColor: Colors.grey,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    //   centerWidget: Center(
+                    //     child: VoilaLogoWidget(),
+                    //   ),
+                    //   showAppLogo: false,
+                    //   hasBackButton: false,
+                    //   trailing: Padding(
+                    //     padding: const EdgeInsets.only(right: 10),
+                    //     child: GestureDetector(
+                    //       child: Image.asset(
+                    //         'assets/images/settings.png',
+                    //         scale: 12,
+                    //       ),
+                    //       onTap: () {
+                    //         Get.toNamed(SwipeSettingsScreen.routeName);
+                    //       },
+                    //     ),
+                    //   ),
+                    // ),
                     Container(
                       child: Expanded(
                         child: SingleChildScrollView(

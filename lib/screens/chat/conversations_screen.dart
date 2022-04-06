@@ -47,34 +47,34 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CustomAppBar(
-                hasTopPadding: true,
-                titleTextColor: Colors.black,
-                customTitle: Container(
-                  padding: EdgeInsets.only(left: 10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            Get.toNamed(ProfileScreen.routeName);
-                          },
-                          child: CircularUserAvatar(
-                            backgroundColor: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                centerWidget: Center(
-                  child: VoilaLogoWidget(),
-                ),
-                showAppLogo: false,
-                hasBackButton: false,
-              ),
+              // CustomAppBar(
+              //   hasTopPadding: true,
+              //   titleTextColor: Colors.black,
+              //   customTitle: Container(
+              //     padding: EdgeInsets.only(left: 10.0),
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //       children: [
+              //         Padding(
+              //           padding: const EdgeInsets.all(4.0),
+              //           child: GestureDetector(
+              //             onTap: () {
+              //               Get.toNamed(ProfileScreen.routeName);
+              //             },
+              //             child: CircularUserAvatar(
+              //               backgroundColor: Colors.grey,
+              //             ),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              //   centerWidget: Center(
+              //     child: VoilaLogoWidget(),
+              //   ),
+              //   showAppLogo: false,
+              //   hasBackButton: false,
+              // ),
               Container(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),

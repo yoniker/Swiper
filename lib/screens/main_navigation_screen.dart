@@ -6,6 +6,7 @@ import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/voila_page.dart';
 import 'package:betabeta/services/app_state_info.dart';
 import 'package:animations/animations.dart';
+import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,6 +17,7 @@ class MainNavigationScreen extends StatefulWidget {
   static const int CONVERSATIONS_PAGE_INDEX = 2;
   static const String routeName = '/main_navigation_screen';
   static const String TAB_INDEX_PARAM = 'tab_index';
+  static late PageController pageController;
   MainNavigationScreen({Key? key}) : super(key: key);
 
   @override
@@ -42,7 +44,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     return PageView(
       physics: NeverScrollableScrollPhysics(),
       children: pages,
-      controller: _pageController,
+      controller: MainNavigationScreen.pageController,
       onPageChanged: (page) {
         setState(() {
           selectedTabIndex = page;
@@ -51,12 +53,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     );
   }
 
-  late PageController _pageController;
-
   void switchTab(int index) {
     //<debug>
     print('GOING TO PAGE:- index ~$index');
-    _pageController.animateToPage(index,
+    MainNavigationScreen.pageController.animateToPage(index,
         duration: Duration(milliseconds: 300), curve: Curves.fastOutSlowIn);
   }
 
@@ -65,7 +65,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     super.initState();
     // initialize the `_selectedTabIndex` variable with the value provided by appstate
     selectedTabIndex = AppStateInfo.instance.latestTabOnMainNavigation;
-    _pageController = PageController(initialPage: 1);
+    MainNavigationScreen.pageController = PageController(initialPage: 1);
 
     // initialize the pageController with necessary values.
   }
@@ -78,7 +78,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
 
   @override
   Widget build(BuildContext context) {
-    print('Building main navigation bar!!!!!!!!!!!!!!');
+    print('Building main navigation screen!!!!!!!!!!!!!!');
     AppStateInfo.instance.latestTabOnMainNavigation =
         selectedTabIndex; //TODO ugly as I mentioned at the comments at the Appstate,switch with a better solution when available
     return Stack(

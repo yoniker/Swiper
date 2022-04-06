@@ -217,7 +217,12 @@ class _ContactsWidgetState extends State<ContactsWidget>
                                 color: Colors.black87,
                                 withPadding: false,
                                 name: 'Keep swiping!',
-                                onTap: () {},
+                                onTap: () {
+                                  MainNavigationScreen.pageController
+                                      .animateToPage(0,
+                                          duration: Duration(milliseconds: 300),
+                                          curve: Curves.fastOutSlowIn);
+                                },
                               ),
                             ),
                             Text(
