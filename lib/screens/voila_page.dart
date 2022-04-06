@@ -174,6 +174,118 @@ class _VoilaPageState extends State<VoilaPage>
                                     )
                                   ],
                                 ),
+                                AdvanceFilterCard(
+                                    onTap: () {
+                                      setState(
+                                        () {
+                                          SettingsData.instance.filterType =
+                                              FilterType.TEXT_SEARCH;
+                                          SettingsData.instance
+                                              .filterDisplayImageUrl = '';
+                                        },
+                                      );
+                                      FocusScope.of(context).unfocus();
+                                    },
+                                    child: AnimatedContainer(
+                                      width: 400,
+                                      height:
+                                          SettingsData.instance.filterType !=
+                                                  FilterType.TEXT_SEARCH
+                                              ? 0
+                                              : 54,
+                                      duration:
+                                          const Duration(milliseconds: 300),
+                                      child: SingleChildScrollView(
+                                        child: InputField(
+                                          onFocusChange: (hasFocus) {
+                                            if (!hasFocus) {
+                                              SettingsData.instance.textSearch =
+                                                  textSearchTyped;
+                                              for (int i = 0; i < 4; ++i)
+                                                print(
+                                                    'finished typing $textSearchTyped');
+                                              MainNavigationScreen
+                                                  .pageController
+                                                  .animateToPage(
+                                                      MainNavigationScreen
+                                                          .MATCHING_PAGE_INDEX,
+                                                      duration: Duration(
+                                                          milliseconds: 300),
+                                                      curve:
+                                                          Curves.fastOutSlowIn);
+                                            }
+                                          },
+                                          onType: (value) {
+                                            setState(() {
+                                              textSearchTyped = value;
+                                            });
+                                          },
+                                          onTapIcon: textSearchTyped.length > 0
+                                              ? () {
+                                                  print(
+                                                      'move to match screen?'); //TODO move to match screen?
+                                                  FocusScope.of(context)
+                                                      .unfocus();
+                                                }
+                                              : null,
+                                          hintText: ' Search...',
+                                          maxLines: 1,
+                                          maxCharacters: 20,
+                                          icon: Icons.search,
+                                          iconSize: 30,
+                                          initialvalue:
+                                              SettingsData.instance.textSearch,
+                                        ),
+                                      ),
+                                    ),
+                                    isActive:
+                                        SettingsData.instance.filterType ==
+                                            FilterType.TEXT_SEARCH,
+                                    image: AssetImage(
+                                        'assets/images/textsearch2.jpg'),
+                                    comingSoon: false,
+                                    showAI: false,
+                                    title: Row(
+                                      children: [
+                                        Text(
+                                          'Text Search',
+                                          style: LargeTitleStyleWhite,
+                                        ),
+                                        DefaultTextStyle(
+                                          style: LargeTitleStyleWhite,
+                                          child: AnimatedTextKit(
+                                            pause: Duration(seconds: 2),
+                                            repeatForever: true,
+                                            animatedTexts: [
+                                              TyperAnimatedText(
+                                                '   Dog lover?...',
+                                                speed:
+                                                    Duration(milliseconds: 100),
+                                              ),
+                                              TyperAnimatedText(
+                                                '   Vegan?...',
+                                                speed:
+                                                    Duration(milliseconds: 100),
+                                              ),
+                                              TyperAnimatedText(
+                                                '   Outdoors?...',
+                                                speed:
+                                                    Duration(milliseconds: 100),
+                                              ),
+                                              TyperAnimatedText(
+                                                '   Sushi?...',
+                                                speed:
+                                                    Duration(milliseconds: 100),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    info: 'Search by a simple word or text'),
+                                SizedBox(
+                                  height: 20,
+                                ),
                                 Row(
                                   children: [
                                     Expanded(
@@ -188,6 +300,8 @@ class _VoilaPageState extends State<VoilaPage>
                                             style: titleStyleWhite,
                                           ),
                                           onTap: () async {
+                                            SettingsData.instance
+                                                .filterDisplayImageUrl = '';
                                             bool imagePicked = false;
                                             await GlobalWidgets
                                                 .showImagePickerDialogue(
@@ -200,14 +314,14 @@ class _VoilaPageState extends State<VoilaPage>
                                                   SettingsData
                                                           .instance.filterType =
                                                       FilterType.CUSTOM_IMAGE;
-                                                  SettingsData.instance
-                                                      .filterDisplayImageUrl = '';
                                                   MainNavigationScreen
                                                       .pageController
-                                                      .animateToPage(0,
+                                                      .animateToPage(
+                                                          MainNavigationScreen
+                                                              .MATCHING_PAGE_INDEX,
                                                           duration: Duration(
                                                               milliseconds:
-                                                                  200),
+                                                                  300),
                                                           curve: Curves
                                                               .fastOutSlowIn);
                                                 } else {
@@ -290,109 +404,6 @@ class _VoilaPageState extends State<VoilaPage>
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                AdvanceFilterCard(
-                                    onTap: () {
-                                      setState(
-                                        () {
-                                          SettingsData.instance.filterType =
-                                              FilterType.TEXT_SEARCH;
-                                          SettingsData.instance
-                                              .filterDisplayImageUrl = '';
-                                        },
-                                      );
-                                      FocusScope.of(context).unfocus();
-                                    },
-                                    child: AnimatedContainer(
-                                      width: 400,
-                                      height:
-                                          SettingsData.instance.filterType !=
-                                                  FilterType.TEXT_SEARCH
-                                              ? 0
-                                              : 54,
-                                      duration:
-                                          const Duration(milliseconds: 300),
-                                      child: SingleChildScrollView(
-                                        child: InputField(
-                                          onFocusChange: (hasFocus) {
-                                            if (!hasFocus) {
-                                              SettingsData.instance.textSearch =
-                                                  textSearchTyped;
-                                              for (int i = 0; i < 4; ++i)
-                                                print(
-                                                    'finished typing $textSearchTyped');
-                                            }
-                                          },
-                                          onType: (value) {
-                                            setState(() {
-                                              textSearchTyped = value;
-                                            });
-                                          },
-                                          onTapIcon: textSearchTyped.length > 0
-                                              ? () {
-                                                  print(
-                                                      'move to match screen?'); //TODO move to match screen?
-                                                  FocusScope.of(context)
-                                                      .unfocus();
-                                                }
-                                              : null,
-                                          hintText: ' Search...',
-                                          maxLines: 1,
-                                          maxCharacters: 20,
-                                          icon: Icons.search,
-                                          iconSize: 30,
-                                          initialvalue:
-                                              SettingsData.instance.textSearch,
-                                        ),
-                                      ),
-                                    ),
-                                    isActive:
-                                        SettingsData.instance.filterType ==
-                                            FilterType.TEXT_SEARCH,
-                                    image: AssetImage(
-                                        'assets/images/textsearch2.jpg'),
-                                    comingSoon: false,
-                                    showAI: false,
-                                    title: Row(
-                                      children: [
-                                        Text(
-                                          'Text Search',
-                                          style: LargeTitleStyleWhite,
-                                        ),
-                                        DefaultTextStyle(
-                                          style: LargeTitleStyleWhite,
-                                          child: AnimatedTextKit(
-                                            pause: Duration(seconds: 2),
-                                            repeatForever: true,
-                                            animatedTexts: [
-                                              TyperAnimatedText(
-                                                '   Dog lover?...',
-                                                speed:
-                                                    Duration(milliseconds: 100),
-                                              ),
-                                              TyperAnimatedText(
-                                                '   Vegan?...',
-                                                speed:
-                                                    Duration(milliseconds: 100),
-                                              ),
-                                              TyperAnimatedText(
-                                                '   Outdoors?...',
-                                                speed:
-                                                    Duration(milliseconds: 100),
-                                              ),
-                                              TyperAnimatedText(
-                                                '   Sushi?...',
-                                                speed:
-                                                    Duration(milliseconds: 100),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    info: 'Search by a simple word or text'),
                                 SizedBox(
                                   height: 20,
                                 ),

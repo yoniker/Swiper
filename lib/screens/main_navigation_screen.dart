@@ -21,8 +21,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class MainNavigationScreen extends StatefulWidget {
-  static const int PROFILE_PAGE_INDEX = 0;
-  static const int MATCHING_PAGE_INDEX = 1;
+  static const int VOILA_PAGE_INDEX = 1;
+  static const int MATCHING_PAGE_INDEX = 0;
   static const int CONVERSATIONS_PAGE_INDEX = 2;
   static const String routeName = '/main_navigation_screen';
   static const String TAB_INDEX_PARAM = 'tab_index';
@@ -91,7 +91,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
 
     // initialize the `_selectedTabIndex` variable with the value provided by appstate
     selectedTabIndex = AppStateInfo.instance.latestTabOnMainNavigation;
-    MainNavigationScreen.pageController = PageController(initialPage: 1);
+    MainNavigationScreen.pageController =
+        PageController(initialPage: selectedTabIndex);
 
     // initialize the pageController with necessary values.
   }

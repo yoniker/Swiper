@@ -1,4 +1,6 @@
+import 'package:betabeta/constants/assets_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/models/profile.dart';
@@ -88,8 +90,10 @@ class _ContactsWidgetState extends State<ContactsWidget>
 
   @override
   Widget build(BuildContext context) {
-    int maleOrFemaleImage =
-        SettingsData.instance.preferredGender == 'Women' ? 2 : 1;
+    String maleOrFemaleImage =
+        SettingsData.instance.preferredGender == PreferredGender.Women.name
+            ? AssetsPaths.Woman1Swipe
+            : AssetsPaths.Man1Swipe;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -146,8 +150,7 @@ class _ContactsWidgetState extends State<ContactsWidget>
                                   border:
                                       Border.all(width: 2, color: Colors.white),
                                   image: DecorationImage(
-                                      image: AssetImage(
-                                          'assets/images/swipe$maleOrFemaleImage.jpg'),
+                                      image: AssetImage(maleOrFemaleImage),
                                       fit: BoxFit.cover),
                                 ),
                                 child: Container(

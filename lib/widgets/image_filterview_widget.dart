@@ -43,13 +43,20 @@ class _ImageFilterViewWidgetState extends State<ImageFilterViewWidget>
         height: 44,
         width: 100,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            image: DecorationImage(
-                fit: BoxFit.cover,
-                image: NetworkImage(
-                  NetworkHelper.faceUrlToFullUrl(
-                      SettingsData.instance.filterDisplayImageUrl),
-                ))),
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          image: SettingsData.instance.filterDisplayImageUrl != ''
+              ? DecorationImage(
+                  fit: BoxFit.cover,
+                  image: NetworkImage(
+                    NetworkHelper.faceUrlToFullUrl(
+                        SettingsData.instance.filterDisplayImageUrl),
+                  ),
+                )
+              : DecorationImage(
+                  fit: BoxFit.cover,
+                  image: AssetImage('assets/images/picture5.png'),
+                ),
+        ),
         child: Stack(
           children: [
             Positioned(
