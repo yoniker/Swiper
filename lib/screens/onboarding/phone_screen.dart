@@ -61,7 +61,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
 
       codeAutoRetrievalTimeout: (String verificationId) async {// After timeout where a phone couldn't find the sms sent to it.
         _verificationId = verificationId;
-        setState(() {
+        if(mounted)setState(() {
           showVerificationWidget = true;
         });
 
