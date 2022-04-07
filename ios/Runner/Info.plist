@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Voila</string>
+	<string>Voilà</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -67,7 +67,11 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Grant access to camera so you can take your own photos </string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Grant access to your location so you will view matches around you</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Grant access to your location so you will view matches around you</string>
+	<key>NSLocationwheninuseusagedescription</key>
 	<string>Grant access to your location so you will view matches around you</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Grant access to microphone so you will be able to share video and audio</string>
