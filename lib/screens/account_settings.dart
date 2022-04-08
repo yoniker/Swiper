@@ -39,33 +39,6 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     Get.offAllNamed(SplashScreen.routeName);
   }
 
-  RangeValues _selectedAges = RangeValues(
-      SettingsData.instance.minAge.toDouble(),
-      SettingsData.instance.maxAge.toDouble());
-  PreferredGender _currentGenderSelected = PreferredGender.values
-      .firstWhere((e) => e.name == SettingsData.instance.preferredGender);
-  String _currentLocation = 'Somewhere, Earth';
-  bool _showInDiscovery = true; //TODO change SettingsData to support visibility
-  double _maxDistance = SettingsData.instance.radius;
-
-  DropdownMenuItem<PreferredGender> _buildGenderDropDownMenuItem(
-      PreferredGender selectedGender) {
-    //
-    return DropdownMenuItem<PreferredGender>(
-      child: Text(
-        selectedGender.name,
-        style: defaultTextStyle,
-      ),
-      value: selectedGender,
-      onTap: () {
-        setState(() {
-          SettingsData.instance.preferredGender = selectedGender.name;
-          _currentGenderSelected = selectedGender;
-        });
-      },
-    );
-  }
-
   String produceAgesRangeText(RangeValues _ages) {
     String agesRangeText;
 
@@ -85,7 +58,6 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     }
     return agesRangeText;
   }
-
 
   @override
   Widget build(BuildContext context) {

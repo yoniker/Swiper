@@ -1,6 +1,6 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
-import 'package:betabeta/screens/onboarding/get_name_screen.dart';
 import 'package:betabeta/services/onboarding_flow_controller.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
@@ -49,7 +49,7 @@ class _TermsScreenState extends State<TermsScreen> {
                       AnimatedTextKit(
                         animatedTexts: [
                           ColorizeAnimatedText('Welcome to Voilà!',
-                              colors: kColorizeColors,
+                              colors: colorizeColors,
                               textStyle: kTitleStyleBlack)
                         ],
                       ),
@@ -135,8 +135,8 @@ class _TermsScreenState extends State<TermsScreen> {
                   elevation: 0,
                   name: 'I Agree',
                   onTap: () {
-                    Get.offAllNamed(OnboardingFlowController.instance.nextRoute(
-                        TermsScreen.routeName));
+                    Get.offAllNamed(OnboardingFlowController.instance
+                        .nextRoute(TermsScreen.routeName));
                   },
                 ),
               ],

@@ -273,11 +273,13 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
                             ),
                           ],
                         ),
-                        TextButton(child: Text('Clear all my likes'),
-                        onPressed: ()async{
-                          await NewNetworkService.instance.clearLikes();
-                          Get.snackbar('Development mode', 'cleared all user choices');
-                        },
+                        TextButton(
+                          child: Text('Clear all my likes'),
+                          onPressed: () async {
+                            await NewNetworkService.instance.clearLikes();
+                            Get.snackbar(
+                                'Development mode', 'cleared all user choices');
+                          },
                         ),
                       ],
                     ),
@@ -449,7 +451,7 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
                   ),
                   RoundedButton(
                     color: Colors.blueGrey,
-                    name: 'Delete account',
+                    name: 'Delete account    ',
                     icon: Icons.delete,
                     onTap: () async {
                       // move to swiping-preference screen.
@@ -461,30 +463,6 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
                   SizedBox(
                     height: 20,
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 2, color: Colors.black),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(15),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: TextButton(
-                        child: Text(
-                          'Done',
-                          style: boldTextStyle.copyWith(fontSize: 20),
-                        ),
-                        onPressed: () {
-                          // close the settings screen.
-                          Get.back();
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  )
                 ],
               )
           ],

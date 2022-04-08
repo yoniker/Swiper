@@ -60,7 +60,6 @@ class RoundedButton extends StatelessWidget {
           mainAxisAlignment: icon == null
               ? MainAxisAlignment.center
               : MainAxisAlignment.spaceEvenly,
-          mainAxisSize: MainAxisSize.min,
           children: [
             Flexible(
               child: Text(

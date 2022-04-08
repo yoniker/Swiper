@@ -1,5 +1,4 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
-import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/services/onboarding_flow_controller.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
@@ -82,7 +81,8 @@ class _FinishOnboardingScreenState extends State<FinishOnboardingScreen> {
                 RoundedButton(
                   name: 'Got it',
                   onTap: () {
-                    Get.offAllNamed(OnboardingFlowController.instance.nextRoute(FinishOnboardingScreen.routeName));
+                    Get.offAllNamed(OnboardingFlowController.instance
+                        .nextRoute(FinishOnboardingScreen.routeName));
                   },
                   color: Colors.white,
                 )

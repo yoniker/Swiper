@@ -52,13 +52,6 @@ const Color kIconColor = Colors.blueAccent;
 const TextStyle kVstyle = TextStyle(fontSize: 20, color: Colors.blueAccent);
 const int kTotalProgressBarPages = 8;
 
-const kColorizeColors = [
-  Colors.purple,
-  Colors.blue,
-  Colors.yellow,
-  Colors.red,
-];
-
 Color kBackroundThemeColor = Color(0xFFE8EBF1);
 
 Color lamer = Colors.black.withOpacity(0.95);
