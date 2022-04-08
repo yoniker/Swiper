@@ -1,15 +1,22 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:betabeta/constants/api_consts.dart';
+import 'package:betabeta/constants/assets_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/services/location_service.dart';
 import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/services/settings_model.dart';
+import 'package:betabeta/widgets/animated_widgets/animated_minitcard_widget.dart';
+import 'package:betabeta/widgets/animated_widgets/no_matches_display_widget.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/match_card.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
+import 'package:betabeta/widgets/voila_logo_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:tcard/tcard.dart';
 
@@ -80,107 +87,129 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
   Offset bottomCardOffset = Offset(0.0, 1.7);
   SwipeDirection? currentJudgment;
   late double currentInterpolation;
-  late AnimationController _animation =
-      AnimationController(vsync: this, duration: const Duration(seconds: 1));
 
-  @override
-  void initState() {
-    _animation =
-        AnimationController(vsync: this, duration: Duration(seconds: 10));
-    _animation.addListener(() {
-      setState(() {});
-    });
-    _animation.repeat(reverse: true);
-    super.initState();
+  void enableLocation() async {
+    var status = await LocationService.instance.requestLocationCapability();
+    if (status == LocationServiceStatus.enabled) {
+      LocationService.instance.onInit();
+    }
   }
 
   Widget _widgetWhenNoCardsExist() {
     if (MatchEngine.instance.locationCountData.status ==
         LocationCountStatus.not_enough_users) {
+      String maleOrFemaleImage =
+          SettingsData.instance.preferredGender == PreferredGender.Women.name
+              ? AssetsPaths.Woman1Swipe
+              : AssetsPaths.Man1Swipe;
       int? requiredNumUsers, currentNumUsers;
       requiredNumUsers =
           MatchEngine.instance.locationCountData.requiredNumUsers;
       currentNumUsers = MatchEngine.instance.locationCountData.currentNumUsers;
       double percents =
           (currentNumUsers ?? 0) / (requiredNumUsers ?? 250) * 100;
-      return Column(
-        children: [
-          Text(
-              'For Nitzan: Put something here when there are not enough users'),
-          Text('For example: '),
-          Text('Current number of users is $currentNumUsers'),
-          Text(' number of users is $requiredNumUsers'),
-          Text('In Percents it is $percents')
-        ],
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AnimatedMiniTcardWidget(
+              maleOrFemaleImage: maleOrFemaleImage,
+              CustomButtomWidget: Text(
+                'Registration\nOpen ❤️',
+                textAlign: TextAlign.center,
+                style: titleStyleWhite.copyWith(fontSize: 12),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Welcome to',
+                  style: titleStyle.copyWith(
+                      color: Colors.black.withOpacity(0.7), fontSize: 25),
+                ),
+                VoilaLogoWidget(
+                  freeText: 'Voilà!',
+                )
+              ],
+            ),
+            Text(
+              'We just opened registration in your area! \nOnce $requiredNumUsers users will register, \nyou will see it here. \n\nCheck this page soon to \nsee matches in your area. \n\nIn the meantime, complete your profile to attract potential matches! 😊',
+              style: titleStyle.copyWith(
+                  color: Colors.black.withOpacity(0.6), fontSize: 18),
+              textAlign: TextAlign.center,
+            ),
+            if (percents > 50)
+              Text(
+                '${percents.round()}% of users already joined!',
+                style: titleStyle.copyWith(color: Colors.blueGrey),
+              )
+          ],
+        ),
       );
     }
 
     if (MatchEngine.instance.locationCountData.status ==
         LocationCountStatus.unknown_location) {
-      return Center(
-        child: Text(
-            'For Nitzan: Show widget when user location is unknown (maybe encourage him to activate gps?)'),
+      return NoMatchesDisplayWidget(
+        centerWidget: Text(
+          'Oops! looks like you forgot to unable location services! \n\nWe need to know where you are swiping from in order to show you potential matches. \n\nPlease return here once your location services have been activated 😊 ',
+          style: kSmallInfoStyle.copyWith(color: Colors.black54),
+          textAlign: TextAlign.center,
+        ),
+        customButtonWidget: RoundedButton(
+          color: Colors.blueGrey,
+          name: 'Enable location   ',
+          onTap: () {
+            enableLocation();
+          },
+          icon: FontAwesomeIcons.locationPinLock,
+          iconColor: Colors.white,
+        ),
       );
     }
-
     if (MatchEngine.instance.locationCountData.status ==
         LocationCountStatus.initial_state) {
-      return Center(
-        child: Text(
-            'For Nitzan: Show something when initializing (didnt get a response from server yet regrading how many users are in our area,are there enough etc)'),
+      return NoMatchesDisplayWidget(
+        centerWidget: DefaultTextStyle(
+          maxLines: 1,
+          style: LargeTitleStyle.copyWith(color: Colors.black54),
+          child: AnimatedTextKit(
+            pause: Duration(seconds: 2),
+            repeatForever: true,
+            animatedTexts: [
+              TyperAnimatedText(
+                'Searching users...',
+                speed: Duration(milliseconds: 100),
+              ),
+              TyperAnimatedText(
+                'Connecting to server...',
+                speed: Duration(milliseconds: 100),
+              ),
+              TyperAnimatedText(
+                'Waiting for response...',
+                speed: Duration(milliseconds: 100),
+              ),
+              TyperAnimatedText(
+                'Connecting...',
+                speed: Duration(milliseconds: 100),
+              ),
+            ],
+          ),
+        ),
+        customButtonWidget: SizedBox(),
       );
     }
 
     if (MatchEngine.instance.getServerSearchStatus ==
         MatchSearchStatus.not_found) {
-      return Container(
-        color: Colors.white,
-        height: double.infinity,
-        width: double.infinity,
-        child: Center(
-            child: Padding(
-          padding: const EdgeInsets.all(60.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Transform.rotate(
-                angle: _animation.value * 10,
-                child: Icon(
-                  Icons.radar_outlined,
-                  size: 100,
-                  color: Colors.black12,
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                'No matches found with your current preferences. Check again soon to see new people.',
-                style: kSmallInfoStyle.copyWith(color: Colors.black45),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              SettingsData.instance.filterType != FilterType.NONE
-                  ? RoundedButton(
-                      name: 'Deactivate filters',
-                      elevation: 4,
-                      onTap: () {
-                        SettingsData.instance.filterType = FilterType.NONE;
-                        SettingsData.instance.filterDisplayImageUrl = '';
-                      },
-                    )
-                  : RoundedButton(
-                      elevation: 4,
-                      onTap: () {
-                        Get.toNamed(SwipeSettingsScreen.routeName);
-                      },
-                      name: 'Expand search',
-                    )
-            ],
-          ),
-        )),
+      return NoMatchesDisplayWidget(
+        centerWidget: Text(
+          'No new matches found with your current preferences. Check again soon to see new people.',
+          style: kSmallInfoStyle.copyWith(color: Colors.black45),
+          textAlign: TextAlign.center,
+        ),
       );
     }
 
@@ -279,11 +308,5 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
               );
       },
     );
-  }
-
-  @override
-  void dispose() {
-    _animation.dispose();
-    super.dispose();
   }
 }

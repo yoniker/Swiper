@@ -57,14 +57,14 @@ class _ConversationsPreviewWidgetState
                       Stack(
                         children: [
                           Image.asset(
-                            'assets/images/speechBubble2.png',
-                            scale: 2.5,
+                            'assets/images/speech_bubble.png',
+                            scale: 1,
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 70.0, top: 30),
+                            padding: const EdgeInsets.only(left: 90.0, top: 30),
                             child: Image.asset(
-                              'assets/images/speechBubble.gif',
-                              scale: 2.3,
+                              'assets/images/speech_bubble2.png',
+                              scale: 1,
                             ),
                           )
                         ],

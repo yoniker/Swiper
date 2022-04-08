@@ -81,7 +81,7 @@ class RoundedButton extends StatelessWidget {
                 ? Icon(
                     icon,
                     size: 25,
-                    color: iconColor != null
+                    color: iconColor == null
                         ? (color == Colors.white ? Colors.black : Colors.white)
                         : iconColor,
                   )

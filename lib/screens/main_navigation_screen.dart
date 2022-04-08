@@ -33,11 +33,8 @@ class MainNavigationScreen extends StatefulWidget {
   _MainNavigationScreenState createState() => _MainNavigationScreenState();
 }
 
-class _MainNavigationScreenState extends State<MainNavigationScreen>
-    with SingleTickerProviderStateMixin {
+class _MainNavigationScreenState extends State<MainNavigationScreen> {
   static int selectedTabIndex = 0;
-  // create a pageController variable to control the varoius pages
-  late AnimationController _animationController;
 
   // List of pages.
   List<Widget> pages = <Widget>[
@@ -52,12 +49,15 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
   Widget buildCenterWidget() {
     switch (SettingsData.instance.filterType) {
       case FilterType.TEXT_SEARCH:
-        if (SettingsData.instance.textSearch.length > 0)
+        if (SettingsData.instance.textSearch.length > 0 &&
+            selectedTabIndex != MainNavigationScreen.CONVERSATIONS_PAGE_INDEX)
           return TextSearchViewWidget();
         break;
       case FilterType.CELEB_IMAGE:
       case FilterType.CUSTOM_IMAGE:
-        return ImageFilterViewWidget();
+        if (selectedTabIndex != MainNavigationScreen.CONVERSATIONS_PAGE_INDEX)
+          return ImageFilterViewWidget();
+        break;
       default:
         return VoilaLogoWidget();
     }
@@ -133,16 +133,26 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
                 ],
               ),
             ),
-            trailing: Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: GestureDetector(
-                child: Image.asset(
-                  'assets/images/settings.png',
-                  scale: 12,
+            trailing: AnimatedOpacity(
+              duration: Duration(milliseconds: 300),
+              opacity: selectedTabIndex ==
+                      MainNavigationScreen.CONVERSATIONS_PAGE_INDEX
+                  ? 0
+                  : 1,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: GestureDetector(
+                  child: Image.asset(
+                    'assets/images/settings.png',
+                    scale: 12,
+                  ),
+                  onTap: selectedTabIndex ==
+                          MainNavigationScreen.CONVERSATIONS_PAGE_INDEX
+                      ? null
+                      : () {
+                          Get.toNamed(SwipeSettingsScreen.routeName);
+                        },
                 ),
-                onTap: () {
-                  Get.toNamed(SwipeSettingsScreen.routeName);
-                },
               ),
             ),
           ),
@@ -172,11 +182,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
               BottomNavigationBarItem(
                 icon: PrecachedImage.asset(
                   imageURI: BetaIconPaths.inactiveMatchTabIconPath,
-                  color: unselectedTabColor,
+                  width: 26,
                 ),
                 activeIcon: PrecachedImage.asset(
                   imageURI: BetaIconPaths.activeMatchTabIconPath,
                   color: mainAppColor02,
+                  width: 26,
                 ),
                 label: 'Match',
                 tooltip: 'Match',

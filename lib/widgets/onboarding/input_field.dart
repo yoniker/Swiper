@@ -22,6 +22,7 @@ class InputField extends StatelessWidget {
       this.minLines = 1,
       this.maxCharacters = 20,
       this.style,
+      this.borderColor = Colors.black87,
       this.onTapIconDisable,
       this.onTapIcon});
 
@@ -46,6 +47,7 @@ class InputField extends StatelessWidget {
   final TextInputType? keyboardType;
   final int? maxCharacters;
   final EdgeInsets? padding;
+  final Color borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -96,8 +98,8 @@ class InputField extends StatelessWidget {
                   ),
                 ),
               ),
-              focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black87, width: 2)),
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: borderColor, width: 2)),
               enabledBorder: const OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.white, width: 1.5),
                 borderRadius: BorderRadius.all(
