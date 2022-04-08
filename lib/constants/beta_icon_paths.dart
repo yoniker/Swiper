@@ -13,11 +13,11 @@ class BetaIconPaths {
 
   /// The path to the active Match Tab image.
   static const String activeMatchTabIconPath =
-      'assets/images/match_tab_icon_active.png';
+      'assets/images/match_cards_selected.png';
 
   /// The path to the inactive Match Tab image.
   static const String inactiveMatchTabIconPath =
-      'assets/images/match_tab_icon_inactive.png';
+      'assets/images/match_cards.png';
 
   /// The path to the active Likes Tab image.
   static const String activeLikesTabIconPath =
@@ -148,5 +148,6 @@ class BetaIconPaths {
   /// The path to edit icon used in the Profile tab.
   static const String editIconFilled01 =
       'assets/images/edit_icon_filled_01.png';
-  static const String anonymousProfileUrl = '/profile_images/real/app_assets/anonymous_user.jpg'; //short url to anon profile
+  static const String anonymousProfileUrl =
+      '/profile_images/real/app_assets/anonymous_user.jpg'; //short url to anon profile
 }

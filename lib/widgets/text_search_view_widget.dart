@@ -9,14 +9,27 @@ class TextSearchViewWidget extends StatefulWidget {
 }
 
 class _TextSearchViewWidgetState extends State<TextSearchViewWidget>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
+  late AnimationController _firstAnimation;
   late Animation<double> _searchAnimation;
+  late Animation<double> _expendLittleAnimation;
+  late Animation<double> _widgetAppearAnimation;
 
   @override
   void initState() {
+    _firstAnimation =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 400))
+          ..forward()
+          ..addListener(() {
+            setState(() {});
+          });
+    _widgetAppearAnimation = Tween<double>(begin: 0, end: 1).animate(
+        CurvedAnimation(parent: _firstAnimation, curve: Curves.fastOutSlowIn));
+    _expendLittleAnimation = Tween<double>(begin: 0.5, end: 1).animate(
+        CurvedAnimation(parent: _firstAnimation, curve: Curves.fastOutSlowIn));
     _animationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 3))
+        AnimationController(vsync: this, duration: Duration(seconds: 5))
           ..forward()
           ..addListener(() {
             setState(() {});
@@ -25,16 +38,14 @@ class _TextSearchViewWidgetState extends State<TextSearchViewWidget>
             }
           });
     _searchAnimation =
-        Tween<double>(begin: 1, end: 110).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.fastOutSlowIn,
-    ));
+        Tween<double>(begin: 1, end: 110).animate(_animationController);
     super.initState();
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _firstAnimation.dispose();
     super.dispose();
   }
 
@@ -42,11 +53,11 @@ class _TextSearchViewWidgetState extends State<TextSearchViewWidget>
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        height: 44,
-        width: 150,
+        height: _expendLittleAnimation.value * 44,
+        width: _expendLittleAnimation.value * 150,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
-          color: Colors.black.withOpacity(0.9),
+          color: Colors.black.withOpacity(_widgetAppearAnimation.value * 0.9),
         ),
         child: Stack(
           children: [
@@ -74,11 +85,10 @@ class _TextSearchViewWidgetState extends State<TextSearchViewWidget>
                   ),
                 ]),
                 height: 35,
-                child: FittedBox(
-                  child: Icon(
-                    Icons.search,
-                    color: Colors.white.withOpacity(0.65),
-                  ),
+                child: Icon(
+                  Icons.search,
+                  size: _widgetAppearAnimation.value * 30,
+                  color: Colors.white.withOpacity(0.65),
                 ),
               ),
             )

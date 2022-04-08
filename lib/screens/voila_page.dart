@@ -134,6 +134,9 @@ class _VoilaPageState extends State<VoilaPage>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
+                                SizedBox(
+                                  height: 5,
+                                ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -197,6 +200,7 @@ class _VoilaPageState extends State<VoilaPage>
                                           const Duration(milliseconds: 300),
                                       child: SingleChildScrollView(
                                         child: InputField(
+                                          borderColor: Color(0xFFC62828),
                                           onFocusChange: (hasFocus) {
                                             if (!hasFocus) {
                                               SettingsData.instance.textSearch =
@@ -204,15 +208,18 @@ class _VoilaPageState extends State<VoilaPage>
                                               for (int i = 0; i < 4; ++i)
                                                 print(
                                                     'finished typing $textSearchTyped');
-                                              MainNavigationScreen
-                                                  .pageController
-                                                  .animateToPage(
-                                                      MainNavigationScreen
-                                                          .MATCHING_PAGE_INDEX,
-                                                      duration: Duration(
-                                                          milliseconds: 300),
-                                                      curve:
-                                                          Curves.fastOutSlowIn);
+                                              if (SettingsData.instance
+                                                      .textSearch.length !=
+                                                  0)
+                                                MainNavigationScreen
+                                                    .pageController
+                                                    .animateToPage(
+                                                        MainNavigationScreen
+                                                            .MATCHING_PAGE_INDEX,
+                                                        duration: Duration(
+                                                            milliseconds: 300),
+                                                        curve: Curves
+                                                            .fastOutSlowIn);
                                             }
                                           },
                                           onType: (value) {
@@ -223,7 +230,7 @@ class _VoilaPageState extends State<VoilaPage>
                                           onTapIcon: textSearchTyped.length > 0
                                               ? () {
                                                   print(
-                                                      'move to match screen?'); //TODO move to match screen?
+                                                      'move to match screen?');
                                                   FocusScope.of(context)
                                                       .unfocus();
                                                 }

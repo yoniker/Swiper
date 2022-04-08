@@ -8,14 +8,27 @@ class ImageFilterViewWidget extends StatefulWidget {
 }
 
 class _ImageFilterViewWidgetState extends State<ImageFilterViewWidget>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late final AnimationController _animationController;
   late final Animation<double> _searchAnimation;
+  late AnimationController _firstAnimation;
+  late Animation<double> _expendLittleAnimation;
+  late Animation<double> _widgetAppearAnimation;
 
   @override
   void initState() {
+    _firstAnimation =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 400))
+          ..forward()
+          ..addListener(() {
+            setState(() {});
+          });
+    _widgetAppearAnimation = Tween<double>(begin: 0, end: 1).animate(
+        CurvedAnimation(parent: _firstAnimation, curve: Curves.fastOutSlowIn));
+    _expendLittleAnimation = Tween<double>(begin: 0.5, end: 1).animate(
+        CurvedAnimation(parent: _firstAnimation, curve: Curves.fastOutSlowIn));
     _animationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 3))
+        AnimationController(vsync: this, duration: Duration(seconds: 4))
           ..forward()
           ..addListener(() {
             setState(() {});
@@ -23,16 +36,15 @@ class _ImageFilterViewWidgetState extends State<ImageFilterViewWidget>
               _animationController.repeat(reverse: true);
             }
           });
-    _searchAnimation = Tween<double>(begin: 1, end: 60).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.fastOutSlowIn,
-    ));
+    _searchAnimation =
+        Tween<double>(begin: 1, end: 60).animate(_animationController);
     super.initState();
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _firstAnimation.dispose();
     super.dispose();
   }
 
@@ -40,12 +52,13 @@ class _ImageFilterViewWidgetState extends State<ImageFilterViewWidget>
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        height: 44,
-        width: 100,
+        height: _expendLittleAnimation.value * 44,
+        width: _expendLittleAnimation.value * 100,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
           image: SettingsData.instance.filterDisplayImageUrl != ''
               ? DecorationImage(
+                  opacity: _widgetAppearAnimation.value,
                   fit: BoxFit.cover,
                   image: NetworkImage(
                     NetworkHelper.faceUrlToFullUrl(
@@ -65,7 +78,7 @@ class _ImageFilterViewWidgetState extends State<ImageFilterViewWidget>
               child: Icon(
                 Icons.search,
                 color: Colors.white.withOpacity(0.65),
-                size: 40,
+                size: _widgetAppearAnimation.value * 40,
               ),
             )
           ],

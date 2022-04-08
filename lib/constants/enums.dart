@@ -10,18 +10,15 @@ enum FilterType {
   NONE,
 }
 
-enum ServerRegistrationStatus{
-  already_registered,
-  new_register
-}
+enum ServerRegistrationStatus { already_registered, new_register }
 
 extension uiDescription on FilterType {
   String get description {
     switch (this) {
       case FilterType.CELEB_IMAGE:
-        return "Celeb Filter";
+        return "Celeb Search";
       case FilterType.CUSTOM_IMAGE:
-        return "Custom Image";
+        return "Image Search";
       case FilterType.USER_TASTE:
         return "My taste";
       case FilterType.NONE:
