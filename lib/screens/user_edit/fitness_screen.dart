@@ -24,7 +24,6 @@ class _FitnessScreen extends State<FitnessScreen> {
               appBar: CustomAppBar(
                 hasTopPadding: true,
                 hasBackButton: true,
-                showAppLogo: false,
                 title: 'Fitness',
               ),
               body: QuestionnaireWidget(

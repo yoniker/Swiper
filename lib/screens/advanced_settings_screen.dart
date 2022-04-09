@@ -203,7 +203,6 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                 ],
               ),
             ),
-            showAppLogo: false,
             hasBackButton: false,
             trailing: Padding(
               padding: const EdgeInsets.only(right: 10),

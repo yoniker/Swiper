@@ -2,6 +2,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 /// A customAppBar that can be used as a Widget outside the [Scaffold] and can also be used inside the
@@ -20,7 +21,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.elevation = 2,
     this.centerTitle = false,
     this.hasTopPadding = false,
-    this.showAppLogo = false,
     this.hasBackButton = true,
     this.trailingPad = 5.0,
     this.centerWidget,
@@ -38,7 +38,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.backgroundColor = Colors.white,
     this.hasBackButton = true,
     this.hasTopPadding = false,
-    this.showAppLogo = true,
     this.elevation = 2,
     this.trailingPad = 5.0,
     this.centerWidget,
@@ -79,10 +78,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   final Widget? centerWidget;
 
-  /// Whether to show the App's Logo at the center of the App Bar.
-  /// Must not be null.
-  final bool showAppLogo;
-
   final double elevation;
 
   /// If the Appbar should have a background color we can use this.
@@ -119,54 +114,54 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ? EdgeInsets.only(top: topPadding)
             : EdgeInsets.zero,
         padding: EdgeInsets.symmetric(horizontal: 5.0),
-        child: Container(
-          child: Stack(children: [
-            if (centerWidget != null) centerWidget!,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    if (hasBackButton)
-                      InkWell(
-                        splashColor: mainAppColor02.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(8.0),
-                        onTap: () {
-                          Get.back();
-                        },
-                        child: GlobalWidgets.assetImageToIcon(
-                          'assets/images/back_arrow.png',
+        child: Stack(children: [
+          if (centerWidget != null) centerWidget!,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  if (hasBackButton)
+                    InkWell(
+                      splashColor: mainAppColor02.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(8.0),
+                      onTap: () {
+                        Get.back();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Icon(
+                          FontAwesomeIcons.chevronLeft,
+                          color: Colors.black87,
+                          size: 20,
                         ),
                       ),
-                    customTitle ??
-                        Padding(
-                          padding: EdgeInsets.only(left: 10.0),
-                          child: Text(
-                            title!,
-                            style: TextStyle(
-                              color: titleTextColor,
-                              fontSize: 22,
-                              fontFamily: 'Nunito',
-                              fontWeight: FontWeight.w700,
-                            ),
+                    ),
+                  customTitle ??
+                      Padding(
+                        padding: EdgeInsets.only(left: 10.0),
+                        child: Text(
+                          title!,
+                          style: TextStyle(
+                            color: titleTextColor,
+                            fontSize: 22,
+                            fontFamily: 'Nunito',
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
-                  ],
-                ),
-                if (showAppLogo)
-                  GlobalWidgets.assetImageToIcon(
-                      'https://picsum.photos/200/300'),
-                Padding(
-                  padding: EdgeInsets.only(right: trailingPad),
-                  child: trailing,
-                ),
-                // show App Logo.
-              ],
-            ),
-          ]),
-        ),
+                      ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: trailingPad),
+                child: trailing,
+              ),
+              // show App Logo.
+            ],
+          ),
+        ]),
       ),
     );
   }

@@ -21,7 +21,6 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
       appBar: CustomAppBar(
         hasTopPadding: true,
         hasBackButton: true,
-        showAppLogo: false,
         title: 'My pets',
       ),
       body: BubblesListWidget(

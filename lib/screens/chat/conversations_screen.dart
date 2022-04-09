@@ -1,14 +1,8 @@
-import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/services/chatData.dart';
-import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/utils/mixins.dart';
-import 'package:betabeta/widgets/circular_user_avatar.dart';
 import 'package:betabeta/widgets/contacts_widget.dart';
 import 'package:betabeta/widgets/conversations_preview_widget.dart';
-import 'package:betabeta/widgets/custom_app_bar.dart';
-import 'package:betabeta/widgets/voila_logo_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class ConversationsScreen extends StatefulWidget {
   const ConversationsScreen({Key? key}) : super(key: key);

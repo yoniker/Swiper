@@ -24,7 +24,6 @@ class _DrinkingScreen extends State<DrinkingScreen> {
             appBar: CustomAppBar(
               hasTopPadding: true,
               hasBackButton: true,
-              showAppLogo: false,
               title: 'Drinking',
             ),
             body: QuestionnaireWidget(

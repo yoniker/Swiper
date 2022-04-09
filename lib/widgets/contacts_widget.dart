@@ -21,8 +21,7 @@ class ContactsWidget extends StatefulWidget {
   _ContactsWidgetState createState() => _ContactsWidgetState();
 }
 
-class _ContactsWidgetState extends State<ContactsWidget>
-    with SingleTickerProviderStateMixin {
+class _ContactsWidgetState extends State<ContactsWidget> {
   List<Profile> allUsers = ChatData.instance.users;
   Set<String> usersIdsInConversations =
       ChatData.instance.allConversationsParticipantsIds;

@@ -30,7 +30,6 @@ class _KidsScreen extends State<KidsScreen> {
             appBar: CustomAppBar(
               hasTopPadding: true,
               hasBackButton: true,
-              showAppLogo: false,
               title: 'Children',
             ),
             body: QuestionnaireWidget(

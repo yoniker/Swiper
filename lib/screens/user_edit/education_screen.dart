@@ -24,7 +24,6 @@ class _EducationScreenState extends State<EducationScreen> {
             appBar: CustomAppBar(
               hasTopPadding: true,
               hasBackButton: true,
-              showAppLogo: false,
               title: 'Education level',
             ),
             body: QuestionnaireWidget(

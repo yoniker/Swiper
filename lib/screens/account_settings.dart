@@ -66,7 +66,6 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       appBar: CustomAppBar(
         title: 'General Settings',
         hasTopPadding: true,
-        showAppLogo: false,
         trailing: PrecachedImage.asset(
           imageURI: BetaIconPaths.settingsBarIcon,
           color: Colors.black,

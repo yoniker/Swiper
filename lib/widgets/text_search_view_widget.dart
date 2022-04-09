@@ -26,7 +26,7 @@ class _TextSearchViewWidgetState extends State<TextSearchViewWidget>
           });
     _widgetAppearAnimation = Tween<double>(begin: 0, end: 1).animate(
         CurvedAnimation(parent: _firstAnimation, curve: Curves.fastOutSlowIn));
-    _expendLittleAnimation = Tween<double>(begin: 0.5, end: 1).animate(
+    _expendLittleAnimation = Tween<double>(begin: 0.8, end: 1).animate(
         CurvedAnimation(parent: _firstAnimation, curve: Curves.fastOutSlowIn));
     _animationController =
         AnimationController(vsync: this, duration: Duration(seconds: 5))
