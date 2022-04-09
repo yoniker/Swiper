@@ -1,4 +1,5 @@
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/models/infoConversation.dart';
 import 'package:betabeta/models/infoMessage.dart';
@@ -6,9 +7,8 @@ import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/chat/chat_screen.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-
-import '../constants/lists_consts.dart';
 
 class ConversationsPreviewWidget extends StatefulWidget {
   ConversationsPreviewWidget({this.search = ''});
@@ -38,6 +38,21 @@ class _ConversationsPreviewWidgetState
 
   @override
   Widget build(BuildContext context) {
+    List<String> months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -97,12 +112,29 @@ class _ConversationsPreviewWidgetState
               double commonHeight = 80;
               InfoConversation conversation = conversations[index];
               InfoMessage lastMessage = conversation.messages[0];
+              DateTime lastMessageTime = DateTime.fromMillisecondsSinceEpoch(
+                lastMessage.changedDate!.toInt() * 1000,
+              );
+              String lastMessageTimeDescription() {
+                if (DateTime.now().difference(lastMessageTime).inDays > 365)
+                  return '${months[lastMessageTime.month - 1]}. ${lastMessageTime.day} ${lastMessageTime.year}';
+                if (DateTime.now().difference(lastMessageTime).inDays > 30)
+                  return '${months[lastMessageTime.month - 1]}. ${lastMessageTime.day}';
+                if (DateTime.now().difference(lastMessageTime).inDays > 1)
+                  return 'Yesterday';
+                String hour() {
+                  if (lastMessageTime.hour > 12)
+                    return '${lastMessageTime.hour - 12}:${lastMessageTime.minute} p.m.';
+                  return '${lastMessageTime.hour}:${lastMessageTime.minute} a.m.';
+                }
+
+                return hour();
+              }
+
               Profile? collocutor = ChatData.instance
                   .getUserById(ChatData.instance.getCollocutorId(conversation));
               bool messageWasRead =
                   ChatData.instance.conversationRead(conversation);
-              // String heightInFeet =
-              //     'Height: ${cmToFeet(collocutor?.height)} ft';
               if (collocutor != null) if (collocutor.username
                   .split(' ')[0]
                   .toLowerCase()
@@ -164,62 +196,35 @@ class _ConversationsPreviewWidgetState
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            collocutor != null
-                                                ? collocutor.username
-                                                    .split(' ')[0]
-                                                : '',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 15.0,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            collocutor.age != null
-                                                ? ', ${collocutor.age}'
-                                                : '',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 15.0,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 5.0,
-                                      ),
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.45,
-                                        child: Text(
-                                            lastMessage.toUiMessage().text,
-                                            style: TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 15.0,
-                                              fontWeight: FontWeight.w600,
-                                              overflow: TextOverflow.ellipsis,
-                                            )),
-                                      ),
-                                    ],
-                                  ),
                                   Row(
                                     children: [
+                                      Text(
+                                        collocutor != null
+                                            ? collocutor.username.split(' ')[0]
+                                            : '',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        collocutor.age != null
+                                            ? ', ${collocutor.age}'
+                                            : '',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                       SizedBox(
                                         width: 10,
                                       ),
                                       Text(
                                         collocutor.height != null &&
                                                 collocutor.height != 0
-                                            ? 'Height: ${cmToFeet(collocutor.height)} ft'
+                                            ? '📏 ${cmToFeet(collocutor.height)} ft'
                                             : '',
                                         style: TextStyle(
                                           color: Colors.blueGrey[400],
@@ -227,25 +232,81 @@ class _ConversationsPreviewWidgetState
                                           fontWeight: FontWeight.w600,
                                           overflow: TextOverflow.ellipsis,
                                         ),
-                                      )
+                                      ),
                                     ],
-                                  )
+                                  ),
+                                  Container(
+                                    constraints: BoxConstraints(
+                                        maxWidth:
+                                            MediaQuery.of(context).size.width *
+                                                0.5),
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color:
+                                          lastMessage.userId == collocutor.uid
+                                              ? Colors.blue[200]
+                                              : Colors.grey[200],
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          lastMessage.toUiMessage().text,
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                            color: lastMessage.userId ==
+                                                    collocutor.uid
+                                                ? Colors.white
+                                                : Colors.black54,
+                                            fontSize: 15.0,
+                                            fontWeight: FontWeight.w600,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          lastMessageTimeDescription(),
+                                          style: TextStyle(
+                                              color: lastMessage.userId ==
+                                                      collocutor.uid
+                                                  ? Colors.white70
+                                                  : Colors.grey,
+                                              fontSize: 15,
+                                              overflow: TextOverflow.ellipsis),
+                                        )
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
                           ],
                         ),
                         if (!messageWasRead)
-                          Container(
-                            width: 50,
-                            height: 25,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5.0),
-                                color: Colors.blue),
-                            alignment: Alignment.center,
-                            child: Icon(
-                              Icons.mail,
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Material(
+                              elevation: 2,
+                              child: Container(
+                                margin: EdgeInsets.all(2),
+                                height: 20,
+                                width: 20,
+                                decoration: BoxDecoration(
+                                  color: Colors.black87,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
                               color: Colors.white,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(30),
+                              ),
                             ),
                           ),
                       ],

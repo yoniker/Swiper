@@ -24,15 +24,15 @@ class _SmokingScreen extends State<SmokingScreen> {
             appBar: CustomAppBar(
               hasTopPadding: true,
               hasBackButton: true,
-              showAppLogo: false,
               title: 'Smoking',
             ),
             body: QuestionnaireWidget(
               headline: 'Do you smoke?',
               choices: ['Regularly', 'Socially', 'Never'],
               initialChoice: SettingsData.instance.smoking,
-              onValueChanged: (newSmokingVal){SettingsData.instance.smoking = newSmokingVal;},
-
+              onValueChanged: (newSmokingVal) {
+                SettingsData.instance.smoking = newSmokingVal;
+              },
             ),
           );
         });

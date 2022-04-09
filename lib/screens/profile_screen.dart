@@ -138,7 +138,6 @@ class _ProfileScreenState extends State<ProfileScreen>
             trailing: PrecachedImage.asset(imageURI: BetaIconPaths.editIcon03),
             hasTopPadding: true,
             hasBackButton: true,
-            showAppLogo: false,
             title: 'Profile',
           ),
           body: SingleChildScrollView(

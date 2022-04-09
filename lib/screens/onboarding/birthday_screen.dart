@@ -1,8 +1,6 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/settings_model.dart';
-import 'package:betabeta/screens/onboarding/get_name_screen.dart';
 import 'package:betabeta/services/onboarding_flow_controller.dart';
-import 'package:betabeta/screens/onboarding/pronouns_screen.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/utils/utils_methods.dart';
 import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
@@ -123,7 +121,9 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
                                             SettingsData.instance.userBirthday =
                                                 selectedDate.toString();
                                             Get.offAllNamed(
-                                                OnboardingFlowController.instance.nextRoute(
+                                                OnboardingFlowController
+                                                    .instance
+                                                    .nextRoute(
                                                         BirthdayOnboardingScreen
                                                             .routeName));
                                           },

@@ -85,6 +85,23 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         duration: Duration(milliseconds: 300), curve: Curves.fastOutSlowIn);
   }
 
+  Widget DoubleIconToStack(IconData icon1, IconData icon2) {
+    return Stack(
+      alignment: Alignment.bottomLeft,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 4.0, bottom: 4),
+          child: Icon(icon1),
+        ),
+        Container(
+          width: 27,
+          color: Colors.black,
+          child: Icon(icon2),
+        ),
+      ],
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -110,7 +127,19 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             centerWidget: ListenerWidget(
                 notifier: SettingsData.instance,
                 builder: (BuildContext) {
-                  return buildCenterWidget();
+                  return GestureDetector(
+                    onTap: SettingsData.instance.filterType !=
+                                FilterType.NONE &&
+                            selectedTabIndex !=
+                                MainNavigationScreen.CONVERSATIONS_PAGE_INDEX
+                        ? () {
+                            MainNavigationScreen.pageController.animateToPage(1,
+                                duration: Duration(milliseconds: 200),
+                                curve: Curves.fastOutSlowIn);
+                          }
+                        : null,
+                    child: buildCenterWidget(),
+                  );
                 }),
             hasTopPadding: true,
             hasBackButton: false,
@@ -120,7 +149,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(4.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(
                       onTap: () {
                         Get.toNamed(ProfileScreen.routeName);
@@ -180,15 +209,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             },
             items: [
               BottomNavigationBarItem(
-                icon: PrecachedImage.asset(
-                  imageURI: BetaIconPaths.inactiveMatchTabIconPath,
-                  width: 26,
-                ),
-                activeIcon: PrecachedImage.asset(
-                  imageURI: BetaIconPaths.activeMatchTabIconPath,
-                  color: mainAppColor02,
-                  width: 26,
-                ),
+                icon: DoubleIconToStack(
+                    FontAwesomeIcons.addressCard, FontAwesomeIcons.addressCard),
+                activeIcon: DoubleIconToStack(FontAwesomeIcons.addressCard,
+                    FontAwesomeIcons.solidAddressCard),
                 label: 'Match',
                 tooltip: 'Match',
               ),

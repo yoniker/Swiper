@@ -110,7 +110,6 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
           appBar: CustomAppBar(
             title: 'Search Celeb',
             hasTopPadding: true,
-            showAppLogo: false,
             trailing: FaIcon(FontAwesomeIcons.addressCard),
           ),
           body: Column(
@@ -127,10 +126,7 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
                   decoration: InputDecoration(
                     fillColor: lightCardColor,
                     filled: true,
-                    prefixIcon: GlobalWidgets.assetImageToIcon(
-                      BetaIconPaths.inactiveMatchTabIconPath,
-                      onTap: toggleFocus,
-                    ),
+                    prefixIcon: Icon(Icons.search),
                     suffixIcon: IconButton(
                       icon: Icon(
                         Icons.close_rounded,

@@ -48,7 +48,6 @@ class _PronounsEditScreenState extends State<PronounsEditScreen> {
             appBar: CustomAppBar(
               hasTopPadding: true,
               hasBackButton: true,
-              showAppLogo: false,
               title: 'My gender',
             ),
             body: SafeArea(

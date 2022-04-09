@@ -100,9 +100,7 @@ List<String> kPetsList = [
 ];
 
 List<String> kEmptyBubbles = [
-  'Spa  🛁',
-  'Cycling  🚲',
-  'Music  🎹',
+  'Add here',
 ];
 
 List<String> kEmptyPets = ['No pets'];

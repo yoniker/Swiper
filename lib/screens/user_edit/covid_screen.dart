@@ -30,7 +30,6 @@ class _CovidScreenState extends State<CovidScreen> {
             appBar: CustomAppBar(
               hasTopPadding: true,
               hasBackButton: true,
-              showAppLogo: false,
               title: 'Covid Vaccine',
             ),
             body: QuestionnaireWidget(

@@ -21,7 +21,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
       appBar: CustomAppBar(
         title: 'Notifications',
         hasTopPadding: true,
-        showAppLogo: false,
         trailing: PrecachedImage.asset(
           imageURI: BetaIconPaths.notificationIconFilled01,
           scale: 5.0,

@@ -44,7 +44,6 @@ class _OrientationEditScreenState extends State<OrientationEditScreen> {
       appBar: CustomAppBar(
         hasTopPadding: true,
         hasBackButton: true,
-        showAppLogo: false,
         title: 'Interested in',
       ),
       backgroundColor: kBackroundThemeColor,

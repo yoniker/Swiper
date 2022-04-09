@@ -11,9 +11,11 @@ import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/chat_profile_display_widget.dart';
 import 'package:betabeta/widgets/circular_user_avatar.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:convert';
 import 'package:get/get.dart';
 
@@ -62,6 +64,10 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
     }
   }
 
+  void unmatchUser() async {
+    await ChatData.instance.unmatch(theUser.uid);
+  }
+
   @override
   void initState() {
     Profile? userFound = ChatData.instance.getUserById(widget.userid);
@@ -93,50 +99,48 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
       return '${howLongAgo.inMinutes} minutes ago';
     }
 
-    return Container(
-      color: Colors.white,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'You matched with ',
-                style: TextStyle(fontSize: 20, color: Colors.black54),
-              ),
-              Text(
-                theUser.username,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.black.withOpacity(0.6)),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          GestureDetector(
-            child: CircularUserAvatar(
-              imageProvider: NetworkImage(
-                  NewNetworkService.getProfileImageUrl(theUser.profileImage)),
-              radius: 90,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'You matched with ',
+              style: TextStyle(fontSize: 20, color: Colors.black54),
             ),
-            onTap: () {
-              Get.toNamed(OtherUserProfileScreen.routeName,
-                  arguments: theUser.uid);
-            },
+            Text(
+              theUser.username,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.black.withOpacity(0.6)),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        GestureDetector(
+          child: CircularUserAvatar(
+            imageProvider: NetworkImage(
+                NewNetworkService.getProfileImageUrl(theUser.profileImage)),
+            radius: 90,
           ),
-          SizedBox(
-            height: 20,
-          ),
-          Text(
-            howLongAgoDescription(),
-            style: TextStyle(fontSize: 20, color: Colors.black54),
-          )
-        ],
-      ),
+          onTap: () {
+            Get.toNamed(OtherUserProfileScreen.routeName,
+                arguments: theUser.uid);
+          },
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Text(
+          howLongAgoDescription(),
+          style: TextStyle(fontSize: 20, color: Colors.black54),
+        )
+      ],
     );
   }
 
@@ -156,62 +160,88 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
                 arguments: theUser.uid);
           },
         ),
-        trailing: TextButton(
-            onPressed: () async {
-              await ChatData.instance.unmatch(theUser.uid);
-              Get.back();
-            },
-            child: Text(
-              'Unmatch',
-              style: TextStyle(
-                color: Colors.red[900],
-                fontSize: 15.0,
-                fontWeight: FontWeight.bold,
-              ),
-            )),
-      ),
-      body: Column(
-        children: [
-          if (_messages.length == 0)
-            Expanded(flex: 4, child: buildEmptyChatWidget()),
-          Expanded(
-            flex: 1,
-            child: Chat(
-              l10n: ChatL10nEn(inputPlaceholder: ' Send a message'),
-
-              theme: DefaultChatTheme(
-                inputMargin: EdgeInsets.all(10),
-                inputPadding: EdgeInsets.all(10),
-                inputBackgroundColor: Colors.transparent,
-                inputContainerDecoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 1.5),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(20),
-                  ),
+        trailing: SizedBox(
+          height: 30,
+          child: FloatingActionButton.small(
+            elevation: 1,
+            backgroundColor: Colors.black45,
+            onPressed: () {
+              showDialog(
+                context: context,
+                useRootNavigator: true,
+                builder: (BuildContext context) => CupertinoAlertDialog(
+                  title: Text('Unmatch ${theUser.username} ?'),
+                  content: Text(
+                      '${theUser.username} will be removed from your chat.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      child: Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Get.back();
+                        Get.back();
+                        unmatchUser();
+                      },
+                      child: Text(
+                        'Unmatch',
+                        style: TextStyle(color: Colors.red[800]),
+                      ),
+                    )
+                  ],
                 ),
-                inputTextColor: Colors.black87,
-                inputTextCursorColor: Colors.blue,
-              ),
-              // customBottomWidget: TextField(
-              //   onChanged: (newMessage){typedMessage = newMessage;},
-              // ),
-              emptyState: SizedBox(),
-              user: types.User(id: SettingsData.instance.uid),
-              showUserAvatars: true,
-              onSendPressed: (text) {
-                ChatData.instance.sendMessage(theUser.uid,
-                    jsonEncode({"type": "text", "content": "${text.text}"}));
-              },
-              messages: _messages,
-              onMessageTap: (context, message) {
-                ChatData.instance
-                    .resendMessageIfError(conversationId, message.id);
-              },
-              onMessageLongPress: (context, message) {
-                ChatData.instance
-                    .resendMessageIfError(conversationId, message.id);
-              },
+              );
+            },
+            child: Icon(
+              FontAwesomeIcons.circleXmark,
+              color: Colors.white70,
+              size: 30,
             ),
+          ),
+        ),
+      ),
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          if (_messages.length == 0) buildEmptyChatWidget(),
+          Chat(
+            l10n: ChatL10nEn(inputPlaceholder: ' Send a message'),
+            theme: DefaultChatTheme(
+              primaryColor: Color(0xFF1565C0),
+              secondaryColor: Color(0xFFE0E0E0),
+              backgroundColor: Colors.transparent,
+              inputMargin: EdgeInsets.all(10),
+              inputPadding: EdgeInsets.all(10),
+              inputBackgroundColor: Colors.transparent,
+              inputContainerDecoration: BoxDecoration(
+                color: Colors.grey[100],
+                border: Border.all(color: Colors.grey, width: 1.5),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20),
+                ),
+              ),
+              inputTextColor: Colors.black87,
+              inputTextCursorColor: Colors.blue,
+            ),
+            emptyState: SizedBox(),
+            user: types.User(id: SettingsData.instance.uid),
+            showUserAvatars: true,
+            onSendPressed: (text) {
+              ChatData.instance.sendMessage(theUser.uid,
+                  jsonEncode({"type": "text", "content": "${text.text}"}));
+            },
+            messages: _messages,
+            onMessageTap: (context, message) {
+              ChatData.instance
+                  .resendMessageIfError(conversationId, message.id);
+            },
+            onMessageLongPress: (context, message) {
+              ChatData.instance
+                  .resendMessageIfError(conversationId, message.id);
+            },
           ),
         ],
       ),

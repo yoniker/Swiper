@@ -128,7 +128,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
             appBar: CustomAppBar(
               title: 'Edit Profile',
               hasTopPadding: true,
-              showAppLogo: false,
             ),
             body: SingleChildScrollView(
               child: Column(
