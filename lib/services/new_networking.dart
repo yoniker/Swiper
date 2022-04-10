@@ -300,4 +300,12 @@ class NewNetworkService {
     }
 
   }
+
+
+  Future<void> deleteAccount() async {
+    Uri deleteAccountUri =
+    Uri.https(SERVER_ADDR, '/delete_account/${SettingsData.instance.uid}');
+    http.Response response = await http.get(deleteAccountUri);
+    //TODO check for a successful response and give user feedback if not successful
+  }
 }

@@ -455,7 +455,7 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
                     icon: Icons.delete,
                     onTap: () async {
                       // move to swiping-preference screen.
-                      await ChatNetworkHelper
+                      await NewNetworkService.instance
                           .deleteAccount(); //TODO at the very least verify with the user that that's what she wants (in order to minimize accidental deleting of accounts)
                       await _logout();
                     },
