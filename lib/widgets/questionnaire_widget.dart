@@ -3,8 +3,10 @@ import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/choice_button.dart';
 import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
+import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class QuestionnaireWidget extends StatefulWidget {
@@ -15,6 +17,7 @@ class QuestionnaireWidget extends StatefulWidget {
       this.onSave,
       this.headline,
       this.promotes,
+      this.extraUserChoice = false,
       this.alwaysPressed = false});
   final List<String> choices;
   final String? headline;
@@ -22,6 +25,7 @@ class QuestionnaireWidget extends StatefulWidget {
   final void Function()? onSave;
   final bool alwaysPressed;
   final String? initialChoice;
+  final bool extraUserChoice;
 
   final List<String>? promotes;
 
@@ -32,6 +36,15 @@ class QuestionnaireWidget extends StatefulWidget {
 class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   String? currentUserChoice;
   String promote = '';
+  bool? _checked = false;
+  String otherChoice = '';
+
+  void UnFocus() {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+  }
 
   @override
   void initState() {
@@ -119,6 +132,91 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
                               ))
                           .toList(),
                     ),
+                    if (widget.extraUserChoice == true)
+                      Column(
+                        children: [
+                          Center(
+                            child: FittedBox(
+                              fit: BoxFit.fill,
+                              child: TextButton(
+                                onPressed: () {
+                                  UnFocus();
+                                  setState(() {
+                                    _checked == false
+                                        ? _checked = true
+                                        : _checked = false;
+                                  });
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      'Other',
+                                      style: kButtonText,
+                                    ),
+                                    const SizedBox(width: 5),
+                                    AnimatedRotation(
+                                      curve: Curves.fastOutSlowIn,
+                                      duration: Duration(milliseconds: 400),
+                                      turns: _checked == true ? -0.5 : 0,
+                                      child: Icon(
+                                        FontAwesomeIcons.chevronDown,
+                                        color: kIconColor,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 100),
+                            height: _checked == false ? 0 : 63,
+                            child: SingleChildScrollView(
+                              child: InputField(
+                                  onTap: () {
+                                    currentUserChoice = otherChoice;
+
+                                    setState(() {
+                                      if (currentUserChoice != otherChoice) {
+                                        currentUserChoice = otherChoice;
+                                      } else {
+                                        currentUserChoice = '';
+                                      }
+                                      ;
+                                    });
+
+                                    if (currentUserChoice != null) {
+                                      widget.onValueChanged
+                                          ?.call(currentUserChoice!);
+                                    }
+                                  },
+                                  maxCharacters: 20,
+                                  style: const TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 25, vertical: 20),
+                                  hintText: 'For other gender type here',
+                                  onType: (value) {
+                                    setState(
+                                      () {
+                                        value.isEmpty
+                                            ? currentUserChoice = null
+                                            : currentUserChoice = value;
+                                      },
+                                    );
+                                    if (currentUserChoice != null) {
+                                      widget.onValueChanged
+                                          ?.call(currentUserChoice!);
+                                    }
+                                  },
+                                  pressed: currentUserChoice == otherChoice),
+                            ),
+                          ),
+                        ],
+                      )
                   ],
                 ),
               ),

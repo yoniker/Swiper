@@ -34,7 +34,7 @@ class RoundedButton extends StatelessWidget {
         Radius.circular(30),
       ),
       color: Colors.transparent,
-      elevation: elevation,
+      elevation: onTap != null ? elevation : 0,
       child: MaterialButton(
         disabledColor: Colors.grey.withOpacity(0.2),
         disabledTextColor: Colors.white,

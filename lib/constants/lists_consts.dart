@@ -42,6 +42,13 @@ List<String> kZodiacsList = [
   'Sagittarius'
 ];
 
+List<String> kEducationChoices = [
+  'High School',
+  'Undergraduate',
+  'Postgraduate'
+];
+List<String> kFitnessChoices = ['Active', 'Occasionally', 'Never'];
+
 List<String> kHobbiesList = [
   'Dogs  🐕',
   'Cats  🐈',

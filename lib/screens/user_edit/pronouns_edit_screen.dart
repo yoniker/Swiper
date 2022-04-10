@@ -125,7 +125,8 @@ class _PronounsEditScreenState extends State<PronounsEditScreen> {
                                         ),
                                         const SizedBox(width: 5),
                                         AnimatedRotation(
-                                          duration: Duration(milliseconds: 200),
+                                          curve: Curves.fastOutSlowIn,
+                                          duration: Duration(milliseconds: 400),
                                           turns: _openOtherGender == true
                                               ? -0.5
                                               : 0,

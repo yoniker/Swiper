@@ -1,3 +1,4 @@
+import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/services/onboarding_flow_controller.dart';
@@ -10,8 +11,6 @@ import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-
-enum Gender { male, female, other }
 
 class PronounScreen extends StatefulWidget {
   static const String routeName = '/pronounScreen';
@@ -139,15 +138,18 @@ class _PronounScreenState extends State<PronounScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   const Text(
-                                    'More options',
+                                    'Other',
                                     style: kButtonText,
                                   ),
                                   const SizedBox(width: 5),
-                                  Icon(
-                                    _checked == false
-                                        ? FontAwesomeIcons.chevronDown
-                                        : FontAwesomeIcons.chevronUp,
-                                    color: kIconColor,
+                                  AnimatedRotation(
+                                    curve: Curves.fastOutSlowIn,
+                                    turns: _checked == true ? -0.5 : 0,
+                                    duration: Duration(milliseconds: 400),
+                                    child: Icon(
+                                      FontAwesomeIcons.chevronDown,
+                                      color: kIconColor,
+                                    ),
                                   )
                                 ],
                               ),
@@ -221,9 +223,9 @@ class _PronounScreenState extends State<PronounScreen> {
                                 ? null
                                 : () {
                                     saveSelectedGender();
-                                    Get.offAllNamed(
-                                        OnboardingFlowController.instance.nextRoute(
-                                            PronounScreen.routeName));
+                                    Get.offAllNamed(OnboardingFlowController
+                                        .instance
+                                        .nextRoute(PronounScreen.routeName));
                                   })
                       ],
                     ),

@@ -10,6 +10,8 @@ enum FilterType {
   NONE,
 }
 
+enum Gender { male, female, other }
+
 enum ServerRegistrationStatus { already_registered, new_register }
 
 extension uiDescription on FilterType {
