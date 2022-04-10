@@ -18,7 +18,7 @@ class _VoilaLogoWidgetState extends State<VoilaLogoWidget>
   @override
   void initState() {
     _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 600))
+        AnimationController(vsync: this, duration: Duration(milliseconds: 800))
           ..forward()
           ..addListener(() {
             setState(() {});

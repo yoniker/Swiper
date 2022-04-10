@@ -28,7 +28,8 @@ class BasicDetail extends StatelessWidget {
           Expanded(
             child: Text(
               detailText!,
-              style: defaultTextStyle,
+              style:
+                  boldTextStyle.copyWith(color: Colors.black.withOpacity(0.7)),
               overflow: TextOverflow.ellipsis,
             ),
           ),

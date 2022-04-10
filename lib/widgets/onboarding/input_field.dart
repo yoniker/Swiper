@@ -53,7 +53,6 @@ class InputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       borderRadius: const BorderRadius.all(Radius.circular(10)),
-      elevation: pressed == true ? 1 : 0,
       color: Colors.transparent,
       child: Theme(
         data: ThemeData(
@@ -113,7 +112,7 @@ class InputField extends StatelessWidget {
               counterText: "",
               contentPadding: padding != null
                   ? padding
-                  : EdgeInsets.fromLTRB(20, 15.0, 20, 15.0),
+                  : EdgeInsets.fromLTRB(10, 15.0, 10, 15.0),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
               ),

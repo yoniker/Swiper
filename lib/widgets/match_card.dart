@@ -131,57 +131,78 @@ class _MatchCardState extends State<MatchCard> {
     }
 
     // construct the Widget.
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Padding(
-        padding: EdgeInsets.only(left: 12.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Flexible(
-                  child: Text(
-                    '${widget.profile.username}, ${widget.profile.age}  ${userLookingFor()}',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: boldTextStyle.copyWith(
-                      shadows: [
-                        Shadow(
-                          blurRadius: 17.0,
-                          color: Colors.black,
-                          offset: Offset(-2.0, 2.0),
-                        ),
-                      ],
-                      color: Colors.white,
-                      fontSize: getRelativeTextSize(25),
-                    ),
+    return Padding(
+      padding: EdgeInsets.only(left: 12.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Text(
+                  '${widget.profile.username}, ${widget.profile.age}  ${userLookingFor()}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: kWhiteDescriptionShadowStyle.copyWith(
+                    color: Colors.white,
+                    fontSize: getRelativeTextSize(25),
                   ),
+                ),
+              ),
+            ],
+          ),
+          if (widget.profile.jobTitle != '' && widget.profile.jobTitle != null)
+            Row(
+              children: [
+                Icon(
+                  FontAwesomeIcons.briefcase,
+                  size: 18,
+                  color: Colors.white70,
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Text(
+                  widget.profile.jobTitle!,
+                  style: kWhiteDescriptionShadowStyle.copyWith(
+                    fontSize: getRelativeTextSize(18),
+                  ),
+                  maxLines: 1,
                 ),
               ],
             ),
-            Expanded(
-              child: Text(
-                widget.profile.description ?? '',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: boldTextStyle.copyWith(
-                  shadows: [
-                    Shadow(
-                      blurRadius: 17.0,
-                      color: Colors.black,
-                      offset: Offset(-2.0, 2.0),
-                    ),
-                  ],
+          if (widget.profile.school != '')
+            Row(
+              children: [
+                Icon(
+                  FontAwesomeIcons.graduationCap,
+                  size: 18,
                   color: Colors.white70,
-                  fontSize: getRelativeTextSize(20),
                 ),
+                SizedBox(
+                  width: 20,
+                ),
+                Text(
+                  widget.profile.school,
+                  style: kWhiteDescriptionShadowStyle.copyWith(
+                    fontSize: getRelativeTextSize(18),
+                  ),
+                  maxLines: 1,
+                ),
+              ],
+            ),
+          if (widget.profile.jobTitle == null && widget.profile.school == '' ||
+              widget.profile.jobTitle == '' && widget.profile.school == '')
+            Text(
+              widget.profile.description ?? '',
+              maxLines: 2,
+              style: kWhiteDescriptionShadowStyle.copyWith(
+                fontSize: getRelativeTextSize(20),
               ),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }
@@ -226,35 +247,29 @@ class _MatchCardState extends State<MatchCard> {
 
     // Return a List of Widgets.
     return [
-      SizedBox(height: 16.0),
-      if (widget.profile.jobTitle != '' && widget.profile.jobTitle != null)
-        BasicDetail(
-          detailText: '${widget.profile.jobTitle}',
-          detailIcon: FaIcon(FontAwesomeIcons.userTie),
+      Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Text(
+          'Introduction',
+          textAlign: TextAlign.start,
+          style: boldTextStyle.copyWith(color: Colors.black54),
         ),
-      if (widget.profile.school != '')
-        BasicDetail(
-          detailText: 'School: ${widget.profile.school}',
-          detailIcon: FaIcon(
-            FontAwesomeIcons.school,
-            size: 18,
-            color: Colors.black,
-          ),
-        ),
-      if (profile.education != '')
-        BasicDetail(
-          detailText: 'Education: ${widget.profile.education}',
-          detailIcon: FaIcon(
-            FontAwesomeIcons.graduationCap,
-            size: 21,
-          ),
-        ),
-      SizedBox(height: 20),
-      Text(
-        'Profile Images',
-        style: subTitleStyle,
       ),
-      _buildDivider(),
+      Container(
+        margin: EdgeInsets.symmetric(horizontal: 15),
+        child: Text(
+          (widget.profile.description != null &&
+                  widget.profile.description != '')
+              ? widget.profile.description!
+              : 'No Description available',
+          style: boldTextStyle.copyWith(
+              color: Colors.black.withOpacity(0.8),
+              fontWeight: FontWeight.w700),
+        ),
+      ),
+      SizedBox(
+        height: 20,
+      ),
       Container(
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.only(
@@ -331,209 +346,208 @@ class _MatchCardState extends State<MatchCard> {
                 ),
         ),
       ),
-      Text(
-        'About me',
-        style: subTitleStyle,
-      ),
-      _buildDivider(),
-      Container(
-        margin: EdgeInsets.symmetric(horizontal: 5),
-        child: Text(
-          (widget.profile.description != null &&
-                  widget.profile.description != '')
-              ? widget.profile.description!
-              : 'No Description available',
-          style: defaultTextStyle,
-        ),
-      ),
       SizedBox(height: 20),
-      if (widget.profile.hobbies.length != 0)
-        Column(
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: Wrap(
+          direction: Axis.horizontal,
           children: [
-            Text(
-              'Hobbies',
-              style: subTitleStyle,
-            ),
-            _buildDivider(),
-            BubbleBlockViewer(
-              bubbles: widget.profile.hobbies,
-            ),
-          ],
-        ),
-      Text(
-        'Basic Info',
-        style: subTitleStyle,
-      ),
-      _buildDivider(),
-      Wrap(
-        direction: Axis.horizontal,
-        children: [
-          BasicDetail(
-            detailText: '${widget.profile.userGender}',
-            detailIcon: FaIcon(
-              FontAwesomeIcons.userFriends,
-              color: Colors.blueAccent,
-            ),
-          ),
-          if (widget.profile.location != null && widget.profile.location != '')
+            if (widget.profile.location != null &&
+                widget.profile.location != '')
+              BasicDetail(
+                  detailText: '${widget.profile.location}',
+                  detailIcon: FaIcon(
+                    FontAwesomeIcons.mapMarkedAlt,
+                    color: Colors.black.withOpacity(0.7),
+                  )),
             BasicDetail(
-                detailText: '${widget.profile.location}',
+              detailText: '${widget.profile.userGender}',
+              detailIcon: FaIcon(
+                FontAwesomeIcons.userGroup,
+                color: Colors.black.withOpacity(0.7),
+              ),
+            ),
+            if (widget.profile.height != 0 && widget.profile.height != null)
+              BasicDetail(
+                detailText: '${cmToFeet(widget.profile.height!)} ft',
                 detailIcon: FaIcon(
-                  FontAwesomeIcons.mapMarkedAlt,
-                  color: Colors.red,
-                )),
-          if (widget.profile.height != 0 && widget.profile.height != null)
-            BasicDetail(
-              detailText: '${cmToFeet(widget.profile.height!)} ft',
-              detailIcon: FaIcon(
-                FontAwesomeIcons.ruler,
-                color: Colors.yellow[700],
+                  FontAwesomeIcons.ruler,
+                  color: Colors.black.withOpacity(0.7),
+                ),
               ),
-            ),
-          if (widget.profile.religion != '' && widget.profile.religion != null)
-            BasicDetail(
-              detailText: '${widget.profile.religion}',
-              detailIcon: FaIcon(
-                FontAwesomeIcons.prayingHands,
-                color: Colors.yellow,
+            if (profile.education != '')
+              BasicDetail(
+                detailText: 'Education: ${widget.profile.education}',
+                detailIcon: FaIcon(
+                  FontAwesomeIcons.graduationCap,
+                  size: 21,
+                  color: Colors.black.withOpacity(0.7),
+                ),
               ),
-            ),
-          if (widget.profile.zodiac != '')
-            BasicDetail(
-              detailText: '${widget.profile.zodiac}',
-              detailIcon: FaIcon(
-                FontAwesomeIcons.starAndCrescent,
-                color: Colors.blueGrey,
+            if (widget.profile.religion != '' &&
+                widget.profile.religion != null)
+              BasicDetail(
+                detailText: '${widget.profile.religion}',
+                detailIcon: FaIcon(
+                  FontAwesomeIcons.handsPraying,
+                  color: Colors.black.withOpacity(0.7),
+                ),
               ),
-            ),
-          if (widget.profile.children != '')
-            BasicDetail(
-              detailText: '${widget.profile.children}',
-              detailIcon: FaIcon(
-                FontAwesomeIcons.babyCarriage,
-                color: Colors.purple,
+            if (widget.profile.zodiac != '')
+              BasicDetail(
+                detailText: '${widget.profile.zodiac}',
+                detailIcon: FaIcon(
+                  FontAwesomeIcons.galacticRepublic,
+                  color: Colors.black.withOpacity(0.7),
+                ),
               ),
-            ),
-        ],
-      ),
-      SizedBox(height: 20),
-      if (widget.profile.pets.length != 0)
-        Column(
-          children: [
-            Text(
-              'Pets',
-              style: subTitleStyle,
-            ),
-            _buildDivider(),
-            BubbleBlockViewer(
-              bubbles: widget.profile.pets,
-            ),
+            if (widget.profile.children != '')
+              BasicDetail(
+                detailText: '${widget.profile.children}',
+                detailIcon: FaIcon(
+                  FontAwesomeIcons.babyCarriage,
+                  color: Colors.black.withOpacity(0.7),
+                ),
+              ),
           ],
+        ),
+      ),
+      SizedBox(
+        height: 20,
+      ),
+      if (widget.profile.hobbies.length != 0)
+        BubbleBlockViewer(
+          titleStyle: boldTextStyle.copyWith(color: Colors.black54),
+          title: 'Hobbies',
+          backgroundColor: Color(0xFFE3F2FD),
+          bubbles: widget.profile.hobbies,
         ),
       if (widget.profile.fitness != '' ||
           widget.profile.drinking != '' ||
           widget.profile.smoking != '')
-        Text(
-          'Lifestyle',
-          style: subTitleStyle,
+        Padding(
+          padding: const EdgeInsets.fromLTRB(15.0, 5, 0, 10),
+          child: Text(
+            'Lifestyle',
+            style: boldTextStyle.copyWith(color: Colors.black54),
+          ),
         ),
-      _buildDivider(),
-      Wrap(
-        direction: Axis.horizontal,
-        children: [
-          if (widget.profile.fitness != '')
-            BasicDetail(
-              detailIcon: FaIcon(FontAwesomeIcons.dumbbell),
-              detailText: '${widget.profile.fitness}',
-            ),
-          if (widget.profile.drinking != '')
-            BasicDetail(
-              detailText: '${widget.profile.drinking}',
-              detailIcon: FaIcon(
-                FontAwesomeIcons.glassMartiniAlt,
-                size: 25,
+      Padding(
+        padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 10),
+        child: Wrap(
+          direction: Axis.horizontal,
+          children: [
+            if (widget.profile.fitness != '')
+              BasicDetail(
+                detailIcon: FaIcon(
+                  FontAwesomeIcons.dumbbell,
+                  color: Colors.blueGrey,
+                ),
+                detailText: '${widget.profile.fitness}',
               ),
-            ),
-          if (widget.profile.smoking != '')
-            BasicDetail(
-              detailText: '${widget.profile.smoking}',
-              detailIcon: FaIcon(FontAwesomeIcons.smoking),
-            )
-        ],
+            if (widget.profile.drinking != '')
+              BasicDetail(
+                detailText: '${widget.profile.drinking}',
+                detailIcon: FaIcon(
+                  FontAwesomeIcons.glassMartiniAlt,
+                  color: Colors.blueGrey,
+                  size: 25,
+                ),
+              ),
+            if (widget.profile.smoking != '')
+              BasicDetail(
+                detailText: '${widget.profile.smoking}',
+                detailIcon: FaIcon(
+                  FontAwesomeIcons.smoking,
+                  color: Colors.blueGrey,
+                ),
+              )
+          ],
+        ),
       ),
+      if (widget.profile.pets.length != 0)
+        BubbleBlockViewer(
+          titleStyle: boldTextStyle.copyWith(color: Colors.black54),
+          title: 'Pets',
+          backgroundColor: Color(0xFFE3F2FD),
+          bubbles: widget.profile.pets,
+        ),
       SizedBox(height: 20),
       if (widget.showAI != false)
-        Text(
-          'Artificial Intelligence',
-          style: subTitleStyle,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          child: Text(
+            'Artificial Intelligence',
+            style: boldTextStyle.copyWith(color: Colors.black54),
+          ),
         ),
-      if (widget.showAI != false) _buildDivider(),
-      Container(
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(
-          top: 8.0,
-          bottom: 12.0,
-          left: 5.0,
-          right: 5.0,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (profile.compatibilityScore != null)
-              DescriptionBanner(
-                message: 'Personal preference',
-                leading: Icon(
-                  Icons.info,
-                  color: Colors.blue,
-                ),
-                overflow: null,
-                constraints: BoxConstraints(
-                  minHeight: 75.0,
-                  maxHeight: 90.5,
-                  maxWidth: MediaQuery.of(context).size.width,
-                ),
-                trailing: CompatibilityScale(
-                  value: profile.compatibilityScore!,
-                  startValue: 20.0,
-                ),
-                onTap: () async {
-                  await GlobalWidgets.showAlertDialogue(
-                    context,
-                    title: 'Info',
-                    message:
-                        'The probability that you will like the current profile, according to Alex,your AI which learnt your personal taste.',
-                  );
-                },
-              ),
-            if (profile.hotnessScore != null)
-              DescriptionBanner(
-                  message: 'Compatibility',
+      if (widget.showAI != false)
+        Container(
+          alignment: Alignment.centerLeft,
+          padding: EdgeInsets.only(
+            top: 8.0,
+            bottom: 12.0,
+            left: 5.0,
+            right: 5.0,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (profile.compatibilityScore != null)
+                DescriptionBanner(
+                  message: 'Personal preference',
+                  leading: Icon(
+                    Icons.info,
+                    color: Colors.blue,
+                  ),
                   overflow: null,
                   constraints: BoxConstraints(
                     minHeight: 75.0,
                     maxHeight: 90.5,
                     maxWidth: MediaQuery.of(context).size.width,
                   ),
-                  leading: Icon(
-                    Icons.info,
-                    color: Colors.blue,
+                  trailing: CompatibilityScale(
+                    value: profile.compatibilityScore!,
+                    startValue: 20.0,
                   ),
-                  trailing: LikeScale(value: profile.hotnessScore!),
                   onTap: () async {
-                    try {
-                      await GlobalWidgets.showAlertDialogue(
-                        context,
-                        title: 'Info',
-                        message:
-                            'The probability that you will be a good match, according to Chris. Chris is an AI which was trained on millions of successful couples!',
-                      );
-                    } catch (e, s) {
-                      print(s);
-                    }
-                  }),
-          ],
+                    await GlobalWidgets.showAlertDialogue(
+                      context,
+                      title: 'Info',
+                      message:
+                          'The probability that you will like the current profile, according to Alex,your AI which learnt your personal taste.',
+                    );
+                  },
+                ),
+              if (profile.hotnessScore != null)
+                DescriptionBanner(
+                    message: 'Compatibility',
+                    overflow: null,
+                    constraints: BoxConstraints(
+                      minHeight: 75.0,
+                      maxHeight: 90.5,
+                      maxWidth: MediaQuery.of(context).size.width,
+                    ),
+                    leading: Icon(
+                      Icons.info,
+                      color: Colors.blue,
+                    ),
+                    trailing: LikeScale(value: profile.hotnessScore!),
+                    onTap: () async {
+                      try {
+                        await GlobalWidgets.showAlertDialogue(
+                          context,
+                          title: 'Info',
+                          message:
+                              'The probability that you will be a good match, according to Chris. Chris is an AI which was trained on millions of successful couples!',
+                        );
+                      } catch (e, s) {
+                        print(s);
+                      }
+                    }),
+            ],
+          ),
         ),
-      ),
     ];
   }
 
@@ -624,9 +638,9 @@ class _MatchCardState extends State<MatchCard> {
             child: SingleChildScrollView(
               controller: _scrollController,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    // padding: EdgeInsets.all(0.0),
                     clipBehavior: Clip.antiAlias,
                     constraints: constraints,
                     decoration: BoxDecoration(
@@ -1046,7 +1060,7 @@ class _PhotoViewState extends State<PhotoView> {
             child: ConstrainedBox(
               constraints: BoxConstraints(
                 minHeight: 55.0,
-                maxHeight: 90.0,
+                maxHeight: 200.0,
                 minWidth: 300,
                 maxWidth: MediaQuery.of(context).size.width,
               ),

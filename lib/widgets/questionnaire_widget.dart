@@ -103,9 +103,10 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
                                           })
                                         : setState(() {
                                             (currentUserChoice = choiceTitle);
-                                            promote = widget.promotes![widget
-                                                .choices
-                                                .indexOf(choiceTitle)];
+                                            if (promote != '')
+                                              promote = widget.promotes![widget
+                                                  .choices
+                                                  .indexOf(choiceTitle)];
                                           });
 
                                     if (currentUserChoice != null) {

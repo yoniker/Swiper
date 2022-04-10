@@ -1,4 +1,4 @@
-enum RelationshipPreference { marriage, relationship, casual, notSure }
+enum RelationshipPreference { Marriage, Relationship, Casual, NotSure }
 
 enum PreferredGender { Men, Women, Everyone }
 
