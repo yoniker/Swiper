@@ -11,6 +11,7 @@ import 'package:betabeta/widgets/compatibility_scale.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/like_scale.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -164,12 +165,15 @@ class _MatchCardState extends State<MatchCard> {
                 SizedBox(
                   width: 20,
                 ),
-                Text(
-                  widget.profile.jobTitle!,
-                  style: kWhiteDescriptionShadowStyle.copyWith(
-                    fontSize: getRelativeTextSize(18),
+                Flexible(
+                  child: Text(
+                    widget.profile.jobTitle!,
+                    style: kWhiteDescriptionShadowStyle.copyWith(
+                      fontSize: getRelativeTextSize(18),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 1,
                 ),
               ],
             ),
@@ -184,22 +188,27 @@ class _MatchCardState extends State<MatchCard> {
                 SizedBox(
                   width: 20,
                 ),
-                Text(
-                  widget.profile.school,
-                  style: kWhiteDescriptionShadowStyle.copyWith(
-                    fontSize: getRelativeTextSize(18),
+                Flexible(
+                  child: Text(
+                    widget.profile.school,
+                    style: kWhiteDescriptionShadowStyle.copyWith(
+                      fontSize: getRelativeTextSize(18),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 1,
                 ),
               ],
             ),
           if (widget.profile.jobTitle == null && widget.profile.school == '' ||
               widget.profile.jobTitle == '' && widget.profile.school == '')
-            Text(
-              widget.profile.description ?? '',
-              maxLines: 2,
-              style: kWhiteDescriptionShadowStyle.copyWith(
-                fontSize: getRelativeTextSize(20),
+            Flexible(
+              child: Text(
+                widget.profile.description ?? '',
+                maxLines: 2,
+                style: kWhiteDescriptionShadowStyle.copyWith(
+                    fontSize: getRelativeTextSize(20),
+                    overflow: TextOverflow.ellipsis),
               ),
             ),
         ],
