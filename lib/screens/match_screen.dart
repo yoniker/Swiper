@@ -167,12 +167,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
 
 
       return NoMatchesDisplayWidget(
-<<<<<<< HEAD
-        centerWidget: Text(
-          'Oops! looks like you forgot to enable location services! \n\nWe need to know where you are swiping from in order to show you potential matches. \n\nPlease return here once your location services have been activated 😊 ',
-          style: kSmallInfoStyle.copyWith(color: Colors.black54),
-          textAlign: TextAlign.center,
-=======
+
         centerWidget: SizedBox(
           child: Text(
             'Oops! looks like you forgot to unable location services! \n\nWe need to know where you are swiping from in order to show you potential matches. \n\nPlease return here once your location services have been activated 😊 ',
@@ -180,7 +175,6 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
             textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
           ),
->>>>>>> theme
         ),
         customButtonWidget: RoundedButton(
           color: Colors.blueGrey,
