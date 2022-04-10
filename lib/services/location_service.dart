@@ -1,19 +1,22 @@
+import 'dart:io';
+
 import 'package:betabeta/services/settings_model.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 
 enum LocationServiceStatus {
   initializing,
   enabled,
   serviceDisabled,
-  userNotGrantedPermission
+  userTemporaryNotGrantedPermission,
+  userPermanentlyNotGrantedPermission
 }
 
 class LocationService extends ChangeNotifier {
   LocationService._privateConstructor();
 
   static final LocationService _instance =
-      LocationService._privateConstructor();
+  LocationService._privateConstructor();
 
   static LocationService get instance => _instance;
 
@@ -24,27 +27,33 @@ class LocationService extends ChangeNotifier {
   LocationServiceStatus _status = LocationServiceStatus.initializing;
 
   Future<LocationServiceStatus> requestUpdateLocationCapability() async {
-    Location location = new Location();
 
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      return LocationServiceStatus.serviceDisabled;
+    }
 
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return LocationServiceStatus.serviceDisabled;
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return LocationServiceStatus.userTemporaryNotGrantedPermission;
       }
     }
 
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return LocationServiceStatus.userNotGrantedPermission;
-      }
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately. 
+      return LocationServiceStatus.userPermanentlyNotGrantedPermission;
     }
-    return LocationServiceStatus.enabled;
+     return LocationServiceStatus.enabled;
   }
 
   Future<LocationServiceStatus> requestLocationCapability() async {
@@ -54,40 +63,42 @@ class LocationService extends ChangeNotifier {
 
   LocationServiceStatus get serviceStatus => _status;
 
-  updateLocation(LocationData locationData) {
+  bool needChangeAppSettings(){
+    if(LocationService.instance.serviceStatus == LocationServiceStatus.userPermanentlyNotGrantedPermission)
+      {return true;}
+        if(Platform.isIOS && LocationService.instance.serviceStatus == LocationServiceStatus.userTemporaryNotGrantedPermission)
+          {return true;}
+        return false;
+  }
+
+  updateLocation(Position? locationData) {
+    if(locationData==null){return;}
     if (!(DateTime.now().difference(lastUpdateDate) > minTimeUpdateLocation)) {
       print('Too soon to update server');
       return;
     }
-
-    if (locationData.longitude == null || locationData.latitude == null) {
-      return;
-    }
-    SettingsData.instance.longitude = locationData.longitude!;
-    SettingsData.instance.latitude = locationData.latitude!;
+    SettingsData.instance.longitude = locationData.longitude;
+    SettingsData.instance.latitude = locationData.latitude;
     lastUpdateDate = DateTime.now();
     print(
-        'UPDATED LOCATION TO  ${locationData.latitude!},${locationData.longitude!}');
+        'UPDATED LOCATION TO  ${locationData.latitude},${locationData.longitude}');
     notifyListeners();
   }
 
   void _listenLocationChanges() {
-    Location location = new Location();
-    location.changeSettings(
-        accuracy: LocationAccuracy.balanced, interval: 1000);
-    location.onLocationChanged.listen((data) {
+    Geolocator.getPositionStream().listen(
+    (data) {
       print('location listener triggered update');
       updateLocation(data);
     });
   }
 
-  Future<LocationData?> getLocation() async {
+  Future<Position?> getLocation() async {
     LocationServiceStatus status = await requestLocationCapability();
     if (status != LocationServiceStatus.enabled) {
       return null;
     }
-    Location location = new Location();
-    return await location.getLocation();
+    return await Geolocator.getCurrentPosition();
   }
 
   onInit() async {

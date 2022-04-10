@@ -64,13 +64,14 @@ dependencies:
   country_code_picker: ^2.0.2
   animated_text_kit: ^4.2.1
   percent_indicator: ^4.0.0
-  location: ^4.3.0
+  geolocator: ^8.2.0
   csc_picker: ^0.2.6
   extended_image: ^6.0.1
   pinput: ^2.2.5
   google_fonts: ^2.3.1
   sign_in_with_apple: ^3.3.0
   crypto: ^3.0.1
+  app_settings: 4.1.5
 
       # publish_to: 'none'
 dependency_overrides:

@@ -158,9 +158,6 @@ class ChatData extends ChangeNotifier {
     if(currentUserProfile!=null && newProfileInformation.lastUpdate!=null && currentUserProfile.lastUpdate!=null && newProfileInformation.lastUpdate!.compareTo(currentUserProfile.lastUpdate!)<0){
       return;
     }
-    for(int i=0; i<100;++i){
-      print('HAHAHAHAHA DOR');
-    }
     await usersBox.put(uid, newProfileInformation);
   }
 

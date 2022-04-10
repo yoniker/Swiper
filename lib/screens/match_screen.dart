@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:app_settings/app_settings.dart';
 import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/constants/assets_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
@@ -88,7 +91,14 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
   SwipeDirection? currentJudgment;
   late double currentInterpolation;
 
+
+
+
   void enableLocation() async {
+    if(LocationService.instance.needChangeAppSettings())
+    {
+      await AppSettings.openLocationSettings();
+    }
     var status = await LocationService.instance.requestLocationCapability();
     if (status == LocationServiceStatus.enabled) {
       LocationService.instance.onInit();
@@ -151,16 +161,19 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
     }
 
     if (MatchEngine.instance.locationCountData.status ==
-        LocationCountStatus.unknown_location) {
+        LocationCountStatus.unknown_location &&
+        (LocationService.instance.serviceStatus == LocationServiceStatus.userTemporaryNotGrantedPermission || LocationService.instance.serviceStatus == LocationServiceStatus.userPermanentlyNotGrantedPermission)) {
+
+
       return NoMatchesDisplayWidget(
         centerWidget: Text(
-          'Oops! looks like you forgot to unable location services! \n\nWe need to know where you are swiping from in order to show you potential matches. \n\nPlease return here once your location services have been activated 😊 ',
+          'Oops! looks like you forgot to enable location services! \n\nWe need to know where you are swiping from in order to show you potential matches. \n\nPlease return here once your location services have been activated 😊 ',
           style: kSmallInfoStyle.copyWith(color: Colors.black54),
           textAlign: TextAlign.center,
         ),
         customButtonWidget: RoundedButton(
           color: Colors.blueGrey,
-          name: 'Enable location   ',
+          name: LocationService.instance.needChangeAppSettings()?'Location Settings':'Enable location   ',
           onTap: () {
             enableLocation();
           },

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/services/chatData.dart';
+import 'package:betabeta/services/location_service.dart';
 import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -90,6 +91,8 @@ class OnboardingFlowController {
       ChatData.instance.onInitApp();
       ChatData.instance.syncWithServer();
       MatchEngine.instance.clear();
+      LocationService.instance.onInit();
+      MatchEngine.instance;
       SettingsData.instance.registrationStatus=API_CONSTS.ALREADY_REGISTERED;
     }
     return candidateNextScreen;
