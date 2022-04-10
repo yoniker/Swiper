@@ -43,6 +43,21 @@ const TextStyle boldTextStyle = TextStyle(
   fontWeight: FontWeight.w700,
 );
 
+const TextStyle kWhiteDescriptionShadowStyle = TextStyle(
+  color: Colors.white70,
+  overflow: TextOverflow.ellipsis,
+  fontFamily: 'Nunito',
+  fontSize: 18,
+  fontWeight: FontWeight.w700,
+  shadows: [
+    Shadow(
+      blurRadius: 17.0,
+      color: Colors.black,
+      offset: Offset(-2.0, 2.0),
+    ),
+  ],
+);
+
 const TextStyle titleStyle = TextStyle(
   color: Colors.black,
   fontFamily: 'Nunito',

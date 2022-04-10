@@ -62,10 +62,10 @@ class _RelationshipTypeOnboardingScreenState
                   name: 'Relationship',
                   onTap: () {
                     setState(() {
-                      currentChoice = RelationshipPreference.relationship;
+                      currentChoice = RelationshipPreference.Relationship;
                     });
                   },
-                  pressed: currentChoice == RelationshipPreference.relationship
+                  pressed: currentChoice == RelationshipPreference.Relationship
                       ? true
                       : false,
                 ),
@@ -74,10 +74,10 @@ class _RelationshipTypeOnboardingScreenState
                   name: 'Something casual',
                   onTap: () {
                     setState(() {
-                      currentChoice = RelationshipPreference.casual;
+                      currentChoice = RelationshipPreference.Casual;
                     });
                   },
-                  pressed: currentChoice == RelationshipPreference.casual
+                  pressed: currentChoice == RelationshipPreference.Casual
                       ? true
                       : false,
                 ),
@@ -86,10 +86,10 @@ class _RelationshipTypeOnboardingScreenState
                   name: 'I\'m not sure',
                   onTap: () {
                     setState(() {
-                      currentChoice = RelationshipPreference.notSure;
+                      currentChoice = RelationshipPreference.NotSure;
                     });
                   },
-                  pressed: currentChoice == RelationshipPreference.notSure
+                  pressed: currentChoice == RelationshipPreference.NotSure
                       ? true
                       : false,
                 ),
@@ -98,10 +98,10 @@ class _RelationshipTypeOnboardingScreenState
                   name: 'Prefer not to say',
                   onTap: () {
                     setState(() {
-                      currentChoice = RelationshipPreference.marriage;
+                      currentChoice = RelationshipPreference.Marriage;
                     });
                   },
-                  pressed: currentChoice == RelationshipPreference.marriage
+                  pressed: currentChoice == RelationshipPreference.Marriage
                       ? true
                       : false,
                 ),
@@ -136,8 +136,9 @@ class _RelationshipTypeOnboardingScreenState
                         ? () {
                             SettingsData.instance.relationshipType =
                                 currentChoice!.name;
-                            Get.offAllNamed(OnboardingFlowController.instance.nextRoute(
-                                RelationshipTypeOnboardingScreen.routeName));
+                            Get.offAllNamed(OnboardingFlowController.instance
+                                .nextRoute(RelationshipTypeOnboardingScreen
+                                    .routeName));
                           }
                         : null)
               ],

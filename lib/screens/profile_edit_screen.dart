@@ -5,6 +5,7 @@ import 'package:betabeta/screens/user_edit/covid_screen.dart';
 import 'package:betabeta/screens/user_edit/drinking_screen.dart';
 import 'package:betabeta/screens/user_edit/education_screen.dart';
 import 'package:betabeta/screens/user_edit/fitness_screen.dart';
+import 'package:betabeta/screens/user_edit/looking_for_screen.dart';
 import 'package:betabeta/screens/user_edit/my_hobbies_screen.dart';
 import 'package:betabeta/screens/user_edit/my_pets_screen.dart';
 import 'package:betabeta/screens/user_edit/orientation_edit_screen.dart';
@@ -274,18 +275,26 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                   ),
                   ProfileEditBlock(
                     title: 'Gender',
-                    icon: FontAwesomeIcons.userAlt,
+                    icon: FontAwesomeIcons.userPen,
                     value: SettingsData.instance.userGender.capitalizeFirst,
                     onTap: () {
                       Get.toNamed(PronounsEditScreen.routeName);
                     },
                   ),
                   ProfileEditBlock(
-                    title: 'Interested in',
-                    icon: FontAwesomeIcons.users,
+                    title: 'Into',
+                    icon: FontAwesomeIcons.personCircleQuestion,
                     value: SettingsData.instance.preferredGender,
                     onTap: () {
                       Get.toNamed(OrientationEditScreen.routeName);
+                    },
+                  ),
+                  ProfileEditBlock(
+                    title: 'Looking for',
+                    icon: FontAwesomeIcons.magnifyingGlass,
+                    value: SettingsData.instance.relationshipType,
+                    onTap: () {
+                      Get.toNamed(LookingForScreen.routeName);
                     },
                   ),
                   Padding(
@@ -293,7 +302,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                     child: RoundedButton(
                         name: 'Done',
                         onTap: () {
-                          Navigator.pop(context);
+                          Get.back();
                         }),
                   )
                 ],

@@ -226,8 +226,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                   imageURI: BetaIconPaths.activeVoilaTabIconPath,
                   width: 30,
                 ),
-                label: 'Filters',
-                tooltip: 'Filters',
+                label: 'Search',
+                tooltip: 'Search',
               ),
               BottomNavigationBarItem(
                 icon: Icon(

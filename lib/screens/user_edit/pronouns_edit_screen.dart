@@ -124,11 +124,15 @@ class _PronounsEditScreenState extends State<PronounsEditScreen> {
                                           style: kButtonText,
                                         ),
                                         const SizedBox(width: 5),
-                                        Icon(
-                                          _openOtherGender == false
-                                              ? FontAwesomeIcons.chevronDown
-                                              : FontAwesomeIcons.chevronUp,
-                                          color: kIconColor,
+                                        AnimatedRotation(
+                                          duration: Duration(milliseconds: 200),
+                                          turns: _openOtherGender == true
+                                              ? -0.5
+                                              : 0,
+                                          child: Icon(
+                                            FontAwesomeIcons.chevronDown,
+                                            color: kIconColor,
+                                          ),
                                         )
                                       ],
                                     ),

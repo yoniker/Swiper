@@ -4,12 +4,19 @@ import 'package:flutter/material.dart';
 
 class BubbleBlockViewer extends StatefulWidget {
   BubbleBlockViewer(
-      {this.title, this.bubbles, this.onTap, this.altEmptyBubbles});
+      {this.title,
+      this.bubbles,
+      this.onTap,
+      this.altEmptyBubbles,
+      this.titleStyle = smallBoldedTitleBlack,
+      this.backgroundColor = Colors.white});
 
   final String? title;
   final List<String>? bubbles;
   final Function()? onTap;
   final List<String>? altEmptyBubbles;
+  final Color backgroundColor;
+  final TextStyle titleStyle;
 
   @override
   State<BubbleBlockViewer> createState() => _BubbleBlockViewerState();
@@ -35,7 +42,7 @@ class _BubbleBlockViewerState extends State<BubbleBlockViewer> {
           if (widget.title != null)
             Text(
               ' ${widget.title}',
-              style: smallBoldedTitleBlack,
+              style: widget.titleStyle,
             ),
           SizedBox(
             height: 5,
@@ -45,7 +52,7 @@ class _BubbleBlockViewerState extends State<BubbleBlockViewer> {
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: widget.backgroundColor,
                 borderRadius: BorderRadius.all(
                   Radius.circular(10),
                 ),
@@ -92,7 +99,7 @@ class _BubbleBlockViewerState extends State<BubbleBlockViewer> {
                                       decoration: BoxDecoration(
                                         color: Colors.blue[100],
                                         border: Border.all(
-                                            color: Colors.blueAccent,
+                                            color: Color(0xFF90CAF9),
                                             width: 1.5),
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(

@@ -16,6 +16,7 @@ import 'package:betabeta/screens/full_image_screen.dart';
 import 'package:betabeta/screens/got_new_match_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
+import 'package:betabeta/screens/user_edit/looking_for_screen.dart';
 import 'package:betabeta/screens/user_edit/my_hobbies_screen.dart';
 import 'package:betabeta/screens/user_edit/my_pets_screen.dart';
 import 'package:betabeta/screens/notification_screen.dart';
@@ -174,7 +175,9 @@ void main() async {
         GetPage(name: MyPetsScreen.routeName, page: () => MyPetsScreen()),
         GetPage(
             name: OtherUserProfileScreen.routeName,
-            page: () => OtherUserProfileScreen())
+            page: () => OtherUserProfileScreen()),
+        GetPage(
+            name: LookingForScreen.routeName, page: () => LookingForScreen())
       ],
       title: 'Voilà MVP',
       debugShowCheckedModeBanner: false,
