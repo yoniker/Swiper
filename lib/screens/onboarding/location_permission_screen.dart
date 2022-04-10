@@ -19,12 +19,10 @@ class LocationPermissionScreen extends StatefulWidget {
 }
 
 class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
-  void enableLocation() async {
+  Future<void> enableLocation() async {
     var status = await LocationService.instance.requestLocationCapability();
     if (status == LocationServiceStatus.enabled) {
       LocationService.instance.onInit();
-      Get.offAllNamed(OnboardingFlowController.instance
-          .nextRoute(LocationPermissionScreen.routeName));
     }
   }
 
@@ -60,33 +58,38 @@ class _LocationPermissionScreenState extends State<LocationPermissionScreen> {
               RoundedButton(
                 color: Colors.white,
                 name: 'Enable location',
-                onTap: () {
-                  enableLocation();
+                onTap: () async{
+                  await enableLocation();
+                  Get.offAllNamed(OnboardingFlowController.instance
+                      .nextRoute(LocationPermissionScreen.routeName));
                 },
               ),
               const SizedBox(height: 20),
               TextButtonOnly(
                 label: 'Not now',
                 onClick: () {
-                  showDialog(
-                      context: context,
-                      builder: (_) => CupertinoAlertDialog(
-                            title: Text(
-                              "In order to see other users, Location services must be used.",
-                            ),
-                            content: Text('Please activate Location services.'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  enableLocation();
-                                },
-                                child: Text(
-                                  'Enable location',
-                                  style: TextStyle(color: Colors.blue),
-                                ),
-                              )
-                            ],
-                          ));
+                  Get.offAllNamed(OnboardingFlowController.instance
+                      .nextRoute(LocationPermissionScreen.routeName));
+
+                  // showDialog(
+                  //     context: context,
+                  //     builder: (_) => CupertinoAlertDialog(
+                  //           title: Text(
+                  //             "In order to see other users, Location services must be used.",
+                  //           ),
+                  //           content: Text('Please activate Location services.'),
+                  //           actions: [
+                  //             TextButton(
+                  //               onPressed: () {
+                  //                 enableLocation();
+                  //               },
+                  //               child: Text(
+                  //                 'Enable location',
+                  //                 style: TextStyle(color: Colors.blue),
+                  //               ),
+                  //             )
+                  //           ],
+                  //         ));
                 },
               )
             ],
