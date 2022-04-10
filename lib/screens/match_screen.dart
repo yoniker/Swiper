@@ -14,6 +14,7 @@ import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/match_card.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:betabeta/widgets/voila_logo_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -153,10 +154,13 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
     if (MatchEngine.instance.locationCountData.status ==
         LocationCountStatus.unknown_location) {
       return NoMatchesDisplayWidget(
-        centerWidget: Text(
-          'Oops! looks like you forgot to unable location services! \n\nWe need to know where you are swiping from in order to show you potential matches. \n\nPlease return here once your location services have been activated 😊 ',
-          style: kSmallInfoStyle.copyWith(color: Colors.black54),
-          textAlign: TextAlign.center,
+        centerWidget: SizedBox(
+          child: Text(
+            'Oops! looks like you forgot to unable location services! \n\nWe need to know where you are swiping from in order to show you potential matches. \n\nPlease return here once your location services have been activated 😊 ',
+            style: kSmallInfoStyle.copyWith(color: Colors.black54),
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
         customButtonWidget: RoundedButton(
           color: Colors.blueGrey,
