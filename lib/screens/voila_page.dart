@@ -40,11 +40,7 @@ class _VoilaPageState extends State<VoilaPage>
   String textSearchTyped = '';
 
   /// Here is where the custom-picked image is being Posted and sent over Network.
-  Future<void> postCustomImageToNetwork(PickedFile chosenImage) async {
-    for (int i = 0; i < 6; ++i) {
-      print(
-          'Before going to face selection filter was ${SettingsData.instance.filterType}');
-    }
+  Future<void> postCustomImageToNetwork(XFile chosenImage) async {
     // block the UI
     setState(() {
       isLoading = true;

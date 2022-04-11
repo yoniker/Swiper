@@ -53,7 +53,7 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
   bool isLoading = false;
 
   /// Here is where the custom-picked image is being Posted and sent over Network.
-  void postCustomImageToNetwork(PickedFile chosenImage) async {
+  void postCustomImageToNetwork(XFile chosenImage) async {
     // block the UI
     setState(() {
       isLoading = true;

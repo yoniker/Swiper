@@ -11,7 +11,7 @@ class ProfileImageWidget extends StatelessWidget {
   bool loadingImage;
 
   /// This function is fired when an image is successfully taken from the Gallery or Camera.
-  final void Function(PickedFile? imageFile)? onImagePicked;
+  final void Function(XFile? imageFile)? onImagePicked;
 
   /// A function that fires when the cancel icon on the image-box is pressed.
   void Function()? onDelete;

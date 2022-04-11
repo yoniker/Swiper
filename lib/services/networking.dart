@@ -182,7 +182,7 @@ class NetworkHelper {
   }
 
   //A helper method to shrink an image if it's too large, and decode it into a workable image format
-  Future<img.Image> _prepareImage(PickedFile pickedImageFile) async {
+  Future<img.Image> _prepareImage(XFile pickedImageFile) async {
     const MAX_IMAGE_SIZE = 800; //TODO make it  a parameter (if needed)
 
     img.Image theImage = img.decodeImage(await pickedImageFile.readAsBytes())!;
@@ -196,7 +196,7 @@ class NetworkHelper {
   }
 
   Future<Tuple2<img.Image, String>> preparedFaceSearchImageFileDetails(
-      PickedFile imageFile) async {
+      XFile imageFile) async {
     img.Image theImage = await _prepareImage(imageFile);
     String fileName = 'custom_face_search_${DateTime.now()}.jpg';
     return Tuple2<img.Image, String>(theImage, fileName);
@@ -222,7 +222,7 @@ class NetworkHelper {
     return;
   }
 
-  Future<void> postProfileImage(PickedFile pickedImage) async {
+  Future<void> postProfileImage(XFile pickedImage) async {
     String fileName = '${DateTime.now().toString()}.jpg';
     img.Image theImage = await _prepareImage(pickedImage);
 

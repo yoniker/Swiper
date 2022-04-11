@@ -278,9 +278,9 @@ class GlobalWidgets {
     /// This function is called immediately after the image is picked.
     /// Here you can make use of the [PickedFile] returned in whatever
     /// Network request or any other usage you may have in mind..
-    Function(PickedFile?)? onImagePicked,
+    Function(XFile?)? onImagePicked,
   }) async {
-    PickedFile? _imageFile;
+    XFile? _imageFile;
     final ImagePicker _picker = ImagePicker();
     String _retrieveDataError;
 
@@ -290,7 +290,7 @@ class GlobalWidgets {
     // basically things that disturb the process in one way or the other.
     //
     Future<void> retrieveLostData() async {
-      final LostData response = await _picker.getLostData();
+      final LostDataResponse response = await _picker.retrieveLostData();
       if (response.isEmpty) {
         return;
       }
@@ -312,7 +312,7 @@ class GlobalWidgets {
     Future<void> _onImageButtonPressed(ImageSource source) async {
       // Initiate the pick Image Function.
       try {
-        final pickedFile = await _picker.getImage(source: source);
+        final pickedFile = await _picker.pickImage(source: source);
         if (pickedFile == null) {
           // Add the retrieve lost data function.
           retrieveLostData();
