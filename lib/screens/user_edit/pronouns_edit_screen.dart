@@ -1,18 +1,10 @@
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/constants/onboarding_consts.dart';
-import 'package:betabeta/services/screen_size.dart';
+import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
-import 'package:betabeta/widgets/onboarding/choice_button.dart';
-import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
-import 'package:betabeta/widgets/onboarding/input_field.dart';
-import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:betabeta/widgets/questionnaire_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-enum Gender { male, female, other }
 
 class PronounsEditScreen extends StatefulWidget {
   static const String routeName = '/pronouns_edit_screen';
@@ -45,7 +37,7 @@ class _PronounsEditScreenState extends State<PronounsEditScreen> {
         notifier: SettingsData.instance,
         builder: (context) {
           return Scaffold(
-            resizeToAvoidBottomInset: false,
+            resizeToAvoidBottomInset: true,
             backgroundColor: backgroundThemeColor,
             appBar: CustomAppBar(
               hasTopPadding: true,
@@ -56,7 +48,7 @@ class _PronounsEditScreenState extends State<PronounsEditScreen> {
               children: [
                 Expanded(
                   child: QuestionnaireWidget(
-                    choices: ['Female', 'Male'],
+                    choices: kGenderChoices,
                     alwaysPressed: true,
                     bottomPadding: false,
                     initialChoice: SettingsData.instance.userGender,

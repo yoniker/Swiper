@@ -25,7 +25,7 @@ class OnboardingColumn extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(30),
+          padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: crossAxisAlignment,
             mainAxisAlignment: mainAxisAlignment,

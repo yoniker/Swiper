@@ -7,6 +7,7 @@ import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:betabeta/widgets/onboarding/progress_bar.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 
 class AboutMeOnboardingScreen extends StatefulWidget {
@@ -49,107 +50,115 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
 
     return Scaffold(
       backgroundColor: kBackroundThemeColor,
-      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: RawScrollbar(
           thumbColor: Colors.black54,
           thickness: 5,
           isAlwaysShown: true,
-          child: SingleChildScrollView(
-            reverse: false,
-            child: SizedBox(
-              height: heightWithoutSafeArea,
-              child: Padding(
-                padding: const EdgeInsets.all(30),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      children: [
-                        ProgressBar(
-                          page: 7,
-                        ),
-                        const Text(
-                          'Tell others about yourself',
-                          style: kTitleStyle,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Text(
-                          'People love to see a bio that describe who you are.',
-                          style: kSmallInfoStyle,
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        InputField(
-                          onTapIcon: aboutMeText.length <
-                                  AboutMeOnboardingScreen.minCharInDescription
-                              ? null
-                              : () {
-                                  SettingsData.instance.userDescription =
-                                      aboutMeText;
-                                  Get.offAllNamed(
-                                      OnboardingFlowController.instance.nextRoute(
-                                          AboutMeOnboardingScreen.routeName));
-                                },
-                          onTapIconDisable: charactersLeft <= 0
-                              ? null
-                              : () {
-                                  alertUserMinimumText();
-                                },
-                          iconHeight: 110,
-                          icon: Icons.send,
-                          onType: (value) {
-                            aboutMeText = value;
-                            setState(() {});
-                          },
-                          maxCharacters: 500,
-                          keyboardType: TextInputType.multiline,
-                          maxLines: 15,
-                          minLines: 5,
-                          hintText:
-                              'Write something interesting about yourself',
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Center(
-                          child: Text(
-                            aboutMeText.length >=
-                                    AboutMeOnboardingScreen.minCharInDescription
-                                ? ''
-                                : 'Minimum $charactersLeft characters left',
-                            style: clickOnDisable != true
-                                ? kSmallInfoStyle
-                                : kSmallInfoStyleAlert,
+          child: CustomScrollView(
+            scrollDirection: Axis.vertical,
+            reverse: true,
+            slivers: [
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 10),
+                            child: ProgressBar(
+                              page: 7,
+                            ),
                           ),
-                        )
-                      ],
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        alertUserMinimumText();
-                      },
-                      child: RoundedButton(
-                          name: 'CONTINUE',
-                          onTap: aboutMeText.length <
-                                  AboutMeOnboardingScreen.minCharInDescription
-                              ? null
-                              : () {
-                                  SettingsData.instance.userDescription =
-                                      aboutMeText;
-                                  Get.offAllNamed(
-                                      OnboardingFlowController.instance.nextRoute(
-                                          AboutMeOnboardingScreen.routeName));
-                                }),
-                    )
-                  ],
+                          const Text(
+                            'Tell others about yourself',
+                            style: kTitleStyle,
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Text(
+                            'People love to see a bio that describe who you are.',
+                            style: kSmallInfoStyle,
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          InputField(
+                            onTapIcon: aboutMeText.length <
+                                    AboutMeOnboardingScreen.minCharInDescription
+                                ? null
+                                : () {
+                                    SettingsData.instance.userDescription =
+                                        aboutMeText;
+                                    Get.offAllNamed(OnboardingFlowController
+                                        .instance
+                                        .nextRoute(
+                                            AboutMeOnboardingScreen.routeName));
+                                  },
+                            onTapIconDisable: charactersLeft <= 0
+                                ? null
+                                : () {
+                                    alertUserMinimumText();
+                                  },
+                            iconHeight: 110,
+                            icon: Icons.send,
+                            onType: (value) {
+                              aboutMeText = value;
+                              setState(() {});
+                            },
+                            maxCharacters: 500,
+                            keyboardType: TextInputType.multiline,
+                            maxLines: 15,
+                            minLines: 5,
+                            hintText:
+                                'Write something interesting about yourself',
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Center(
+                            child: Text(
+                              aboutMeText.length >=
+                                      AboutMeOnboardingScreen
+                                          .minCharInDescription
+                                  ? ''
+                                  : 'Minimum $charactersLeft characters left',
+                              style: clickOnDisable != true
+                                  ? kSmallInfoStyle
+                                  : kSmallInfoStyleAlert,
+                            ),
+                          )
+                        ],
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          alertUserMinimumText();
+                        },
+                        child: RoundedButton(
+                            name: 'CONTINUE',
+                            onTap: aboutMeText.length <
+                                    AboutMeOnboardingScreen.minCharInDescription
+                                ? null
+                                : () {
+                                    SettingsData.instance.userDescription =
+                                        aboutMeText;
+                                    Get.offAllNamed(OnboardingFlowController
+                                        .instance
+                                        .nextRoute(
+                                            AboutMeOnboardingScreen.routeName));
+                                  }),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ),
+              )
+            ],
           ),
         ),
       ),

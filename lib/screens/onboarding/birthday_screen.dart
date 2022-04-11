@@ -44,8 +44,11 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                ProgressBar(
-                  page: 2,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: ProgressBar(
+                    page: 2,
+                  ),
                 ),
                 const FittedBox(
                   child: Text(

@@ -22,15 +22,11 @@ class _GetNameScreenState extends State<GetNameScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kBackroundThemeColor,
-      resizeToAvoidBottomInset:
-          ScreenSize.getSize(context) == ScreenSizeCategory.small
-              ? false
-              : true,
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: Padding(
-          padding: const EdgeInsets.all(30),
+          padding: const EdgeInsets.all(20),
           child: SafeArea(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -52,8 +48,8 @@ class _GetNameScreenState extends State<GetNameScreen> {
                       initialvalue: userName,
                       onTapIcon: () {
                         SettingsData.instance.name = userName;
-                        Get.offAllNamed(OnboardingFlowController.instance.nextRoute(
-                            GetNameScreen.routeName));
+                        Get.offAllNamed(OnboardingFlowController.instance
+                            .nextRoute(GetNameScreen.routeName));
                       },
                       icon: userName.length == 0 ? null : Icons.send,
                       hintText: ' Enter your first name here.',
@@ -85,8 +81,8 @@ class _GetNameScreenState extends State<GetNameScreen> {
                       ? null
                       : () {
                           SettingsData.instance.name = userName;
-                          Get.offAllNamed(OnboardingFlowController.instance.nextRoute(
-                              GetNameScreen.routeName));
+                          Get.offAllNamed(OnboardingFlowController.instance
+                              .nextRoute(GetNameScreen.routeName));
                         },
                 )
               ],

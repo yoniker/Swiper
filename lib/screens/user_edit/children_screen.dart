@@ -1,4 +1,5 @@
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
@@ -34,13 +35,7 @@ class _KidsScreen extends State<KidsScreen> {
             ),
             body: QuestionnaireWidget(
               headline: 'Do you have plans for children?',
-              choices: [
-                'Have & no more',
-                'Have & want more',
-                'Want someday',
-                "Don't want",
-                'Not sure'
-              ],
+              choices: kChildrenChoice,
               initialChoice: SettingsData.instance.children,
               onValueChanged: (newChildrenValue) {
                 SettingsData.instance.children = newChildrenValue;

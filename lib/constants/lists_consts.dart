@@ -49,6 +49,33 @@ List<String> kEducationChoices = [
 ];
 List<String> kFitnessChoices = ['Active', 'Occasionally', 'Never'];
 
+List<String> kGenderChoices = ['Female', 'Man'];
+
+List<String> kIntoChoices = ['Men', 'Women', 'Everyone'];
+
+List<String> kSmokingChoices = ['Regularly', 'Socially', 'Never'];
+
+List<String> kChildrenChoice = [
+  'Have & no more',
+  'Have & want more',
+  'Want someday',
+  "Don't want",
+  'Not sure',
+];
+
+List<String> kRelationshipTypeChoices = [
+  'Relationship',
+  'Something casual',
+  "I'm not sure",
+  'Prefer not to say'
+];
+
+List<String> kPromotesForPreferredGender = [
+  'We will only show you men',
+  'We will only show you women',
+  'We will show you everyone'
+];
+
 List<String> kHobbiesList = [
   'Dogs  🐕',
   'Cats  🐈',

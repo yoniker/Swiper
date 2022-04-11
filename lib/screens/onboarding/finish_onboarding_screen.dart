@@ -73,7 +73,7 @@ class _FinishOnboardingScreenState extends State<FinishOnboardingScreen> {
                       height: 20,
                     ),
                     const Text(
-                      'One message is not enough! have a conversation to keep your match!',
+                      'One message is not enough! Have a conversation to keep your match!',
                       style: kSmallTitleStyle,
                     )
                   ],
