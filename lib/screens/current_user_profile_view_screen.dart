@@ -20,6 +20,20 @@ class CurrentUserProfileViewScreen extends StatefulWidget {
 
 class _CurrentUserProfileViewScreenState
     extends State<CurrentUserProfileViewScreen> {
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    _scrollController = ScrollController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   _CurrentUserProfileViewScreenState createState() =>
       _CurrentUserProfileViewScreenState();
@@ -59,13 +73,13 @@ class _CurrentUserProfileViewScreenState
             userGender: SettingsData.instance.userGender,
             showUserGender: SettingsData.instance.showUserGender,
             location: SettingsData.instance.locationDescription,
-            relationshipType: SettingsData.instance.relationshipType
-        );
+            relationshipType: SettingsData.instance.relationshipType);
 
         return Stack(alignment: Alignment.topLeft, children: [
           Scaffold(
             // appBar: CustomAppBar(),
             body: MatchCard(
+              scrollController: _scrollController,
               clickable: true,
               showCarousel: true,
               profile: currentUserProfile,

@@ -21,9 +21,14 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen>
   late AnimationController _controller;
   late Animation animation;
   late Animation secondAnimation;
+  late final ScrollController _scrollController;
 
   @override
   void initState() {
+    _scrollController = ScrollController()
+      ..addListener(() {
+        setState(() {});
+      });
     theUser = Get.arguments;
     _controller = AnimationController(
       vsync: this,
@@ -51,6 +56,7 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen>
   @override
   void dispose() {
     _controller.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -70,6 +76,7 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen>
             ),
           ),
           MatchCard(
+            scrollController: _scrollController,
             profile: theUser,
             clickable: true,
             showCarousel: true,
@@ -101,123 +108,127 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen>
             ),
           ),
           SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Center(
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: animation.value * 32,
-                        child: FittedBox(
-                          child: AnimatedTextKit(
-                            isRepeatingAnimation: true,
-                            repeatForever: true,
-                            pause: Duration(milliseconds: 1),
-                            animatedTexts: [
-                              ColorizeAnimatedText(
-                                'You & ${theUser.username}',
-                                speed: Duration(seconds: 2),
-                                textStyle:
-                                    colorizeTextStyle.copyWith(fontSize: 20),
-                                colors: colorizeColors,
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
+            child: AnimatedOpacity(
+              opacity: _scrollController.offset > 200 ? 0 : 1,
+              duration: Duration(seconds: 1),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Center(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: animation.value * 32,
+                          child: FittedBox(
+                            child: AnimatedTextKit(
+                              isRepeatingAnimation: true,
+                              repeatForever: true,
+                              pause: Duration(milliseconds: 1),
+                              animatedTexts: [
+                                ColorizeAnimatedText(
+                                  'You & ${theUser.username}',
+                                  speed: Duration(seconds: 2),
+                                  textStyle:
+                                      colorizeTextStyle.copyWith(fontSize: 20),
+                                  colors: colorizeColors,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: secondAnimation.value * 66,
-                        child: FittedBox(
-                          child: AnimatedTextKit(
-                            pause: Duration(milliseconds: 1),
-                            isRepeatingAnimation: true,
-                            repeatForever: true,
-                            animatedTexts: [
-                              ColorizeAnimatedText(
-                                'MATCHED!',
-                                textStyle: colorizeTextStyle,
-                                speed: Duration(seconds: 2),
-                                colors: colorizeColors,
+                        SizedBox(
+                          height: secondAnimation.value * 66,
+                          child: FittedBox(
+                            child: AnimatedTextKit(
+                              pause: Duration(milliseconds: 1),
+                              isRepeatingAnimation: true,
+                              repeatForever: true,
+                              animatedTexts: [
+                                ColorizeAnimatedText(
+                                  'MATCHED!',
+                                  textStyle: colorizeTextStyle,
+                                  speed: Duration(seconds: 2),
+                                  colors: colorizeColors,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Get.offAndToNamed(
+                          ChatScreen.getRouteWithUserId(theUser.uid));
+
+                      /// ToDo need to get to user match chat directly
+                    },
+                    child: AnimatedContainer(
+                      margin: EdgeInsets.symmetric(horizontal: 30),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                flex: 3,
+                                child: Text(
+                                  'Introduce yourself ☺️',
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  style: titleStyle.copyWith(
+                                      color: Colors.black54),
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
+                              Flexible(
+                                flex: 1,
+                                child: AnimatedContainer(
+                                  duration: Duration(seconds: 1),
+                                  height: secondAnimation.isCompleted ? 30 : 0,
+                                  width: secondAnimation.isCompleted ? 30 : 0,
+                                  child: SingleChildScrollView(
+                                    child: Icon(
+                                      FontAwesomeIcons.facebookMessenger,
+                                      size: 28,
+                                      color: Colors.black45,
+                                    ),
+                                  ),
+                                ),
                               )
                             ],
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Get.offAndToNamed(
-                        ChatScreen.getRouteWithUserId(theUser.uid));
+                      height: _controller.isCompleted ? 65 : 0,
+                      width: _controller.isCompleted ? 600 : 0,
+                      curve: Curves.easeIn,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.6),
 
-                    /// ToDo need to get to user match chat directly
-                  },
-                  child: AnimatedContainer(
-                    margin: EdgeInsets.symmetric(horizontal: 30),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              flex: 3,
-                              child: Text(
-                                'Introduce yourself ☺️',
-                                overflow: TextOverflow.fade,
-                                maxLines: 1,
-                                style:
-                                    titleStyle.copyWith(color: Colors.black54),
-                                textAlign: TextAlign.start,
-                              ),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: AnimatedContainer(
-                                duration: Duration(seconds: 1),
-                                height: secondAnimation.isCompleted ? 30 : 0,
-                                width: secondAnimation.isCompleted ? 30 : 0,
-                                child: SingleChildScrollView(
-                                  child: Icon(
-                                    FontAwesomeIcons.facebookMessenger,
-                                    size: 28,
-                                    color: Colors.black45,
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
+                            blurRadius: 15,
+                            offset:
+                                Offset(-2.0, 2.0), // changes position of shadow
+                          ),
+                        ],
+                        color: Colors.white70,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
                         ),
                       ),
+                      duration: Duration(milliseconds: 500),
                     ),
-                    height: _controller.isCompleted ? 65 : 0,
-                    width: _controller.isCompleted ? 600 : 0,
-                    curve: Curves.easeIn,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.6),
-
-                          blurRadius: 15,
-                          offset:
-                              Offset(-2.0, 2.0), // changes position of shadow
-                        ),
-                      ],
-                      color: Colors.white70,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                    ),
-                    duration: Duration(milliseconds: 500),
                   ),
-                ),
-                SizedBox(
-                  height: 120,
-                ),
-              ],
+                  SizedBox(
+                    height: 120,
+                  ),
+                ],
+              ),
             ),
           )
         ],

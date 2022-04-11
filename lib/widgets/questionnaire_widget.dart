@@ -72,12 +72,6 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
 
   @override
   Widget build(BuildContext context) {
-    //height (with SafeArea)
-    double height = MediaQuery.of(context).size.height;
-    // Height (without SafeArea)
-    var padding = MediaQuery.of(context).viewPadding;
-    double heightWithoutSafeArea = height - padding.top - padding.bottom;
-
     return SafeArea(
       child: RawScrollbar(
         isAlwaysShown: true,
@@ -95,12 +89,6 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // ConditionalParentWidget(
-                      //   condition:
-                      //       ScreenSize.getSize(context) == ScreenSizeCategory.small,
-                      //   conditionalBuilder: (Widget child) => FittedBox(
-                      //     child: child,
-                      //   ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

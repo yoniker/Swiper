@@ -79,6 +79,7 @@ class MatchCardBuilder extends StatefulWidget {
 
   final maxThumbOpacity =
       0.7; // Max opacity of the thumbs feedback (when swiping left/right)
+  late final ScrollController _scrollController;
 
   @override
   _MatchCardBuilderState createState() => _MatchCardBuilderState();
@@ -91,13 +92,25 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
   Offset bottomCardOffset = Offset(0.0, 1.7);
   SwipeDirection? currentJudgment;
   late double currentInterpolation;
+  late final ScrollController _scrollController;
 
+  @override
+  void initState() {
+    _scrollController = ScrollController()
+      ..addListener(() {
+        setState(() {});
+      });
+    super.initState();
+  }
 
-
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   void enableLocation() async {
-    if(LocationService.instance.needChangeAppSettings())
-    {
+    if (LocationService.instance.needChangeAppSettings()) {
       await AppSettings.openLocationSettings();
     }
     var status = await LocationService.instance.requestLocationCapability();
@@ -162,12 +175,12 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
     }
 
     if (MatchEngine.instance.locationCountData.status ==
-        LocationCountStatus.unknown_location &&
-        (LocationService.instance.serviceStatus == LocationServiceStatus.userTemporaryNotGrantedPermission || LocationService.instance.serviceStatus == LocationServiceStatus.userPermanentlyNotGrantedPermission)) {
-
-
+            LocationCountStatus.unknown_location &&
+        (LocationService.instance.serviceStatus ==
+                LocationServiceStatus.userTemporaryNotGrantedPermission ||
+            LocationService.instance.serviceStatus ==
+                LocationServiceStatus.userPermanentlyNotGrantedPermission)) {
       return NoMatchesDisplayWidget(
-
         centerWidget: SizedBox(
           child: Text(
             'Oops! looks like you forgot to unable location services! \n\nWe need to know where you are swiping from in order to show you potential matches. \n\nPlease return here once your location services have been activated 😊 ',
@@ -178,7 +191,9 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
         ),
         customButtonWidget: RoundedButton(
           color: Colors.blueGrey,
-          name: LocationService.instance.needChangeAppSettings()?'Location Settings':'Enable location   ',
+          name: LocationService.instance.needChangeAppSettings()
+              ? 'Location Settings'
+              : 'Enable location   ',
           onTap: () {
             enableLocation();
           },
@@ -314,6 +329,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
                     },
                     cards: topEngineMatches.map<Widget>((match) {
                       return MatchCard(
+                        scrollController: _scrollController,
                         key: Key(match!.profile!.uid),
                         profile: match.profile!,
                         showCarousel: true,

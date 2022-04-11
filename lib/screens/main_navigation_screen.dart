@@ -34,7 +34,7 @@ class MainNavigationScreen extends StatefulWidget {
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  static int selectedTabIndex = 0;
+  static int selectedTabIndex = MainNavigationScreen.VOILA_PAGE_INDEX;
 
   // List of pages.
   List<Widget> pages = <Widget>[

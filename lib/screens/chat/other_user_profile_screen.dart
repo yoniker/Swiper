@@ -18,8 +18,13 @@ class OtherUserProfileScreen extends StatefulWidget {
 }
 
 class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
+  late final ScrollController _scrollController;
   @override
   void initState() {
+    _scrollController = ScrollController()
+      ..addListener(() {
+        setState(() {});
+      });
     Profile? profileToShow = ChatData.instance.getUserById(widget.userId);
     if (profileToShow == null ||
         profileToShow.imageUrls == null ||
@@ -29,6 +34,11 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
       ChatData.instance.updateUserDataFromServer(widget.userId);
     }
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
   }
 
   @override
@@ -44,6 +54,7 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                 ? SizedBox()
                 : MatchCard(
                     clickable: true,
+                    scrollController: _scrollController,
                     showCarousel: true,
                     profile: profileToShow,
                     showActionButtons: false,

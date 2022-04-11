@@ -23,6 +23,7 @@ class MatchCard extends StatefulWidget {
   MatchCard(
       {Key? key,
       required this.profile,
+      required this.scrollController,
       this.clickable = true,
       this.showCarousel = true,
       this.showActionButtons = true,
@@ -44,13 +45,13 @@ class MatchCard extends StatefulWidget {
   /// Whether to show AI title
   final bool showAI;
 
+  final ScrollController? scrollController;
+
   @override
   _MatchCardState createState() => _MatchCardState();
 }
 
 class _MatchCardState extends State<MatchCard> {
-  ScrollController? _scrollController;
-
   /// This connotes the Widget to display as the background.
   /// This is typically a [PhotoView].
   Widget _buildBackground(BuildContext context) {
@@ -218,16 +219,22 @@ class _MatchCardState extends State<MatchCard> {
   // }
 
   @override
-  void initState() {
-    super.initState();
-    _scrollController = ScrollController();
-  }
-
-  @override
-  void dispose() {
-    _scrollController!.dispose();
-    super.dispose();
-  }
+  // void initState() {
+  //   super.initState();
+  //   scrollController = ScrollController();
+  //   if (scrollController != null)
+  //     scrollController!.addListener(() {
+  //       setState(() {
+  //         print(scrollController!.offset);
+  //       });
+  //     });
+  // }
+  //
+  // @override
+  // void dispose() {
+  //   scrollController!.dispose();
+  //   super.dispose();
+  // }
 
   List<Widget> buildMatchDetails(
     Profile profile, {
@@ -645,7 +652,7 @@ class _MatchCardState extends State<MatchCard> {
               ],
             ),
             child: SingleChildScrollView(
-              controller: _scrollController,
+              controller: widget.scrollController,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -694,7 +701,7 @@ class PhotoView extends StatefulWidget {
     this.descriptionHeightFraction = 0.2,
     this.descriptionWidthFraction = 1.0,
     this.showCarousel = true,
-    this.carouselPosition = CarouselPosition.bottom,
+    this.carouselPosition = CarouselPosition.top,
     this.carouselDotSize = 3.5,
     this.selectedCarouselDotSize = 6.0,
     this.carouselActiveDotColor = Colors.blue,
@@ -997,10 +1004,12 @@ class _PhotoViewState extends State<PhotoView> {
         decoration: BoxDecoration(
             color: widget.carouselBackgroundColor,
             borderRadius: BorderRadius.circular(16.0)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: carousels,
-        ),
+        child: widget.imageUrls!.length > 1 && widget.imageUrls != null
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: carousels,
+              )
+            : SizedBox(),
       ),
     );
   }
@@ -1092,8 +1101,7 @@ class _PhotoViewState extends State<PhotoView> {
                 ),
                 child: Column(
                   // fit: StackFit.expand,
-                  mainAxisAlignment: widget.descriptionWidget == null ||
-                          widget.showCarousel == null
+                  mainAxisAlignment: widget.descriptionWidget == null
                       ? MainAxisAlignment.center
                       : MainAxisAlignment.spaceBetween,
                   children: [
@@ -1104,8 +1112,7 @@ class _PhotoViewState extends State<PhotoView> {
                       Expanded(child: _descriptionLayer()),
 
                     // declare the CarouselLayer of the PhotoView.
-                    if (widget.showCarousel != null && widget.showCarousel)
-                      _carouselLayer(),
+                    if (widget.showCarousel) _carouselLayer(),
                   ],
                 ),
               ),
@@ -1168,17 +1175,23 @@ class CarouselDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.fromSize(
-      // Make the Dot appear bigger than the others when in Focus.
-      size: Size.fromRadius(isFocused ? focusedSize : size),
-      child: GestureDetector(
-        onTap: () {
-          onTap!();
-        },
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: isFocused ? activeColor : inactiveColor,
-            borderRadius: BorderRadius.circular(24.0),
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 2.0),
+        child: SizedBox(
+          // Make the Dot appear bigger than the others when in Focus.
+          height: isFocused ? 5 : 3,
+
+          child: GestureDetector(
+            onTap: () {
+              onTap!();
+            },
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: isFocused ? activeColor : inactiveColor,
+                borderRadius: BorderRadius.circular(24.0),
+              ),
+            ),
           ),
         ),
       ),
