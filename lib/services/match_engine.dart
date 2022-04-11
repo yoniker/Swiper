@@ -67,6 +67,9 @@ class MatchEngine extends ChangeNotifier {
         List newProfiles = matches.map<Profile>((match){return Profile.fromJson(match);}).toList();
         List<Match> newPotentialMatches=newProfiles.map<Match>((profile){return Match(profile: profile);}).toList();
         if (newPotentialMatches.length>0) {
+          //Remove all of the profiles in the queue that already exist so there is no duplicate.
+          var currentUids = _matches.map((match) => match.profile?.uid??'');
+          newPotentialMatches.removeWhere((newMatch) => currentUids.contains(newMatch.profile?.uid));
           _matches.addAll(newPotentialMatches);
           notifyListeners();
         }
