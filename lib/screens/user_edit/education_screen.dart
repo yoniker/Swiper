@@ -33,6 +33,9 @@ class _EducationScreenState extends State<EducationScreen> {
               onValueChanged: (newEducationValue) {
                 SettingsData.instance.education = newEducationValue;
               },
+              onSave: () {
+                Navigator.pop(context);
+              },
             ),
           );
         });

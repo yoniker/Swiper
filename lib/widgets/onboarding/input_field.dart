@@ -99,8 +99,10 @@ class InputField extends StatelessWidget {
               ),
               focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: borderColor, width: 2)),
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white, width: 1.5),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                    color: pressed == true ? Colors.black87 : Colors.white,
+                    width: 1.5),
                 borderRadius: BorderRadius.all(
                   Radius.circular(10),
                 ),

@@ -11,21 +11,9 @@ class BetaIconPaths {
   /// The path to the inactive Profile Tab image.
   static const String inactiveVoilaTabIconPath = 'assets/images/voila.png';
 
-  /// The path to the active Match Tab image.
-  static const String activeMatchTabIconPath =
-      'assets/images/match_cards_selected.png';
-
-  /// The path to the inactive Match Tab image.
-  static const String inactiveMatchTabIconPath =
-      'assets/images/match_cards.png';
-
   /// The path to the active Likes Tab image.
   static const String activeLikesTabIconPath =
       'assets/images/likes_tab_icon_active.png';
-
-  /// The path to the iactive Likes Tab image.
-  static const String inactiveLikesTabIconPath =
-      'assets/images/likes_tab_icon_inactive.png';
 
   /// The path to the active Messages Tab image.
   static const String activeMessagesTabIconPath =
@@ -87,10 +75,6 @@ class BetaIconPaths {
   /// The path to the yellow-colored notification Icon.
   static const String profileIconFilled01 =
       'assets/images/profile_icon_filled.png';
-
-  /// The path to the redBlend-colored settings Icon.
-  static const String settingsIconFilled01 =
-      'assets/images/settings_icon_filled.png';
 
   /// The path to the redBlended "heart&" Icon used in the view_children screen.
   static const String heartsUnitedIconPath_01 =

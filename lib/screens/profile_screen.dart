@@ -14,6 +14,7 @@ import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:betabeta/widgets/thumb_button.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -209,9 +210,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                             },
                             child: Positioned(
                               top: 12.0,
-                              child: PrecachedImage.asset(
-                                imageURI: BetaIconPaths.settingsIconFilled01,
+                              child: Icon(
+                                Icons.settings,
                                 color: Colors.blueGrey,
+                                size: 25,
                               ),
                             ),
                           ),

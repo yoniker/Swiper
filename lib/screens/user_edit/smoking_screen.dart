@@ -33,6 +33,9 @@ class _SmokingScreen extends State<SmokingScreen> {
               onValueChanged: (newSmokingVal) {
                 SettingsData.instance.smoking = newSmokingVal;
               },
+              onSave: () {
+                Navigator.pop(context);
+              },
             ),
           );
         });

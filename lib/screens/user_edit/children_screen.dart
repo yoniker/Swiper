@@ -45,6 +45,9 @@ class _KidsScreen extends State<KidsScreen> {
               onValueChanged: (newChildrenValue) {
                 SettingsData.instance.children = newChildrenValue;
               },
+              onSave: () {
+                Navigator.pop(context);
+              },
             ),
           );
         });

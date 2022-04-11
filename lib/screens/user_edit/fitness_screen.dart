@@ -34,6 +34,9 @@ class _FitnessScreen extends State<FitnessScreen> {
                 onValueChanged: (newFitnessValue) {
                   SettingsData.instance.fitness = newFitnessValue;
                 },
+                onSave: () {
+                  Navigator.pop(context);
+                },
               ));
         });
   }

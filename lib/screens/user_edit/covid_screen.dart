@@ -42,6 +42,9 @@ class _CovidScreenState extends State<CovidScreen> {
               onValueChanged: (newCovidValue) {
                 SettingsData.instance.covid_vaccine = newCovidValue;
               },
+              onSave: () {
+                Navigator.pop(context);
+              },
             ),
           );
         });

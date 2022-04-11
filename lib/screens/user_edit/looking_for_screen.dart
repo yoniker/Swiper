@@ -42,6 +42,9 @@ class _LookingForScreenState extends State<LookingForScreen> {
             },
             alwaysPressed: true,
             initialChoice: SettingsData.instance.relationshipType,
+            onSave: () {
+              Navigator.pop(context);
+            },
           ),
         );
       },

@@ -56,6 +56,9 @@ class _OrientationEditScreenState extends State<OrientationEditScreen> {
         },
         alwaysPressed: true,
         initialChoice: SettingsData.instance.preferredGender,
+        onSave: () {
+          Navigator.pop(context);
+        },
       ),
     );
   }

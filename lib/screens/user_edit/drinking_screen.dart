@@ -33,6 +33,9 @@ class _DrinkingScreen extends State<DrinkingScreen> {
               onValueChanged: (newDrinkingValue) {
                 SettingsData.instance.drinking = newDrinkingValue;
               },
+              onSave: () {
+                Navigator.pop(context);
+              },
             ),
           );
         });

@@ -8,6 +8,7 @@ import 'package:betabeta/widgets/onboarding/choice_button.dart';
 import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
+import 'package:betabeta/widgets/questionnaire_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -44,175 +45,217 @@ class _PronounsEditScreenState extends State<PronounsEditScreen> {
         notifier: SettingsData.instance,
         builder: (context) {
           return Scaffold(
+            resizeToAvoidBottomInset: false,
             backgroundColor: backgroundThemeColor,
             appBar: CustomAppBar(
               hasTopPadding: true,
               hasBackButton: true,
               title: 'My gender',
             ),
-            body: SafeArea(
-              child: RawScrollbar(
-                isAlwaysShown: true,
-                thumbColor: Colors.black54,
-                thickness: 5,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: SizedBox(
-                    height: heightWithoutSafeArea - 38,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 30, left: 20, right: 20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ConditionalParentWidget(
-                                condition: ScreenSize.getSize(context) ==
-                                    ScreenSizeCategory.small,
-                                conditionalBuilder: (Widget child) => FittedBox(
-                                  child: child,
-                                ),
-                                child: Column(
-                                  children: [
-                                    ChoiceButton(
-                                        name: 'Female',
-                                        onTap: () {
-                                          UnFocus();
-                                          setState(() {
-                                            SettingsData.instance.userGender =
-                                                Gender.female.name;
-                                          });
-                                        },
-                                        pressed:
-                                            SettingsData.instance.userGender ==
-                                                Gender.female.name),
-                                    const SizedBox(height: 20),
-                                    ChoiceButton(
-                                        name: 'Male',
-                                        onTap: () {
-                                          UnFocus();
-                                          SettingsData.instance.userGender =
-                                              Gender.male.name;
-                                        },
-                                        pressed:
-                                            SettingsData.instance.userGender ==
-                                                Gender.male.name),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 10),
-                              Center(
-                                child: FittedBox(
-                                  fit: BoxFit.fill,
-                                  child: TextButton(
-                                    onPressed: () {
-                                      UnFocus();
-                                      setState(() {
-                                        _openOtherGender == false
-                                            ? _openOtherGender = true
-                                            : _openOtherGender = false;
-                                      });
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        const Text(
-                                          'More options',
-                                          style: kButtonText,
-                                        ),
-                                        const SizedBox(width: 5),
-                                        AnimatedRotation(
-                                          curve: Curves.fastOutSlowIn,
-                                          duration: Duration(milliseconds: 400),
-                                          turns: _openOtherGender == true
-                                              ? -0.5
-                                              : 0,
-                                          child: Icon(
-                                            FontAwesomeIcons.chevronDown,
-                                            color: kIconColor,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              AnimatedContainer(
-                                duration: const Duration(milliseconds: 100),
-                                height: _openOtherGender == false ? 0 : 63,
-                                child: SingleChildScrollView(
-                                  child: InputField(
-                                      onTap: () {
-                                        SettingsData.instance.userGender =
-                                            Gender.other.name;
-                                      },
-                                      maxCharacters: 20,
-                                      style: const TextStyle(
-                                          color: Colors.black87,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w600),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 25, vertical: 20),
-                                      hintText: 'For other gender type here',
-                                      onType: (value) {
-                                        setState(() {
-                                          value.isEmpty
-                                              ? elseGender = null
-                                              : elseGender = value;
-                                        });
-                                      },
-                                      onTapIcon: () {
-                                        SettingsData.instance.userGender =
-                                            Gender.other.name;
-                                      },
-                                      pressed:
-                                          SettingsData.instance.userGender ==
-                                              Gender.other.name),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              RoundedButton(
-                                  name: 'Save',
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  }),
-                              Theme(
-                                data: ThemeData(
-                                    unselectedWidgetColor: Colors.black87),
-                                child: CheckboxListTile(
-                                    title: const Text(
-                                      'Show my gender on my profile',
-                                      style: boldTextStyle,
-                                    ),
-                                    controlAffinity:
-                                        ListTileControlAffinity.trailing,
-                                    contentPadding: EdgeInsets.zero,
-                                    checkColor: Colors.white,
-                                    activeColor: Colors.black87,
-                                    tristate: false,
-                                    value: SettingsData.instance.showUserGender,
-                                    onChanged: (value) {
-                                      if (value != null) {
-                                        SettingsData.instance.showUserGender =
-                                            value;
-                                      }
-                                    }),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+            body: Column(
+              children: [
+                Expanded(
+                  child: QuestionnaireWidget(
+                    choices: ['Female', 'Male'],
+                    alwaysPressed: true,
+                    bottomPadding: false,
+                    initialChoice: SettingsData.instance.userGender,
+                    extraUserChoice: true,
+                    onValueChanged: (newGender) {
+                      SettingsData.instance.userGender = newGender;
+                    },
+                    onSave: () {
+                      Navigator.pop(context);
+                    },
                   ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  child: Theme(
+                    data: ThemeData(unselectedWidgetColor: Colors.black87),
+                    child: CheckboxListTile(
+                        title: const Text(
+                          'Visible',
+                          style: boldTextStyle,
+                        ),
+                        controlAffinity: ListTileControlAffinity.trailing,
+                        contentPadding: EdgeInsets.zero,
+                        checkColor: Colors.white,
+                        activeColor: Colors.black87,
+                        tristate: false,
+                        value: SettingsData.instance.showUserGender,
+                        onChanged: (value) {
+                          if (value != null) {
+                            SettingsData.instance.showUserGender = value;
+                          }
+                        }),
+                  ),
+                )
+              ],
             ),
+            // body: SafeArea(
+            //   child: RawScrollbar(
+            //     isAlwaysShown: true,
+            //     thumbColor: Colors.black54,
+            //     thickness: 5,
+            //     child: SingleChildScrollView(
+            //       scrollDirection: Axis.vertical,
+            //       child: SizedBox(
+            //         height: heightWithoutSafeArea - 38,
+            //         child: Padding(
+            //           padding:
+            //               const EdgeInsets.only(top: 30, left: 20, right: 20),
+            //           child: Column(
+            //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //             children: [
+            //               Column(
+            //                 crossAxisAlignment: CrossAxisAlignment.start,
+            //                 children: [
+            //                   ConditionalParentWidget(
+            //                     condition: ScreenSize.getSize(context) ==
+            //                         ScreenSizeCategory.small,
+            //                     conditionalBuilder: (Widget child) => FittedBox(
+            //                       child: child,
+            //                     ),
+            //                     child: Column(
+            //                       children: [
+            //                         ChoiceButton(
+            //                             name: 'Female',
+            //                             onTap: () {
+            //                               UnFocus();
+            //                               setState(() {
+            //                                 SettingsData.instance.userGender =
+            //                                     Gender.female.name;
+            //                               });
+            //                             },
+            //                             pressed:
+            //                                 SettingsData.instance.userGender ==
+            //                                     Gender.female.name),
+            //                         const SizedBox(height: 20),
+            //                         ChoiceButton(
+            //                             name: 'Male',
+            //                             onTap: () {
+            //                               UnFocus();
+            //                               SettingsData.instance.userGender =
+            //                                   Gender.male.name;
+            //                             },
+            //                             pressed:
+            //                                 SettingsData.instance.userGender ==
+            //                                     Gender.male.name),
+            //                       ],
+            //                     ),
+            //                   ),
+            //                   const SizedBox(height: 10),
+            //                   Center(
+            //                     child: FittedBox(
+            //                       fit: BoxFit.fill,
+            //                       child: TextButton(
+            //                         onPressed: () {
+            //                           UnFocus();
+            //                           setState(() {
+            //                             _openOtherGender == false
+            //                                 ? _openOtherGender = true
+            //                                 : _openOtherGender = false;
+            //                           });
+            //                         },
+            //                         child: Row(
+            //                           mainAxisAlignment:
+            //                               MainAxisAlignment.center,
+            //                           children: [
+            //                             const Text(
+            //                               'More options',
+            //                               style: kButtonText,
+            //                             ),
+            //                             const SizedBox(width: 5),
+            //                             AnimatedRotation(
+            //                               curve: Curves.fastOutSlowIn,
+            //                               duration: Duration(milliseconds: 400),
+            //                               turns: _openOtherGender == true
+            //                                   ? -0.5
+            //                                   : 0,
+            //                               child: Icon(
+            //                                 FontAwesomeIcons.chevronDown,
+            //                                 color: kIconColor,
+            //                               ),
+            //                             )
+            //                           ],
+            //                         ),
+            //                       ),
+            //                     ),
+            //                   ),
+            //                   AnimatedContainer(
+            //                     duration: const Duration(milliseconds: 100),
+            //                     height: _openOtherGender == false ? 0 : 63,
+            //                     child: SingleChildScrollView(
+            //                       child: InputField(
+            //                           onTap: () {
+            //                             SettingsData.instance.userGender =
+            //                                 Gender.other.name;
+            //                           },
+            //                           maxCharacters: 20,
+            //                           style: const TextStyle(
+            //                               color: Colors.black87,
+            //                               fontSize: 20,
+            //                               fontWeight: FontWeight.w600),
+            //                           padding: const EdgeInsets.symmetric(
+            //                               horizontal: 25, vertical: 20),
+            //                           hintText: 'For other gender type here',
+            //                           onType: (value) {
+            //                             setState(() {
+            //                               value.isEmpty
+            //                                   ? elseGender = null
+            //                                   : elseGender = value;
+            //                             });
+            //                           },
+            //                           onTapIcon: () {
+            //                             SettingsData.instance.userGender =
+            //                                 Gender.other.name;
+            //                           },
+            //                           pressed:
+            //                               SettingsData.instance.userGender ==
+            //                                   Gender.other.name),
+            //                     ),
+            //                   ),
+            //                 ],
+            //               ),
+            //               Column(
+            //                 children: [
+            //                   RoundedButton(
+            //                       name: 'Save',
+            //                       onTap: () {
+            //                         Navigator.pop(context);
+            //                       }),
+            //                   Theme(
+            //                     data: ThemeData(
+            //                         unselectedWidgetColor: Colors.black87),
+            //                     child: CheckboxListTile(
+            //                         title: const Text(
+            //                           'Show my gender on my profile',
+            //                           style: boldTextStyle,
+            //                         ),
+            //                         controlAffinity:
+            //                             ListTileControlAffinity.trailing,
+            //                         contentPadding: EdgeInsets.zero,
+            //                         checkColor: Colors.white,
+            //                         activeColor: Colors.black87,
+            //                         tristate: false,
+            //                         value: SettingsData.instance.showUserGender,
+            //                         onChanged: (value) {
+            //                           if (value != null) {
+            //                             SettingsData.instance.showUserGender =
+            //                                 value;
+            //                           }
+            //                         }),
+            //                   )
+            //                 ],
+            //               ),
+            //             ],
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
           );
         });
   }

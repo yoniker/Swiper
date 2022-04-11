@@ -17,7 +17,9 @@ class QuestionnaireWidget extends StatefulWidget {
       this.onSave,
       this.headline,
       this.promotes,
+      this.saveButtonName = 'Save',
       this.extraUserChoice = false,
+      this.bottomPadding = true,
       this.alwaysPressed = false});
   final List<String> choices;
   final String? headline;
@@ -25,7 +27,9 @@ class QuestionnaireWidget extends StatefulWidget {
   final void Function()? onSave;
   final bool alwaysPressed;
   final String? initialChoice;
+  final String saveButtonName;
   final bool extraUserChoice;
+  final bool bottomPadding;
 
   final List<String>? promotes;
 
@@ -49,6 +53,18 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   @override
   void initState() {
     currentUserChoice = widget.initialChoice;
+    if (widget.choices.contains(currentUserChoice) != true &&
+        widget.initialChoice != null &&
+        widget.initialChoice != '')
+      setState(() {
+        _checked = true;
+      });
+    if (widget.promotes != null && widget.initialChoice != null)
+      setState(() {
+        promote =
+            widget.promotes![widget.choices.indexOf(widget.initialChoice!)];
+      });
+
     super.initState();
   }
 
@@ -76,7 +92,8 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: EdgeInsets.fromLTRB(
+              20, 20, 20, widget.bottomPadding == true ? 20 : 0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -104,6 +121,8 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
                                 child: ChoiceButton(
                                   name: '$choiceTitle',
                                   onTap: () {
+                                    print(promote);
+                                    UnFocus();
                                     widget.alwaysPressed != true
                                         ? setState(() {
                                             if (currentUserChoice !=
@@ -175,17 +194,6 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
                             child: SingleChildScrollView(
                               child: InputField(
                                   onTap: () {
-                                    currentUserChoice = otherChoice;
-
-                                    setState(() {
-                                      if (currentUserChoice != otherChoice) {
-                                        currentUserChoice = otherChoice;
-                                      } else {
-                                        currentUserChoice = '';
-                                      }
-                                      ;
-                                    });
-
                                     if (currentUserChoice != null) {
                                       widget.onValueChanged
                                           ?.call(currentUserChoice!);
@@ -199,54 +207,57 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 25, vertical: 20),
                                   hintText: 'For other gender type here',
+                                  initialvalue: _checked == true
+                                      ? currentUserChoice
+                                      : null,
                                   onType: (value) {
                                     setState(
                                       () {
                                         value.isEmpty
-                                            ? currentUserChoice = null
+                                            ? currentUserChoice =
+                                                widget.initialChoice
                                             : currentUserChoice = value;
+                                        otherChoice = value;
                                       },
                                     );
                                     if (currentUserChoice != null) {
-                                      widget.onValueChanged
-                                          ?.call(currentUserChoice!);
+                                      if (currentUserChoice!.length > 2)
+                                        widget.onValueChanged
+                                            ?.call(currentUserChoice!);
                                     }
+                                    print(widget.initialChoice);
                                   },
-                                  pressed: currentUserChoice == otherChoice),
+                                  pressed: widget.choices
+                                          .contains(currentUserChoice) !=
+                                      true),
                             ),
                           ),
                         ],
-                      )
+                      ),
+                    if (promote != '')
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: FittedBox(
+                          child: Row(
+                            children: [
+                              const Icon(Icons.remove_red_eye_rounded,
+                                  color: Colors.black54),
+                              const SizedBox(width: 10),
+                              Text(promote, style: kSmallInfoStyle),
+                            ],
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),
-              Column(
-                children: [
-                  RoundedButton(
-                    name: 'Save',
-                    onTap: () {
-                      if (widget.onSave != null) {
+              RoundedButton(
+                name: widget.saveButtonName,
+                onTap: widget.onSave != null
+                    ? () {
                         widget.onSave!.call();
-                      } else {
-                        Get.back();
                       }
-                    },
-                  ),
-                  if (promote != '')
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: FittedBox(
-                        child: Row(
-                          children: [
-                            const Icon(Icons.remove_red_eye_rounded,
-                                color: Colors.black54),
-                            const SizedBox(width: 10),
-                            Text(promote, style: kSmallInfoStyle),
-                          ],
-                        ),
-                      ),
-                    ),
-                ],
+                    : null,
               ),
             ],
           ),
