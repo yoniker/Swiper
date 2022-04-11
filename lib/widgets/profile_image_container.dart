@@ -9,7 +9,7 @@ class ProfileImageContainer extends StatelessWidget {
   final String? imageUrl;
   final BuildContext? context;
   final bool? loadingImage;
-  final Function(PickedFile? imageFile)? onImagePicked;
+  final Function(XFile? imageFile)? onImagePicked;
 
   /// A function that fires when the cancel icon on the image-box is pressed.
   final void Function()? onDelete;

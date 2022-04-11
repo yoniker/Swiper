@@ -58,7 +58,9 @@ class _CurrentUserProfileViewScreenState
             preferredGender: SettingsData.instance.preferredGender,
             userGender: SettingsData.instance.userGender,
             showUserGender: SettingsData.instance.showUserGender,
-            location: SettingsData.instance.locationDescription);
+            location: SettingsData.instance.locationDescription,
+            relationshipType: SettingsData.instance.relationshipType
+        );
 
         return Stack(alignment: Alignment.topLeft, children: [
           Scaffold(

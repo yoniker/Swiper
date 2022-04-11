@@ -24,7 +24,7 @@ class NewNetworkService {
   static NewNetworkService get instance => _instance;
 
   //A helper method to shrink an image if it's too large, and decode it into a workable image format
-  static Future<img.Image> _prepareImage(PickedFile pickedImageFile) async {
+  static Future<img.Image> _prepareImage(XFile pickedImageFile) async {
     const MAX_IMAGE_SIZE =
         1500; //TODO make this a parameter and let the user control it (if needed)
 
@@ -38,7 +38,7 @@ class NewNetworkService {
     return theImage;
   }
 
-  Future<void> postProfileImage(PickedFile pickedImage) async {
+  Future<void> postProfileImage(XFile pickedImage) async {
     String fileName = '${DateTime.now().toString()}.jpg';
     img.Image theImage = await _prepareImage(pickedImage);
 
@@ -299,5 +299,13 @@ class NewNetworkService {
       return LocationCountData(status: LocationCountStatus.initial_state);
     }
 
+  }
+
+
+  Future<void> deleteAccount() async {
+    Uri deleteAccountUri =
+    Uri.https(SERVER_ADDR, '/delete_account/${SettingsData.instance.uid}');
+    http.Response response = await http.get(deleteAccountUri);
+    //TODO check for a successful response and give user feedback if not successful
   }
 }

@@ -64,13 +64,15 @@ class Profile{
   String userGender;
   @HiveField(27)
   bool showUserGender;
+  @HiveField(28)
+  String relationshipType;
 
 
 
 
   Profile({required this.username,required this.uid,required this.matchChangedTime,this.imageUrls,this.headline,this.description,this.age,this.location,this.jobTitle,this.religion,this.height,this.compatibilityScore,this.hotnessScore,this.distance,
     required this.pets,required this.drinking,required this.hobbies,required this.covidVaccine,required this.children,required this.education,required this.smoking,required this.fitness,required this.zodiac,required this.school,
-    this.lastUpdate,required this.preferredGender,required this.userGender,required this.showUserGender
+    this.lastUpdate,required this.preferredGender,required this.userGender,required this.showUserGender,required this.relationshipType
 
   });
   Profile.fromJson(Map json,{DateTime? lastUpdateTime}) :
@@ -100,6 +102,7 @@ class Profile{
         this.userGender = json[API_CONSTS.USER_GENDER_KEY]??'',
         this.showUserGender = json[API_CONSTS.SHOW_USER_GENDER_KEY]!=null && json[API_CONSTS.SHOW_USER_GENDER_KEY]=='true',
         this.preferredGender = json[API_CONSTS.PREFERRED_GENDER_KEY]??'',
+        this.relationshipType = json[API_CONSTS.USER_RELATIONSHIP_TYPE]??'',
         this.matchChangedTime = json[API_CONSTS.USER_MATCH_CHANGED_TIME]!=null? DateTime.fromMillisecondsSinceEpoch((json[API_CONSTS.USER_MATCH_CHANGED_TIME]*1000).toInt()).toUtc():null,
         this.lastUpdate = lastUpdateTime??DateTime(1990);
 
