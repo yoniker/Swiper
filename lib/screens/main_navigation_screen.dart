@@ -190,6 +190,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           extendBody: true,
           resizeToAvoidBottomInset: true,
           bottomNavigationBar: BottomNavigationBar(
+            showSelectedLabels: false,
             backgroundColor: Colors.black,
             selectedLabelStyle: boldTextStyle.copyWith(color: Colors.red),
             unselectedLabelStyle: boldTextStyle.copyWith(
@@ -199,7 +200,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             selectedItemColor:
                 selectedTabIndex == 1 ? goldColorish : mainAppColor02,
             unselectedItemColor: unselectedTabColor,
-            showUnselectedLabels: true,
+            showUnselectedLabels: false,
             elevation: 0.0,
             currentIndex: selectedTabIndex,
             onTap: (index) {
@@ -209,11 +210,26 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             },
             items: [
               BottomNavigationBarItem(
-                icon: DoubleIconToStack(
-                    FontAwesomeIcons.addressCard, FontAwesomeIcons.addressCard),
-                activeIcon: DoubleIconToStack(FontAwesomeIcons.addressCard,
-                    FontAwesomeIcons.solidAddressCard),
-                label: 'Match',
+                icon: Icon(
+                  Icons.search,
+                  size: 30,
+                ),
+                activeIcon: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Icon(
+                      Icons.search,
+                      size: 30,
+                    ),
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 0, 7, 4),
+                      height: 14,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.white),
+                    )
+                  ],
+                ),
+                label: '',
                 tooltip: 'Match',
               ),
               BottomNavigationBarItem(
@@ -226,7 +242,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                   imageURI: BetaIconPaths.activeVoilaTabIconPath,
                   width: 30,
                 ),
-                label: 'Search',
+                label: '',
                 tooltip: 'Search',
               ),
               BottomNavigationBarItem(
@@ -234,7 +250,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                   FontAwesomeIcons.comments,
                 ),
                 activeIcon: Icon(FontAwesomeIcons.solidComments),
-                label: 'Chat',
+                label: '',
                 tooltip: 'Chat',
               ),
             ],
