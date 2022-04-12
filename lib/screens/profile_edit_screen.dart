@@ -188,7 +188,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                     showCursor: true,
                     title: 'Job title',
                     maxLines: 1,
-                    maxCharacters: 20,
+                    maxCharacters: 25,
                     controller: jobTitleController,
                     onType: (val) {
                       SettingsData.instance.jobTitle = val;
@@ -198,7 +198,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                   TextEditBlock(
                     showCursor: true,
                     title: 'School',
-                    maxCharacters: 10,
+                    maxCharacters: 25,
                     maxLines: 1,
                     controller: schoolController,
                     onType: (val) {

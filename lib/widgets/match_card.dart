@@ -11,7 +11,6 @@ import 'package:betabeta/widgets/compatibility_scale.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/like_scale.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -83,6 +82,23 @@ class _MatchCardState extends State<MatchCard> {
       endIndent: 2.0,
       thickness: 2.8,
       height: 8.0,
+    );
+  }
+
+  Widget BubbleContainer(String text) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+          color: Colors.black.withOpacity(0.05)),
+      child: Text(
+        text,
+        style: smallBoldedTitleBlack.copyWith(
+            color: Colors.black.withOpacity(0.65), fontSize: 16),
+        overflow: TextOverflow.ellipsis,
+      ),
     );
   }
 
@@ -212,30 +228,33 @@ class _MatchCardState extends State<MatchCard> {
                     overflow: TextOverflow.ellipsis),
               ),
             ),
+          if (widget.profile.location != null && widget.profile.location != '')
+            Row(
+              children: [
+                Icon(
+                  FontAwesomeIcons.mapLocationDot,
+                  size: 18,
+                  color: Colors.white70,
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Text(
+                  widget.profile.location!,
+                  style: kWhiteDescriptionShadowStyle.copyWith(
+                    fontSize: getRelativeTextSize(18),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
+                )
+              ],
+            ),
         ],
       ),
     );
   }
-  // }
 
   @override
-  // void initState() {
-  //   super.initState();
-  //   scrollController = ScrollController();
-  //   if (scrollController != null)
-  //     scrollController!.addListener(() {
-  //       setState(() {
-  //         print(scrollController!.offset);
-  //       });
-  //     });
-  // }
-  //
-  // @override
-  // void dispose() {
-  //   scrollController!.dispose();
-  //   super.dispose();
-  // }
-
   List<Widget> buildMatchDetails(
     Profile profile, {
     required BuildContext context,
@@ -283,6 +302,47 @@ class _MatchCardState extends State<MatchCard> {
               fontWeight: FontWeight.w700),
         ),
       ),
+      Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Text(
+          'More about me',
+          textAlign: TextAlign.start,
+          style: boldTextStyle.copyWith(color: Colors.black54),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: Wrap(
+          runSpacing: 10,
+          spacing: 7,
+          direction: Axis.horizontal,
+          children: [
+            if (widget.profile.relationshipType != '')
+              BubbleContainer('🔍  ${widget.profile.relationshipType}'),
+            if (widget.profile.height != 0 && widget.profile.height != null)
+              BubbleContainer('📏  ${cmToFeet(widget.profile.height!)} ft'),
+            if (profile.education != '')
+              BubbleContainer('🎓  ${widget.profile.education}'),
+            if (widget.profile.children != '')
+              BubbleContainer('🍼  ${widget.profile.children}'),
+            if (widget.profile.religion != '' &&
+                widget.profile.religion != null)
+              BubbleContainer('${widget.profile.religion}'),
+            if (widget.profile.zodiac != '')
+              BubbleContainer('${widget.profile.zodiac}'),
+            if (widget.profile.fitness != '')
+              BubbleContainer('💪  ${widget.profile.fitness}'),
+            if (widget.profile.drinking != '')
+              BubbleContainer('🍷  ${widget.profile.drinking}'),
+            if (widget.profile.smoking != '')
+              BubbleContainer('🚬  ${widget.profile.smoking}'),
+            if (widget.profile.showUserGender == true)
+              BubbleContainer('⚧  ${widget.profile.userGender}'),
+            if (widget.profile.covidVaccine != '')
+              BubbleContainer('💉  ${widget.profile.covidVaccine}')
+          ],
+        ),
+      ),
       SizedBox(
         height: 20,
       ),
@@ -317,11 +377,6 @@ class _MatchCardState extends State<MatchCard> {
                         NewNetworkService.getProfileImageUrl(_imageUrls[index]);
                     return GestureDetector(
                       onTap: () {
-                        // pushToScreen(
-                        //   context,
-                        //   builder: (context) =>
-                        //       FullImageScreen(imageUrl: _url),
-                        // );
                         Get.toNamed(
                           FullImageScreen.routeName,
                           arguments: _url,
@@ -362,75 +417,6 @@ class _MatchCardState extends State<MatchCard> {
                 ),
         ),
       ),
-      SizedBox(height: 20),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: Wrap(
-          direction: Axis.horizontal,
-          children: [
-            if (widget.profile.location != null &&
-                widget.profile.location != '')
-              BasicDetail(
-                  detailText: '${widget.profile.location}',
-                  detailIcon: FaIcon(
-                    FontAwesomeIcons.mapMarkedAlt,
-                    color: Colors.black.withOpacity(0.7),
-                  )),
-            BasicDetail(
-              detailText: '${widget.profile.userGender}',
-              detailIcon: FaIcon(
-                FontAwesomeIcons.userGroup,
-                color: Colors.black.withOpacity(0.7),
-              ),
-            ),
-            if (widget.profile.height != 0 && widget.profile.height != null)
-              BasicDetail(
-                detailText: '${cmToFeet(widget.profile.height!)} ft',
-                detailIcon: FaIcon(
-                  FontAwesomeIcons.ruler,
-                  color: Colors.black.withOpacity(0.7),
-                ),
-              ),
-            if (profile.education != '')
-              BasicDetail(
-                detailText: 'Education: ${widget.profile.education}',
-                detailIcon: FaIcon(
-                  FontAwesomeIcons.graduationCap,
-                  size: 21,
-                  color: Colors.black.withOpacity(0.7),
-                ),
-              ),
-            if (widget.profile.religion != '' &&
-                widget.profile.religion != null)
-              BasicDetail(
-                detailText: '${widget.profile.religion}',
-                detailIcon: FaIcon(
-                  FontAwesomeIcons.handsPraying,
-                  color: Colors.black.withOpacity(0.7),
-                ),
-              ),
-            if (widget.profile.zodiac != '')
-              BasicDetail(
-                detailText: '${widget.profile.zodiac}',
-                detailIcon: FaIcon(
-                  FontAwesomeIcons.galacticRepublic,
-                  color: Colors.black.withOpacity(0.7),
-                ),
-              ),
-            if (widget.profile.children != '')
-              BasicDetail(
-                detailText: '${widget.profile.children}',
-                detailIcon: FaIcon(
-                  FontAwesomeIcons.babyCarriage,
-                  color: Colors.black.withOpacity(0.7),
-                ),
-              ),
-          ],
-        ),
-      ),
-      SizedBox(
-        height: 20,
-      ),
       if (widget.profile.hobbies.length != 0)
         BubbleBlockViewer(
           titleStyle: boldTextStyle.copyWith(color: Colors.black54),
@@ -438,49 +424,6 @@ class _MatchCardState extends State<MatchCard> {
           backgroundColor: Color(0xFFE3F2FD),
           bubbles: widget.profile.hobbies,
         ),
-      if (widget.profile.fitness != '' ||
-          widget.profile.drinking != '' ||
-          widget.profile.smoking != '')
-        Padding(
-          padding: const EdgeInsets.fromLTRB(15.0, 5, 0, 10),
-          child: Text(
-            'Lifestyle',
-            style: boldTextStyle.copyWith(color: Colors.black54),
-          ),
-        ),
-      Padding(
-        padding: const EdgeInsets.fromLTRB(10.0, 0, 0, 10),
-        child: Wrap(
-          direction: Axis.horizontal,
-          children: [
-            if (widget.profile.fitness != '')
-              BasicDetail(
-                detailIcon: FaIcon(
-                  FontAwesomeIcons.dumbbell,
-                  color: Colors.blueGrey,
-                ),
-                detailText: '${widget.profile.fitness}',
-              ),
-            if (widget.profile.drinking != '')
-              BasicDetail(
-                detailText: '${widget.profile.drinking}',
-                detailIcon: FaIcon(
-                  FontAwesomeIcons.glassMartiniAlt,
-                  color: Colors.blueGrey,
-                  size: 25,
-                ),
-              ),
-            if (widget.profile.smoking != '')
-              BasicDetail(
-                detailText: '${widget.profile.smoking}',
-                detailIcon: FaIcon(
-                  FontAwesomeIcons.smoking,
-                  color: Colors.blueGrey,
-                ),
-              )
-          ],
-        ),
-      ),
       if (widget.profile.pets.length != 0)
         BubbleBlockViewer(
           titleStyle: boldTextStyle.copyWith(color: Colors.black54),
@@ -488,7 +431,10 @@ class _MatchCardState extends State<MatchCard> {
           backgroundColor: Color(0xFFE3F2FD),
           bubbles: widget.profile.pets,
         ),
-      SizedBox(height: 20),
+      if (widget.profile.fitness != '' ||
+          widget.profile.drinking != '' ||
+          widget.profile.smoking != '')
+        SizedBox(height: 20),
       if (widget.showAI != false)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),

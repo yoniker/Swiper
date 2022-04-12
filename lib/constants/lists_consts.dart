@@ -6,40 +6,40 @@ cmToFeet(centimeters) {
 }
 
 List<String> kReligionsList = [
-  'Atheism/Agnosticism',
-  'Bahá’í',
-  'Buddhism',
-  'Christianity',
-  'Confucianism',
-  'Druze',
-  'Gnosticism',
-  'Hinduism',
-  'Islam',
-  'Jainism',
-  'Judaism',
-  'Rastafarianism',
-  'Shinto',
-  'Sikhism',
-  'Zoroastrianism',
-  'Traditional African Religions',
-  'African Diaspora Religions',
-  'Indigenous American Religions',
-  'Other'
+  '⚛  Atheist',
+  '🙏  Bahá’í',
+  '📿  Buddhist',
+  '✝  Christian',
+  '🙏  Confucian',
+  '🙏  Druze',
+  '🙏  Gnostic',
+  '🙏  Hindu',
+  '☪  Muslim',
+  '🙏  Jain',
+  '✡  Jewish',
+  '🙏  Rastafarian',
+  '🙏  Shin',
+  '🙏  Sikh',
+  '🙏  Zoroastrian',
+  '🙏  African',
+  '🙏  Dias',
+  '🙏  Indigenous',
+  '⚛  Other'
 ];
 
 List<String> kZodiacsList = [
-  'Capricorn',
-  'Aquarius',
-  'Pisces',
-  'Aries',
-  'Taurus',
-  'Gemini',
-  'Cancer',
-  'Leo',
-  'Virgo',
-  'Libra',
-  'Scorpio',
-  'Sagittarius'
+  '♑  Capricorn',
+  '♒  Aquarius',
+  '♓  Pisces',
+  '♈  Aries',
+  '♉  Taurus',
+  '♊  Gemini',
+  '♋  Cancer',
+  '♌  Leo',
+  '♍  Virgo',
+  '♎  Libra',
+  '♏  Scorpio',
+  '♐  Sagittarius'
 ];
 
 List<String> kEducationChoices = [
@@ -49,7 +49,7 @@ List<String> kEducationChoices = [
 ];
 List<String> kFitnessChoices = ['Active', 'Occasionally', 'Never'];
 
-List<String> kGenderChoices = ['Female', 'Man'];
+List<String> kGenderChoices = ['Female', 'Male'];
 
 List<String> kIntoChoices = ['Men', 'Women', 'Everyone'];
 

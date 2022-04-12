@@ -1,13 +1,16 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
 
 class BasicDetail extends StatelessWidget {
   final String? detailText;
   final Widget? detailIcon;
+  final bool isBubble;
 
-  const BasicDetail({Key? key, this.detailText, this.detailIcon})
+  const BasicDetail(
+      {Key? key, this.detailText, this.detailIcon, this.isBubble = false})
       : super(key: key);
 
   @override
@@ -16,20 +19,35 @@ class BasicDetail extends StatelessWidget {
       return SizedBox.shrink();
     }
 
-    return Container(
-      alignment: Alignment.centerRight,
-      padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
+    return ConditionalParentWidget(
+      conditionalBuilder: (Widget child) {
+        return Container(
+            child: child,
+            padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
+            margin: EdgeInsets.symmetric(vertical: 4, horizontal: 2.5),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.05),
+              borderRadius: BorderRadius.all(
+                Radius.circular(20),
+              ),
+            ));
+      },
+      condition: isBubble,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: isBubble != true ? MainAxisSize.max : MainAxisSize.min,
         children: [
           Container(
-              margin: EdgeInsets.only(left: 5), width: 50, child: detailIcon),
-          SizedBox(width: 5.6),
-          Expanded(
+              margin: EdgeInsets.only(left: 5),
+              width: isBubble != true ? 45 : 30,
+              child: detailIcon),
+          Flexible(
             child: Text(
               detailText!,
-              style:
-                  boldTextStyle.copyWith(color: Colors.black.withOpacity(0.7)),
+              style: isBubble != true
+                  ? boldTextStyle.copyWith(color: Colors.black.withOpacity(0.7))
+                  : smallBoldedTitleBlack.copyWith(
+                      color: Colors.black.withOpacity(0.65), fontSize: 16),
               overflow: TextOverflow.ellipsis,
             ),
           ),

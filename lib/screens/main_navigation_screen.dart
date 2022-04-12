@@ -192,10 +192,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           bottomNavigationBar: BottomNavigationBar(
             showSelectedLabels: false,
             backgroundColor: Colors.black,
-            selectedLabelStyle: boldTextStyle.copyWith(color: Colors.red),
+            selectedLabelStyle:
+                boldTextStyle.copyWith(color: Colors.red, fontSize: 0),
             unselectedLabelStyle: boldTextStyle.copyWith(
               color: darkTextColor,
-              fontSize: 13.0,
+              fontSize: 0.0,
             ),
             selectedItemColor:
                 selectedTabIndex == 1 ? goldColorish : mainAppColor02,
