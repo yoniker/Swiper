@@ -1,3 +1,4 @@
+import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
@@ -35,7 +36,7 @@ class _LookingForScreenState extends State<LookingForScreen> {
           ),
           backgroundColor: kBackroundThemeColor,
           body: QuestionnaireWidget(
-            choices: ['Marriage', 'Relationship', 'Casual', 'Not sure'],
+            choices: kRelationshipTypeChoices,
             headline: 'What are you looking for?',
             onValueChanged: (newLookingFor) {
               SettingsData.instance.relationshipType = newLookingFor;

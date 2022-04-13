@@ -76,6 +76,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                         ContactsWidget(
                           search: searchProfile.toLowerCase(),
                         ),
+                        if (ChatData.instance.users.isNotEmpty) Divider(),
                         ConversationsPreviewWidget(
                           search: searchProfile.toLowerCase(),
                         ),

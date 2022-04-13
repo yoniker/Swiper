@@ -33,25 +33,32 @@ class BasicDetail extends StatelessWidget {
             ));
       },
       condition: isBubble,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: isBubble != true ? MainAxisSize.max : MainAxisSize.min,
-        children: [
-          Container(
-              margin: EdgeInsets.only(left: 5),
-              width: isBubble != true ? 45 : 30,
-              child: detailIcon),
-          Flexible(
-            child: Text(
-              detailText!,
-              style: isBubble != true
-                  ? boldTextStyle.copyWith(color: Colors.black.withOpacity(0.7))
-                  : smallBoldedTitleBlack.copyWith(
-                      color: Colors.black.withOpacity(0.65), fontSize: 16),
-              overflow: TextOverflow.ellipsis,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(15.0, 0, 0, 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: isBubble != true ? MainAxisSize.max : MainAxisSize.min,
+          children: [
+            Container(
+              width: isBubble != true ? 16 : 30,
+              child: FittedBox(child: detailIcon),
             ),
-          ),
-        ],
+            SizedBox(
+              width: 15,
+            ),
+            Flexible(
+              child: Text(
+                detailText!,
+                style: isBubble != true
+                    ? boldTextStyle.copyWith(
+                        color: Colors.black.withOpacity(0.6), fontSize: 15)
+                    : smallBoldedTitleBlack.copyWith(
+                        color: Colors.black.withOpacity(0.65), fontSize: 16),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

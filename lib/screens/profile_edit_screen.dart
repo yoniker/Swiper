@@ -115,6 +115,25 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
     );
   }
 
+  IconData ReligionIcon() {
+    switch (SettingsData.instance.religion) {
+      case 'Jewish':
+        return FontAwesomeIcons.starOfDavid;
+        ;
+      case 'Muslim':
+        return FontAwesomeIcons.starAndCrescent;
+
+      case 'Christian':
+        return FontAwesomeIcons.cross;
+
+      case 'Buddhist':
+        return FontAwesomeIcons.vihara;
+      default:
+        FontAwesomeIcons.handsPraying;
+    }
+    return FontAwesomeIcons.handsPraying;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListenerWidget(
@@ -169,7 +188,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                   ),
                   ProfileEditBlock(
                     title: 'Religion',
-                    icon: FontAwesomeIcons.prayingHands,
+                    icon: ReligionIcon(),
                     value: SettingsData.instance.religion,
                     onTap: () {
                       choicesPopUp(kReligionsList, updateReligion);
@@ -177,7 +196,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                   ),
                   ProfileEditBlock(
                     title: 'Zodiac',
-                    icon: FontAwesomeIcons.starAndCrescent,
+                    icon: FontAwesomeIcons.galacticRepublic,
                     value: SettingsData.instance.zodiac,
                     onTap: () {
                       choicesPopUp(kZodiacsList, updateZodiac);
@@ -197,7 +216,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                   Divider(),
                   TextEditBlock(
                     showCursor: true,
-                    title: 'School',
+                    title: 'University',
                     maxCharacters: 25,
                     maxLines: 1,
                     controller: schoolController,

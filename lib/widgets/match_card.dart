@@ -263,6 +263,32 @@ class _MatchCardState extends State<MatchCard> {
   }) {
     final _imageUrls = profile.imageUrls ?? <String>[];
 
+    Icon ReligionIcon() {
+      switch (widget.profile.religion) {
+        case 'Jewish':
+          return Icon(
+            FontAwesomeIcons.starOfDavid,
+            color: Colors.black.withOpacity(0.6),
+          );
+        case 'Muslim':
+          return Icon(FontAwesomeIcons.starAndCrescent,
+              color: Colors.black.withOpacity(0.6));
+
+        case 'Christian':
+          return Icon(FontAwesomeIcons.cross,
+              color: Colors.black.withOpacity(0.6));
+
+        case 'Buddhist':
+          return Icon(FontAwesomeIcons.vihara,
+              color: Colors.black.withOpacity(0.6));
+        default:
+          Icon(FontAwesomeIcons.handsPraying,
+              color: Colors.black.withOpacity(0.6));
+      }
+      return Icon(FontAwesomeIcons.handsPraying,
+          color: Colors.black.withOpacity(0.6));
+    }
+
     // builds the achievement items such as loves and stars.
     Widget _buildAchievementItem(String iconURI, String value) {
       return Padding(
@@ -284,13 +310,8 @@ class _MatchCardState extends State<MatchCard> {
 
     // Return a List of Widgets.
     return [
-      Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Text(
-          'Introduction',
-          textAlign: TextAlign.start,
-          style: boldTextStyle.copyWith(color: Colors.black54),
-        ),
+      SizedBox(
+        height: 16,
       ),
       Container(
         margin: EdgeInsets.symmetric(horizontal: 15),
@@ -304,50 +325,174 @@ class _MatchCardState extends State<MatchCard> {
               fontWeight: FontWeight.w700),
         ),
       ),
+      SizedBox(
+        height: 15,
+      ),
+      if (widget.profile.location != null)
+        BasicDetail(
+          detailText: 'Located in ${widget.profile.location}',
+          detailIcon: Icon(
+            FontAwesomeIcons.locationDot,
+            color: Colors.black.withOpacity(0.6),
+          ),
+        ),
+      if (widget.profile.showUserGender == true &&
+          widget.profile.userGender != '')
+        BasicDetail(
+          detailIcon: Icon(
+            FontAwesomeIcons.transgender,
+            color: Colors.black.withOpacity(0.6),
+          ),
+          detailText: widget.profile.userGender,
+        ),
+      if (widget.profile.relationshipType != '' &&
+          widget.profile.relationshipType != 'Prefer not to say')
+        BasicDetail(
+          detailText: 'Looking for ${widget.profile.relationshipType}',
+          detailIcon: Icon(
+            FontAwesomeIcons.magnifyingGlass,
+            color: Colors.black.withOpacity(0.6),
+          ),
+        ),
+      if (widget.profile.height != null && widget.profile.height != 0)
+        BasicDetail(
+          detailText:
+              '${cmToFeet(widget.profile.height!)} ft (${widget.profile.height!.toInt()} cm)',
+          detailIcon: Icon(
+            FontAwesomeIcons.ruler,
+            color: Colors.black.withOpacity(0.6),
+          ),
+        ),
+      if (widget.profile.jobTitle != null && widget.profile.jobTitle != '')
+        BasicDetail(
+          detailIcon: Icon(
+            FontAwesomeIcons.briefcase,
+            color: Colors.black.withOpacity(0.6),
+          ),
+          detailText: '${widget.profile.jobTitle}',
+        ),
+      if (widget.profile.education != '')
+        BasicDetail(
+          detailIcon: Icon(
+            FontAwesomeIcons.graduationCap,
+            color: Colors.black.withOpacity(0.6),
+          ),
+          detailText: '${widget.profile.education}',
+        ),
+      if (widget.profile.school != '')
+        BasicDetail(
+          detailIcon: Icon(
+            FontAwesomeIcons.schoolFlag,
+            color: Colors.black.withOpacity(0.6),
+          ),
+          detailText: 'Studied at ${widget.profile.school}',
+        ),
+      if (widget.profile.children != '')
+        BasicDetail(
+          detailIcon: Icon(
+            FontAwesomeIcons.babyCarriage,
+            color: Colors.black.withOpacity(0.6),
+          ),
+          detailText: '${widget.profile.children}',
+        ),
+      if (widget.profile.religion != null && widget.profile.religion != '')
+        BasicDetail(
+          detailIcon: ReligionIcon(),
+          detailText: widget.profile.religion,
+        ),
+      if (widget.profile.zodiac != '')
+        BasicDetail(
+          detailIcon: Icon(
+            FontAwesomeIcons.galacticRepublic,
+            color: Colors.black.withOpacity(0.6),
+          ),
+          detailText: widget.profile.zodiac,
+        ),
+      if (widget.profile.fitness != '')
+        BasicDetail(
+          detailIcon: Icon(
+            FontAwesomeIcons.dumbbell,
+            color: Colors.black.withOpacity(0.6),
+          ),
+          detailText: widget.profile.fitness,
+        ),
+      if (widget.profile.drinking != '')
+        BasicDetail(
+          detailIcon: Icon(
+            FontAwesomeIcons.wineGlass,
+            color: Colors.black.withOpacity(0.6),
+          ),
+          detailText: widget.profile.drinking,
+        ),
+      if (widget.profile.smoking != '')
+        BasicDetail(
+          detailIcon: Icon(
+            FontAwesomeIcons.smoking,
+            color: Colors.black.withOpacity(0.6),
+          ),
+          detailText: widget.profile.smoking,
+        ),
+      if (widget.profile.covidVaccine != '')
+        BasicDetail(
+          detailIcon: Icon(
+            FontAwesomeIcons.syringe,
+            color: Colors.black.withOpacity(0.6),
+          ),
+          detailText: widget.profile.covidVaccine,
+        ),
+      SizedBox(
+        height: 16,
+      ),
+      if (widget.profile.hobbies.length != 0)
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.03),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                )),
+            child: Wrap(
+              runSpacing: 10,
+              spacing: 7,
+              direction: Axis.horizontal,
+              children: widget.profile.hobbies
+                  .map((hobbie) => BubbleContainer(hobbie))
+                  .toList(),
+            ),
+          ),
+        ),
       Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(12.0),
         child: Text(
-          'More about me',
-          textAlign: TextAlign.start,
-          style: boldTextStyle.copyWith(color: Colors.black54),
+          'My pets',
+          style: smallBoldedTitleBlack.copyWith(
+              color: Colors.black.withOpacity(0.65), fontSize: 16),
         ),
       ),
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: Wrap(
-          runSpacing: 10,
-          spacing: 7,
-          direction: Axis.horizontal,
-          children: [
-            if (widget.profile.relationshipType != '')
-              BubbleContainer('🔍  ${widget.profile.relationshipType}'),
-            if (widget.profile.height != 0 && widget.profile.height != null)
-              BubbleContainer('📏  ${cmToFeet(widget.profile.height!)} ft'),
-            if (profile.education != '')
-              BubbleContainer('🎓  ${widget.profile.education}'),
-            if (widget.profile.children != '')
-              BubbleContainer('🍼  ${widget.profile.children}'),
-            if (widget.profile.religion != '' &&
-                widget.profile.religion != null)
-              BubbleContainer('${widget.profile.religion}'),
-            if (widget.profile.zodiac != '')
-              BubbleContainer('${widget.profile.zodiac}'),
-            if (widget.profile.fitness != '')
-              BubbleContainer('💪  ${widget.profile.fitness}'),
-            if (widget.profile.drinking != '')
-              BubbleContainer('🍷  ${widget.profile.drinking}'),
-            if (widget.profile.smoking != '')
-              BubbleContainer('🚬  ${widget.profile.smoking}'),
-            if (widget.profile.showUserGender == true)
-              BubbleContainer('⚧  ${widget.profile.userGender}'),
-            if (widget.profile.covidVaccine != '')
-              BubbleContainer('💉  ${widget.profile.covidVaccine}')
-          ],
+        child: Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.03),
+              borderRadius: BorderRadius.all(
+                Radius.circular(10),
+              )),
+          child: Wrap(
+            runSpacing: 10,
+            spacing: 7,
+            direction: Axis.horizontal,
+            children:
+                widget.profile.pets.map((pet) => BubbleContainer(pet)).toList(),
+          ),
         ),
       ),
-      SizedBox(
-        height: 20,
-      ),
+      if (widget.profile.hobbies.length != 0 && widget.profile.pets.length != 0)
+        SizedBox(
+          height: 10,
+        ),
       Container(
         alignment: Alignment.centerLeft,
         padding: EdgeInsets.only(
@@ -419,24 +564,10 @@ class _MatchCardState extends State<MatchCard> {
                 ),
         ),
       ),
-      if (widget.profile.hobbies.length != 0)
-        BubbleBlockViewer(
-          titleStyle: boldTextStyle.copyWith(color: Colors.black54),
-          title: 'Hobbies',
-          backgroundColor: Color(0xFFE3F2FD),
-          bubbles: widget.profile.hobbies,
-        ),
-      if (widget.profile.pets.length != 0)
-        BubbleBlockViewer(
-          titleStyle: boldTextStyle.copyWith(color: Colors.black54),
-          title: 'Pets',
-          backgroundColor: Color(0xFFE3F2FD),
-          bubbles: widget.profile.pets,
-        ),
       if (widget.profile.fitness != '' ||
           widget.profile.drinking != '' ||
           widget.profile.smoking != '')
-        SizedBox(height: 20),
+        SizedBox(height: 10),
       if (widget.showAI != false)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
