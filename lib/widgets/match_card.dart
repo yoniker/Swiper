@@ -239,13 +239,15 @@ class _MatchCardState extends State<MatchCard> {
                 SizedBox(
                   width: 20,
                 ),
-                Text(
-                  widget.profile.location!,
-                  style: kWhiteDescriptionShadowStyle.copyWith(
-                    fontSize: getRelativeTextSize(18),
+                Flexible(
+                  child: Text(
+                    widget.profile.location!,
+                    style: kWhiteDescriptionShadowStyle.copyWith(
+                      fontSize: getRelativeTextSize(18),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.fade,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.fade,
                 )
               ],
             ),
