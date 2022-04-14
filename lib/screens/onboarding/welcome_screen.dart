@@ -81,6 +81,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       currentlyTryingToLogin = false;
     });
 
+
+
+
+
+    setState(() {
+      currentlyTryingToLogin = false;
+    });
+
+  }
+
+  _tryPhoneLogin()async{
+    setState(() {
+      currentlyTryingToLogin = true;
+    });
+    var credential = await Get.toNamed(PhoneScreen.routeName,arguments: true);
+    if(credential!=null){ //TODO replace condition with "phone login failed".
+      ServerRegistrationStatus currentServerRegistrationStatus = await _registerUserAtServer();
+      await _continueIfLoggedIn(currentServerRegistrationStatus);}
+    setState(() {
+      currentlyTryingToLogin = false;
+    });
   }
 
   @override
@@ -187,9 +208,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               icon: Icons.phone_android,
                               color: Colors.transparent,
                               onTap: () {
-                                Get.offAllNamed(OnboardingFlowController
-                                    .instance
-                                    .nextRoute(PhoneScreen.routeName));
+                                 _tryPhoneLogin();
                               }),
                           Center(
                             child: Column(

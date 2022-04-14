@@ -113,7 +113,7 @@ class LoginsService{
         .getSingleFile(SettingsData.instance.facebookProfileImageUrl);
   }
   
-  static Future<UserCredential?> signInUser({required AuthCredential credential,void Function(Object)? onError})async{
+   Future<UserCredential?> signInUser({required AuthCredential credential,void Function(Object)? onError})async{
 
     // Sign the user in (or link) with the credential
     try{
