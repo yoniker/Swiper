@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/models/loginService.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/onboarding_flow_controller.dart';
 import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
@@ -33,6 +34,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
   String? _verificationId;
   final pinController = TextEditingController();
   final pinFocusNode = FocusNode();
+  bool isMainLoginMethod = (Get.arguments==true);
   
 
 
@@ -99,10 +101,22 @@ class _PhoneScreenState extends State<PhoneScreen> {
 
 
   Future<void> tryLinkPhone()async{
-    //Try to link the phone with user. If successful,move on to next screen in onboarding
+    UserCredential? resultOfSigning;
+
     try {
-    UserCredential? resultOfLinking = await FirebaseAuth.instance.currentUser
-        ?.linkWithCredential(_phoneCredential!);
+
+
+
+      if(!isMainLoginMethod)
+
+        //Try to link the phone with user. If successful,move on to next screen in onboarding
+    {resultOfSigning= await FirebaseAuth.instance.currentUser
+        ?.linkWithCredential(_phoneCredential!);}
+
+      else{
+        //This is main login method, so try to create a user with this phone credentials
+        resultOfSigning = await LoginsService.instance.signInUser(credential: _phoneCredential!);
+      }
   }
   on FirebaseAuthException catch (exception){
     if(exception.code==PhoneScreen.INVALID_SMS_CODE){
@@ -119,7 +133,9 @@ class _PhoneScreenState extends State<PhoneScreen> {
   }
     String? currentTokenId = await FirebaseAuth.instance.currentUser?.getIdToken();
     await NewNetworkService.instance.verifyToken(firebaseIdToken: currentTokenId!); //TODO API in server which gets all the info from user's token (and later produces a JWT)
-    Get.offAllNamed(OnboardingFlowController.instance.nextRoute(PhoneScreen.routeName));
+    if(!isMainLoginMethod)
+    {Get.offAllNamed(OnboardingFlowController.instance.nextRoute(PhoneScreen.routeName));}
+    else{Get.back(result:resultOfSigning);}
 
 
   }
