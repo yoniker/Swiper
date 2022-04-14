@@ -191,7 +191,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           resizeToAvoidBottomInset: true,
           bottomNavigationBar: BottomNavigationBar(
             showSelectedLabels: false,
-            backgroundColor: Colors.black,
+            backgroundColor: Colors.black.withOpacity(0.95),
             selectedLabelStyle:
                 boldTextStyle.copyWith(color: Colors.red, fontSize: 0),
             unselectedLabelStyle: boldTextStyle.copyWith(

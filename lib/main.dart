@@ -79,6 +79,7 @@ void main() async {
   );
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.white.withOpacity(0.05),
       statusBarIconBrightness: Brightness.dark));
   runApp(
     GetMaterialApp(
