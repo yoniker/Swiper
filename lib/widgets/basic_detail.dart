@@ -40,7 +40,7 @@ class BasicDetail extends StatelessWidget {
           mainAxisSize: isBubble != true ? MainAxisSize.max : MainAxisSize.min,
           children: [
             Container(
-              width: isBubble != true ? 16 : 30,
+              width: isBubble != true ? 18 : 30,
               child: FittedBox(child: detailIcon),
             ),
             SizedBox(
@@ -51,7 +51,7 @@ class BasicDetail extends StatelessWidget {
                 detailText!,
                 style: isBubble != true
                     ? boldTextStyle.copyWith(
-                        color: Colors.black.withOpacity(0.6), fontSize: 15)
+                        color: Colors.black.withOpacity(0.6), fontSize: 16)
                     : smallBoldedTitleBlack.copyWith(
                         color: Colors.black.withOpacity(0.65), fontSize: 16),
                 overflow: TextOverflow.ellipsis,

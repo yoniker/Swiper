@@ -326,7 +326,81 @@ class _MatchCardState extends State<MatchCard> {
         ),
       ),
       SizedBox(
-        height: 15,
+        height: 10,
+      ),
+      Container(
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.only(
+          top: 8.0,
+          bottom: 12.0,
+          left: 5.0,
+          right: 5.0,
+        ),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: 30.5,
+            maxHeight: 100.5,
+            minWidth: 250.0,
+            maxWidth: MediaQuery.of(context).size.width,
+          ),
+          child: !(_imageUrls.length > 0)
+              ? Center(
+                  child: Text(
+                    'No Profile image Available for match',
+                    style: mediumBoldedCharStyle,
+                  ),
+                )
+              : ListView.separated(
+                  key: UniqueKey(),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _imageUrls.length,
+                  itemBuilder: (cntx, index) {
+                    final String _url =
+                        NewNetworkService.getProfileImageUrl(_imageUrls[index]);
+                    return GestureDetector(
+                      onTap: () {
+                        Get.toNamed(
+                          FullImageScreen.routeName,
+                          arguments: _url,
+                        );
+                      },
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: 30.5,
+                          maxHeight: 100.5,
+                          minWidth: 30.5,
+                          maxWidth: 100.5,
+                        ),
+                        // height: 80.5,
+                        // width: 100.0,
+                        child: AspectRatio(
+                          aspectRatio: 1 / 1,
+                          child: Card(
+                            margin: EdgeInsets.all(0.0),
+                            clipBehavior: Clip.antiAlias,
+                            elevation: 2.1,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            ),
+                            child: PrecachedImage.network(
+                              imageURL: _url,
+                              fadeIn: true,
+                              shouldPrecache: false,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (cntx, index) {
+                    return SizedBox(width: 16.0);
+                  },
+                ),
+        ),
+      ),
+      SizedBox(
+        height: 10,
       ),
       if (widget.profile.location != null)
         BasicDetail(
@@ -440,9 +514,10 @@ class _MatchCardState extends State<MatchCard> {
           ),
           detailText: widget.profile.covidVaccine,
         ),
-      SizedBox(
-        height: 16,
-      ),
+      if (widget.profile.pets.length != 0 || widget.profile.hobbies.length != 0)
+        SizedBox(
+          height: 10,
+        ),
       if (widget.profile.hobbies.length != 0)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -463,106 +538,37 @@ class _MatchCardState extends State<MatchCard> {
             ),
           ),
         ),
-      Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Text(
-          'My pets',
-          style: smallBoldedTitleBlack.copyWith(
-              color: Colors.black.withOpacity(0.65), fontSize: 16),
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: Container(
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.03),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
-              )),
-          child: Wrap(
-            runSpacing: 10,
-            spacing: 7,
-            direction: Axis.horizontal,
-            children:
-                widget.profile.pets.map((pet) => BubbleContainer(pet)).toList(),
+      if (widget.profile.pets.length != 0)
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Text(
+            'My pets',
+            style: smallBoldedTitleBlack.copyWith(
+                color: Colors.black.withOpacity(0.65), fontSize: 16),
           ),
         ),
-      ),
-      if (widget.profile.hobbies.length != 0 && widget.profile.pets.length != 0)
-        SizedBox(
-          height: 10,
-        ),
-      Container(
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(
-          top: 8.0,
-          bottom: 12.0,
-          left: 5.0,
-          right: 5.0,
-        ),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            minHeight: 30.5,
-            maxHeight: 100.5,
-            minWidth: 250.0,
-            maxWidth: MediaQuery.of(context).size.width,
+      if (widget.profile.pets.length != 0)
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.03),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                )),
+            child: Wrap(
+              runSpacing: 10,
+              spacing: 7,
+              direction: Axis.horizontal,
+              children: widget.profile.pets
+                  .map((pet) => BubbleContainer(pet))
+                  .toList(),
+            ),
           ),
-          child: !(_imageUrls.length > 0)
-              ? Center(
-                  child: Text(
-                    'No Profile image Available for match',
-                    style: mediumBoldedCharStyle,
-                  ),
-                )
-              : ListView.separated(
-                  key: UniqueKey(),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _imageUrls.length,
-                  itemBuilder: (cntx, index) {
-                    final String _url =
-                        NewNetworkService.getProfileImageUrl(_imageUrls[index]);
-                    return GestureDetector(
-                      onTap: () {
-                        Get.toNamed(
-                          FullImageScreen.routeName,
-                          arguments: _url,
-                        );
-                      },
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minHeight: 30.5,
-                          maxHeight: 100.5,
-                          minWidth: 30.5,
-                          maxWidth: 100.5,
-                        ),
-                        // height: 80.5,
-                        // width: 100.0,
-                        child: AspectRatio(
-                          aspectRatio: 1 / 1,
-                          child: Card(
-                            margin: EdgeInsets.all(0.0),
-                            clipBehavior: Clip.antiAlias,
-                            elevation: 2.1,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                            ),
-                            child: PrecachedImage.network(
-                              imageURL: _url,
-                              fadeIn: true,
-                              shouldPrecache: false,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  separatorBuilder: (cntx, index) {
-                    return SizedBox(width: 16.0);
-                  },
-                ),
         ),
+      SizedBox(
+        height: 10,
       ),
       if (widget.profile.fitness != '' ||
           widget.profile.drinking != '' ||
