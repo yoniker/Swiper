@@ -194,7 +194,7 @@ class _MatchCardState extends State<MatchCard> {
                 ),
               ],
             ),
-          if (widget.profile.school != '')
+          if (widget.profile.school != '' && widget.profile.jobTitle == '')
             Row(
               children: [
                 Icon(

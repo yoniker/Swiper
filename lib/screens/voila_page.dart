@@ -32,7 +32,7 @@ class _VoilaPageState extends State<VoilaPage>
     with AutomaticKeepAliveClientMixin {
   bool isLoading = false;
   bool isPressed = false;
-  String textSearchTyped = '';
+  String textSearchTyped = SettingsData.instance.textSearch;
 
   /// Here is where the custom-picked image is being Posted and sent over Network.
   Future<void> postCustomImageToNetwork(XFile chosenImage) async {
@@ -196,6 +196,9 @@ class _VoilaPageState extends State<VoilaPage>
                                             if (!hasFocus) {
                                               SettingsData.instance.textSearch =
                                                   textSearchTyped;
+                                              print(SettingsData
+                                                      .instance.textSearch +
+                                                  ' testing if changed');
                                               for (int i = 0; i < 4; ++i)
                                                 print(
                                                     'finished typing $textSearchTyped');
@@ -211,6 +214,14 @@ class _VoilaPageState extends State<VoilaPage>
                                                             milliseconds: 300),
                                                         curve: Curves
                                                             .fastOutSlowIn);
+                                              if (SettingsData.instance
+                                                      .textSearch.length ==
+                                                  0)
+                                                SettingsData
+                                                        .instance.filterType =
+                                                    FilterType.NONE;
+                                              SettingsData.instance
+                                                  .filterDisplayImageUrl = '';
                                             }
                                           },
                                           onType: (value) {
@@ -231,8 +242,7 @@ class _VoilaPageState extends State<VoilaPage>
                                           maxCharacters: 20,
                                           icon: Icons.search,
                                           iconSize: 30,
-                                          initialvalue:
-                                              SettingsData.instance.textSearch,
+                                          initialvalue: textSearchTyped,
                                         ),
                                       ),
                                     ),

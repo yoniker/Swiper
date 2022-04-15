@@ -6,6 +6,7 @@ import 'package:betabeta/screens/splash_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
+import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -61,19 +62,23 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: lightCardColor,
-      appBar: CustomAppBar(
-        title: 'General Settings',
-        hasTopPadding: true,
-        trailing: PrecachedImage.asset(
-          imageURI: BetaIconPaths.settingsBarIcon,
-          color: Colors.black,
-        ),
-      ),
-      body: SwipeSettingWidget(
-        showExtraSettings: true,
-      ),
-    );
+    return ListenerWidget(
+        notifier: SettingsData.instance,
+        builder: (BuildContext context) {
+          return Scaffold(
+            backgroundColor: lightCardColor,
+            appBar: CustomAppBar(
+              title: 'General Settings',
+              hasTopPadding: true,
+              trailing: PrecachedImage.asset(
+                imageURI: BetaIconPaths.settingsBarIcon,
+                color: Colors.black,
+              ),
+            ),
+            body: SwipeSettingWidget(
+              showExtraSettings: true,
+            ),
+          );
+        });
   }
 }

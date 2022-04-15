@@ -16,7 +16,7 @@ class LocationService extends ChangeNotifier {
   LocationService._privateConstructor();
 
   static final LocationService _instance =
-  LocationService._privateConstructor();
+      LocationService._privateConstructor();
 
   static LocationService get instance => _instance;
 
@@ -27,7 +27,6 @@ class LocationService extends ChangeNotifier {
   LocationServiceStatus _status = LocationServiceStatus.initializing;
 
   Future<LocationServiceStatus> requestUpdateLocationCapability() async {
-
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       // Location services are not enabled don't continue
@@ -50,10 +49,10 @@ class LocationService extends ChangeNotifier {
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately. 
+      // Permissions are denied forever, handle appropriately.
       return LocationServiceStatus.userPermanentlyNotGrantedPermission;
     }
-     return LocationServiceStatus.enabled;
+    return LocationServiceStatus.enabled;
   }
 
   Future<LocationServiceStatus> requestLocationCapability() async {
@@ -63,18 +62,25 @@ class LocationService extends ChangeNotifier {
 
   LocationServiceStatus get serviceStatus => _status;
 
-  bool needChangeAppSettings(){
-    if(LocationService.instance.serviceStatus == LocationServiceStatus.userPermanentlyNotGrantedPermission)
-      {return true;}
-        if(Platform.isIOS && LocationService.instance.serviceStatus == LocationServiceStatus.userTemporaryNotGrantedPermission)
-          {return true;}
-        return false;
+  bool needChangeAppSettings() {
+    if (LocationService.instance.serviceStatus ==
+        LocationServiceStatus.userPermanentlyNotGrantedPermission) {
+      return true;
+    }
+    if (Platform.isIOS &&
+        LocationService.instance.serviceStatus ==
+            LocationServiceStatus.userTemporaryNotGrantedPermission) {
+      return true;
+    }
+    return false;
   }
 
   updateLocation(Position? locationData) {
-    if(locationData==null){return;}
+    if (locationData == null) {
+      return;
+    }
     if (!(DateTime.now().difference(lastUpdateDate) > minTimeUpdateLocation)) {
-      print('Too soon to update server');
+      //print('Too soon to update server');
       return;
     }
     SettingsData.instance.longitude = locationData.longitude;
@@ -86,9 +92,8 @@ class LocationService extends ChangeNotifier {
   }
 
   void _listenLocationChanges() {
-    Geolocator.getPositionStream().listen(
-    (data) {
-      print('location listener triggered update');
+    Geolocator.getPositionStream().listen((data) {
+      //print('location listener triggered update');
       updateLocation(data);
     });
   }

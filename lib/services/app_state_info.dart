@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 //And the alternative (navigator 2.0) is too complicated to my taste (see https://medium.com/flutter/learning-flutters-new-navigation-and-routing-system-7c9068155ade)
 
 class AppStateInfo extends ChangeNotifier with WidgetsBindingObserver {
-
-  AppLifecycleState _appState=AppLifecycleState.resumed;
+  AppLifecycleState _appState = AppLifecycleState.resumed;
   AppLifecycleState get appState => _appState;
-  int latestTabOnMainNavigation = MainNavigationScreen.MATCHING_PAGE_INDEX; //Yes this is ugly, see comment #2 above
+  int latestTabOnMainNavigation = MainNavigationScreen
+      .VOILA_PAGE_INDEX; //Yes this is ugly, see comment #2 above
 
-  AppStateInfo._privateConstructor(){
+  AppStateInfo._privateConstructor() {
     WidgetsBinding.instance!.addObserver(this);
   }
 
@@ -23,5 +23,4 @@ class AppStateInfo extends ChangeNotifier with WidgetsBindingObserver {
     _appState = state;
     notifyListeners();
   }
-
 }
