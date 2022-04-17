@@ -22,8 +22,9 @@ class _FinishOnboardingScreenState extends State<FinishOnboardingScreen> {
     // TODO: implement initState
     super.initState();
     _controller =
-        VideoPlayerController.asset('assets/onboarding/videos/endingvideo.mp4')
+        VideoPlayerController.asset('assets/onboarding/videos/startvideo.mp4')
           ..initialize().then((_) {
+            _controller.seekTo(Duration(seconds: 36));
             _controller.play();
             _controller.setLooping(true);
             setState(() {});
@@ -36,10 +37,10 @@ class _FinishOnboardingScreenState extends State<FinishOnboardingScreen> {
       body: Stack(children: [
         SizedBox.expand(
           child: FittedBox(
-            fit: BoxFit.fill,
+            fit: BoxFit.cover,
             child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
+              width: _controller.value.size.width,
+              height: _controller.value.size.height,
               child: VideoPlayer(_controller),
             ),
           ),

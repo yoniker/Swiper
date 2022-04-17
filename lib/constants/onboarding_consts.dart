@@ -16,6 +16,7 @@ const TextStyle kSmallInfoStyle =
 const TextStyle kSmallInfoStyleAlert =
     TextStyle(color: Colors.red, fontWeight: FontWeight.w600, fontSize: 16);
 const TextStyle kSmallInfoStyleWhite = TextStyle(
+    fontFamily: 'Nunito',
     color: Colors.white,
     fontWeight: FontWeight.w500,
     fontSize: 15,

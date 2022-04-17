@@ -15,6 +15,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const String routeName = '/welcome_screen';
@@ -36,7 +37,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       print('THERE IS NO UID AT CONTINUE IF LOGGED IN, SO NOT LOGGING IN...');
       return;
     }
-    
+
     OnboardingFlowController.instance.setOnboardingPath(currentStatus);
 
     Get.offAllNamed(
@@ -74,31 +75,32 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       currentlyTryingToLogin = true;
     });
     UserCredential? credential = await LoginsService.instance.signInWithApple();
-    if(credential!=null){ //TODO replace condition with "apple login failed".
-    ServerRegistrationStatus currentServerRegistrationStatus = await _registerUserAtServer();
-    await _continueIfLoggedIn(currentServerRegistrationStatus);}
+    if (credential != null) {
+      //TODO replace condition with "apple login failed".
+      ServerRegistrationStatus currentServerRegistrationStatus =
+          await _registerUserAtServer();
+      await _continueIfLoggedIn(currentServerRegistrationStatus);
+    }
     setState(() {
       currentlyTryingToLogin = false;
     });
 
-
-
-
-
     setState(() {
       currentlyTryingToLogin = false;
     });
-
   }
 
-  _tryPhoneLogin()async{
+  _tryPhoneLogin() async {
     setState(() {
       currentlyTryingToLogin = true;
     });
-    var credential = await Get.toNamed(PhoneScreen.routeName,arguments: true);
-    if(credential!=null){ //TODO replace condition with "phone login failed".
-      ServerRegistrationStatus currentServerRegistrationStatus = await _registerUserAtServer();
-      await _continueIfLoggedIn(currentServerRegistrationStatus);}
+    var credential = await Get.toNamed(PhoneScreen.routeName, arguments: true);
+    if (credential != null) {
+      //TODO replace condition with "phone login failed".
+      ServerRegistrationStatus currentServerRegistrationStatus =
+          await _registerUserAtServer();
+      await _continueIfLoggedIn(currentServerRegistrationStatus);
+    }
     setState(() {
       currentlyTryingToLogin = false;
     });
@@ -129,8 +131,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           child: FittedBox(
             fit: BoxFit.cover,
             child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
+              width: _controller.value.size.width,
+              height: _controller.value.size.height,
               child: VideoPlayer(_controller),
             ),
           ),
@@ -191,7 +193,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 name: 'Continue with Apple      ',
                                 showBorder: false,
                                 color: Colors.white,
-                                onTap: () async{
+                                onTap: () async {
                                   //TODO Apple login logic
                                   _tryAppleLogin();
 
@@ -208,7 +210,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               icon: Icons.phone_android,
                               color: Colors.transparent,
                               onTap: () {
-                                 _tryPhoneLogin();
+                                _tryPhoneLogin();
                               }),
                           Center(
                             child: Column(
@@ -227,14 +229,23 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                         'Terms of Service',
                                         style: kSmallInfoStyleUnderlineWhite,
                                       ),
-                                      onPressed: () {
-                                        //TODO show terms of service
+                                      onPressed: () async {
+                                        final url =
+                                            'https://www.voiladating.com/privacy-policy';
+                                        if (await canLaunch(url)) {
+                                          await launch(url);
+                                        }
                                       },
                                     ),
                                     SizedBox(width: 20),
                                     TextButton(
-                                      onPressed:
-                                          () {}, //TODO show privacy policy
+                                      onPressed: () async {
+                                        final url =
+                                            'https://www.voiladating.com/privacy-policy';
+                                        if (await canLaunch(url)) {
+                                          await launch(url);
+                                        }
+                                      },
                                       child: Text(
                                         'Privacy Policy',
                                         style: kSmallInfoStyleUnderlineWhite,

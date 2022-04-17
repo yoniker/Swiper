@@ -98,6 +98,12 @@ class _VoilaPageState extends State<VoilaPage>
   }
 
   @override
+  void initState() {
+    print(SettingsData.instance.uid);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListenerWidget(
         notifier: SettingsData.instance,
