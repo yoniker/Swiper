@@ -52,6 +52,7 @@ class SettingsData extends ChangeNotifier {
   static const String PETS_KEY = 'pets';
   static const String HEIGHT_IN_CM_KEY = 'height_in_cm';
   static const String TEXT_SEARCH_KEY = 'text_search';
+  static const String IS_TEST_USER_KEY = 'is_test_user';
   static const String REGISTRATION_STATUS_KEY = 'registration_status';
 
   static const _debounceSettingsTime =
@@ -140,6 +141,7 @@ class SettingsData extends ChangeNotifier {
   List<String> _pets = [];
   int _heightInCm = 0;
   String _registrationStatus = '';
+  bool _isTestUser = false;
 
   SettingsData._privateConstructor() {
     //And after that, read settings from shared
@@ -213,6 +215,7 @@ class SettingsData extends ChangeNotifier {
     _jobTitle = sharedPreferences.getString(JOB_TITLE_KEY) ?? _jobTitle;
     _textSearch = sharedPreferences.getString(TEXT_SEARCH_KEY)??_textSearch;
     _registrationStatus = sharedPreferences.getString(REGISTRATION_STATUS_KEY)??_registrationStatus;
+    _isTestUser = sharedPreferences.getBool(IS_TEST_USER_KEY)??_isTestUser;
     _readFromShared = true;
 
     return;
@@ -387,6 +390,15 @@ class SettingsData extends ChangeNotifier {
     }
     _maxAge = newMaxAge;
     savePreferences(MAX_AGE_KEY, newMaxAge);
+  }
+
+  bool get isTestUser{
+    return _isTestUser;
+  }
+
+  set isTestUser(bool newIsTestUser){
+    _isTestUser = newIsTestUser;
+    savePreferences(IS_TEST_USER_KEY, newIsTestUser,sendServer: false,resetMatchEngine: false);
   }
 
   int get auditionCount {

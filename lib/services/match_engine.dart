@@ -93,6 +93,7 @@ class MatchEngine extends ChangeNotifier {
 
 
   void locationListener(){
+    print('location listener triggered');
     addMatchesIfNeeded();
   }
 

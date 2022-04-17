@@ -252,7 +252,7 @@ class NewNetworkService {
       SettingsData.instance.updateFromServerData(decodedResponse[API_CONSTS.USER_DATA]);
       return ServerRegistrationStatus.already_registered;
     }
-    //The only possible response now is that the user is newly registered - so had to go through onboarding
+    //The only possible response possible now is that the user is newly registered - so had to go through onboarding
     //if(decodedResponse[API_CONSTS.STATUS]==API_CONSTS.NEW_REGISTER){
       SettingsData.instance.uid = decodedResponse[API_CONSTS.USER_DATA][SettingsData.FIREBASE_UID_KEY];
       return ServerRegistrationStatus.new_register;
@@ -285,6 +285,12 @@ class NewNetworkService {
     try{
       var decodedResponse = jsonDecode(response.body);
       LocationCountStatus status = LocationCountStatus.values.firstWhere((status_option) => status_option.name == decodedResponse[API_CONSTS.LOCATION_STATUS_KEY],orElse: ()=>LocationCountStatus.initial_state);
+      if(decodedResponse[API_CONSTS.IS_TEST_USER_KEY] == true){
+        SettingsData.instance.isTestUser = true;
+      }
+      else{
+        SettingsData.instance.isTestUser = false;
+      }
       //Here there should be just enough users or not enough users + data
       if(status==LocationCountStatus.enough_users){
         return LocationCountData(status: status);
