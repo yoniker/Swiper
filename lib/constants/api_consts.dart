@@ -68,6 +68,7 @@ class API_CONSTS{
   static const String PUSH_NOTIFICATION_USER_ID = 'user_id';
   //Possible location count responses
   static const String LOCATION_STATUS_KEY = 'status';
+  static const String IS_TEST_USER_KEY  = 'is_test_user';
   static const String LOCATION_REQUIRED_USERS = 'required_num';
   static const String LOCATION_CURRENT_USERS = 'current_num';
 }

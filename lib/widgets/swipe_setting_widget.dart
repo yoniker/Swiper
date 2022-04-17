@@ -101,6 +101,8 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            //Text(SettingsData.instance.uid),
+            if(SettingsData.instance.isTestUser) Text("I'm a test user",style: TextStyle(color: Colors.red),),
             GlobalWidgets.buildSettingsBlock(
               title: 'Visibility'.toUpperCase(),
               description: 'Show your profile to other people using this App',
@@ -257,7 +259,7 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
                             ),
                           ],
                         ),
-                        Row(
+                        if(SettingsData.instance.isTestUser) Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
