@@ -398,7 +398,7 @@ class SettingsData extends ChangeNotifier {
 
   set isTestUser(bool newIsTestUser){
     _isTestUser = newIsTestUser;
-    savePreferences(IS_TEST_USER_KEY, newIsTestUser,sendServer: false);
+    savePreferences(IS_TEST_USER_KEY, newIsTestUser,sendServer: false,resetMatchEngine: false);
   }
 
   int get auditionCount {
