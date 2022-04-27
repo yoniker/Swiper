@@ -128,7 +128,7 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 2.0),
+                      padding: const EdgeInsets.only(bottom: 5.0),
                       child: Text(
                         "I'm interested in",
                         style: boldTextStyle,
@@ -151,31 +151,9 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
                           decoration: BoxDecoration(
                             color: _currentGenderSelected.name ==
                                     PreferredGender.Men.name
-                                ? Colors.red[50]
+                                ? Colors.red[100]
                                 : Colors.white,
-                            border: Border(
-                              left: BorderSide(
-                                  color: _currentGenderSelected.name ==
-                                          PreferredGender.Men.name
-                                      ? appMainColor
-                                      : Colors.black87),
-                              top: BorderSide(
-                                  color: _currentGenderSelected.name ==
-                                          PreferredGender.Men.name
-                                      ? appMainColor
-                                      : Colors.black87),
-                              bottom: BorderSide(
-                                  color: _currentGenderSelected.name ==
-                                          PreferredGender.Men.name
-                                      ? appMainColor
-                                      : Colors.black87),
-                              right: BorderSide(
-                                  width: 1,
-                                  color: _currentGenderSelected.name ==
-                                          PreferredGender.Men.name
-                                      ? appMainColor
-                                      : Colors.black87),
-                            ),
+                            boxShadow: kElevationToShadow[1],
                             borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(30),
                               bottomLeft: Radius.circular(30),
@@ -196,15 +174,9 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
                           decoration: BoxDecoration(
                             color: _currentGenderSelected.name ==
                                     PreferredGender.Women.name
-                                ? Colors.red[50]
+                                ? Colors.red[100]
                                 : Colors.white,
-                            border: Border.symmetric(
-                              horizontal: BorderSide(
-                                  color: _currentGenderSelected.name ==
-                                          PreferredGender.Women.name
-                                      ? appMainColor
-                                      : Colors.black87),
-                            ),
+                            boxShadow: kElevationToShadow[1],
                           ),
                         ),
                         choiceOnRow(
@@ -219,15 +191,11 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
                           pressed: _currentGenderSelected.name ==
                               PreferredGender.Everyone.name,
                           decoration: BoxDecoration(
+                            boxShadow: kElevationToShadow[1],
                             color: _currentGenderSelected.name ==
                                     PreferredGender.Everyone.name
-                                ? Colors.red[50]
+                                ? Colors.red[100]
                                 : Colors.white,
-                            border: Border.all(
-                                color: _currentGenderSelected.name ==
-                                        PreferredGender.Everyone.name
-                                    ? appMainColor
-                                    : Colors.black87),
                             borderRadius: BorderRadius.only(
                               topRight: Radius.circular(30),
                               bottomRight: Radius.circular(30),
