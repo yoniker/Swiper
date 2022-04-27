@@ -66,7 +66,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         notifier: SettingsData.instance,
         builder: (BuildContext context) {
           return Scaffold(
-            backgroundColor: lightCardColor,
+            backgroundColor: backgroundThemeColor,
             appBar: CustomAppBar(
               title: 'General Settings',
               hasTopPadding: true,

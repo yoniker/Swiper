@@ -1,3 +1,5 @@
+import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
@@ -29,11 +31,10 @@ class _SwipeSettingsScreenState extends State<SwipeSettingsScreen> {
         notifier: SettingsData.instance,
         builder: (context) {
           return Scaffold(
+            backgroundColor: backgroundThemeColor,
             appBar: CustomAppBar(
-              title: 'Settings',
+              title: 'Dating Preferences',
               hasTopPadding: true,
-              trailing: Icon(
-                  Icons.settings), //iconURI: 'assets/images/settings_icon.png',
             ),
             body: SwipeSettingWidget(),
           );

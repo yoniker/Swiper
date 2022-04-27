@@ -29,7 +29,7 @@ class AdvanceFilterCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 250,
+        height: MediaQuery.of(context).size.height * 0.365,
         decoration: BoxDecoration(
           border: isActive == true
               ? Border.all(color: Color(0xFFC62828), width: 4)

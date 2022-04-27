@@ -402,7 +402,7 @@ class _MatchCardState extends State<MatchCard> {
       SizedBox(
         height: 10,
       ),
-      if (widget.profile.location != null)
+      if (widget.profile.location != null && widget.profile.location != '')
         BasicDetail(
           detailText: 'Located in ${widget.profile.location}',
           detailIcon: Icon(

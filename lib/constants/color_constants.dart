@@ -27,6 +27,8 @@ const Color blue = Color(0xFF389CEB);
 const Color yellowishOrange = Color(0xFFF99442);
 
 const Color goldColorish = Color(0xFFC59533);
+const Color appMainColor = Color(0xFFC62828);
+const Color appSecondaryColor = Colors.black87;
 
 // global textstyles
 const TextStyle defaultTextStyle = TextStyle(
@@ -184,3 +186,21 @@ const colorizeTextStyle =
     offset: Offset(-2.0, 2.0),
   ),
 ]);
+
+const Decoration kSettingsBlockBoxDecor = BoxDecoration(
+  color: Colors.white,
+  boxShadow: [
+    BoxShadow(
+        offset: Offset(0.0, 2.0),
+        blurRadius: 1.0,
+        spreadRadius: -1.0,
+        color: Color(0x33000000)),
+    BoxShadow(
+        offset: Offset(0.0, 1.0), blurRadius: 1.0, color: Color(0x24000000)),
+    BoxShadow(
+        offset: Offset(0.0, 1.0), blurRadius: 3.0, color: Color(0x1F000000)),
+  ],
+  borderRadius: BorderRadius.all(
+    Radius.circular(5),
+  ),
+);

@@ -197,7 +197,7 @@ class _VoilaPageState extends State<VoilaPage>
                                           const Duration(milliseconds: 300),
                                       child: SingleChildScrollView(
                                         child: InputField(
-                                          borderColor: Color(0xFFC62828),
+                                          borderColor: appMainColor,
                                           onFocusChange: (hasFocus) {
                                             if (!hasFocus) {
                                               SettingsData.instance.textSearch =

@@ -10,7 +10,7 @@ class AppStateInfo extends ChangeNotifier with WidgetsBindingObserver {
   AppLifecycleState _appState = AppLifecycleState.resumed;
   AppLifecycleState get appState => _appState;
   int latestTabOnMainNavigation = MainNavigationScreen
-      .VOILA_PAGE_INDEX; //Yes this is ugly, see comment #2 above
+      .MATCHING_PAGE_INDEX; //Yes this is ugly, see comment #2 above
 
   AppStateInfo._privateConstructor() {
     WidgetsBinding.instance!.addObserver(this);

@@ -300,14 +300,15 @@ class CupertinoRangeSlider extends StatelessWidget {
         overlappingShapeStrokeColor: Colors.transparent,
         // This sets the `thumbColor` to white
         // in conformation with the cupertino Design Library.
-        thumbColor: CupertinoColors.white,
+        thumbColor: thumbColor,
         // The color to be used in painting the value indicator of the [CupertinoRangeSlider].
         // This Defaults to the activeColor of the [CupertinoRangeSlider].
         // If this is null it is set to the current PrimaryColor of the current [Theme].
         valueIndicatorColor: valueIndicatorColor ??
             activeColor ??
             Theme.of(context).primaryColor,
-        activeTickMarkColor: activeTickMarkColor ?? Theme.of(context).colorScheme.onPrimary,
+        activeTickMarkColor:
+            activeTickMarkColor ?? Theme.of(context).colorScheme.onPrimary,
         inactiveTickMarkColor: inactiveTickMarkColor ?? Colors.grey,
         disabledThumbColor: disabledThumbColor,
         showValueIndicator: ShowValueIndicator.onlyForDiscrete,
@@ -323,7 +324,6 @@ class CupertinoRangeSlider extends StatelessWidget {
         divisions: divisions,
         labels: labels,
         semanticFormatterCallback: semanticFormatterCallback,
-
       ),
     );
   }

@@ -34,7 +34,7 @@ class MainNavigationScreen extends StatefulWidget {
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  static int selectedTabIndex = MainNavigationScreen.VOILA_PAGE_INDEX;
+  static int selectedTabIndex = MainNavigationScreen.MATCHING_PAGE_INDEX;
 
   // List of pages.
   List<Widget> pages = <Widget>[
@@ -164,10 +164,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             ),
             trailing: AnimatedOpacity(
               duration: Duration(milliseconds: 300),
-              opacity: selectedTabIndex ==
-                      MainNavigationScreen.CONVERSATIONS_PAGE_INDEX
-                  ? 0
-                  : 1,
+              opacity:
+                  selectedTabIndex == MainNavigationScreen.MATCHING_PAGE_INDEX
+                      ? 1
+                      : 0,
               child: Padding(
                 padding: const EdgeInsets.only(right: 10),
                 child: GestureDetector(
@@ -175,8 +175,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                     'assets/images/settings.png',
                     scale: 12,
                   ),
-                  onTap: selectedTabIndex ==
-                          MainNavigationScreen.CONVERSATIONS_PAGE_INDEX
+                  onTap: selectedTabIndex !=
+                          MainNavigationScreen.MATCHING_PAGE_INDEX
                       ? null
                       : () {
                           Get.toNamed(SwipeSettingsScreen.routeName);
