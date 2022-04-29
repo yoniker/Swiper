@@ -6,6 +6,7 @@ cmToFeet(centimeters) {
 }
 
 List<String> kReligionsList = [
+  'No religion',
   'Atheist',
   'Bahá’í',
   'Buddhist',
@@ -28,6 +29,7 @@ List<String> kReligionsList = [
 ];
 
 List<String> kZodiacsList = [
+  'No zodiac',
   'Capricorn  ♑',
   'Aquarius  ♒',
   'Pisces  ♓',

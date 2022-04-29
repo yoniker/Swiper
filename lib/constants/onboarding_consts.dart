@@ -11,8 +11,12 @@ const TextStyle kTitleStyleBlack =
 const TextStyle kInputTextStyle = TextStyle(fontSize: 20, height: 0.8);
 const TextStyle kSmallTitleBlack =
     TextStyle(fontSize: 20, fontWeight: FontWeight.w500);
-const TextStyle kSmallInfoStyle =
-    TextStyle(color: Colors.black54, fontWeight: FontWeight.w500, fontSize: 15);
+const TextStyle kSmallInfoStyle = TextStyle(
+  color: Colors.black54,
+  fontWeight: FontWeight.w500,
+  fontSize: 15,
+  overflow: TextOverflow.ellipsis,
+);
 const TextStyle kSmallInfoStyleAlert =
     TextStyle(color: Colors.red, fontWeight: FontWeight.w600, fontSize: 16);
 const TextStyle kSmallInfoStyleWhite = TextStyle(

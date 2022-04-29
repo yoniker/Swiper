@@ -7,6 +7,7 @@ import 'package:betabeta/constants/assets_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/screens/profile_edit_screen.dart';
 import 'package:betabeta/services/location_service.dart';
 import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
@@ -132,44 +133,55 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
       currentNumUsers = MatchEngine.instance.locationCountData.currentNumUsers;
       double percents =
           (currentNumUsers ?? 0) / (requiredNumUsers ?? 250) * 100;
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AnimatedMiniTcardWidget(
-              maleOrFemaleImage: maleOrFemaleImage,
-              CustomButtomWidget: Text(
-                'Registration\nOpen ❤️',
-                textAlign: TextAlign.center,
-                style: titleStyleWhite.copyWith(fontSize: 12),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Welcome to',
-                  style: titleStyle.copyWith(
-                      color: Colors.black.withOpacity(0.7), fontSize: 25),
+      return SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AnimatedMiniTcardWidget(
+                maleOrFemaleImage: maleOrFemaleImage,
+                CustomButtomWidget: Text(
+                  'Registration\nOpen ❤️',
+                  textAlign: TextAlign.center,
+                  style: titleStyleWhite.copyWith(fontSize: 12),
                 ),
-                VoilaLogoWidget(
-                  freeText: 'Voilà!',
-                )
-              ],
-            ),
-            Text(
-              'We just opened registration in your area! \nOnce $requiredNumUsers users will register, \nyou will see it here. \n\nCheck this page soon to \nsee matches in your area. \n\nIn the meantime, complete your profile to attract potential matches! 😊',
-              style: titleStyle.copyWith(
-                  color: Colors.black.withOpacity(0.6), fontSize: 18),
-              textAlign: TextAlign.center,
-            ),
-            if (percents > 50)
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Welcome to',
+                    style: titleStyle.copyWith(
+                        color: Colors.black.withOpacity(0.7), fontSize: 25),
+                  ),
+                  VoilaLogoWidget(
+                    freeText: 'Voilà!',
+                  )
+                ],
+              ),
               Text(
-                '${percents.round()}% of users already joined!',
-                style: titleStyle.copyWith(color: Colors.blueGrey),
+                'We just opened registration in your area! \nNew users in your area will be shown here. \n\nCheck this page often to see new matches. \n\nIn the meantime, complete your profile to attract potential matches! 😊',
+                style: titleStyle.copyWith(
+                    color: Colors.black.withOpacity(0.6), fontSize: 18),
+                textAlign: TextAlign.center,
+              ),
+              if (percents > 50)
+                Text(
+                  '${percents.round()}% of users already joined!',
+                  style: titleStyle.copyWith(color: Colors.blueGrey),
+                ),
+              Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: RoundedButton(
+                  name: 'Complete my profile',
+                  onTap: () {
+                    Get.toNamed(ProfileEditScreen.routeName);
+                  },
+                ),
               )
-          ],
+            ],
+          ),
         ),
       );
     }

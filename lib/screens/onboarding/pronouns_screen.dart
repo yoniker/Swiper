@@ -71,25 +71,29 @@ class _PronounScreenState extends State<PronounScreen> {
                     : null,
               ),
             ),
-            Theme(
-              data: ThemeData(unselectedWidgetColor: Colors.black87),
-              child: CheckboxListTile(
-                  title: const Text(
-                    'Show my gender on my profile',
-                    style: kSmallInfoStyle,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Text(
+                      'Show my gender on my profile',
+                      style: kSmallInfoStyle,
+                      maxLines: 1,
+                    ),
                   ),
-                  controlAffinity: ListTileControlAffinity.leading,
-                  contentPadding: EdgeInsets.zero,
-                  checkColor: Colors.white,
-                  activeColor: Colors.black87,
-                  tristate: false,
-                  value: _showGender,
-                  onChanged: (value) {
-                    setState(() {
-                      _showGender = value!;
-                    });
-                  }),
-            ),
+                  Switch(
+                    value: SettingsData.instance.showUserGender,
+                    onChanged: (newValue) {
+                      setState(() {
+                        SettingsData.instance.showUserGender = newValue;
+                      });
+                    },
+                  )
+                ],
+              ),
+            )
           ],
         ),
       ),

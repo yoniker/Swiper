@@ -1,5 +1,6 @@
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/lists_consts.dart';
+import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/screens/user_edit/children_screen.dart';
 import 'package:betabeta/screens/user_edit/covid_screen.dart';
 import 'package:betabeta/screens/user_edit/drinking_screen.dart';
@@ -70,14 +71,21 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
   }
 
   void updateReligion(int value) {
-    SettingsData.instance.religion = kReligionsList[value];
+    // if value is 0, delete religion
+    value != 0
+        ? SettingsData.instance.religion = kReligionsList[value]
+        : SettingsData.instance.religion = '';
   }
 
   void updateZodiac(int value) {
-    SettingsData.instance.zodiac = kZodiacsList[value];
+    // if value is 0, delete religion
+    value != 0
+        ? SettingsData.instance.zodiac = kZodiacsList[value]
+        : SettingsData.instance.zodiac = '';
   }
 
-  choicesPopUp(List<String> choices, Function(int)? onChange) async {
+  choicesPopUp(List<String> choices, Function(int)? onChange, int initialItem,
+      String title, Function()? onDelete) {
     FocusScope.of(context).requestFocus(new FocusNode());
     showCupertinoModalPopup(
       context: context,
@@ -86,28 +94,56 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
           padding: const EdgeInsets.all(30.0),
           child: Container(
             decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(10))),
-            height: 300,
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: CupertinoPicker(
-                      scrollController: FixedExtentScrollController(
-                          initialItem: choices.length ~/ 2),
-                      itemExtent: 50.0,
-                      onSelectedItemChanged: (onChange),
-                      children:
-                          choices.map((e) => Center(child: Text(e))).toList(),
+                color: Colors.white, borderRadius: BorderRadius.circular(10)),
+            height: 350,
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Text(
+                      title,
+                      style: smallBoldedTitleBlack,
                     ),
                   ),
-                ),
-              ],
+                  Expanded(
+                    flex: 3,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: CupertinoPicker(
+                        scrollController: FixedExtentScrollController(
+                            initialItem: initialItem),
+                        itemExtent: 50.0,
+                        onSelectedItemChanged: (onChange),
+                        children:
+                            choices.map((e) => Center(child: Text(e))).toList(),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextButton(
+                    onPressed: onDelete,
+                    child: Text(
+                      'Delete',
+                      style: kButtonText.copyWith(color: appMainColor),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
+                    child: RoundedButton(
+                        name: 'Save',
+                        onTap: () {
+                          Navigator.pop(context);
+                        }),
+                  )
+                ],
+              ),
             ),
           ),
         );
@@ -183,7 +219,19 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                         ? '${SettingsData.instance.heightInCm} cm (${cmToFeet(SettingsData.instance.heightInCm)} ft)'
                         : null,
                     onTap: () {
-                      choicesPopUp(kHeightList, updateHeight);
+                      choicesPopUp(
+                        kHeightList,
+                        updateHeight,
+                        SettingsData.instance.heightInCm != 0
+                            ? kHeightList.indexOf(
+                                '${SettingsData.instance.heightInCm} cm (${cmToFeet(SettingsData.instance.heightInCm)} ft)')
+                            : (kHeightList.length * 0.5).toInt(),
+                        'What is your height?',
+                        () {
+                          SettingsData.instance.heightInCm = 0;
+                          Navigator.pop(context);
+                        },
+                      );
                     },
                   ),
                   ProfileEditBlock(
@@ -191,7 +239,19 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                     icon: ReligionIcon(),
                     value: SettingsData.instance.religion,
                     onTap: () {
-                      choicesPopUp(kReligionsList, updateReligion);
+                      choicesPopUp(
+                        kReligionsList,
+                        updateReligion,
+                        kReligionsList.contains(SettingsData.instance.religion)
+                            ? kReligionsList
+                                .indexOf(SettingsData.instance.religion)
+                            : 0,
+                        'What religion do you practice?',
+                        () {
+                          SettingsData.instance.religion = '';
+                          Navigator.pop(context);
+                        },
+                      );
                     },
                   ),
                   ProfileEditBlock(
@@ -199,7 +259,18 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                     icon: FontAwesomeIcons.galacticRepublic,
                     value: SettingsData.instance.zodiac,
                     onTap: () {
-                      choicesPopUp(kZodiacsList, updateZodiac);
+                      choicesPopUp(
+                        kZodiacsList,
+                        updateZodiac,
+                        kZodiacsList.contains(SettingsData.instance.zodiac)
+                            ? kZodiacsList.indexOf(SettingsData.instance.zodiac)
+                            : 0,
+                        'What is your Zodiac sign?',
+                        () {
+                          SettingsData.instance.zodiac = '';
+                          Navigator.pop(context);
+                        },
+                      );
                     },
                   ),
                   Divider(),
