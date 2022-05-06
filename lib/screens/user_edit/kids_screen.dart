@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 
 class KidsScreen extends StatefulWidget {
   static const String routeName = '/kids_screen';
-  const KidsScreen({Key? key}) : super(key: key);
+  final bool onboardingMode;
+
+  const KidsScreen({Key? key, this.onboardingMode = true}) : super(key: key);
 
   @override
   _KidsScreen createState() => _KidsScreen();
@@ -28,13 +30,16 @@ class _KidsScreen extends State<KidsScreen> {
         builder: (context) {
           return Scaffold(
             backgroundColor: backgroundThemeColor,
-            appBar: CustomAppBar(
-              hasTopPadding: true,
-              hasBackButton: true,
-              title: 'Children',
-            ),
+            appBar: widget.onboardingMode
+                ? null
+                : CustomAppBar(
+                    hasTopPadding: true,
+                    hasBackButton: true,
+                    title: 'Children',
+                  ),
             body: QuestionnaireWidget(
               headline: 'Do you have plans for children?',
+              onboardingMode: widget.onboardingMode != true ? false : true,
               choices: kChildrenChoice,
               initialChoice: SettingsData.instance.children,
               onValueChanged: (newChildrenValue) {

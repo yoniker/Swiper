@@ -1,4 +1,5 @@
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 import 'package:get/get.dart';
@@ -9,12 +10,14 @@ class BubblesListWidget extends StatefulWidget {
       required this.bubbles,
       this.maxChoices = 1,
       required this.initialValue,
+      this.disableInteractiveOkButton = false,
       this.onValueChanged});
 
   final String? headline;
   final List<String> bubbles;
   final int maxChoices;
   final void Function(List<String>)? onValueChanged;
+  final bool disableInteractiveOkButton;
   final List<String> initialValue;
 
   @override
@@ -41,10 +44,10 @@ class _BubblesListWidgetState extends State<BubblesListWidget> {
             if (widget.headline != null)
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
                 child: Text(
                   '${widget.headline}',
-                  style: smallTitleLighterBlack,
+                  style: kButtonText,
                 ),
               ),
             Expanded(
@@ -75,11 +78,11 @@ class _BubblesListWidgetState extends State<BubblesListWidget> {
                               margin: EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                   color: pickedBubbles.contains(h)
-                                      ? Colors.blue[100]
+                                      ? appMainColor.withOpacity(0.15)
                                       : null,
                                   border: Border.all(
                                       color: pickedBubbles.contains(h)
-                                          ? Colors.blueAccent
+                                          ? appMainColor
                                           : Colors.black,
                                       width: 1.5),
                                   borderRadius:
@@ -91,7 +94,7 @@ class _BubblesListWidgetState extends State<BubblesListWidget> {
                                   '$h',
                                   style: pickedBubbles.contains(h)
                                       ? smallBoldedTitleBlack.copyWith(
-                                          color: Colors.blue)
+                                          color: appMainColor)
                                       : smallBoldedTitleBlack,
                                 ),
                               ),
@@ -103,11 +106,12 @@ class _BubblesListWidgetState extends State<BubblesListWidget> {
             ),
           ],
         ),
-        if (pickedBubbles.equals(widget.initialValue) != true)
+        if (pickedBubbles.equals(widget.initialValue) != true &&
+            widget.disableInteractiveOkButton != true)
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: FloatingActionButton.extended(
-              backgroundColor: Colors.blue[800]!.withOpacity(0.8),
+              backgroundColor: Colors.red[900]!.withOpacity(0.8),
               onPressed: () {
                 Get.back();
               },

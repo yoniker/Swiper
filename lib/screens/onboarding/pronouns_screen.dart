@@ -44,6 +44,7 @@ class _PronounScreenState extends State<PronounScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(30.0, 20, 30, 0),
               child: ProgressBar(
+                totalProgressBarPages: kTotalProgressBarPages,
                 page: 3,
               ),
             ),

@@ -17,6 +17,7 @@ class TextEditBlock extends StatefulWidget {
       this.keyboardType = TextInputType.text,
       this.readOnly = false,
       this.showCursor = false,
+      this.hideTitle = false,
       this.controller,
       this.placeholder});
   final String title;
@@ -29,6 +30,7 @@ class TextEditBlock extends StatefulWidget {
   final TextInputType? keyboardType;
   final bool readOnly;
   final bool showCursor;
+  final bool hideTitle;
   final String? initialValue;
   final void Function(String)? onType;
   final void Function()? onTap;
@@ -45,7 +47,8 @@ class _TextEditBlockState extends State<TextEditBlock> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(' ${widget.title}', style: smallBoldedTitleBlack),
+          if (widget.hideTitle != true)
+            Text(' ${widget.title}', style: smallBoldedTitleBlack),
           SizedBox(
             height: 5,
           ),

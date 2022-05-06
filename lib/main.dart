@@ -3,7 +3,10 @@ import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/chat/chat_screen.dart';
 import 'package:betabeta/screens/chat/other_user_profile_screen.dart';
-import 'package:betabeta/screens/user_edit/children_screen.dart';
+import 'package:betabeta/screens/complete_profile_pageview_screen.dart';
+import 'package:betabeta/screens/onboarding/job_title_screen.dart';
+import 'package:betabeta/screens/onboarding/school_screen.dart';
+import 'package:betabeta/screens/user_edit/kids_screen.dart';
 import 'package:betabeta/screens/chat/conversations_screen.dart';
 import 'package:betabeta/screens/user_edit/covid_screen.dart';
 import 'package:betabeta/screens/current_user_profile_view_screen.dart';
@@ -179,7 +182,10 @@ void main() async {
             name: OtherUserProfileScreen.routeName,
             page: () => OtherUserProfileScreen()),
         GetPage(
-            name: LookingForScreen.routeName, page: () => LookingForScreen())
+            name: LookingForScreen.routeName, page: () => LookingForScreen()),
+        GetPage(
+            name: CompleteProfilePageViewScreen.routeName,
+            page: () => CompleteProfilePageViewScreen())
       ],
       title: 'Voilà MVP',
       debugShowCheckedModeBanner: false,

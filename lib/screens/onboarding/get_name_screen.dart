@@ -35,6 +35,7 @@ class _GetNameScreenState extends State<GetNameScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ProgressBar(
+                      totalProgressBarPages: kTotalProgressBarPages,
                       page: 1,
                     ),
                     const FittedBox(

@@ -32,11 +32,11 @@ const Color appSecondaryColor = Colors.black87;
 
 // global textstyles
 const TextStyle defaultTextStyle = TextStyle(
-  color: Colors.black,
-  fontFamily: 'Nunito',
-  fontSize: 17,
-  fontWeight: FontWeight.w500,
-);
+    color: Colors.black,
+    fontFamily: 'Nunito',
+    fontSize: 17,
+    fontWeight: FontWeight.w500,
+    overflow: TextOverflow.ellipsis);
 
 const TextStyle boldTextStyle = TextStyle(
   color: Colors.black,

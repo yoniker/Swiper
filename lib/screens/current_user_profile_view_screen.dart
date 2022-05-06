@@ -50,7 +50,7 @@ class _CurrentUserProfileViewScreenState
         final currentUserProfile = Profile(
             age: age,
             jobTitle: SettingsData.instance.jobTitle,
-            height: SettingsData.instance.heightInCm.toDouble(),
+            height: SettingsData.instance.heightInCm,
             imageUrls: SettingsData.instance.profileImagesUrls,
             children: SettingsData.instance.children,
             covidVaccine: SettingsData.instance.covid_vaccine,

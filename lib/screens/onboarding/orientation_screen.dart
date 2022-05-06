@@ -27,6 +27,7 @@ class _OrientationScreenState extends State<OrientationScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(30.0, 20, 30, 0),
               child: ProgressBar(
+                totalProgressBarPages: kTotalProgressBarPages,
                 page: 4,
               ),
             ),

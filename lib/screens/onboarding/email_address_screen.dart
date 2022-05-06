@@ -44,6 +44,7 @@ class _EmailAddressScreenState extends State<EmailAddressScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ProgressBar(
+                            totalProgressBarPages: kTotalProgressBarPages,
                             page: 6,
                           ),
                           const Text(

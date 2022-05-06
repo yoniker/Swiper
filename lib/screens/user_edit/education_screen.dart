@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 
 class EducationScreen extends StatefulWidget {
   static const String routeName = '/education_screen';
-  const EducationScreen({Key? key}) : super(key: key);
+  final bool onboardingMode;
+  const EducationScreen({Key? key, this.onboardingMode = true})
+      : super(key: key);
 
   @override
   State<EducationScreen> createState() => _EducationScreenState();
@@ -22,13 +24,17 @@ class _EducationScreenState extends State<EducationScreen> {
         builder: (context) {
           return Scaffold(
             backgroundColor: backgroundThemeColor,
-            appBar: CustomAppBar(
-              hasTopPadding: true,
-              hasBackButton: true,
-              title: 'Education level',
-            ),
+            appBar: widget.onboardingMode
+                ? null
+                : CustomAppBar(
+                    hasTopPadding: true,
+                    hasBackButton: true,
+                    title: 'Education level',
+                  ),
             body: QuestionnaireWidget(
               choices: kEducationChoices,
+              headline: 'What is your education level?',
+              onboardingMode: widget.onboardingMode,
               initialChoice: SettingsData.instance.education,
               onValueChanged: (newEducationValue) {
                 SettingsData.instance.education = newEducationValue;

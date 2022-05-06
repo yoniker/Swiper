@@ -67,7 +67,7 @@ class _ImageFilterViewWidgetState extends State<ImageFilterViewWidget>
                 )
               : DecorationImage(
                   fit: BoxFit.cover,
-                  image: AssetImage('assets/images/picture5.png'),
+                  image: AssetImage('assets/images/celeb3.jpg'),
                 ),
         ),
         child: Stack(

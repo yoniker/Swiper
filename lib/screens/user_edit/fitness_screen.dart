@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 
 class FitnessScreen extends StatefulWidget {
   static const String routeName = '/fitness_screen';
-  const FitnessScreen({Key? key}) : super(key: key);
+  final bool onboardingMode;
+  const FitnessScreen({Key? key, this.onboardingMode = true}) : super(key: key);
 
   @override
   _FitnessScreen createState() => _FitnessScreen();
@@ -22,13 +23,16 @@ class _FitnessScreen extends State<FitnessScreen> {
         builder: (context) {
           return Scaffold(
               backgroundColor: backgroundThemeColor,
-              appBar: CustomAppBar(
-                hasTopPadding: true,
-                hasBackButton: true,
-                title: 'Fitness',
-              ),
+              appBar: widget.onboardingMode
+                  ? null
+                  : CustomAppBar(
+                      hasTopPadding: true,
+                      hasBackButton: true,
+                      title: 'Fitness',
+                    ),
               body: QuestionnaireWidget(
                 headline: 'How often do you work out?',
+                onboardingMode: widget.onboardingMode,
                 choices: kFitnessChoices,
                 initialChoice: SettingsData.instance.fitness,
                 onValueChanged: (newFitnessValue) {

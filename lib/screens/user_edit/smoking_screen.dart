@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 
 class SmokingScreen extends StatefulWidget {
   static const String routeName = '/smoking_screen';
-  const SmokingScreen({Key? key}) : super(key: key);
+  final bool onboardingMode;
+  const SmokingScreen({Key? key, this.onboardingMode = true}) : super(key: key);
 
   @override
   _SmokingScreen createState() => _SmokingScreen();
@@ -22,13 +23,16 @@ class _SmokingScreen extends State<SmokingScreen> {
         builder: (context) {
           return Scaffold(
             backgroundColor: backgroundThemeColor,
-            appBar: CustomAppBar(
-              hasTopPadding: true,
-              hasBackButton: true,
-              title: 'Smoking',
-            ),
+            appBar: widget.onboardingMode
+                ? null
+                : CustomAppBar(
+                    hasTopPadding: true,
+                    hasBackButton: true,
+                    title: 'Smoking',
+                  ),
             body: QuestionnaireWidget(
               headline: 'Do you smoke?',
+              onboardingMode: widget.onboardingMode,
               choices: kSmokingChoices,
               initialChoice: SettingsData.instance.smoking,
               onValueChanged: (newSmokingVal) {

@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 
 class CovidScreen extends StatefulWidget {
   static const String routeName = '/covid_screen';
-  const CovidScreen({Key? key}) : super(key: key);
+  final bool onboardingMode;
+  const CovidScreen({Key? key, this.onboardingMode = false}) : super(key: key);
 
   @override
   State<CovidScreen> createState() => _CovidScreenState();
@@ -27,12 +28,16 @@ class _CovidScreenState extends State<CovidScreen> {
         builder: (context) {
           return Scaffold(
             backgroundColor: backgroundThemeColor,
-            appBar: CustomAppBar(
-              hasTopPadding: true,
-              hasBackButton: true,
-              title: 'Covid Vaccine',
-            ),
+            appBar: widget.onboardingMode
+                ? null
+                : CustomAppBar(
+                    hasTopPadding: true,
+                    hasBackButton: true,
+                    title: 'Covid Vaccine',
+                  ),
             body: QuestionnaireWidget(
+              onboardingMode: widget.onboardingMode,
+              headline: 'Are you Covid-19 vaccinated?',
               choices: [
                 'Fully vaccinated',
                 'Partially vaccinated',

@@ -6,7 +6,7 @@ cmToFeet(centimeters) {
 }
 
 List<String> kReligionsList = [
-  'No religion',
+  'Select option',
   'Atheist',
   'Bahá’í',
   'Buddhist',
@@ -29,7 +29,7 @@ List<String> kReligionsList = [
 ];
 
 List<String> kZodiacsList = [
-  'No zodiac',
+  'Select option',
   'Capricorn  ♑',
   'Aquarius  ♒',
   'Pisces  ♓',
@@ -65,7 +65,7 @@ List<String> kChildrenChoice = [
   'Not sure',
 ];
 
-List<String> kRelationshipTypeChoices = [
+const List<String> kRelationshipTypeChoices = [
   'Marriage',
   'Relationship',
   'Something casual',

@@ -97,10 +97,9 @@ class _BubbleBlockViewerState extends State<BubbleBlockViewer> {
                                       margin: EdgeInsets.symmetric(
                                           horizontal: 5, vertical: 5),
                                       decoration: BoxDecoration(
-                                        color: Colors.blue[100],
+                                        color: appMainColor.withOpacity(0.15),
                                         border: Border.all(
-                                            color: Color(0xFF90CAF9),
-                                            width: 1.5),
+                                            color: appMainColor, width: 1.5),
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(
                                             30,
@@ -109,11 +108,11 @@ class _BubbleBlockViewerState extends State<BubbleBlockViewer> {
                                       ),
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 10.0, vertical: 4),
+                                            horizontal: 10.0, vertical: 2),
                                         child: Text(
                                           e,
                                           style: smallBoldedTitleBlack.copyWith(
-                                              color: Colors.blue),
+                                              color: appMainColor),
                                         ),
                                       ),
                                     ))

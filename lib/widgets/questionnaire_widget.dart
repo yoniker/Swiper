@@ -21,6 +21,7 @@ class QuestionnaireWidget extends StatefulWidget {
       this.saveButtonName = 'Save',
       this.extraUserChoice = false,
       this.bottomPadding = true,
+      this.onboardingMode = false,
       this.alwaysPressed = false});
   final List<String> choices;
   final String? headline;
@@ -31,6 +32,7 @@ class QuestionnaireWidget extends StatefulWidget {
   final String saveButtonName;
   final bool extraUserChoice;
   final bool bottomPadding;
+  final bool onboardingMode;
   final String? subLine;
 
   final List<String>? promotes;
@@ -73,191 +75,187 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: RawScrollbar(
-        isAlwaysShown: true,
-        thumbColor: Colors.black54,
-        thickness: 5,
-        child: CustomScrollView(
-          scrollDirection: Axis.vertical,
-          reverse: true,
-          slivers: [
-            SliverFillRemaining(
-                hasScrollBody: false,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                      20, 20, 20, widget.bottomPadding == true ? 20 : 0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (widget.headline != null)
-                            Text(
-                              widget.headline!,
-                              style: titleStyle,
-                            ),
-                          if (widget.subLine != null)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
-                              child: Text(
-                                widget.subLine!,
-                                style: kSmallInfoStyle,
-                              ),
-                            ),
-                          SizedBox(
-                            height: 30,
+      child: CustomScrollView(
+        controller: ScrollController(),
+        primary: false,
+        scrollDirection: Axis.vertical,
+        reverse: true,
+        slivers: [
+          SliverFillRemaining(
+              hasScrollBody: false,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(
+                    20, 20, 20, widget.bottomPadding == true ? 20 : 0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (widget.headline != null)
+                          Text(
+                            widget.headline!,
+                            style: titleStyle,
                           ),
-                          Column(
-                            children: widget.choices
-                                .map((choiceTitle) => Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 20.0),
-                                      child: ChoiceButton(
-                                        name: '$choiceTitle',
-                                        onTap: () {
-                                          UnFocus();
-                                          widget.alwaysPressed != true
-                                              ? setState(() {
-                                                  if (currentUserChoice !=
-                                                      choiceTitle) {
-                                                    currentUserChoice =
-                                                        choiceTitle;
-                                                  } else {
-                                                    currentUserChoice = '';
-                                                  }
-                                                  ;
-                                                })
-                                              : setState(() {
-                                                  (currentUserChoice =
-                                                      choiceTitle);
-                                                });
-
-                                          if (widget.promotes != null)
-                                            setState(() {
-                                              promote = widget.promotes![widget
-                                                  .choices
-                                                  .indexOf(choiceTitle)];
-                                            });
-                                          if (currentUserChoice != null) {
-                                            widget.onValueChanged
-                                                ?.call(currentUserChoice!);
-                                          }
-                                        },
-                                        pressed:
-                                            currentUserChoice == choiceTitle,
-                                      ),
-                                    ))
-                                .toList(),
+                        if (widget.subLine != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Text(
+                              widget.subLine!,
+                              style: kSmallInfoStyle,
+                            ),
                           ),
-                          if (widget.extraUserChoice == true)
-                            Column(
-                              children: [
-                                Center(
-                                  child: FittedBox(
-                                    fit: BoxFit.fill,
-                                    child: TextButton(
-                                      onPressed: () {
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Column(
+                          children: widget.choices
+                              .map((choiceTitle) => Padding(
+                                    padding:
+                                        const EdgeInsets.only(bottom: 20.0),
+                                    child: ChoiceButton(
+                                      name: '$choiceTitle',
+                                      onTap: () {
                                         UnFocus();
-                                        setState(() {
-                                          _checked == false
-                                              ? _checked = true
-                                              : _checked = false;
-                                        });
+                                        widget.alwaysPressed != true
+                                            ? setState(() {
+                                                if (currentUserChoice !=
+                                                    choiceTitle) {
+                                                  currentUserChoice =
+                                                      choiceTitle;
+                                                } else {
+                                                  currentUserChoice = '';
+                                                }
+                                                ;
+                                              })
+                                            : setState(() {
+                                                (currentUserChoice =
+                                                    choiceTitle);
+                                              });
+
+                                        if (widget.promotes != null)
+                                          setState(() {
+                                            promote = widget.promotes![widget
+                                                .choices
+                                                .indexOf(choiceTitle)];
+                                          });
+                                        if (currentUserChoice != null) {
+                                          widget.onValueChanged
+                                              ?.call(currentUserChoice!);
+                                        }
                                       },
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          const Text(
-                                            'Other',
-                                            style: kButtonText,
+                                      pressed: currentUserChoice == choiceTitle,
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                        if (widget.extraUserChoice == true)
+                          Column(
+                            children: [
+                              Center(
+                                child: FittedBox(
+                                  fit: BoxFit.fill,
+                                  child: TextButton(
+                                    onPressed: () {
+                                      UnFocus();
+                                      setState(() {
+                                        _checked == false
+                                            ? _checked = true
+                                            : _checked = false;
+                                      });
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const Text(
+                                          'Other',
+                                          style: kButtonText,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        AnimatedRotation(
+                                          curve: Curves.fastOutSlowIn,
+                                          duration: Duration(milliseconds: 400),
+                                          turns: _checked == true ? -0.5 : 0,
+                                          child: Icon(
+                                            FontAwesomeIcons.chevronDown,
+                                            color: kIconColor,
                                           ),
-                                          const SizedBox(width: 5),
-                                          AnimatedRotation(
-                                            curve: Curves.fastOutSlowIn,
-                                            duration:
-                                                Duration(milliseconds: 400),
-                                            turns: _checked == true ? -0.5 : 0,
-                                            child: Icon(
-                                              FontAwesomeIcons.chevronDown,
-                                              color: kIconColor,
-                                            ),
-                                          )
-                                        ],
-                                      ),
+                                        )
+                                      ],
                                     ),
                                   ),
                                 ),
-                                AnimatedContainer(
-                                  duration: const Duration(milliseconds: 100),
-                                  height: _checked == false ? 0 : 63,
-                                  child: SingleChildScrollView(
-                                    child: InputField(
-                                        onTap: () {
-                                          if (currentUserChoice != null) {
+                              ),
+                              AnimatedContainer(
+                                duration: const Duration(milliseconds: 100),
+                                height: _checked == false ? 0 : 63,
+                                child: SingleChildScrollView(
+                                  child: InputField(
+                                      onTap: () {
+                                        if (currentUserChoice != null) {
+                                          widget.onValueChanged
+                                              ?.call(currentUserChoice!);
+                                        }
+                                      },
+                                      maxCharacters: 20,
+                                      style: const TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 25, vertical: 20),
+                                      hintText: 'For other gender type here',
+                                      initialvalue: _checked == true
+                                          ? currentUserChoice
+                                          : null,
+                                      onType: (value) {
+                                        setState(
+                                          () {
+                                            value.isEmpty
+                                                ? currentUserChoice =
+                                                    widget.initialChoice
+                                                : value.length > 2
+                                                    ? currentUserChoice = value
+                                                    : null;
+                                            otherChoice = value;
+                                          },
+                                        );
+                                        if (currentUserChoice != null) {
+                                          if (currentUserChoice!.length > 2)
                                             widget.onValueChanged
                                                 ?.call(currentUserChoice!);
-                                          }
-                                        },
-                                        maxCharacters: 20,
-                                        style: const TextStyle(
-                                            color: Colors.black87,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w600),
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 25, vertical: 20),
-                                        hintText: 'For other gender type here',
-                                        initialvalue: _checked == true
-                                            ? currentUserChoice
-                                            : null,
-                                        onType: (value) {
-                                          setState(
-                                            () {
-                                              value.isEmpty
-                                                  ? currentUserChoice =
-                                                      widget.initialChoice
-                                                  : value.length > 2
-                                                      ? currentUserChoice =
-                                                          value
-                                                      : null;
-                                              otherChoice = value;
-                                            },
-                                          );
-                                          if (currentUserChoice != null) {
-                                            if (currentUserChoice!.length > 2)
-                                              widget.onValueChanged
-                                                  ?.call(currentUserChoice!);
-                                          }
-                                          print(widget.initialChoice);
-                                        },
-                                        pressed: widget.choices
-                                                .contains(currentUserChoice) !=
-                                            true),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          if (promote != '')
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5.0),
-                              child: FittedBox(
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.remove_red_eye_rounded,
-                                        color: Colors.black54),
-                                    const SizedBox(width: 10),
-                                    Text(promote, style: kSmallInfoStyle),
-                                  ],
+                                        }
+                                        print(widget.initialChoice);
+                                      },
+                                      pressed: widget.choices
+                                              .contains(currentUserChoice) !=
+                                          true),
                                 ),
                               ),
+                            ],
+                          ),
+                        if (promote != '')
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: FittedBox(
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.remove_red_eye_rounded,
+                                      color: Colors.black54),
+                                  const SizedBox(width: 10),
+                                  Text(promote, style: kSmallInfoStyle),
+                                ],
+                              ),
                             ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      // ),
+                          ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    // ),
+                    if (widget.onboardingMode != true)
                       RoundedButton(
                         name: widget.saveButtonName,
                         onTap: widget.onSave != null
@@ -266,11 +264,10 @@ class _QuestionnaireWidgetState extends State<QuestionnaireWidget> {
                               }
                             : null,
                       ),
-                    ],
-                  ),
-                )),
-          ],
-        ),
+                  ],
+                ),
+              )),
+        ],
       ),
     );
   }

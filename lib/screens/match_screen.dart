@@ -139,6 +139,9 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SizedBox(
+                height: 40,
+              ),
               AnimatedMiniTcardWidget(
                 maleOrFemaleImage: maleOrFemaleImage,
                 CustomButtomWidget: Text(
@@ -161,7 +164,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
                 ],
               ),
               Text(
-                'We just opened registration in your area! \nNew users in your area will be shown here. \n\nCheck this page often to see new matches. \n\nIn the meantime, complete your profile to attract potential matches! 😊',
+                'Registration is now open in your area! \nNew users will appear here. \n\nCheck this page often to see new matches. \n\nIn the meantime, complete your profile to attract potential matches! 😊',
                 style: titleStyle.copyWith(
                     color: Colors.black.withOpacity(0.6), fontSize: 18),
                 textAlign: TextAlign.center,
@@ -174,6 +177,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
               Padding(
                 padding: const EdgeInsets.all(30.0),
                 child: RoundedButton(
+                  color: Colors.black87,
                   name: 'Complete my profile',
                   onTap: () {
                     Get.toNamed(ProfileEditScreen.routeName);

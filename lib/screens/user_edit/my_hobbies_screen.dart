@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 
 class MyHobbiesScreen extends StatefulWidget {
   static const String routeName = '/my_hobbies_screen';
-  const MyHobbiesScreen({Key? key}) : super(key: key);
+  final bool onboardingMode;
+  const MyHobbiesScreen({Key? key, this.onboardingMode = false})
+      : super(key: key);
 
   @override
   State<MyHobbiesScreen> createState() => _MyHobbiesScreenState();
@@ -18,12 +20,15 @@ class _MyHobbiesScreenState extends State<MyHobbiesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundThemeColor,
-      appBar: CustomAppBar(
-        hasTopPadding: true,
-        hasBackButton: true,
-        title: 'My hobbies',
-      ),
+      appBar: widget.onboardingMode
+          ? null
+          : CustomAppBar(
+              hasTopPadding: true,
+              hasBackButton: true,
+              title: 'My hobbies',
+            ),
       body: BubblesListWidget(
+        disableInteractiveOkButton: widget.onboardingMode,
         bubbles: kHobbiesList,
         headline: 'Choose up to 6 hobbies to highlight for your profile',
         maxChoices: 6,

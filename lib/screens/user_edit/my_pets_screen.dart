@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 
 class MyPetsScreen extends StatefulWidget {
   static const String routeName = '/my_pets_screen';
-  const MyPetsScreen({Key? key}) : super(key: key);
+  final bool onboardingMode;
+  const MyPetsScreen({Key? key, this.onboardingMode = false}) : super(key: key);
 
   @override
   State<MyPetsScreen> createState() => _MyPetsScreenState();
@@ -18,12 +19,15 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundThemeColor,
-      appBar: CustomAppBar(
-        hasTopPadding: true,
-        hasBackButton: true,
-        title: 'My pets',
-      ),
+      appBar: widget.onboardingMode
+          ? null
+          : CustomAppBar(
+              hasTopPadding: true,
+              hasBackButton: true,
+              title: 'My pets',
+            ),
       body: BubblesListWidget(
+        disableInteractiveOkButton: widget.onboardingMode,
         bubbles: kPetsList,
         headline: 'Do you have pets?',
         maxChoices: 4,

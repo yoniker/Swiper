@@ -1,7 +1,7 @@
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
-import 'package:betabeta/screens/user_edit/children_screen.dart';
+import 'package:betabeta/screens/user_edit/kids_screen.dart';
 import 'package:betabeta/screens/user_edit/covid_screen.dart';
 import 'package:betabeta/screens/user_edit/drinking_screen.dart';
 import 'package:betabeta/screens/user_edit/education_screen.dart';
@@ -130,7 +130,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                   TextButton(
                     onPressed: onDelete,
                     child: Text(
-                      'Delete',
+                      'Remove',
                       style: kButtonText.copyWith(color: appMainColor),
                     ),
                   ),

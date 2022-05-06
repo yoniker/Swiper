@@ -27,7 +27,7 @@ class ProfileAdapter extends TypeAdapter<Profile> {
       location: fields[7] as String?,
       jobTitle: fields[9] as String?,
       religion: fields[13] as String?,
-      height: fields[10] as double?,
+      height: fields[10] as int?,
       compatibilityScore: fields[11] as double?,
       hotnessScore: fields[12] as double?,
       distance: fields[8] as double?,

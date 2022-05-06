@@ -47,6 +47,7 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
                   child: ProgressBar(
+                    totalProgressBarPages: kTotalProgressBarPages,
                     page: 2,
                   ),
                 ),

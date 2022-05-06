@@ -7,12 +7,12 @@ import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:betabeta/widgets/onboarding/progress_bar.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 
 class AboutMeOnboardingScreen extends StatefulWidget {
   static const String routeName = '/aboutMeOnboardingScreen';
-  static const int minCharInDescription = 10;
+  static const int minWordsInDescription = 10;
 
   const AboutMeOnboardingScreen({Key? key}) : super(key: key);
 
@@ -25,6 +25,7 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
   String aboutMeText = '';
   bool clickOnDisable = false;
   Timer? _debounce;
+  int _count = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +46,7 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
       });
     }
 
-    int charactersLeft =
-        AboutMeOnboardingScreen.minCharInDescription - (aboutMeText.length);
+    int wordsLeft = AboutMeOnboardingScreen.minWordsInDescription - (_count);
 
     return Scaffold(
       backgroundColor: kBackroundThemeColor,
@@ -72,6 +72,7 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 10),
                             child: ProgressBar(
+                              totalProgressBarPages: kTotalProgressBarPages,
                               page: 7,
                             ),
                           ),
@@ -90,8 +91,9 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                             height: 30,
                           ),
                           InputField(
-                            onTapIcon: aboutMeText.length <
-                                    AboutMeOnboardingScreen.minCharInDescription
+                            onTapIcon: _count <
+                                    AboutMeOnboardingScreen
+                                        .minWordsInDescription
                                 ? null
                                 : () {
                                     SettingsData.instance.userDescription =
@@ -101,7 +103,7 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                                         .nextRoute(
                                             AboutMeOnboardingScreen.routeName));
                                   },
-                            onTapIconDisable: charactersLeft <= 0
+                            onTapIconDisable: wordsLeft <= 0
                                 ? null
                                 : () {
                                     alertUserMinimumText();
@@ -110,6 +112,9 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                             icon: Icons.send,
                             onType: (value) {
                               aboutMeText = value;
+                              final RegExp regExp = new RegExp(r"[\w-._]+");
+                              final Iterable matches = regExp.allMatches(value);
+                              _count = matches.length;
                               setState(() {});
                             },
                             maxCharacters: 500,
@@ -124,11 +129,11 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                           ),
                           Center(
                             child: Text(
-                              aboutMeText.length >=
+                              _count >=
                                       AboutMeOnboardingScreen
-                                          .minCharInDescription
+                                          .minWordsInDescription
                                   ? ''
-                                  : 'Minimum $charactersLeft characters left',
+                                  : 'Minimum ${wordsLeft} words left',
                               style: clickOnDisable != true
                                   ? kSmallInfoStyle
                                   : kSmallInfoStyleAlert,
@@ -142,8 +147,9 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                         },
                         child: RoundedButton(
                             name: 'CONTINUE',
-                            onTap: aboutMeText.length <
-                                    AboutMeOnboardingScreen.minCharInDescription
+                            onTap: _count <
+                                    AboutMeOnboardingScreen
+                                        .minWordsInDescription
                                 ? null
                                 : () {
                                     SettingsData.instance.userDescription =

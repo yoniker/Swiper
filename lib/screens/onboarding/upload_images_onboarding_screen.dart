@@ -38,6 +38,7 @@ class _UploadImagesOnboardingScreenState
                   child: Column(
                     children: [
                       ProgressBar(
+                        totalProgressBarPages: kTotalProgressBarPages,
                         page: 8,
                       ),
                       const Text(
@@ -98,8 +99,8 @@ class _UploadImagesOnboardingScreenState
                       name: 'NEXT',
                       onTap: SettingsData.instance.profileImagesUrls.length != 0
                           ? () {
-                              Get.offAllNamed(
-                                  OnboardingFlowController.instance.nextRoute(
+                              Get.offAllNamed(OnboardingFlowController.instance
+                                  .nextRoute(
                                       UploadImagesOnboardingScreen.routeName));
                             }
                           : null,

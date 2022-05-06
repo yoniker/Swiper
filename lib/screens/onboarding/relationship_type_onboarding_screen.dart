@@ -24,7 +24,6 @@ class RelationshipTypeOnboardingScreen extends StatefulWidget {
 
 class _RelationshipTypeOnboardingScreenState
     extends State<RelationshipTypeOnboardingScreen> {
-  bool? _showOnProfile = true;
   String? currentChoice;
 
   @override
@@ -38,6 +37,7 @@ class _RelationshipTypeOnboardingScreenState
             Padding(
               padding: const EdgeInsets.fromLTRB(30.0, 20, 30, 0),
               child: ProgressBar(
+                totalProgressBarPages: kTotalProgressBarPages,
                 page: 5,
               ),
             ),
@@ -65,120 +65,6 @@ class _RelationshipTypeOnboardingScreenState
             )
           ],
         ),
-        // child: OnboardingColumn(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   crossAxisAlignment: CrossAxisAlignment.start,
-        //   children: [
-        //     Column(
-        //       crossAxisAlignment: CrossAxisAlignment.start,
-        //       children: [
-        //         ProgressBar(
-        //           page: 5,
-        //         ),
-        //         FittedBox(
-        //           child: const Text(
-        //             'What are you looking for?',
-        //             maxLines: 2,
-        //             style: kTitleStyle,
-        //           ),
-        //         ),
-        //         const SizedBox(
-        //           height: 10,
-        //         ),
-        //         const Text(
-        //           'This will help Voilà find you suitable matches',
-        //           style: kSmallInfoStyle,
-        //         ),
-        //         const SizedBox(
-        //           height: 30,
-        //         ),
-        //         ChoiceButton(
-        //           name: 'Relationship',
-        //           onTap: () {
-        //             setState(() {
-        //               currentChoice = RelationshipPreference.Relationship;
-        //             });
-        //           },
-        //           pressed: currentChoice == RelationshipPreference.Relationship
-        //               ? true
-        //               : false,
-        //         ),
-        //         const SizedBox(height: 20),
-        //         ChoiceButton(
-        //           name: 'Something casual',
-        //           onTap: () {
-        //             setState(() {
-        //               currentChoice = RelationshipPreference.Casual;
-        //             });
-        //           },
-        //           pressed: currentChoice == RelationshipPreference.Casual
-        //               ? true
-        //               : false,
-        //         ),
-        //         const SizedBox(height: 20),
-        //         ChoiceButton(
-        //           name: 'I\'m not sure',
-        //           onTap: () {
-        //             setState(() {
-        //               currentChoice = RelationshipPreference.NotSure;
-        //             });
-        //           },
-        //           pressed: currentChoice == RelationshipPreference.NotSure
-        //               ? true
-        //               : false,
-        //         ),
-        //         const SizedBox(height: 20),
-        //         ChoiceButton(
-        //           name: 'Prefer not to say',
-        //           onTap: () {
-        //             setState(() {
-        //               currentChoice = RelationshipPreference.Marriage;
-        //             });
-        //           },
-        //           pressed: currentChoice == RelationshipPreference.Marriage
-        //               ? true
-        //               : false,
-        //         ),
-        //       ],
-        //     ),
-        //     Column(
-        //       children: [
-        //         ScreenSize.getSize(context) == ScreenSizeCategory.small
-        //             ? const FittedBox()
-        //             : Theme(
-        //                 data: ThemeData(unselectedWidgetColor: Colors.black87),
-        //                 child: CheckboxListTile(
-        //                     title: const Text(
-        //                       'Show this on my profile',
-        //                       style: kSmallInfoStyle,
-        //                     ),
-        //                     controlAffinity: ListTileControlAffinity.leading,
-        //                     contentPadding: EdgeInsets.zero,
-        //                     checkColor: Colors.white,
-        //                     activeColor: Colors.black87,
-        //                     tristate: false,
-        //                     value: _showOnProfile,
-        //                     onChanged: (value) {
-        //                       setState(() {
-        //                         _showOnProfile = value;
-        //                       });
-        //                     }),
-        //               ),
-        //         RoundedButton(
-        //             name: 'CONTINUE',
-        //             onTap: currentChoice != null
-        //                 ? () {
-        //                     SettingsData.instance.relationshipType =
-        //                         currentChoice!.name;
-        //                     Get.offAllNamed(OnboardingFlowController.instance
-        //                         .nextRoute(RelationshipTypeOnboardingScreen
-        //                             .routeName));
-        //                   }
-        //                 : null)
-        //       ],
-        //     )
-        //   ],
-        // ),
       ),
     );
   }

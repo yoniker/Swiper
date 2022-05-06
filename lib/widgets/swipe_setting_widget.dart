@@ -277,9 +277,13 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          'Deal breaker',
-                          style: boldTextStyle,
+                        Flexible(
+                          child: Text(
+                            'Only show people within range',
+                            maxLines: 1,
+                            style: defaultTextStyle.copyWith(
+                                fontWeight: FontWeight.w600),
+                          ),
                         ),
                         Switch(
                           value: SettingsData.instance.searchDistanceEnabled,
@@ -297,7 +301,8 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
                         children: [
                           Text(
                             'Show Dummy Profiles',
-                            style: boldTextStyle,
+                            style: defaultTextStyle.copyWith(
+                                fontWeight: FontWeight.w600),
                           ),
                           Switch(
                             value: SettingsData.instance.showDummyProfiles,
@@ -414,9 +419,13 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          'Deal breaker',
-                          style: boldTextStyle,
+                        Flexible(
+                          child: Text(
+                            'Only show people within range',
+                            maxLines: 1,
+                            style: defaultTextStyle.copyWith(
+                                fontWeight: FontWeight.w600),
+                          ),
                         ),
                         Switch(
                           value: ageDealBreaker,
@@ -440,29 +449,42 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
               Container(
                 decoration: kSettingsBlockBoxDecor,
                 padding: EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      'Show me on Voilà',
-                      style: boldTextStyle,
-                    ),
-                    Switch(
-                      value: _showInDiscovery,
-                      activeColor: appMainColor,
-                      onChanged: (value) {
-                        setState(
-                          () {
-                            // TODO:// Add required Function.
-                            // Alert user to make sure he is intentionally changing his visibiliry status.
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Show me on Voilà',
+                          style: boldTextStyle,
+                        ),
+                        Switch(
+                          value: _showInDiscovery,
+                          activeColor: appMainColor,
+                          onChanged: (value) {
+                            setState(
+                              () {
+                                // TODO:// Add required Function.
+                                // Alert user to make sure he is intentionally changing his visibiliry status.
 
-                            // set "_showInDiscovery" to the currrent switch value.
-                            _showInDiscovery = value;
+                                // set "_showInDiscovery" to the currrent switch value.
+                                _showInDiscovery = value;
+                              },
+                            );
                           },
-                        );
-                      },
+                        ),
+                      ],
                     ),
+                    Flexible(
+                      child: Text(
+                        'Be visible to everyone on Voilà',
+                        style: defaultTextStyle.copyWith(
+                            fontWeight: FontWeight.w600),
+                      ),
+                    )
                   ],
                 ),
               ),

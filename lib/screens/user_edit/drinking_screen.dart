@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 
 class DrinkingScreen extends StatefulWidget {
   static const String routeName = '/drinking_screen';
-  const DrinkingScreen({Key? key}) : super(key: key);
+  final bool onboardingMode;
+  const DrinkingScreen({Key? key, this.onboardingMode = true})
+      : super(key: key);
 
   @override
   _DrinkingScreen createState() => _DrinkingScreen();
@@ -21,12 +23,15 @@ class _DrinkingScreen extends State<DrinkingScreen> {
         builder: (context) {
           return Scaffold(
             backgroundColor: backgroundThemeColor,
-            appBar: CustomAppBar(
-              hasTopPadding: true,
-              hasBackButton: true,
-              title: 'Drinking',
-            ),
+            appBar: widget.onboardingMode
+                ? null
+                : CustomAppBar(
+                    hasTopPadding: true,
+                    hasBackButton: true,
+                    title: 'Drinking',
+                  ),
             body: QuestionnaireWidget(
+              onboardingMode: widget.onboardingMode,
               headline: 'How often do you drink?',
               choices: ['Frequently', 'Socially', 'Never'],
               initialChoice: SettingsData.instance.drinking,
