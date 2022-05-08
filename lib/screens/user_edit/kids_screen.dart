@@ -10,7 +10,7 @@ class KidsScreen extends StatefulWidget {
   static const String routeName = '/kids_screen';
   final bool onboardingMode;
 
-  const KidsScreen({Key? key, this.onboardingMode = true}) : super(key: key);
+  const KidsScreen({Key? key, this.onboardingMode = false}) : super(key: key);
 
   @override
   _KidsScreen createState() => _KidsScreen();

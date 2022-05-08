@@ -18,7 +18,7 @@ class ProgressBar extends StatelessWidget {
         animation: true,
         animateFromLastPercent: true,
         animationDuration: 200,
-        fillColor: Colors.black54,
+        fillColor: Colors.black.withOpacity(0.05),
       ),
     );
   }

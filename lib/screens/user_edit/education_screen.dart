@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 class EducationScreen extends StatefulWidget {
   static const String routeName = '/education_screen';
   final bool onboardingMode;
-  const EducationScreen({Key? key, this.onboardingMode = true})
+  const EducationScreen({Key? key, this.onboardingMode = false})
       : super(key: key);
 
   @override

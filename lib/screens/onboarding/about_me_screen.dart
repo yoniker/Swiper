@@ -8,11 +8,10 @@ import 'package:betabeta/widgets/onboarding/progress_bar.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 
 class AboutMeOnboardingScreen extends StatefulWidget {
   static const String routeName = '/aboutMeOnboardingScreen';
-  static const int minWordsInDescription = 10;
+  static const int minWordsInDescription = 3;
 
   const AboutMeOnboardingScreen({Key? key}) : super(key: key);
 

@@ -132,7 +132,8 @@ List<String> kPetsList = [
   'Frog  🐸',
   'Guinea pig  🐹',
   'Hedgehog  🦔',
-  'Other  🐐'
+  'Other  🐐',
+  'No pets'
 ];
 
 List<String> kEmptyBubbles = [

@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 class FitnessScreen extends StatefulWidget {
   static const String routeName = '/fitness_screen';
   final bool onboardingMode;
-  const FitnessScreen({Key? key, this.onboardingMode = true}) : super(key: key);
+  const FitnessScreen({Key? key, this.onboardingMode = false})
+      : super(key: key);
 
   @override
   _FitnessScreen createState() => _FitnessScreen();

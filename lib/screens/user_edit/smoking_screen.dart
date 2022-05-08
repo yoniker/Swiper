@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 class SmokingScreen extends StatefulWidget {
   static const String routeName = '/smoking_screen';
   final bool onboardingMode;
-  const SmokingScreen({Key? key, this.onboardingMode = true}) : super(key: key);
+  const SmokingScreen({Key? key, this.onboardingMode = false})
+      : super(key: key);
 
   @override
   _SmokingScreen createState() => _SmokingScreen();

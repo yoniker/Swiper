@@ -29,7 +29,7 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
       body: BubblesListWidget(
         disableInteractiveOkButton: widget.onboardingMode,
         bubbles: kPetsList,
-        headline: 'Do you have pets?',
+        headline: 'Pets?',
         maxChoices: 4,
         initialValue: SettingsData.instance.pets,
         onValueChanged: (newPetsValue) {

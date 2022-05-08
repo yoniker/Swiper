@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 class DrinkingScreen extends StatefulWidget {
   static const String routeName = '/drinking_screen';
   final bool onboardingMode;
-  const DrinkingScreen({Key? key, this.onboardingMode = true})
+  const DrinkingScreen({Key? key, this.onboardingMode = false})
       : super(key: key);
 
   @override
