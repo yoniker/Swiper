@@ -110,10 +110,10 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen>
           SafeArea(
             child: AnimatedOpacity(
               opacity:
-                  _scrollController.hasClients && _scrollController.offset > 200
+                  _scrollController.hasClients && _scrollController.offset > 20
                       ? 0
                       : 1,
-              duration: Duration(seconds: 1),
+              duration: Duration(milliseconds: 300),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

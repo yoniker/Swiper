@@ -29,7 +29,7 @@ class Profile {
   @HiveField(9)
   String? jobTitle;
   @HiveField(10)
-  int? height;
+  double? height;
   @HiveField(11)
   double? compatibilityScore;
   @HiveField(12)

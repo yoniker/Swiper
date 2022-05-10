@@ -1,4 +1,3 @@
-import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/infoMessage.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/chat/other_user_profile_screen.dart';

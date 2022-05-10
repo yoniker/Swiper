@@ -6,6 +6,8 @@ import 'package:betabeta/models/infoMessage.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/chat/chat_screen.dart';
 import 'package:betabeta/services/new_networking.dart';
+import 'package:betabeta/services/settings_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -53,15 +55,61 @@ class _ConversationsPreviewWidgetState
       'Dec'
     ];
 
+    void maxedOutPopUpDialog() {
+      showDialog(
+          context: context,
+          builder: (_) => CupertinoAlertDialog(
+                title: Text(
+                  "conversations maxed out!",
+                ),
+                content: Text(
+                    '\nYou have reached your maximum available conversations.\n\nIn order to start a new conversation, please clear at least one slot \n\n(While in conversation, on the top right corner of the screen, click on the \'x\' button).'),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        'Close',
+                        style: TextStyle(color: Colors.red),
+                      ))
+                ],
+              ));
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: conversations.length != 0
-              ? Text(
-                  'Conversations',
-                  style: boldTextStyle,
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Conversations',
+                      style: boldTextStyle,
+                    ),
+                    if (SettingsData.instance.userGender !=
+                        kGenderChoices.first)
+                      conversations.length >= 4
+                          ? GestureDetector(
+                              onTap: () {
+                                maxedOutPopUpDialog();
+                              },
+                              child: Text(
+                                'Maxed out',
+                                style: boldTextStyle.copyWith(
+                                    color: appMainColor,
+                                    decoration: TextDecoration.underline),
+                              ),
+                            )
+                          : Text(
+                              '${conversations.length} / 4 ',
+                              style:
+                                  boldTextStyle.copyWith(color: appMainColor),
+                            )
+                  ],
                 )
               : Center(
                   child: Column(

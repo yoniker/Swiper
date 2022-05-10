@@ -363,14 +363,14 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                       //print(SettingsData.instance.hobbies);
                     },
                   ),
-                  ProfileEditBlock(
-                    title: 'Gender',
-                    icon: FontAwesomeIcons.userPen,
-                    value: SettingsData.instance.userGender.capitalizeFirst,
-                    onTap: () {
-                      Get.toNamed(PronounsEditScreen.routeName);
-                    },
-                  ),
+                  // ProfileEditBlock(
+                  //   title: 'Gender',
+                  //   icon: FontAwesomeIcons.userPen,
+                  //   value: SettingsData.instance.userGender.capitalizeFirst,
+                  //   onTap: () {
+                  //     Get.toNamed(PronounsEditScreen.routeName);
+                  //   },
+                  // ),     /// Do we really need that? users should not be able to change it.
                   ProfileEditBlock(
                     title: 'Into',
                     icon: FontAwesomeIcons.personCircleQuestion,
