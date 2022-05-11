@@ -149,13 +149,21 @@ class ChatData extends ChangeNotifier {
     } catch (_) {}
   }
 
-  Future<void> updateUserBox(String uid,Profile newProfileInformation)async{
+  Future<void> updateUserBox(String uid, Profile newProfileInformation) async {
     Profile? currentUserProfile = usersBox.get(uid);
-    if(currentUserProfile!=null && currentUserProfile.lastUpdate!=null && DateTime.now().difference(currentUserProfile.lastUpdate!)<minTimeDiffForUserUpdate){
+    if (currentUserProfile != null &&
+        currentUserProfile.lastUpdate != null &&
+        DateTime.now().difference(currentUserProfile.lastUpdate!) <
+            minTimeDiffForUserUpdate) {
       return; //Don't overwrite updated profiles
     }
 
-    if(currentUserProfile!=null && newProfileInformation.lastUpdate!=null && currentUserProfile.lastUpdate!=null && newProfileInformation.lastUpdate!.compareTo(currentUserProfile.lastUpdate!)<0){
+    if (currentUserProfile != null &&
+        newProfileInformation.lastUpdate != null &&
+        currentUserProfile.lastUpdate != null &&
+        newProfileInformation.lastUpdate!
+                .compareTo(currentUserProfile.lastUpdate!) <
+            0) {
       return;
     }
     await usersBox.put(uid, newProfileInformation);
@@ -296,15 +304,13 @@ class ChatData extends ChangeNotifier {
       return;
     }
 
-    
-
     //If here then push notification is new message as all other notifications types were handled above this line
     final String senderId = message['user_id'];
     if (senderId != SettingsData.instance.uid) {
       //Update Users Box
       final Profile sender =
           Profile.fromJson(jsonDecode(message["sender_details"]));
-      updateUserBox(sender.uid,sender); 
+      updateUserBox(sender.uid, sender);
       NotificationsController.instance.showNewMessageNotification(
           senderName: sender.username, senderId: senderId);
     }
@@ -429,12 +435,13 @@ class ChatData extends ChangeNotifier {
 
   Future<void> updateUsersData(List<dynamic> unparsedUsers) async {
     for (var unparsedUser in unparsedUsers) {
-      Profile user = Profile.fromJson(unparsedUser,lastUpdateTime: DateTime(1990));
+      Profile user =
+          Profile.fromJson(unparsedUser, lastUpdateTime: DateTime(1990));
       if (unparsedUser[API_CONSTS.MATCH_STATUS] != 'active') {
         await usersBox.delete(user.uid);
       } else {
         Profile? currentUserProfile = usersBox.get(user.uid);
-        await updateUserBox(user.uid,user);
+        await updateUserBox(user.uid, user);
       }
     }
     updateAllUsersDataFromServer();
@@ -515,16 +522,47 @@ class ChatData extends ChangeNotifier {
     return 0;
   }
 
-  List<InfoConversation> get conversations {
-    //Get the conversations sorted before displaying those to the user
-    List<InfoConversation> allConversations = conversationsBox.values.toList();
-    //((messageA,messageB)=> (messageB.changedDate??messageB.addedDate??0)>(messageA.changedDate??messageA.addedDate??0)?1:-1);
-    allConversations.sort((conversation1, conversation2) =>
+  bool _currentUserInitiatedConversation(InfoConversation conversation) {
+    InfoMessage firstMessage = conversation.messages.last;
+    return firstMessage.userId == SettingsData.instance.uid;
+  }
+
+  List<InfoConversation> _sortConversationsByLastChanged(
+      List<InfoConversation> conversations) {
+    conversations.sort((conversation1, conversation2) =>
         timeConversationLastChanged(conversation2) >
                 timeConversationLastChanged(conversation1)
             ? 1
             : -1);
+    return conversations;
+  }
+
+  List<InfoConversation> get conversations {
+    //Get the conversations sorted before displaying those to the user
+    List<InfoConversation> allConversations = conversationsBox.values.toList();
+    allConversations = _sortConversationsByLastChanged(allConversations);
     return List.unmodifiable(allConversations);
+  }
+
+  List<InfoConversation> _siftedConversationsByInitiator(
+      {required bool currentUserInitiated}) {
+    //if true, get all of the conversations that the current user initiated, if false get all the conversations that others initiated
+    List<InfoConversation> allConversations = conversationsBox.values.toList();
+    List<InfoConversation> siftedConversations = allConversations
+        .where((conversation) =>
+            _currentUserInitiatedConversation(conversation) ==
+            currentUserInitiated)
+        .toList();
+    siftedConversations = _sortConversationsByLastChanged(siftedConversations);
+    return List.unmodifiable(siftedConversations);
+  }
+
+  List<InfoConversation> get conversationsCurrentUserStarted {
+    return _siftedConversationsByInitiator(currentUserInitiated: true);
+  }
+
+  List<InfoConversation> get conversationsOtherUsersStarted {
+    return _siftedConversationsByInitiator(currentUserInitiated: false);
   }
 
   Set<String> get allConversationsParticipantsIds {
@@ -677,11 +715,14 @@ class ChatData extends ChangeNotifier {
     }
   }
 
-  Future<void> updateUserDataFromServer(String uid,{bool forceUpdate=false}) async {
+  Future<void> updateUserDataFromServer(String uid,
+      {bool forceUpdate = false}) async {
     Profile? currentProfile = usersBox.get(uid);
-    if(currentProfile!=null && currentProfile.lastUpdate!=null &&
-        DateTime.now().difference(currentProfile.lastUpdate!)<minTimeDiffForUserUpdate &&
-        forceUpdate!=true){
+    if (currentProfile != null &&
+        currentProfile.lastUpdate != null &&
+        DateTime.now().difference(currentProfile.lastUpdate!) <
+            minTimeDiffForUserUpdate &&
+        forceUpdate != true) {
       return;
     }
     Profile? profileFromServer =

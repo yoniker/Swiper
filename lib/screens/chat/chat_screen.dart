@@ -98,48 +98,50 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
       return '${howLongAgo.inMinutes} minutes ago';
     }
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'You matched with ',
-              style: TextStyle(fontSize: 20, color: Colors.black54),
-            ),
-            Text(
-              theUser.username,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Colors.black.withOpacity(0.6)),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        GestureDetector(
-          child: CircularUserAvatar(
-            imageProvider: NetworkImage(
-                NewNetworkService.getProfileImageUrl(theUser.profileImage)),
-            radius: 90,
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'You matched with ',
+                style: TextStyle(fontSize: 20, color: Colors.black54),
+              ),
+              Text(
+                theUser.username,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Colors.black.withOpacity(0.6)),
+              ),
+            ],
           ),
-          onTap: () {
-            Get.toNamed(OtherUserProfileScreen.routeName,
-                arguments: theUser.uid);
-          },
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        Text(
-          howLongAgoDescription(),
-          style: TextStyle(fontSize: 20, color: Colors.black54),
-        )
-      ],
+          SizedBox(
+            height: 20,
+          ),
+          GestureDetector(
+            child: CircularUserAvatar(
+              imageProvider: NetworkImage(
+                  NewNetworkService.getProfileImageUrl(theUser.profileImage)),
+              radius: 90,
+            ),
+            onTap: () {
+              Get.toNamed(OtherUserProfileScreen.routeName,
+                  arguments: theUser.uid);
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            howLongAgoDescription(),
+            style: TextStyle(fontSize: 20, color: Colors.black54),
+          )
+        ],
+      ),
     );
   }
 

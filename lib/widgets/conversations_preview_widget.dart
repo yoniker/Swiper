@@ -1,3 +1,4 @@
+import 'package:betabeta/constants/app_functionality_consts.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/services/chatData.dart';
@@ -13,9 +14,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class ConversationsPreviewWidget extends StatefulWidget {
-  ConversationsPreviewWidget({this.search = ''});
+  ConversationsPreviewWidget(
+      {this.search = '', this.conversationsThatMaleStartedMode = false});
 
   final String search;
+  final bool conversationsThatMaleStartedMode;
 
   @override
   _ConversationsPreviewWidgetState createState() =>
@@ -25,10 +28,18 @@ class ConversationsPreviewWidget extends StatefulWidget {
 class _ConversationsPreviewWidgetState
     extends State<ConversationsPreviewWidget> {
   List<InfoConversation> conversations = ChatData.instance.conversations;
+  List<InfoConversation> conversationsOtherInitiated =
+      ChatData.instance.conversationsOtherUsersStarted;
+  List<InfoConversation> conversationsUserInitiated =
+      ChatData.instance.conversationsCurrentUserStarted;
 
   void listenConversations() {
     setState(() {
       conversations = ChatData.instance.conversations;
+      conversationsOtherInitiated =
+          ChatData.instance.conversationsOtherUsersStarted;
+      conversationsUserInitiated =
+          ChatData.instance.conversationsCurrentUserStarted;
     });
   }
 
@@ -40,7 +51,7 @@ class _ConversationsPreviewWidgetState
 
   @override
   Widget build(BuildContext context) {
-    List<String> months = [
+    final List<String> months = [
       'Jan',
       'Feb',
       'Mar',
@@ -55,15 +66,42 @@ class _ConversationsPreviewWidgetState
       'Dec'
     ];
 
+    headline<String>() {
+      if (widget.conversationsThatMaleStartedMode)
+        return 'Conversations you\'ve started';
+      if (widget.conversationsThatMaleStartedMode != true &&
+          SettingsData.instance.userGender == kFemaleGender)
+        return 'Conversations';
+      return 'Conversations others initiated';
+    }
+
+    conversationsCount<int>() {
+      if (widget.conversationsThatMaleStartedMode)
+        return conversationsUserInitiated.length;
+      if (widget.conversationsThatMaleStartedMode != true &&
+          SettingsData.instance.userGender == kFemaleGender)
+        return conversations.length;
+      return conversationsOtherInitiated.length;
+    }
+
+    conversationMode<InfoConversation>() {
+      if (widget.conversationsThatMaleStartedMode)
+        return conversationsUserInitiated;
+      if (widget.conversationsThatMaleStartedMode != true &&
+          SettingsData.instance.userGender == kFemaleGender)
+        return conversations;
+      return conversationsOtherInitiated;
+    }
+
     void maxedOutPopUpDialog() {
       showDialog(
           context: context,
           builder: (_) => CupertinoAlertDialog(
                 title: Text(
-                  "conversations maxed out!",
+                  "conversations that you started.",
                 ),
                 content: Text(
-                    '\nYou have reached your maximum available conversations.\n\nIn order to start a new conversation, please clear at least one slot \n\n(While in conversation, on the top right corner of the screen, click on the \'x\' button).'),
+                    '\nThis indicates how many available pick-up conversations you have.\n\nIn order to start a new conversation, please clear at least one slot \n\n(While in conversation, on the top right corner of the screen, click on the \'x\' button).'),
                 actions: [
                   TextButton(
                       onPressed: () {
@@ -82,40 +120,46 @@ class _ConversationsPreviewWidgetState
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: conversations.length != 0
+          child: conversations.length != 0 ||
+                  widget.conversationsThatMaleStartedMode
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Conversations',
-                      style: boldTextStyle,
+                    Flexible(
+                      child: Text(
+                        headline(),
+                        maxLines: 2,
+                        style: boldTextStyle,
+                      ),
                     ),
-                    if (SettingsData.instance.userGender !=
-                        kGenderChoices.first)
-                      conversations.length >= 4
-                          ? GestureDetector(
-                              onTap: () {
-                                maxedOutPopUpDialog();
-                              },
-                              child: Text(
-                                'Maxed out',
-                                style: boldTextStyle.copyWith(
-                                    color: appMainColor,
-                                    decoration: TextDecoration.underline),
-                              ),
-                            )
-                          : Text(
-                              '${conversations.length} / 4 ',
+                    if (widget.conversationsThatMaleStartedMode)
+                      GestureDetector(
+                        onTap: () {
+                          maxedOutPopUpDialog();
+                        },
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              '${conversationsUserInitiated.length} / ${kMaxInitiatedConversations} ',
                               style:
                                   boldTextStyle.copyWith(color: appMainColor),
+                            ),
+                            Icon(
+                              FontAwesomeIcons.info,
+                              size: 15,
                             )
+                          ],
+                        ),
+                      )
                   ],
                 )
               : Center(
                   child: Column(
                     children: [
                       SizedBox(
-                        height: 60,
+                        height: 30,
                       ),
                       Stack(
                         children: [
@@ -146,7 +190,11 @@ class _ConversationsPreviewWidgetState
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                             color: Colors.black.withOpacity(0.65)),
-                      )
+                      ),
+                      SizedBox(
+                        height: 31,
+                      ),
+                      Divider()
                     ],
                   ),
                 ),
@@ -155,11 +203,14 @@ class _ConversationsPreviewWidgetState
             physics: NeverScrollableScrollPhysics(),
             padding: EdgeInsets.zero,
             shrinkWrap: true,
-            itemCount: conversations.length,
+            itemCount: conversationsCount(),
             itemBuilder: (context, index) {
               double commonHeight = 80;
-              InfoConversation conversation = conversations[index];
+              InfoConversation conversation = conversationMode()[index];
               InfoMessage lastMessage = conversation.messages[0];
+              InfoMessage firstMessage = conversation.messages.last;
+
+              /// show the first message in conversation
               DateTime lastMessageTime = DateTime.fromMillisecondsSinceEpoch(
                 lastMessage.changedDate!.toInt() * 1000,
               );
@@ -186,13 +237,11 @@ class _ConversationsPreviewWidgetState
               if (collocutor != null) if (collocutor.username
                   .split(' ')[0]
                   .toLowerCase()
-                  .contains(widget.search))
+                  .contains(widget.search)) {
                 return GestureDetector(
                   onTap: () {
-                    if (collocutor != null) {
-                      Get.toNamed(
-                          ChatScreen.getRouteWithUserId(collocutor.uid));
-                    }
+                    print(firstMessage.userId);
+                    Get.toNamed(ChatScreen.getRouteWithUserId(collocutor.uid));
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -361,6 +410,7 @@ class _ConversationsPreviewWidgetState
                     ),
                   ),
                 );
+              }
               return Container();
             }),
       ],

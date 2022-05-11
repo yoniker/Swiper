@@ -5,7 +5,7 @@ cmToFeet(centimeters) {
   return ("${feet.toInt()}' ${inch.toInt()}");
 }
 
-List<String> kReligionsList = [
+const List<String> kReligionsList = [
   'Select option',
   'Atheist',
   'Bahá’í',
@@ -28,7 +28,7 @@ List<String> kReligionsList = [
   'Other'
 ];
 
-List<String> kZodiacsList = [
+const List<String> kZodiacsList = [
   'Select option',
   'Capricorn  ♑',
   'Aquarius  ♒',
@@ -44,20 +44,21 @@ List<String> kZodiacsList = [
   'Sagittarius  ♐'
 ];
 
-List<String> kEducationChoices = [
+const List<String> kEducationChoices = [
   'High School',
   'Undergraduate',
   'Postgraduate'
 ];
-List<String> kFitnessChoices = ['Active', 'Occasionally', 'Never'];
+const List<String> kFitnessChoices = ['Active', 'Occasionally', 'Never'];
 
-List<String> kGenderChoices = ['Female', 'Male'];
+const List<String> kGenderChoices = ['Female', 'Male'];
+String kFemaleGender = kGenderChoices.first;
 
-List<String> kIntoChoices = ['Men', 'Women', 'Everyone'];
+const List<String> kIntoChoices = ['Men', 'Women', 'Everyone'];
 
-List<String> kSmokingChoices = ['Regularly', 'Socially', 'Never'];
+const List<String> kSmokingChoices = ['Regularly', 'Socially', 'Never'];
 
-List<String> kChildrenChoice = [
+const List<String> kChildrenChoice = [
   'Have & no more',
   'Have & want more',
   'Want someday',
@@ -72,13 +73,13 @@ const List<String> kRelationshipTypeChoices = [
   'Prefer not to say'
 ];
 
-List<String> kPromotesForPreferredGender = [
+const List<String> kPromotesForPreferredGender = [
   'We will only show you men',
   'We will only show you women',
   'We will show you everyone'
 ];
 
-List<String> kHobbiesList = [
+const List<String> kHobbiesList = [
   'Dogs  🐕',
   'Cats  🐈',
   'Art  🎨',
@@ -115,7 +116,7 @@ List<String> kHobbiesList = [
   'Winter activities  🎿',
 ];
 
-List<String> kPetsList = [
+const List<String> kPetsList = [
   'Fish  🐟',
   'Dog  🐕',
   'Cat  🐈',
@@ -136,16 +137,16 @@ List<String> kPetsList = [
   'No pets'
 ];
 
-List<String> kEmptyBubbles = [
+const List<String> kEmptyBubbles = [
   'Add here',
 ];
 
-List<String> kEmptyPets = ['No pets'];
+const List<String> kEmptyPets = ['No pets'];
 
 // Here we generate a list of numbers and use them to create a list with 129 numbers which we want to use as cm, we tell the list to start at number 91
 int startingCm = 91;
-List<String> kHeightList = List.generate(
+List<String> kHeightList = List.unmodifiable(List.generate(
     129,
     (index) =>
         (index + startingCm).toString() +
-        ' cm (${cmToFeet(index + startingCm)} ft)');
+        ' cm (${cmToFeet(index + startingCm)} ft)'));

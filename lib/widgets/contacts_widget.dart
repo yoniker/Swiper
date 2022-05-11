@@ -1,6 +1,9 @@
+import 'package:betabeta/constants/app_functionality_consts.dart';
 import 'package:betabeta/constants/assets_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
+import 'package:betabeta/constants/lists_consts.dart';
+import 'package:betabeta/models/infoConversation.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/models/profile.dart';
@@ -9,6 +12,7 @@ import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/animated_widgets/animated_minitcard_widget.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -26,12 +30,13 @@ class _ContactsWidgetState extends State<ContactsWidget> {
   Set<String> usersIdsInConversations =
       ChatData.instance.allConversationsParticipantsIds;
   late List<Profile> usersNotInConversations;
+  late List<InfoConversation> conversationsUserInitiated =
+      ChatData.instance.conversationsCurrentUserStarted;
 
   String headline = 'My matches';
 
   void updateConversationsData() {
     allUsers = ChatData.instance.users;
-    print('testing 1');
     usersIdsInConversations = ChatData.instance.allConversationsParticipantsIds;
     usersNotInConversations = allUsers
         .where((user) => !usersIdsInConversations.contains(user.uid))
@@ -40,12 +45,36 @@ class _ContactsWidgetState extends State<ContactsWidget> {
     usersNotInConversations.length == 0
         ? headline = 'No new matches'
         : headline = 'My matches';
+    conversationsUserInitiated =
+        ChatData.instance.conversationsCurrentUserStarted;
   }
 
   void listenContacts() {
     setState(() {
       updateConversationsData();
     });
+  }
+
+  void maxedOutPopUpDialog() {
+    showDialog(
+        context: context,
+        builder: (_) => CupertinoAlertDialog(
+              title: Text(
+                "You already have ${kMaxInitiatedConversations} conversations you\'ve started.",
+              ),
+              content: Text(
+                  '\nIn order to start a new conversation, please clear at least one slot \n\n(While in conversation, on the top right corner of the screen, click on the \'x\' button).'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'Close',
+                      style: TextStyle(color: Colors.red),
+                    ))
+              ],
+            ));
   }
 
   @override
@@ -103,6 +132,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
                                 withPadding: false,
                                 name: 'Keep swiping!',
                                 onTap: () {
+                                  print('');
                                   MainNavigationScreen.pageController
                                       .animateToPage(0,
                                           duration: Duration(milliseconds: 300),
@@ -133,10 +163,14 @@ class _ContactsWidgetState extends State<ContactsWidget> {
                           .contains(widget.search))
                         return GestureDetector(
                           onTap: () {
-                            {
+                            if (SettingsData.instance.userGender !=
+                                    kFemaleGender &&
+                                conversationsUserInitiated.length >=
+                                    kMaxInitiatedConversations)
+                              maxedOutPopUpDialog();
+                            else
                               Get.toNamed(ChatScreen.getRouteWithUserId(
                                   currentUser.uid));
-                            }
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),

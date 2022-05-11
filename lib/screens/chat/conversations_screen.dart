@@ -1,4 +1,6 @@
+import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/services/chatData.dart';
+import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/contacts_widget.dart';
 import 'package:betabeta/widgets/conversations_preview_widget.dart';
@@ -27,6 +29,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
   }
 
   String searchProfile = '';
+  String femaleGender = kGenderChoices.first;
 
   @override
   Widget build(BuildContext context) {
@@ -76,10 +79,24 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                         ContactsWidget(
                           search: searchProfile.toLowerCase(),
                         ),
-                        if (ChatData.instance.users.isNotEmpty) Divider(),
-                        ConversationsPreviewWidget(
-                          search: searchProfile.toLowerCase(),
+                        // if (ChatData.instance.users.isNotEmpty) Divider(),
+                        if (ChatData.instance.conversationsOtherUsersStarted
+                                .isEmpty &&
+                            ChatData.instance.conversationsCurrentUserStarted
+                                .isNotEmpty &&
+                            SettingsData.instance.userGender != kFemaleGender)
+                          SizedBox()
+                        else
+                          ConversationsPreviewWidget(
+                            search: searchProfile.toLowerCase(),
+                          ),
+                        SizedBox(
+                          height: 10,
                         ),
+                        if (SettingsData.instance.userGender != femaleGender)
+                          ConversationsPreviewWidget(
+                            conversationsThatMaleStartedMode: true,
+                          )
                       ],
                     ),
                   ),
