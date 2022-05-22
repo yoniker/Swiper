@@ -53,6 +53,7 @@ class SettingsData extends ChangeNotifier {
   static const String HEIGHT_IN_CM_KEY = 'height_in_cm';
   static const String TEXT_SEARCH_KEY = 'text_search';
   static const String IS_TEST_USER_KEY = 'is_test_user';
+  static const String USER_TOOK_TUTORIAL_KEY = 'user_took_tutorial';
   static const String REGISTRATION_STATUS_KEY = 'registration_status';
 
   static const _debounceSettingsTime =
@@ -137,6 +138,7 @@ class SettingsData extends ChangeNotifier {
   String _jobTitle = '';
   String _covid_vaccine = '';
   String _textSearch = '';
+  bool _userTookTutorial = false;
   List<String> _hobbies = [];
   List<String> _pets = [];
   int _heightInCm = 0;
@@ -487,6 +489,17 @@ class SettingsData extends ChangeNotifier {
     _showDummyProfiles = newShowDummyProfiles;
     savePreferences(GET_DUMMY_PROFILES_KEY, newShowDummyProfiles);
   }
+
+  bool get  userTookTutorial
+  {
+    return _userTookTutorial;
+  }
+
+  set userTookTutorial(bool newUserTookTutorial) {
+    _userTookTutorial = newUserTookTutorial;
+    savePreferences(USER_TOOK_TUTORIAL_KEY, newUserTookTutorial,sendServer: false,resetMatchEngine: false);
+  }
+
 
   double get lastSync {
     return _lastSync;
