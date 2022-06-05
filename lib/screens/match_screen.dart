@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:betabeta/constants/api_consts.dart';
@@ -47,23 +45,17 @@ class _MatchScreenState extends State<MatchScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: backgroundThemeColor,
-      child: Padding(
-        padding: MediaQuery.of(context).padding,
-        child: Container(
-          color: Colors.white70,
-          child: Column(
-            children: [
-              // create the card stack.
-              // Wrap in expanded to allow the card to take up the maximum
-              // possible space.
-              Expanded(
-                child: MatchCardBuilder(),
-              ),
-            ],
+    return Padding(
+      padding: MediaQuery.of(context).padding,
+      child: Column(
+        children: [
+          // create the card stack.
+          // Wrap in expanded to allow the card to take up the maximum
+          // possible space.
+          Expanded(
+            child: MatchCardBuilder(),
           ),
-        ),
+        ],
       ),
     );
   }

@@ -370,7 +370,9 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                   //   onTap: () {
                   //     Get.toNamed(PronounsEditScreen.routeName);
                   //   },
-                  // ),     /// Do we really need that? users should not be able to change it.
+                  // ),
+
+                  /// Do we really need that? users should not be able to change it.
                   ProfileEditBlock(
                     title: 'Into',
                     icon: FontAwesomeIcons.personCircleQuestion,
