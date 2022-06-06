@@ -16,7 +16,7 @@ publish_to: none
 version: 0.4.38+0.4.38
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.17.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -54,7 +54,7 @@ dependencies:
   image: ^3.1.0
   auth_buttons: ^2.0.3
   firebase_core: ^1.10.6
-  get: ^4.6.1
+  get: ^4.6.5
   animations: ^2.0.2
   flutter_chat_ui: 1.5.5
   firebase_messaging: ^11.2.4
@@ -64,17 +64,18 @@ dependencies:
   video_player: ^2.2.18
   country_code_picker: ^2.0.2
   animated_text_kit: ^4.2.1
-  percent_indicator: ^4.0.0
+  percent_indicator: ^4.2.2
   geolocator: ^8.2.0
   csc_picker: ^0.2.6
-  extended_image: ^6.0.1
-  pinput: ^2.2.5
+  extended_image: ^6.2.1
+  pinput: ^2.2.10
   google_fonts: ^2.3.1
   sign_in_with_apple: ^3.3.0
   crypto: ^3.0.1
   app_settings: 4.1.5
+  modal_bottom_sheet: ^2.0.1
 
-      # publish_to: 'none'
+  # publish_to: 'none'
 dependency_overrides:
   photo_view:
     git:
