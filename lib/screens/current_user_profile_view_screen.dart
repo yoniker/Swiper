@@ -93,17 +93,17 @@ class _CurrentUserProfileViewScreenState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   FloatingActionButton(
-                    elevation: 30,
+                    elevation: 0,
                     backgroundColor: Colors.transparent,
                     child: Icon(
                       FontAwesomeIcons.chevronLeft,
-                      // shadows: [
-                      //   Shadow(
-                      //     blurRadius: 17.0,
-                      //     color: Colors.black,
-                      //     offset: Offset(-2.0, 2.0),
-                      //   ),
-                      // ],
+                      shadows: [
+                        Shadow(
+                          blurRadius: 17.0,
+                          color: Colors.black,
+                          offset: Offset(-2.0, 2.0),
+                        ),
+                      ],
                       size: 40,
                       color: Colors.white,
                     ),
