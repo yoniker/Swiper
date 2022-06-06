@@ -57,7 +57,7 @@ class SettingsData extends ChangeNotifier {
   static const String REGISTRATION_STATUS_KEY = 'registration_status';
 
   static const _debounceSettingsTime =
-      Duration(seconds: 2); //Debounce time such that we notify listeners
+      Duration(milliseconds: 200); //Debounce time such that we notify listeners
 
   static bool shouldResetMatchEngineAfterPosting = false; //This exists because of a situation where one send to server but dont reset engine overrode the send to server and reset (and matches were not reset)
 
@@ -422,7 +422,7 @@ class SettingsData extends ChangeNotifier {
    set filterName(String newFilterName){ //TODO remove public support
     if(newFilterName==_filterName) {return;}
     _filterName = newFilterName;
-    savePreferences(FILTER_NAME_KEY, newFilterName);
+    savePreferences(FILTER_NAME_KEY, newFilterName,durationDelaySendServer: Duration(milliseconds: 0));
   }
 
   FilterType get filterType{
@@ -856,13 +856,13 @@ class SettingsData extends ChangeNotifier {
   }
 
   void savePreferences(String sharedPreferencesKey, dynamic newValue,
-      {bool sendServer = true, bool resetMatchEngine = true}) async {
+      {bool sendServer = true, bool resetMatchEngine = true,Duration durationDelaySendServer=_debounceSettingsTime}) async {
       if(sendServer){
         shouldResetMatchEngineAfterPosting |= resetMatchEngine; //See the comment up in the def to understand why it's here
       if (_debounceServer?.isActive ?? false) {
         _debounceServer!.cancel();
       }
-      _debounceServer = Timer(_debounceSettingsTime, () async {
+      _debounceServer = Timer(durationDelaySendServer, () async {
         if (_uid.length > 0) {
           await NewNetworkService.instance.postUserSettings();
           if (shouldResetMatchEngineAfterPosting) {
