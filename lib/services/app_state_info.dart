@@ -13,7 +13,7 @@ class AppStateInfo extends ChangeNotifier with WidgetsBindingObserver {
       .MATCHING_PAGE_INDEX; //Yes this is ugly, see comment #2 above
 
   AppStateInfo._privateConstructor() {
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   static final AppStateInfo instance = AppStateInfo._privateConstructor();
