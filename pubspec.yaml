@@ -49,7 +49,7 @@ dependencies:
   hive_flutter: ^1.1.0
   tcard:
     git:
-      url: git://github.com/yoniker/tcard.git
+      url: https://github.com/yoniker/tcard
   path_provider: ^2.0.8
   image: ^3.1.0
   auth_buttons: ^2.0.3
