@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:betabeta/constants/api_consts.dart';
@@ -7,15 +5,18 @@ import 'package:betabeta/constants/assets_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/profile_edit_screen.dart';
 import 'package:betabeta/services/location_service.dart';
 import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/services/settings_model.dart';
+import 'package:betabeta/utils/utils_methods.dart';
 import 'package:betabeta/widgets/animated_widgets/animated_minitcard_widget.dart';
 import 'package:betabeta/widgets/animated_widgets/no_matches_display_widget.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/match_card.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
+import 'package:betabeta/widgets/voila_card_widget.dart';
 import 'package:betabeta/widgets/voila_logo_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -314,43 +315,83 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
           return SizedBox.shrink();
         }
 
+        var Birthday = SettingsData.instance.userBirthday;
+        DateTime userBirthday = DateTime.parse(Birthday);
+        int age = UtilsMethods.calculateAge(userBirthday);
+
+        final currentUserProfile = Profile(
+            age: age,
+            jobTitle: SettingsData.instance.jobTitle,
+            height: SettingsData.instance.heightInCm.toDouble(),
+            imageUrls: SettingsData.instance.profileImagesUrls,
+            children: SettingsData.instance.children,
+            covidVaccine: SettingsData.instance.covid_vaccine,
+            drinking: SettingsData.instance.drinking,
+            uid: SettingsData.instance.uid,
+            education: SettingsData.instance.education,
+            fitness: SettingsData.instance.fitness,
+            religion: SettingsData.instance.religion,
+            hobbies: SettingsData.instance.hobbies,
+            school: SettingsData.instance.school,
+            smoking: SettingsData.instance.smoking,
+            pets: SettingsData.instance.pets,
+            username: SettingsData.instance.name,
+            zodiac: SettingsData.instance.zodiac,
+            matchChangedTime: DateTime.now(),
+            compatibilityScore: 1.0,
+            hotnessScore: 1.0,
+            description: SettingsData.instance.userDescription,
+            preferredGender: SettingsData.instance.preferredGender,
+            userGender: SettingsData.instance.userGender,
+            showUserGender: SettingsData.instance.showUserGender,
+            location: SettingsData.instance.locationDescription,
+            relationshipType: SettingsData.instance.relationshipType);
+
         return topEngineMatches.isEmpty
             ? _widgetWhenNoCardsExist()
             : Stack(
                 fit: StackFit.expand,
                 children: [
-                  TCard(
-                    onDragCard:
-                        (double interpolation, SwipeDirection direction) {
-                      setState(() {
-                        currentInterpolation = interpolation;
-                        currentJudgment = direction;
-                      });
-                      return;
-                    },
-                    delaySlideFor: 0,
-                    onForward: (int index, SwipeInfo info) {
-                      if (index == 0) {
-                        //TODO index>0 should be impossible
-                        if (info.direction == SwipeDirection.Left) {
-                          MatchEngine.instance
-                              .currentMatchDecision(Decision.nope);
-                        } else if (info.direction == SwipeDirection.Right) {
-                          MatchEngine.instance
-                              .currentMatchDecision(Decision.like);
-                        }
-                      }
-                    },
-                    cards: topEngineMatches.map<Widget>((match) {
-                      return MatchCard(
-                        scrollController: _scrollController,
-                        key: Key(match!.profile!.uid),
-                        profile: match.profile!,
-                        showCarousel: true,
-                        clickable: true,
-                      );
-                    }).toList(),
+                  VoilaCardWidget(
+                    matchCard: MatchCard(
+                      scrollController: _scrollController,
+                      profile: currentUserProfile,
+                      showCarousel: true,
+                      clickable: true,
+                    ),
                   ),
+                  // TCard(
+                  //   onDragCard:
+                  //       (double interpolation, SwipeDirection direction) {
+                  //     setState(() {
+                  //       currentInterpolation = interpolation;
+                  //       currentJudgment = direction;
+                  //     });
+                  //     return;
+                  //   },
+                  //   delaySlideFor: 0,
+                  //   onForward: (int index, SwipeInfo info) {
+                  //     if (index == 0) {
+                  //       //TODO index>0 should be impossible
+                  //       if (info.direction == SwipeDirection.Left) {
+                  //         MatchEngine.instance
+                  //             .currentMatchDecision(Decision.nope);
+                  //       } else if (info.direction == SwipeDirection.Right) {
+                  //         MatchEngine.instance
+                  //             .currentMatchDecision(Decision.like);
+                  //       }
+                  //     }
+                  //   },
+                  //   cards: topEngineMatches.map<Widget>((match) {
+                  //     return MatchCard(
+                  //       scrollController: _scrollController,
+                  //       key: Key(match!.profile!.uid),
+                  //       profile: match.profile!,
+                  //       showCarousel: true,
+                  //       clickable: true,
+                  //     );
+                  //   }).toList(),
+                  // ),
                   _buildThumbIcon(),
                 ],
               );
