@@ -8,7 +8,10 @@ import 'match_card.dart';
 
 class VoilaCardWidget extends StatefulWidget {
   final MatchCard matchCard;
-  const VoilaCardWidget({Key? key, required this.matchCard}) : super(key: key);
+  final bool isFront;
+  const VoilaCardWidget(
+      {Key? key, required this.matchCard, required this.isFront})
+      : super(key: key);
 
   @override
   State<VoilaCardWidget> createState() => _VoilaCardWidgetState();
@@ -22,13 +25,13 @@ class _VoilaCardWidgetState extends State<VoilaCardWidget> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final size = MediaQuery.of(context).size;
 
-      final provider = Provider.of<CardProvider>(context, listen: true);
+      final provider = Provider.of<CardProvider>(context, listen: false);
       provider.setScreenSize(size);
     });
   }
 
   Widget build(BuildContext context) => SizedBox.expand(
-        child: buildFrontCard(),
+        child: widget.isFront ? buildFrontCard() : buildCard(),
       );
 
   Widget buildFrontCard() => GestureDetector(

@@ -7,6 +7,7 @@ import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/profile_edit_screen.dart';
+import 'package:betabeta/services/card_provider.dart';
 import 'package:betabeta/services/location_service.dart';
 import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -22,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:tcard/tcard.dart';
 
 class MatchScreen extends StatefulWidget {
@@ -278,7 +280,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
             MatchEngine.instance.currentMatch(),
           if (MatchEngine.instance.nextMatch() != null)
             MatchEngine.instance.nextMatch()
-        ];
+        ].reversed.toList();
 
         Widget _buildThumbIcon() {
           if (currentJudgment == SwipeDirection.Right) {
@@ -347,19 +349,40 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
             location: SettingsData.instance.locationDescription,
             relationshipType: SettingsData.instance.relationshipType);
 
+        Widget buildCards() {
+          final provider = Provider.of<CardProvider>(context);
+          final matchCards = provider.matchCards;
+
+          return Stack(
+            children: topEngineMatches.map<Widget>((match) {
+              return VoilaCardWidget(
+                isFront: matchCards.last == match,
+                matchCard: MatchCard(
+                  scrollController: _scrollController,
+                  key: Key(match!.profile!.uid),
+                  profile: match.profile!,
+                  showCarousel: true,
+                  clickable: true,
+                ),
+              );
+            }).toList(),
+          );
+        }
+
         return topEngineMatches.isEmpty
             ? _widgetWhenNoCardsExist()
             : Stack(
                 fit: StackFit.expand,
                 children: [
-                  VoilaCardWidget(
-                    matchCard: MatchCard(
-                      scrollController: _scrollController,
-                      profile: currentUserProfile,
-                      showCarousel: true,
-                      clickable: true,
-                    ),
-                  ),
+                  buildCards(),
+                  // VoilaCardWidget(
+                  //   matchCard: MatchCard(
+                  //     scrollController: _scrollController,
+                  //     profile: currentUserProfile,
+                  //     showCarousel: true,
+                  //     clickable: true,
+                  //   ),
+                  // ),
                   // TCard(
                   //   onDragCard:
                   //       (double interpolation, SwipeDirection direction) {
