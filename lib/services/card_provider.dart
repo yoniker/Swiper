@@ -1,33 +1,43 @@
+import 'dart:math';
+
 import 'package:betabeta/services/match_engine.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 enum CardStatus { like, dislike, skip }
 
 class CardProvider extends ChangeNotifier {
-  List<Match?> matchCards = [];
+  List<String> _urlImages = [];
   bool isDragging = false;
   double angle = 0;
   Offset position = Offset.zero;
   Size _screenSize = Size.zero;
 
+  List<String> get urlImages => _urlImages;
+
   CardProvider() {
     resetUsers();
-  }
-
-  void resetUsers() {
-    matchCards = [
-      if (MatchEngine.instance.currentMatch() != null)
-        MatchEngine.instance.currentMatch(),
-      if (MatchEngine.instance.nextMatch() != null)
-        MatchEngine.instance.nextMatch()
-    ].reversed.toList();
   }
 
   void setScreenSize(Size screenSize) => _screenSize = screenSize;
 
   void startPosition(DragStartDetails details) {
     isDragging = true;
+    notifyListeners();
+  }
 
+  void resetUsers() {
+    _urlImages = <String>[
+      'https://unsplash.com/photos/PaCzyxEcqiw/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjU0ODI4MjM5&force=true&w=640',
+      'https://unsplash.com/photos/n1B6ftPB5Eg/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjU0ODM2NzQ3&force=true&w=640',
+      'https://unsplash.com/photos/RBerxXPnZPE/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjU0ODM2Mjgy&force=true&w=640',
+      'https://unsplash.com/photos/Zz5LQe-VSMY/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8NXx8d29tYW58ZW58MHx8fHwxNjU0NzY4NDY3&force=true&w=640',
+      'https://unsplash.com/photos/aoQ4DYZLE_E/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjU0ODM2ODE4&force=true&w=640',
+      'https://unsplash.com/photos/JoKS3XweV50/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjU0ODM2ODM3&force=true&w=640',
+      'https://unsplash.com/photos/AoL-mVxprmk/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjU0ODMzNDgy&force=true&w=640',
+      'https://unsplash.com/photos/0oRefidSNKc/download?force=true&w=640',
+      'https://unsplash.com/photos/FcLyt7lW5wg/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8NTV8fHdvbWFufGVufDB8fHx8MTY1NDc2NzM1Mg&force=true&w=640'
+    ].reversed.toList();
     notifyListeners();
   }
 
@@ -40,15 +50,27 @@ class CardProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void endPosition() {
+  void endPosition() async {
     isDragging = false;
     notifyListeners();
 
-    final status = getStatus();
+    final status = getStatus(force: true);
+
+    if (status != null) {
+      Fluttertoast.cancel();
+      Fluttertoast.showToast(
+          msg: status.toString().split('.').last.toUpperCase(), fontSize: 36);
+    }
 
     switch (status) {
       case CardStatus.like:
         like();
+        break;
+      case CardStatus.dislike:
+        dislike();
+        break;
+      case CardStatus.skip:
+        skip();
         break;
       default:
         resetPosition();
@@ -63,15 +85,48 @@ class CardProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  CardStatus? getStatus() {
-    final x = position.dx;
-
+  double getStatusOpacity() {
     final delta = 100;
+    final pos = max(position.dx.abs(), position.dy.abs());
+    final opacity = pos / delta;
 
-    if (x >= delta) {
-      return CardStatus.like;
+    return min(opacity, 1);
+  }
+
+  double getStatusScale() {
+    final delta = 10;
+    final pos = max(position.dx.abs(), position.dy.abs());
+    final scale = delta / pos;
+
+    return min(scale, 1);
+  }
+
+  CardStatus? getStatus({bool force = false}) {
+    final x = position.dx;
+    final y = position.dy;
+    final forceSkip = x.abs() < 20;
+
+    if (force) {
+      final delta = 100;
+
+      if (x >= delta) {
+        return CardStatus.like;
+      } else if (x <= -delta) {
+        return CardStatus.dislike;
+      } else if (y <= -delta && forceSkip) {
+        return CardStatus.skip;
+      }
+    } else {
+      final delta = 0;
+
+      if (y <= -delta * 2 && forceSkip) {
+        return CardStatus.skip;
+      } else if (x >= delta) {
+        return CardStatus.like;
+      } else if (x <= -delta) {
+        return CardStatus.dislike;
+      }
     }
-    return null;
   }
 
   void like() {
@@ -82,11 +137,25 @@ class CardProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void dislike() {
+    angle = -20;
+    position -= Offset(2 * _screenSize.width, 0);
+    _nextCard();
+    notifyListeners();
+  }
+
+  void skip() {
+    angle = 0;
+    position -= Offset(0, _screenSize.height);
+    _nextCard();
+    notifyListeners();
+  }
+
   Future _nextCard() async {
-    if (matchCards.isEmpty) return;
+    if (_urlImages.isEmpty) return;
 
     await Future.delayed(Duration(milliseconds: 200));
-    matchCards.removeLast();
+    _urlImages.removeLast();
     resetPosition();
   }
 }

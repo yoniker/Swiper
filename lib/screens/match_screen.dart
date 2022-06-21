@@ -317,56 +317,31 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
           return SizedBox.shrink();
         }
 
-        var Birthday = SettingsData.instance.userBirthday;
-        DateTime userBirthday = DateTime.parse(Birthday);
-        int age = UtilsMethods.calculateAge(userBirthday);
-
-        final currentUserProfile = Profile(
-            age: age,
-            jobTitle: SettingsData.instance.jobTitle,
-            height: SettingsData.instance.heightInCm.toDouble(),
-            imageUrls: SettingsData.instance.profileImagesUrls,
-            children: SettingsData.instance.children,
-            covidVaccine: SettingsData.instance.covid_vaccine,
-            drinking: SettingsData.instance.drinking,
-            uid: SettingsData.instance.uid,
-            education: SettingsData.instance.education,
-            fitness: SettingsData.instance.fitness,
-            religion: SettingsData.instance.religion,
-            hobbies: SettingsData.instance.hobbies,
-            school: SettingsData.instance.school,
-            smoking: SettingsData.instance.smoking,
-            pets: SettingsData.instance.pets,
-            username: SettingsData.instance.name,
-            zodiac: SettingsData.instance.zodiac,
-            matchChangedTime: DateTime.now(),
-            compatibilityScore: 1.0,
-            hotnessScore: 1.0,
-            description: SettingsData.instance.userDescription,
-            preferredGender: SettingsData.instance.preferredGender,
-            userGender: SettingsData.instance.userGender,
-            showUserGender: SettingsData.instance.showUserGender,
-            location: SettingsData.instance.locationDescription,
-            relationshipType: SettingsData.instance.relationshipType);
-
         Widget buildCards() {
           final provider = Provider.of<CardProvider>(context);
-          final matchCards = provider.matchCards;
+          final urlImages = provider.urlImages;
 
-          return Stack(
-            children: topEngineMatches.map<Widget>((match) {
-              return VoilaCardWidget(
-                isFront: matchCards.last == match,
-                matchCard: MatchCard(
-                  scrollController: _scrollController,
-                  key: Key(match!.profile!.uid),
-                  profile: match.profile!,
-                  showCarousel: true,
-                  clickable: true,
-                ),
-              );
-            }).toList(),
-          );
+          return urlImages.isEmpty
+              ? Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      final provider =
+                          Provider.of<CardProvider>(context, listen: false);
+
+                      provider.resetUsers();
+                    },
+                    child: Text('Restart'),
+                  ),
+                )
+              : Stack(
+                  children: urlImages
+                      .map(
+                        (urlImage) => VoilaCardWidget(
+                            user: urlImage,
+                            isFront: urlImages.last == urlImage),
+                      )
+                      .toList(),
+                );
         }
 
         return topEngineMatches.isEmpty
