@@ -94,7 +94,7 @@ class CardProvider extends ChangeNotifier {
   }
 
   double getStatusScale() {
-    final delta = 10;
+    final delta = 30;
     final pos = max(position.dx.abs(), position.dy.abs());
     final scale = delta / pos;
 

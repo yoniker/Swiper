@@ -42,7 +42,7 @@ class _VoilaCardWidgetState extends State<VoilaCardWidget> {
               child: AnimatedContainer(
               curve: Curves.easeInOut,
               padding: EdgeInsets.symmetric(
-                  vertical: scale * 10, horizontal: scale * 5),
+                  vertical: scale * 30, horizontal: scale * 15),
               duration: Duration(milliseconds: milliseconds),
               child: buildCard(),
             )),
