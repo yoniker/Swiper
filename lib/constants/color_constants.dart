@@ -178,6 +178,13 @@ const colorizeColors = [
   Color(0XFFDDA900)
 ];
 
+const List<BoxShadow>? shadow = [
+  BoxShadow(
+    color: lightCardColor,
+    blurRadius: 12.0,
+  )
+];
+
 const colorizeTextStyle =
     TextStyle(fontSize: 40.0, fontFamily: 'LuckiestGuy', shadows: [
   Shadow(

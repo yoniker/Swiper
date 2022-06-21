@@ -7,6 +7,7 @@ import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/profile_edit_screen.dart';
+import 'package:betabeta/services/card_provider.dart';
 import 'package:betabeta/services/location_service.dart';
 import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -22,6 +23,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:tcard/tcard.dart';
 
 class MatchScreen extends StatefulWidget {
@@ -278,7 +280,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
             MatchEngine.instance.currentMatch(),
           if (MatchEngine.instance.nextMatch() != null)
             MatchEngine.instance.nextMatch()
-        ];
+        ].reversed.toList();
 
         Widget _buildThumbIcon() {
           if (currentJudgment == SwipeDirection.Right) {
@@ -315,51 +317,39 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
           return SizedBox.shrink();
         }
 
-        var Birthday = SettingsData.instance.userBirthday;
-        DateTime userBirthday = DateTime.parse(Birthday);
-        int age = UtilsMethods.calculateAge(userBirthday);
+        Widget buildCards() {
+          final provider = Provider.of<CardProvider>(context, listen: true);
+          final urlImages = provider.urlImages;
 
-        final currentUserProfile = Profile(
-            age: age,
-            jobTitle: SettingsData.instance.jobTitle,
-            height: SettingsData.instance.heightInCm.toDouble(),
-            imageUrls: SettingsData.instance.profileImagesUrls,
-            children: SettingsData.instance.children,
-            covidVaccine: SettingsData.instance.covid_vaccine,
-            drinking: SettingsData.instance.drinking,
-            uid: SettingsData.instance.uid,
-            education: SettingsData.instance.education,
-            fitness: SettingsData.instance.fitness,
-            religion: SettingsData.instance.religion,
-            hobbies: SettingsData.instance.hobbies,
-            school: SettingsData.instance.school,
-            smoking: SettingsData.instance.smoking,
-            pets: SettingsData.instance.pets,
-            username: SettingsData.instance.name,
-            zodiac: SettingsData.instance.zodiac,
-            matchChangedTime: DateTime.now(),
-            compatibilityScore: 1.0,
-            hotnessScore: 1.0,
-            description: SettingsData.instance.userDescription,
-            preferredGender: SettingsData.instance.preferredGender,
-            userGender: SettingsData.instance.userGender,
-            showUserGender: SettingsData.instance.showUserGender,
-            location: SettingsData.instance.locationDescription,
-            relationshipType: SettingsData.instance.relationshipType);
+          return urlImages.isEmpty
+              ? Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      final provider =
+                          Provider.of<CardProvider>(context, listen: false);
+
+                      provider.resetUsers();
+                    },
+                    child: Text('Restart'),
+                  ),
+                )
+              : Stack(
+                  children: urlImages
+                      .map(
+                        (urlImage) => VoilaCardWidget(
+                            urlImage: urlImage,
+                            isFront: urlImages.last == urlImage),
+                      )
+                      .toList(),
+                );
+        }
 
         return topEngineMatches.isEmpty
             ? _widgetWhenNoCardsExist()
             : Stack(
                 fit: StackFit.expand,
                 children: [
-                  VoilaCardWidget(
-                    matchCard: MatchCard(
-                      scrollController: _scrollController,
-                      profile: currentUserProfile,
-                      showCarousel: true,
-                      clickable: true,
-                    ),
-                  ),
+                  buildCards(),
                   // TCard(
                   //   onDragCard:
                   //       (double interpolation, SwipeDirection direction) {
