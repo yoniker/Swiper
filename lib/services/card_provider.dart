@@ -4,7 +4,7 @@ import 'package:betabeta/services/match_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-enum CardStatus { like, dislike, skip }
+enum CardStatus { like, dislike }
 
 class CardProvider extends ChangeNotifier {
   List<String> _urlImages = [];
@@ -69,9 +69,6 @@ class CardProvider extends ChangeNotifier {
       case CardStatus.dislike:
         dislike();
         break;
-      case CardStatus.skip:
-        skip();
-        break;
       default:
         resetPosition();
     }
@@ -104,7 +101,6 @@ class CardProvider extends ChangeNotifier {
   CardStatus? getStatus({bool force = false}) {
     final x = position.dx;
     final y = position.dy;
-    final forceSkip = x.abs() < 20;
 
     if (force) {
       final delta = 100;
@@ -113,15 +109,11 @@ class CardProvider extends ChangeNotifier {
         return CardStatus.like;
       } else if (x <= -delta) {
         return CardStatus.dislike;
-      } else if (y <= -delta && forceSkip) {
-        return CardStatus.skip;
       }
     } else {
       final delta = 0;
 
-      if (y <= -delta * 2 && forceSkip) {
-        return CardStatus.skip;
-      } else if (x >= delta) {
+      if (x >= delta) {
         return CardStatus.like;
       } else if (x <= -delta) {
         return CardStatus.dislike;

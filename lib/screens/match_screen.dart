@@ -318,7 +318,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
         }
 
         Widget buildCards() {
-          final provider = Provider.of<CardProvider>(context);
+          final provider = Provider.of<CardProvider>(context, listen: true);
           final urlImages = provider.urlImages;
 
           return urlImages.isEmpty
@@ -337,7 +337,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
                   children: urlImages
                       .map(
                         (urlImage) => VoilaCardWidget(
-                            user: urlImage,
+                            urlImage: urlImage,
                             isFront: urlImages.last == urlImage),
                       )
                       .toList(),
@@ -350,14 +350,6 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
                 fit: StackFit.expand,
                 children: [
                   buildCards(),
-                  // VoilaCardWidget(
-                  //   matchCard: MatchCard(
-                  //     scrollController: _scrollController,
-                  //     profile: currentUserProfile,
-                  //     showCarousel: true,
-                  //     clickable: true,
-                  //   ),
-                  // ),
                   // TCard(
                   //   onDragCard:
                   //       (double interpolation, SwipeDirection direction) {

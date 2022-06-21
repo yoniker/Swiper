@@ -8,9 +8,10 @@ import 'package:provider/provider.dart';
 import 'match_card.dart';
 
 class VoilaCardWidget extends StatefulWidget {
-  final String user;
+  final String urlImage;
   final bool isFront;
-  const VoilaCardWidget({Key? key, required this.user, required this.isFront})
+  const VoilaCardWidget(
+      {Key? key, required this.urlImage, required this.isFront})
       : super(key: key);
 
   @override
@@ -31,21 +32,10 @@ class _VoilaCardWidgetState extends State<VoilaCardWidget> {
   }
 
   Widget build(BuildContext context) {
-    final provider = Provider.of<CardProvider>(context);
-    final scale = provider.getStatusScale();
-    final milliseconds = provider.isDragging ? 0 : 400;
-
     return SizedBox(
       child: widget.isFront
           ? SizedBox.expand(child: buildFrontCard())
-          : SizedBox.expand(
-              child: AnimatedContainer(
-              curve: Curves.easeInOut,
-              padding: EdgeInsets.symmetric(
-                  vertical: scale * 30, horizontal: scale * 15),
-              duration: Duration(milliseconds: milliseconds),
-              child: buildCard(),
-            )),
+          : SizedBox.expand(child: buildBackCard()),
     );
   }
 
@@ -93,6 +83,20 @@ class _VoilaCardWidgetState extends State<VoilaCardWidget> {
         },
       );
 
+  Widget buildBackCard() {
+    final provider = Provider.of<CardProvider>(context, listen: false);
+    final scale = provider.getStatusScale();
+    final milliseconds = provider.isDragging ? 0 : 400;
+
+    return AnimatedContainer(
+      curve: Curves.easeInOut,
+      padding:
+          EdgeInsets.symmetric(vertical: scale * 30, horizontal: scale * 15),
+      duration: Duration(milliseconds: milliseconds),
+      child: buildCard(),
+    );
+  }
+
   Widget buildCard() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
@@ -102,7 +106,7 @@ class _VoilaCardWidgetState extends State<VoilaCardWidget> {
           Radius.circular(10),
         ),
         image: DecorationImage(
-            image: NetworkImage(widget.user), fit: BoxFit.cover),
+            image: NetworkImage(widget.urlImage), fit: BoxFit.cover),
       ),
     );
   }
@@ -133,16 +137,6 @@ class _VoilaCardWidgetState extends State<VoilaCardWidget> {
           right: 50,
         );
 
-      case CardStatus.skip:
-        final child =
-            buildStamp(color: Colors.yellow, text: 'Skip', opacity: opacity);
-
-        return Positioned(
-          child: child,
-          bottom: 128,
-          left: 128,
-          right: 128,
-        );
       default:
         return Container();
     }
