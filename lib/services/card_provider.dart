@@ -28,7 +28,7 @@ class CardProvider extends ChangeNotifier {
   }
 
   void resetUsers() {
-    _matches = List<Match>.from(MatchEngine.instance.matches.reversed);//.sublist(0,5); TODO why does using a sublist here creates a nasty bug?
+    _matches = List<Match>.from(MatchEngine.instance.topMatches.reversed);// TODO why does using a sublist here creates a nasty bug?
     notifyListeners();
   }
 

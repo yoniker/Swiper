@@ -337,6 +337,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
                   children: matches
                       .map(
                         (match) => VoilaCardWidget(
+                          key:Key(match.profile!.uid),
                             match: match,
                             isFront: matches.last == match),
                       )

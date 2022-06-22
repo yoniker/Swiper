@@ -17,6 +17,7 @@ class MatchEngine extends ChangeNotifier {
   DateTime lastLocationCheck = DateTime(1990);
   bool listeningToLocation = false;
   static const Duration minIntervalWaitLocation = Duration(minutes: 5);
+  static const int numMatchesToGiveCardProvider = 5;
 
 
 
@@ -45,7 +46,7 @@ class MatchEngine extends ChangeNotifier {
   Match? nextMatch()  {
     if(_matches.length<=1){return null;}
     return _matches.elementAt(1);}
-    List<Match> get matches => List<Match>.from(_matches);
+    List<Match> get topMatches => List<Match>.from(_matches).sublist(0,_matches.length>=numMatchesToGiveCardProvider?numMatchesToGiveCardProvider:_matches.length);
 
   Future<void> getMoreMatchesFromServer() async {
     if(_serverMatchesSearchStatus==MatchSearchStatus.not_found){
