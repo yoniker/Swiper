@@ -8,14 +8,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 enum CardStatus { like, dislike }
 
 class CardProvider extends ChangeNotifier {
-  List<String> _urlImages = [];
   List<Match> _matches = [];
   bool isDragging = false;
   double angle = 0;
   Offset position = Offset.zero;
   Size _screenSize = Size.zero;
-
-  List<String> get urlImages => _urlImages;
   List<Match> get matches => _matches;
 
   CardProvider() {
@@ -31,9 +28,7 @@ class CardProvider extends ChangeNotifier {
   }
 
   void resetUsers() {
-    _urlImages = MatchEngine.instance.matches.reversed.map((match) =>
-    NewNetworkService.getProfileImageUrl(match.profile!.imageUrls![0])).toList();
-    _matches = MatchEngine.instance.matches.reversed.toList();
+    _matches = List<Match>.from(MatchEngine.instance.matches.reversed);//.sublist(0,5); TODO why does using a sublist here creates a nasty bug?
     notifyListeners();
   }
 
@@ -120,7 +115,7 @@ class CardProvider extends ChangeNotifier {
   void like() {
     angle = 20;
     position += Offset(2 * _screenSize.width / 2, 0);
-    _nextCard();
+    _nextCard(decision: Decision.like);
 
     notifyListeners();
   }
@@ -128,22 +123,16 @@ class CardProvider extends ChangeNotifier {
   void dislike() {
     angle = -20;
     position -= Offset(2 * _screenSize.width, 0);
-    _nextCard();
+    _nextCard(decision: Decision.nope);
     notifyListeners();
   }
 
-  void skip() {
-    angle = 0;
-    position -= Offset(0, _screenSize.height);
-    _nextCard();
-    notifyListeners();
-  }
-
-  Future _nextCard() async {
-    if (_urlImages.isEmpty) return;
+  Future _nextCard({required Decision decision}) async {
+    if (_matches.isEmpty) return;
 
     await Future.delayed(Duration(milliseconds: 200));
-    MatchEngine.instance.currentMatchDecision(Decision.nope);
+    print(MatchEngine.instance.currentMatch()!.profile!.username);
+    MatchEngine.instance.currentMatchDecision(decision);
     resetPosition();
     resetUsers();
   }

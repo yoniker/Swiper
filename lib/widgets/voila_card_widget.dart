@@ -100,16 +100,12 @@ class _VoilaCardWidgetState extends State<VoilaCardWidget> {
   }
 
   Widget buildCard() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-      decoration: BoxDecoration(
-        boxShadow: widget.isFront ? shadow : null,
-        borderRadius: BorderRadius.all(
-          Radius.circular(10),
-        ),
-        image: DecorationImage(
-            image: NetworkImage(NewNetworkService.getProfileImageUrl(widget.match.profile!.imageUrls![0])), fit: BoxFit.cover),
-      ),
+    return MatchCard(
+      scrollController: null,
+      key: Key(widget.match.profile!.uid),
+      profile: widget.match.profile!,
+      showCarousel: true,
+      clickable: widget.isFront,
     );
   }
 
