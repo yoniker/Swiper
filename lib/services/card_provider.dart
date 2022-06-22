@@ -9,12 +9,14 @@ enum CardStatus { like, dislike }
 
 class CardProvider extends ChangeNotifier {
   List<String> _urlImages = [];
+  List<Match> _matches = [];
   bool isDragging = false;
   double angle = 0;
   Offset position = Offset.zero;
   Size _screenSize = Size.zero;
 
   List<String> get urlImages => _urlImages;
+  List<Match> get matches => _matches;
 
   CardProvider() {
     MatchEngine.instance.addListener(() { resetUsers(); notifyListeners();});
@@ -31,6 +33,7 @@ class CardProvider extends ChangeNotifier {
   void resetUsers() {
     _urlImages = MatchEngine.instance.matches.reversed.map((match) =>
     NewNetworkService.getProfileImageUrl(match.profile!.imageUrls![0])).toList();
+    _matches = MatchEngine.instance.matches.reversed.toList();
     notifyListeners();
   }
 
