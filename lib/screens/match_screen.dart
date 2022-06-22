@@ -319,9 +319,9 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
 
         Widget buildCards() {
           final provider = Provider.of<CardProvider>(context, listen: true);
-          final urlImages = provider.urlImages;
+          final matches = provider.matches;
 
-          return urlImages.isEmpty
+          return matches.isEmpty
               ? Center(
                   child: ElevatedButton(
                     onPressed: () {
@@ -334,11 +334,11 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
                   ),
                 )
               : Stack(
-                  children: urlImages
+                  children: matches
                       .map(
-                        (urlImage) => VoilaCardWidget(
-                            urlImage: urlImage,
-                            isFront: urlImages.last == urlImage),
+                        (match) => VoilaCardWidget(
+                            match: match,
+                            isFront: matches.last == match),
                       )
                       .toList(),
                 );

@@ -2,16 +2,18 @@ import 'dart:math';
 
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/services/card_provider.dart';
+import 'package:betabeta/services/match_engine.dart';
+import 'package:betabeta/services/new_networking.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'match_card.dart';
 
 class VoilaCardWidget extends StatefulWidget {
-  final String urlImage;
+  final Match match;
   final bool isFront;
   const VoilaCardWidget(
-      {Key? key, required this.urlImage, required this.isFront})
+      {Key? key, required this.match, required this.isFront})
       : super(key: key);
 
   @override
@@ -106,7 +108,7 @@ class _VoilaCardWidgetState extends State<VoilaCardWidget> {
           Radius.circular(10),
         ),
         image: DecorationImage(
-            image: NetworkImage(widget.urlImage), fit: BoxFit.cover),
+            image: NetworkImage(NewNetworkService.getProfileImageUrl(widget.match.profile!.imageUrls![0])), fit: BoxFit.cover),
       ),
     );
   }
