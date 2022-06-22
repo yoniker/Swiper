@@ -86,9 +86,7 @@ void main() async {
     // statusBarIconBrightness: Brightness.dark,
   ));
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => CardProvider(),
-      child: GetMaterialApp(
+     GetMaterialApp(
         home: SplashScreen(),
         getPages: [
           GetPage(
@@ -199,6 +197,6 @@ void main() async {
         title: 'Voilà MVP',
         debugShowCheckedModeBanner: false,
       ),
-    ),
+
   );
 }

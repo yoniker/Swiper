@@ -272,50 +272,12 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
   @override
   Widget build(BuildContext context) {
     // return a stack of cards well positioned.
-    return ListenerWidget(
+
+    return ChangeNotifierProvider(
+        create: (context) => CardProvider(),
+    child:ListenerWidget(
       notifier: MatchEngine.instance,
       builder: (context) {
-        List<Match?> topEngineMatches = [
-          if (MatchEngine.instance.currentMatch() != null)
-            MatchEngine.instance.currentMatch(),
-          if (MatchEngine.instance.nextMatch() != null)
-            MatchEngine.instance.nextMatch()
-        ].reversed.toList();
-
-        Widget _buildThumbIcon() {
-          if (currentJudgment == SwipeDirection.Right) {
-            return Center(
-              child: Opacity(
-                opacity: currentInterpolation * widget.maxThumbOpacity,
-                child: Transform.scale(
-                  scale: currentInterpolation,
-                  child: Icon(
-                    Icons.thumb_up,
-                    size: 100.0,
-                    color: Colors.green,
-                  ),
-                ),
-              ),
-            );
-          }
-          if (currentJudgment == SwipeDirection.Left) {
-            return Center(
-              child: Opacity(
-                opacity: currentInterpolation * widget.maxThumbOpacity,
-                child: Transform.scale(
-                  scale: currentInterpolation,
-                  child: Icon(
-                    Icons.thumb_down,
-                    size: 100.0,
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-            );
-          }
-
-          return SizedBox.shrink();
-        }
 
         Widget buildCards() {
           final provider = Provider.of<CardProvider>(context, listen: true);
@@ -345,48 +307,15 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
                 );
         }
 
-        return topEngineMatches.isEmpty
+        return MatchEngine.instance.topMatches.isEmpty
             ? _widgetWhenNoCardsExist()
             : Stack(
                 fit: StackFit.expand,
                 children: [
                   buildCards(),
-                  // TCard(
-                  //   onDragCard:
-                  //       (double interpolation, SwipeDirection direction) {
-                  //     setState(() {
-                  //       currentInterpolation = interpolation;
-                  //       currentJudgment = direction;
-                  //     });
-                  //     return;
-                  //   },
-                  //   delaySlideFor: 0,
-                  //   onForward: (int index, SwipeInfo info) {
-                  //     if (index == 0) {
-                  //       //TODO index>0 should be impossible
-                  //       if (info.direction == SwipeDirection.Left) {
-                  //         MatchEngine.instance
-                  //             .currentMatchDecision(Decision.nope);
-                  //       } else if (info.direction == SwipeDirection.Right) {
-                  //         MatchEngine.instance
-                  //             .currentMatchDecision(Decision.like);
-                  //       }
-                  //     }
-                  //   },
-                  //   cards: topEngineMatches.map<Widget>((match) {
-                  //     return MatchCard(
-                  //       scrollController: _scrollController,
-                  //       key: Key(match!.profile!.uid),
-                  //       profile: match.profile!,
-                  //       showCarousel: true,
-                  //       clickable: true,
-                  //     );
-                  //   }).toList(),
-                  // ),
-                  _buildThumbIcon(),
                 ],
               );
       },
-    );
+    ));
   }
 }
