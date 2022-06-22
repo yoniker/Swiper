@@ -5,17 +5,14 @@ import 'package:betabeta/constants/assets_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
-import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/profile_edit_screen.dart';
 import 'package:betabeta/services/card_provider.dart';
 import 'package:betabeta/services/location_service.dart';
 import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/services/settings_model.dart';
-import 'package:betabeta/utils/utils_methods.dart';
 import 'package:betabeta/widgets/animated_widgets/animated_minitcard_widget.dart';
 import 'package:betabeta/widgets/animated_widgets/no_matches_display_widget.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
-import 'package:betabeta/widgets/match_card.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:betabeta/widgets/voila_card_widget.dart';
 import 'package:betabeta/widgets/voila_logo_widget.dart';
@@ -269,53 +266,47 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
     );
   }
 
+  Widget buildCards(CardProvider provider) {
+    final matches = provider.matches;
+
+    return matches.isEmpty
+        ? Center(
+      child: ElevatedButton(
+        onPressed: () {
+          provider.resetUsers();
+        },
+        child: Text('Restart'),
+      ),
+    )
+        : Stack(
+      children: matches
+          .map(
+            (match) => VoilaCardWidget(
+            key:Key(match.profile!.uid),
+            match: match,
+            isFront: matches.last == match),
+      )
+          .toList(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // return a stack of cards well positioned.
 
     return ChangeNotifierProvider(
         create: (context) => CardProvider(),
-    child:ListenerWidget(
-      notifier: MatchEngine.instance,
-      builder: (context) {
+    builder:(context,child){
 
-        Widget buildCards() {
-          final provider = Provider.of<CardProvider>(context, listen: true);
-          final matches = provider.matches;
+    return Consumer<CardProvider>(
+        builder: (context, cardProvider, child) =>
 
-          return matches.isEmpty
-              ? Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      final provider =
-                          Provider.of<CardProvider>(context, listen: false);
-
-                      provider.resetUsers();
-                    },
-                    child: Text('Restart'),
-                  ),
-                )
-              : Stack(
-                  children: matches
-                      .map(
-                        (match) => VoilaCardWidget(
-                          key:Key(match.profile!.uid),
-                            match: match,
-                            isFront: matches.last == match),
-                      )
-                      .toList(),
-                );
-        }
-
-        return MatchEngine.instance.topMatches.isEmpty
+    MatchEngine.instance.topMatches.isEmpty
             ? _widgetWhenNoCardsExist()
             : Stack(
                 fit: StackFit.expand,
                 children: [
-                  buildCards(),
+                  buildCards(cardProvider),
                 ],
-              );
-      },
-    ));
+              ));});
   }
 }
