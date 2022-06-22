@@ -12,7 +12,6 @@ import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/animated_widgets/animated_minitcard_widget.dart';
 import 'package:betabeta/widgets/animated_widgets/no_matches_display_widget.dart';
-import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:betabeta/widgets/voila_card_widget.dart';
 import 'package:betabeta/widgets/voila_logo_widget.dart';
@@ -21,7 +20,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:tcard/tcard.dart';
 
 class MatchScreen extends StatefulWidget {
   static const String routeName = '/match_screen';
@@ -89,7 +87,6 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
     with SingleTickerProviderStateMixin {
   double bottomCardScale = 0.95;
   Offset bottomCardOffset = Offset(0.0, 1.7);
-  SwipeDirection? currentJudgment;
   late double currentInterpolation;
   late final ScrollController _scrollController;
 
