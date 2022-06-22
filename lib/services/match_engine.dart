@@ -45,6 +45,7 @@ class MatchEngine extends ChangeNotifier {
   Match? nextMatch()  {
     if(_matches.length<=1){return null;}
     return _matches.elementAt(1);}
+    List<Match> get matches => _matches.toList();
 
   Future<void> getMoreMatchesFromServer() async {
     if(_serverMatchesSearchStatus==MatchSearchStatus.not_found){

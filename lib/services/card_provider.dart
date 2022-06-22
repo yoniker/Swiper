@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:betabeta/services/match_engine.dart';
+import 'package:betabeta/services/new_networking.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -16,6 +17,7 @@ class CardProvider extends ChangeNotifier {
   List<String> get urlImages => _urlImages;
 
   CardProvider() {
+    MatchEngine.instance.addListener(() { resetUsers(); notifyListeners();});
     resetUsers();
   }
 
@@ -27,17 +29,8 @@ class CardProvider extends ChangeNotifier {
   }
 
   void resetUsers() {
-    _urlImages = <String>[
-      'https://unsplash.com/photos/PaCzyxEcqiw/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjU0ODI4MjM5&force=true&w=640',
-      'https://unsplash.com/photos/n1B6ftPB5Eg/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjU0ODM2NzQ3&force=true&w=640',
-      'https://unsplash.com/photos/RBerxXPnZPE/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjU0ODM2Mjgy&force=true&w=640',
-      'https://unsplash.com/photos/Zz5LQe-VSMY/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8NXx8d29tYW58ZW58MHx8fHwxNjU0NzY4NDY3&force=true&w=640',
-      'https://unsplash.com/photos/aoQ4DYZLE_E/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjU0ODM2ODE4&force=true&w=640',
-      'https://unsplash.com/photos/JoKS3XweV50/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjU0ODM2ODM3&force=true&w=640',
-      'https://unsplash.com/photos/AoL-mVxprmk/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjU0ODMzNDgy&force=true&w=640',
-      'https://unsplash.com/photos/0oRefidSNKc/download?force=true&w=640',
-      'https://unsplash.com/photos/FcLyt7lW5wg/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8NTV8fHdvbWFufGVufDB8fHx8MTY1NDc2NzM1Mg&force=true&w=640'
-    ].reversed.toList();
+    _urlImages = MatchEngine.instance.matches.reversed.map((match) =>
+    NewNetworkService.getProfileImageUrl(match.profile!.imageUrls![0])).toList();
     notifyListeners();
   }
 
@@ -147,7 +140,8 @@ class CardProvider extends ChangeNotifier {
     if (_urlImages.isEmpty) return;
 
     await Future.delayed(Duration(milliseconds: 200));
-    _urlImages.removeLast();
+    MatchEngine.instance.currentMatchDecision(Decision.nope);
     resetPosition();
+    resetUsers();
   }
 }
