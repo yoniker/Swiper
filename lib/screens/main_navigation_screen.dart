@@ -16,6 +16,7 @@ import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:betabeta/widgets/text_search_view_widget.dart';
 import 'package:betabeta/widgets/voila_logo_widget.dart';
+import 'package:betabeta/widgets/voila_search_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -59,9 +60,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           return ImageFilterViewWidget();
         break;
       default:
-        return VoilaLogoWidget();
+        return VoilaSearchButtonWidget();
     }
-    return VoilaLogoWidget();
+    return VoilaSearchButtonWidget();
   }
 
   /// builds the widget's body.

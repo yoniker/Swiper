@@ -9,8 +9,7 @@ import 'match_card.dart';
 class VoilaCardWidget extends StatefulWidget {
   final Match match;
   final bool isFront;
-  const VoilaCardWidget(
-      {Key? key, required this.match, required this.isFront})
+  const VoilaCardWidget({Key? key, required this.match, required this.isFront})
       : super(key: key);
 
   @override
@@ -18,6 +17,8 @@ class VoilaCardWidget extends StatefulWidget {
 }
 
 class _VoilaCardWidgetState extends State<VoilaCardWidget> {
+  final EdgeInsetsGeometry cardPadding =
+      const EdgeInsets.symmetric(vertical: 10, horizontal: 5);
   @override
   void initState() {
     super.initState();
@@ -38,48 +39,51 @@ class _VoilaCardWidgetState extends State<VoilaCardWidget> {
     );
   }
 
-  Widget buildFrontCard() => GestureDetector(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final provider = Provider.of<CardProvider>(context, listen: true);
-            final position = provider.position;
-            final milliseconds = provider.isDragging ? 0 : 400;
+  Widget buildFrontCard() => Padding(
+        padding: cardPadding,
+        child: GestureDetector(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final provider = Provider.of<CardProvider>(context, listen: true);
+              final position = provider.position;
+              final milliseconds = provider.isDragging ? 0 : 400;
 
-            final center = constraints.smallest.center(Offset.zero);
-            final angle = provider.angle * pi / 180;
-            final rotatedMatrix = Matrix4.identity()
-              ..translate(center.dx, center.dy)
-              ..rotateZ(angle)
-              ..translate(-center.dx, -center.dy);
+              final center = constraints.smallest.center(Offset.zero);
+              final angle = provider.angle * pi / 180;
+              final rotatedMatrix = Matrix4.identity()
+                ..translate(center.dx, center.dy)
+                ..rotateZ(angle)
+                ..translate(-center.dx, -center.dy);
 
-            return AnimatedContainer(
-              curve: Curves.easeInOut,
-              duration: Duration(milliseconds: milliseconds),
-              transform: rotatedMatrix..translate(position.dx, position.dy),
-              child: Stack(
-                children: [
-                  buildCard(),
-                  buildStamps(),
-                ],
-              ),
-            );
+              return AnimatedContainer(
+                curve: Curves.easeInOut,
+                duration: Duration(milliseconds: milliseconds),
+                transform: rotatedMatrix..translate(position.dx, position.dy),
+                child: Stack(
+                  children: [
+                    buildCard(),
+                    buildStamps(),
+                  ],
+                ),
+              );
+            },
+          ),
+          onPanStart: (details) {
+            final provider = Provider.of<CardProvider>(context, listen: false);
+
+            provider.startPosition(details);
+          },
+          onPanUpdate: (details) {
+            final provider = Provider.of<CardProvider>(context, listen: false);
+
+            provider.updatePosition(details);
+          },
+          onPanEnd: (details) {
+            final provider = Provider.of<CardProvider>(context, listen: false);
+
+            provider.endPosition();
           },
         ),
-        onPanStart: (details) {
-          final provider = Provider.of<CardProvider>(context, listen: false);
-
-          provider.startPosition(details);
-        },
-        onPanUpdate: (details) {
-          final provider = Provider.of<CardProvider>(context, listen: false);
-
-          provider.updatePosition(details);
-        },
-        onPanEnd: (details) {
-          final provider = Provider.of<CardProvider>(context, listen: false);
-
-          provider.endPosition();
-        },
       );
 
   Widget buildBackCard() {
@@ -89,8 +93,8 @@ class _VoilaCardWidgetState extends State<VoilaCardWidget> {
 
     return AnimatedContainer(
       curve: Curves.easeInOut,
-      padding:
-          EdgeInsets.symmetric(vertical: scale * 30, horizontal: scale * 15),
+      padding: EdgeInsets.symmetric(
+          vertical: (scale * 30) + 10, horizontal: (scale * 15) + 5),
       duration: Duration(milliseconds: milliseconds),
       child: buildCard(),
     );

@@ -3,8 +3,7 @@ import 'package:betabeta/widgets/gradient_text_widget.dart';
 import 'package:flutter/material.dart';
 
 class VoilaLogoWidget extends StatefulWidget {
-  const VoilaLogoWidget({Key? key, this.freeText = 'Voilà-dating'})
-      : super(key: key);
+  const VoilaLogoWidget({Key? key, this.freeText = 'Voilà'}) : super(key: key);
   final String freeText;
   @override
   State<VoilaLogoWidget> createState() => _VoilaLogoWidgetState();
