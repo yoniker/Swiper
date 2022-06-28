@@ -135,12 +135,6 @@ class _ProfileScreenState extends State<ProfileScreen>
 
         return Scaffold(
           backgroundColor: backgroundThemeColor,
-          appBar: CustomAppBar(
-            trailing: PrecachedImage.asset(imageURI: BetaIconPaths.editIcon03),
-            hasTopPadding: true,
-            hasBackButton: true,
-            title: 'Profile',
-          ),
           body: SingleChildScrollView(
             child: Column(
               children: [

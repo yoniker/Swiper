@@ -1,3 +1,4 @@
+import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/widgets/gradient_text_widget.dart';
 import 'package:flutter/material.dart';
@@ -41,18 +42,9 @@ class _VoilaLogoWidgetState extends State<VoilaLogoWidget>
         padding: const EdgeInsets.all(8.0),
         child: Opacity(
           opacity: _animation.value,
-          child: GradientText(
-            widget.freeText,
-            style: TextStyle(
-                overflow: TextOverflow.fade,
-                color: goldColorish,
-                fontSize: 25,
-                fontWeight: FontWeight.bold),
-            gradient: LinearGradient(colors: [
-              Color(0XFFC3932F),
-              Color(0XFFD2AB54),
-              Color(0XFFC3932F),
-            ]),
+          child: Image.asset(
+            BetaIconPaths.voilaLogoBlackALT,
+            scale: 9,
           ),
         ),
       ),

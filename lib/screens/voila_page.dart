@@ -4,12 +4,12 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/data_models/celeb.dart';
-import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/widgets/advance_filter_card_widget.dart';
+import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
@@ -105,22 +105,26 @@ class _VoilaPageState extends State<VoilaPage>
 
   @override
   Widget build(BuildContext context) {
-    return ListenerWidget(
-        notifier: SettingsData.instance,
-        builder: (BuildContext context) {
-          bool customImageExists =
-              SettingsData.instance.filterDisplayImageUrl.length > 0;
-          Celeb _selectedCeleb = Celeb(
-              celebName: SettingsData.instance.celebId,
-              imagesUrls: [SettingsData.instance.filterDisplayImageUrl]);
-          return GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-            },
-            child: SafeArea(
-              top: false,
+    return Scaffold(
+      appBar: CustomAppBar(
+        title: 'Advance Search',
+        hasTopPadding: true,
+        hasBackButton: true,
+      ),
+      backgroundColor: Colors.white,
+      body: ListenerWidget(
+          notifier: SettingsData.instance,
+          builder: (BuildContext context) {
+            bool customImageExists =
+                SettingsData.instance.filterDisplayImageUrl.length > 0;
+            Celeb _selectedCeleb = Celeb(
+                celebName: SettingsData.instance.celebId,
+                imagesUrls: [SettingsData.instance.filterDisplayImageUrl]);
+            return GestureDetector(
+              onTap: () {
+                FocusScope.of(context).unfocus();
+              },
               child: Container(
-                color: Colors.white70,
                 child: Column(
                   children: [
                     Container(
@@ -210,16 +214,7 @@ class _VoilaPageState extends State<VoilaPage>
                                                     'finished typing $textSearchTyped');
                                               if (SettingsData.instance
                                                       .textSearch.length !=
-                                                  0)
-                                                MainNavigationScreen
-                                                    .pageController
-                                                    .animateToPage(
-                                                        MainNavigationScreen
-                                                            .MATCHING_PAGE_INDEX,
-                                                        duration: Duration(
-                                                            milliseconds: 300),
-                                                        curve: Curves
-                                                            .fastOutSlowIn);
+                                                  0) Get.back();
                                               if (SettingsData.instance
                                                       .textSearch.length ==
                                                   0)
@@ -328,16 +323,7 @@ class _VoilaPageState extends State<VoilaPage>
                                                   SettingsData
                                                           .instance.filterType =
                                                       FilterType.CUSTOM_IMAGE;
-                                                  MainNavigationScreen
-                                                      .pageController
-                                                      .animateToPage(
-                                                          MainNavigationScreen
-                                                              .MATCHING_PAGE_INDEX,
-                                                          duration: Duration(
-                                                              milliseconds:
-                                                                  300),
-                                                          curve: Curves
-                                                              .fastOutSlowIn);
+                                                  Get.back();
                                                 } else {
                                                   SettingsData
                                                           .instance.filterType =
@@ -388,13 +374,7 @@ class _VoilaPageState extends State<VoilaPage>
                                                         .filterDisplayImageUrl =
                                                     _selectedCeleb
                                                         .imagesUrls![0];
-                                                MainNavigationScreen
-                                                    .pageController
-                                                    .animateToPage(0,
-                                                        duration: Duration(
-                                                            milliseconds: 300),
-                                                        curve: Curves
-                                                            .fastOutSlowIn);
+                                                Get.back();
                                               } else {
                                                 SettingsData.instance
                                                     .filterDisplayImageUrl = '';
@@ -482,9 +462,9 @@ class _VoilaPageState extends State<VoilaPage>
                   ],
                 ),
               ),
-            ),
-          );
-        });
+            );
+          }),
+    );
   }
 
   @override

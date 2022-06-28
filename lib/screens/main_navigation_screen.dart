@@ -21,9 +21,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class MainNavigationScreen extends StatefulWidget {
-  static const int VOILA_PAGE_INDEX = 1;
+  static const int PROFILE_PAGE_INDEX = 2;
   static const int MATCHING_PAGE_INDEX = 0;
-  static const int CONVERSATIONS_PAGE_INDEX = 2;
+  static const int CONVERSATIONS_PAGE_INDEX = 1;
   static const String routeName = '/main_navigation_screen';
   static const String TAB_INDEX_PARAM = 'tab_index';
   static late PageController pageController;
@@ -42,20 +42,20 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     MatchScreen(
       key: Key('Match Screen'),
     ),
-    VoilaPage(),
     ConversationsScreen(),
+    ProfileScreen(),
   ];
 
   Widget buildCenterWidget() {
     switch (SettingsData.instance.filterType) {
       case FilterType.TEXT_SEARCH:
         if (SettingsData.instance.textSearch.length > 0 &&
-            selectedTabIndex != MainNavigationScreen.CONVERSATIONS_PAGE_INDEX)
+            selectedTabIndex == MainNavigationScreen.MATCHING_PAGE_INDEX)
           return TextSearchViewWidget();
         break;
       case FilterType.CELEB_IMAGE:
       case FilterType.CUSTOM_IMAGE:
-        if (selectedTabIndex != MainNavigationScreen.CONVERSATIONS_PAGE_INDEX)
+        if (selectedTabIndex == MainNavigationScreen.MATCHING_PAGE_INDEX)
           return ImageFilterViewWidget();
         break;
       default:
@@ -83,6 +83,21 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     print('GOING TO PAGE:- index ~$index');
     MainNavigationScreen.pageController.animateToPage(index,
         duration: Duration(milliseconds: 300), curve: Curves.fastOutSlowIn);
+  }
+
+  void openVoilaSettings() {
+    // showModalBottomSheet(
+    //     elevation: 5,
+    //     isScrollControlled: true,
+    //     barrierColor: Colors.transparent,
+    //     constraints: BoxConstraints(
+    //         maxHeight: MediaQuery.of(context).size.height * 0.85),
+    //     backgroundColor: Colors.transparent,
+    //     context: context,
+    //     builder: (context) {
+    //       return VoilaPage();
+    //     });
+    Get.toNamed(VoilaPage.routeName);
   }
 
   Widget DoubleIconToStack(IconData icon1, IconData icon2) {
@@ -124,20 +139,19 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       children: [
         Scaffold(
           appBar: CustomAppBar(
+            hasVerticalPadding: false,
             centerWidget: ListenerWidget(
                 notifier: SettingsData.instance,
                 builder: (BuildContext) {
                   return GestureDetector(
-                    onTap: SettingsData.instance.filterType !=
-                                FilterType.NONE &&
-                            selectedTabIndex !=
-                                MainNavigationScreen.CONVERSATIONS_PAGE_INDEX
-                        ? () {
-                            MainNavigationScreen.pageController.animateToPage(1,
-                                duration: Duration(milliseconds: 200),
-                                curve: Curves.fastOutSlowIn);
-                          }
-                        : null,
+                    onTap:
+                        SettingsData.instance.filterType != FilterType.NONE &&
+                                selectedTabIndex ==
+                                    MainNavigationScreen.MATCHING_PAGE_INDEX
+                            ? () {
+                                openVoilaSettings();
+                              }
+                            : null,
                     child: buildCenterWidget(),
                   );
                 }),
@@ -145,21 +159,24 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             hasBackButton: false,
             customTitle: Container(
               padding: EdgeInsets.only(left: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        Get.toNamed(ProfileScreen.routeName);
-                      },
-                      child: CircularUserAvatar(
-                        backgroundColor: Colors.grey,
-                      ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    openVoilaSettings();
+                  },
+                  child: AnimatedOpacity(
+                    opacity: selectedTabIndex ==
+                            MainNavigationScreen.MATCHING_PAGE_INDEX
+                        ? 1
+                        : 0,
+                    duration: Duration(milliseconds: 300),
+                    child: Image.asset(
+                      'assets/images/search.png',
+                      scale: 12,
                     ),
                   ),
-                ],
+                ),
               ),
             ),
             trailing: AnimatedOpacity(
@@ -198,8 +215,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               color: darkTextColor,
               fontSize: 0.0,
             ),
-            selectedItemColor:
-                selectedTabIndex == 1 ? goldColorish : mainAppColor02,
+            selectedItemColor: mainAppColor02,
             unselectedItemColor: unselectedTabColor,
             showUnselectedLabels: false,
             elevation: 0.0,
@@ -213,14 +229,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.search,
-                  size: 30,
+                  size: 35,
                 ),
                 activeIcon: Stack(
                   alignment: Alignment.center,
                   children: [
                     Icon(
                       Icons.search,
-                      size: 30,
+                      size: 35,
                     ),
                     Container(
                       margin: EdgeInsets.fromLTRB(0, 0, 7, 4),
@@ -234,25 +250,22 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 tooltip: 'Match',
               ),
               BottomNavigationBarItem(
-                icon: PrecachedImage.asset(
-                  imageURI: BetaIconPaths.inactiveVoilaTabIconPath,
-                  width: 30,
-                  color: unselectedTabColor,
+                icon: Icon(FontAwesomeIcons.comments, size: 26),
+                activeIcon: Icon(
+                  FontAwesomeIcons.solidComments,
+                  size: 26,
                 ),
-                activeIcon: PrecachedImage.asset(
-                  imageURI: BetaIconPaths.activeVoilaTabIconPath,
-                  width: 30,
-                ),
-                label: '',
-                tooltip: 'Search',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  FontAwesomeIcons.comments,
-                ),
-                activeIcon: Icon(FontAwesomeIcons.solidComments),
                 label: '',
                 tooltip: 'Chat',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(FontAwesomeIcons.user, size: 27),
+                activeIcon: Icon(
+                  FontAwesomeIcons.userAlt,
+                  size: 27,
+                ),
+                label: '',
+                tooltip: 'Profile',
               ),
             ],
           ),
