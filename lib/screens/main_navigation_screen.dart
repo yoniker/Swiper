@@ -229,42 +229,63 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             },
             items: [
               BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.search,
-                  size: 35,
+                icon: AnimatedScale(
+                  scale: 0.85,
+                  duration: Duration(milliseconds: 200),
+                  child: Icon(
+                    Icons.search,
+                    size: 35,
+                  ),
                 ),
-                activeIcon: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Icon(
-                      Icons.search,
-                      size: 35,
-                    ),
-                    Container(
-                      margin: EdgeInsets.fromLTRB(0, 0, 7, 4),
-                      height: 14,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle, color: Colors.white),
-                    )
-                  ],
+                activeIcon: AnimatedScale(
+                  duration: Duration(milliseconds: 200),
+                  scale: 1,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Icon(
+                        Icons.search,
+                        size: 35,
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(0, 0, 7, 4),
+                        height: 14,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: mainAppColor02),
+                      )
+                    ],
+                  ),
                 ),
                 label: '',
                 tooltip: 'Match',
               ),
               BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.comments, size: 26),
-                activeIcon: Icon(
-                  FontAwesomeIcons.solidComments,
-                  size: 26,
+                icon: AnimatedScale(
+                    duration: Duration(milliseconds: 200),
+                    scale: 0.85,
+                    curve: Curves.easeInOut,
+                    child: Icon(
+                      FontAwesomeIcons.comments,
+                      size: 26,
+                    )),
+                activeIcon: AnimatedScale(
+                  scale: 1,
+                  duration: Duration(milliseconds: 200),
+                  child: Icon(
+                    FontAwesomeIcons.solidComments,
+                    size: 26,
+                  ),
                 ),
                 label: '',
                 tooltip: 'Chat',
               ),
               BottomNavigationBarItem(
-                icon: Icon(FontAwesomeIcons.user, size: 27),
-                activeIcon: Icon(
-                  FontAwesomeIcons.userAlt,
-                  size: 27,
+                icon: CircularUserAvatar(
+                  borderColor: unselectedTabColor,
+                  maxRadius: 11,
+                ),
+                activeIcon: CircularUserAvatar(
+                  maxRadius: 13,
                 ),
                 label: '',
                 tooltip: 'Profile',
