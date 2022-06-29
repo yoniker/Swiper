@@ -48,7 +48,7 @@ class _Tutorial1State extends State<Tutorial1> {
                   name: 'NEXT',
                   onTap: () {
                     Get.offAllNamed(OnboardingFlowController.instance
-                        .nextRoute(GetNameScreen.routeName));
+                        .nextRoute(Tutorial1.routeName));
                   },
                 )
               ],
