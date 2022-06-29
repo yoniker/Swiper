@@ -87,17 +87,17 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen>
             child: Padding(
               padding: const EdgeInsets.only(left: 2.0, top: 2),
               child: FloatingActionButton(
-                elevation: 20,
+                elevation: 0,
                 backgroundColor: Colors.transparent,
                 child: Icon(
                   FontAwesomeIcons.chevronLeft,
-                  // shadows: [
-                  //   Shadow(
-                  //     blurRadius: 17.0,
-                  //     color: Colors.black,
-                  //     offset: Offset(-2.0, 2.0),
-                  //   ),
-                  // ],
+                  shadows: [
+                    Shadow(
+                      blurRadius: 17.0,
+                      color: Colors.black,
+                      offset: Offset(-2.0, 2.0),
+                    ),
+                  ],
                   size: 40,
                   color: Colors.white,
                 ),
