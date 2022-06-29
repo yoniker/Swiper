@@ -48,11 +48,10 @@ class _MatchScreenState extends State<MatchScreen>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: backgroundThemeColor,
+      color: backgroundThemeColorALT,
       child: Padding(
         padding: MediaQuery.of(context).padding,
         child: Container(
-          color: Colors.white70,
           child: Column(
             children: [
               // create the card stack.

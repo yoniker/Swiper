@@ -134,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         }
 
         return Scaffold(
-          backgroundColor: backgroundThemeColor,
+          backgroundColor: backgroundThemeColorALT,
           body: SingleChildScrollView(
             child: Column(
               children: [

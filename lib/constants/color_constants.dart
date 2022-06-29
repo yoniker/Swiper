@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 const Color lightCardColor = Color(0xFFF5F5F5);
 const Color backgroundThemeColor = Color(0xFFE8EBF1);
+const Color backgroundThemeColorALT = Colors.white38;
 const Color darkTextColor = Color(0xFF747474);
 const Color unselectedTabColor = Colors.white60;
 const Color blackTextColor = Color(0xFF000000);

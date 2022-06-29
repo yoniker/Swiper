@@ -140,6 +140,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         Scaffold(
           appBar: CustomAppBar(
             hasVerticalPadding: false,
+            backgroundColor: backgroundThemeColorALT,
+            elevation: 0,
             centerWidget: ListenerWidget(
                 notifier: SettingsData.instance,
                 builder: (BuildContext) {

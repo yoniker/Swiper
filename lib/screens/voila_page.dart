@@ -107,7 +107,7 @@ class _VoilaPageState extends State<VoilaPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'Advance Search',
+        title: 'Advanced Search',
         hasTopPadding: true,
         hasBackButton: true,
       ),

@@ -1,3 +1,4 @@
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -40,7 +41,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           FocusScope.of(context).unfocus();
         },
         child: Container(
-          color: Colors.white38,
+          color: backgroundThemeColorALT,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
