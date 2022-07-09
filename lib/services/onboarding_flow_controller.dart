@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/constants/enums.dart';
-import 'package:betabeta/screens/onboarding/tutorial_1.dart';
+import 'package:betabeta/screens/onboarding/tutorial_screen_starter.dart';
 import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/services/location_service.dart';
 import 'package:betabeta/services/match_engine.dart';
@@ -49,7 +49,7 @@ class OnboardingFlowController {
     UploadImagesOnboardingScreen.routeName,
     LocationPermissionScreen.routeName,
     FinishOnboardingScreen.routeName,
-    Tutorial1.routeName,
+    TutorialScreenStarter.routeName,
     MainNavigationScreen.routeName
   ];
 

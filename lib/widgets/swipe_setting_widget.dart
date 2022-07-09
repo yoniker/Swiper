@@ -14,6 +14,7 @@ import 'package:betabeta/widgets/dropdown_form_field.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
+import 'package:betabeta/widgets/voila_logo_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -493,10 +494,9 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
                   padding: const EdgeInsets.symmetric(vertical: 40.0),
                   child: Column(
                     children: [
-                      Image.asset(
-                        'assets/images/voila.png',
-                        color: goldColorish,
-                        scale: 7,
+                      VoilaLogoWidget(
+                        logoOnlyMode: true,
+                        logoScale: 7,
                       ),
                       Text(
                         'Voilà V 1.0.2',

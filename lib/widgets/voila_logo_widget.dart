@@ -4,9 +4,15 @@ import 'package:betabeta/widgets/gradient_text_widget.dart';
 import 'package:flutter/material.dart';
 
 class VoilaLogoWidget extends StatefulWidget {
-  const VoilaLogoWidget({Key? key, this.freeText = 'Voilà-dating'})
+  const VoilaLogoWidget(
+      {Key? key,
+      this.freeText = 'Voilà-dating',
+      this.logoOnlyMode = false,
+      this.logoScale = 9})
       : super(key: key);
   final String freeText;
+  final bool logoOnlyMode;
+  final double logoScale;
   @override
   State<VoilaLogoWidget> createState() => _VoilaLogoWidgetState();
 }
@@ -42,10 +48,24 @@ class _VoilaLogoWidgetState extends State<VoilaLogoWidget>
         padding: const EdgeInsets.all(8.0),
         child: Opacity(
           opacity: _animation.value,
-          child: Image.asset(
-            BetaIconPaths.voilaLogoBlackALT,
-            scale: 9,
-          ),
+          child: widget.logoOnlyMode
+              ? Image.asset(
+                  BetaIconPaths.voilaLogoBlackALT,
+                  scale: widget.logoScale,
+                )
+              : GradientText(
+                  widget.freeText,
+                  style: TextStyle(
+                      overflow: TextOverflow.fade,
+                      color: goldColorish,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold),
+                  gradient: LinearGradient(colors: [
+                    Color(0XFFC3932F),
+                    Color(0XFFD2AB54),
+                    Color(0XFFC3932F),
+                  ]),
+                ),
         ),
       ),
     );

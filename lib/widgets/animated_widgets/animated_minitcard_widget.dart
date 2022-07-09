@@ -1,14 +1,15 @@
 import 'package:betabeta/constants/assets_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AnimatedMiniTcardWidget extends StatefulWidget {
   AnimatedMiniTcardWidget(
-      {Key? key, required this.maleOrFemaleImage, this.CustomButtomWidget})
+      {Key? key, required this.maleOrFemaleImage, this.CustomButtonWidget})
       : super(key: key);
 
   final String maleOrFemaleImage;
-  late final Widget? CustomButtomWidget;
+  late final Widget? CustomButtonWidget;
 
   @override
   State<AnimatedMiniTcardWidget> createState() =>
@@ -111,8 +112,8 @@ class _AnimatedMiniTcardWidgetState extends State<AnimatedMiniTcardWidget>
                     Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        widget.CustomButtomWidget != null
-                            ? widget.CustomButtomWidget!
+                        widget.CustomButtonWidget != null
+                            ? widget.CustomButtonWidget!
                             : Text(
                                 'Swipe',
                                 textAlign: TextAlign.center,
@@ -122,13 +123,13 @@ class _AnimatedMiniTcardWidgetState extends State<AnimatedMiniTcardWidget>
                       ],
                     ),
                     Icon(
-                      Icons.thumb_up,
+                      FontAwesomeIcons.solidThumbsUp,
                       color:
                           Colors.green.withOpacity(expandAnimation.value * 1),
                       size: expandAnimation.value * 35,
                     ),
                     Icon(
-                      Icons.thumb_down,
+                      FontAwesomeIcons.solidThumbsDown,
                       color: Colors.red.withOpacity(shrinkAnimation.value * 1),
                       size: shrinkAnimation.value * 35,
                     )

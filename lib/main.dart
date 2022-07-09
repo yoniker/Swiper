@@ -6,7 +6,7 @@ import 'package:betabeta/screens/chat/other_user_profile_screen.dart';
 import 'package:betabeta/screens/complete_profile_pageview_screen.dart';
 import 'package:betabeta/screens/onboarding/job_title_screen.dart';
 import 'package:betabeta/screens/onboarding/school_screen.dart';
-import 'package:betabeta/screens/onboarding/tutorial_1.dart';
+import 'package:betabeta/screens/onboarding/tutorial_screen_starter.dart';
 import 'package:betabeta/screens/user_edit/kids_screen.dart';
 import 'package:betabeta/screens/chat/conversations_screen.dart';
 import 'package:betabeta/screens/user_edit/covid_screen.dart';
@@ -187,7 +187,9 @@ void main() async {
         GetPage(
             name: CompleteProfilePageViewScreen.routeName,
             page: () => CompleteProfilePageViewScreen()),
-        GetPage(name: Tutorial1.routeName, page: () => Tutorial1())
+        GetPage(
+            name: TutorialScreenStarter.routeName,
+            page: () => TutorialScreenStarter())
       ],
       title: 'Voilà MVP',
       debugShowCheckedModeBanner: false,

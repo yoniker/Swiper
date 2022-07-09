@@ -146,6 +146,7 @@ const TextStyle LargeTitleStyleWhite = TextStyle(
     color: Colors.white,
     fontFamily: 'Nunito',
     fontSize: 26,
+    height: 1.2,
     fontWeight: FontWeight.bold,
     shadows: [
       Shadow(

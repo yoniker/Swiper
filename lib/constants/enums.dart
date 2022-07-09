@@ -7,6 +7,7 @@ enum FilterType {
   CUSTOM_IMAGE,
   TEXT_SEARCH,
   USER_TASTE,
+  THEIR_TASTE,
   NONE,
 }
 
