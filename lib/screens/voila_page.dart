@@ -408,14 +408,17 @@ class _VoilaPageState extends State<VoilaPage>
   @override
   void initState() {
     print(SettingsData.instance.uid);
-    if (widget.startTutorial)
-      Future.delayed(Duration(milliseconds: 100), showTutorial);
+    if (widget.startTutorial){
+      WidgetsBinding.instance
+          .addPostFrameCallback((_) => Future.delayed(Duration(milliseconds: 200),showTutorial));
+    }
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Advanced Search',

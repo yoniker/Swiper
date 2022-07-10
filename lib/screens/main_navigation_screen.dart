@@ -139,7 +139,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     _animation = Tween<double>(begin: 0, end: 1)
         .animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
     if (selectedTabIndex == MainNavigationScreen.MATCHING_PAGE_INDEX &&
-        startTutorial) Future.delayed(Duration(seconds: 2), showTutorial);
+        startTutorial) {
+
+      WidgetsBinding.instance.addPostFrameCallback((_) => Future.delayed(Duration(milliseconds: 200),showTutorial));
+
+    }
     super.initState();
 
     // initialize the `_selectedTabIndex` variable with the value provided by appstate
