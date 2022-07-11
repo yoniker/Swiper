@@ -133,7 +133,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
           ..forward()
           ..addListener(() {
             setState(() {
-              print(_animation.value);
             });
           });
     _animation = Tween<double>(begin: 0, end: 1)
@@ -272,7 +271,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
 
   @override
   Widget build(BuildContext context) {
-    print('Building main navigation screen!!!!!!!!!!!!!!');
     AppStateInfo.instance.latestTabOnMainNavigation =
         selectedTabIndex; //TODO ugly as I mentioned at the comments at the Appstate,switch with a better solution when available
     return Opacity(
