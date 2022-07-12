@@ -98,49 +98,64 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
       return '${howLongAgo.inMinutes} minutes ago';
     }
 
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'You matched with ',
+    return AnimatedScale(
+      duration: Duration(milliseconds: 300),
+      scale: MediaQuery.of(context).viewInsets.bottom == 0 ? 1 : 0.8,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            AnimatedOpacity(
+              duration: Duration(milliseconds: 300),
+              opacity: MediaQuery.of(context).viewInsets.bottom == 0 ? 1 : 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'You matched with ',
+                    style: TextStyle(fontSize: 20, color: Colors.black54),
+                  ),
+                  Text(
+                    theUser.username,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.black.withOpacity(0.6)),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            GestureDetector(
+              child: CircularUserAvatar(
+                imageProvider: NetworkImage(
+                    NewNetworkService.getProfileImageUrl(theUser.profileImage)),
+                radius: 80,
+              ),
+              onTap: () {
+                Get.toNamed(OtherUserProfileScreen.routeName,
+                    arguments: theUser.uid);
+              },
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            AnimatedOpacity(
+              duration: Duration(milliseconds: 300),
+              opacity: MediaQuery.of(context).viewInsets.bottom == 0 ? 1 : 0,
+              child: Text(
+                howLongAgoDescription(),
                 style: TextStyle(fontSize: 20, color: Colors.black54),
               ),
-              Text(
-                theUser.username,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.black.withOpacity(0.6)),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          GestureDetector(
-            child: CircularUserAvatar(
-              imageProvider: NetworkImage(
-                  NewNetworkService.getProfileImageUrl(theUser.profileImage)),
-              radius: 90,
             ),
-            onTap: () {
-              Get.toNamed(OtherUserProfileScreen.routeName,
-                  arguments: theUser.uid);
-            },
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Text(
-            howLongAgoDescription(),
-            style: TextStyle(fontSize: 20, color: Colors.black54),
-          )
-        ],
+            SizedBox(
+              height: 100,
+            )
+          ],
+        ),
       ),
     );
   }
@@ -163,44 +178,54 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
         ),
         trailing: SizedBox(
           height: 30,
-          child: FloatingActionButton.small(
-            elevation: 1,
-            backgroundColor: Colors.black45,
-            onPressed: () {
-              showDialog(
-                context: context,
-                useRootNavigator: true,
-                builder: (BuildContext context) => CupertinoAlertDialog(
-                  title: Text('Unmatch ${theUser.username} ?'),
-                  content: Text(
-                      '${theUser.username} will be removed from your chat.'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Get.back();
-                      },
-                      child: Text('Cancel'),
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  print(MediaQuery.of(context).viewInsets.bottom);
+                },
+                child: Icon(FontAwesomeIcons.info),
+              ),
+              FloatingActionButton.small(
+                elevation: 1,
+                backgroundColor: Colors.black45,
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    useRootNavigator: true,
+                    builder: (BuildContext context) => CupertinoAlertDialog(
+                      title: Text('Unmatch ${theUser.username} ?'),
+                      content: Text(
+                          '${theUser.username} will be removed from your chat.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Get.back();
+                            Get.back();
+                            unmatchUser();
+                          },
+                          child: Text(
+                            'Unmatch',
+                            style: TextStyle(color: Colors.red[800]),
+                          ),
+                        )
+                      ],
                     ),
-                    TextButton(
-                      onPressed: () {
-                        Get.back();
-                        Get.back();
-                        unmatchUser();
-                      },
-                      child: Text(
-                        'Unmatch',
-                        style: TextStyle(color: Colors.red[800]),
-                      ),
-                    )
-                  ],
+                  );
+                },
+                child: Icon(
+                  FontAwesomeIcons.circleXmark,
+                  color: Colors.white70,
+                  size: 30,
                 ),
-              );
-            },
-            child: Icon(
-              FontAwesomeIcons.circleXmark,
-              color: Colors.white70,
-              size: 30,
-            ),
+              ),
+            ],
           ),
         ),
       ),

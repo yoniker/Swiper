@@ -21,6 +21,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
+import '../constants/global_keys.dart';
+
 class MainNavigationScreen extends StatefulWidget {
   static const int PROFILE_PAGE_INDEX = 2;
   static const int MATCHING_PAGE_INDEX = 0;
@@ -43,10 +45,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
   late Animation _animation;
 
   late TutorialCoachMark VoilaTutorial;
-  List<TargetFocus> targets = <TargetFocus>[];
+  late TutorialCoachMark VoilaTutorialStage2;
 
-  GlobalKey searchButton = GlobalKey();
-  GlobalKey filterButton = GlobalKey();
+  List<TargetFocus> targets = <TargetFocus>[];
 
   // List of pages.
   List<Widget> pages = <Widget>[
@@ -140,9 +141,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
         .animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
     if (selectedTabIndex == MainNavigationScreen.MATCHING_PAGE_INDEX &&
         startTutorial) {
-
-      WidgetsBinding.instance.addPostFrameCallback((_) => Future.delayed(Duration(milliseconds: 200),showTutorial));
-
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => Future.delayed(Duration(milliseconds: 200), showTutorial));
     }
     super.initState();
 
@@ -171,24 +171,16 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
       textSkip: "SKIP",
       paddingFocus: 10,
       opacityShadow: 0.8,
-      onFinish: () {
+      onFinish: () async {
         print("finish");
-        Get.toNamed(VoilaPage.routeName, arguments: true);
-      },
-      onClickTarget: (target) {
-        print('onClickTarget: $target');
-      },
-      onClickTargetWithTapPosition: (target, tapDetails) {
-        print("target: $target");
-        print(
-            "clicked at position local: ${tapDetails.localPosition} - global: ${tapDetails.globalPosition}");
-      },
-      onClickOverlay: ($context) {
-        showDialog(context: context, builder: (_) => Text('Test'));
-        print('onClickOverlay: $context');
-      },
-      onSkip: () {
-        print("skip");
+
+        await Get.toNamed(VoilaPage.routeName, arguments: true);
+
+        MainNavigationScreen.pageController.animateToPage(
+            MainNavigationScreen.CONVERSATIONS_PAGE_INDEX,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.fastOutSlowIn);
+        Future.delayed(Duration(milliseconds: 300), showStage2Tutorial);
       },
     )..show();
   }
@@ -261,6 +253,71 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
                       textAlign: TextAlign.center,
                     ),
                   ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showStage2Tutorial() {
+    initStage2Targets();
+    VoilaTutorialStage2 = TutorialCoachMark(
+      context,
+      hideSkip: true,
+      alignSkip: Alignment.centerLeft,
+      targets: targets,
+      colorShadow: Colors.black.withOpacity(0.7),
+      textSkip: "SKIP",
+      paddingFocus: 10,
+      opacityShadow: 0.8,
+      onFinish: () {
+        MainNavigationScreen.pageController.animateToPage(
+            MainNavigationScreen.MATCHING_PAGE_INDEX,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.fastOutSlowIn);
+      },
+    )..show();
+  }
+
+  void initStage2Targets() {
+    targets.clear();
+    targets.add(
+      TargetFocus(
+        identify: "conversationsYouStarted",
+        keyTarget: numberOfConversationsWidget,
+        alignSkip: Alignment.bottomCenter,
+        contents: [
+          TargetContent(
+            align: ContentAlign.left,
+            builder: (context, controller) {
+              return GestureDetector(
+                onTap: () {
+                  VoilaTutorialStage2.next();
+                },
+                child: Container(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        "For more meaningful connections, we limit each user number of conversation starts!",
+                        style: LargeTitleStyleWhite.copyWith(
+                            color: Colors.redAccent, fontSize: 22),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        'Click anywhere to start swiping!\n\nEnjoy ☺️',
+                        style: LargeTitleStyleWhite,
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
                 ),
               );
             },

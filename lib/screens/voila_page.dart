@@ -9,7 +9,6 @@ import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/widgets/advance_filter_card_widget.dart';
-import 'package:betabeta/widgets/animated_widgets/animated_pop_up_dialog.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
@@ -22,6 +21,8 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:tuple/tuple.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+
+import '../constants/global_keys.dart';
 
 class VoilaPage extends StatefulWidget {
   static const String routeName = '/voila_page';
@@ -42,12 +43,6 @@ class _VoilaPageState extends State<VoilaPage>
   late TutorialCoachMark VoilaTutorial;
   List<TargetFocus> targets = <TargetFocus>[];
 
-  final GlobalKey<FormState> textSearchWidget = GlobalKey<FormState>();
-  final GlobalKey<FormState> imageSearchWidget = GlobalKey<FormState>();
-  final GlobalKey<FormState> celebSearchWidget = GlobalKey<FormState>();
-  final GlobalKey<FormState> yourTasteWidget = GlobalKey<FormState>();
-  final GlobalKey<FormState> theirTasteWidget = GlobalKey<FormState>();
-
   void ScrollPageDown() {
     _scrollController.animateTo(_scrollController.position.maxScrollExtent,
         duration: Duration(milliseconds: 500), curve: Curves.easeIn);
@@ -66,26 +61,10 @@ class _VoilaPageState extends State<VoilaPage>
       opacityShadow: 0.8,
       onFinish: () {
         Get.back();
-        showDialog(
-          barrierColor: Colors.black.withOpacity(0.8),
-          context: context,
-          builder: (_) => AnimatedPopUpDialog(),
-        );
       },
       onClickTarget: (target) {
         if (target.keyTarget == targets[2].keyTarget)
           Future.delayed(Duration(milliseconds: 100), ScrollPageDown);
-      },
-      onClickTargetWithTapPosition: (target, tapDetails) {
-        print("target: $target");
-        print(
-            "clicked at position local: ${tapDetails.localPosition} - global: ${tapDetails.globalPosition}");
-      },
-      onClickOverlay: (target) {
-        print('onClickOverlay: $target');
-      },
-      onSkip: () {
-        print("skip");
       },
     )..show();
   }
@@ -408,9 +387,9 @@ class _VoilaPageState extends State<VoilaPage>
   @override
   void initState() {
     print(SettingsData.instance.uid);
-    if (widget.startTutorial){
-      WidgetsBinding.instance
-          .addPostFrameCallback((_) => Future.delayed(Duration(milliseconds: 200),showTutorial));
+    if (widget.startTutorial) {
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => Future.delayed(Duration(milliseconds: 200), showTutorial));
     }
 
     super.initState();
@@ -524,15 +503,11 @@ class _VoilaPageState extends State<VoilaPage>
                                                 SettingsData
                                                         .instance.textSearch =
                                                     textSearchTyped;
-                                                print(SettingsData
-                                                        .instance.textSearch +
-                                                    ' testing if changed');
+
                                                 for (int i = 0; i < 4; ++i)
-                                                  print(
-                                                      'finished typing $textSearchTyped');
-                                                if (SettingsData.instance
-                                                        .textSearch.length !=
-                                                    0) Get.back();
+                                                  if (SettingsData.instance
+                                                          .textSearch.length !=
+                                                      0) Get.back();
                                                 if (SettingsData.instance
                                                         .textSearch.length ==
                                                     0)

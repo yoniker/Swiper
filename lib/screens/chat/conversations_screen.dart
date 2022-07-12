@@ -81,28 +81,24 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                           search: searchProfile.toLowerCase(),
                         ),
                         // if (ChatData.instance.users.isNotEmpty) Divider(),
-                        if (ChatData.instance.conversationsOtherUsersStarted
-                                .isEmpty &&
-                            ChatData.instance.conversationsCurrentUserStarted
-                                .isNotEmpty &&
-                            SettingsData.instance.userGender != kFemaleGender)
-                          SizedBox()
-                        else
-                          ConversationsPreviewWidget(
-                            search: searchProfile.toLowerCase(),
-                          ),
+
+                        ConversationsPreviewWidget(
+                          conversationsThatYouStartedMode: true,
+                        ),
+
                         SizedBox(
                           height: 10,
                         ),
-                        if (SettingsData.instance.userGender != femaleGender)
-                          ConversationsPreviewWidget(
-                            conversationsThatMaleStartedMode: true,
-                          )
+
+                        ConversationsPreviewWidget(
+                          conversationsThatYouStartedMode: false,
+                          search: searchProfile.toLowerCase(),
+                        ),
                       ],
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
