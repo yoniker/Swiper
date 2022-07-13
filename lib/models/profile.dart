@@ -124,7 +124,7 @@ class Profile {
         this.age = json[API_CONSTS.USER_AGE],
         this.distance = json[API_CONSTS.USER_LOCATION_DISTANCE],
         this.location = json[API_CONSTS.USER_LOCATION_DESCRIPTION] ?? '',
-        this.height = json[API_CONSTS.USER_HEIGHT_IN_CM],
+        this.height = json[API_CONSTS.USER_HEIGHT_IN_CM]?.toDouble(),
         this.userGender = json[API_CONSTS.USER_GENDER_KEY] ?? '',
         this.showUserGender = json[API_CONSTS.SHOW_USER_GENDER_KEY] != null &&
             json[API_CONSTS.SHOW_USER_GENDER_KEY] == 'true',

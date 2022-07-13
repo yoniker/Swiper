@@ -1,135 +1,124 @@
-import 'dart:async';
-import 'dart:collection';
 import 'dart:convert';
-import 'dart:convert' as json;
 import 'dart:math';
-
+import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/match_engine.dart';
-import 'package:betabeta/services/new_networking.dart';
+import 'package:betabeta/services/cache_service.dart';
+import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/services/settings_model.dart';
-import 'package:betabeta/models/userid.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_parser/src/media_type.dart' as media;
-import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
-import 'package:tuple/tuple.dart';
-
-enum NetworkTaskStatus {
-  completed,
-  inProgress,
-  notExist
-} //possible statuses for long ongoing tasks on the server
-
-
+import 'package:image/image.dart' as img;
+import 'package:http_parser/src/media_type.dart' as media;
+import 'dart:convert' as json;
 
 class AWSServer {
   static const SERVER_ADDR = 'services.voilaserver.com';
-  static final AWSServer _instance = AWSServer._internal();
   static const MIN_MATCHES_CALL_INTERVAL = Duration(seconds: 1);
-  static const MIN_TASK_STATUS_CALL_INTERVAL = Duration(seconds: 1);
-  static const ALL_USER_IMAGES = 'all_user_images';
-  DateTime _lastMatchCall =
-  DateTime(2000); //The year 2000 is when the last call happened :D
-  DateTime _lastFacesImagesCall = DateTime(2000);
-  DateTime _lastTaskStatusCall = DateTime(2000);
-  Future<http.Response>? _facesCall;
-  static const MIN_FACES_CALL_INTERVAL = Duration(milliseconds: 500);
+  DateTime _lastMatchCall = DateTime(2000);
+  AWSServer._privateConstructor();
 
-  factory AWSServer() {
-    return _instance;
-  }
+  static final AWSServer _instance =
+  AWSServer._privateConstructor();
 
-  AWSServer._internal();
-/*
-  static Future<List<String>> getCeleblinks(String? celebName) async {
-    Uri celebsLinkUri = Uri.https(SERVER_ADDR, 'celeblinks/$celebName');
-    http.Response resp = await http.get(celebsLinkUri);
-    if (resp.statusCode == 200) {
-      //TODO think how to handle network errors
-      var parsed = json.jsonDecode(resp.body);
-      List<String> imagesLinks = parsed.cast<String>();
-      return imagesLinks;
-    }
+  static AWSServer get instance => _instance;
 
-    return [];
-  }
 
-  static String faceUrlToFullUrl(String faceUrl) {
-    return 'https://' + AWSServer.SERVER_ADDR + '/' + faceUrl;
-  }
-
-  static List<Image> serverImagesUrlsToImages(
-      List<String> facesUrls, BuildContext context) {
-    List<Image> facesImages = [];
-    for (int imageIndex = 0; imageIndex < facesUrls.length; imageIndex++) {
-      String url = AWSServer.faceUrlToFullUrl(facesUrls[imageIndex]);
-      Image img = Image.network(url, fit: BoxFit.cover);
-      precacheImage(img.image, context);
-      facesImages.add(img);
-    }
-    return facesImages;
-  }
-*/
-  //getMatches: Grab some matches and image links from the server
-  dynamic getMatches() async {
-    if (DateTime.now().difference(_lastMatchCall) < MIN_MATCHES_CALL_INTERVAL) {
-      await Future.delayed(MIN_MATCHES_CALL_INTERVAL -
-          DateTime.now().difference(_lastMatchCall));
-    }
-    _lastMatchCall = DateTime.now();
-    Uri matchesUrl =
-    Uri.https(SERVER_ADDR, '/matches/${SettingsData.instance.uid}');
-    http.Response response = await http.get(matchesUrl);
-    if (response.statusCode != 200) {
-      return null; //TODO error handling
-    }
-
-    try{dynamic listProfiles = jsonDecode(response.body);
-    return listProfiles;
-    }
-    catch(e){
-      print('Error during parsing matches');
-      return [];
-    }
-
-  }
 
   /*
-  static List<String> serverImagesUrl(List<String> imagesUrls) {
+  //A helper method to shrink an image if it's too large, and decode it into a workable image format
+  static Future<img.Image> _prepareImage(XFile pickedImageFile) async {
+    const MAX_IMAGE_SIZE =
+    1500; //TODO make this a parameter and let the user control it (if needed)
 
-    return imagesUrls.map((val) {
-      return AWSServer.SERVER_ADDR + '/images/' + val;
-    }).toList();
-  }
-
-  static String serverCelebImageUrl(String imageUrl){
-    return AWSServer.faceUrlToFullUrl(imageUrl);
-  }
-
-  postUserDecision({Decision? decision, Profile? otherUserProfile}) async {
-    SettingsData settings = SettingsData.instance;
-    if (true) {
-      print('TODO fix the profile @matchEngine stuff');
-      return;
+    img.Image theImage = img.decodeImage(await pickedImageFile.readAsBytes())!;
+    if (max(theImage.height, theImage.width) > MAX_IMAGE_SIZE) {
+      double resizeFactor =
+          MAX_IMAGE_SIZE / max(theImage.height, theImage.width);
+      theImage = img.copyResize(theImage,
+          width: (theImage.width * resizeFactor).round());
     }
-    Map<String, String?> toSend = {
-      'deciderName': settings.name,
-      'decidee': otherUserProfile!.username,
-      'decision': decision
-          .toString()
-          .substring("Decision.".length, decision.toString().length)
-    };
-    String encoded = jsonEncode(toSend);
-    Uri postDecisionUri =
-    Uri.https(SERVER_ADDR, '/decision/${settings.facebookId}');
-    http.Response response = await http.post(postDecisionUri,
-        body: encoded); //TODO something if response wasnt 200
+    return theImage;
   }
 
+  Future<void> postProfileImage(XFile pickedImage) async {
+    String fileName = '${DateTime.now().toString()}.jpg';
+    img.Image theImage = await _prepareImage(pickedImage);
+
+    http.MultipartRequest request = http.MultipartRequest(
+      'POST',
+      Uri.https(
+          SERVER_ADDR, '/upload_profile_image/${SettingsData.instance.uid}'),
+    );
+    var multipartFile = new http.MultipartFile.fromBytes(
+      'file',
+      img.encodeJpg(theImage, quality: 50),
+      filename: fileName,
+      contentType: media.MediaType.parse('image/jpeg'),
+    );
+    request.files.add(multipartFile);
+    var response = await request.send(); //TODO something if response wasn't 200
+    if (response.statusCode == 200) {
+      var resp_text = await response.stream.bytesToString();
+      var responseMap = jsonDecode(resp_text);
+      String url = getProfileImageUrl(responseMap['image_url']);
+      await CacheService.saveToCache(url, img.encodeJpg(theImage, quality: 50));
+      print('SAVED UPLOADED IMAGE TO CACHE!');
+    }
+
+    return;
+  }
+
+  static String shortProfileUrlImageById(String userId) {
+    //Get the user's main profile image by her userId
+    return  '/profile_image/$userId';
+  }
+
+  static String getProfileImageUrl(String shortUrl) {
+    return 'https://' + SERVER_ADDR + shortUrl;
+  }
+
+  Future<void> syncCurrentProfileImagesUrls() async {
+    Uri countUri = Uri.https(
+        SERVER_ADDR, '/profile_images/get_urls/${SettingsData.instance.uid}/');
+    var response = await http.get(countUri);
+    if (response.statusCode == 200) {
+      var parsed = json.jsonDecode(response.body);
+      List<String>? imagesLinks = parsed.cast<String>();
+      if (imagesLinks != null) {
+        SettingsData.instance.profileImagesUrls = imagesLinks;
+      }
+    }
+  }
+
+  Future<void> swapProfileImages(
+      String profileImage1Url, String profileImage2Url) async {
+    Map<String, String> toSend = {
+      'file1_url': profileImage1Url,
+      'file2_url': profileImage2Url
+    };
+
+    String encoded = jsonEncode(toSend);
+
+    Uri swapUri = Uri.https(
+        SERVER_ADDR, '/profile_images/swap/${SettingsData.instance.uid}');
+    http.Response response = await http.post(swapUri, body: encoded);
+    return;
+  }
+
+  Future<void> deleteProfileImage(String profileImageUrl) async {
+    Uri deletionUri = Uri.https(
+        SERVER_ADDR, '/profile_images/delete/${SettingsData.instance.uid}');
+    Map<String, String> toSend = {
+      'file_url': profileImageUrl,
+    };
+    print('trying to delete $profileImageUrl');
+    String encoded = jsonEncode(toSend);
+    var response = await http.post(deletionUri, body: encoded);
+    return;
+  }
+*/
   postUserSettings() async {
-    await NewNetworkService.instance.postUserSettings(); //TODO This is because matches are changed through the older server. Once the matches are handled by new server, get rid of this method and switch the calls to it to newnetworkservice
     SettingsData settings = SettingsData.instance;
     Map<String, String?> toSend = {
       SettingsData.FIREBASE_UID_KEY: settings.uid,
@@ -157,155 +146,181 @@ class AWSServer {
       SettingsData.USER_RELATIONSHIP_TYPE_KEY: settings.relationshipType,
       SettingsData.LONGITUDE_KEY: settings.longitude.toString(),
       SettingsData.LATITUDE_KEY: settings.latitude.toString(),
+      SettingsData.SEARCH_DISTANCE_ENABLED_KEY:
+      settings.searchDistanceEnabled.toString(),
+      SettingsData.GET_DUMMY_PROFILES_KEY:
+      settings.showDummyProfiles.toString(),
+      SettingsData.JOB_TITLE_KEY: settings.jobTitle,
+      SettingsData.SCHOOL_KEY: settings.school,
+      SettingsData.RELIGION_KEY: settings.religion,
+      SettingsData.ZODIAC_KEY: settings.zodiac,
+      SettingsData.FITNESS_KEY: settings.fitness,
+      SettingsData.SMOKING_KEY: settings.smoking,
+      SettingsData.DRINKING_KEY: settings.drinking,
+      SettingsData.EDUCATION_KEY: settings.education,
+      SettingsData.CHILDREN_KEY: settings.children,
+      SettingsData.COVID_VACCINE_KEY: settings.covid_vaccine,
+      SettingsData.HOBBIES_KEY: json.jsonEncode(settings.hobbies),
+      SettingsData.PETS_KEY: json.jsonEncode(settings.pets),
+      SettingsData.HEIGHT_IN_CM_KEY: settings.heightInCm.toString(),
+      SettingsData.TEXT_SEARCH_KEY: settings.textSearch,
+      SettingsData.REGISTRATION_STATUS_KEY: settings.registrationStatus
     };
     String encoded = jsonEncode(toSend);
-    Uri postSettingsUri = Uri.https(SERVER_ADDR, '/settings/${settings.uid}');
-    //http.Response response = await http.post(postSettingsUri, body: encoded); //TODO something if response wasnt 200
-
-  }
-
-  Future<HashMap<String, dynamic>> getFacesCustomImageSearchLinks(
-      {String? imageFileName}) async {
-    if (_facesCall != null) {
-      return HashMap();
-    }
-    Uri facesLinkUri =
-    Uri.https(SERVER_ADDR, 'faces/${SettingsData.instance.uid}/$imageFileName');
-    _facesCall = http.get(facesLinkUri);
-    if (DateTime.now().difference(_lastFacesImagesCall) <
-        MIN_FACES_CALL_INTERVAL) {
-      await Future.delayed(MIN_FACES_CALL_INTERVAL -
-          DateTime.now().difference(_lastFacesImagesCall));
-    }
-    _lastFacesImagesCall = DateTime.now();
-    http.Response response = await _facesCall!; //TODO something if error
-    dynamic facesData = jsonDecode(response.body);
-    _facesCall = null;
-    return HashMap.from(facesData);
-  }
-
-  //A helper method to shrink an image if it's too large, and decode it into a workable image format
-  Future<img.Image> _prepareImage(XFile pickedImageFile) async {
-    const MAX_IMAGE_SIZE = 800; //TODO make it  a parameter (if needed)
-
-    img.Image theImage = img.decodeImage(await pickedImageFile.readAsBytes())!;
-    if (max(theImage.height, theImage.width) > MAX_IMAGE_SIZE) {
-      double resizeFactor =
-          MAX_IMAGE_SIZE / max(theImage.height, theImage.width);
-      theImage = img.copyResize(theImage,
-          width: (theImage.width * resizeFactor).round());
-    }
-    return theImage;
-  }
-
-  Future<Tuple2<img.Image, String>> preparedFaceSearchImageFileDetails(
-      XFile imageFile) async {
-    img.Image theImage = await _prepareImage(imageFile);
-    String fileName = 'custom_face_search_${DateTime.now()}.jpg';
-    return Tuple2<img.Image, String>(theImage, fileName);
-  }
-
-  Future<void> postFaceSearchImage(
-      Tuple2<img.Image, String> imageFileDetails) async {
-    img.Image theImage = imageFileDetails.item1;
-    String fileName = imageFileDetails.item2;
-
-    http.MultipartRequest request = http.MultipartRequest(
-      'POST',
-      Uri.https(SERVER_ADDR, '/upload/${SettingsData.instance.uid}'),
-    );
-    var multipartFile = new http.MultipartFile.fromBytes(
-      'file',
-      img.encodeJpg(theImage),
-      filename: fileName,
-      contentType: media.MediaType.parse('image/jpeg'),
-    );
-    request.files.add(multipartFile);
-    var response = await request.send(); //TODO something if response wasn't 200
-    return;
-  }
-
-  Future<void> postProfileImage(XFile pickedImage) async {
-    String fileName = '${DateTime.now().toString()}.jpg';
-    img.Image theImage = await _prepareImage(pickedImage);
-
-    http.MultipartRequest request = http.MultipartRequest(
-      'POST',
-      Uri.https(SERVER_ADDR, '/profile_images/${SettingsData.instance.uid}'),
-    );
-    var multipartFile = new http.MultipartFile.fromBytes(
-      'file',
-      img.encodeJpg(theImage),
-      filename: fileName,
-      contentType: media.MediaType.parse('image/jpeg'),
-    );
-    request.files.add(multipartFile);
-    var response = await request.send(); //TODO something if response wasn't 200
-    return;
-  }
-
-  Future<List<String>?> getProfileImages() async {
-    Uri countUri = Uri.https(
-        SERVER_ADDR, '/profile_images/get_list/${SettingsData.instance.uid}/');
-    var response = await http.get(countUri);
+    Uri postSettingsUri = Uri.https(SERVER_ADDR, '/user_data/settings/${settings.uid}');
+    http.Response response = await http.post(postSettingsUri, body: encoded);
     if (response.statusCode == 200) {
-      var parsed = json.jsonDecode(response.body);
-      List<String>? imagesLinks = parsed.cast<String>();
-      return imagesLinks;
+      //TODO something if response wasnt 200
+      var dict_response = jsonDecode(response.body);
+      String locationDescription = dict_response['location_description'];
+      if (locationDescription.length > 0) {
+        print('SETTING LOCATION DESCRIPTION TO $locationDescription');
+        SettingsData.instance.locationDescription = locationDescription;
+      }
     }
   }
+  /*
 
-  String getProfileImageUrl(String shortUrl) {
-    return 'https://' +
-        SERVER_ADDR +
-        '/profile_images/${SettingsData.instance.uid}/$shortUrl';
+
+   */
+  //getMatches: Grab some matches and image links from the server
+  dynamic getMatches() async {
+    if (DateTime.now().difference(_lastMatchCall) < MIN_MATCHES_CALL_INTERVAL) {
+      await Future.delayed(MIN_MATCHES_CALL_INTERVAL -
+          DateTime.now().difference(_lastMatchCall));
+    }
+    _lastMatchCall = DateTime.now();
+    Uri matchesUrl =
+    Uri.https(SERVER_ADDR, '/matches/${SettingsData.instance.uid}');
+    http.Response response = await http.get(matchesUrl); //eg /12313?gender=Male
+    if (response.statusCode != 200) {
+      return null; //TODO error handling
+    }
+    dynamic profilesSearchResult = jsonDecode(response.body);
+    print('dor');
+    return profilesSearchResult;
+
   }
 
-  Future<void> deleteProfileImage(int index) async {
-    Uri deletionUri = Uri.https(SERVER_ADDR,
-        '/profile_images/delete/${SettingsData.instance.uid}/${index.toString()}');
-    var response = await http.get(deletionUri);
-    return;
-  }
 
-  Future<void> swapProfileImages(
-      int profileImageIndex1, int profileImageIndex2) async {
-    Map<String, int> toSend = {
-      'file1_index': profileImageIndex1,
-      'file2_index': profileImageIndex2
+  /*
+  postUserDecision({required Decision decision,required  Profile otherUserProfile}) async {
+    Map<String, String?> toSend = {
+      API_CONSTS.DECIDER_ID_KEY: SettingsData.instance.uid,
+      API_CONSTS.DECIDEE_ID_KEY: otherUserProfile.uid,
+      API_CONSTS.DECISION_KEY: decision.name
     };
-
     String encoded = jsonEncode(toSend);
+    Uri postDecisionUri =
+    Uri.https(SERVER_ADDR, '/decision/${SettingsData.instance.uid}');
+    http.Response response = await http.post(postDecisionUri,
+        body: encoded); //TODO something if response wasnt 200
+  }
 
-    Uri swapUri = Uri.https(
-        SERVER_ADDR, '/profile_images/swap/${SettingsData.instance.uid}');
-    http.Response response = await http.post(swapUri, body: encoded);
+  Future<Profile?> getSingleUserProfile(String userId)async{
+    Uri getUserUri = Uri.https(SERVER_ADDR, '/profile/$userId');
+    http.Response response = await http.get(getUserUri);
+    if(response.statusCode!=200){
+      return null; //TODO retry?
+    }
+    dynamic profileDataResult = jsonDecode(response.body);
+    if(profileDataResult[API_CONSTS.MATCH_STATUS] == API_CONSTS.SINGLE_PROFILE_NOT_FOUND){
+      return null;
+    }
+    return Profile.fromJson(profileDataResult[API_CONSTS.SINGLE_PROFILE_USER_DATA]);
+  }
+
+  Future<void> unmatch(String uid)async{
+    Uri unmatchUrl =
+    Uri.https(SERVER_ADDR, '/unmatch/${SettingsData.instance.uid}/$uid');
+    http.Response response = await http.get(unmatchUrl);
+    //TODO something if not 200
     return;
   }
 
-  Future<NetworkTaskStatus> checkTaskStatus(String? taskId) async {
-    if (DateTime.now().difference(_lastTaskStatusCall) <
-        MIN_TASK_STATUS_CALL_INTERVAL) {
-      await Future.delayed(MIN_TASK_STATUS_CALL_INTERVAL -
-          DateTime.now().difference(_lastTaskStatusCall));
-    }
-    _lastTaskStatusCall = DateTime.now();
-    Uri getTaskStatus = Uri.https(
-        SERVER_ADDR, '/task_status/${SettingsData.instance.uid}/$taskId');
-    http.Response response = await http.get(getTaskStatus);
-    if (response.statusCode == 200) {
-      var decodedResponse = json.jsonDecode(response.body);
-      if (decodedResponse == 'in_progress') {
-        return NetworkTaskStatus.inProgress;
-      }
-      if (decodedResponse == 'completed') {
-        return NetworkTaskStatus.completed;
-      }
-      return NetworkTaskStatus.notExist;
+  Future<void> clearLikes()async{
+    Uri clearLikesUrl =
+    Uri.https(SERVER_ADDR, '/clear_likes/${SettingsData.instance.uid}');
+    http.Response response = await http.get(clearLikesUrl);
+    return;
+  }
+
+  Future<ServerRegistrationStatus> registerUid({required String firebaseIdToken}) async {
+    Uri verifyTokenUri = Uri.https(SERVER_ADDR, '/register_firebase_uid');
+    http.Response response = await http
+        .get(verifyTokenUri, headers: {'firebase_id_token': firebaseIdToken});
+    if (response.statusCode != 200) {
+      //TODO throw error (bad jwt? server down?)
     }
 
-    return NetworkTaskStatus
-        .notExist; //TODO else what to do when status isnt 200?
+    var decodedResponse= json.jsonDecode(response.body);
+
+    if(decodedResponse[API_CONSTS.STATUS]==API_CONSTS.ALREADY_REGISTERED){
+
+      SettingsData.instance.updateFromServerData(decodedResponse[API_CONSTS.USER_DATA]);
+      return ServerRegistrationStatus.already_registered;
+    }
+    //The only possible response possible now is that the user is newly registered - so had to go through onboarding
+    //if(decodedResponse[API_CONSTS.STATUS]==API_CONSTS.NEW_REGISTER){
+    SettingsData.instance.uid = decodedResponse[API_CONSTS.USER_DATA][SettingsData.FIREBASE_UID_KEY];
+    return ServerRegistrationStatus.new_register;
+    //}
+  }
+
+
+
+  Future<void> verifyToken({required String firebaseIdToken}) async {
+    Uri verifyTokenUri = Uri.https(SERVER_ADDR, '/verify_token');
+    http.Response response = await http
+        .get(verifyTokenUri, headers: {'firebase_id_token': firebaseIdToken});
+    if (response.statusCode != 200) {
+      //TODO throw error (bad jwt? server down?)
+    }
+
+    var decodedResponse= json.jsonDecode(response.body);
+
+    return;
+    //}
+
+  }
+
+  Future<LocationCountData> getCountUsersByLocation()async{
+    Uri countUsersByLocationUri = Uri.https(SERVER_ADDR, '/users_in_location/${SettingsData.instance.uid}');
+    http.Response response = await http.get(countUsersByLocationUri);
+    if(response.statusCode!=200){
+      return LocationCountData(status: LocationCountStatus.initial_state);
+    }
+    try{
+      var decodedResponse = jsonDecode(response.body);
+      LocationCountStatus status = LocationCountStatus.values.firstWhere((status_option) => status_option.name == decodedResponse[API_CONSTS.LOCATION_STATUS_KEY],orElse: ()=>LocationCountStatus.initial_state);
+      if(decodedResponse[API_CONSTS.IS_TEST_USER_KEY] == true){
+        SettingsData.instance.isTestUser = true;
+      }
+      else{
+        SettingsData.instance.isTestUser = false;
+      }
+      //Here there should be just enough users or not enough users + data
+      if(status==LocationCountStatus.enough_users){
+        return LocationCountData(status: status);
+      }
+      //Here only if there are enough users so:
+      int requiredUsers = decodedResponse[API_CONSTS.LOCATION_REQUIRED_USERS];
+      int currentNumUsers = decodedResponse[API_CONSTS.LOCATION_CURRENT_USERS];
+      return LocationCountData(status: status,currentNumUsers: currentNumUsers,requiredNumUsers: requiredUsers);
+
+    }
+    catch(e){
+      return LocationCountData(status: LocationCountStatus.initial_state);
+    }
+
+  }
+
+
+  Future<void> deleteAccount() async {
+    Uri deleteAccountUri =
+    Uri.https(SERVER_ADDR, '/delete_account/${SettingsData.instance.uid}');
+    http.Response response = await http.get(deleteAccountUri);
+    //TODO check for a successful response and give user feedback if not successful
   }
 
 

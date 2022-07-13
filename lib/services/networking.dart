@@ -125,41 +125,41 @@ class NetworkHelper {
         body: encoded); //TODO something if response wasnt 200
   }
 
-  postUserSettings() async {
-    await NewNetworkService.instance.postUserSettings(); //TODO This is because matches are changed through the older server. Once the matches are handled by new server, get rid of this method and switch the calls to it to newnetworkservice
-    SettingsData settings = SettingsData.instance;
-    Map<String, String?> toSend = {
-      SettingsData.FIREBASE_UID_KEY: settings.uid,
-      SettingsData.FACEBOOK_ID_KEY: settings.facebookId,
-      'update_date': '8.0',
-      SettingsData.NAME_KEY: settings.name,
-      SettingsData.MIN_AGE_KEY: settings.minAge.toString(),
-      SettingsData.MAX_AGE_KEY: settings.maxAge.toString(),
-      SettingsData.PREFERRED_GENDER_KEY: settings.preferredGender,
-      SettingsData.FILTER_NAME_KEY: settings.filterName,
-      SettingsData.AUDITION_COUNT_KEY: settings.auditionCount.toString(),
-      SettingsData.TASTE_MIX_RATIO_KEY: settings.tasteMixRatio.toString(),
-      SettingsData.CELEB_ID_KEY: settings.celebId,
-      SettingsData.FILTER_DISPLAY_IMAGE_URL_KEY: settings.filterDisplayImageUrl,
-      SettingsData.RADIUS_KEY: settings.radius.toString(),
-      SettingsData.FCM_TOKEN_KEY: settings.fcmToken,
-      SettingsData.FACEBOOK_PROFILE_IMAGE_URL_KEY:
-          settings.facebookProfileImageUrl,
-      SettingsData.FACEBOOK_BIRTHDAY_KEY: settings.facebookBirthday,
-      SettingsData.EMAIL_KEY: settings.email,
-      SettingsData.USER_GENDER_KEY: settings.userGender,
-      SettingsData.USER_DESCRIPTION_KEY: settings.userDescription,
-      SettingsData.SHOW_USER_GENDER_KEY: settings.showUserGender.toString(),
-      SettingsData.USER_BIRTHDAY_KEY: settings.userBirthday,
-      SettingsData.USER_RELATIONSHIP_TYPE_KEY: settings.relationshipType,
-      SettingsData.LONGITUDE_KEY: settings.longitude.toString(),
-      SettingsData.LATITUDE_KEY: settings.latitude.toString(),
-    };
-    String encoded = jsonEncode(toSend);
-    Uri postSettingsUri = Uri.https(SERVER_ADDR, '/settings/${settings.uid}');
-    //http.Response response = await http.post(postSettingsUri, body: encoded); //TODO something if response wasnt 200
-
-  }
+  // postUserSettings() async {
+  //   await NewNetworkService.instance.postUserSettings(); //TODO This is because matches are changed through the older server. Once the matches are handled by new server, get rid of this method and switch the calls to it to newnetworkservice
+  //   SettingsData settings = SettingsData.instance;
+  //   Map<String, String?> toSend = {
+  //     SettingsData.FIREBASE_UID_KEY: settings.uid,
+  //     SettingsData.FACEBOOK_ID_KEY: settings.facebookId,
+  //     'update_date': '8.0',
+  //     SettingsData.NAME_KEY: settings.name,
+  //     SettingsData.MIN_AGE_KEY: settings.minAge.toString(),
+  //     SettingsData.MAX_AGE_KEY: settings.maxAge.toString(),
+  //     SettingsData.PREFERRED_GENDER_KEY: settings.preferredGender,
+  //     SettingsData.FILTER_NAME_KEY: settings.filterName,
+  //     SettingsData.AUDITION_COUNT_KEY: settings.auditionCount.toString(),
+  //     SettingsData.TASTE_MIX_RATIO_KEY: settings.tasteMixRatio.toString(),
+  //     SettingsData.CELEB_ID_KEY: settings.celebId,
+  //     SettingsData.FILTER_DISPLAY_IMAGE_URL_KEY: settings.filterDisplayImageUrl,
+  //     SettingsData.RADIUS_KEY: settings.radius.toString(),
+  //     SettingsData.FCM_TOKEN_KEY: settings.fcmToken,
+  //     SettingsData.FACEBOOK_PROFILE_IMAGE_URL_KEY:
+  //         settings.facebookProfileImageUrl,
+  //     SettingsData.FACEBOOK_BIRTHDAY_KEY: settings.facebookBirthday,
+  //     SettingsData.EMAIL_KEY: settings.email,
+  //     SettingsData.USER_GENDER_KEY: settings.userGender,
+  //     SettingsData.USER_DESCRIPTION_KEY: settings.userDescription,
+  //     SettingsData.SHOW_USER_GENDER_KEY: settings.showUserGender.toString(),
+  //     SettingsData.USER_BIRTHDAY_KEY: settings.userBirthday,
+  //     SettingsData.USER_RELATIONSHIP_TYPE_KEY: settings.relationshipType,
+  //     SettingsData.LONGITUDE_KEY: settings.longitude.toString(),
+  //     SettingsData.LATITUDE_KEY: settings.latitude.toString(),
+  //   };
+  //   String encoded = jsonEncode(toSend);
+  //   Uri postSettingsUri = Uri.https(SERVER_ADDR, '/settings/${settings.uid}');
+  //   //http.Response response = await http.post(postSettingsUri, body: encoded); //TODO something if response wasnt 200
+  //
+  // }
 
   Future<HashMap<String, dynamic>> getFacesCustomImageSearchLinks(
       {String? imageFileName}) async {

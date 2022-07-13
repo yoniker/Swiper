@@ -1,5 +1,6 @@
 import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/location_service.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -54,7 +55,7 @@ class MatchEngine extends ChangeNotifier {
       return;}
     if(SettingsData.instance.uid.length<=0){return;}
       try {
-        matchesBeingGotten = NewNetworkService.instance.getMatches();
+        matchesBeingGotten = AWSServer.instance.getMatches();
         dynamic matchesSearchResult = await matchesBeingGotten;
         if(matchesSearchResult==null){return;}
         MatchSearchStatus newStatus = MatchSearchStatus.values.firstWhere((s) => s.name==matchesSearchResult[API_CONSTS.MATCHES_SEARCH_STATUS_KEY],orElse:()=>MatchSearchStatus.empty) ;
