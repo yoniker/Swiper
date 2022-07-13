@@ -168,9 +168,8 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
         hasBackButton: true,
         customTitle: ProfileDisplay(
           theUser,
-          minRadius: 10,
-          maxRadius: 20,
           direction: Axis.horizontal,
+          radius: 16,
           onTap: () {
             Get.toNamed(OtherUserProfileScreen.routeName,
                 arguments: theUser.uid);
@@ -180,15 +179,9 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
           height: 30,
           child: Row(
             children: [
-              GestureDetector(
-                onTap: () {
-                  print(MediaQuery.of(context).viewInsets.bottom);
-                },
-                child: Icon(FontAwesomeIcons.info),
-              ),
               FloatingActionButton.small(
-                elevation: 1,
-                backgroundColor: Colors.black45,
+                elevation: 0,
+                backgroundColor: Colors.transparent,
                 onPressed: () {
                   showDialog(
                     context: context,
@@ -220,9 +213,9 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
                   );
                 },
                 child: Icon(
-                  FontAwesomeIcons.circleXmark,
-                  color: Colors.white70,
-                  size: 30,
+                  FontAwesomeIcons.ellipsisVertical,
+                  color: Colors.black87,
+                  size: 25,
                 ),
               ),
             ],
@@ -232,7 +225,6 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
       body: Stack(
         alignment: Alignment.center,
         children: [
-          if (_messages.length == 0) buildEmptyChatWidget(),
           Chat(
             l10n: ChatL10nEn(inputPlaceholder: ' Send a message'),
             theme: DefaultChatTheme(
@@ -269,6 +261,7 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
                   .resendMessageIfError(conversationId, message.id);
             },
           ),
+          if (_messages.length == 0) buildEmptyChatWidget(),
         ],
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
@@ -52,14 +53,7 @@ class ProfileDisplay extends StatelessWidget {
                   SizedBox(
                     width: 10,
                   ),
-                  Text(
-                    profile.username,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )
+                  Text(profile.username, style: titleStyle)
                 ])),
     );
   }

@@ -4,6 +4,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/data_models/celeb.dart';
+import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
@@ -14,6 +15,7 @@ import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -35,7 +37,6 @@ class VoilaPage extends StatefulWidget {
 class _VoilaPageState extends State<VoilaPage>
     with AutomaticKeepAliveClientMixin {
   bool isLoading = false;
-  bool isPressed = false;
   String textSearchTyped = SettingsData.instance.textSearch;
 
   ScrollController _scrollController = ScrollController();
@@ -413,6 +414,7 @@ class _VoilaPageState extends State<VoilaPage>
             Celeb _selectedCeleb = Celeb(
                 celebName: SettingsData.instance.celebId,
                 imagesUrls: [SettingsData.instance.filterDisplayImageUrl]);
+
             return GestureDetector(
               onTap: () {
                 FocusScope.of(context).unfocus();
@@ -616,14 +618,28 @@ class _VoilaPageState extends State<VoilaPage>
                                           onTap: () {
                                             SettingsData.instance.filterType =
                                                 FilterType.THEIR_TASTE;
+                                            SettingsData.instance
+                                                .filterDisplayImageUrl = '';
                                             FocusScope.of(context).unfocus();
                                             Get.back();
                                           },
                                           isActive: SettingsData
                                                   .instance.filterType ==
                                               FilterType.THEIR_TASTE,
-                                          image: AssetImage(
-                                              'assets/images/taste2.jpg'),
+                                          image: SettingsData
+                                                      .instance.filterType ==
+                                                  FilterType.THEIR_TASTE
+                                              ? ExtendedNetworkImageProvider(
+                                                  NewNetworkService
+                                                      .getProfileImageUrl(
+                                                          SettingsData
+                                                              .instance
+                                                              .profileImagesUrls
+                                                              .first),
+                                                  cache: true)
+                                              : AssetImage(
+                                                      'assets/images/taste2.jpg')
+                                                  as ImageProvider<Object>,
                                           title: Text(
                                             'Their Taste',
                                             style: titleStyleWhite,

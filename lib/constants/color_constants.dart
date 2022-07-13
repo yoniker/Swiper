@@ -138,7 +138,7 @@ const TextStyle titleStyleWhite = TextStyle(
       Shadow(
         blurRadius: 15.0,
         color: Colors.black,
-        offset: Offset(-2.0, 2.0),
+        offset: Offset(-4.0, 2.0),
       ),
     ]);
 

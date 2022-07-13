@@ -9,6 +9,7 @@ import 'package:betabeta/screens/voila_page.dart';
 import 'package:betabeta/services/app_state_info.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/animated_widgets/animated_their_taste_widget.dart';
+import 'package:betabeta/widgets/animated_widgets/animated_tutorial_screen_texts.dart';
 import 'package:betabeta/widgets/circular_user_avatar.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/image_filterview_widget.dart';
@@ -380,6 +381,17 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
           ),
           trailing: Row(
             children: [
+              GestureDetector(
+                onTap: () async {
+                  Get.to(
+                    AnimatedTutorialScreenTexts(
+                      totalScriptedTime: 10000,
+                      timedAnimatedTexts: [],
+                    ),
+                  );
+                },
+                child: Icon(FontAwesomeIcons.question),
+              ),
               AnimatedOpacity(
                 duration: Duration(milliseconds: 300),
                 opacity:

@@ -38,7 +38,6 @@ class _TutorialScreenStarterState extends State<TutorialScreenStarter>
                 .nextRoute(TutorialScreenStarter.routeName),
             arguments: true);
       }
-      print(time);
     });
     _controller = AnimationController(
       vsync: this,
