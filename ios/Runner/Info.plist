@@ -66,7 +66,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Grant access to camera so you can take your own photos </string>
+	<string>Allow access to your camera, so you can take pictures to share with others via your profile </string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Grant access to your location so you will view matches around you</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -76,7 +76,7 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Grant access to microphone so you will be able to share video and audio</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Grant access to gallery so you can choose your photos </string>
+	<string>Allow access to your library, so you can choose pictures to share with others via your profile </string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
