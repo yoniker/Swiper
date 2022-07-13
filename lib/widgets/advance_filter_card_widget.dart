@@ -4,7 +4,7 @@ import 'package:betabeta/services/settings_model.dart';
 import 'package:flutter/material.dart';
 
 class AdvanceFilterCard extends StatelessWidget {
-  final AssetImage image;
+  final ImageProvider<Object> image;
   final Widget title;
   final String? centerNotice;
   final bool? showAI;

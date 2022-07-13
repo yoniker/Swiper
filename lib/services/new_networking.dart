@@ -68,7 +68,7 @@ class NewNetworkService {
 
   static String shortProfileUrlImageById(String userId) {
     //Get the user's main profile image by her userId
-    return  '/profile_image/$userId';
+    return '/profile_image/$userId';
   }
 
   static String getProfileImageUrl(String shortUrl) {
@@ -190,13 +190,12 @@ class NewNetworkService {
     if (response.statusCode != 200) {
       return null; //TODO error handling
     }
-      dynamic profilesSearchResult = jsonDecode(response.body);
-      return profilesSearchResult;
-
+    dynamic profilesSearchResult = jsonDecode(response.body);
+    return profilesSearchResult;
   }
 
-
-  postUserDecision({required Decision decision,required  Profile otherUserProfile}) async {
+  postUserDecision(
+      {required Decision decision, required Profile otherUserProfile}) async {
     Map<String, String?> toSend = {
       API_CONSTS.DECIDER_ID_KEY: SettingsData.instance.uid,
       API_CONSTS.DECIDEE_ID_KEY: otherUserProfile.uid,
@@ -204,40 +203,43 @@ class NewNetworkService {
     };
     String encoded = jsonEncode(toSend);
     Uri postDecisionUri =
-    Uri.https(SERVER_ADDR, '/decision/${SettingsData.instance.uid}');
+        Uri.https(SERVER_ADDR, '/decision/${SettingsData.instance.uid}');
     http.Response response = await http.post(postDecisionUri,
         body: encoded); //TODO something if response wasnt 200
   }
 
-  Future<Profile?> getSingleUserProfile(String userId)async{
+  Future<Profile?> getSingleUserProfile(String userId) async {
     Uri getUserUri = Uri.https(SERVER_ADDR, '/profile/$userId');
     http.Response response = await http.get(getUserUri);
-    if(response.statusCode!=200){
+    if (response.statusCode != 200) {
       return null; //TODO retry?
     }
     dynamic profileDataResult = jsonDecode(response.body);
-    if(profileDataResult[API_CONSTS.MATCH_STATUS] == API_CONSTS.SINGLE_PROFILE_NOT_FOUND){
+    if (profileDataResult[API_CONSTS.MATCH_STATUS] ==
+        API_CONSTS.SINGLE_PROFILE_NOT_FOUND) {
       return null;
     }
-  return Profile.fromJson(profileDataResult[API_CONSTS.SINGLE_PROFILE_USER_DATA]);
+    return Profile.fromJson(
+        profileDataResult[API_CONSTS.SINGLE_PROFILE_USER_DATA]);
   }
 
-  Future<void> unmatch(String uid)async{
+  Future<void> unmatch(String uid) async {
     Uri unmatchUrl =
-    Uri.https(SERVER_ADDR, '/unmatch/${SettingsData.instance.uid}/$uid');
+        Uri.https(SERVER_ADDR, '/unmatch/${SettingsData.instance.uid}/$uid');
     http.Response response = await http.get(unmatchUrl);
     //TODO something if not 200
     return;
   }
 
-  Future<void> clearLikes()async{
+  Future<void> clearLikes() async {
     Uri clearLikesUrl =
-    Uri.https(SERVER_ADDR, '/clear_likes/${SettingsData.instance.uid}');
+        Uri.https(SERVER_ADDR, '/clear_likes/${SettingsData.instance.uid}');
     http.Response response = await http.get(clearLikesUrl);
     return;
   }
 
-   Future<ServerRegistrationStatus> registerUid({required String firebaseIdToken}) async {
+  Future<ServerRegistrationStatus> registerUid(
+      {required String firebaseIdToken}) async {
     Uri verifyTokenUri = Uri.https(SERVER_ADDR, '/register_firebase_uid');
     http.Response response = await http
         .get(verifyTokenUri, headers: {'firebase_id_token': firebaseIdToken});
@@ -245,21 +247,20 @@ class NewNetworkService {
       //TODO throw error (bad jwt? server down?)
     }
 
-    var decodedResponse= json.jsonDecode(response.body);
+    var decodedResponse = json.jsonDecode(response.body);
 
-    if(decodedResponse[API_CONSTS.STATUS]==API_CONSTS.ALREADY_REGISTERED){
-
-      SettingsData.instance.updateFromServerData(decodedResponse[API_CONSTS.USER_DATA]);
+    if (decodedResponse[API_CONSTS.STATUS] == API_CONSTS.ALREADY_REGISTERED) {
+      SettingsData.instance
+          .updateFromServerData(decodedResponse[API_CONSTS.USER_DATA]);
       return ServerRegistrationStatus.already_registered;
     }
     //The only possible response possible now is that the user is newly registered - so had to go through onboarding
     //if(decodedResponse[API_CONSTS.STATUS]==API_CONSTS.NEW_REGISTER){
-      SettingsData.instance.uid = decodedResponse[API_CONSTS.USER_DATA][SettingsData.FIREBASE_UID_KEY];
-      return ServerRegistrationStatus.new_register;
+    SettingsData.instance.uid =
+        decodedResponse[API_CONSTS.USER_DATA][SettingsData.FIREBASE_UID_KEY];
+    return ServerRegistrationStatus.new_register;
     //}
   }
-
-
 
   Future<void> verifyToken({required String firebaseIdToken}) async {
     Uri verifyTokenUri = Uri.https(SERVER_ADDR, '/verify_token');
@@ -269,48 +270,50 @@ class NewNetworkService {
       //TODO throw error (bad jwt? server down?)
     }
 
-    var decodedResponse= json.jsonDecode(response.body);
+    var decodedResponse = json.jsonDecode(response.body);
 
     return;
     //}
-
   }
 
-  Future<LocationCountData> getCountUsersByLocation()async{
-    Uri countUsersByLocationUri = Uri.https(SERVER_ADDR, '/users_in_location/${SettingsData.instance.uid}');
+  Future<LocationCountData> getCountUsersByLocation() async {
+    Uri countUsersByLocationUri = Uri.https(
+        SERVER_ADDR, '/users_in_location/${SettingsData.instance.uid}');
     http.Response response = await http.get(countUsersByLocationUri);
-    if(response.statusCode!=200){
+    if (response.statusCode != 200) {
       return LocationCountData(status: LocationCountStatus.initial_state);
     }
-    try{
+    try {
       var decodedResponse = jsonDecode(response.body);
-      LocationCountStatus status = LocationCountStatus.values.firstWhere((status_option) => status_option.name == decodedResponse[API_CONSTS.LOCATION_STATUS_KEY],orElse: ()=>LocationCountStatus.initial_state);
-      if(decodedResponse[API_CONSTS.IS_TEST_USER_KEY] == true){
+      LocationCountStatus status = LocationCountStatus.values.firstWhere(
+          (status_option) =>
+              status_option.name ==
+              decodedResponse[API_CONSTS.LOCATION_STATUS_KEY],
+          orElse: () => LocationCountStatus.initial_state);
+      if (decodedResponse[API_CONSTS.IS_TEST_USER_KEY] == true) {
         SettingsData.instance.isTestUser = true;
-      }
-      else{
+      } else {
         SettingsData.instance.isTestUser = false;
       }
       //Here there should be just enough users or not enough users + data
-      if(status==LocationCountStatus.enough_users){
+      if (status == LocationCountStatus.enough_users) {
         return LocationCountData(status: status);
       }
       //Here only if there are enough users so:
       int requiredUsers = decodedResponse[API_CONSTS.LOCATION_REQUIRED_USERS];
       int currentNumUsers = decodedResponse[API_CONSTS.LOCATION_CURRENT_USERS];
-      return LocationCountData(status: status,currentNumUsers: currentNumUsers,requiredNumUsers: requiredUsers);
-
-    }
-    catch(e){
+      return LocationCountData(
+          status: status,
+          currentNumUsers: currentNumUsers,
+          requiredNumUsers: requiredUsers);
+    } catch (e) {
       return LocationCountData(status: LocationCountStatus.initial_state);
     }
-
   }
-
 
   Future<void> deleteAccount() async {
     Uri deleteAccountUri =
-    Uri.https(SERVER_ADDR, '/delete_account/${SettingsData.instance.uid}');
+        Uri.https(SERVER_ADDR, '/delete_account/${SettingsData.instance.uid}');
     http.Response response = await http.get(deleteAccountUri);
     //TODO check for a successful response and give user feedback if not successful
   }

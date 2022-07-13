@@ -67,7 +67,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
               actions: [
                 TextButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Get.back();
                     },
                     child: const Text(
                       'Close',
@@ -163,10 +163,8 @@ class _ContactsWidgetState extends State<ContactsWidget> {
                           .contains(widget.search))
                         return GestureDetector(
                           onTap: () {
-                            if (SettingsData.instance.userGender !=
-                                    kFemaleGender &&
-                                conversationsUserInitiated.length >=
-                                    kMaxInitiatedConversations)
+                            if (conversationsUserInitiated.length >=
+                                kMaxInitiatedConversations)
                               maxedOutPopUpDialog();
                             else
                               Get.toNamed(ChatScreen.getRouteWithUserId(

@@ -69,7 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         },
         child: Material(
           color: Colors.white,
-          elevation: 1.2,
+          elevation: 5.2,
           shape: CircleBorder(),
           child: Padding(
             padding: const EdgeInsets.all(2.1),
@@ -78,6 +78,18 @@ class _ProfileScreenState extends State<ProfileScreen>
               maxRadius: 75.0,
               backgroundImage: _image,
               backgroundColor: lightCardColor,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    SettingsData.instance.name,
+                    style: titleStyleWhite,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -139,13 +151,6 @@ class _ProfileScreenState extends State<ProfileScreen>
             child: Column(
               children: [
                 _profilePicDisplay(_profileImageToShow),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
-                  child: Text(
-                    SettingsData.instance.name,
-                    style: titleStyle,
-                  ),
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
