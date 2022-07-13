@@ -381,33 +381,33 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
           ),
           trailing: Row(
             children: [
-              GestureDetector(
-                onTap: () async {
-                  Get.to(
-                    AnimatedTutorialScreenTexts(
-                      totalScriptedTime: 10000,
-                      timedAnimatedTexts: [],
-                    ),
-                  );
-                },
-                child: Icon(FontAwesomeIcons.question),
-              ),
-              AnimatedOpacity(
-                duration: Duration(milliseconds: 300),
-                opacity:
-                    selectedTabIndex == MainNavigationScreen.MATCHING_PAGE_INDEX
-                        ? 1
-                        : 0,
-                child: GestureDetector(
-                  onTap: selectedTabIndex ==
-                          MainNavigationScreen.MATCHING_PAGE_INDEX
-                      ? () {
-                          showTutorial();
-                        }
-                      : null,
-                  child: Icon(Icons.info),
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: () async {
+              //     Get.to(
+              //       AnimatedTutorialScreenTexts(
+              //         totalScriptedTime: 10000,
+              //         timedAnimatedTexts: [],
+              //       ),
+              //     );
+              //   },
+              //   child: Icon(FontAwesomeIcons.question),
+              // ),
+              // AnimatedOpacity(
+              //   duration: Duration(milliseconds: 300),
+              //   opacity:
+              //       selectedTabIndex == MainNavigationScreen.MATCHING_PAGE_INDEX
+              //           ? 1
+              //           : 0,
+              //   child: GestureDetector(
+              //     onTap: selectedTabIndex ==
+              //             MainNavigationScreen.MATCHING_PAGE_INDEX
+              //         ? () {
+              //             showTutorial();
+              //           }
+              //         : null,
+              //     child: Icon(Icons.info),
+              //   ),
+              // ),
               SizedBox(
                 width: 5,
               ),
