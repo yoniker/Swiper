@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -10,6 +11,7 @@ import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/widgets/advance_filter_card_widget.dart';
+import 'package:betabeta/widgets/animated_widgets/animated_tutorial_screen_texts.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
@@ -41,285 +43,332 @@ class _VoilaPageState extends State<VoilaPage>
 
   ScrollController _scrollController = ScrollController();
 
-  late TutorialCoachMark VoilaTutorial;
-  List<TargetFocus> targets = <TargetFocus>[];
+  void showTutorial() async {
+    void ScrollPageDown() {
+      _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+          duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+    }
 
-  void ScrollPageDown() {
-    _scrollController.animateTo(_scrollController.position.maxScrollExtent,
-        duration: Duration(milliseconds: 500), curve: Curves.easeIn);
-  }
+    TutorialCoachMark? currentTutorial;
 
-  void showTutorial() {
-    initTargets();
-    VoilaTutorial = TutorialCoachMark(
-      context,
-      hideSkip: true,
-      alignSkip: Alignment.centerLeft,
-      targets: targets,
-      colorShadow: Colors.black.withOpacity(0.7),
-      textSkip: "SKIP",
-      paddingFocus: 10,
-      opacityShadow: 0.8,
-      onFinish: () {
-        Get.back();
-      },
-      onClickTarget: (target) {
-        if (target.keyTarget == targets[2].keyTarget)
-          Future.delayed(Duration(milliseconds: 100), ScrollPageDown);
-      },
-    )..show();
-  }
-
-  void initTargets() {
-    targets.clear();
-    targets.add(
-      TargetFocus(
-        identify: "textSearchWidget",
-        keyTarget: textSearchWidget,
-        alignSkip: Alignment.bottomCenter,
-        shape: ShapeLightFocus.RRect,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (context, controller) {
-              return Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      "Click here for free text search",
-                      style: LargeTitleStyleWhite,
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'You can find other New York Yankees for example!',
+    TargetFocus textSearchTarget = TargetFocus(
+      identify: "textSearchWidget",
+      keyTarget: textSearchWidget,
+      alignSkip: Alignment.bottomCenter,
+      shape: ShapeLightFocus.RRect,
+      contents: [
+        TargetContent(
+          align: ContentAlign.bottom,
+          builder: (context, controller) {
+            return Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    "Click here for free text search",
+                    style: LargeTitleStyleWhite,
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'You can find other New York Yankees for example!',
+                    style: LargeTitleStyleWhite.copyWith(
+                        color: Colors.redAccent, fontSize: 20),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      currentTutorial?.next();
+                    },
+                    child: Text(
+                      'NEXT',
                       style: LargeTitleStyleWhite.copyWith(
-                          color: Colors.redAccent, fontSize: 20),
-                      textAlign: TextAlign.center,
+                          decoration: TextDecoration.underline,
+                          color: Colors.blueAccent),
                     ),
-                    SizedBox(
-                      height: 10,
+                  )
+                ],
+              ),
+            );
+          },
+        ),
+      ],
+    );
+    TargetFocus yourTasteTarget = TargetFocus(
+      identify: 'yourTasteWidget',
+      keyTarget: yourTasteWidget,
+      alignSkip: Alignment.bottomCenter,
+      shape: ShapeLightFocus.RRect,
+      contents: [
+        TargetContent(
+          align: ContentAlign.top,
+          builder: (context, controller) {
+            return Container(
+              child: Column(
+                children: [
+                  Text(
+                    "Voilà has a personal assistant, which learns your taste intimately",
+                    style: LargeTitleStyleWhite,
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'You can actually ask voilà to show you people that you like!',
+                    style: LargeTitleStyleWhite.copyWith(
+                        fontSize: 20, color: Colors.redAccent),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      currentTutorial?.finish();
+                    },
+                    child: Text(
+                      'NEXT',
+                      style: LargeTitleStyleWhite.copyWith(
+                          decoration: TextDecoration.underline,
+                          color: Colors.blueAccent),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        VoilaTutorial.next();
-                      },
-                      child: Text(
-                        'NEXT',
-                        style: LargeTitleStyleWhite.copyWith(
-                            decoration: TextDecoration.underline,
-                            color: Colors.blueAccent),
-                      ),
-                    )
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
-      ),
+                  )
+                ],
+              ),
+            );
+          },
+        ),
+      ],
+    );
+    TargetFocus theirTasteTarget = TargetFocus(
+      identify: 'theirTasteWidget',
+      keyTarget: theirTasteWidget,
+      alignSkip: Alignment.bottomCenter,
+      shape: ShapeLightFocus.RRect,
+      contents: [
+        TargetContent(
+          align: ContentAlign.top,
+          builder: (context, controller) {
+            return Container(
+              child: Column(
+                children: [
+                  Text(
+                    "Since voilà learns everyone's taste, you can even ask voila to show people that will like you!",
+                    style: LargeTitleStyleWhite.copyWith(
+                        fontSize: 20, color: Colors.redAccent),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'See members that you are their taste!',
+                    style: LargeTitleStyleWhite,
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      currentTutorial?.finish();
+                    },
+                    child: Text(
+                      'NEXT',
+                      style: LargeTitleStyleWhite.copyWith(
+                          decoration: TextDecoration.underline,
+                          color: Colors.blueAccent),
+                    ),
+                  )
+                ],
+              ),
+            );
+          },
+        ),
+      ],
+    );
+    TargetFocus celebWidgetTarget = TargetFocus(
+      identify: 'celebSearchWidget',
+      keyTarget: celebSearchWidget,
+      alignSkip: Alignment.bottomCenter,
+      shape: ShapeLightFocus.RRect,
+      contents: [
+        TargetContent(
+          align: ContentAlign.bottom,
+          builder: (context, controller) {
+            return Container(
+              child: Column(
+                children: [
+                  Text(
+                    'You can look for celeb look-a-likes. So if you like britney spears, you can date her look-a-likes ☺️',
+                    style: LargeTitleStyleWhite.copyWith(
+                        fontSize: 20, color: Colors.redAccent),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Click here to search for Celeb look-a-like members!',
+                    style: LargeTitleStyleWhite,
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      currentTutorial?.finish();
+                    },
+                    child: Text(
+                      'NEXT',
+                      style: LargeTitleStyleWhite.copyWith(
+                          decoration: TextDecoration.underline,
+                          color: Colors.blueAccent),
+                    ),
+                  )
+                ],
+              ),
+            );
+          },
+        ),
+      ],
+    );
+    TargetFocus imageSearchTarget = TargetFocus(
+      identify: "imageSearchWidget",
+      keyTarget: imageSearchWidget,
+      alignSkip: Alignment.bottomCenter,
+      shape: ShapeLightFocus.RRect,
+      contents: [
+        TargetContent(
+          align: ContentAlign.bottom,
+          builder: (context, controller) {
+            return Container(
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    'You can even use your own picture!',
+                    style: LargeTitleStyleWhite.copyWith(
+                        fontSize: 20, color: Colors.redAccent),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Click here to search for picture look-a-like members",
+                    style: LargeTitleStyleWhite,
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      currentTutorial?.finish();
+                    },
+                    child: Text(
+                      'NEXT',
+                      style: LargeTitleStyleWhite.copyWith(
+                          decoration: TextDecoration.underline,
+                          color: Colors.blueAccent),
+                    ),
+                  )
+                ],
+              ),
+            );
+          },
+        ),
+      ],
     );
 
-    targets.add(
-      TargetFocus(
-        identify: 'yourTasteWidget',
-        keyTarget: yourTasteWidget,
-        alignSkip: Alignment.bottomCenter,
-        shape: ShapeLightFocus.RRect,
-        contents: [
-          TargetContent(
-            align: ContentAlign.top,
-            builder: (context, controller) {
-              return Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Voilà has a personal assistant, which learns your taste intimately",
-                      style: LargeTitleStyleWhite,
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'You can actually ask voilà to show you people that you like!',
-                      style: LargeTitleStyleWhite.copyWith(
-                          fontSize: 20, color: Colors.redAccent),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        VoilaTutorial.next();
-                      },
-                      child: Text(
-                        'NEXT',
-                        style: LargeTitleStyleWhite.copyWith(
-                            decoration: TextDecoration.underline,
-                            color: Colors.blueAccent),
-                      ),
-                    )
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-    targets.add(
-      TargetFocus(
-        identify: 'theirTasteWidget',
-        keyTarget: theirTasteWidget,
-        alignSkip: Alignment.bottomCenter,
-        shape: ShapeLightFocus.RRect,
-        contents: [
-          TargetContent(
-            align: ContentAlign.top,
-            builder: (context, controller) {
-              return Container(
-                child: Column(
-                  children: [
-                    Text(
-                      "Since voilà learns everyone's taste, you can even ask voila to show people that will like you!",
-                      style: LargeTitleStyleWhite.copyWith(
-                          fontSize: 20, color: Colors.redAccent),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'See members that you are their taste!',
-                      style: LargeTitleStyleWhite,
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        ScrollPageDown();
-                        VoilaTutorial.next();
-                      },
-                      child: Text(
-                        'NEXT',
-                        style: LargeTitleStyleWhite.copyWith(
-                            decoration: TextDecoration.underline,
-                            color: Colors.blueAccent),
-                      ),
-                    )
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-    targets.add(
-      TargetFocus(
-        identify: 'celebSearchWidget',
-        keyTarget: celebSearchWidget,
-        alignSkip: Alignment.bottomCenter,
-        shape: ShapeLightFocus.RRect,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (context, controller) {
-              return Container(
-                child: Column(
-                  children: [
-                    Text(
-                      'You can look for celeb look-a-likes. So if you like britney spears, you can date her look-a-likes ☺️',
-                      style: LargeTitleStyleWhite.copyWith(
-                          fontSize: 20, color: Colors.redAccent),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'Click here to search for Celeb look-a-like members!',
-                      style: LargeTitleStyleWhite,
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        VoilaTutorial.next();
-                      },
-                      child: Text(
-                        'NEXT',
-                        style: LargeTitleStyleWhite.copyWith(
-                            decoration: TextDecoration.underline,
-                            color: Colors.blueAccent),
-                      ),
-                    )
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-    targets.add(
-      TargetFocus(
-        identify: "imageSearchWidget",
-        keyTarget: imageSearchWidget,
-        alignSkip: Alignment.bottomCenter,
-        shape: ShapeLightFocus.RRect,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (context, controller) {
-              return Container(
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      'You can even use your own picture!',
-                      style: LargeTitleStyleWhite.copyWith(
-                          fontSize: 20, color: Colors.redAccent),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "Click here to search for picture look-a-like members",
-                      style: LargeTitleStyleWhite,
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        VoilaTutorial.next();
-                      },
-                      child: Text(
-                        'NEXT',
-                        style: LargeTitleStyleWhite.copyWith(
-                            decoration: TextDecoration.underline,
-                            color: Colors.blueAccent),
-                      ),
-                    )
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
+    Future<void> showTutorialWithOneTarget(
+        {required TargetFocus target}) async {
+      Completer completer = Completer();
+
+      await Future.delayed(Duration(milliseconds: 300));
+      currentTutorial = TutorialCoachMark(
+        context,
+        hideSkip: true,
+        alignSkip: Alignment.centerLeft,
+        targets: [target],
+        colorShadow: Colors.black.withOpacity(0.7),
+        textSkip: "SKIP",
+        paddingFocus: 10,
+        opacityShadow: 0.8,
+        onFinish: () {
+          completer.complete();
+        },
+        onClickTarget: (target) {},
+      )..show();
+
+      return completer.future;
+    }
+
+    await showTutorialWithOneTarget(target: textSearchTarget);
+    await Get.to(AnimatedTutorialScreenTexts(
+        totalScriptedTime: 6000,
+        timedAnimatedTexts: [
+          TimedAnimatedText(
+              beginTime: 500,
+              endTime: 5500,
+              text: 'Voilà is the only dating app with a Free Text Search!')
+        ]));
+    await showTutorialWithOneTarget(target: yourTasteTarget);
+    await Get.to(AnimatedTutorialScreenTexts(
+        totalScriptedTime: 8000,
+        timedAnimatedTexts: [
+          TimedAnimatedText(
+              beginTime: 500,
+              endTime: 4500,
+              text: 'Only Voilà lets you search according to your taste'),
+          TimedAnimatedText(
+              beginTime: 5500,
+              endTime: 7500,
+              text: 'The end for endless swiping!')
+        ]));
+    await showTutorialWithOneTarget(target: theirTasteTarget);
+    await Get.to(AnimatedTutorialScreenTexts(
+        totalScriptedTime: 8000,
+        timedAnimatedTexts: [
+          TimedAnimatedText(
+              beginTime: 500,
+              endTime: 4500,
+              text:
+                  'Only Voilà lets you search according to the other users\' taste'),
+          TimedAnimatedText(
+              beginTime: 5000,
+              endTime: 7900,
+              text: 'Find a match as soon as possible!')
+        ]));
+    await Future.delayed(Duration(milliseconds: 100), ScrollPageDown);
+    await Future.delayed(Duration(milliseconds: 700));
+    await showTutorialWithOneTarget(target: celebWidgetTarget);
+    await Get.to(AnimatedTutorialScreenTexts(
+        totalScriptedTime: 4000,
+        timedAnimatedTexts: [
+          TimedAnimatedText(
+              beginTime: 500,
+              endTime: 3500,
+              text: 'Find people who look like your favorite celeb!'),
+        ]));
+    await showTutorialWithOneTarget(target: imageSearchTarget);
+    await Get.to(AnimatedTutorialScreenTexts(
+        totalScriptedTime: 5000,
+        timedAnimatedTexts: [
+          TimedAnimatedText(
+              beginTime: 500,
+              endTime: 4500,
+              text: 'Search for anyone\'s look-a-like!'),
+        ]));
+
+    Get.back();
   }
 
   /// Here is where the custom-picked image is being Posted and sent over Network.
