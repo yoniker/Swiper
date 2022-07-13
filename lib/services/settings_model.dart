@@ -124,7 +124,7 @@ class SettingsData extends ChangeNotifier {
   double _latitude = 0.0;
   String _locationDescription = '';
   bool _searchDistanceEnabled = false;
-  bool _showDummyProfiles = false;
+  bool _showDummyProfiles = true;
   List<String> _profileImagesUrls = [];
 
   String _school = '';
@@ -143,7 +143,7 @@ class SettingsData extends ChangeNotifier {
   List<String> _pets = [];
   int _heightInCm = 0;
   String _registrationStatus = '';
-  bool _isTestUser = false;
+  bool _isTestUser = true;
 
   SettingsData._privateConstructor() {
     //And after that, read settings from shared
