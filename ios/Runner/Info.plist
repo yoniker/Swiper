@@ -66,7 +66,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Allow access to your camera, so you can take pictures to share with others via your profile </string>
+	<string>Allow access to your camera, so you can take pictures and share those pictures with others via your profile </string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Grant access to your location so you will view matches around you</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
