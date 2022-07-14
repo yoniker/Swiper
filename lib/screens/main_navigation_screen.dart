@@ -381,17 +381,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
           ),
           trailing: Row(
             children: [
-              GestureDetector(
-                onTap: () async {
-                  Get.to(
-                    AnimatedTutorialScreenTexts(
-                      totalScriptedTime: 10000,
-                      timedAnimatedTexts: [],
-                    ),
-                  );
-                },
-                child: Icon(FontAwesomeIcons.question),
-              ),
               AnimatedOpacity(
                 duration: Duration(milliseconds: 300),
                 opacity:
