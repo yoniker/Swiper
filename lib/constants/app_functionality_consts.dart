@@ -1,1 +1,1 @@
-const int kMaxInitiatedConversations = 2;
+const int kMaxInitiatedConversations = 3;

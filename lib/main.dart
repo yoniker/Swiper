@@ -4,8 +4,6 @@ import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/chat/chat_screen.dart';
 import 'package:betabeta/screens/chat/other_user_profile_screen.dart';
 import 'package:betabeta/screens/complete_profile_pageview_screen.dart';
-import 'package:betabeta/screens/onboarding/job_title_screen.dart';
-import 'package:betabeta/screens/onboarding/school_screen.dart';
 import 'package:betabeta/screens/onboarding/tutorial_screen_starter.dart';
 import 'package:betabeta/screens/user_edit/kids_screen.dart';
 import 'package:betabeta/screens/chat/conversations_screen.dart';
@@ -81,6 +79,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     // statusBarColor: Colors.transparent,
     systemNavigationBarColor: Colors.white.withOpacity(0.05),

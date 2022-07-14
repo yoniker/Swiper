@@ -118,7 +118,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ? EdgeInsets.only(top: topPadding)
             : EdgeInsets.zero,
         padding: hasVerticalPadding == true
-            ? EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0)
+            ? EdgeInsets.symmetric(horizontal: 4.0, vertical: 5.0)
             : null,
         child: Stack(children: [
           if (centerWidget != null) centerWidget!,
@@ -141,7 +141,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         child: Icon(
                           FontAwesomeIcons.chevronLeft,
                           color: Colors.black87,
-                          size: 20,
+                          size: 22,
                         ),
                       ),
                     ),
