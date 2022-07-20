@@ -8,6 +8,13 @@ class BetaIconPaths {
   /// The path to the active Profile Tab image.
   static const String activeVoilaTabIconPath = 'assets/images/voila.png';
 
+  /// Voila search filter button.
+  static const String voilaSearchSettingsPath = 'assets/images/search.png';
+
+  /// Swipe settings button icon.
+  static const String voilaSwipeSettingsButtonPath =
+      'assets/images/settings.png';
+
   /// The path to the inactive Profile Tab image.
   static const String inactiveVoilaTabIconPath = 'assets/images/voila.png';
 
@@ -45,7 +52,7 @@ class BetaIconPaths {
   static const String appLogoIcon = 'assets/beta_logo_01.png';
 
   /// The path to edit-profile-image icon in the Profile Screen.
-  static const String editProfileIconPath = 'assets/images/edit_icon_01.png';
+  static const String editProfileIconPath = 'assets/images/pencil.png';
 
   /// The path to edit-profile-image icon in the Profile Screen.
   static const String editIcon02 = 'assets/images/edit_icon_02.png';

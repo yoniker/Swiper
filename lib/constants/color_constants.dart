@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 const Color lightCardColor = Color(0xFFF5F5F5);
 const Color backgroundThemeColor = Color(0xFFE8EBF1);
-const Color backgroundThemeColorALT = Colors.white38;
+const Color backgroundThemeColorALT = Color(0xEFF5F8F8);
 const Color darkTextColor = Color(0xFF747474);
 const Color unselectedTabColor = Colors.white60;
 const Color blackTextColor = Color(0xFF000000);
@@ -163,6 +163,12 @@ const TextStyle LargeTitleStyle = TextStyle(
   fontWeight: FontWeight.bold,
 );
 
+const TextStyle kTypeTextStyle = TextStyle(
+  color: Colors.black87,
+  fontFamily: 'Playfair_Display',
+  fontSize: 16,
+);
+
 //<@SUGN> This is an optional Gradient variable to be used in conjuction with
 // the `GradientWidget` found in the {widgets} folder.
 const LinearGradient mainColorGradient = const LinearGradient(
@@ -180,14 +186,17 @@ const colorizeColors = [
   Color(0XFFDDA900)
 ];
 
-const colorizeTextStyle =
-    TextStyle(fontSize: 40.0, fontFamily: 'LuckiestGuy', shadows: [
-  Shadow(
-    blurRadius: 15.0,
-    color: Colors.black,
-    offset: Offset(-2.0, 2.0),
-  ),
-]);
+const colorizeTextStyle = TextStyle(
+  fontSize: 40.0,
+  fontFamily: 'LuckiestGuy',
+  shadows: [
+    Shadow(
+      blurRadius: 15.0,
+      color: Colors.black,
+      offset: Offset(-2.0, 2.0),
+    ),
+  ],
+);
 
 const Decoration kSettingsBlockBoxDecor = BoxDecoration(
   color: Colors.white,

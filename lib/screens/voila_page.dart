@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:betabeta/constants/assets_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/data_models/celeb.dart';
@@ -345,9 +346,6 @@ class _VoilaPageState extends State<VoilaPage>
           imageFileName: imageFileDetails.item2,
         ),
       );
-      print(SettingsData.instance.filterType);
-      print(SettingsData.instance.filterDisplayImageUrl);
-      print('dor');
     } catch (exception) {
       print(exception);
 
@@ -409,8 +407,6 @@ class _VoilaPageState extends State<VoilaPage>
       body: ListenerWidget(
           notifier: SettingsData.instance,
           builder: (BuildContext context) {
-            bool customImageExists =
-                SettingsData.instance.filterDisplayImageUrl.length > 0;
             Celeb _selectedCeleb = Celeb(
                 celebName: SettingsData.instance.celebId,
                 imagesUrls: [SettingsData.instance.filterDisplayImageUrl]);
@@ -546,8 +542,8 @@ class _VoilaPageState extends State<VoilaPage>
                                       isActive:
                                           SettingsData.instance.filterType ==
                                               FilterType.TEXT_SEARCH,
-                                      image: AssetImage(
-                                          'assets/images/textsearch2.jpg'),
+                                      image:
+                                          AssetImage(AssetsPaths.textSearchPic),
                                       showAI: false,
                                       title: Row(
                                         children: [
@@ -601,7 +597,7 @@ class _VoilaPageState extends State<VoilaPage>
                                           },
                                           centerNotice: 'Not enough data',
                                           image: AssetImage(
-                                              'assets/images/taste5.jpg'),
+                                              AssetsPaths.tasteSearchPic),
                                           title: Text(
                                             'Your Taste',
                                             style: titleStyleWhite,
@@ -637,8 +633,8 @@ class _VoilaPageState extends State<VoilaPage>
                                                               .profileImagesUrls
                                                               .first),
                                                   cache: true)
-                                              : AssetImage(
-                                                      'assets/images/taste2.jpg')
+                                              : AssetImage(AssetsPaths
+                                                      .theirTasteSearchPic)
                                                   as ImageProvider<Object>,
                                           title: Text(
                                             'Their Taste',
@@ -660,8 +656,8 @@ class _VoilaPageState extends State<VoilaPage>
                                           isActive: SettingsData
                                                   .instance.filterType ==
                                               FilterType.CUSTOM_IMAGE,
-                                          image: AssetImage(
-                                              'assets/images/picture5.jpg'),
+                                          image: AssetImage(AssetsPaths
+                                              .customPicFilterSearchPic),
                                           title: Text(
                                             FilterType.CUSTOM_IMAGE.description,
                                             style: titleStyleWhite,
@@ -704,7 +700,7 @@ class _VoilaPageState extends State<VoilaPage>
                                       key: celebSearchWidget,
                                       child: AdvanceFilterCard(
                                           image: AssetImage(
-                                              'assets/images/celeb3.jpg'),
+                                              AssetsPaths.celebSearchPic),
                                           isActive: SettingsData
                                                   .instance.filterType ==
                                               FilterType.CELEB_IMAGE,

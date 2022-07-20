@@ -41,7 +41,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
           FocusScope.of(context).unfocus();
         },
         child: Container(
-          color: backgroundThemeColorALT,
+          color: backgroundThemeColor,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

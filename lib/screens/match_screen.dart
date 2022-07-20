@@ -48,7 +48,7 @@ class _MatchScreenState extends State<MatchScreen>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: backgroundThemeColorALT,
+      color: backgroundThemeColor,
       child: Padding(
         padding: MediaQuery.of(context).padding,
         child: Container(

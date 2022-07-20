@@ -1,11 +1,9 @@
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/screens/complete_profile_pageview_screen.dart';
 import 'package:betabeta/services/onboarding_flow_controller.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';

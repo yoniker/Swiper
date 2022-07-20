@@ -1,3 +1,4 @@
+import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
@@ -208,7 +209,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
                     children: <Widget>[
                       Text(
                         "Click here for basic filters",
-                        style: LargeTitleStyleWhite,
+                        style: kTypeTextStyle.copyWith(color: Colors.white),
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(
@@ -338,7 +339,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
       child: Scaffold(
         appBar: CustomAppBar(
           hasVerticalPadding: false,
-          backgroundColor: backgroundThemeColorALT,
+          backgroundColor: backgroundThemeColor,
           elevation: 0,
           centerWidget: ListenerWidget(
               notifier: SettingsData.instance,
@@ -372,7 +373,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
                       : 0,
                   duration: Duration(milliseconds: 300),
                   child: Image.asset(
-                    'assets/images/search.png',
+                    BetaIconPaths.voilaSearchSettingsPath,
                     scale: 12,
                   ),
                 ),
@@ -411,7 +412,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
                   padding: const EdgeInsets.only(right: 10),
                   child: GestureDetector(
                     child: Image.asset(
-                      'assets/images/settings.png',
+                      BetaIconPaths.voilaSwipeSettingsButtonPath,
                       scale: 12,
                     ),
                     onTap: selectedTabIndex !=

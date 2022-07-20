@@ -198,6 +198,16 @@ flutter:
       fonts:
         - asset: assets/fonts/AlfaSlabOne-Regular.ttf
 
+    - family: Playfair_Display
+      fonts:
+        - asset: assets/fonts/Playfair_Display/PlayfairDisplay-VariableFont_wght.ttf
+          weight: 400
+        - asset: assets/fonts/Playfair_Display/static/PlayfairDisplay-Black.ttf
+        - asset: assets/fonts/Playfair_Display/static/PlayfairDisplay-Bold.ttf
+        - asset: assets/fonts/Playfair_Display/static/PlayfairDisplay-Italic.ttf
+          weight: 600
+
+
 
 
 
