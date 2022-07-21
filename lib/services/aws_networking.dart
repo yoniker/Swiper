@@ -259,6 +259,12 @@ class AWSServer {
     return customFacesLinks;
   }
 
+  String CustomFaceLinkToFullUrl(String faceUrl){
+    //example input: 5EX44AtZ5cXxW1O12G3tByRcC012/custom_image/analysis1658383341.368371/0.jpg
+    return 'https://$SERVER_ADDR/user_data/custom_face_search_image/$faceUrl';
+    //user_data/custom_face_search_image/<user_id>/custom_image/<analysis_directory_name>/<filename>
+  }
+
 
   /*
   postUserDecision({required Decision decision,required  Profile otherUserProfile}) async {
