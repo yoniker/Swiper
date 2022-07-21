@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/data_models/celeb.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
@@ -510,10 +511,10 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
+
                                         Image.network(
-                                            NetworkHelper.faceUrlToFullUrl(
-                                                SettingsData.instance
-                                                    .filterDisplayImageUrl),
+                                          AWSServer.instance.CustomFaceLinkToFullUrl(
+                                              SettingsData.instance.filterDisplayImageUrl),
                                             height: 75,
                                             width: 75,
                                             fit: BoxFit.scaleDown),

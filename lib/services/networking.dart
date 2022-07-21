@@ -54,21 +54,21 @@ class NetworkHelper {
     return [];
   }
 
-  static String faceUrlToFullUrl(String faceUrl) {
-    return 'https://' + NetworkHelper.SERVER_ADDR + '/' + faceUrl;
-  }
+  // static String faceUrlToFullUrl(String faceUrl) {
+  //   return 'https://' + NetworkHelper.SERVER_ADDR + '/' + faceUrl;
+  // }
 
-  static List<Image> serverImagesUrlsToImages(
-      List<String> facesUrls, BuildContext context) {
-    List<Image> facesImages = [];
-    for (int imageIndex = 0; imageIndex < facesUrls.length; imageIndex++) {
-      String url = NetworkHelper.faceUrlToFullUrl(facesUrls[imageIndex]);
-      Image img = Image.network(url, fit: BoxFit.cover);
-      precacheImage(img.image, context);
-      facesImages.add(img);
-    }
-    return facesImages;
-  }
+  // static List<Image> serverImagesUrlsToImages(
+  //     List<String> facesUrls, BuildContext context) {
+  //   List<Image> facesImages = [];
+  //   for (int imageIndex = 0; imageIndex < facesUrls.length; imageIndex++) {
+  //     String url = NetworkHelper.faceUrlToFullUrl(facesUrls[imageIndex]);
+  //     Image img = Image.network(url, fit: BoxFit.cover);
+  //     precacheImage(img.image, context);
+  //     facesImages.add(img);
+  //   }
+  //   return facesImages;
+  // }
 
   //getMatches: Grab some matches and image links from the server
   dynamic getMatches() async {
@@ -101,9 +101,9 @@ class NetworkHelper {
     }).toList();
   }
 
-  static String serverCelebImageUrl(String imageUrl){
-    return NetworkHelper.faceUrlToFullUrl(imageUrl);
-  }
+  // static String serverCelebImageUrl(String imageUrl){
+  //   return NetworkHelper.faceUrlToFullUrl(imageUrl);
+  // }
 
   postUserDecision({Decision? decision, Profile? otherUserProfile}) async {
     SettingsData settings = SettingsData.instance;

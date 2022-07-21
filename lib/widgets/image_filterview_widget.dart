@@ -1,3 +1,4 @@
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,7 @@ class _ImageFilterViewWidgetState extends State<ImageFilterViewWidget>
                   opacity: _widgetAppearAnimation.value,
                   fit: BoxFit.cover,
                   image: NetworkImage(
-                    NetworkHelper.faceUrlToFullUrl(
+                      AWSServer.instance.CustomFaceLinkToFullUrl(
                         SettingsData.instance.filterDisplayImageUrl),
                   ),
                 )

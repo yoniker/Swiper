@@ -1,4 +1,5 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,8 @@ class AdvanceFilterCard extends StatelessWidget {
           image: isActive == true &&
                   SettingsData.instance.filterDisplayImageUrl != ''
               ? DecorationImage(
-                  image: NetworkImage(NetworkHelper.faceUrlToFullUrl(
+                  image: NetworkImage(
+                      AWSServer.instance.CustomFaceLinkToFullUrl(
                       SettingsData.instance.filterDisplayImageUrl)),
                   fit: BoxFit.cover,
                 )
