@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/voila_page.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/services/networking.dart';
@@ -44,19 +45,11 @@ class _FaceSelectionScreenState extends State<FaceSelectionScreen> {
   }
 
   void getFacesLinks() async {
-    HashMap<String, dynamic> facesData = await NetworkHelper().getFacesCustomImageSearchLinks(
-        imageFileName: widget.imageFileName);
-    String? status = facesData['status'];
-    while (status == 'incomplete') {
-      facesData = await NetworkHelper().getFacesCustomImageSearchLinks(
-          imageFileName: widget.imageFileName);
-      status = facesData[
-          'status']; //TODO make sure we don't fuck the server with lots of requests
-
-    }
-
+    if(widget.imageFileName==null){return;}
+    List<String> facesLinks = await AWSServer.instance.getFaceSearchAnalysis(widget.imageFileName!);
     setState(() {
-      _facesLinks = List<String>.from(facesData['faces_links']);
+      _facesLinks = facesLinks;
+      print('dor');
     });
   }
 

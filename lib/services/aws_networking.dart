@@ -12,6 +12,8 @@ import 'package:image/image.dart' as img;
 import 'package:http_parser/src/media_type.dart' as media;
 import 'dart:convert' as json;
 
+import 'package:tuple/tuple.dart';
+
 class AWSServer {
   static const SERVER_ADDR = 'services.voilaserver.com';
   static const MIN_MATCHES_CALL_INTERVAL = Duration(seconds: 1);
@@ -200,6 +202,61 @@ class AWSServer {
     print('dor');
     return profilesSearchResult;
 
+  }
+  //A helper method to shrink an image if it's too large, and decode it into a workable image format
+  Future<img.Image> _prepareImage(XFile pickedImageFile) async {
+    const MAX_IMAGE_SIZE = 800; //TODO make it  a parameter (if needed)
+
+    img.Image theImage = img.decodeImage(await pickedImageFile.readAsBytes())!;
+    if (max(theImage.height, theImage.width) > MAX_IMAGE_SIZE) {
+      double resizeFactor =
+          MAX_IMAGE_SIZE / max(theImage.height, theImage.width);
+      theImage = img.copyResize(theImage,
+          width: (theImage.width * resizeFactor).round());
+    }
+    return theImage;
+  }
+
+  Future<Tuple2<img.Image, String>> preparedFaceSearchImageFileDetails(
+      XFile imageFile) async {
+    img.Image theImage = await _prepareImage(imageFile);
+    String fileName = 'custom_face_search_${DateTime.now().microsecondsSinceEpoch}.jpg';
+    return Tuple2<img.Image, String>(theImage, fileName);
+  }
+
+
+  Future<void> postFaceSearchImage(
+      Tuple2<img.Image, String> imageFileDetails) async {
+    img.Image theImage = imageFileDetails.item1;
+    String fileName = imageFileDetails.item2;
+
+    http.MultipartRequest request = http.MultipartRequest(
+      'POST',
+      Uri.https(SERVER_ADDR, '/user_data/upload_custom_image/${SettingsData.instance.uid}'),
+    );
+    var multipartFile = new http.MultipartFile.fromBytes(
+      'file',
+      img.encodeJpg(theImage),
+      filename: fileName,
+      contentType: media.MediaType.parse('image/jpeg'),
+    );
+    request.files.add(multipartFile);
+    var response = await request.send(); //TODO something if response wasn't 200
+
+
+    return;
+  }
+
+  Future<List<String>> getFaceSearchAnalysis(String imageFileName) async{
+    var analyzeUrl =
+    Uri.https(SERVER_ADDR, '/user_data/analyze_custom_image/${SettingsData.instance.uid}/$imageFileName');
+    var response = await http.get(analyzeUrl);
+    if(response.statusCode!=200){
+      return []; //TODO retry?
+    }
+    dynamic faceSearchResult = jsonDecode(response.body);
+    List<String> customFacesLinks = List<String>.from(faceSearchResult["display_images"]);
+    return customFacesLinks;
   }
 
 
