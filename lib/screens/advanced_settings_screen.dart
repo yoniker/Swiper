@@ -6,7 +6,6 @@ import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/face_selection_screen.dart';
-import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/cupertino.dart';
@@ -62,10 +61,10 @@ class _AdvancedSettingsScreenState extends State<AdvancedSettingsScreen> {
 
     try {
       Tuple2<img.Image, String> imageFileDetails =
-          await NetworkHelper().preparedFaceSearchImageFileDetails(chosenImage);
+          await AWSServer.instance.preparedFaceSearchImageFileDetails(chosenImage);
 
       //
-      await NetworkHelper().postFaceSearchImage(imageFileDetails);
+      await AWSServer.instance.postFaceSearchImage(imageFileDetails);
 
       //
       await Get.toNamed(

@@ -6,8 +6,6 @@ import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/voila_page.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
-import 'package:betabeta/screens/advanced_settings_screen.dart';
-import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/widgets/bouncing_button.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/faces_widget.dart';

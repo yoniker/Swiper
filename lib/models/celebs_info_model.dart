@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:betabeta/data_models/celeb.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/db_helper.dart';
-import 'package:betabeta/services/networking.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fuzzy/fuzzy.dart';
 import 'package:trotter/trotter.dart';
