@@ -265,6 +265,25 @@ class AWSServer {
     //user_data/custom_face_search_image/<user_id>/custom_image/<analysis_directory_name>/<filename>
   }
 
+  Future<List<String>> getCelebUrls(String celebName)async{
+    Uri celebsLinkUri = Uri.https(SERVER_ADDR, 'user_data/celeb_image_links/$celebName');
+
+      http.Response resp = await http.get(celebsLinkUri);
+      if (resp.statusCode == 200) {
+        //TODO think how to handle network errors
+        dynamic faceSearchResult = jsonDecode(resp.body);
+        List<String> celebImagesLinks = List<String>.from(faceSearchResult["celeb_image_links"]);
+        return celebImagesLinks;
+  }
+
+      return [];
+
+  }
+
+  String celebImageUrlToFullUrl(String celebImageUrl){
+    return Uri.https(SERVER_ADDR,'user_data/$celebImageUrl').toString();
+  }
+
 
   /*
   postUserDecision({required Decision decision,required  Profile otherUserProfile}) async {

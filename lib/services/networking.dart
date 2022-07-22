@@ -41,18 +41,19 @@ class NetworkHelper {
 
   NetworkHelper._internal();
 
-  static Future<List<String>> getCeleblinks(String? celebName) async {
-    Uri celebsLinkUri = Uri.https(SERVER_ADDR, 'celeblinks/$celebName');
-    http.Response resp = await http.get(celebsLinkUri);
-    if (resp.statusCode == 200) {
-      //TODO think how to handle network errors
-      var parsed = json.jsonDecode(resp.body);
-      List<String> imagesLinks = parsed.cast<String>();
-      return imagesLinks;
-    }
-
-    return [];
-  }
+  // static Future<List<String>> getCeleblinks(String? celebName) async {
+  //   Uri celebsLinkUri = Uri.https(SERVER_ADDR, 'celeblinks/$celebName');
+  //
+  //   http.Response resp = await http.get(celebsLinkUri);
+  //   if (resp.statusCode == 200) {
+  //     //TODO think how to handle network errors
+  //     var parsed = json.jsonDecode(resp.body);
+  //     List<String> imagesLinks = parsed.cast<String>();
+  //     return imagesLinks;
+  //   }
+  //
+  //   return [];
+  // }
 
   // static String faceUrlToFullUrl(String faceUrl) {
   //   return 'https://' + NetworkHelper.SERVER_ADDR + '/' + faceUrl;
@@ -71,35 +72,35 @@ class NetworkHelper {
   // }
 
   //getMatches: Grab some matches and image links from the server
-  dynamic getMatches() async {
-    if (DateTime.now().difference(_lastMatchCall) < MIN_MATCHES_CALL_INTERVAL) {
-      await Future.delayed(MIN_MATCHES_CALL_INTERVAL -
-          DateTime.now().difference(_lastMatchCall));
-    }
-    _lastMatchCall = DateTime.now();
-    Uri matchesUrl =
-        Uri.https(SERVER_ADDR, '/matches/${SettingsData.instance.uid}');
-    http.Response response = await http.get(matchesUrl); //eg /12313?gender=Male
-    if (response.statusCode != 200) {
-      return null; //TODO error handling
-    }
+  // dynamic getMatches() async {
+  //   if (DateTime.now().difference(_lastMatchCall) < MIN_MATCHES_CALL_INTERVAL) {
+  //     await Future.delayed(MIN_MATCHES_CALL_INTERVAL -
+  //         DateTime.now().difference(_lastMatchCall));
+  //   }
+  //   _lastMatchCall = DateTime.now();
+  //   Uri matchesUrl =
+  //       Uri.https(SERVER_ADDR, '/matches/${SettingsData.instance.uid}');
+  //   http.Response response = await http.get(matchesUrl); //eg /12313?gender=Male
+  //   if (response.statusCode != 200) {
+  //     return null; //TODO error handling
+  //   }
+  //
+  //   try{dynamic listProfiles = jsonDecode(response.body);
+  //   return listProfiles;
+  //   }
+  //   catch(e){
+  //     print('Error during parsing matches');
+  //     return [];
+  //   }
+  //
+  // }
 
-    try{dynamic listProfiles = jsonDecode(response.body);
-    return listProfiles;
-    }
-    catch(e){
-      print('Error during parsing matches');
-      return [];
-    }
-
-  }
-
-  static List<String> serverImagesUrl(List<String> imagesUrls) {
-
-    return imagesUrls.map((val) {
-      return NetworkHelper.SERVER_ADDR + '/images/' + val;
-    }).toList();
-  }
+  // static List<String> serverImagesUrl(List<String> imagesUrls) {
+  //
+  //   return imagesUrls.map((val) {
+  //     return NetworkHelper.SERVER_ADDR + '/images/' + val;
+  //   }).toList();
+  // }
 
   // static String serverCelebImageUrl(String imageUrl){
   //   return NetworkHelper.faceUrlToFullUrl(imageUrl);

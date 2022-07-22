@@ -1,3 +1,4 @@
+import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/networking.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -62,8 +63,11 @@ class _ImageFilterViewWidgetState extends State<ImageFilterViewWidget>
                   opacity: _widgetAppearAnimation.value,
                   fit: BoxFit.cover,
                   image: NetworkImage(
+                    SettingsData.instance.filterType == FilterType.CUSTOM_IMAGE?
                       AWSServer.instance.CustomFaceLinkToFullUrl(
-                        SettingsData.instance.filterDisplayImageUrl),
+                        SettingsData.instance.filterDisplayImageUrl):
+                        AWSServer.instance.celebImageUrlToFullUrl(SettingsData.instance.filterDisplayImageUrl)
+                    ,
                   ),
                 )
               : DecorationImage(

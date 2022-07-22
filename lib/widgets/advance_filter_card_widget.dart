@@ -1,3 +1,4 @@
+import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/networking.dart';
@@ -45,9 +46,14 @@ class AdvanceFilterCard extends StatelessWidget {
           image: isActive == true &&
                   SettingsData.instance.filterDisplayImageUrl != ''
               ? DecorationImage(
+
                   image: NetworkImage(
+                      SettingsData.instance.filterType == FilterType.CUSTOM_IMAGE?
                       AWSServer.instance.CustomFaceLinkToFullUrl(
-                      SettingsData.instance.filterDisplayImageUrl)),
+                      SettingsData.instance.filterDisplayImageUrl):
+                          AWSServer.instance.celebImageUrlToFullUrl(SettingsData.instance.filterDisplayImageUrl) //TODO Nitzan - having to write that equals a bad spaghetti code. Fix it please.
+
+                  ),
                   fit: BoxFit.cover,
                 )
               : DecorationImage(
