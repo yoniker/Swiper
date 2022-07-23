@@ -1,3 +1,4 @@
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +81,7 @@ class _AnimatedTheirTasteWidgetState extends State<AnimatedTheirTasteWidget>
                 borderRadius: BorderRadius.all(Radius.circular(30)),
                 image: DecorationImage(
                   fit: BoxFit.cover,
-                  image: NetworkImage(NewNetworkService.getProfileImageUrl(
+                  image: NetworkImage(AWSServer.getProfileImageUrl(
                       _profileImageToShow!)),
                 ),
               ),

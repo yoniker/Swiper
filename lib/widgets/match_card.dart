@@ -2,6 +2,7 @@ import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/screens/full_image_screen.dart';
 import 'package:betabeta/services/new_networking.dart';
@@ -356,7 +357,7 @@ class _MatchCardState extends State<MatchCard> {
                   itemCount: _imageUrls.length,
                   itemBuilder: (cntx, index) {
                     final String _url =
-                        NewNetworkService.getProfileImageUrl(_imageUrls[index]);
+                        AWSServer.getProfileImageUrl(_imageUrls[index]);
                     return GestureDetector(
                       onTap: () {
                         Get.toNamed(
@@ -935,7 +936,7 @@ class _PhotoViewState extends State<PhotoView> {
     carouselDots = <CarouselDot>[];
     if (widget.imageUrls == null || widget.imageUrls!.length == 0) {
       var img = Image.network(
-        NewNetworkService.getProfileImageUrl(BetaIconPaths.anonymousProfileUrl),
+        AWSServer.getProfileImageUrl(BetaIconPaths.anonymousProfileUrl),
         scale: 1.0,
         fit: BoxFit.cover,
       );
@@ -947,7 +948,7 @@ class _PhotoViewState extends State<PhotoView> {
         imageIndex < widget.imageUrls!.length;
         imageIndex++) {
       var img = Image.network(
-        NewNetworkService.getProfileImageUrl(widget.imageUrls![imageIndex]),
+        AWSServer.getProfileImageUrl(widget.imageUrls![imageIndex]),
         scale: 1.0,
         fit: BoxFit.cover,
         //headers:{"Keep-Alive":"timeout=20"},

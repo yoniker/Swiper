@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/screens/onboarding/tutorial_screen_starter.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/services/location_service.dart';
 import 'package:betabeta/services/match_engine.dart';
@@ -86,7 +87,7 @@ class OnboardingFlowController {
       break;
     }
     if (candidateNextScreen == MainNavigationScreen.routeName) {
-      NewNetworkService.instance.syncCurrentProfileImagesUrls();
+      AWSServer.instance.syncCurrentProfileImagesUrls();
       ChatData.instance.onInitApp();
       ChatData.instance.syncWithServer();
       MatchEngine.instance.clear();

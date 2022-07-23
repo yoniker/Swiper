@@ -1,6 +1,7 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/screens/current_user_profile_view_screen.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/account_settings.dart';
@@ -38,7 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   void _syncFromServer() async {
-    await NewNetworkService.instance.syncCurrentProfileImagesUrls();
+    await AWSServer.instance.syncCurrentProfileImagesUrls();
   }
 
   // builds the profile picture display.
@@ -49,7 +50,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             imageURI: BetaIconPaths.defaultProfileImagePath01,
           ).image
         : ExtendedNetworkImageProvider(
-            NewNetworkService.getProfileImageUrl(imageUrl),
+            AWSServer.getProfileImageUrl(imageUrl),
             cache: true);
 
     return Padding(

@@ -185,7 +185,7 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
                       Celeb currentCeleb =
                           CelebsInfo.instance.entireCelebsList[index];
                       return CelebWidget(
-                        key: Key(currentCeleb.celebName),
+                        key: ValueKey(currentCeleb.celebName),
                         theCeleb: currentCeleb,
                         celebsInfo: CelebsInfo.instance,
                         celebIndex: index,

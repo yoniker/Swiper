@@ -12,6 +12,7 @@ import 'package:betabeta/screens/user_edit/my_pets_screen.dart';
 import 'package:betabeta/screens/user_edit/orientation_edit_screen.dart';
 import 'package:betabeta/screens/user_edit/pronouns_edit_screen.dart';
 import 'package:betabeta/screens/user_edit/smoking_screen.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/utils/mixins.dart';
@@ -48,7 +49,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
 
     // this makes sure that if the state is not yet mounted, we don't end up calling setState
     // but instead push the function forward to the addPostFrameCallback function.
-    NewNetworkService.instance.syncCurrentProfileImagesUrls();
+    AWSServer.instance.syncCurrentProfileImagesUrls();
   }
 
   @override

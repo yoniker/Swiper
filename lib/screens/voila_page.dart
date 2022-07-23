@@ -630,7 +630,7 @@ class _VoilaPageState extends State<VoilaPage>
                                                       .instance.filterType ==
                                                   FilterType.THEIR_TASTE
                                               ? ExtendedNetworkImageProvider(
-                                                  NewNetworkService
+                                                  AWSServer
                                                       .getProfileImageUrl(
                                                           SettingsData
                                                               .instance

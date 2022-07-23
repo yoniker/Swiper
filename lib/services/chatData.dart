@@ -7,6 +7,7 @@ import 'package:betabeta/models/infoMessage.dart';
 import 'package:betabeta/models/infoMessageReceipt.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/models/persistentMessagesData.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/chat/chat_screen.dart';
@@ -726,7 +727,7 @@ class ChatData extends ChangeNotifier {
       return;
     }
     Profile? profileFromServer =
-        await NewNetworkService.instance.getSingleUserProfile(uid);
+        await AWSServer.instance.getSingleUserProfile(uid);
     if (profileFromServer != null) {
       Profile? currentProfile = usersBox.get(uid);
       profileFromServer.matchChangedTime = profileFromServer.matchChangedTime ??

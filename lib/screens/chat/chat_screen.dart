@@ -2,6 +2,7 @@ import 'package:betabeta/models/infoMessage.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/chat/other_user_profile_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -132,7 +133,7 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
             GestureDetector(
               child: CircularUserAvatar(
                 imageProvider: NetworkImage(
-                    NewNetworkService.getProfileImageUrl(theUser.profileImage)),
+                    AWSServer.getProfileImageUrl(theUser.profileImage)),
                 radius: 80,
               ),
               onTap: () {

@@ -4,6 +4,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/data_models/celeb.dart';
 import 'package:betabeta/models/celebs_info_model.dart';
 import 'package:betabeta/services/aws_networking.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
 class CelebWidget extends StatefulWidget {
@@ -18,7 +19,7 @@ class CelebWidget extends StatefulWidget {
 
 class _CelebWidgetState extends State<CelebWidget> {
   int _imageIndex = 0;
-  late List<Image> celebImages;
+  late List<ExtendedImage> celebImages;
 
   @override
   void didChangeDependencies() {
@@ -168,7 +169,7 @@ class _CelebWidgetState extends State<CelebWidget> {
       celebImages = [];
       for (int imageIndex = 0; imageIndex < (widget.theCeleb.imagesUrls?.length??0); imageIndex++) {
         String url =AWSServer.instance.celebImageUrlToFullUrl(widget.theCeleb.imagesUrls![imageIndex]);
-        Image img = Image.network(url,height: 150.0,width: 150.0,fit:BoxFit.cover);
+        ExtendedImage img = ExtendedImage.network(url,height: 150.0,width: 150.0,fit:BoxFit.cover,retries: 3,);
         precacheImage(img.image, context);
         celebImages.add(img);
       }

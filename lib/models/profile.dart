@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:betabeta/constants/api_consts.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -141,7 +142,7 @@ class Profile {
     return types.User(
         id: uid,
         firstName: username,
-        imageUrl: NewNetworkService.getProfileImageUrl(profileImage));
+        imageUrl: AWSServer.getProfileImageUrl(profileImage));
   }
 
   bool hasImages() {
@@ -152,6 +153,6 @@ class Profile {
     if (hasImages()) {
       return imageUrls![0];
     }
-    return NewNetworkService.shortProfileUrlImageById(uid);
+    return AWSServer.shortProfileUrlImageById(uid);
   }
 }
