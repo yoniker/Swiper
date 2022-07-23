@@ -39,6 +39,9 @@ class ServiceWebsocket {
 
   void _listenRawMessages(dynamic message){
     var decoded_message = json.decode(message);
+    for(int i=0; i<100; ++i){
+      print('Got $decoded_message from websocket!');
+    }
     Map<String,dynamic> content = decoded_message;
     if(_exposedStreamActive){
       _streamController.add(content);

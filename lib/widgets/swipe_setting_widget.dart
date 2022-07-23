@@ -1,6 +1,7 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/screens/splash_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
@@ -321,7 +322,7 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
                           style: TextStyle(color: Colors.red),
                         ),
                         onPressed: () async {
-                          await NewNetworkService.instance.clearLikes();
+                          await AWSServer.instance.clearLikes();
                           MatchEngine.instance.clear();
                           Get.snackbar(
                               'Development mode', 'cleared all user choices');

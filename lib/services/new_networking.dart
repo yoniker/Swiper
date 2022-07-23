@@ -115,19 +115,19 @@ class NewNetworkService {
   //   return;
   // }
 
-  postUserDecision(
-      {required Decision decision, required Profile otherUserProfile}) async {
-    Map<String, String?> toSend = {
-      API_CONSTS.DECIDER_ID_KEY: SettingsData.instance.uid,
-      API_CONSTS.DECIDEE_ID_KEY: otherUserProfile.uid,
-      API_CONSTS.DECISION_KEY: decision.name
-    };
-    String encoded = jsonEncode(toSend);
-    Uri postDecisionUri =
-        Uri.https(SERVER_ADDR, '/decision/${SettingsData.instance.uid}');
-    http.Response response = await http.post(postDecisionUri,
-        body: encoded); //TODO something if response wasnt 200
-  }
+  // postUserDecision(
+  //     {required Decision decision, required Profile otherUserProfile}) async {
+  //   Map<String, String?> toSend = {
+  //     API_CONSTS.DECIDER_ID_KEY: SettingsData.instance.uid,
+  //     API_CONSTS.DECIDEE_ID_KEY: otherUserProfile.uid,
+  //     API_CONSTS.DECISION_KEY: decision.name
+  //   };
+  //   String encoded = jsonEncode(toSend);
+  //   Uri postDecisionUri =
+  //       Uri.https(SERVER_ADDR, '/decision/${SettingsData.instance.uid}');
+  //   http.Response response = await http.post(postDecisionUri,
+  //       body: encoded); //TODO something if response wasnt 200
+  // }
 
   // Future<Profile?> getSingleUserProfile(String userId) async {
   //   Uri getUserUri = Uri.https(SERVER_ADDR, '/profile/$userId');
@@ -144,20 +144,20 @@ class NewNetworkService {
   //       profileDataResult[API_CONSTS.SINGLE_PROFILE_USER_DATA]);
   // }
 
-  Future<void> unmatch(String uid) async {
-    Uri unmatchUrl =
-        Uri.https(SERVER_ADDR, '/unmatch/${SettingsData.instance.uid}/$uid');
-    http.Response response = await http.get(unmatchUrl);
-    //TODO something if not 200
-    return;
-  }
+  // Future<void> unmatch(String uid) async {
+  //   Uri unmatchUrl =
+  //       Uri.https(SERVER_ADDR, '/unmatch/${SettingsData.instance.uid}/$uid');
+  //   http.Response response = await http.get(unmatchUrl);
+  //   //TODO something if not 200
+  //   return;
+  // }
 
-  Future<void> clearLikes() async {
-    Uri clearLikesUrl =
-        Uri.https(SERVER_ADDR, '/clear_likes/${SettingsData.instance.uid}');
-    http.Response response = await http.get(clearLikesUrl);
-    return;
-  }
+  // Future<void> clearLikes() async {
+  //   Uri clearLikesUrl =
+  //       Uri.https(SERVER_ADDR, '/clear_likes/${SettingsData.instance.uid}');
+  //   http.Response response = await http.get(clearLikesUrl);
+  //   return;
+  // }
 
   Future<ServerRegistrationStatus> registerUid(
       {required String firebaseIdToken}) async {

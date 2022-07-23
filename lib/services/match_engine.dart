@@ -169,7 +169,7 @@ class MatchEngine extends ChangeNotifier {
       goToNextMatch();
     }
     notifyListeners();
-    NewNetworkService.instance.postUserDecision(decision: decision,otherUserProfile: currentMatch.profile!);
+    AWSServer.instance.postUserDecision(decision: decision,otherUserProfile: currentMatch.profile!);
     }
   }
 

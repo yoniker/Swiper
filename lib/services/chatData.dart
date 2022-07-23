@@ -758,6 +758,6 @@ class ChatData extends ChangeNotifier {
     if (uid == SettingsData.instance.uid) {
       return;
     }
-    await NewNetworkService.instance.unmatch(uid);
+    await AWSServer.instance.unmatch(uid);
   }
 }
