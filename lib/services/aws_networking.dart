@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:betabeta/constants/api_consts.dart';
+import 'package:betabeta/models/infoMessage.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/services/cache_service.dart';
@@ -14,6 +15,7 @@ import 'dart:convert' as json;
 
 import 'package:tuple/tuple.dart';
 
+enum TaskResult { success, failed }
 class AWSServer {
   static const SERVER_ADDR = 'services.voilaserver.com';
   static const MIN_MATCHES_CALL_INTERVAL = Duration(seconds: 1);
@@ -410,6 +412,48 @@ class AWSServer {
     Uri.https(SERVER_ADDR, 'user_data/clear_likes/${SettingsData.instance.uid}');
     http.Response response = await http.get(clearLikesUrl);
     return;
+  }
+
+  static Future<TaskResult> sendMessage(String uid,
+      String startingConversationContent, double senderEpochTime) async {
+    Map<String, dynamic> toSend = {
+      'other_user_id': uid,
+      'message_content': startingConversationContent,
+      'sender_epoch_time': senderEpochTime
+    };
+    String encoded = jsonEncode(toSend);
+    Uri postMessageUri =
+    Uri.https(SERVER_ADDR, 'user_data/send_message/${SettingsData.instance.uid}');
+    http.Response response = await http.post(postMessageUri, body: encoded);
+    if (response.statusCode == 200) {
+      return TaskResult.success;
+    }
+    return TaskResult.failed;
+  }
+
+  static Future<Tuple2<List<InfoMessage>, List<dynamic>>>
+  getMessagesByTimestamp() async {
+    Uri syncChatDataUri = Uri.https(SERVER_ADDR,
+        'user_data/sync/${SettingsData.instance.uid}/${SettingsData.instance.lastSync}');
+    http.Response response = await http.get(syncChatDataUri);
+    var unparsedData = json.jsonDecode(response.body);
+    List<dynamic> unparsedMessages = unparsedData['messages_data'];
+    List<dynamic> unparsedMatchesChanges = unparsedData['matches_data'];
+    List<InfoMessage> messages = unparsedMessages
+        .map((message) => InfoMessage.fromJson(message))
+        .toList();
+    return Tuple2(messages, unparsedMatchesChanges);
+  }
+
+  static Future<bool> markConversationAsRead(String conversationId) async {
+    Uri syncChatDataUri = Uri.https(SERVER_ADDR,
+        'user_data/mark_conversation_read/${SettingsData.instance.uid}/$conversationId');
+    http.Response response =
+    await http.get(syncChatDataUri); //TODO something when there's an error
+    if (response.statusCode == 200) {
+      return true;
+    }
+    return false;
   }
 
 

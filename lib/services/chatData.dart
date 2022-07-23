@@ -14,7 +14,6 @@ import 'package:betabeta/screens/chat/chat_screen.dart';
 import 'package:betabeta/screens/got_new_match_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/services/app_state_info.dart';
-import 'package:betabeta/services/chat_networking.dart';
 import 'package:betabeta/services/notifications_controller.dart';
 import 'package:betabeta/services/service_websocket.dart';
 import 'package:get/get.dart';
@@ -323,7 +322,7 @@ class ChatData extends ChangeNotifier {
 
   Future<void> syncWithServer() async {
     Tuple2<List<InfoMessage>, List<dynamic>> newData =
-        await ChatNetworkHelper.getMessagesByTimestamp();
+        await AWSServer.getMessagesByTimestamp();
     List<InfoMessage> newMessages = newData.item1;
     List<dynamic> unparsedUsers = newData.item2;
     await updateUsersData(unparsedUsers);
@@ -467,7 +466,7 @@ class ChatData extends ChangeNotifier {
     addMessageToDB(newMessage, otherParticipantsId: otherUserId);
     String? newMessageStatus;
     try {
-      TaskResult result = await ChatNetworkHelper.sendMessage(
+      TaskResult result = await AWSServer.sendMessage(
           otherUserId, messageContent, epochTime);
       newMessageStatus = result == TaskResult.success ? 'Sent' : 'Error';
     } catch (_) {
@@ -691,7 +690,7 @@ class ChatData extends ChangeNotifier {
       return;
     } //This can happen only when it wasn't set above after initialization eg when there's no message from sender for example
     bool markedSuccessfully =
-        await ChatNetworkHelper.markConversationAsRead(conversationId);
+        await AWSServer.markConversationAsRead(conversationId);
     if (markedSuccessfully) {
       for (var message in theConversation.messages) {
         var sender = message.userId;
@@ -754,10 +753,10 @@ class ChatData extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> unmatch(String uid) async {
-    if (uid == SettingsData.instance.uid) {
-      return;
-    }
-    await AWSServer.instance.unmatch(uid);
-  }
+  // Future<void> unmatch(String uid) async {
+  //   if (uid == SettingsData.instance.uid) {
+  //     return;
+  //   }
+  //   await AWSServer.instance.unmatch(uid);
+  // }
 }

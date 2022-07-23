@@ -65,7 +65,7 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
   }
 
   void unmatchUser() async {
-    await ChatData.instance.unmatch(theUser.uid);
+    await AWSServer.instance.unmatch(theUser.uid);
   }
 
   @override

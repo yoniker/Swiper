@@ -1,25 +1,17 @@
-import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/screens/splash_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
-import 'package:betabeta/services/chat_networking.dart';
 import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/cupertino_range_slider.dart';
-import 'package:betabeta/widgets/custom_app_bar.dart';
-import 'package:betabeta/widgets/dropdown_form_field.dart';
-import 'package:betabeta/widgets/global_widgets.dart';
-import 'package:betabeta/widgets/listener_widget.dart';
-import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:betabeta/widgets/voila_logo_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'dart:math' as math;
 
