@@ -24,6 +24,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'dart:convert';
 
 Future<void> handleBackgroundMessage(RemoteMessage rawMessage) async {
+  print('handle background message called!');
   await PersistMessages().writeShouldSync(true);
   await ChatData.initDB();
   await SettingsData.instance.readSettingsFromShared();
@@ -634,6 +635,7 @@ class ChatData extends ChangeNotifier {
       if (subscription == null) {
         subscription =
             FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+              print('got the message $message');
           controller.add(message.data);
         });
         FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);

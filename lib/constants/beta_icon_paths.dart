@@ -139,5 +139,5 @@ class BetaIconPaths {
       'assets/images/voila_logo_black_alt.png';
 
   static const String anonymousProfileUrl =
-      '/profile_images/real/app_assets/anonymous_user.jpg'; //short url to anon profile
+      'user_data/profile_images/real/app_assets/anonymous_user.jpg'; //short url to anon profile
 }
