@@ -5,7 +5,6 @@ import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/screens/splash_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/services/match_engine.dart';
-import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/cupertino_range_slider.dart';
 import 'package:betabeta/widgets/voila_logo_widget.dart';
@@ -533,7 +532,7 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
                     GestureDetector(
                       onTap: () async {
                         // move to swiping-preference screen.
-                        await NewNetworkService.instance
+                        await AWSServer.instance
                             .deleteAccount(); //TODO at the very least verify with the user that that's what she wants (in order to minimize accidental deleting of accounts)
                         await _logout();
                       },

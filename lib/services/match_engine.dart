@@ -2,7 +2,6 @@ import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/location_service.dart';
-import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:collection';
@@ -115,7 +114,7 @@ class MatchEngine extends ChangeNotifier {
         listeningToLocation = true;}
         return;
       }
-      _locationCountData = await NewNetworkService.instance.getCountUsersByLocation();
+      _locationCountData = await AWSServer.instance.getCountUsersByLocation();
 
     }
   }

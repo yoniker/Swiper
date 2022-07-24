@@ -5,7 +5,6 @@ import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/screens/full_image_screen.dart';
-import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/widgets/basic_detail.dart';
 import 'package:betabeta/widgets/bubble_edit_block.dart';
 import 'package:betabeta/widgets/compatibility_scale.dart';

@@ -4,7 +4,6 @@ import 'package:betabeta/screens/chat/other_user_profile_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/chatData.dart';
-import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/services/app_state_info.dart';
 import 'package:betabeta/utils/mixins.dart';

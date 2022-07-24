@@ -1,5 +1,4 @@
 import 'package:betabeta/services/aws_networking.dart';
-import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/listener_widget.dart';

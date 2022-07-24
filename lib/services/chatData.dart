@@ -8,7 +8,6 @@ import 'package:betabeta/models/infoMessageReceipt.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/models/persistentMessagesData.dart';
 import 'package:betabeta/services/aws_networking.dart';
-import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/screens/chat/chat_screen.dart';
 import 'package:betabeta/screens/got_new_match_screen.dart';

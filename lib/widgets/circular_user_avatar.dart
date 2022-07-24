@@ -1,6 +1,5 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/services/aws_networking.dart';
-import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:extended_image/extended_image.dart';

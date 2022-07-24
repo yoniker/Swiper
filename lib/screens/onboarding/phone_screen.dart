@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/models/loginService.dart';
-import 'package:betabeta/services/new_networking.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/onboarding_flow_controller.dart';
 import 'package:betabeta/widgets/onboarding/onboarding_column.dart';
 import 'package:betabeta/widgets/onboarding/phone_number_collector.dart';
@@ -132,7 +132,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
 
   }
     String? currentTokenId = await FirebaseAuth.instance.currentUser?.getIdToken();
-    await NewNetworkService.instance.verifyToken(firebaseIdToken: currentTokenId!); //TODO API in server which gets all the info from user's token (and later produces a JWT)
+    await AWSServer.instance.verifyToken(firebaseIdToken: currentTokenId!); //TODO API in server which gets all the info from user's token (and later produces a JWT)
     if(!isMainLoginMethod)
     {Get.offAllNamed(OnboardingFlowController.instance.nextRoute(PhoneScreen.routeName));}
     else{Get.back(result:resultOfSigning);}

@@ -2,7 +2,6 @@ import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:betabeta/services/new_networking.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AnimatedTheirTasteWidget extends StatefulWidget {

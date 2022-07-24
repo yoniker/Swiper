@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/services/aws_networking.dart';
-import 'package:betabeta/services/new_networking.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 part 'profile.g.dart';

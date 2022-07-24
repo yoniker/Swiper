@@ -1,7 +1,6 @@
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/aws_networking.dart';
-import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
 
