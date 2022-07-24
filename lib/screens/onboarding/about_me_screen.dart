@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 
 class AboutMeOnboardingScreen extends StatefulWidget {
   static const String routeName = '/aboutMeOnboardingScreen';
-  static const int minWordsInDescription = 3;
+  static const int minWordsInDescription = 5;
 
   const AboutMeOnboardingScreen({Key? key}) : super(key: key);
 

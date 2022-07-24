@@ -3,7 +3,8 @@ import 'dart:math';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/data_models/celeb.dart';
 import 'package:betabeta/models/celebs_info_model.dart';
-import 'package:betabeta/services/networking.dart';
+import 'package:betabeta/services/aws_networking.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
 class CelebWidget extends StatefulWidget {
@@ -11,14 +12,14 @@ class CelebWidget extends StatefulWidget {
   final CelebsInfo? celebsInfo;
   final void Function()? onTap;
   final int? celebIndex;
-  CelebWidget({required this.theCeleb, this.celebsInfo, this.onTap,this.celebIndex});
+  CelebWidget({required this.theCeleb, this.celebsInfo, this.onTap,this.celebIndex,Key? key}):super(key: key);
   @override
   _CelebWidgetState createState() => _CelebWidgetState();
 }
 
 class _CelebWidgetState extends State<CelebWidget> {
   int _imageIndex = 0;
-  late List<Image> celebImages;
+  late List<ExtendedImage> celebImages;
 
   @override
   void didChangeDependencies() {
@@ -167,8 +168,8 @@ class _CelebWidgetState extends State<CelebWidget> {
     if (widget.theCeleb.imagesUrls != null) {
       celebImages = [];
       for (int imageIndex = 0; imageIndex < (widget.theCeleb.imagesUrls?.length??0); imageIndex++) {
-        String url = 'https://'+NetworkHelper.SERVER_ADDR+ widget.theCeleb.imagesUrls![imageIndex];
-        Image img = Image.network(url,height: 150.0,width: 150.0,fit:BoxFit.cover);
+        String url =AWSServer.instance.celebImageUrlToFullUrl(widget.theCeleb.imagesUrls![imageIndex]);
+        ExtendedImage img = ExtendedImage.network(url,height: 150.0,width: 150.0,fit:BoxFit.cover,retries: 3,);
         precacheImage(img.image, context);
         celebImages.add(img);
       }

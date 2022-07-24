@@ -1,8 +1,12 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:betabeta/constants/app_functionality_consts.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/chat/chat_screen.dart';
+import 'package:betabeta/services/chatData.dart';
+import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/match_card.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -22,6 +26,28 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen>
   late Animation animation;
   late Animation secondAnimation;
   late final ScrollController _scrollController;
+
+  void maxedOutPopUpDialog() {
+    showDialog(
+        context: context,
+        builder: (_) => CupertinoAlertDialog(
+              title: Text(
+                "You already have ${kMaxInitiatedConversations} conversations you\'ve started.",
+              ),
+              content: Text(
+                  '\nIn order to start a new conversation, please clear at least one slot \n\n(While in conversation, on the top right corner of the screen, click on the \'x\' button).'),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'Close',
+                      style: TextStyle(color: Colors.red),
+                    ))
+              ],
+            ));
+  }
 
   @override
   void initState() {
@@ -87,17 +113,17 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen>
             child: Padding(
               padding: const EdgeInsets.only(left: 2.0, top: 2),
               child: FloatingActionButton(
-                elevation: 20,
+                elevation: 0,
                 backgroundColor: Colors.transparent,
                 child: Icon(
                   FontAwesomeIcons.chevronLeft,
-                  // shadows: [
-                  //   Shadow(
-                  //     blurRadius: 17.0,
-                  //     color: Colors.black,
-                  //     offset: Offset(-2.0, 2.0),
-                  //   ),
-                  // ],
+                  shadows: [
+                    Shadow(
+                      blurRadius: 17.0,
+                      color: Colors.black,
+                      offset: Offset(-2.0, 2.0),
+                    ),
+                  ],
                   size: 40,
                   color: Colors.white,
                 ),
@@ -163,10 +189,12 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen>
                   ),
                   GestureDetector(
                     onTap: () {
-                      Get.offAndToNamed(
-                          ChatScreen.getRouteWithUserId(theUser.uid));
-
-                      /// ToDo need to get to user match chat directly
+                      if (ChatData.instance.conversationsCurrentUserStarted
+                              .length >=
+                          kMaxInitiatedConversations)
+                        maxedOutPopUpDialog();
+                      else
+                        Get.toNamed(ChatScreen.getRouteWithUserId(theUser.uid));
                     },
                     child: AnimatedContainer(
                       margin: EdgeInsets.symmetric(horizontal: 30),

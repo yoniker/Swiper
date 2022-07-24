@@ -55,7 +55,7 @@ const TextStyle kBlueButtonStyle =
     TextStyle(color: Colors.blueAccent, fontSize: 20);
 const Color kIconColor = Colors.blueAccent;
 const TextStyle kVstyle = TextStyle(fontSize: 20, color: Colors.blueAccent);
-const int kTotalProgressBarPages = 8;
+const int kTotalProgressBarPages = 9;
 
 Color kBackroundThemeColor = Color(0xFFE8EBF1);
 

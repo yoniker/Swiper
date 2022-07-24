@@ -1,7 +1,7 @@
 import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/location_service.dart';
-import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:collection';
@@ -54,7 +54,7 @@ class MatchEngine extends ChangeNotifier {
       return;}
     if(SettingsData.instance.uid.length<=0){return;}
       try {
-        matchesBeingGotten = NewNetworkService.instance.getMatches();
+        matchesBeingGotten = AWSServer.instance.getMatches();
         dynamic matchesSearchResult = await matchesBeingGotten;
         if(matchesSearchResult==null){return;}
         MatchSearchStatus newStatus = MatchSearchStatus.values.firstWhere((s) => s.name==matchesSearchResult[API_CONSTS.MATCHES_SEARCH_STATUS_KEY],orElse:()=>MatchSearchStatus.empty) ;
@@ -114,7 +114,7 @@ class MatchEngine extends ChangeNotifier {
         listeningToLocation = true;}
         return;
       }
-      _locationCountData = await NewNetworkService.instance.getCountUsersByLocation();
+      _locationCountData = await AWSServer.instance.getCountUsersByLocation();
 
     }
   }
@@ -168,7 +168,7 @@ class MatchEngine extends ChangeNotifier {
       goToNextMatch();
     }
     notifyListeners();
-    NewNetworkService.instance.postUserDecision(decision: decision,otherUserProfile: currentMatch.profile!);
+    AWSServer.instance.postUserDecision(decision: decision,otherUserProfile: currentMatch.profile!);
     }
   }
 

@@ -27,7 +27,7 @@ class _FinishOnboardingScreenState extends State<FinishOnboardingScreen> {
       case 'Marriage':
         return 'Looks like you are here to get married!';
       case 'Relationship':
-        return 'You are here for a relationship!';
+        return 'Looks like you are here for a relationship!';
     }
     return 'Congratulations on creating a profile!';
   }

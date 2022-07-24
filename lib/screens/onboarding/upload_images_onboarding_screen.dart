@@ -51,6 +51,7 @@ class _UploadImagesOnboardingScreenState
                       const Text(
                         'Let\'s start with your first photos. Add at least one photo. You can change and add more later.',
                         style: kSmallInfoStyle,
+                        maxLines: 3,
                       ),
                       const SizedBox(
                         height: 30,
@@ -61,11 +62,11 @@ class _UploadImagesOnboardingScreenState
                       const SizedBox(
                         height: 30,
                       ),
-                      RoundedButton(
-                          name: 'Add from Facebook',
-                          icon: Icons.facebook,
-                          color: const Color(0xFF0060DB),
-                          onTap: null) //TODO add option to upload from facebook
+                      // RoundedButton(
+                      //     name: 'Add from Facebook',
+                      //     icon: Icons.facebook,
+                      //     color: const Color(0xFF0060DB),
+                      //     onTap: null) //TODO add option to upload from facebook
                     ],
                   ),
                 ),

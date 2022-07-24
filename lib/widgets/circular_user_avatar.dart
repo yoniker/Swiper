@@ -1,5 +1,5 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
-import 'package:betabeta/services/new_networking.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:extended_image/extended_image.dart';
@@ -48,64 +48,61 @@ class CircularUserAvatar extends StatelessWidget {
 
   final Color backgroundColor;
 
+  final Color borderColor;
+
   /// The decoration with which to decorate the [ProfileImageAvatar].
   final Decoration? decoration;
 
-
-
-  const CircularUserAvatar({
-    Key? key,
-    this.imageProvider,
-    this.backgroundColor = const Color(0xFFE0E0E0),
-    this.decoration,
-    this.child,
-    this.radius,
-    this.minRadius,
-    this.maxRadius,
-  }) : super(key: key);
-
-
-
-
-
-
+  const CircularUserAvatar(
+      {Key? key,
+      this.imageProvider,
+      this.backgroundColor = const Color(0xFFE0E0E0),
+      this.decoration,
+      this.child,
+      this.radius,
+      this.minRadius,
+      this.maxRadius,
+      this.borderColor = Colors.white})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListenerWidget(
       notifier: SettingsData.instance,
-      builder:(context){
-
-
+      builder: (context) {
         String? _profileImageToShow;
-        List<String> _profileImagesUrls = SettingsData.instance.profileImagesUrls;
+        List<String> _profileImagesUrls =
+            SettingsData.instance.profileImagesUrls;
 
         if (_profileImagesUrls.isNotEmpty) {
           _profileImageToShow = _profileImagesUrls.first;
         }
 
-        
-        ImageProvider toUseImageProvider = imageProvider!=null?imageProvider!: 
-        _profileImageToShow==null?
-        ExtendedAssetImageProvider(
-            BetaIconPaths.defaultProfileImagePath01,
-            cacheRawData: true
-        )
-            : ExtendedNetworkImageProvider(
-            NewNetworkService.getProfileImageUrl(_profileImageToShow),
-            cache: true
-        ) as ImageProvider;
-        return CircleAvatar(
-          backgroundColor: backgroundColor,
-          backgroundImage: toUseImageProvider,
-          radius: radius,
-          minRadius: minRadius,
-          maxRadius: maxRadius,
-          child: child,
-        );},
+        ImageProvider toUseImageProvider = imageProvider != null
+            ? imageProvider!
+            : _profileImageToShow == null
+                ? ExtendedAssetImageProvider(
+                    BetaIconPaths.defaultProfileImagePath01,
+                    cacheRawData: true)
+                : ExtendedNetworkImageProvider(
+                    AWSServer.getProfileImageUrl(_profileImageToShow),
+                    cache: true) as ImageProvider;
+        return Material(
+          shape: CircleBorder(),
+          color: borderColor,
+          child: Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: CircleAvatar(
+              backgroundColor: backgroundColor,
+              backgroundImage: toUseImageProvider,
+              radius: radius,
+              minRadius: minRadius,
+              maxRadius: maxRadius,
+              child: child,
+            ),
+          ),
+        );
+      },
     );
   }
 }
-
-
-

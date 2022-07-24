@@ -1,24 +1,26 @@
+import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
-import 'package:betabeta/services/networking.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:flutter/material.dart';
 
 class AdvanceFilterCard extends StatelessWidget {
-  final AssetImage image;
+  final ImageProvider<Object> image;
   final Widget title;
-  final bool? comingSoon;
+  final String? centerNotice;
   final bool? showAI;
   final bool? isActive;
   final Widget? button;
   final String info;
   final void Function()? onTap;
   final Widget? child;
+
   AdvanceFilterCard(
       {required this.image,
       required this.title,
       required this.info,
       this.child,
-      this.comingSoon,
+      this.centerNotice,
       this.showAI,
       this.isActive = false,
       this.button,
@@ -29,7 +31,7 @@ class AdvanceFilterCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.365,
+        height: MediaQuery.of(context).size.height * 0.38,
         decoration: BoxDecoration(
           border: isActive == true
               ? Border.all(color: Color(0xFFC62828), width: 4)
@@ -43,8 +45,14 @@ class AdvanceFilterCard extends StatelessWidget {
           image: isActive == true &&
                   SettingsData.instance.filterDisplayImageUrl != ''
               ? DecorationImage(
-                  image: NetworkImage(NetworkHelper.faceUrlToFullUrl(
-                      SettingsData.instance.filterDisplayImageUrl)),
+
+                  image: NetworkImage(
+                      SettingsData.instance.filterType == FilterType.CUSTOM_IMAGE?
+                      AWSServer.instance.CustomFaceLinkToFullUrl(
+                      SettingsData.instance.filterDisplayImageUrl):
+                          AWSServer.instance.celebImageUrlToFullUrl(SettingsData.instance.filterDisplayImageUrl) //TODO Nitzan - having to write that equals a bad spaghetti code. Fix it please.
+
+                  ),
                   fit: BoxFit.cover,
                 )
               : DecorationImage(
@@ -75,10 +83,11 @@ class AdvanceFilterCard extends StatelessWidget {
                 if (child != null) Center(child: child!),
                 SizedBox(),
                 SizedBox(),
-                comingSoon == true
+                centerNotice != null
                     ? Center(
                         child: Text(
-                          'Coming Soon!',
+                          '$centerNotice',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                               color: Colors.red,
                               fontSize: 25,
@@ -106,7 +115,7 @@ class AdvanceFilterCard extends StatelessWidget {
                             info,
                             style: kSmallInfoStyleWhite,
                             overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
+                            maxLines: 3,
                           ),
                           if (showAI != false)
                             Row(

@@ -76,14 +76,12 @@ class _SplashScreenState extends State<SplashScreen>
   // loads in the shared preference.
   void _load() async {
     final routeTo = await _chooseRoute();
-    try {
+
       await _initializeApp();
       if (routeTo == MainNavigationScreen.routeName) {
         await _initAppAlreadyRegistered();
       }
-    } catch (e) {
-      print('There was an error at initialization $e');
-    }
+
 
     if (!navigatedFromNotification) {
       Get.offAllNamed(routeTo);

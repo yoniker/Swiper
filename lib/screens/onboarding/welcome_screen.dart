@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/screens/onboarding/phone_screen.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/loginService.dart';
-import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/services/onboarding_flow_controller.dart';
 import 'package:betabeta/services/screen_size.dart';
@@ -48,7 +48,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     var idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
     String uid = FirebaseAuth.instance.currentUser!.uid;
     ServerRegistrationStatus currentRegistrationStatus =
-        await NewNetworkService.instance.registerUid(firebaseIdToken: idToken!);
+        await AWSServer.instance.registerUid(firebaseIdToken: idToken!);
     return currentRegistrationStatus;
   }
 

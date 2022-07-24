@@ -22,6 +22,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.centerTitle = false,
     this.hasTopPadding = false,
     this.hasBackButton = true,
+    this.hasVerticalPadding = true,
     this.trailingPad = 5.0,
     this.centerWidget,
   })  :
@@ -40,6 +41,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.hasTopPadding = false,
     this.elevation = 2,
     this.trailingPad = 5.0,
+    this.hasVerticalPadding = true,
     this.centerWidget,
   })  : this.trailing = Padding(
           padding: EdgeInsets.only(left: 10.0),
@@ -101,6 +103,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   final bool centerTitle;
 
+  final bool hasVerticalPadding;
+
   @override
   Widget build(BuildContext context) {
     // This holds the value for the topPadding of the AppBar.
@@ -113,7 +117,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         margin: (hasTopPadding)
             ? EdgeInsets.only(top: topPadding)
             : EdgeInsets.zero,
-        padding: EdgeInsets.symmetric(horizontal: 5.0),
+        padding: hasVerticalPadding == true
+            ? EdgeInsets.symmetric(horizontal: 4.0, vertical: 5.0)
+            : null,
         child: Stack(children: [
           if (centerWidget != null) centerWidget!,
           Row(
@@ -135,7 +141,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         child: Icon(
                           FontAwesomeIcons.chevronLeft,
                           color: Colors.black87,
-                          size: 20,
+                          size: 22,
                         ),
                       ),
                     ),

@@ -48,11 +48,10 @@ class _MatchScreenState extends State<MatchScreen>
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: backgroundThemeColor,
+      color: backgroundThemeColorALT,
       child: Padding(
         padding: MediaQuery.of(context).padding,
         child: Container(
-          color: Colors.white70,
           child: Column(
             children: [
               // create the card stack.
@@ -138,11 +137,11 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: 40,
+                height: 20,
               ),
               AnimatedMiniTcardWidget(
                 maleOrFemaleImage: maleOrFemaleImage,
-                CustomButtomWidget: Text(
+                CustomButtonWidget: Text(
                   'Registration\nOpen ❤️',
                   textAlign: TextAlign.center,
                   style: titleStyleWhite.copyWith(fontSize: 12),
@@ -173,7 +172,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
                   style: titleStyle.copyWith(color: Colors.blueGrey),
                 ),
               Padding(
-                padding: const EdgeInsets.all(30.0),
+                padding: const EdgeInsets.fromLTRB(30, 20, 30, 10),
                 child: RoundedButton(
                   color: Colors.black87,
                   name: 'Complete my profile',

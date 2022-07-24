@@ -12,7 +12,7 @@ import 'package:betabeta/screens/user_edit/my_pets_screen.dart';
 import 'package:betabeta/screens/user_edit/orientation_edit_screen.dart';
 import 'package:betabeta/screens/user_edit/pronouns_edit_screen.dart';
 import 'package:betabeta/screens/user_edit/smoking_screen.dart';
-import 'package:betabeta/services/new_networking.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/bubble_edit_block.dart';
@@ -48,7 +48,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
 
     // this makes sure that if the state is not yet mounted, we don't end up calling setState
     // but instead push the function forward to the addPostFrameCallback function.
-    NewNetworkService.instance.syncCurrentProfileImagesUrls();
+    AWSServer.instance.syncCurrentProfileImagesUrls();
   }
 
   @override
@@ -363,14 +363,16 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
                       //print(SettingsData.instance.hobbies);
                     },
                   ),
-                  // ProfileEditBlock(
-                  //   title: 'Gender',
-                  //   icon: FontAwesomeIcons.userPen,
-                  //   value: SettingsData.instance.userGender.capitalizeFirst,
-                  //   onTap: () {
-                  //     Get.toNamed(PronounsEditScreen.routeName);
-                  //   },
-                  // ),     /// Do we really need that? users should not be able to change it.
+                  ProfileEditBlock(
+                    title: 'Gender',
+                    icon: FontAwesomeIcons.userPen,
+                    value: SettingsData.instance.userGender.capitalizeFirst,
+                    onTap: () {
+                      Get.toNamed(PronounsEditScreen.routeName);
+                    },
+                  ),
+
+                  /// Do we really need that? users should not be able to change it.
                   ProfileEditBlock(
                     title: 'Into',
                     icon: FontAwesomeIcons.personCircleQuestion,

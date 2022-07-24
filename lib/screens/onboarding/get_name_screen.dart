@@ -1,7 +1,6 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/services/onboarding_flow_controller.dart';
-import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:betabeta/widgets/onboarding/progress_bar.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';

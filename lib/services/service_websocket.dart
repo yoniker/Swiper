@@ -40,9 +40,6 @@ class ServiceWebsocket {
   void _listenRawMessages(dynamic message){
     var decoded_message = json.decode(message);
     Map<String,dynamic> content = decoded_message;
-    String ack_id = decoded_message['ack_id'];
-    var encodedAckResponse = jsonEncode({'message_type':'ack','ack_id':ack_id});
-    _channel!.add(encodedAckResponse);
     if(_exposedStreamActive){
       _streamController.add(content);
     }
@@ -53,7 +50,7 @@ class ServiceWebsocket {
     try {
       _creatingConnection = true;
       await _waitUntilConnected();
-      _channel =  await WebSocket.connect('wss://dordating.com:8085');
+      _channel =  await WebSocket.connect('wss://services.voilaserver.com/websockets/register',headers: {'user_id':SettingsData.instance.uid});
       if(_channel == null){
         print('connect returned null. Trying to reconnect...');
         await Future.delayed(Duration(seconds: 2));

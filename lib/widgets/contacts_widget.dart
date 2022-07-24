@@ -5,10 +5,10 @@ import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/models/infoConversation.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/chat/chat_screen.dart';
-import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/animated_widgets/animated_minitcard_widget.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
@@ -67,7 +67,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
               actions: [
                 TextButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      Get.back();
                     },
                     child: const Text(
                       'Close',
@@ -163,10 +163,8 @@ class _ContactsWidgetState extends State<ContactsWidget> {
                           .contains(widget.search))
                         return GestureDetector(
                           onTap: () {
-                            if (SettingsData.instance.userGender !=
-                                    kFemaleGender &&
-                                conversationsUserInitiated.length >=
-                                    kMaxInitiatedConversations)
+                            if (conversationsUserInitiated.length >=
+                                kMaxInitiatedConversations)
                               maxedOutPopUpDialog();
                             else
                               Get.toNamed(ChatScreen.getRouteWithUserId(
@@ -179,7 +177,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
                                 CircleAvatar(
                                   radius: 35.0,
                                   backgroundImage: NetworkImage(
-                                      NewNetworkService.getProfileImageUrl(
+                                      AWSServer.getProfileImageUrl(
                                           currentUser.profileImage)),
                                 ),
                                 SizedBox(

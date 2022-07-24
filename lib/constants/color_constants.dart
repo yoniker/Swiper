@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 const Color lightCardColor = Color(0xFFF5F5F5);
 const Color backgroundThemeColor = Color(0xFFE8EBF1);
+const Color backgroundThemeColorALT = Colors.white38;
 const Color darkTextColor = Color(0xFF747474);
 const Color unselectedTabColor = Colors.white60;
 const Color blackTextColor = Color(0xFF000000);
@@ -137,7 +138,7 @@ const TextStyle titleStyleWhite = TextStyle(
       Shadow(
         blurRadius: 15.0,
         color: Colors.black,
-        offset: Offset(-2.0, 2.0),
+        offset: Offset(-4.0, 2.0),
       ),
     ]);
 
@@ -145,6 +146,7 @@ const TextStyle LargeTitleStyleWhite = TextStyle(
     color: Colors.white,
     fontFamily: 'Nunito',
     fontSize: 26,
+    height: 1.2,
     fontWeight: FontWeight.bold,
     shadows: [
       Shadow(

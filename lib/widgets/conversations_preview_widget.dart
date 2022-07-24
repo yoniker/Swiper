@@ -1,12 +1,13 @@
 import 'package:betabeta/constants/app_functionality_consts.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/global_keys.dart';
 import 'package:betabeta/constants/lists_consts.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/models/infoConversation.dart';
 import 'package:betabeta/models/infoMessage.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/chat/chat_screen.dart';
-import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,10 +16,10 @@ import 'package:get/get.dart';
 
 class ConversationsPreviewWidget extends StatefulWidget {
   ConversationsPreviewWidget(
-      {this.search = '', this.conversationsThatMaleStartedMode = false});
+      {this.search = '', this.conversationsThatYouStartedMode = false});
 
   final String search;
-  final bool conversationsThatMaleStartedMode;
+  final bool conversationsThatYouStartedMode;
 
   @override
   _ConversationsPreviewWidgetState createState() =>
@@ -66,30 +67,24 @@ class _ConversationsPreviewWidgetState
       'Dec'
     ];
 
-    headline<String>() {
-      if (widget.conversationsThatMaleStartedMode)
-        return 'Conversations you\'ve started';
-      if (widget.conversationsThatMaleStartedMode != true &&
-          SettingsData.instance.userGender == kFemaleGender)
-        return 'Conversations';
-      return 'Conversations others initiated';
+    String headline() {
+      if (widget.conversationsThatYouStartedMode)
+        return 'Conversations you started';
+      if (ChatData.instance.conversationsOtherUsersStarted.isNotEmpty)
+        return 'Conversations they started';
+      return '';
     }
 
-    conversationsCount<int>() {
-      if (widget.conversationsThatMaleStartedMode)
+    int conversationsCount() {
+      if (widget.conversationsThatYouStartedMode)
         return conversationsUserInitiated.length;
-      if (widget.conversationsThatMaleStartedMode != true &&
-          SettingsData.instance.userGender == kFemaleGender)
-        return conversations.length;
       return conversationsOtherInitiated.length;
     }
 
-    conversationMode<InfoConversation>() {
-      if (widget.conversationsThatMaleStartedMode)
+    List<InfoConversation> conversationsToShow() {
+      if (widget.conversationsThatYouStartedMode)
         return conversationsUserInitiated;
-      if (widget.conversationsThatMaleStartedMode != true &&
-          SettingsData.instance.userGender == kFemaleGender)
-        return conversations;
+
       return conversationsOtherInitiated;
     }
 
@@ -121,7 +116,7 @@ class _ConversationsPreviewWidgetState
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: conversations.length != 0 ||
-                  widget.conversationsThatMaleStartedMode
+                  widget.conversationsThatYouStartedMode
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -132,12 +127,13 @@ class _ConversationsPreviewWidgetState
                         style: boldTextStyle,
                       ),
                     ),
-                    if (widget.conversationsThatMaleStartedMode)
+                    if (widget.conversationsThatYouStartedMode)
                       GestureDetector(
                         onTap: () {
                           maxedOutPopUpDialog();
                         },
                         child: Row(
+                          key: numberOfConversationsWidget,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -147,7 +143,7 @@ class _ConversationsPreviewWidgetState
                                   boldTextStyle.copyWith(color: appMainColor),
                             ),
                             Icon(
-                              FontAwesomeIcons.info,
+                              FontAwesomeIcons.circleInfo,
                               size: 15,
                             )
                           ],
@@ -205,8 +201,11 @@ class _ConversationsPreviewWidgetState
             shrinkWrap: true,
             itemCount: conversationsCount(),
             itemBuilder: (context, index) {
+              if (index == 3) {
+                print('dor');
+              }
               double commonHeight = 80;
-              InfoConversation conversation = conversationMode()[index];
+              InfoConversation conversation = conversationsToShow()[index];
               InfoMessage lastMessage = conversation.messages[0];
               InfoMessage firstMessage = conversation.messages.last;
 
@@ -277,7 +276,7 @@ class _ConversationsPreviewWidgetState
                                   ),
                                   image: DecorationImage(
                                       image: NetworkImage(collocutor != null
-                                          ? NewNetworkService
+                                          ? AWSServer
                                               .getProfileImageUrl(
                                                   collocutor.profileImage)
                                           : ''),

@@ -6,7 +6,10 @@ import 'package:flutter/material.dart';
 //This is done because pushing two named paths doesn't work at getx (see https://github.com/jonataslaw/getx/issues/2130)
 //And the alternative (navigator 2.0) is too complicated to my taste (see https://medium.com/flutter/learning-flutters-new-navigation-and-routing-system-7c9068155ade)
 
+enum TutorialState { showTutorial, dontShowTutorial }
+
 class AppStateInfo extends ChangeNotifier with WidgetsBindingObserver {
+  TutorialState shouldShowTutorial = TutorialState.dontShowTutorial;
   AppLifecycleState _appState = AppLifecycleState.resumed;
   AppLifecycleState get appState => _appState;
   int latestTabOnMainNavigation = MainNavigationScreen
