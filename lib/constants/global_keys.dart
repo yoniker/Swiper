@@ -9,4 +9,4 @@ final GlobalKey<FormState> yourTasteWidget = GlobalKey<FormState>();
 final GlobalKey<FormState> theirTasteWidget = GlobalKey<FormState>();
 final GlobalKey<FormState> numberOfConversationsWidget = GlobalKey<FormState>();
 final GlobalKey percentageWidgetCircle = GlobalKey();
-final GlobalKey test = GlobalKey();
+final GlobalKey percentageWidgetAtPendingScreen = GlobalKey();

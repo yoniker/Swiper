@@ -109,7 +109,6 @@ class _CurrentUserProfileViewScreenState
                     ),
                     onPressed: () {
                       Navigator.pop(context);
-                      print(SettingsData.instance.showUserGender);
                     },
                   ),
                   SizedBox(

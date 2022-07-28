@@ -4,7 +4,9 @@ import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/chat/chat_screen.dart';
 import 'package:betabeta/screens/chat/other_user_profile_screen.dart';
 import 'package:betabeta/screens/complete_profile_pageview_screen.dart';
+import 'package:betabeta/screens/my_look_a_like_screen.dart';
 import 'package:betabeta/screens/onboarding/tutorial_screen_starter.dart';
+import 'package:betabeta/screens/pending_approvment_screen.dart';
 import 'package:betabeta/screens/user_edit/kids_screen.dart';
 import 'package:betabeta/screens/chat/conversations_screen.dart';
 import 'package:betabeta/screens/user_edit/covid_screen.dart';
@@ -188,7 +190,12 @@ void main() async {
             page: () => CompleteProfilePageViewScreen()),
         GetPage(
             name: TutorialScreenStarter.routeName,
-            page: () => TutorialScreenStarter())
+            page: () => TutorialScreenStarter()),
+        GetPage(
+            name: MyLookALikeScreen.routeName, page: () => MyLookALikeScreen()),
+        GetPage(
+            name: PendingApprovementScreen.routeName,
+            page: () => PendingApprovementScreen())
       ],
       title: 'Voilà MVP',
       debugShowCheckedModeBanner: false,

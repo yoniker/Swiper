@@ -13,6 +13,7 @@ import 'package:firebase_messaging_web/firebase_messaging_web.dart';
 import 'package:flutter_facebook_auth_web/flutter_facebook_auth_web.dart';
 import 'package:geolocator_web/geolocator_web.dart';
 import 'package:image_picker_for_web/image_picker_for_web.dart';
+import 'package:share_plus_web/share_plus_web.dart';
 import 'package:shared_preferences_web/shared_preferences_web.dart';
 import 'package:sign_in_with_apple_web/sign_in_with_apple_web.dart';
 import 'package:smart_auth/smart_auth_web.dart';
@@ -30,6 +31,7 @@ void registerPlugins(Registrar registrar) {
   FlutterFacebookAuthPlugin.registerWith(registrar);
   GeolocatorPlugin.registerWith(registrar);
   ImagePickerPlugin.registerWith(registrar);
+  SharePlusPlugin.registerWith(registrar);
   SharedPreferencesPlugin.registerWith(registrar);
   SignInWithApplePlugin.registerWith(registrar);
   SmartAuthWeb.registerWith(registrar);

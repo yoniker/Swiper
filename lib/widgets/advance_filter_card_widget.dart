@@ -44,8 +44,10 @@ class AdvanceFilterCard extends StatelessWidget {
           image: isActive == true &&
                   SettingsData.instance.filterDisplayImageUrl != ''
               ? DecorationImage(
-                  image: NetworkImage(NetworkHelper.faceUrlToFullUrl(
-                      SettingsData.instance.filterDisplayImageUrl)),
+                  image: NetworkImage(
+                    NetworkHelper.faceUrlToFullUrl(
+                        SettingsData.instance.filterDisplayImageUrl),
+                  ),
                   fit: BoxFit.cover,
                 )
               : DecorationImage(

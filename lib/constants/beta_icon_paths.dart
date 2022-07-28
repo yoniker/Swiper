@@ -11,6 +11,10 @@ class BetaIconPaths {
   /// Voila search filter button.
   static const String voilaSearchSettingsPath = 'assets/images/search.png';
 
+  static const String settingsIconPath = 'assets/images/gear.png';
+
+  static const String voilaCelebrityIconPath = 'assets/images/fame.png';
+
   /// Swipe settings button icon.
   static const String voilaSwipeSettingsButtonPath =
       'assets/images/settings.png';
@@ -144,6 +148,8 @@ class BetaIconPaths {
 
   static const String voilaLogoBlackALT =
       'assets/images/voila_logo_black_alt.png';
+
+  static const String voilaLogoWhite = 'assets/images/voila_logoWhite.png';
 
   static const String anonymousProfileUrl =
       '/profile_images/real/app_assets/anonymous_user.jpg'; //short url to anon profile

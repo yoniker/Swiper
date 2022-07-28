@@ -88,7 +88,7 @@ class _VoilaPageState extends State<VoilaPage>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      "Click here for free text search",
+                      "Click here to search by text",
                       style: LargeTitleStyleWhite,
                       textAlign: TextAlign.center,
                     ),
@@ -98,7 +98,7 @@ class _VoilaPageState extends State<VoilaPage>
                     Text(
                       'You can find other New York Yankees for example!',
                       style: LargeTitleStyleWhite.copyWith(
-                          color: Colors.redAccent, fontSize: 20),
+                          color: Colors.white.withOpacity(0.8), fontSize: 20),
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(
@@ -138,7 +138,7 @@ class _VoilaPageState extends State<VoilaPage>
                 child: Column(
                   children: [
                     Text(
-                      "Voilà has a personal assistant, which learns your taste intimately",
+                      "Voilà can learn your taste intimately",
                       style: LargeTitleStyleWhite,
                       textAlign: TextAlign.center,
                     ),
@@ -146,9 +146,11 @@ class _VoilaPageState extends State<VoilaPage>
                       height: 10,
                     ),
                     Text(
-                      'You can actually ask voilà to show you people that you like!',
+                      'When active, every swipe teach Voilà your type!',
                       style: LargeTitleStyleWhite.copyWith(
-                          fontSize: 20, color: Colors.redAccent),
+                        fontSize: 20,
+                        color: Colors.white.withOpacity(0.8),
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(
@@ -187,17 +189,19 @@ class _VoilaPageState extends State<VoilaPage>
                 child: Column(
                   children: [
                     Text(
-                      "Since voilà learns everyone's taste, you can even ask voila to show people that will like you!",
-                      style: LargeTitleStyleWhite.copyWith(
-                          fontSize: 20, color: Colors.redAccent),
+                      'Click here to see members that you are their taste!',
+                      style: LargeTitleStyleWhite,
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(
                       height: 10,
                     ),
                     Text(
-                      'See members that you are their taste!',
-                      style: LargeTitleStyleWhite,
+                      "Voilà learns everyone's taste",
+                      style: LargeTitleStyleWhite.copyWith(
+                        fontSize: 20,
+                        color: Colors.white.withOpacity(0.8),
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(
@@ -237,17 +241,17 @@ class _VoilaPageState extends State<VoilaPage>
                 child: Column(
                   children: [
                     Text(
-                      'You can look for celeb look-a-likes. So if you like britney spears, you can date her look-a-likes ☺️',
-                      style: LargeTitleStyleWhite.copyWith(
-                          fontSize: 20, color: Colors.redAccent),
+                      'Voilà can look for celeb look-a-likes so you can date your favorite celeb look-a-likes ☺️',
+                      style: LargeTitleStyleWhite,
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(
                       height: 10,
                     ),
                     Text(
-                      'Click here to search for Celeb look-a-like members!',
-                      style: LargeTitleStyleWhite,
+                      'Click here to try!',
+                      style: LargeTitleStyleWhite.copyWith(
+                          fontSize: 20, color: Colors.white70),
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(
@@ -287,16 +291,18 @@ class _VoilaPageState extends State<VoilaPage>
                   children: <Widget>[
                     Text(
                       'You can even use your own picture!',
-                      style: LargeTitleStyleWhite.copyWith(
-                          fontSize: 20, color: Colors.redAccent),
+                      style: LargeTitleStyleWhite,
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(
                       height: 10,
                     ),
                     Text(
-                      "Click here to search for picture look-a-like members",
-                      style: LargeTitleStyleWhite,
+                      "Click here to search for any image look-a-like members",
+                      style: LargeTitleStyleWhite.copyWith(
+                        fontSize: 20,
+                        color: Colors.white.withOpacity(0.8),
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(

@@ -1,7 +1,7 @@
 class AssetsPaths {
   static const String Woman1Swipe = 'assets/images/swipe_woman.jpg';
   static const String Man1Swipe = 'assets/images/swipe_man.jpg';
-  static const String MiniTcardBackImage = 'assets/images/backImage.jpg';
+  static const String MiniTcardBackImage = 'assets/images/backimage.jpg';
   static const String womanProfileTutorialImage1 =
       'assets/onboarding/images/profile1.png';
   static const String editPicture1 = 'assets/images/edit_profile1.jpg';

@@ -10,6 +10,7 @@ import 'package:betabeta/widgets/bubble_edit_block.dart';
 import 'package:betabeta/widgets/compatibility_scale.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/like_scale.dart';
+import 'package:betabeta/widgets/main_app_box.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -72,16 +73,6 @@ class _MatchCardState extends State<MatchCard> {
         carouselInactiveDotColor: inactiveDot,
         carouselActiveDotColor: activeDot,
       ),
-    );
-  }
-
-  Widget _buildDivider() {
-    return Divider(
-      color: lightCardColor,
-      indent: 2.0,
-      endIndent: 2.0,
-      thickness: 2.8,
-      height: 8.0,
     );
   }
 
@@ -287,25 +278,6 @@ class _MatchCardState extends State<MatchCard> {
       }
       return Icon(FontAwesomeIcons.handsPraying,
           color: Colors.black.withOpacity(0.6));
-    }
-
-    // builds the achievement items such as loves and stars.
-    Widget _buildAchievementItem(String iconURI, String value) {
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 2.0),
-        child: Row(
-          children: [
-            Text(
-              value,
-              style: smallCharStyle.copyWith(color: darkTextColor),
-            ),
-            SizedBox(width: 2.0),
-            PrecachedImage.asset(
-              imageURI: iconURI,
-            ),
-          ],
-        ),
-      );
     }
 
     // Return a List of Widgets.
@@ -550,13 +522,7 @@ class _MatchCardState extends State<MatchCard> {
       if (widget.profile.pets.length != 0)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Container(
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.03),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
-                )),
+          child: MainAppBox(
             child: Wrap(
               runSpacing: 10,
               spacing: 7,

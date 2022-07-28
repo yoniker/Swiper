@@ -8,11 +8,13 @@ class VoilaLogoWidget extends StatefulWidget {
       {Key? key,
       this.freeText = 'Voilà-dating',
       this.logoOnlyMode = false,
+      this.whiteLogo = false,
       this.logoScale = 9})
       : super(key: key);
   final String freeText;
   final bool logoOnlyMode;
   final double logoScale;
+  final bool whiteLogo;
   @override
   State<VoilaLogoWidget> createState() => _VoilaLogoWidgetState();
 }
@@ -43,6 +45,9 @@ class _VoilaLogoWidgetState extends State<VoilaLogoWidget>
 
   @override
   Widget build(BuildContext context) {
+    final String logoUrl = widget.whiteLogo == true
+        ? BetaIconPaths.voilaLogoWhite
+        : BetaIconPaths.voilaLogoBlackALT;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -50,7 +55,7 @@ class _VoilaLogoWidgetState extends State<VoilaLogoWidget>
           opacity: _animation.value,
           child: widget.logoOnlyMode
               ? Image.asset(
-                  BetaIconPaths.voilaLogoBlackALT,
+                  logoUrl,
                   scale: widget.logoScale,
                 )
               : GradientText(

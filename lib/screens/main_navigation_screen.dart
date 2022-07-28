@@ -2,6 +2,7 @@ import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/screens/account_settings.dart';
 import 'package:betabeta/screens/chat/conversations_screen.dart';
 import 'package:betabeta/screens/match_screen.dart';
 import 'package:betabeta/screens/profile_screen.dart';
@@ -10,12 +11,11 @@ import 'package:betabeta/screens/voila_page.dart';
 import 'package:betabeta/services/app_state_info.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/animated_widgets/animated_their_taste_widget.dart';
-import 'package:betabeta/widgets/animated_widgets/animated_tutorial_screen_texts.dart';
+import 'package:betabeta/widgets/circle_button.dart';
 import 'package:betabeta/widgets/circular_user_avatar.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/image_filterview_widget.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
-import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:betabeta/widgets/text_search_view_widget.dart';
 import 'package:betabeta/widgets/voila_logo_widget.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +24,7 @@ import 'package:get/get.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../constants/global_keys.dart';
+import '../widgets/animated_widgets/animated_appear_widget.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   static const int PROFILE_PAGE_INDEX = 2;
@@ -48,6 +49,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
 
   late TutorialCoachMark VoilaTutorial;
   late TutorialCoachMark VoilaTutorialStage2;
+
+  final int pageGeneralAnimationTimeInMillSec = 300;
 
   List<TargetFocus> targets = <TargetFocus>[];
 
@@ -78,6 +81,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
           return AnimatedTheirTasteWidget();
         break;
       default:
+        if (selectedTabIndex == MainNavigationScreen.PROFILE_PAGE_INDEX)
+          return VoilaLogoWidget(
+            logoOnlyMode: true,
+            whiteLogo: true,
+          );
         return VoilaLogoWidget(
           logoOnlyMode: true,
         );
@@ -85,6 +93,144 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     return VoilaLogoWidget(
       logoOnlyMode: true,
     );
+  }
+
+  Widget buildSettingWidget() {
+    switch (selectedTabIndex) {
+      case MainNavigationScreen.PROFILE_PAGE_INDEX:
+        return CircleButton(
+          onPressed: () {
+            Get.toNamed(AccountSettingsScreen.routeName);
+          },
+          child: Stack(
+            children: [
+              AnimatedScale(
+                duration:
+                    Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
+                scale:
+                    selectedTabIndex != MainNavigationScreen.MATCHING_PAGE_INDEX
+                        ? 0
+                        : 1,
+                child: Image.asset(
+                  BetaIconPaths.voilaSwipeSettingsButtonPath,
+                  scale: 12,
+                ),
+              ),
+              AnimatedScale(
+                duration:
+                    Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
+                scale:
+                    selectedTabIndex != MainNavigationScreen.MATCHING_PAGE_INDEX
+                        ? 1
+                        : 0,
+                child: Image.asset(
+                  BetaIconPaths.settingsIconPath,
+                  scale: 4,
+                ),
+              ),
+            ],
+          ),
+        );
+        break;
+      case MainNavigationScreen.MATCHING_PAGE_INDEX:
+        return CircleButton(
+          onPressed: () {
+            Get.toNamed(SwipeSettingsScreen.routeName);
+          },
+          child: Stack(
+            children: [
+              AnimatedScale(
+                duration:
+                    Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
+                scale:
+                    selectedTabIndex != MainNavigationScreen.MATCHING_PAGE_INDEX
+                        ? 0
+                        : 1,
+                child: Image.asset(
+                  BetaIconPaths.voilaSwipeSettingsButtonPath,
+                  scale: 12,
+                ),
+              ),
+              AnimatedScale(
+                duration:
+                    Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
+                scale:
+                    selectedTabIndex != MainNavigationScreen.MATCHING_PAGE_INDEX
+                        ? 1
+                        : 0,
+                child: Image.asset(
+                  BetaIconPaths.settingsIconPath,
+                  scale: 4,
+                ),
+              ),
+            ],
+          ),
+        );
+      case MainNavigationScreen.CONVERSATIONS_PAGE_INDEX:
+        return CircleButton(
+          onPressed: () {},
+          child: Stack(
+            children: [
+              AnimatedScale(
+                duration:
+                    Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
+                scale:
+                    selectedTabIndex != MainNavigationScreen.MATCHING_PAGE_INDEX
+                        ? 0
+                        : 0,
+                child: Image.asset(
+                  BetaIconPaths.voilaSwipeSettingsButtonPath,
+                  scale: 12,
+                ),
+              ),
+              AnimatedScale(
+                duration:
+                    Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
+                scale:
+                    selectedTabIndex != MainNavigationScreen.MATCHING_PAGE_INDEX
+                        ? 0
+                        : 0,
+                child: Image.asset(
+                  BetaIconPaths.settingsIconPath,
+                  scale: 4,
+                ),
+              ),
+            ],
+          ),
+        );
+      default:
+        return CircleButton(
+          onPressed: () {},
+          child: Stack(
+            children: [
+              AnimatedScale(
+                duration:
+                    Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
+                scale:
+                    selectedTabIndex != MainNavigationScreen.MATCHING_PAGE_INDEX
+                        ? 0
+                        : 1,
+                child: Image.asset(
+                  BetaIconPaths.voilaSwipeSettingsButtonPath,
+                  scale: 12,
+                ),
+              ),
+              AnimatedScale(
+                duration:
+                    Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
+                scale:
+                    selectedTabIndex != MainNavigationScreen.MATCHING_PAGE_INDEX
+                        ? 1
+                        : 0,
+                child: Image.asset(
+                  BetaIconPaths.settingsIconPath,
+                  scale: 4,
+                ),
+              ),
+            ],
+          ),
+        );
+    }
   }
 
   /// builds the widget's body.
@@ -105,7 +251,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     //<debug>
     print('GOING TO PAGE:- index ~$index');
     MainNavigationScreen.pageController.animateToPage(index,
-        duration: Duration(milliseconds: 300), curve: Curves.fastOutSlowIn);
+        duration: Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
+        curve: Curves.fastOutSlowIn);
   }
 
   void openVoilaSettings() {
@@ -135,9 +282,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
         AnimationController(vsync: this, duration: Duration(seconds: 2))
           ..forward()
           ..addListener(() {
-            setState(() {
-              print(_animation.value);
-            });
+            setState(() {});
           });
     _animation = Tween<double>(begin: 0, end: 1)
         .animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
@@ -180,9 +325,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
 
         MainNavigationScreen.pageController.animateToPage(
             MainNavigationScreen.CONVERSATIONS_PAGE_INDEX,
-            duration: Duration(milliseconds: 300),
+            duration: Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
             curve: Curves.fastOutSlowIn);
-        Future.delayed(Duration(milliseconds: 300), showStage2Tutorial);
+        Future.delayed(
+            Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
+            showStage2Tutorial);
       },
     )..show();
   }
@@ -209,7 +356,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
                     children: <Widget>[
                       Text(
                         "Click here for basic filters",
-                        style: kTypeTextStyle.copyWith(color: Colors.white),
+                        style: LargeTitleStyleWhite,
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(
@@ -251,7 +398,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
                   children: <Widget>[
                     Text(
                       "Click here for advanced search",
-                      style: LargeTitleStyleWhite.copyWith(color: Colors.white),
+                      style: LargeTitleStyleWhite,
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -278,7 +425,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
       onFinish: () {
         MainNavigationScreen.pageController.animateToPage(
             MainNavigationScreen.MATCHING_PAGE_INDEX,
-            duration: Duration(milliseconds: 300),
+            duration: Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
             curve: Curves.fastOutSlowIn);
       },
     )..show();
@@ -307,7 +454,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
                       Text(
                         "For more meaningful connections, we limit each user number of conversation starts!",
                         style: LargeTitleStyleWhite.copyWith(
-                            color: Colors.redAccent, fontSize: 22),
+                            color: Colors.lightBlueAccent, fontSize: 22),
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(
@@ -338,8 +485,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
       opacity: _animation.value,
       child: Scaffold(
         appBar: CustomAppBar(
+          trailingPad: 0,
           hasVerticalPadding: false,
-          backgroundColor: backgroundThemeColor,
+          backgroundColor:
+              selectedTabIndex == MainNavigationScreen.PROFILE_PAGE_INDEX
+                  ? Colors.black
+                  : backgroundThemeColor,
           elevation: 0,
           centerWidget: ListenerWidget(
               notifier: SettingsData.instance,
@@ -362,70 +513,63 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
             padding: EdgeInsets.only(left: 10.0),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: GestureDetector(
-                onTap: () {
-                  openVoilaSettings();
-                },
-                child: AnimatedOpacity(
-                  opacity: selectedTabIndex ==
-                          MainNavigationScreen.MATCHING_PAGE_INDEX
-                      ? 1
-                      : 0,
-                  duration: Duration(milliseconds: 300),
-                  child: Image.asset(
-                    BetaIconPaths.voilaSearchSettingsPath,
-                    scale: 12,
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: selectedTabIndex ==
+                            MainNavigationScreen.MATCHING_PAGE_INDEX
+                        ? () {
+                            openVoilaSettings();
+                          }
+                        : null,
+                    child: AnimatedOpacity(
+                      opacity: selectedTabIndex ==
+                              MainNavigationScreen.MATCHING_PAGE_INDEX
+                          ? 1
+                          : 0,
+                      duration: Duration(
+                          milliseconds: pageGeneralAnimationTimeInMillSec),
+                      child: Image.asset(
+                        BetaIconPaths.voilaSearchSettingsPath,
+                        scale: 12,
+                      ),
+                    ),
                   ),
-                ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  AnimatedOpacity(
+                    duration: Duration(
+                        milliseconds: pageGeneralAnimationTimeInMillSec),
+                    opacity: selectedTabIndex ==
+                            MainNavigationScreen.MATCHING_PAGE_INDEX
+                        ? 1
+                        : 0,
+                    child: GestureDetector(
+                      onTap: selectedTabIndex ==
+                              MainNavigationScreen.MATCHING_PAGE_INDEX
+                          ? () {
+                              showTutorial();
+                            }
+                          : null,
+                      child: Icon(Icons.info),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-          trailing: Row(
-            children: [
-              AnimatedOpacity(
-                duration: Duration(milliseconds: 300),
-                opacity:
-                    selectedTabIndex == MainNavigationScreen.MATCHING_PAGE_INDEX
-                        ? 1
-                        : 0,
-                child: GestureDetector(
-                  onTap: selectedTabIndex ==
-                          MainNavigationScreen.MATCHING_PAGE_INDEX
-                      ? () {
-                          showTutorial();
-                        }
-                      : null,
-                  child: Icon(Icons.info),
-                ),
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              AnimatedOpacity(
-                key: filterButton,
-                duration: Duration(milliseconds: 300),
-                opacity:
-                    selectedTabIndex == MainNavigationScreen.MATCHING_PAGE_INDEX
-                        ? 1
-                        : 0,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: GestureDetector(
-                    child: Image.asset(
-                      BetaIconPaths.voilaSwipeSettingsButtonPath,
-                      scale: 12,
-                    ),
-                    onTap: selectedTabIndex !=
-                            MainNavigationScreen.MATCHING_PAGE_INDEX
-                        ? null
-                        : () {
-                            Get.toNamed(SwipeSettingsScreen.routeName);
-                          },
-                  ),
-                ),
-              ),
-            ],
-          ),
+          trailing: AnimatedOpacity(
+              key: filterButton,
+              duration:
+                  Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
+              opacity: selectedTabIndex ==
+                          MainNavigationScreen.MATCHING_PAGE_INDEX ||
+                      selectedTabIndex ==
+                          MainNavigationScreen.PROFILE_PAGE_INDEX
+                  ? 1
+                  : 0,
+              child: buildSettingWidget()),
         ),
         backgroundColor: kBackroundThemeColor,
         body: _body(),
@@ -454,14 +598,16 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
             BottomNavigationBarItem(
               icon: AnimatedScale(
                 scale: 0.85,
-                duration: Duration(milliseconds: 200),
+                duration:
+                    Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
                 child: Icon(
                   Icons.search,
                   size: 35,
                 ),
               ),
               activeIcon: AnimatedScale(
-                duration: Duration(milliseconds: 200),
+                duration:
+                    Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
                 scale: 1,
                 child: Stack(
                   alignment: Alignment.center,
@@ -484,7 +630,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
             ),
             BottomNavigationBarItem(
               icon: AnimatedScale(
-                  duration: Duration(milliseconds: 200),
+                  duration:
+                      Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
                   scale: 0.85,
                   curve: Curves.easeInOut,
                   child: Icon(
@@ -493,7 +640,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
                   )),
               activeIcon: AnimatedScale(
                 scale: 1,
-                duration: Duration(milliseconds: 200),
+                duration:
+                    Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
                 child: Icon(
                   FontAwesomeIcons.solidComments,
                   size: 26,
