@@ -17,7 +17,6 @@ import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -50,7 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             imageURI: BetaIconPaths.defaultProfileImagePath01,
           ).image
         : ExtendedNetworkImageProvider(
-            NewNetworkService.getProfileImageUrl(imageUrl),
+            AWSServer.getProfileImageUrl(imageUrl),
             cache: true);
 
     return Padding(

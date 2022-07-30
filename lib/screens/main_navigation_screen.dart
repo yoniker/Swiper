@@ -63,7 +63,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     switch (SettingsData.instance.filterType) {
       case FilterType.TEXT_SEARCH:
         if (SettingsData.instance.textSearch.length > 0 &&
-            selectedTabIndex == MainNavigationScreen.MATCHING_PAGE_INDEX)
+            selectedTabIndex == MainNavigationScreen.MATCHING_PAGE_INDEX) //TODO Nitzan why is this condition here and why does it repeat itself?
           return TextSearchViewWidget();
         break;
       case FilterType.CELEB_IMAGE:
@@ -309,7 +309,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
 
   @override
   Widget build(BuildContext context) {
-    print('Building main navigation screen!!!!!!!!!!!!!!');
     AppStateInfo.instance.latestTabOnMainNavigation =
         selectedTabIndex; //TODO ugly as I mentioned at the comments at the Appstate,switch with a better solution when available
     return Opacity(

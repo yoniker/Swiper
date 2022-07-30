@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:betabeta/constants/api_consts.dart';
-import 'package:betabeta/services/new_networking.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 part 'profile.g.dart';
@@ -124,7 +124,7 @@ class Profile {
         this.age = json[API_CONSTS.USER_AGE],
         this.distance = json[API_CONSTS.USER_LOCATION_DISTANCE],
         this.location = json[API_CONSTS.USER_LOCATION_DESCRIPTION] ?? '',
-        this.height = json[API_CONSTS.USER_HEIGHT_IN_CM],
+        this.height = json[API_CONSTS.USER_HEIGHT_IN_CM]?.toDouble(),
         this.userGender = json[API_CONSTS.USER_GENDER_KEY] ?? '',
         this.showUserGender = json[API_CONSTS.SHOW_USER_GENDER_KEY] != null &&
             json[API_CONSTS.SHOW_USER_GENDER_KEY] == 'true',
@@ -141,7 +141,7 @@ class Profile {
     return types.User(
         id: uid,
         firstName: username,
-        imageUrl: NewNetworkService.getProfileImageUrl(profileImage));
+        imageUrl: AWSServer.getProfileImageUrl(profileImage));
   }
 
   bool hasImages() {
@@ -152,6 +152,6 @@ class Profile {
     if (hasImages()) {
       return imageUrls![0];
     }
-    return NewNetworkService.shortProfileUrlImageById(uid);
+    return AWSServer.shortProfileUrlImageById(uid);
   }
 }

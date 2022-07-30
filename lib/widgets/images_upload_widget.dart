@@ -1,4 +1,4 @@
-import 'package:betabeta/services/new_networking.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
@@ -130,7 +130,7 @@ class _ImagesUploadwidgetState extends State<ImagesUploadwidget> {
                 if (newIndex >= _profileImagesUrls.length) {
                   return;
                 }
-                NewNetworkService.instance.swapProfileImages(
+                AWSServer.instance.swapProfileImages(
                     _profileImagesUrls[oldIndex],
                     _profileImagesUrls[
                         newIndex]); //I don't see a need to wait for the server;
@@ -155,28 +155,27 @@ class _ImagesUploadwidgetState extends State<ImagesUploadwidget> {
                         reorderable: index < _profileImagesUrls.length,
                         child: _pictureBox(
                             imageUrl: index < _profileImagesUrls.length
-                                ? NewNetworkService.getProfileImageUrl(
+                                ? AWSServer.getProfileImageUrl(
                                     _profileImagesUrls[index])
                                 : null,
                             onDelete: () async {
                               if (_profileImagesUrls.length < index + 1) {
                                 return;
                               }
-                              await NewNetworkService.instance
-                                  .deleteProfileImage(
+                              await AWSServer.instance.deleteProfileImage(
                                       _profileImagesUrls[index]);
-                              await NewNetworkService.instance.syncCurrentProfileImagesUrls();
+                              await AWSServer.instance.syncCurrentProfileImagesUrls();
                             },
                             onImagePicked: (pickedImage) async {
                               setState(() {
                                 _uploadingImage = true;
                               });
-                              await NewNetworkService.instance
+                              await AWSServer.instance
                                   .postProfileImage(pickedImage!);
                               setState(() {
                                 _uploadingImage = false;
                               });
-                              await NewNetworkService.instance.syncCurrentProfileImagesUrls();
+                              await AWSServer.instance.syncCurrentProfileImagesUrls();
                             }),
                       )));
         });

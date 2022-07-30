@@ -12,7 +12,7 @@ import 'package:betabeta/screens/user_edit/my_pets_screen.dart';
 import 'package:betabeta/screens/user_edit/orientation_edit_screen.dart';
 import 'package:betabeta/screens/user_edit/pronouns_edit_screen.dart';
 import 'package:betabeta/screens/user_edit/smoking_screen.dart';
-import 'package:betabeta/services/new_networking.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/bubble_edit_block.dart';

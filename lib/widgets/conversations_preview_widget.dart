@@ -2,12 +2,12 @@ import 'package:betabeta/constants/app_functionality_consts.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/global_keys.dart';
 import 'package:betabeta/constants/lists_consts.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/models/infoConversation.dart';
 import 'package:betabeta/models/infoMessage.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/screens/chat/chat_screen.dart';
-import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -276,7 +276,7 @@ class _ConversationsPreviewWidgetState
                                   ),
                                   image: DecorationImage(
                                       image: NetworkImage(collocutor != null
-                                          ? NewNetworkService
+                                          ? AWSServer
                                               .getProfileImageUrl(
                                                   collocutor.profileImage)
                                           : ''),

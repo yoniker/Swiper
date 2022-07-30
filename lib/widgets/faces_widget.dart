@@ -1,5 +1,5 @@
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/services/networking.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -24,7 +24,7 @@ class _FacesWidgetState extends State<FacesWidget> {
     }
     else{
       for(int imageIndex = 0 ; imageIndex<widget.facesUrls!.length; imageIndex++){
-        String url = NetworkHelper.faceUrlToFullUrl(widget.facesUrls![imageIndex]);
+        String url = AWSServer.instance.CustomFaceLinkToFullUrl(widget.facesUrls![imageIndex]);
         Image img = Image.network(url,height: 75.0,width: 75.0,fit:BoxFit.cover);
         precacheImage(img.image, context);
         facesImages.add(img);
