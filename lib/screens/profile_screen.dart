@@ -6,7 +6,7 @@ import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/pending_approvment_screen.dart';
 import 'package:betabeta/screens/profile_edit_screen.dart';
 import 'package:betabeta/services/app_tutorial_brain.dart';
-import 'package:betabeta/services/new_networking.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/animated_widgets/animated_percentage_circle_profile_widget.dart';
@@ -17,6 +17,7 @@ import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -48,8 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         ? PrecachedImage.asset(
             imageURI: BetaIconPaths.defaultProfileImagePath01,
           ).image
-        : ExtendedNetworkImageProvider(
-            AWSServer.getProfileImageUrl(imageUrl),
+        : ExtendedNetworkImageProvider(AWSServer.getProfileImageUrl(imageUrl),
             cache: true);
 
     return Padding(

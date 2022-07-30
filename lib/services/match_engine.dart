@@ -62,33 +62,20 @@ class MatchEngine extends ChangeNotifier {
   Future<void> getMoreMatchesFromServer() async {
     if (_serverMatchesSearchStatus == MatchSearchStatus.not_found) {
       print('Not getting more matches from server since nothing was found!');
-      return;}
-    if (! (matchesBeingGotten == null && _matches.length < MINIMUM_CACHED_PROFILES)) {
-      return;}
-    if(SettingsData.instance.uid.length<=0){return;}
-      try {
-        matchesBeingGotten = AWSServer.instance.getMatches();
-        dynamic matchesSearchResult = await matchesBeingGotten;
-        if(matchesSearchResult==null){return;}
-        MatchSearchStatus newStatus = MatchSearchStatus.values.firstWhere((s) => s.name==matchesSearchResult[API_CONSTS.MATCHES_SEARCH_STATUS_KEY],orElse:()=>MatchSearchStatus.empty) ;
-        if (_serverMatchesSearchStatus!=newStatus){
-          _serverMatchesSearchStatus = newStatus;
-          notifyListeners();
-        }
-        print('STATUS OF FINDING MATCHES IS $_serverMatchesSearchStatus');
-        dynamic matches = matchesSearchResult[API_CONSTS.MATCHES_SEARCH_MATCHES_KEY];
-        List newProfiles = matches.map<Profile>((match){return Profile.fromJson(match);}).toList();
-        List<Match> newPotentialMatches=newProfiles.map<Match>((profile){return Match(profile: profile);}).toList();
-        if (newPotentialMatches.length>0) {
-          //Remove all of the profiles in the queue that already exist so there is no duplicate.
-          var currentUids = _matches.map((match) => match.profile?.uid??'');
-          newPotentialMatches.removeWhere((newMatch) => currentUids.contains(newMatch.profile?.uid));
-          _matches.addAll(newPotentialMatches);
-          notifyListeners();
-        }
-      } finally {
-        matchesBeingGotten = null;
-        addMatchesIfNeeded();
+      return;
+    }
+    if (!(matchesBeingGotten == null &&
+        _matches.length < MINIMUM_CACHED_PROFILES)) {
+      return;
+    }
+    if (SettingsData.instance.uid.length <= 0) {
+      return;
+    }
+    try {
+      matchesBeingGotten = AWSServer.instance.getMatches();
+      dynamic matchesSearchResult = await matchesBeingGotten;
+      if (matchesSearchResult == null) {
+        return;
       }
       MatchSearchStatus newStatus = MatchSearchStatus.values.firstWhere(
           (s) =>
@@ -99,7 +86,7 @@ class MatchEngine extends ChangeNotifier {
         _serverMatchesSearchStatus = newStatus;
         notifyListeners();
       }
-      //print('STATUS OF FINDING MATCHES IS $_serverMatchesSearchStatus');
+      print('STATUS OF FINDING MATCHES IS $_serverMatchesSearchStatus');
       dynamic matches =
           matchesSearchResult[API_CONSTS.MATCHES_SEARCH_MATCHES_KEY];
       List newProfiles = matches.map<Profile>((match) {
@@ -161,7 +148,6 @@ class MatchEngine extends ChangeNotifier {
         return;
       }
       _locationCountData = await AWSServer.instance.getCountUsersByLocation();
-
     }
   }
 
@@ -212,8 +198,8 @@ class MatchEngine extends ChangeNotifier {
       goToNextMatch();
     }
     notifyListeners();
-    AWSServer.instance.postUserDecision(decision: decision,otherUserProfile: currentMatch.profile!);
-    }
+    AWSServer.instance.postUserDecision(
+        decision: decision, otherUserProfile: currentMatch.profile!);
   }
 }
 

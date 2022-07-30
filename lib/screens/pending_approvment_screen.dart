@@ -5,9 +5,9 @@ import 'package:betabeta/screens/account_settings.dart';
 import 'package:betabeta/screens/current_user_profile_view_screen.dart';
 import 'package:betabeta/screens/profile_edit_screen.dart';
 import 'package:betabeta/screens/profile_screen.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/utils/mixins.dart';
 import 'package:betabeta/widgets/animated_widgets/animated_percentage_circle_profile_widget.dart';
@@ -45,8 +45,7 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
         ? PrecachedImage.asset(
             imageURI: BetaIconPaths.defaultProfileImagePath01,
           ).image
-        : ExtendedNetworkImageProvider(
-            NewNetworkService.getProfileImageUrl(imageUrl),
+        : ExtendedNetworkImageProvider(AWSServer.getProfileImageUrl(imageUrl),
             cache: true);
 
     return Padding(

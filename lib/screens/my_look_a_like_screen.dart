@@ -1,6 +1,6 @@
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/screens/full_image_screen.dart';
-import 'package:betabeta/services/new_networking.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
@@ -24,7 +24,7 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
   @override
   void initState() {
     setState(() {
-      selectedImage = NewNetworkService.getProfileImageUrl(
+      selectedImage = AWSServer.getProfileImageUrl(
           SettingsData.instance.profileImagesUrls.first);
     });
 
@@ -81,9 +81,8 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                             scrollDirection: Axis.horizontal,
                             itemCount: _imageUrls.length,
                             itemBuilder: (cntx, index) {
-                              final String _url =
-                                  NewNetworkService.getProfileImageUrl(
-                                      _imageUrls[index]);
+                              final String _url = AWSServer.getProfileImageUrl(
+                                  _imageUrls[index]);
                               return GestureDetector(
                                 onTap: () {
                                   print(SettingsData
