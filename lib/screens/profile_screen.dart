@@ -40,6 +40,10 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   void initState() {
     super.initState();
+    //_syncFromServer();
+  }
+  void _syncFromServer() async {
+    await AWSServer.instance.syncCurrentProfileImagesUrls();
   }
 
   // builds the profile picture display.

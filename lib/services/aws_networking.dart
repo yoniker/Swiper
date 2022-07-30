@@ -324,15 +324,14 @@ class AWSServer {
   }
 
   Future<void> syncCurrentProfileImagesUrls() async {
-    Uri countUri = Uri.https(
-        SERVER_ADDR, '/user_data/profile_images/get_urls/${SettingsData.instance.uid}/');
-    var response = await http.get(countUri);
+    Uri getUrlsUri = Uri.https(
+        SERVER_ADDR, '/user_data/profile_images/get_urls/${SettingsData.instance.uid}');
+    var response = await http.get(getUrlsUri);
     if (response.statusCode == 200) {
       var parsed = json.jsonDecode(response.body);
       List<String>? imagesLinks = parsed.cast<String>();
       if (imagesLinks != null) {
         SettingsData.instance.profileImagesUrls = imagesLinks;
-        print('dor');
       }
     }
   }

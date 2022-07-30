@@ -377,6 +377,7 @@ class SettingsData extends ChangeNotifier {
         sendServer: false, resetMatchEngine: false);
     savePreferences(REGISTRATION_STATUS_KEY, _registrationStatus,
         sendServer: false, resetMatchEngine: false);
+    AWSServer.instance.syncCurrentProfileImagesUrls();
   }
 
   String get preferredGender {
