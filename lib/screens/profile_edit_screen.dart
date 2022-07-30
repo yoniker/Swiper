@@ -45,10 +45,6 @@ class _ProfileEditScreenState extends State<ProfileEditScreen>
   @override
   initState() {
     super.initState();
-
-    // this makes sure that if the state is not yet mounted, we don't end up calling setState
-    // but instead push the function forward to the addPostFrameCallback function.
-    NewNetworkService.instance.syncCurrentProfileImagesUrls();
   }
 
   @override

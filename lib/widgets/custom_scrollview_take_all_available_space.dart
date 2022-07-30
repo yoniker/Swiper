@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 class CustomScrollViewTakesAllAvailableSpace extends StatelessWidget {
   final List<Widget> children;
   final EdgeInsetsGeometry padding;
+  final CrossAxisAlignment crossAxisAlignment;
   const CustomScrollViewTakesAllAvailableSpace(
-      {Key? key, required this.children, required this.padding})
+      {Key? key,
+      required this.children,
+      required this.padding,
+      this.crossAxisAlignment = CrossAxisAlignment.start})
       : super(key: key);
 
   @override
@@ -16,8 +20,13 @@ class CustomScrollViewTakesAllAvailableSpace extends StatelessWidget {
         child: MediaQuery.removePadding(
           context: context,
           removeTop: true,
-          child: Scrollbar(
+          removeBottom: true,
+          child: RawScrollbar(
             controller: scrollController,
+            thumbColor: Colors.black87,
+            trackVisibility: true,
+            trackRadius: Radius.circular(20),
+            trackColor: Colors.red,
             radius: Radius.circular(20),
             thumbVisibility: true,
             child: CustomScrollView(
@@ -30,7 +39,7 @@ class CustomScrollViewTakesAllAvailableSpace extends StatelessWidget {
                   hasScrollBody: false,
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: crossAxisAlignment,
                     children: children,
                   ),
                 )

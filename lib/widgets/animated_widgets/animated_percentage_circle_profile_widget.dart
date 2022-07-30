@@ -79,15 +79,12 @@ class _AnimatedPercentageCircleProfileWidgetState
       count++;
     }
     percentIndicator = (count / totalItems) * 100;
-
-    _controller.forward();
-    print(count);
   }
 
   @override
   void initState() {
     _controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 2000))
+        AnimationController(vsync: this, duration: Duration(milliseconds: 3000))
           ..addListener(() {
             setState(() {});
           })

@@ -5,8 +5,17 @@ class CircleButton extends StatefulWidget {
   final void Function()? onPressed;
   final Widget? child;
   final Color color;
+  final double elevation;
+  final EdgeInsets padding;
+  final String? label;
   const CircleButton(
-      {Key? key, this.onPressed, this.child, this.color = backgroundThemeColor})
+      {Key? key,
+      this.onPressed,
+      this.child,
+      this.color = backgroundThemeColor,
+      this.padding = const EdgeInsets.all(8.0),
+      this.label,
+      this.elevation = 0})
       : super(key: key);
 
   @override
@@ -16,13 +25,23 @@ class CircleButton extends StatefulWidget {
 class _CircleButtonState extends State<CircleButton> {
   @override
   Widget build(BuildContext context) {
-    return MaterialButton(
-      elevation: 0,
-      padding: EdgeInsets.all(10),
-      onPressed: widget.onPressed,
-      shape: CircleBorder(),
-      child: widget.child,
-      color: widget.color,
+    return Column(
+      children: [
+        MaterialButton(
+          elevation: widget.elevation,
+          padding: widget.padding,
+          onPressed: widget.onPressed,
+          shape: CircleBorder(),
+          child: widget.child,
+          color: widget.color,
+        ),
+        if (widget.label != null)
+          Text(
+            widget.label!,
+            style: titleStyle.copyWith(fontSize: 16),
+            textAlign: TextAlign.center,
+          )
+      ],
     );
   }
 }

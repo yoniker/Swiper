@@ -9,6 +9,7 @@ import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/screens/voila_page.dart';
 import 'package:betabeta/services/app_state_info.dart';
+import 'package:betabeta/services/app_tutorial_brain.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/animated_widgets/animated_their_taste_widget.dart';
 import 'package:betabeta/widgets/circle_button.dart';
@@ -21,10 +22,7 @@ import 'package:betabeta/widgets/voila_logo_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
-
 import '../constants/global_keys.dart';
-import '../widgets/animated_widgets/animated_appear_widget.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   static const int PROFILE_PAGE_INDEX = 2;
@@ -33,6 +31,7 @@ class MainNavigationScreen extends StatefulWidget {
   static const String routeName = '/main_navigation_screen';
   static const String TAB_INDEX_PARAM = 'tab_index';
   static late PageController pageController;
+  static late AnimationController appBarColorAnimationController;
   MainNavigationScreen({Key? key}) : super(key: key);
 
   @override
@@ -40,19 +39,15 @@ class MainNavigationScreen extends StatefulWidget {
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   static int selectedTabIndex = MainNavigationScreen.MATCHING_PAGE_INDEX;
   final bool startTutorial = Get.arguments ?? false;
   late bool pageIsTransparent = true;
   late AnimationController _controller;
+
+  late Animation _backgroundColor;
   late Animation _animation;
-
-  late TutorialCoachMark VoilaTutorial;
-  late TutorialCoachMark VoilaTutorialStage2;
-
-  final int pageGeneralAnimationTimeInMillSec = 300;
-
-  List<TargetFocus> targets = <TargetFocus>[];
+  final AppTutorialBrain appTutorial = AppTutorialBrain();
 
   // List of pages.
   List<Widget> pages = <Widget>[
@@ -81,21 +76,20 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
           return AnimatedTheirTasteWidget();
         break;
       default:
-        if (selectedTabIndex == MainNavigationScreen.PROFILE_PAGE_INDEX)
-          return VoilaLogoWidget(
-            logoOnlyMode: true,
-            whiteLogo: true,
-          );
         return VoilaLogoWidget(
           logoOnlyMode: true,
+          whiteLogo:
+              selectedTabIndex == MainNavigationScreen.PROFILE_PAGE_INDEX,
         );
     }
     return VoilaLogoWidget(
       logoOnlyMode: true,
+      whiteLogo: selectedTabIndex == MainNavigationScreen.PROFILE_PAGE_INDEX,
     );
   }
 
   Widget buildSettingWidget() {
+    double settingsScale = 11;
     switch (selectedTabIndex) {
       case MainNavigationScreen.PROFILE_PAGE_INDEX:
         return CircleButton(
@@ -113,7 +107,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
                         : 1,
                 child: Image.asset(
                   BetaIconPaths.voilaSwipeSettingsButtonPath,
-                  scale: 12,
+                  scale: settingsScale,
                 ),
               ),
               AnimatedScale(
@@ -148,7 +142,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
                         : 1,
                 child: Image.asset(
                   BetaIconPaths.voilaSwipeSettingsButtonPath,
-                  scale: 12,
+                  scale: settingsScale,
                 ),
               ),
               AnimatedScale(
@@ -180,7 +174,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
                         : 0,
                 child: Image.asset(
                   BetaIconPaths.voilaSwipeSettingsButtonPath,
-                  scale: 12,
+                  scale: settingsScale,
                 ),
               ),
               AnimatedScale(
@@ -212,7 +206,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
                         : 1,
                 child: Image.asset(
                   BetaIconPaths.voilaSwipeSettingsButtonPath,
-                  scale: 12,
+                  scale: settingsScale,
                 ),
               ),
               AnimatedScale(
@@ -247,33 +241,25 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     );
   }
 
-  void switchTab(int index) {
+  Future<void> switchTab(int index) async {
     //<debug>
     print('GOING TO PAGE:- index ~$index');
-    MainNavigationScreen.pageController.animateToPage(index,
+    await MainNavigationScreen.pageController.animateToPage(index,
         duration: Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
         curve: Curves.fastOutSlowIn);
+    changeColor();
   }
 
   void openVoilaSettings() {
     Get.toNamed(VoilaPage.routeName);
   }
 
-  Widget DoubleIconToStack(IconData icon1, IconData icon2) {
-    return Stack(
-      alignment: Alignment.bottomLeft,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 4.0, bottom: 4),
-          child: Icon(icon1),
-        ),
-        Container(
-          width: 27,
-          color: Colors.black,
-          child: Icon(icon2),
-        ),
-      ],
-    );
+  void changeColor() {
+    if (MainNavigationScreen.appBarColorAnimationController.isCompleted &&
+        selectedTabIndex != MainNavigationScreen.PROFILE_PAGE_INDEX)
+      MainNavigationScreen.appBarColorAnimationController.reverse();
+    else if (selectedTabIndex == MainNavigationScreen.PROFILE_PAGE_INDEX)
+      MainNavigationScreen.appBarColorAnimationController.forward();
   }
 
   @override
@@ -288,9 +274,23 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
         .animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
     if (selectedTabIndex == MainNavigationScreen.MATCHING_PAGE_INDEX &&
         startTutorial) {
-      WidgetsBinding.instance.addPostFrameCallback(
-          (_) => Future.delayed(Duration(milliseconds: 200), showTutorial));
+      WidgetsBinding.instance.addPostFrameCallback((_) => Future.delayed(
+          Duration(milliseconds: 200), appTutorial.showTutorial(context)));
     }
+    MainNavigationScreen.appBarColorAnimationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 200),
+    )
+      ..addStatusListener((status) {})
+      ..addListener(() {
+        setState(() {});
+      });
+    _backgroundColor =
+        ColorTween(begin: backgroundThemeColor, end: Colors.black).animate(
+      CurvedAnimation(
+          parent: MainNavigationScreen.appBarColorAnimationController,
+          curve: Curves.easeIn),
+    );
     super.initState();
 
     // initialize the `_selectedTabIndex` variable with the value provided by appstate
@@ -307,175 +307,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     super.dispose();
   }
 
-  void showTutorial() {
-    initTargets();
-    VoilaTutorial = TutorialCoachMark(
-      context,
-      hideSkip: true,
-      alignSkip: Alignment.centerLeft,
-      targets: targets,
-      colorShadow: Colors.black.withOpacity(0.7),
-      textSkip: "SKIP",
-      paddingFocus: 10,
-      opacityShadow: 0.8,
-      onFinish: () async {
-        print("finish");
-
-        await Get.toNamed(VoilaPage.routeName, arguments: true);
-
-        MainNavigationScreen.pageController.animateToPage(
-            MainNavigationScreen.CONVERSATIONS_PAGE_INDEX,
-            duration: Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
-            curve: Curves.fastOutSlowIn);
-        Future.delayed(
-            Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
-            showStage2Tutorial);
-      },
-    )..show();
-  }
-
-  void initTargets() {
-    targets.clear();
-    targets.add(
-      TargetFocus(
-        identify: "filterButtonAppBar",
-        keyTarget: filterButton,
-        alignSkip: Alignment.bottomCenter,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (context, controller) {
-              return GestureDetector(
-                onTap: () {
-                  print('clicked on overlay');
-                },
-                child: Container(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "Click here for basic filters",
-                        style: LargeTitleStyleWhite,
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          VoilaTutorial.next();
-                        },
-                        child: Text(
-                          'NEXT',
-                          style: LargeTitleStyleWhite.copyWith(
-                              decoration: TextDecoration.underline,
-                              color: Colors.blueAccent),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-    targets.add(
-      TargetFocus(
-        identify: "SearchButtonAppBar",
-        keyTarget: searchButton,
-        alignSkip: Alignment.bottomCenter,
-        contents: [
-          TargetContent(
-            align: ContentAlign.bottom,
-            builder: (context, controller) {
-              return Container(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Click here for advanced search",
-                      style: LargeTitleStyleWhite,
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  void showStage2Tutorial() {
-    initStage2Targets();
-    VoilaTutorialStage2 = TutorialCoachMark(
-      context,
-      hideSkip: true,
-      alignSkip: Alignment.centerLeft,
-      targets: targets,
-      colorShadow: Colors.black.withOpacity(0.7),
-      textSkip: "SKIP",
-      paddingFocus: 10,
-      opacityShadow: 0.8,
-      onFinish: () {
-        MainNavigationScreen.pageController.animateToPage(
-            MainNavigationScreen.MATCHING_PAGE_INDEX,
-            duration: Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
-            curve: Curves.fastOutSlowIn);
-      },
-    )..show();
-  }
-
-  void initStage2Targets() {
-    targets.clear();
-    targets.add(
-      TargetFocus(
-        identify: "conversationsYouStarted",
-        keyTarget: numberOfConversationsWidget,
-        alignSkip: Alignment.bottomCenter,
-        contents: [
-          TargetContent(
-            align: ContentAlign.left,
-            builder: (context, controller) {
-              return GestureDetector(
-                onTap: () {
-                  VoilaTutorialStage2.next();
-                },
-                child: Container(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        "For more meaningful connections, we limit each user number of conversation starts!",
-                        style: LargeTitleStyleWhite.copyWith(
-                            color: Colors.lightBlueAccent, fontSize: 22),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        'Click anywhere to start swiping!\n\nEnjoy ☺️',
-                        style: LargeTitleStyleWhite,
-                        textAlign: TextAlign.center,
-                      )
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     print('Building main navigation screen!!!!!!!!!!!!!!');
@@ -487,10 +318,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
         appBar: CustomAppBar(
           trailingPad: 0,
           hasVerticalPadding: false,
-          backgroundColor:
-              selectedTabIndex == MainNavigationScreen.PROFILE_PAGE_INDEX
-                  ? Colors.black
-                  : backgroundThemeColor,
+          backgroundColor: _backgroundColor.value,
           elevation: 0,
           centerWidget: ListenerWidget(
               notifier: SettingsData.instance,
@@ -510,52 +338,25 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
           hasBackButton: false,
           customTitle: Container(
             key: searchButton,
-            padding: EdgeInsets.only(left: 10.0),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: selectedTabIndex ==
-                            MainNavigationScreen.MATCHING_PAGE_INDEX
-                        ? () {
-                            openVoilaSettings();
-                          }
-                        : null,
-                    child: AnimatedOpacity(
-                      opacity: selectedTabIndex ==
-                              MainNavigationScreen.MATCHING_PAGE_INDEX
-                          ? 1
-                          : 0,
-                      duration: Duration(
-                          milliseconds: pageGeneralAnimationTimeInMillSec),
-                      child: Image.asset(
-                        BetaIconPaths.voilaSearchSettingsPath,
-                        scale: 12,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  AnimatedOpacity(
-                    duration: Duration(
-                        milliseconds: pageGeneralAnimationTimeInMillSec),
-                    opacity: selectedTabIndex ==
-                            MainNavigationScreen.MATCHING_PAGE_INDEX
+            padding: EdgeInsets.only(left: 18),
+            child: GestureDetector(
+              onTap:
+                  selectedTabIndex == MainNavigationScreen.MATCHING_PAGE_INDEX
+                      ? () {
+                          openVoilaSettings();
+                        }
+                      : null,
+              child: AnimatedOpacity(
+                opacity:
+                    selectedTabIndex == MainNavigationScreen.MATCHING_PAGE_INDEX
                         ? 1
                         : 0,
-                    child: GestureDetector(
-                      onTap: selectedTabIndex ==
-                              MainNavigationScreen.MATCHING_PAGE_INDEX
-                          ? () {
-                              showTutorial();
-                            }
-                          : null,
-                      child: Icon(Icons.info),
-                    ),
-                  ),
-                ],
+                duration:
+                    Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
+                child: Image.asset(
+                  BetaIconPaths.voilaSearchSettingsPath,
+                  scale: 12,
+                ),
               ),
             ),
           ),
@@ -589,8 +390,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
           showUnselectedLabels: false,
           elevation: 0.0,
           currentIndex: selectedTabIndex,
-          onTap: (index) {
-            switchTab(index);
+          onTap: (index) async {
+            await switchTab(index);
 
             // then jump to the new page.
           },

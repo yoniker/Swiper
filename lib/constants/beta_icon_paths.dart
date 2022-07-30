@@ -8,12 +8,18 @@ class BetaIconPaths {
   /// The path to the active Profile Tab image.
   static const String activeVoilaTabIconPath = 'assets/images/voila.png';
 
+  static const String quillPenIconPath = 'assets/images/quill-pen1.png';
+
   /// Voila search filter button.
   static const String voilaSearchSettingsPath = 'assets/images/search.png';
 
+  static const String mirrorFemalePath = 'assets/images/mirror_female.png';
+
+  static const String mirrorMalePath = 'assets/images/mirror_male.png';
+
   static const String settingsIconPath = 'assets/images/gear.png';
 
-  static const String voilaCelebrityIconPath = 'assets/images/fame.png';
+  static const String voilaCelebrityIconPath = 'assets/images/star2.png';
 
   /// Swipe settings button icon.
   static const String voilaSwipeSettingsButtonPath =

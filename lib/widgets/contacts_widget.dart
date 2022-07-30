@@ -133,7 +133,9 @@ class _ContactsWidgetState extends State<ContactsWidget> {
                                 name: 'Keep swiping!',
                                 onTap: () {
                                   MainNavigationScreen.pageController
-                                      .animateToPage(0,
+                                      .animateToPage(
+                                          MainNavigationScreen
+                                              .MATCHING_PAGE_INDEX,
                                           duration: Duration(milliseconds: 300),
                                           curve: Curves.fastOutSlowIn);
                                 },

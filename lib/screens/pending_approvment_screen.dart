@@ -4,6 +4,8 @@ import 'package:betabeta/constants/url-consts.dart';
 import 'package:betabeta/screens/account_settings.dart';
 import 'package:betabeta/screens/current_user_profile_view_screen.dart';
 import 'package:betabeta/screens/profile_edit_screen.dart';
+import 'package:betabeta/screens/profile_screen.dart';
+import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:betabeta/services/new_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -35,11 +37,6 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
   @override
   void initState() {
     super.initState();
-    mountedLoader(_syncFromServer);
-  }
-
-  void _syncFromServer() async {
-    await NewNetworkService.instance.syncCurrentProfileImagesUrls();
   }
 
   Widget _profilePicDisplay(String? imageUrl) {
@@ -57,7 +54,7 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
       child: Clickable(
         onTap: () async {
           await Get.toNamed(CurrentUserProfileViewScreen.routeName);
-          _syncFromServer();
+          setState(() {});
         },
         child: Material(
           color: Colors.transparent,
@@ -122,68 +119,70 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
                 children: [
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.only(top: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(20),
-                      ),
-                    ),
-                    child: SafeArea(
-                      child: Column(
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CircleButton(
-                                onPressed: () {
-                                  Get.toNamed(MyLookALikeScreen.routeName);
-                                },
-                                color: Colors.white,
-                                child: Image.asset(
-                                  BetaIconPaths.voilaCelebrityIconPath,
-                                  scale: 4,
-                                ),
-                              ),
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  AnimatedPercentageCircleProfileWidget(
-                                    center:
-                                        _profilePicDisplay(_profileImageToShow),
-                                    buttonBackgroundColor: Colors.black,
-                                    key: GlobalKey(),
+                    child: CustomPaint(
+                      painter: ArcPainter2(),
+                      child: SafeArea(
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.02,
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CircleButton(
+                                  onPressed: () {
+                                    Get.toNamed(MyLookALikeScreen.routeName);
+                                  },
+                                  color: Colors.white,
+                                  child: Image.asset(
+                                    BetaIconPaths.voilaCelebrityIconPath,
+                                    scale: 4,
                                   ),
-                                  RoundedButton(
-                                    name: 'Edit Profile',
-                                    onTap: () async {
-                                      await Get.toNamed(
-                                          ProfileEditScreen.routeName);
-                                      _syncFromServer();
-                                    },
-                                    minWidth: 0,
-                                  ),
-                                  SizedBox(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.03,
-                                  )
-                                ],
-                              ),
-                              CircleButton(
-                                color: Colors.white,
-                                onPressed: () {
-                                  Get.toNamed(AccountSettingsScreen.routeName);
-                                },
-                                child: Image.asset(
-                                  BetaIconPaths.voilaSwipeSettingsButtonPath,
-                                  scale: 12,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    AnimatedPercentageCircleProfileWidget(
+                                      center: _profilePicDisplay(
+                                          _profileImageToShow),
+                                      buttonBackgroundColor: Colors.black,
+                                      key: GlobalKey(),
+                                    ),
+                                    RoundedButton(
+                                      elevation: 0,
+                                      name: 'Edit Profile',
+                                      onTap: () async {
+                                        await Get.toNamed(
+                                            ProfileEditScreen.routeName);
+                                        setState(() {});
+                                      },
+                                      minWidth: 0,
+                                    ),
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.03,
+                                    )
+                                  ],
+                                ),
+                                CircleButton(
+                                  color: Colors.white,
+                                  onPressed: () {
+                                    Get.toNamed(
+                                        AccountSettingsScreen.routeName);
+                                  },
+                                  child: Image.asset(
+                                    BetaIconPaths.voilaSwipeSettingsButtonPath,
+                                    scale: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -250,4 +249,26 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
       },
     );
   }
+}
+
+class ArcPainter2 extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paint = Paint()
+      ..color = Colors.black
+      ..strokeWidth = 10
+      ..style = PaintingStyle.fill;
+    var paint2 = Paint()..style = PaintingStyle.fill;
+    final arc1 = Path();
+    final rect = Rect.fromPoints(Offset(size.width * 0.0, size.height * 0),
+        Offset(size.width, size.height * 0.901));
+    arc1.moveTo(size.width * 0.0, size.height * 0.9);
+    arc1.arcToPoint(Offset(size.width, size.height * 0.9),
+        radius: Radius.circular(650), clockwise: false);
+    canvas.drawPath(arc1, paint);
+    canvas.drawRect(rect, paint2);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

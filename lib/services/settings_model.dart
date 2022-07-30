@@ -59,39 +59,52 @@ class SettingsData extends ChangeNotifier {
   static const _debounceSettingsTime =
       Duration(milliseconds: 200); //Debounce time such that we notify listeners
 
-  static bool shouldResetMatchEngineAfterPosting = false; //This exists because of a situation where one send to server but dont reset engine overrode the send to server and reset (and matches were not reset)
+  static bool shouldResetMatchEngineAfterPosting =
+      false; //This exists because of a situation where one send to server but dont reset engine overrode the send to server and reset (and matches were not reset)
 
-  static bool isNotEmptyString(dynamic s){
-    if(s==null){return false;}
-    if(!(s is String)){return false;}
-    return s.length >0;
-  }
-
-  static bool castStringToBool(dynamic s,{bool onNoCast=false}){
-    if (!isNotEmptyString(s)){return onNoCast;}
-    return s.toLowerCase()=='true';
-  }
-  
-  static List<String> castToListString(dynamic s,{List<String> onNoCast= const []}){
-    if(s==null){return onNoCast;}
-    if(!(s is String)) {return onNoCast;}
-    try{
-      List<String> castedList = List<String>.from(jsonDecode(s));
-      return castedList;
-
-
+  static bool isNotEmptyString(dynamic s) {
+    if (s == null) {
+      return false;
     }
+    if (!(s is String)) {
+      return false;
+    }
+    return s.length > 0;
+  }
 
-    catch(e){
+  static bool castStringToBool(dynamic s, {bool onNoCast = false}) {
+    if (!isNotEmptyString(s)) {
       return onNoCast;
     }
-
+    return s.toLowerCase() == 'true';
   }
 
-  static int castToInt(dynamic s , {required int onNoCast}){
-    if(s==null){return onNoCast;}
-    if(s is int){return s;}
-    if(s is double){return s.round();}
+  static List<String> castToListString(dynamic s,
+      {List<String> onNoCast = const []}) {
+    if (s == null) {
+      return onNoCast;
+    }
+    if (!(s is String)) {
+      return onNoCast;
+    }
+    try {
+      List<String> castedList = List<String>.from(jsonDecode(s));
+      return castedList;
+    } catch (e) {
+      return onNoCast;
+    }
+  }
+
+  static int castToInt(dynamic s, {required int onNoCast}) {
+    if (s == null) {
+      return onNoCast;
+    }
+    if (s is int) {
+      return s;
+    }
+    if (s is double) {
+      return s.round();
+    }
     return onNoCast;
   }
 
@@ -150,9 +163,10 @@ class SettingsData extends ChangeNotifier {
     readSettingsFromShared();
   }
 
-
   Future<void> readSettingsFromShared() async {
-    if(_readFromShared == true) {return;}
+    if (_readFromShared == true) {
+      return;
+    }
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     _preferredGender =
         sharedPreferences.getString(PREFERRED_GENDER_KEY) ?? _preferredGender;
@@ -167,7 +181,8 @@ class SettingsData extends ChangeNotifier {
         sharedPreferences.getInt(AUDITION_COUNT_KEY) ?? _auditionCount;
     _filterName = sharedPreferences.getString(FILTER_NAME_KEY) ?? _filterName;
     _filterDisplayImageUrl =
-        sharedPreferences.getString(FILTER_DISPLAY_IMAGE_URL_KEY) ?? _filterDisplayImageUrl;
+        sharedPreferences.getString(FILTER_DISPLAY_IMAGE_URL_KEY) ??
+            _filterDisplayImageUrl;
     _celebId = sharedPreferences.getString(CELEB_ID_KEY) ?? _celebId;
     _tasteMixRatio =
         sharedPreferences.getDouble(TASTE_MIX_RATIO_KEY) ?? _tasteMixRatio;
@@ -215,9 +230,11 @@ class SettingsData extends ChangeNotifier {
     _pets = sharedPreferences.getStringList(PETS_KEY) ?? _pets;
     _heightInCm = sharedPreferences.getInt(HEIGHT_IN_CM_KEY) ?? _heightInCm;
     _jobTitle = sharedPreferences.getString(JOB_TITLE_KEY) ?? _jobTitle;
-    _textSearch = sharedPreferences.getString(TEXT_SEARCH_KEY)??_textSearch;
-    _registrationStatus = sharedPreferences.getString(REGISTRATION_STATUS_KEY)??_registrationStatus;
-    _isTestUser = sharedPreferences.getBool(IS_TEST_USER_KEY)??_isTestUser;
+    _textSearch = sharedPreferences.getString(TEXT_SEARCH_KEY) ?? _textSearch;
+    _registrationStatus =
+        sharedPreferences.getString(REGISTRATION_STATUS_KEY) ??
+            _registrationStatus;
+    _isTestUser = sharedPreferences.getBool(IS_TEST_USER_KEY) ?? _isTestUser;
     _readFromShared = true;
 
     return;
@@ -229,20 +246,20 @@ class SettingsData extends ChangeNotifier {
     return _readFromShared;
   }
 
-
-
-
-  void updateFromServerData(Map<dynamic,dynamic> userData){
-      _uid = userData[SettingsData.FIREBASE_UID_KEY] ?? _uid;
+  void updateFromServerData(Map<dynamic, dynamic> userData) {
+    _uid = userData[SettingsData.FIREBASE_UID_KEY] ?? _uid;
     _preferredGender = userData[PREFERRED_GENDER_KEY] ?? _preferredGender;
     _name = userData[NAME_KEY] ?? _name;
     _facebookId = userData[FACEBOOK_ID_KEY] ?? _facebookId;
-    _facebookProfileImageUrl = userData[FACEBOOK_PROFILE_IMAGE_URL_KEY] ?? _facebookProfileImageUrl;
+    _facebookProfileImageUrl =
+        userData[FACEBOOK_PROFILE_IMAGE_URL_KEY] ?? _facebookProfileImageUrl;
     _minAge = userData[MIN_AGE_KEY].round() ?? _minAge;
     _maxAge = userData[MAX_AGE_KEY].round() ?? _maxAge;
-    _auditionCount = castToInt(userData[AUDITION_COUNT_KEY],onNoCast: auditionCount);
+    _auditionCount =
+        castToInt(userData[AUDITION_COUNT_KEY], onNoCast: auditionCount);
     _filterName = userData[FILTER_NAME_KEY] ?? _filterName;
-    _filterDisplayImageUrl = userData[FILTER_DISPLAY_IMAGE_URL_KEY] ?? _filterDisplayImageUrl;
+    _filterDisplayImageUrl =
+        userData[FILTER_DISPLAY_IMAGE_URL_KEY] ?? _filterDisplayImageUrl;
     _celebId = userData[CELEB_ID_KEY] ?? _celebId;
     _tasteMixRatio = userData[TASTE_MIX_RATIO_KEY] ?? _tasteMixRatio;
     _lastSync = 0;
@@ -251,14 +268,20 @@ class SettingsData extends ChangeNotifier {
     _email = userData[EMAIL_KEY] ?? _email;
     _userGender = userData[USER_GENDER_KEY] ?? _userGender;
     _userDescription = userData[USER_DESCRIPTION_KEY] ?? _userDescription;
-    _showUserGender = castStringToBool(userData[SHOW_USER_GENDER_KEY],onNoCast: _showUserGender);
+    _showUserGender = castStringToBool(userData[SHOW_USER_GENDER_KEY],
+        onNoCast: _showUserGender);
     _userBirthday = userData[USER_BIRTHDAY_KEY] ?? _userBirthday;
-    _relationshipType = userData[USER_RELATIONSHIP_TYPE_KEY] ?? _relationshipType;
+    _relationshipType =
+        userData[USER_RELATIONSHIP_TYPE_KEY] ?? _relationshipType;
     _profileImagesUrls = userData[PROFILE_IMAGES_KEY] ?? _profileImagesUrls;
-    _locationDescription = userData[LOCATION_DESCRIPTION_KEY] ?? _locationDescription;
-    _searchDistanceEnabled = castStringToBool(userData[SEARCH_DISTANCE_ENABLED_KEY],onNoCast: _searchDistanceEnabled);
+    _locationDescription =
+        userData[LOCATION_DESCRIPTION_KEY] ?? _locationDescription;
+    _searchDistanceEnabled = castStringToBool(
+        userData[SEARCH_DISTANCE_ENABLED_KEY],
+        onNoCast: _searchDistanceEnabled);
     _radius = userData[RADIUS_KEY] ?? _radius;
-    _showDummyProfiles = castStringToBool(userData[GET_DUMMY_PROFILES_KEY],onNoCast: _showDummyProfiles);
+    _showDummyProfiles = castStringToBool(userData[GET_DUMMY_PROFILES_KEY],
+        onNoCast: _showDummyProfiles);
     _school = userData[SCHOOL_KEY] ?? _school;
     _religion = userData[RELIGION_KEY] ?? _religion;
     _zodiac = userData[ZODIAC_KEY] ?? _zodiac;
@@ -268,58 +291,93 @@ class SettingsData extends ChangeNotifier {
     _education = userData[EDUCATION_KEY] ?? _education;
     _children = userData[CHILDREN_KEY] ?? _children;
     _covid_vaccine = userData[COVID_VACCINE_KEY] ?? _covid_vaccine;
-    _hobbies = castToListString(userData[HOBBIES_KEY],onNoCast: _hobbies);
-    _pets = castToListString(userData[PETS_KEY],onNoCast: _pets);
+    _hobbies = castToListString(userData[HOBBIES_KEY], onNoCast: _hobbies);
+    _pets = castToListString(userData[PETS_KEY], onNoCast: _pets);
     _heightInCm = castToInt(userData[HEIGHT_IN_CM_KEY], onNoCast: _heightInCm);
     _jobTitle = userData[JOB_TITLE_KEY] ?? _jobTitle;
-    _textSearch = userData[TEXT_SEARCH_KEY]??_textSearch;
-    _registrationStatus = userData[REGISTRATION_STATUS_KEY]??_registrationStatus;
+    _textSearch = userData[TEXT_SEARCH_KEY] ?? _textSearch;
+    _registrationStatus =
+        userData[REGISTRATION_STATUS_KEY] ?? _registrationStatus;
 
-      savePreferences(FIREBASE_UID_KEY, _uid,sendServer: false,resetMatchEngine: false);
-      savePreferences(PREFERRED_GENDER_KEY, _preferredGender,sendServer: false,resetMatchEngine: false);
-      savePreferences(NAME_KEY, _name,sendServer: false,resetMatchEngine: false);
-      savePreferences(FACEBOOK_PROFILE_IMAGE_URL_KEY, _facebookProfileImageUrl,sendServer: false,resetMatchEngine: false);
-      savePreferences(MIN_AGE_KEY, _minAge,sendServer: false,resetMatchEngine: false);
-      savePreferences(MAX_AGE_KEY, _maxAge,sendServer: false,resetMatchEngine: false);
-      savePreferences(AUDITION_COUNT_KEY, _auditionCount,sendServer: false,resetMatchEngine: false);
-      savePreferences(FILTER_NAME_KEY, _filterName,sendServer: false,resetMatchEngine: false);
-      savePreferences(FILTER_DISPLAY_IMAGE_URL_KEY, _filterDisplayImageUrl,sendServer: false,resetMatchEngine: false);
-      savePreferences(CELEB_ID_KEY, _celebId,sendServer: false,resetMatchEngine: false);
-      savePreferences(TASTE_MIX_RATIO_KEY, _tasteMixRatio,sendServer: false,resetMatchEngine: false);
-      savePreferences(FCM_TOKEN_KEY, _fcmToken,sendServer: false,resetMatchEngine: false);
-      savePreferences(FACEBOOK_BIRTHDAY_KEY, _facebookBirthday,sendServer: false,resetMatchEngine: false);
-      savePreferences(EMAIL_KEY, _email,sendServer: false,resetMatchEngine: false);
-      savePreferences(USER_GENDER_KEY, _userGender,sendServer: false,resetMatchEngine: false);
-      savePreferences(USER_DESCRIPTION_KEY, _userDescription,sendServer: false,resetMatchEngine: false);
-      savePreferences(SHOW_USER_GENDER_KEY, _showUserGender,sendServer: false,resetMatchEngine: false);
-      savePreferences(USER_BIRTHDAY_KEY, _userBirthday,sendServer: false,resetMatchEngine: false);
-      savePreferences(USER_RELATIONSHIP_TYPE_KEY, _relationshipType,sendServer: false,resetMatchEngine: false);
-      savePreferences(PROFILE_IMAGES_KEY, _profileImagesUrls,sendServer: false,resetMatchEngine: false);
-      savePreferences(LOCATION_DESCRIPTION_KEY, _locationDescription,sendServer: false,resetMatchEngine: false);
-      savePreferences(SEARCH_DISTANCE_ENABLED_KEY, _searchDistanceEnabled,sendServer: false,resetMatchEngine: false);
-      savePreferences(RADIUS_KEY, _radius,sendServer: false,resetMatchEngine: false);
-      savePreferences(GET_DUMMY_PROFILES_KEY, _showDummyProfiles,sendServer: false,resetMatchEngine: false);
-      savePreferences(SCHOOL_KEY, _school,sendServer: false,resetMatchEngine: false);
-      savePreferences(RELIGION_KEY, _religion,sendServer: false,resetMatchEngine: false);
-      savePreferences(ZODIAC_KEY, _zodiac,sendServer: false,resetMatchEngine: false);
-      savePreferences(FITNESS_KEY, _fitness,sendServer: false,resetMatchEngine: false);
-      savePreferences(SMOKING_KEY, _smoking,sendServer: false,resetMatchEngine: false);
-      savePreferences(DRINKING_KEY, _drinking,sendServer: false,resetMatchEngine: false);
-      savePreferences(EDUCATION_KEY, _education,sendServer: false,resetMatchEngine: false);
-      savePreferences(CHILDREN_KEY, _children,sendServer: false,resetMatchEngine: false);
-      savePreferences(COVID_VACCINE_KEY, _covid_vaccine,sendServer: false,resetMatchEngine: false);
-      savePreferences(HOBBIES_KEY, _hobbies,sendServer: false,resetMatchEngine: false);
-      savePreferences(PETS_KEY, _pets,sendServer: false,resetMatchEngine: false);
-      savePreferences(HEIGHT_IN_CM_KEY, _heightInCm,sendServer: false,resetMatchEngine: false);
-      savePreferences(JOB_TITLE_KEY, _jobTitle,sendServer: false,resetMatchEngine: false);
-      savePreferences(TEXT_SEARCH_KEY, _textSearch,sendServer: false,resetMatchEngine: false);
-      savePreferences(REGISTRATION_STATUS_KEY, _registrationStatus,sendServer: false,resetMatchEngine: false);
+    savePreferences(FIREBASE_UID_KEY, _uid,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(PREFERRED_GENDER_KEY, _preferredGender,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(NAME_KEY, _name,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(FACEBOOK_PROFILE_IMAGE_URL_KEY, _facebookProfileImageUrl,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(MIN_AGE_KEY, _minAge,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(MAX_AGE_KEY, _maxAge,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(AUDITION_COUNT_KEY, _auditionCount,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(FILTER_NAME_KEY, _filterName,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(FILTER_DISPLAY_IMAGE_URL_KEY, _filterDisplayImageUrl,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(CELEB_ID_KEY, _celebId,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(TASTE_MIX_RATIO_KEY, _tasteMixRatio,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(FCM_TOKEN_KEY, _fcmToken,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(FACEBOOK_BIRTHDAY_KEY, _facebookBirthday,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(EMAIL_KEY, _email,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(USER_GENDER_KEY, _userGender,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(USER_DESCRIPTION_KEY, _userDescription,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(SHOW_USER_GENDER_KEY, _showUserGender,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(USER_BIRTHDAY_KEY, _userBirthday,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(USER_RELATIONSHIP_TYPE_KEY, _relationshipType,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(PROFILE_IMAGES_KEY, _profileImagesUrls,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(LOCATION_DESCRIPTION_KEY, _locationDescription,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(SEARCH_DISTANCE_ENABLED_KEY, _searchDistanceEnabled,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(RADIUS_KEY, _radius,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(GET_DUMMY_PROFILES_KEY, _showDummyProfiles,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(SCHOOL_KEY, _school,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(RELIGION_KEY, _religion,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(ZODIAC_KEY, _zodiac,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(FITNESS_KEY, _fitness,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(SMOKING_KEY, _smoking,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(DRINKING_KEY, _drinking,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(EDUCATION_KEY, _education,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(CHILDREN_KEY, _children,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(COVID_VACCINE_KEY, _covid_vaccine,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(HOBBIES_KEY, _hobbies,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(PETS_KEY, _pets,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(HEIGHT_IN_CM_KEY, _heightInCm,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(JOB_TITLE_KEY, _jobTitle,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(TEXT_SEARCH_KEY, _textSearch,
+        sendServer: false, resetMatchEngine: false);
+    savePreferences(REGISTRATION_STATUS_KEY, _registrationStatus,
+        sendServer: false, resetMatchEngine: false);
   }
-
-
-
-
-
 
   String get preferredGender {
     return _preferredGender;
@@ -394,13 +452,14 @@ class SettingsData extends ChangeNotifier {
     savePreferences(MAX_AGE_KEY, newMaxAge);
   }
 
-  bool get isTestUser{
+  bool get isTestUser {
     return _isTestUser;
   }
 
-  set isTestUser(bool newIsTestUser){
+  set isTestUser(bool newIsTestUser) {
     _isTestUser = newIsTestUser;
-    savePreferences(IS_TEST_USER_KEY, newIsTestUser,sendServer: false,resetMatchEngine: false);
+    savePreferences(IS_TEST_USER_KEY, newIsTestUser,
+        sendServer: false, resetMatchEngine: false);
   }
 
   int get auditionCount {
@@ -415,25 +474,31 @@ class SettingsData extends ChangeNotifier {
     savePreferences(AUDITION_COUNT_KEY, newAuditionCount);
   }
 
-  String get filterName{ //TODO remove public support?
+  String get filterName {
+    //TODO remove public support?
     return _filterName;
   }
 
-   set filterName(String newFilterName){ //TODO remove public support
-    if(newFilterName==_filterName) {return;}
+  set filterName(String newFilterName) {
+    //TODO remove public support
+    if (newFilterName == _filterName) {
+      return;
+    }
     _filterName = newFilterName;
-    savePreferences(FILTER_NAME_KEY, newFilterName,durationDelaySendServer: Duration(milliseconds: 0));
+    savePreferences(FILTER_NAME_KEY, newFilterName,
+        durationDelaySendServer: Duration(milliseconds: 0));
   }
 
-  FilterType get filterType{
-    return FilterType.values.firstWhere((filter) => filter.name==_filterName,orElse:()=>FilterType.NONE);
+  FilterType get filterType {
+    return FilterType.values.firstWhere((filter) => filter.name == _filterName,
+        orElse: () => FilterType.NONE);
   }
 
-  set filterType(FilterType filterType){
+  set filterType(FilterType filterType) {
     this.filterName = filterType.name;
   }
 
-  String get filterDisplayImageUrl{
+  String get filterDisplayImageUrl {
     return _filterDisplayImageUrl;
   }
 
@@ -490,16 +555,15 @@ class SettingsData extends ChangeNotifier {
     savePreferences(GET_DUMMY_PROFILES_KEY, newShowDummyProfiles);
   }
 
-  bool get  userTookTutorial
-  {
+  bool get userTookTutorial {
     return _userTookTutorial;
   }
 
   set userTookTutorial(bool newUserTookTutorial) {
     _userTookTutorial = newUserTookTutorial;
-    savePreferences(USER_TOOK_TUTORIAL_KEY, newUserTookTutorial,sendServer: false,resetMatchEngine: false);
+    savePreferences(USER_TOOK_TUTORIAL_KEY, newUserTookTutorial,
+        sendServer: false, resetMatchEngine: false);
   }
-
 
   double get lastSync {
     return _lastSync;
@@ -525,8 +589,6 @@ class SettingsData extends ChangeNotifier {
     _fcmToken = newToken;
     savePreferences(FCM_TOKEN_KEY, newToken, resetMatchEngine: false);
   }
-
-
 
   String get uid {
     return _uid;
@@ -813,7 +875,6 @@ class SettingsData extends ChangeNotifier {
     savePreferences(PETS_KEY, newPets, resetMatchEngine: false);
   }
 
-
   String get textSearch {
     return _textSearch;
   }
@@ -823,8 +884,7 @@ class SettingsData extends ChangeNotifier {
     savePreferences(TEXT_SEARCH_KEY, newTextSearch);
   }
 
-
-  String get registrationStatus  {
+  String get registrationStatus {
     return _registrationStatus;
   }
 
@@ -832,7 +892,6 @@ class SettingsData extends ChangeNotifier {
     _registrationStatus = newRegistrationStatus;
     savePreferences(REGISTRATION_STATUS_KEY, newRegistrationStatus);
   }
-
 
   int get heightInCm {
     return _heightInCm;
@@ -856,9 +915,12 @@ class SettingsData extends ChangeNotifier {
   }
 
   void savePreferences(String sharedPreferencesKey, dynamic newValue,
-      {bool sendServer = true, bool resetMatchEngine = true,Duration durationDelaySendServer=_debounceSettingsTime}) async {
-      if(sendServer){
-        shouldResetMatchEngineAfterPosting |= resetMatchEngine; //See the comment up in the def to understand why it's here
+      {bool sendServer = true,
+      bool resetMatchEngine = true,
+      Duration durationDelaySendServer = _debounceSettingsTime}) async {
+    if (sendServer) {
+      shouldResetMatchEngineAfterPosting |=
+          resetMatchEngine; //See the comment up in the def to understand why it's here
       if (_debounceServer?.isActive ?? false) {
         _debounceServer!.cancel();
       }
@@ -870,11 +932,12 @@ class SettingsData extends ChangeNotifier {
             shouldResetMatchEngineAfterPosting = false;
           }
         }
-      });}
-      else if (resetMatchEngine){
-        MatchEngine.instance.clear();
-      }
-
+      });
+    } else if (resetMatchEngine) {
+      MatchEngine.instance.clear();
+    }
+    print(
+        'At settings data, because of $sharedPreferencesKey going to notify listeners');
     notifyListeners();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     if (newValue is int) {

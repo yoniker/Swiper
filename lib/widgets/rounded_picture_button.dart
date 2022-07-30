@@ -5,13 +5,17 @@ class RoundedPictureButton extends StatelessWidget {
   final Widget child;
   final double width;
   final double height;
+  final EdgeInsetsGeometry padding;
   final void Function()? onTap;
+  final BoxFit? fit;
   final BorderRadiusGeometry? borderRadius;
   const RoundedPictureButton({
     Key? key,
     required this.image,
     required this.child,
     required this.onTap,
+    this.fit = BoxFit.cover,
+    this.padding = const EdgeInsets.symmetric(vertical: 5),
     this.width = 300,
     this.height = 80,
     this.borderRadius = const BorderRadius.all(
@@ -24,6 +28,7 @@ class RoundedPictureButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        margin: padding,
         width: width,
         height: height,
         decoration: BoxDecoration(
@@ -38,7 +43,7 @@ class RoundedPictureButton extends StatelessWidget {
             ],
             image: DecorationImage(
               image: image,
-              fit: BoxFit.cover,
+              fit: fit,
               colorFilter: ColorFilter.mode(
                   Colors.black.withOpacity(0.75), BlendMode.dstATop),
             ),
