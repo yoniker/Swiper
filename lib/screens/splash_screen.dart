@@ -1,4 +1,6 @@
 import 'package:betabeta/constants/api_consts.dart';
+import 'package:betabeta/constants/assets_paths.dart';
+import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/models/celebs_info_model.dart';
 import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/services/match_engine.dart';
@@ -77,11 +79,10 @@ class _SplashScreenState extends State<SplashScreen>
   void _load() async {
     final routeTo = await _chooseRoute();
 
-      await _initializeApp();
-      if (routeTo == MainNavigationScreen.routeName) {
-        await _initAppAlreadyRegistered();
-      }
-
+    await _initializeApp();
+    if (routeTo == MainNavigationScreen.routeName) {
+      await _initAppAlreadyRegistered();
+    }
 
     if (!navigatedFromNotification) {
       Get.offAllNamed(routeTo);
@@ -101,13 +102,13 @@ class _SplashScreenState extends State<SplashScreen>
               padding: const EdgeInsets.all(6.0),
               child: Container(
                 width: sizeAnimation.value,
-                child: Image.asset('assets/images/voila.png'),
+                child: Image.asset(BetaIconPaths.inactiveVoilaTabIconPath),
               ),
             ),
             Container(
               alignment: Alignment.center,
               child: Image.asset(
-                'assets/images/logo_text.png',
+                BetaIconPaths.logoTextFile,
                 fit: BoxFit.contain,
                 width: 230,
               ),

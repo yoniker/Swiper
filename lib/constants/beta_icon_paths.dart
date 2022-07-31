@@ -61,6 +61,8 @@ class BetaIconPaths {
   /// The path to the App's/Company's Logo.
   static const String appLogoIcon = 'assets/beta_logo_01.png';
 
+  static const String logoTextFile = 'assets/images/logo_text.png';
+
   /// The path to edit-profile-image icon in the Profile Screen.
   static const String editProfileIconPath = 'assets/images/pencil.png';
 

@@ -97,7 +97,7 @@ class _FinishOnboardingScreenState extends State<FinishOnboardingScreen> {
                                 height: 20,
                               ),
                               Text(
-                                'When you start a conversation, there is 48 hours for both parties to keep the match.',
+                                'You can start up to 3 conversations unless they message you first!',
                                 style: kWhiteDescriptionShadowStyle.copyWith(
                                     color: Colors.white,
                                     fontSize: 20,

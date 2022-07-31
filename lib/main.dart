@@ -5,6 +5,7 @@ import 'package:betabeta/screens/chat/chat_screen.dart';
 import 'package:betabeta/screens/chat/other_user_profile_screen.dart';
 import 'package:betabeta/screens/complete_profile_pageview_screen.dart';
 import 'package:betabeta/screens/my_look_a_like_screen.dart';
+import 'package:betabeta/screens/onboarding/onboarding_pageview_screen.dart';
 import 'package:betabeta/screens/onboarding/tutorial_screen_starter.dart';
 import 'package:betabeta/screens/pending_approvment_screen.dart';
 import 'package:betabeta/screens/user_edit/kids_screen.dart';
@@ -51,6 +52,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:get/get.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -195,7 +197,10 @@ void main() async {
             name: MyLookALikeScreen.routeName, page: () => MyLookALikeScreen()),
         GetPage(
             name: PendingApprovementScreen.routeName,
-            page: () => PendingApprovementScreen())
+            page: () => PendingApprovementScreen()),
+        GetPage(
+            name: OnboardingPageViewScreen.routeName,
+            page: () => OnboardingPageViewScreen())
       ],
       title: 'Voilà MVP',
       debugShowCheckedModeBanner: false,

@@ -87,6 +87,12 @@ class _ContactsWidgetState extends State<ContactsWidget> {
   }
 
   @override
+  void dispose() {
+    ChatData.instance.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     String maleOrFemaleImage =
         SettingsData.instance.preferredGender == PreferredGender.Women.name

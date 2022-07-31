@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/constants/url-consts.dart';
 import 'package:betabeta/screens/onboarding/phone_screen.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/loginService.dart';
@@ -174,9 +175,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             icon: Icons.facebook_rounded,
                             color: const Color(0xFF0060DB),
                             onTap: () async {
-                              setState(() {
-                                currentlyTryingToLogin = true;
-                              });
                               await _tryFacebookLogin();
                               setState(() {
                                 currentlyTryingToLogin = false;
@@ -230,8 +228,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                         style: kSmallInfoStyleUnderlineWhite,
                                       ),
                                       onPressed: () async {
-                                        final url =
-                                            'https://www.voiladating.com/privacy-policy';
+                                        final url = privacyPolicyUrl;
                                         if (await canLaunch(url)) {
                                           await launch(url);
                                         }
@@ -240,8 +237,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                     SizedBox(width: 20),
                                     TextButton(
                                       onPressed: () async {
-                                        final url =
-                                            'https://www.voiladating.com/privacy-policy';
+                                        final url = privacyPolicyUrl;
                                         if (await canLaunch(url)) {
                                           await launch(url);
                                         }
