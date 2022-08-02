@@ -17,6 +17,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart' as intl;
 
 class ChatScreen extends StatefulWidget {
   ChatScreen({Key? key})
@@ -82,6 +83,21 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
     //AppStateInfo.instance.addListener(listenConversation);
     updateChatData();
     super.initState();
+  }
+
+  TextDirection chatInputTextDirection = TextDirection.ltr;
+  //
+  intl.TextDirection? LTRtoRTL(String text) {
+    if (intl.Bidi.detectRtlDirectionality(text)) {
+      chatInputTextDirection = TextDirection.rtl;
+      return intl.TextDirection.RTL;
+    }
+    chatInputTextDirection = TextDirection.ltr;
+    return intl.TextDirection.LTR;
+  }
+
+  bool isRTL(String text) {
+    return intl.Bidi.detectRtlDirectionality(text);
   }
 
   Widget buildEmptyChatWidget() {
@@ -227,6 +243,18 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
         children: [
           Chat(
             l10n: ChatL10nEn(inputPlaceholder: ' Send a message'),
+            inputOptions: InputOptions(
+                onTextChanged: (input) {
+                  if (isRTL(input))
+                    setState(() {
+                      chatInputTextDirection = TextDirection.rtl;
+                    });
+                  else
+                    setState(() {
+                      chatInputTextDirection = TextDirection.ltr;
+                    });
+                },
+                textDirection: chatInputTextDirection),
             theme: DefaultChatTheme(
               primaryColor: Color(0xFF1565C0),
               secondaryColor: Color(0xFFE0E0E0),
@@ -248,8 +276,13 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
             user: types.User(id: SettingsData.instance.uid),
             showUserAvatars: true,
             onSendPressed: (text) {
-              ChatData.instance.sendMessage(theUser.uid,
-                  jsonEncode({"type": "text", "content": "${text.text}"}));
+              ChatData.instance.sendMessage(
+                  theUser.uid,
+                  jsonEncode({
+                    "type": "text",
+                    "content":
+                        "${intl.BidiFormatter.LTR().wrapWithUnicode(text.text, direction: LTRtoRTL(text.text))}"
+                  }));
             },
             messages: _messages,
             onMessageTap: (context, message) {

@@ -52,6 +52,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -91,6 +92,22 @@ void main() async {
   ));
   runApp(
     GetMaterialApp(
+      localizationsDelegates: [
+        // ... app-specific localization delegate[s] here
+        // TODO: uncomment the line below after codegen
+        // AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en', ''), // English, no country code
+        const Locale('ar', ''), // Arabic, no country code
+        const Locale('he', ''),
+        const Locale.fromSubtags(
+            languageCode: 'zh'), // Chinese *See Advanced Locales below*
+        // ... other locales the app supports
+      ],
       home: SplashScreen(),
       getPages: [
         GetPage(
