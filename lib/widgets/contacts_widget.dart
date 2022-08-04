@@ -48,10 +48,10 @@ class _ContactsWidgetState extends State<ContactsWidget> {
   }
 
   void listenContacts() {
-    if (mounted)
-      setState(() {
-        updateConversationsData();
-      });
+    updateConversationsData();
+    if(mounted) {setState(() {
+
+    });}
   }
 
   void maxedOutPopUpDialog() {
