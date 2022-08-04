@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/services/onboarding_flow_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,13 +31,10 @@ class _TutorialScreenStarterState extends State<TutorialScreenStarter>
         setState(() {
           time = time + 100;
         });
-      if (time > 12500) {
+      if (time > 6500) {
         timer.cancel();
         time = 0;
-        Get.offAllNamed(
-            OnboardingFlowController.instance
-                .nextRoute(TutorialScreenStarter.routeName),
-            arguments: true);
+        Get.offAllNamed(MainNavigationScreen.routeName, arguments: true);
       }
     });
     _controller = AnimationController(
@@ -195,36 +193,36 @@ class _TutorialScreenStarterState extends State<TutorialScreenStarter>
                                 ),
                               ),
                             ),
-                            Container(
-                              child: Stack(
-                                alignment: AlignmentDirectional.center,
-                                children: [
-                                  AnimatedOpacity(
-                                    duration: Duration(milliseconds: 300),
-                                    opacity: time > 6500 && time < 9000 ? 1 : 0,
-                                    child: Text(
-                                      "Voilà is different than other apps",
-                                      style: LargeTitleStyleWhite.copyWith(
-                                          color: Colors.redAccent),
-                                      maxLines: 3,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  AnimatedOpacity(
-                                    duration: Duration(milliseconds: 300),
-                                    opacity:
-                                        time > 9500 && time < 12000 ? 1 : 0,
-                                    child: Text(
-                                      "Let's go over the basics",
-                                      style: LargeTitleStyleWhite.copyWith(
-                                          color: Colors.redAccent),
-                                      maxLines: 3,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            // Container(
+                            //   child: Stack(
+                            //     alignment: AlignmentDirectional.center,
+                            //     children: [
+                            //       AnimatedOpacity(
+                            //         duration: Duration(milliseconds: 300),
+                            //         opacity: time > 6500 && time < 9000 ? 1 : 0,
+                            //         child: Text(
+                            //           "Voilà is different than other apps",
+                            //           style: LargeTitleStyleWhite.copyWith(
+                            //               color: Colors.redAccent),
+                            //           maxLines: 3,
+                            //           textAlign: TextAlign.center,
+                            //         ),
+                            //       ),
+                            //       AnimatedOpacity(
+                            //         duration: Duration(milliseconds: 300),
+                            //         opacity:
+                            //             time > 9500 && time < 12000 ? 1 : 0,
+                            //         child: Text(
+                            //           "Let's go over the basics",
+                            //           style: LargeTitleStyleWhite.copyWith(
+                            //               color: Colors.redAccent),
+                            //           maxLines: 3,
+                            //           textAlign: TextAlign.center,
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
                           ],
                         ),
                       ],

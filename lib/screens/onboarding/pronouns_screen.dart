@@ -1,6 +1,7 @@
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/screens/onboarding/onboarding_pageview_screen.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/services/onboarding_flow_controller.dart';
 import 'package:betabeta/widgets/onboarding/progress_bar.dart';
@@ -10,8 +11,9 @@ import 'package:get/get.dart';
 
 class PronounScreen extends StatefulWidget {
   static const String routeName = '/pronounScreen';
+  final void Function()? onNext;
 
-  const PronounScreen({Key? key}) : super(key: key);
+  const PronounScreen({Key? key, this.onNext}) : super(key: key);
 
   @override
   _PronounScreenState createState() => _PronounScreenState();
@@ -36,18 +38,14 @@ class _PronounScreenState extends State<PronounScreen> {
     var padding = MediaQuery.of(context).viewPadding;
     double heightWithoutSafeArea = height - padding.top - padding.bottom;
 
-    return Scaffold(
-      backgroundColor: kBackroundThemeColor,
-      body: SafeArea(
-        child: Column(
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: kBackroundThemeColor,
+        body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(30.0, 20, 30, 0),
-              child: ProgressBar(
-                totalProgressBarPages: kTotalProgressBarPages,
-                page: 3,
-              ),
-            ),
             Expanded(
               child: QuestionnaireWidget(
                 choices: kGenderChoices,
@@ -66,8 +64,8 @@ class _PronounScreenState extends State<PronounScreen> {
                 onSave: elseGender.length != 0
                     ? () {
                         saveSelectedGender();
-                        Get.offAllNamed(OnboardingFlowController.instance
-                            .nextRoute(PronounScreen.routeName));
+                        FocusScope.of(context).unfocus();
+                        widget.onNext?.call();
                       }
                     : null,
               ),

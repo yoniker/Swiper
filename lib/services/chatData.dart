@@ -466,8 +466,8 @@ class ChatData extends ChangeNotifier {
     addMessageToDB(newMessage, otherParticipantsId: otherUserId);
     String? newMessageStatus;
     try {
-      TaskResult result = await AWSServer.sendMessage(
-          otherUserId, messageContent, epochTime);
+      TaskResult result =
+          await AWSServer.sendMessage(otherUserId, messageContent, epochTime);
       newMessageStatus = result == TaskResult.success ? 'Sent' : 'Error';
     } catch (_) {
       newMessageStatus = 'Error';
@@ -634,7 +634,7 @@ class ChatData extends ChangeNotifier {
       if (subscription == null) {
         subscription =
             FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-              print('got the message $message');
+          print('got the message $message');
           controller.add(message.data);
         });
         FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
@@ -752,6 +752,12 @@ class ChatData extends ChangeNotifier {
       await ChatData.instance.updateUserDataFromServer(user.uid);
     }
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    print('Chat data was disposed!');
+    super.dispose();
   }
 
   // Future<void> unmatch(String uid) async {

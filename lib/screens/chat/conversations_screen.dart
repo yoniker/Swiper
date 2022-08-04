@@ -8,8 +8,10 @@ import 'package:betabeta/widgets/conversations_preview_widget.dart';
 import 'package:flutter/material.dart';
 
 class ConversationsScreen extends StatefulWidget {
-  const ConversationsScreen({Key? key}) : super(key: key);
+  const ConversationsScreen({Key? key, this.onClickKeepSwiping})
+      : super(key: key);
   static const String routeName = '/conversations_screen';
+  final void Function()? onClickKeepSwiping;
 
   @override
   _ConversationsScreenState createState() => _ConversationsScreenState();
@@ -79,6 +81,7 @@ class _ConversationsScreenState extends State<ConversationsScreen>
                       children: [
                         ContactsWidget(
                           search: searchProfile.toLowerCase(),
+                          onClickKeepSwiping: widget.onClickKeepSwiping,
                         ),
                         // if (ChatData.instance.users.isNotEmpty) Divider(),
 

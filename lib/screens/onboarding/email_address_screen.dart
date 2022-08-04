@@ -10,8 +10,9 @@ import 'package:get/get.dart';
 
 class EmailAddressScreen extends StatefulWidget {
   static const String routeName = '/emailAddressScreen';
+  final void Function()? onNext;
 
-  const EmailAddressScreen({Key? key}) : super(key: key);
+  const EmailAddressScreen({Key? key, this.onNext}) : super(key: key);
 
   @override
   _EmailAddressScreenState createState() => _EmailAddressScreenState();
@@ -30,94 +31,85 @@ class _EmailAddressScreenState extends State<EmailAddressScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kBackroundThemeColor,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: CustomScrollView(
-                  slivers: [
-                    SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ProgressBar(
-                            totalProgressBarPages: kTotalProgressBarPages,
-                            page: 6,
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: CustomScrollView(
+                slivers: [
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'What\'s your email address?',
+                          style: kTitleStyle,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Text(
+                          'We will use this to recover your account \nincase you can\'t log in',
+                          style: kSmallInfoStyle,
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        InputField(
+                          hintText: 'add account recovery email',
+                          initialvalue: userEmail,
+                          keyboardType: TextInputType.emailAddress,
+                          onType: (value) {
+                            userEmail = value;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            widget.onNext?.call();
+                          },
+                          child: const Text(
+                            'Skip this step',
+                            style: kSmallInfoStyleUnderline,
                           ),
-                          const Text(
-                            'What\'s your email address?',
-                            style: kTitleStyle,
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          const Text(
-                            'We will use this to recover your account \nincase you can\'t log in',
-                            style: kSmallInfoStyle,
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          InputField(
-                            hintText: 'add account recovery email',
-                            initialvalue: userEmail,
-                            keyboardType: TextInputType.emailAddress,
-                            onType: (value) {
-                              userEmail = value;
-                            },
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Get.offAllNamed(OnboardingFlowController.instance
-                                  .nextRoute(EmailAddressScreen.routeName));
-                            },
-                            child: const Text(
-                              'Skip this step',
-                              style: kSmallInfoStyleUnderline,
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
               ),
-              RoundedButton(
-                  name: 'CONTINUE',
-                  onTap: () {
-                    if (isValid(userEmail)) {
-                      SettingsData.instance.email = userEmail;
-                      Get.offAllNamed(OnboardingFlowController.instance
-                          .nextRoute(EmailAddressScreen.routeName));
-                    } else {
-                      showCupertinoDialog(
-                          context: context,
-                          builder: (_) => CupertinoAlertDialog(
-                                title: const Text('Invalid email'),
-                                content: const Text(
-                                    'The email you have entered \ndoes not appear to be valid.'),
-                                actions: [
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text(
-                                        'Close',
-                                        style:
-                                            const TextStyle(color: Colors.red),
-                                      ))
-                                ],
-                              ));
-                    }
-                  })
-            ],
-          ),
+            ),
+            RoundedButton(
+                name: 'CONTINUE',
+                onTap: () {
+                  if (isValid(userEmail)) {
+                    SettingsData.instance.email = userEmail;
+                    widget.onNext?.call();
+                  } else {
+                    showCupertinoDialog(
+                        context: context,
+                        builder: (_) => CupertinoAlertDialog(
+                              title: const Text('Invalid email'),
+                              content: const Text(
+                                  'The email you have entered \ndoes not appear to be valid.'),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text(
+                                      'Close',
+                                      style: const TextStyle(color: Colors.red),
+                                    ))
+                              ],
+                            ));
+                  }
+                })
+          ],
         ),
       ),
     );

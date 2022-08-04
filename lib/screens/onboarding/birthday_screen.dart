@@ -1,4 +1,5 @@
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/screens/onboarding/onboarding_pageview_screen.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/services/onboarding_flow_controller.dart';
 import 'package:betabeta/services/screen_size.dart';
@@ -12,8 +13,9 @@ import 'package:get/get.dart';
 
 class BirthdayOnboardingScreen extends StatefulWidget {
   static const String routeName = '/birthday_onboarding';
+  final void Function()? onNext;
 
-  const BirthdayOnboardingScreen({Key? key}) : super(key: key);
+  const BirthdayOnboardingScreen({Key? key, this.onNext}) : super(key: key);
 
   @override
   _BirthdayOnboardingScreenState createState() =>
@@ -37,123 +39,108 @@ class _BirthdayOnboardingScreenState extends State<BirthdayOnboardingScreen> {
     return Scaffold(
       backgroundColor: kBackroundThemeColor,
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: OnboardingColumn(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: ProgressBar(
-                    totalProgressBarPages: kTotalProgressBarPages,
-                    page: 2,
-                  ),
+      body: OnboardingColumn(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const FittedBox(
+                child: Text(
+                  "When's your birthday?",
+                  style: kTitleStyle,
                 ),
-                const FittedBox(
-                  child: Text(
-                    "When's your birthday?",
-                    style: kTitleStyle,
-                  ),
-                ),
-                Divider(
-                  height: screenHeight * 0.03,
-                  color: Colors.grey,
-                ),
-                SizedBox(
-                  height:
-                      ScreenSize.getSize(context) == ScreenSizeCategory.small
-                          ? screenHeight * 0.45
-                          : screenHeight * 0.18,
-                  child: CupertinoTheme(
-                    data: const CupertinoThemeData(
-                      textTheme: CupertinoTextThemeData(
-                        dateTimePickerTextStyle: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w400),
-                      ),
+              ),
+              Divider(
+                height: screenHeight * 0.03,
+                color: Colors.grey,
+              ),
+              SizedBox(
+                height: ScreenSize.getSize(context) == ScreenSizeCategory.small
+                    ? screenHeight * 0.45
+                    : screenHeight * 0.18,
+                child: CupertinoTheme(
+                  data: const CupertinoThemeData(
+                    textTheme: CupertinoTextThemeData(
+                      dateTimePickerTextStyle: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400),
                     ),
-                    child: CupertinoDatePicker(
-                        mode: CupertinoDatePickerMode.date,
-                        initialDateTime: selectedDate,
-                        minimumDate: earliestDate,
-                        maximumDate: currentDate,
-                        onDateTimeChanged: (newDate) {
-                          setState(() {
-                            selectedDate = newDate;
-                          });
-                        }),
                   ),
+                  child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.date,
+                      initialDateTime: selectedDate,
+                      minimumDate: earliestDate,
+                      maximumDate: currentDate,
+                      onDateTimeChanged: (newDate) {
+                        setState(() {
+                          selectedDate = newDate;
+                        });
+                      }),
                 ),
-                Divider(
-                  height: screenHeight * 0.03,
-                  color: Colors.grey,
-                )
-              ],
-            ),
-            Column(
-              children: [
-                RoundedButton(
-                  name: 'NEXT',
-                  onTap: () {
-                    int age = UtilsMethods.calculateAge(selectedDate);
-                    showDialog(
-                        context: context,
-                        builder: (_) => CupertinoAlertDialog(
-                              title: Text(
-                                "You're $age",
-                              ),
-                              content: age >= 18
-                                  ? const Text(
-                                      "Make sure that this is you'r correct age.")
-                                  : const Text(
-                                      'The minimum age requirement for Voilà is 18 years old.\nWe will be happy to welcome you back when you are 18'),
-                              actions: age >= 18
-                                  ? ([
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text(
-                                            'Cancel',
-                                            style: TextStyle(color: Colors.red),
-                                          )),
-                                      TextButton(
-                                          onPressed: () {
-                                            SettingsData.instance.userBirthday =
-                                                selectedDate.toString();
-                                            Get.offAllNamed(
-                                                OnboardingFlowController
-                                                    .instance
-                                                    .nextRoute(
-                                                        BirthdayOnboardingScreen
-                                                            .routeName));
-                                          },
-                                          child: const Text(
-                                            'Confirm',
-                                            style:
-                                                TextStyle(color: Colors.black),
-                                          ))
-                                    ])
-                                  : [
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text(
-                                            'Close',
-                                            style: TextStyle(color: Colors.red),
-                                          ))
-                                    ],
-                            ));
-                  },
-                ),
-              ],
-            )
-          ],
-        ),
+              ),
+              Divider(
+                height: screenHeight * 0.03,
+                color: Colors.grey,
+              )
+            ],
+          ),
+          Column(
+            children: [
+              RoundedButton(
+                name: 'NEXT',
+                onTap: () {
+                  int age = UtilsMethods.calculateAge(selectedDate);
+                  showDialog(
+                      context: context,
+                      builder: (_) => CupertinoAlertDialog(
+                            title: Text(
+                              "You're $age",
+                            ),
+                            content: age >= 18
+                                ? const Text(
+                                    "Make sure that this is you'r correct age.")
+                                : const Text(
+                                    'The minimum age requirement for Voilà is 18 years old.\nWe will be happy to welcome you back when you are 18'),
+                            actions: age >= 18
+                                ? ([
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text(
+                                          'Cancel',
+                                          style: TextStyle(color: Colors.red),
+                                        )),
+                                    TextButton(
+                                        onPressed: () {
+                                          SettingsData.instance.userBirthday =
+                                              selectedDate.toString();
+                                          Get.back();
+                                          widget.onNext?.call();
+                                        },
+                                        child: const Text(
+                                          'Confirm',
+                                          style: TextStyle(color: Colors.black),
+                                        ))
+                                  ])
+                                : [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text(
+                                          'Close',
+                                          style: TextStyle(color: Colors.red),
+                                        ))
+                                  ],
+                          ));
+                },
+              ),
+            ],
+          )
+        ],
       ),
     );
   }

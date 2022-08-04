@@ -1,9 +1,11 @@
 import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/onboarding/dynamic_picker_screen.dart';
 import 'package:betabeta/screens/onboarding/finish_onboarding_screen.dart';
 import 'package:betabeta/screens/onboarding/job_title_screen.dart';
 import 'package:betabeta/screens/onboarding/school_screen.dart';
+import 'package:betabeta/screens/onboarding/tutorial_screen_starter.dart';
 import 'package:betabeta/screens/user_edit/covid_screen.dart';
 import 'package:betabeta/screens/user_edit/drinking_screen.dart';
 import 'package:betabeta/screens/user_edit/education_screen.dart';
@@ -145,8 +147,7 @@ class _CompleteProfilePageViewScreenState
                         TextButton(
                           onPressed: () {
                             FocusScope.of(context).unfocus();
-                            Get.offAllNamed(OnboardingFlowController.instance
-                                .nextRoute(FinishOnboardingScreen.routeName));
+                            Get.back();
                           },
                           child: Text(
                             'Skip all',
@@ -171,10 +172,7 @@ class _CompleteProfilePageViewScreenState
                                 name: 'Complete',
                                 onTap: () {
                                   FocusScope.of(context).unfocus();
-                                  Get.offAllNamed(OnboardingFlowController
-                                      .instance
-                                      .nextRoute(
-                                          FinishOnboardingScreen.routeName));
+                                  Get.back();
                                 }),
                       ],
                     ),

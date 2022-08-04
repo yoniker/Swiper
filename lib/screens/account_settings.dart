@@ -25,21 +25,6 @@ class AccountSettingsScreen extends StatefulWidget {
 }
 
 class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
-  _logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    //Save name, id and picture url to persistent storage, and move on to the next screen
-    await prefs.remove('name');
-    await prefs.remove('facebook_id');
-    await prefs.remove('facebook_profile_image_url');
-    await prefs.remove('preferredGender');
-    SettingsData.instance.name = '';
-    await ChatData.instance.cancelSubscriptions();
-    SettingsData.instance.uid = '';
-    await ChatData.instance.deleteDB();
-    await FirebaseAuth.instance.signOut();
-    Get.offAllNamed(SplashScreen.routeName);
-  }
-
   String produceAgesRangeText(RangeValues _ages) {
     String agesRangeText;
 

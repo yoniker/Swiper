@@ -3,7 +3,21 @@ import 'dart:io';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/constants/url-consts.dart';
+import 'package:betabeta/screens/main_navigation_screen.dart';
+import 'package:betabeta/screens/onboarding/about_me_screen.dart';
+import 'package:betabeta/screens/onboarding/birthday_screen.dart';
+import 'package:betabeta/screens/onboarding/finish_onboarding_screen.dart';
+import 'package:betabeta/screens/onboarding/get_name_screen.dart';
+import 'package:betabeta/screens/onboarding/location_permission_screen.dart';
+import 'package:betabeta/screens/onboarding/notifications_permission_screen.dart';
+import 'package:betabeta/screens/onboarding/onboarding_pageview_screen.dart';
+import 'package:betabeta/screens/onboarding/orientation_screen.dart';
 import 'package:betabeta/screens/onboarding/phone_screen.dart';
+import 'package:betabeta/screens/onboarding/pronouns_screen.dart';
+import 'package:betabeta/screens/onboarding/relationship_type_onboarding_screen.dart';
+import 'package:betabeta/screens/onboarding/terms_screen.dart';
+import 'package:betabeta/screens/onboarding/tutorial_screen_starter.dart';
+import 'package:betabeta/screens/onboarding/upload_images_onboarding_screen.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/loginService.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -39,10 +53,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       return;
     }
 
-    OnboardingFlowController.instance.setOnboardingPath(currentStatus);
-
-    Get.offAllNamed(
-        OnboardingFlowController.instance.nextRoute(WelcomeScreen.routeName));
+    Get.offAllNamed(OnboardingPageViewScreen.routeName,
+        arguments: currentStatus);
   }
 
   Future<ServerRegistrationStatus> _registerUserAtServer() async {

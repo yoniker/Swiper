@@ -2,9 +2,7 @@ import 'package:betabeta/constants/app_functionality_consts.dart';
 import 'package:betabeta/constants/assets_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
-import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/models/infoConversation.dart';
-import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/models/profile.dart';
@@ -17,9 +15,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ContactsWidget extends StatefulWidget {
-  ContactsWidget({this.search = ''});
-
+  final void Function()? onClickKeepSwiping;
   final String search;
+  ContactsWidget({this.search = '', required this.onClickKeepSwiping});
 
   @override
   _ContactsWidgetState createState() => _ContactsWidgetState();
@@ -138,12 +136,7 @@ class _ContactsWidgetState extends State<ContactsWidget> {
                                 withPadding: false,
                                 name: 'Keep swiping!',
                                 onTap: () {
-                                  MainNavigationScreen.pageController
-                                      .animateToPage(
-                                          MainNavigationScreen
-                                              .MATCHING_PAGE_INDEX,
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.fastOutSlowIn);
+                                  widget.onClickKeepSwiping?.call();
                                 },
                               ),
                             ),

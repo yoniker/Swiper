@@ -12,4 +12,5 @@ class AssetsPaths {
   static const String mirrorOnTheWall1 = 'assets/images/mirror_picture.jpg';
   static const String starPictureCeleb = 'assets/images/star10.jpg';
   static const String editProfilePicture = 'assets/images/q5.jpg';
+  static const String locationGif = 'assets/onboarding/images/location.gif';
 }

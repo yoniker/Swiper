@@ -30,7 +30,7 @@ class MainNavigationScreen extends StatefulWidget {
   static const int CONVERSATIONS_PAGE_INDEX = 1;
   static const String routeName = '/main_navigation_screen';
   static const String TAB_INDEX_PARAM = 'tab_index';
-  static late PageController pageController;
+
   static late AnimationController appBarColorAnimationController;
   MainNavigationScreen({Key? key}) : super(key: key);
 
@@ -44,26 +44,30 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
   final bool startTutorial = Get.arguments ?? false;
   late bool pageIsTransparent = true;
   late AnimationController _controller;
-
+  late PageController pageController;
   late Animation _backgroundColor;
   late Animation _animation;
-  final AppTutorialBrain appTutorial = AppTutorialBrain();
+  late List<Widget> pages;
+  Future<void> switchTab(int index) async {
+    //<debug>
+    print('GOING TO PAGE:- index ~$index');
+    await pageController.animateToPage(index,
+        duration: Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
+        curve: Curves.fastOutSlowIn);
+    changeColor();
+  }
+
+  late AppTutorialBrain appTutorial;
 
   // List of pages.
-  List<Widget> pages = <Widget>[
-    // ProfileTab(),
-    MatchScreen(
-      key: Key('Match Screen'),
-    ),
-    ConversationsScreen(),
-    ProfileScreen(),
-  ];
 
   Widget buildCenterWidget() {
     switch (SettingsData.instance.filterType) {
       case FilterType.TEXT_SEARCH:
         if (SettingsData.instance.textSearch.length > 0 &&
-            selectedTabIndex == MainNavigationScreen.MATCHING_PAGE_INDEX) //TODO Nitzan why is this condition here and why does it repeat itself?
+            selectedTabIndex ==
+                MainNavigationScreen
+                    .MATCHING_PAGE_INDEX) //TODO Nitzan why is this condition here and why does it repeat itself?
           return TextSearchViewWidget();
         break;
       case FilterType.CELEB_IMAGE:
@@ -232,22 +236,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     return PageView(
       physics: NeverScrollableScrollPhysics(),
       children: pages,
-      controller: MainNavigationScreen.pageController,
+      controller: pageController,
       onPageChanged: (page) {
         setState(() {
           selectedTabIndex = page;
         });
       },
     );
-  }
-
-  Future<void> switchTab(int index) async {
-    //<debug>
-    print('GOING TO PAGE:- index ~$index');
-    await MainNavigationScreen.pageController.animateToPage(index,
-        duration: Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
-        curve: Curves.fastOutSlowIn);
-    changeColor();
   }
 
   void openVoilaSettings() {
@@ -262,8 +257,31 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
       MainNavigationScreen.appBarColorAnimationController.forward();
   }
 
+  void startTutorialAgain() async {
+    await switchTab(MainNavigationScreen.MATCHING_PAGE_INDEX);
+    appTutorial.showTutorial(context);
+  }
+
+  void moveToMatchPage() {
+    switchTab(MainNavigationScreen.MATCHING_PAGE_INDEX);
+  }
+
+  void moveToChatPage() {
+    switchTab(MainNavigationScreen.CONVERSATIONS_PAGE_INDEX);
+  }
+
   @override
   void initState() {
+    pages = [
+      // ProfileTab(),
+      MatchScreen(
+        key: Key('Match Screen'),
+      ),
+      ConversationsScreen(onClickKeepSwiping: moveToMatchPage),
+      ProfileScreen(
+        onStartTutorial: startTutorialAgain,
+      ),
+    ];
     _controller =
         AnimationController(vsync: this, duration: Duration(seconds: 2))
           ..forward()
@@ -272,11 +290,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
           });
     _animation = Tween<double>(begin: 0, end: 1)
         .animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
-    if (selectedTabIndex == MainNavigationScreen.MATCHING_PAGE_INDEX &&
-        startTutorial) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => Future.delayed(
-          Duration(milliseconds: 200), appTutorial.showTutorial(context)));
-    }
+
     MainNavigationScreen.appBarColorAnimationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 200),
@@ -291,19 +305,27 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
           parent: MainNavigationScreen.appBarColorAnimationController,
           curve: Curves.easeIn),
     );
+    appTutorial = AppTutorialBrain(
+        moveToChatPage: moveToChatPage, moveBackToMatchPage: moveToMatchPage);
+
     super.initState();
 
     // initialize the `_selectedTabIndex` variable with the value provided by appstate
     selectedTabIndex = AppStateInfo.instance.latestTabOnMainNavigation;
-    MainNavigationScreen.pageController =
-        PageController(initialPage: selectedTabIndex);
-
+    pageController = PageController(initialPage: selectedTabIndex);
+    changeColor();
+    if (startTutorial) {
+      if (selectedTabIndex == MainNavigationScreen.MATCHING_PAGE_INDEX)
+        WidgetsBinding.instance.addPostFrameCallback((_) => Future.delayed(
+            Duration(milliseconds: 200), appTutorial.showTutorial(context)));
+    }
     // initialize the pageController with necessary values.
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    pageController.dispose();
     super.dispose();
   }
 
@@ -311,6 +333,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
   Widget build(BuildContext context) {
     AppStateInfo.instance.latestTabOnMainNavigation =
         selectedTabIndex; //TODO ugly as I mentioned at the comments at the Appstate,switch with a better solution when available
+
     return Opacity(
       opacity: _animation.value,
       child: Scaffold(

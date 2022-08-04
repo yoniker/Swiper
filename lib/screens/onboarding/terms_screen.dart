@@ -1,6 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/screens/onboarding/onboarding_pageview_screen.dart';
 import 'package:betabeta/services/onboarding_flow_controller.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
@@ -10,11 +11,12 @@ import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
 class TermsScreen extends StatefulWidget {
-  const TermsScreen({Key? key}) : super(key: key);
+  const TermsScreen({Key? key, this.onNext}) : super(key: key);
 
   @override
   _TermsScreenState createState() => _TermsScreenState();
   static const String routeName = '/Terms';
+  final void Function()? onNext;
 }
 
 class _TermsScreenState extends State<TermsScreen> {
@@ -189,8 +191,7 @@ class _TermsScreenState extends State<TermsScreen> {
                       elevation: 0,
                       name: 'I Agree',
                       onTap: () {
-                        Get.offAllNamed(OnboardingFlowController.instance
-                            .nextRoute(TermsScreen.routeName));
+                        widget.onNext?.call();
                       },
                     ),
                   ],

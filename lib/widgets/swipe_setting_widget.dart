@@ -34,10 +34,15 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
     await prefs.remove('facebook_profile_image_url');
     await prefs.remove('preferredGender');
     SettingsData.instance.name = '';
+    print('dor1');
     await ChatData.instance.cancelSubscriptions();
     SettingsData.instance.uid = '';
     await ChatData.instance.deleteDB();
+    print('dor2');
     await FirebaseAuth.instance.signOut();
+    for (int i = 0; i < 10; ++i) {
+      print('HAAHAHAHA');
+    }
     Get.offAllNamed(SplashScreen.routeName);
   }
 
@@ -504,8 +509,8 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
                 Column(
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        _logout();
+                      onTap: () async {
+                        await _logout();
                       },
                       child: Container(
                         width: double.infinity,

@@ -16,6 +16,10 @@ void changeColor() {
 }
 
 class AppTutorialBrain {
+  final Function()? moveToChatPage;
+  final void Function()? moveBackToMatchPage;
+  AppTutorialBrain(
+      {required this.moveToChatPage, required this.moveBackToMatchPage});
   showTutorial(context) {
     initTargets();
     VoilaTutorial = TutorialCoachMark(
@@ -29,10 +33,8 @@ class AppTutorialBrain {
       opacityShadow: 0.8,
       onFinish: () async {
         await Get.toNamed(VoilaPage.routeName, arguments: true);
-        await MainNavigationScreen.pageController.animateToPage(
-            MainNavigationScreen.CONVERSATIONS_PAGE_INDEX,
-            duration: Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
-            curve: Curves.fastOutSlowIn);
+        await Future.delayed(
+            Duration(milliseconds: 300), moveToChatPage?.call());
         showStage2Tutorial(context);
       },
     )..show();
@@ -127,10 +129,7 @@ class AppTutorialBrain {
       paddingFocus: 10,
       opacityShadow: 0.8,
       onFinish: () {
-        MainNavigationScreen.pageController.animateToPage(
-            MainNavigationScreen.MATCHING_PAGE_INDEX,
-            duration: Duration(milliseconds: pageGeneralAnimationTimeInMillSec),
-            curve: Curves.fastOutSlowIn);
+        moveBackToMatchPage?.call();
       },
     )..show();
   }

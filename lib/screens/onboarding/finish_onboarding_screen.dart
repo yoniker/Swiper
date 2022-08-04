@@ -1,7 +1,7 @@
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/screens/complete_profile_pageview_screen.dart';
-import 'package:betabeta/services/onboarding_flow_controller.dart';
+import 'package:betabeta/screens/onboarding/tutorial_screen_starter.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +10,9 @@ import 'package:video_player/video_player.dart';
 
 class FinishOnboardingScreen extends StatefulWidget {
   static const String routeName = '/finishOnboardingScreen';
+  final void Function()? onNext;
 
-  const FinishOnboardingScreen({Key? key}) : super(key: key);
+  const FinishOnboardingScreen({Key? key, this.onNext}) : super(key: key);
 
   @override
   _FinishOnboardingScreenState createState() => _FinishOnboardingScreenState();
@@ -129,10 +130,7 @@ class _FinishOnboardingScreenState extends State<FinishOnboardingScreen> {
                             children: [
                               TextButton(
                                 onPressed: () {
-                                  Get.offAllNamed(OnboardingFlowController
-                                      .instance
-                                      .nextRoute(
-                                          FinishOnboardingScreen.routeName));
+                                  widget.onNext?.call();
                                 },
                                 child: Text(
                                   'Skip for now',
@@ -145,9 +143,10 @@ class _FinishOnboardingScreenState extends State<FinishOnboardingScreen> {
                               ),
                               RoundedButton(
                                 name: 'Complete profile now',
-                                onTap: () {
-                                  Get.toNamed(
+                                onTap: () async {
+                                  await Get.toNamed(
                                       CompleteProfilePageViewScreen.routeName);
+                                  widget.onNext?.call();
                                 },
                                 color: Colors.white,
                               ),

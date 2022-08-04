@@ -2,7 +2,6 @@ import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/screens/current_user_profile_view_screen.dart';
-import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/pending_approvment_screen.dart';
 import 'package:betabeta/screens/profile_edit_screen.dart';
 import 'package:betabeta/services/app_tutorial_brain.dart';
@@ -24,8 +23,16 @@ import 'package:url_launcher/url_launcher.dart';
 import '../widgets/onboarding/rounded_button.dart';
 
 class ProfileScreen extends StatefulWidget {
-  ProfileScreen({Key? key}) : super(key: key);
+  ProfileScreen(
+      {Key? key,
+      this.onStartTutorial,
+      this.moveBackToMatchPage,
+      this.moveToTutorialPage})
+      : super(key: key);
   static const String routeName = '/profile_screen';
+  final void Function()? onStartTutorial;
+  final void Function()? moveToTutorialPage;
+  final void Function()? moveBackToMatchPage;
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -33,15 +40,19 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen>
     with AutomaticKeepAliveClientMixin, MountedStateMixin<ProfileScreen> {
-  final AppTutorialBrain appTutorial = AppTutorialBrain();
+  late AppTutorialBrain appTutorial;
 
   // create a SettingsData & a NetworkHelper instance.
 
   @override
   void initState() {
+    appTutorial = AppTutorialBrain(
+        moveToChatPage: widget.moveToTutorialPage,
+        moveBackToMatchPage: widget.moveBackToMatchPage);
     super.initState();
     //_syncFromServer();
   }
+
   void _syncFromServer() async {
     await AWSServer.instance.syncCurrentProfileImagesUrls();
   }
@@ -214,13 +225,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     child: HingeStyleButtonTesting(
                       text: 'How does it work?',
-                      onTap: () async {
-                        changeColor();
-                        await MainNavigationScreen.pageController.animateToPage(
-                            MainNavigationScreen.MATCHING_PAGE_INDEX,
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.fastOutSlowIn);
-                        appTutorial.showTutorial(context);
+                      onTap: () {
+                        widget.onStartTutorial?.call();
                       },
                       textStyle: kButtonText.copyWith(
                           fontSize: adaptiveFontForMiddleTextButtons),

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/screens/onboarding/onboarding_pageview_screen.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/services/onboarding_flow_controller.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
@@ -12,8 +13,9 @@ import 'package:get/get.dart';
 class AboutMeOnboardingScreen extends StatefulWidget {
   static const String routeName = '/aboutMeOnboardingScreen';
   static const int minWordsInDescription = 5;
+  final void Function()? onNext;
 
-  const AboutMeOnboardingScreen({Key? key}) : super(key: key);
+  const AboutMeOnboardingScreen({Key? key, this.onNext}) : super(key: key);
 
   @override
   _AboutMeOnboardingScreenState createState() =>
@@ -47,10 +49,13 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
 
     int wordsLeft = AboutMeOnboardingScreen.minWordsInDescription - (_count);
 
-    return Scaffold(
-      backgroundColor: kBackroundThemeColor,
-      body: SafeArea(
-        child: RawScrollbar(
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: kBackroundThemeColor,
+        body: RawScrollbar(
           thumbColor: Colors.black54,
           thickness: 5,
           isAlwaysShown: true,
@@ -68,13 +73,6 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                     children: [
                       Column(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(10.0, 0, 10, 10),
-                            child: ProgressBar(
-                              totalProgressBarPages: kTotalProgressBarPages,
-                              page: 7,
-                            ),
-                          ),
                           const Text(
                             'Tell others about yourself',
                             style: kTitleStyle,
@@ -97,10 +95,8 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                                 : () {
                                     SettingsData.instance.userDescription =
                                         aboutMeText;
-                                    Get.offAllNamed(OnboardingFlowController
-                                        .instance
-                                        .nextRoute(
-                                            AboutMeOnboardingScreen.routeName));
+                                    FocusScope.of(context).unfocus();
+                                    widget.onNext?.call();
                                   },
                             onTapIconDisable: wordsLeft <= 0
                                 ? null
@@ -153,10 +149,8 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                                 : () {
                                     SettingsData.instance.userDescription =
                                         aboutMeText;
-                                    Get.offAllNamed(OnboardingFlowController
-                                        .instance
-                                        .nextRoute(
-                                            AboutMeOnboardingScreen.routeName));
+                                    FocusScope.of(context).unfocus();
+                                    widget.onNext?.call();
                                   }),
                       )
                     ],
