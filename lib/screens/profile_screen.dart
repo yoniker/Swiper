@@ -3,6 +3,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/screens/current_user_profile_view_screen.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
+import 'package:betabeta/screens/my_look_a_like_screen.dart';
 import 'package:betabeta/screens/pending_approvment_screen.dart';
 import 'package:betabeta/screens/profile_edit_screen.dart';
 import 'package:betabeta/services/app_tutorial_brain.dart';
@@ -167,7 +168,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CircleButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.toNamed(MyLookALikeScreen.routeName);
+                        },
                         color: circleButtonColor,
                         padding: EdgeInsets.all(12),
                         elevation: 5,

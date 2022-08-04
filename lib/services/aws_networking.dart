@@ -15,10 +15,13 @@ import 'dart:convert' as json;
 
 import 'package:tuple/tuple.dart';
 
-enum TaskResult { success, failed }
+enum ServerResponse { Success, Failed,InProgress, Error }
+
+
 class AWSServer {
   static const SERVER_ADDR = 'services.voilaserver.com';
   static const MIN_MATCHES_CALL_INTERVAL = Duration(seconds: 1);
+  
   DateTime _lastMatchCall = DateTime(2000);
   AWSServer._privateConstructor();
 
@@ -261,11 +264,7 @@ class AWSServer {
     return customFacesLinks;
   }
 
-  String CustomFaceLinkToFullUrl(String faceUrl){
-    //example input: 5EX44AtZ5cXxW1O12G3tByRcC012/custom_image/analysis1658383341.368371/0.jpg
-    return 'https://$SERVER_ADDR/user_data/custom_face_search_image/$faceUrl';
-    //user_data/custom_face_search_image/<user_id>/custom_image/<analysis_directory_name>/<filename>
-  }
+
 
   Future<List<String>> getCelebUrls(String celebName)async{
     Uri celebsLinkUri = Uri.https(SERVER_ADDR, 'user_data/celeb_image_links/$celebName');
@@ -284,6 +283,16 @@ class AWSServer {
 
   String celebImageUrlToFullUrl(String celebImageUrl){
     return Uri.https(SERVER_ADDR,'user_data/$celebImageUrl').toString();
+  }
+
+  String CustomFaceLinkToFullUrl(String faceUrl){
+    //example input: 5EX44AtZ5cXxW1O12G3tByRcC012/custom_image/analysis1658383341.368371/0.jpg
+    return 'https://$SERVER_ADDR/user_data/custom_face_search_image/$faceUrl';
+    //user_data/custom_face_search_image/<user_id>/custom_image/<analysis_directory_name>/<filename>
+  }
+
+  static String profileFaceLinkToFullUrl(String faceUrl){
+    return Uri.https(SERVER_ADDR, '/analyze-user-fr/fr_face_image/'+faceUrl).toString();
   }
 
 
@@ -413,7 +422,7 @@ class AWSServer {
     return;
   }
 
-  static Future<TaskResult> sendMessage(String uid,
+  static Future<ServerResponse> sendMessage(String uid,
       String startingConversationContent, double senderEpochTime) async {
     Map<String, dynamic> toSend = {
       'other_user_id': uid,
@@ -425,9 +434,9 @@ class AWSServer {
     Uri.https(SERVER_ADDR, 'user_data/send_message/${SettingsData.instance.uid}');
     http.Response response = await http.post(postMessageUri, body: encoded);
     if (response.statusCode == 200) {
-      return TaskResult.success;
+      return ServerResponse.Success;
     }
-    return TaskResult.failed;
+    return ServerResponse.Failed;
   }
 
   static Future<Tuple2<List<InfoMessage>, List<dynamic>>>
@@ -533,6 +542,27 @@ class AWSServer {
     Uri.https(SERVER_ADDR, 'user_data/delete_account/${SettingsData.instance.uid}');
     http.Response response = await http.get(deleteAccountUri);
     //TODO check for a successful response and give user feedback if not successful
+  }
+
+
+  Future<Tuple2<List<String>?,ServerResponse>> getProfileFacesAnalysis()async{
+    Uri getAnalysisUri =
+    Uri.https(SERVER_ADDR, 'analyze-user-fr/get_analysis/${SettingsData.instance.uid}');
+    http.Response response = await http.get(getAnalysisUri);
+
+    if (response.statusCode != 200) {
+
+      //TODO throw error (bad jwt? server down? analysis not completed?)
+      if(response.statusCode == 202)
+      {return Tuple2(null, ServerResponse.InProgress);}
+
+      return Tuple2(null, ServerResponse.Error);
+    }
+
+    var decodedResponse = json.jsonDecode(response.body);
+    var facesUrls = List<String>.from(decodedResponse[API_CONSTS.FACES_DETAILS]);
+    print('Dor');
+     return Tuple2(facesUrls, ServerResponse.Success);
   }
 
 

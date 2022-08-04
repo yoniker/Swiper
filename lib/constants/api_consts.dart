@@ -71,4 +71,5 @@ class API_CONSTS{
   static const String IS_TEST_USER_KEY  = 'is_test_user';
   static const String LOCATION_REQUIRED_USERS = 'required_num';
   static const String LOCATION_CURRENT_USERS = 'current_num';
+  static const String FACES_DETAILS = 'faces_details';
 }
