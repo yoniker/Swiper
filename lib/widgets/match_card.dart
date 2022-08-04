@@ -12,6 +12,7 @@ import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/like_scale.dart';
 import 'package:betabeta/widgets/main_app_box.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -900,7 +901,7 @@ class _PhotoViewState extends State<PhotoView> {
     // instantiate the carousel List
     carouselDots = <CarouselDot>[];
     if (widget.imageUrls == null || widget.imageUrls!.length == 0) {
-      var img = Image.network(
+      var img = ExtendedImage.network(
         AWSServer.getProfileImageUrl(BetaIconPaths.anonymousProfileUrl),
         scale: 1.0,
         fit: BoxFit.cover,
@@ -912,7 +913,7 @@ class _PhotoViewState extends State<PhotoView> {
     for (int imageIndex = 0;
         imageIndex < widget.imageUrls!.length;
         imageIndex++) {
-      var img = Image.network(
+      var img = ExtendedImage.network(
         AWSServer.getProfileImageUrl(widget.imageUrls![imageIndex]),
         scale: 1.0,
         fit: BoxFit.cover,
