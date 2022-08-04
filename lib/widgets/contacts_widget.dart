@@ -48,9 +48,10 @@ class _ContactsWidgetState extends State<ContactsWidget> {
   }
 
   void listenContacts() {
-    setState(() {
-      updateConversationsData();
-    });
+    if (mounted)
+      setState(() {
+        updateConversationsData();
+      });
   }
 
   void maxedOutPopUpDialog() {
@@ -82,12 +83,6 @@ class _ContactsWidgetState extends State<ContactsWidget> {
         listenContacts); //TODO add an option to listen only to users box changes on the ChatData API
 
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    ChatData.instance.dispose();
-    super.dispose();
   }
 
   @override
