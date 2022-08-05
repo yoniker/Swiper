@@ -20,9 +20,25 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
   final double percentage = 75;
   final String celebMock = 'Bruce Willis';
   late String selectedImage = '';
+  ServerResponse currentState = ServerResponse.InProgress;
+  List<String> facesUrls = [];
+
+
+  Future<void> updateProfileFacesUrls()async{
+    //TODO use SettingsData as a cache so that the screen loads faster etc
+    var response = await AWSServer.instance.getProfileFacesAnalysis();
+    if(response.item2==ServerResponse.Success && response.item1!=null){
+      //TODO update SettingsData
+      setState(() {
+        print('dor is the king');
+        facesUrls = response.item1!;
+      });
+    } //TODO what if not successful?
+  }
 
   @override
   void initState() {
+    updateProfileFacesUrls();
     setState(() {
       selectedImage = AWSServer.getProfileImageUrl(
           SettingsData.instance.profileImagesUrls.first);
@@ -36,7 +52,6 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
     return ListenerWidget(
       notifier: SettingsData.instance,
       builder: (context) {
-        final _imageUrls = SettingsData.instance.profileImagesUrls;
         return Scaffold(
           backgroundColor: backgroundThemeColor,
           appBar: CustomAppBar(
@@ -69,7 +84,7 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                       minWidth: 250.0,
                       maxWidth: MediaQuery.of(context).size.width,
                     ),
-                    child: !(_imageUrls.length > 0)
+                    child: !(facesUrls.length > 0)
                         ? Center(
                             child: Text(
                               'No Profile image Available for match',
@@ -79,10 +94,10 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                         : ListView.separated(
                             key: UniqueKey(),
                             scrollDirection: Axis.horizontal,
-                            itemCount: _imageUrls.length,
+                            itemCount: facesUrls.length,
                             itemBuilder: (cntx, index) {
-                              final String _url = AWSServer.getProfileImageUrl(
-                                  _imageUrls[index]);
+                              final String _url = AWSServer.profileFaceLinkToFullUrl(
+                                  facesUrls[index]);
                               return GestureDetector(
                                 onTap: () {
                                   print(SettingsData
