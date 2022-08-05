@@ -1,4 +1,5 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:betabeta/constants/assets_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/screens/onboarding/onboarding_pageview_screen.dart';
@@ -24,14 +25,13 @@ class _TermsScreenState extends State<TermsScreen> {
 
   @override
   void initState() {
-    _controller =
-        VideoPlayerController.asset('assets/onboarding/videos/startvideo.mp4')
-          ..initialize().then((_) {
-            _controller.seekTo(Duration(seconds: 23));
-            _controller.play();
-            _controller.setLooping(true);
-            setState(() {});
-          });
+    _controller = VideoPlayerController.asset(AssetsPaths.backgroundVideoPath)
+      ..initialize().then((_) {
+        _controller.seekTo(Duration(seconds: 23));
+        _controller.play();
+        _controller.setLooping(true);
+        setState(() {});
+      });
     super.initState();
   }
 
@@ -43,163 +43,186 @@ class _TermsScreenState extends State<TermsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black87,
-      body: Stack(
-        children: [
-          SizedBox.expand(
-            child: FittedBox(
-                fit: BoxFit.cover,
-                child: SizedBox(
-                  height: _controller.value.size.height,
-                  width: _controller.value.size.width,
-                  child: VideoPlayer(_controller),
-                )),
-          ),
-          Padding(
-            padding: EdgeInsets.all(
-                ScreenSize.getSize(context) != ScreenSizeCategory.small
-                    ? 30
-                    : 0),
-            child: ConditionalParentWidget(
-              condition:
-                  ScreenSize.getSize(context) == ScreenSizeCategory.small,
-              conditionalBuilder: (Widget child) => Scrollbar(
-                isAlwaysShown: true,
-                scrollbarOrientation: ScrollbarOrientation.right,
-                child: Padding(
-                  padding: const EdgeInsets.all(30.0),
-                  child: SingleChildScrollView(
-                    reverse: true,
-                    child: child,
+    ScrollController scrollController = ScrollController();
+    return GestureDetector(
+      onTap: () {
+        if (scrollController.position.maxScrollExtent.isFinite)
+          scrollController.animateTo(scrollController.position.maxScrollExtent,
+              duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+      },
+      child: Scaffold(
+        backgroundColor: Colors.black87,
+        body: Stack(
+          children: [
+            SizedBox.expand(
+              child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: SizedBox(
+                    height: _controller.value.size.height,
+                    width: _controller.value.size.width,
+                    child: VideoPlayer(_controller),
+                  )),
+            ),
+            Padding(
+              padding: EdgeInsets.all(
+                  ScreenSize.getSize(context) != ScreenSizeCategory.small
+                      ? 30
+                      : 0),
+              child: ConditionalParentWidget(
+                condition:
+                    ScreenSize.getSize(context) == ScreenSizeCategory.small,
+                conditionalBuilder: (Widget child) => Padding(
+                  padding: const EdgeInsets.only(right: 1.0),
+                  child: RawScrollbar(
+                    thumbVisibility: true,
+                    trackVisibility: true,
+                    controller: scrollController,
+                    thickness: 4,
+                    thumbColor: Colors.white,
+                    radius: Radius.circular(30),
+                    scrollbarOrientation: ScrollbarOrientation.right,
+                    child: Padding(
+                      padding: const EdgeInsets.all(30.0),
+                      child: SingleChildScrollView(
+                        controller: scrollController,
+                        reverse: false,
+                        child: child,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              child: SafeArea(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Center(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          AnimatedTextKit(
-                            animatedTexts: [
-                              ColorizeAnimatedText('Welcome to Voilà!',
-                                  colors: colorizeColors,
-                                  textStyle: kTitleStyleBlack)
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'We are excited for you to join our community! \nBefore you swipe, please follow these guidelines:',
-                            style: kSmallInfoStyleWhite.copyWith(
-                              fontSize: 16,
-                              color: Colors.white.withOpacity(0.8),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 20, top: 20),
-                            child: Row(
-                              children: [
-                                Text(
-                                  '✔',
-                                  style: kVstyle,
-                                ),
-                                Text(
-                                  '  No Catfishing.',
-                                  style: kWhiteDescriptionShadowStyle.copyWith(
-                                      color: Colors.white, fontSize: 20),
-                                  textAlign: TextAlign.start,
-                                ),
+                child: SafeArea(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AnimatedTextKit(
+                              animatedTexts: [
+                                ColorizeAnimatedText('Welcome to Voilà!',
+                                    colors: colorizeColors,
+                                    textStyle: kTitleStyleBlack)
                               ],
                             ),
-                          ),
-                          Text(
-                            'Use your own bio, age and photos',
-                            style: kSmallInfoStyleWhite.copyWith(
-                              fontSize: 16,
-                              color: Colors.white.withOpacity(0.8),
+                            const SizedBox(
+                              height: 10,
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 20, top: 20),
-                            child: Row(
-                              children: [
-                                Text(
-                                  '✔',
-                                  style: kVstyle,
-                                ),
-                                Text(
-                                  '  Respect.',
-                                  style: kWhiteDescriptionShadowStyle.copyWith(
-                                      color: Colors.white, fontSize: 20),
-                                  textAlign: TextAlign.start,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Text(
-                            'Treat others the same way you want to be treated.',
-                            style: kSmallInfoStyleWhite.copyWith(
-                              fontSize: 16,
-                              color: Colors.white.withOpacity(0.8),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 20, top: 20),
-                            child: Row(
-                              children: [
-                                Text(
-                                  '✔',
-                                  style: kVstyle,
-                                ),
-                                Text(
-                                  '  Security.',
-                                  style: kWhiteDescriptionShadowStyle.copyWith(
-                                      color: Colors.white, fontSize: 20),
-                                  textAlign: TextAlign.start,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Text(
-                            'Keep your personal information to yourself. \nDont give your phone number too quickly!',
-                            style: kSmallInfoStyleWhite.copyWith(
-                              fontSize: 16,
-                              color: Colors.white.withOpacity(0.8),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 20, top: 20),
-                            child: Text(
-                              'And remember that we are here for you!',
+                            Text(
+                              'We are excited for you to join our community! \nBefore you swipe, please follow these guidelines:',
                               style: kSmallInfoStyleWhite.copyWith(
                                 fontSize: 16,
                                 color: Colors.white.withOpacity(0.8),
                               ),
-                              textAlign: TextAlign.start,
                             ),
-                          )
-                        ],
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(bottom: 20, top: 20),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '✔',
+                                    style: kVstyle,
+                                  ),
+                                  Text(
+                                    '  No Catfishing.',
+                                    style:
+                                        kWhiteDescriptionShadowStyle.copyWith(
+                                            color: Colors.white, fontSize: 20),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              'Use your own bio, age and photos',
+                              style: kSmallInfoStyleWhite.copyWith(
+                                fontSize: 16,
+                                color: Colors.white.withOpacity(0.8),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(bottom: 20, top: 20),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '✔',
+                                    style: kVstyle,
+                                  ),
+                                  Text(
+                                    '  Respect.',
+                                    style:
+                                        kWhiteDescriptionShadowStyle.copyWith(
+                                            color: Colors.white, fontSize: 20),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              'Treat others the same way you want to be treated.',
+                              style: kSmallInfoStyleWhite.copyWith(
+                                fontSize: 16,
+                                color: Colors.white.withOpacity(0.8),
+                              ),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(bottom: 20, top: 20),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '✔',
+                                    style: kVstyle,
+                                  ),
+                                  Text(
+                                    '  Security.',
+                                    style:
+                                        kWhiteDescriptionShadowStyle.copyWith(
+                                            color: Colors.white, fontSize: 20),
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              'Keep your personal information to yourself. \nDont give your phone number too quickly!',
+                              style: kSmallInfoStyleWhite.copyWith(
+                                fontSize: 16,
+                                color: Colors.white.withOpacity(0.8),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 20, top: 20),
+                              child: Text(
+                                'And remember that we are here for you!',
+                                style: kSmallInfoStyleWhite.copyWith(
+                                  fontSize: 16,
+                                  color: Colors.white.withOpacity(0.8),
+                                ),
+                                textAlign: TextAlign.start,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    RoundedButton(
-                      elevation: 0,
-                      name: 'I Agree',
-                      onTap: () {
-                        widget.onNext?.call();
-                      },
-                    ),
-                  ],
+                      RoundedButton(
+                        elevation: 0,
+                        name: 'I Agree',
+                        onTap: () {
+                          widget.onNext?.call();
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

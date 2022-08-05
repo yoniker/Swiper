@@ -49,12 +49,13 @@ class _OnboardingPageViewScreenState extends State<OnboardingPageViewScreen> {
   var notificationKey = UniqueKey();
   nextPage() {
     print(chosenOnboradingFlow.last);
-    if (chosenOnboradingFlow.last != chosenOnboradingFlow[currentPage])
+    if (chosenOnboradingFlow.last != chosenOnboradingFlow[currentPage]) {
       pageController.animateToPage(currentPage + 1,
           duration: Duration(milliseconds: 300), curve: Curves.fastOutSlowIn);
-    else {
+    } else {
       syncWithServer();
-      if (chosenOnboradingFlow.length < 4)
+      if (widget.registrationStatus ==
+          ServerRegistrationStatus.already_registered)
         Get.offAllNamed(MainNavigationScreen.routeName);
       else
         Get.offAllNamed(TutorialScreenStarter.routeName);

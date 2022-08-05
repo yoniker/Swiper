@@ -35,6 +35,7 @@ class _BubblesListWidgetState extends State<BubblesListWidget> {
 
   @override
   Widget build(BuildContext context) {
+    PageController pageController = PageController();
     return Stack(
       alignment: Alignment.bottomRight,
       children: [
@@ -44,63 +45,75 @@ class _BubblesListWidgetState extends State<BubblesListWidget> {
             if (widget.headline != null)
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
                 child: Text(
                   '${widget.headline}',
                   style: kButtonText,
                 ),
               ),
             Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(10),
-                child: Wrap(
-                  direction: Axis.horizontal,
-                  children: widget.bubbles
-                      .map((h) => GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                if (pickedBubbles.length <
-                                    (widget.maxChoices.toInt() + 1)) ;
-                                {
-                                  if (pickedBubbles.contains(h) != true) {
-                                    pickedBubbles.add(h);
-                                  } else {
-                                    pickedBubbles.remove(h);
-                                  }
-                                }
-                                if (pickedBubbles.length ==
-                                    (widget.maxChoices.toInt() + 1))
-                                  pickedBubbles.remove(h);
-                              });
-                              widget.onValueChanged?.call(pickedBubbles);
-                            },
-                            child: Container(
-                              margin: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                  color: pickedBubbles.contains(h)
-                                      ? appMainColor.withOpacity(0.15)
-                                      : null,
-                                  border: Border.all(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 1.0),
+                child: RawScrollbar(
+                  trackVisibility: true,
+                  thumbVisibility: true,
+                  thumbColor: Colors.black87,
+                  controller: pageController,
+                  thickness: 4,
+                  radius: Radius.circular(30),
+                  child: SingleChildScrollView(
+                    controller: pageController,
+                    padding: EdgeInsets.all(10),
+                    child: Wrap(
+                      direction: Axis.horizontal,
+                      children: widget.bubbles
+                          .map((h) => GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    if (pickedBubbles.length <
+                                        (widget.maxChoices.toInt() + 1)) ;
+                                    {
+                                      if (pickedBubbles.contains(h) != true) {
+                                        pickedBubbles.add(h);
+                                      } else {
+                                        pickedBubbles.remove(h);
+                                      }
+                                    }
+                                    if (pickedBubbles.length ==
+                                        (widget.maxChoices.toInt() + 1))
+                                      pickedBubbles.remove(h);
+                                  });
+                                  widget.onValueChanged?.call(pickedBubbles);
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
                                       color: pickedBubbles.contains(h)
-                                          ? appMainColor
-                                          : Colors.black,
-                                      width: 1.5),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(30))),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 4),
-                                child: Text(
-                                  '$h',
-                                  style: pickedBubbles.contains(h)
-                                      ? smallBoldedTitleBlack.copyWith(
-                                          color: appMainColor)
-                                      : smallBoldedTitleBlack,
+                                          ? appMainColor.withOpacity(0.15)
+                                          : null,
+                                      border: Border.all(
+                                          color: pickedBubbles.contains(h)
+                                              ? appMainColor
+                                              : Colors.black,
+                                          width: 1.5),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(30))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 4),
+                                    child: Text(
+                                      '$h',
+                                      style: pickedBubbles.contains(h)
+                                          ? smallBoldedTitleBlack.copyWith(
+                                              color: appMainColor)
+                                          : smallBoldedTitleBlack,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ))
-                      .toList(),
+                              ))
+                          .toList(),
+                    ),
+                  ),
                 ),
               ),
             ),

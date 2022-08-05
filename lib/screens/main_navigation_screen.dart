@@ -93,10 +93,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
   }
 
   Widget buildSettingWidget() {
-    double settingsScale = 11;
+    double settingsScale = 12;
+    double padding = 5;
     switch (selectedTabIndex) {
       case MainNavigationScreen.PROFILE_PAGE_INDEX:
         return CircleButton(
+          padding: EdgeInsets.all(padding),
           onPressed: () {
             Get.toNamed(AccountSettingsScreen.routeName);
           },
@@ -132,6 +134,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
         break;
       case MainNavigationScreen.MATCHING_PAGE_INDEX:
         return CircleButton(
+          padding: EdgeInsets.all(padding),
           onPressed: () {
             Get.toNamed(SwipeSettingsScreen.routeName);
           },
@@ -166,6 +169,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
         );
       case MainNavigationScreen.CONVERSATIONS_PAGE_INDEX:
         return CircleButton(
+          padding: EdgeInsets.all(padding),
           onPressed: () {},
           child: Stack(
             children: [
@@ -198,6 +202,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
         );
       default:
         return CircleButton(
+          padding: EdgeInsets.all(padding),
           onPressed: () {},
           child: Stack(
             children: [

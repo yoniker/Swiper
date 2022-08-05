@@ -108,16 +108,6 @@ class _FinishOnboardingScreenState extends State<FinishOnboardingScreen> {
                                 height: 20,
                               ),
                               Text(
-                                'One message is not enough!',
-                                style: kWhiteDescriptionShadowStyle.copyWith(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    overflow: TextOverflow.visible),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Text(
                                 'People love to see a detailed profile. \nYou can add more information about yourself below.',
                                 style: kWhiteDescriptionShadowStyle.copyWith(
                                     color: Colors.white,

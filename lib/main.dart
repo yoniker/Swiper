@@ -4,6 +4,7 @@ import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/chat/chat_screen.dart';
 import 'package:betabeta/screens/chat/other_user_profile_screen.dart';
 import 'package:betabeta/screens/complete_profile_pageview_screen.dart';
+import 'package:betabeta/screens/mock_new_match_card_page.dart';
 import 'package:betabeta/screens/my_look_a_like_screen.dart';
 import 'package:betabeta/screens/onboarding/onboarding_pageview_screen.dart';
 import 'package:betabeta/screens/onboarding/tutorial_screen_starter.dart';
@@ -217,7 +218,10 @@ void main() async {
             page: () => PendingApprovementScreen()),
         GetPage(
             name: OnboardingPageViewScreen.routeName,
-            page: () => OnboardingPageViewScreen())
+            page: () => OnboardingPageViewScreen()),
+        GetPage(
+            name: MockNewMatchCardPage.routePage,
+            page: () => MockNewMatchCardPage())
       ],
       title: 'Voilà MVP',
       debugShowCheckedModeBanner: false,

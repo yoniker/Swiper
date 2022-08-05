@@ -13,4 +13,6 @@ class AssetsPaths {
   static const String starPictureCeleb = 'assets/images/star10.jpg';
   static const String editProfilePicture = 'assets/images/q5.jpg';
   static const String locationGif = 'assets/onboarding/images/location.gif';
+  static const String backgroundVideoPath =
+      'assets/onboarding/videos/startvideo.mp4';
 }
