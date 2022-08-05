@@ -54,6 +54,21 @@ class CelebsInfo extends ChangeNotifier {
 
   }
 
+  Future<void> getCelebsImageLinks({required List<Celeb> celebs,bool refreshIfExists = false})async{
+    List<Future<void>> futuresGetCelebs=[];
+    for(Celeb celeb in celebs){
+      if(refreshIfExists==false && (celeb.imagesUrls?.length??0)>0){
+        continue;
+      }
+      futuresGetCelebs.add(getCelebImageLinks(celeb));
+
+    }
+
+    await Future.wait(futuresGetCelebs);
+    notifyListeners();
+
+  }
+
   UnmodifiableListView<Celeb> get entireCelebsList => UnmodifiableListView(_celebsInfo!);
 
   static HashMap<Celeb?,double> computeScores(Map map){
@@ -101,9 +116,29 @@ class CelebsInfo extends ChangeNotifier {
     _celebsInfo = celebsInfoCopy;
     _lastChangeTime = DateTime.now();
     notifyListeners();
+  }
 
+
+
+  UnmodifiableListView<Celeb> getCelebsByNames(List<String> names){
+    List<Celeb> listOfCelebs = [];
+    Map<int,String> indexToName = names.asMap();
+    Map<String,int> NameToIndex = indexToName.map( (k, v) => MapEntry(v, k) );
+    if(_celebsInfo==null){return UnmodifiableListView([]);}
+    for(Celeb celeb in _celebsInfo!){
+      if(names.contains(celeb.celebName)){
+        listOfCelebs.add(celeb);
+      }
+
+    }
+
+    listOfCelebs.sort((celebA,celebB) => NameToIndex[celebA.celebName]!.compareTo(NameToIndex[celebB.celebName]!));
+    return UnmodifiableListView(listOfCelebs);
 
   }
+
+
+
 
 
 

@@ -164,15 +164,17 @@ class _CelebWidgetState extends State<CelebWidget> {
     );
   }
 
-  void updateCelebImages() {
+  void updateCelebImages()async {
     if (widget.theCeleb.imagesUrls != null) {
       celebImages = [];
+      List<Future<void>> precacheImagesFutures = [];
       for (int imageIndex = 0; imageIndex < (widget.theCeleb.imagesUrls?.length??0); imageIndex++) {
         String url =AWSServer.instance.celebImageUrlToFullUrl(widget.theCeleb.imagesUrls![imageIndex]);
         ExtendedImage img = ExtendedImage.network(url,height: 150.0,width: 150.0,fit:BoxFit.cover,retries: 3,);
-        precacheImage(img.image, context);
+        precacheImagesFutures.add(precacheImage(img.image, context));
         celebImages.add(img);
       }
+      await Future.wait(precacheImagesFutures);
     }
   }
 }

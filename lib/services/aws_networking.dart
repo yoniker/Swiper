@@ -1,6 +1,9 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:math';
 import 'package:betabeta/constants/api_consts.dart';
+import 'package:betabeta/data_models/celeb.dart';
+import 'package:betabeta/models/celebs_info_model.dart';
 import 'package:betabeta/models/infoMessage.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/match_engine.dart';
@@ -16,6 +19,13 @@ import 'dart:convert' as json;
 import 'package:tuple/tuple.dart';
 
 enum ServerResponse { Success, Failed,InProgress, Error }
+
+class CelebSimilarityDetails{
+  Celeb celeb;
+  double faceRecognitionDistance; //A smaller distance is better (=more similar) than a larger distance.
+  CelebSimilarityDetails({required this.celeb,required this.faceRecognitionDistance});
+
+}
 
 
 class AWSServer {
@@ -563,6 +573,32 @@ class AWSServer {
     var facesUrls = List<String>.from(decodedResponse[API_CONSTS.FACES_DETAILS]);
     print('Dor');
      return Tuple2(facesUrls, ServerResponse.Success);
+  }
+
+  Future<List<CelebSimilarityDetails>> getSimilarCelebsByImageUrl(String shortFaceAnalysisUrl)async{
+    //Input : a short face analysis url, point out to a face detection on the server
+    //Output : a list of the most similar celebs to that detection, and their corresponding distances
+
+    Uri getAnalysisUri =
+    Uri.https(SERVER_ADDR, 'analyze-user-fr/get_celebs_lookalike/$shortFaceAnalysisUrl');
+
+    http.Response response = await http.get(getAnalysisUri);
+    if (response.statusCode != 200) {return [];} //TODO something other than returning an empty list
+    var decodedResponse = json.jsonDecode(response.body);
+    List<Map> celebsData = List<Map>.from(decodedResponse[API_CONSTS.CELEBS_DATA]);
+    List<String> celebsNames = [];
+    for(var celebData in celebsData){
+      celebsNames.add(celebData["celebname"]);
+    }
+    UnmodifiableListView<Celeb> celebs =CelebsInfo.instance.getCelebsByNames(celebsNames);
+    await CelebsInfo.instance.getCelebsImageLinks(celebs: celebs);
+    List<CelebSimilarityDetails> similarities = [];
+    for(Celeb celeb in celebs){
+      double distance = celebsData.firstWhere((celebData) => celebData["celebname"] == celeb.celebName,orElse: ()=>{"distance":100})["distance"];
+      similarities.add(CelebSimilarityDetails(celeb:celeb,faceRecognitionDistance: distance));
+    }
+    return similarities;
+
   }
 
 

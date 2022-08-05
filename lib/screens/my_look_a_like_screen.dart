@@ -1,12 +1,13 @@
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/screens/full_image_screen.dart';
+import 'package:betabeta/data_models/celeb.dart';
+import 'package:betabeta/models/celebs_info_model.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
+import 'package:betabeta/widgets/celeb_widget.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class MyLookALikeScreen extends StatefulWidget {
   const MyLookALikeScreen({Key? key}) : super(key: key);
@@ -16,12 +17,28 @@ class MyLookALikeScreen extends StatefulWidget {
   static const String routeName = '/my_celeb_look_a_like';
 }
 
+class CelebDetails{
+  Celeb celeb;
+  double faceRecognitionDistance;
+  CelebDetails({required this.celeb,required this.faceRecognitionDistance});
+
+}
+
 class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
   final double percentage = 75;
   final String celebMock = 'Bruce Willis';
-  late String selectedImage = '';
+  String selectedImage = '';
   ServerResponse currentState = ServerResponse.InProgress;
   List<String> facesUrls = [];
+  List<CelebSimilarityDetails> celebsSimilarities = [];
+
+  Future<void> updateCelebs(String link)async{
+    celebsSimilarities = await AWSServer.instance.getSimilarCelebsByImageUrl(link);
+    setState(() {
+
+    });
+  }
+
 
 
   Future<void> updateProfileFacesUrls()async{
@@ -30,7 +47,6 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
     if(response.item2==ServerResponse.Success && response.item1!=null){
       //TODO update SettingsData
       setState(() {
-        print('dor is the king');
         facesUrls = response.item1!;
       });
     } //TODO what if not successful?
@@ -39,11 +55,6 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
   @override
   void initState() {
     updateProfileFacesUrls();
-    setState(() {
-      selectedImage = AWSServer.getProfileImageUrl(
-          SettingsData.instance.profileImagesUrls.first);
-    });
-
     super.initState();
   }
 
@@ -100,12 +111,11 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                                   facesUrls[index]);
                               return GestureDetector(
                                 onTap: () {
-                                  print(SettingsData
-                                      .instance.profileImagesUrls.first);
                                   setState(() {
                                     selectedImage = _url;
+
                                   });
-                                  print(selectedImage);
+                                 updateCelebs(facesUrls[index]);
                                 },
                                 child: ConstrainedBox(
                                   constraints: BoxConstraints(
@@ -156,33 +166,32 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width * 0.95,
+                  height: MediaQuery.of(context).size.width * 0.55,
                   decoration: kSettingsBlockBoxDecor,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Text('You look $percentage% like',
-                            style: boldTextStyle),
-                      ),
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.45,
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                          image: DecorationImage(
-                              image:
-                                  AssetImage('assets/images/BruceWillis.jpg'),
-                              fit: BoxFit.cover),
-                        ),
-                      ),
-                      Text(
-                        celebMock,
-                        style: LargeTitleStyle,
-                      )
-                    ],
-                  ),
+                  child:
+                  ListView.separated(
+                    physics: BouncingScrollPhysics(),
+                    //controller: _listController,
+                    separatorBuilder: (BuildContext context, int index) {
+                      return SizedBox(height: 15.0);
+                    },
+                    itemCount: celebsSimilarities.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      Celeb currentCeleb =
+                      celebsSimilarities[index].celeb;
+                      double currentDistance = celebsSimilarities[index].faceRecognitionDistance;
+                      return CelebWidget(
+                        key: ValueKey(currentCeleb.celebName),
+                        theCeleb: currentCeleb,
+                        celebsInfo: CelebsInfo.instance,
+                        celebIndex: index,
+                        onTap: () {
+                          print('pressed ${currentCeleb.celebName} which has distance $currentDistance');
+                        },
+                      );
+                    },
+                  )
+                  ,
                 )
               ],
             ),
