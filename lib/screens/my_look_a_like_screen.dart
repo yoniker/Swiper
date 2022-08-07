@@ -31,23 +31,44 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
   ServerResponse currentState = ServerResponse.InProgress;
   List<String> facesUrls = [];
   List<CelebSimilarityDetails> celebsSimilarities = [];
+  bool  profileIsBeingProcessed = false;
+  bool celebsBeingProcessed = false;
 
   Future<void> updateCelebs(String link)async{
+    setState(() {
+      celebsBeingProcessed = true;
+    });
     celebsSimilarities = await AWSServer.instance.getSimilarCelebsByImageUrl(link);
     setState(() {
-
+      celebsBeingProcessed = false;
     });
   }
 
 
 
   Future<void> updateProfileFacesUrls()async{
-    //TODO use SettingsData as a cache so that the screen loads faster etc
     var response = await AWSServer.instance.getProfileFacesAnalysis();
-    if(response.item2==ServerResponse.Success && response.item1!=null){
-      //TODO update SettingsData
+    ServerResponse serverResponse = response.item2;
+    List<String>? data = response.item1;
+    while(serverResponse == ServerResponse.InProgress){
       setState(() {
-        facesUrls = response.item1!;
+        profileIsBeingProcessed = true;
+      });
+      //TODO Nitzan update UI to show this is being processed at the server
+      await Future.delayed(Duration(seconds: 1)); //TODO in the future,might replace polling with a websocket/FCM push
+      response = await AWSServer.instance.getProfileFacesAnalysis();
+      serverResponse = response.item2;
+      data = response.item1;
+    }
+
+    setState(() {
+      profileIsBeingProcessed = false;
+    });
+
+
+    if(serverResponse==ServerResponse.Success && data!=null){
+      setState(() {
+        facesUrls = data!;
       });
     } //TODO what if not successful?
   }
@@ -169,6 +190,8 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                   height: MediaQuery.of(context).size.width * 0.55,
                   decoration: kSettingsBlockBoxDecor,
                   child:
+                  profileIsBeingProcessed?Text('Processing profile'): //TODO Nitzan - change this text to a nice looking widget
+                  celebsBeingProcessed? Text('Processing Celebs'): //TODO Nitzan - change this text to a nice looking widget
                   ListView.separated(
                     physics: BouncingScrollPhysics(),
                     //controller: _listController,

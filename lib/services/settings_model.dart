@@ -108,6 +108,8 @@ class SettingsData extends ChangeNotifier {
     return onNoCast;
   }
 
+  bool currentlyPostingSettings = false;
+
   String _uid = '';
   String _name = '';
   String _facebookId = '';
@@ -920,14 +922,20 @@ class SettingsData extends ChangeNotifier {
       bool resetMatchEngine = true,
       Duration durationDelaySendServer = _debounceSettingsTime}) async {
     if (sendServer) {
+      currentlyPostingSettings = true;
       shouldResetMatchEngineAfterPosting |=
           resetMatchEngine; //See the comment up in the def to understand why it's here
       if (_debounceServer?.isActive ?? false) {
         _debounceServer!.cancel();
       }
+
+      if(shouldResetMatchEngineAfterPosting){
+        MatchEngine.instance.clear(); //Reset the match engine here - otherwise, with a bad connection the old matches stayed
+      }
       _debounceServer = Timer(durationDelaySendServer, () async {
         if (_uid.length > 0) {
           await AWSServer.instance.postUserSettings();
+          currentlyPostingSettings = false;
           if (shouldResetMatchEngineAfterPosting) {
             MatchEngine.instance.clear();
             shouldResetMatchEngineAfterPosting = false;

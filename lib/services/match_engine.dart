@@ -64,6 +64,14 @@ class MatchEngine extends ChangeNotifier {
       print('Not getting more matches from server since nothing was found!');
       return;
     }
+
+    if(SettingsData.instance.currentlyPostingSettings){
+      print('Currently new settings being posted, so going to wait for that to complete');
+      await Future.delayed(Duration(milliseconds: 500));
+      await getMoreMatchesFromServer();
+      return;
+    }
+
     if (!(matchesBeingGotten == null &&
         _matches.length < MINIMUM_CACHED_PROFILES)) {
       return;

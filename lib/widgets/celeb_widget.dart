@@ -170,7 +170,7 @@ class _CelebWidgetState extends State<CelebWidget> {
       List<Future<void>> precacheImagesFutures = [];
       for (int imageIndex = 0; imageIndex < (widget.theCeleb.imagesUrls?.length??0); imageIndex++) {
         String url =AWSServer.instance.celebImageUrlToFullUrl(widget.theCeleb.imagesUrls![imageIndex]);
-        ExtendedImage img = ExtendedImage.network(url,height: 150.0,width: 150.0,fit:BoxFit.cover,retries: 3,);
+        ExtendedImage img = ExtendedImage.network(url,height: 150.0,width: 150.0,fit:BoxFit.cover);
         precacheImagesFutures.add(precacheImage(img.image, context));
         celebImages.add(img);
       }
