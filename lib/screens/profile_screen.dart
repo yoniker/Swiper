@@ -2,12 +2,10 @@ import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/screens/current_user_profile_view_screen.dart';
-<<<<<<< HEAD
+
 import 'package:betabeta/screens/mock_new_match_card_page.dart';
-=======
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/my_look_a_like_screen.dart';
->>>>>>> master_new
 import 'package:betabeta/screens/pending_approvment_screen.dart';
 import 'package:betabeta/screens/profile_edit_screen.dart';
 import 'package:betabeta/services/app_tutorial_brain.dart';
@@ -185,11 +183,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     children: [
                       CircleButton(
                         onPressed: () {
-<<<<<<< HEAD
-                          Get.toNamed(MockNewMatchCardPage.routePage);
-=======
                           Get.toNamed(MyLookALikeScreen.routeName);
->>>>>>> master_new
                         },
                         color: circleButtonColor,
                         padding: EdgeInsets.all(12),
