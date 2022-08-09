@@ -466,9 +466,9 @@ class ChatData extends ChangeNotifier {
     addMessageToDB(newMessage, otherParticipantsId: otherUserId);
     String? newMessageStatus;
     try {
-      TaskResult result =
-          await AWSServer.sendMessage(otherUserId, messageContent, epochTime);
-      newMessageStatus = result == TaskResult.success ? 'Sent' : 'Error';
+      ServerResponse result = await AWSServer.sendMessage(
+          otherUserId, messageContent, epochTime);
+      newMessageStatus = result == ServerResponse.Success ? 'Sent' : 'Error';
     } catch (_) {
       newMessageStatus = 'Error';
     }

@@ -1,12 +1,13 @@
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/screens/full_image_screen.dart';
+import 'package:betabeta/data_models/celeb.dart';
+import 'package:betabeta/models/celebs_info_model.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
+import 'package:betabeta/widgets/celeb_widget.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class MyLookALikeScreen extends StatefulWidget {
   const MyLookALikeScreen({Key? key}) : super(key: key);
@@ -16,18 +17,65 @@ class MyLookALikeScreen extends StatefulWidget {
   static const String routeName = '/my_celeb_look_a_like';
 }
 
+class CelebDetails{
+  Celeb celeb;
+  double faceRecognitionDistance;
+  CelebDetails({required this.celeb,required this.faceRecognitionDistance});
+
+}
+
 class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
   final double percentage = 75;
   final String celebMock = 'Bruce Willis';
-  late String selectedImage = '';
+  String selectedImage = '';
+  ServerResponse currentState = ServerResponse.InProgress;
+  List<String> facesUrls = [];
+  List<CelebSimilarityDetails> celebsSimilarities = [];
+  bool  profileIsBeingProcessed = false;
+  bool celebsBeingProcessed = false;
+
+  Future<void> updateCelebs(String link)async{
+    setState(() {
+      celebsBeingProcessed = true;
+    });
+    celebsSimilarities = await AWSServer.instance.getSimilarCelebsByImageUrl(link);
+    setState(() {
+      celebsBeingProcessed = false;
+    });
+  }
+
+
+
+  Future<void> updateProfileFacesUrls()async{
+    var response = await AWSServer.instance.getProfileFacesAnalysis();
+    ServerResponse serverResponse = response.item2;
+    List<String>? data = response.item1;
+    while(serverResponse == ServerResponse.InProgress){
+      setState(() {
+        profileIsBeingProcessed = true;
+      });
+      //TODO Nitzan update UI to show this is being processed at the server
+      await Future.delayed(Duration(seconds: 1)); //TODO in the future,might replace polling with a websocket/FCM push
+      response = await AWSServer.instance.getProfileFacesAnalysis();
+      serverResponse = response.item2;
+      data = response.item1;
+    }
+
+    setState(() {
+      profileIsBeingProcessed = false;
+    });
+
+
+    if(serverResponse==ServerResponse.Success && data!=null){
+      setState(() {
+        facesUrls = data!;
+      });
+    } //TODO what if not successful?
+  }
 
   @override
   void initState() {
-    setState(() {
-      selectedImage = AWSServer.getProfileImageUrl(
-          SettingsData.instance.profileImagesUrls.first);
-    });
-
+    updateProfileFacesUrls();
     super.initState();
   }
 
@@ -36,7 +84,6 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
     return ListenerWidget(
       notifier: SettingsData.instance,
       builder: (context) {
-        final _imageUrls = SettingsData.instance.profileImagesUrls;
         return Scaffold(
           backgroundColor: backgroundThemeColor,
           appBar: CustomAppBar(
@@ -69,7 +116,7 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                       minWidth: 250.0,
                       maxWidth: MediaQuery.of(context).size.width,
                     ),
-                    child: !(_imageUrls.length > 0)
+                    child: !(facesUrls.length > 0)
                         ? Center(
                             child: Text(
                               'No Profile image Available for match',
@@ -79,18 +126,17 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                         : ListView.separated(
                             key: UniqueKey(),
                             scrollDirection: Axis.horizontal,
-                            itemCount: _imageUrls.length,
+                            itemCount: facesUrls.length,
                             itemBuilder: (cntx, index) {
-                              final String _url = AWSServer.getProfileImageUrl(
-                                  _imageUrls[index]);
+                              final String _url = AWSServer.profileFaceLinkToFullUrl(
+                                  facesUrls[index]);
                               return GestureDetector(
                                 onTap: () {
-                                  print(SettingsData
-                                      .instance.profileImagesUrls.first);
                                   setState(() {
                                     selectedImage = _url;
+
                                   });
-                                  print(selectedImage);
+                                 updateCelebs(facesUrls[index]);
                                 },
                                 child: ConstrainedBox(
                                   constraints: BoxConstraints(
@@ -141,33 +187,34 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width * 0.95,
+                  height: MediaQuery.of(context).size.width * 0.55,
                   decoration: kSettingsBlockBoxDecor,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Text('You look $percentage% like',
-                            style: boldTextStyle),
-                      ),
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.45,
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                          image: DecorationImage(
-                              image:
-                                  AssetImage('assets/images/BruceWillis.jpg'),
-                              fit: BoxFit.cover),
-                        ),
-                      ),
-                      Text(
-                        celebMock,
-                        style: LargeTitleStyle,
-                      )
-                    ],
-                  ),
+                  child:
+                  profileIsBeingProcessed?Text('Processing profile'): //TODO Nitzan - change this text to a nice looking widget
+                  celebsBeingProcessed? Text('Processing Celebs'): //TODO Nitzan - change this text to a nice looking widget
+                  ListView.separated(
+                    physics: BouncingScrollPhysics(),
+                    //controller: _listController,
+                    separatorBuilder: (BuildContext context, int index) {
+                      return SizedBox(height: 15.0);
+                    },
+                    itemCount: celebsSimilarities.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      Celeb currentCeleb =
+                      celebsSimilarities[index].celeb;
+                      double currentDistance = celebsSimilarities[index].faceRecognitionDistance;
+                      return CelebWidget(
+                        key: ValueKey(currentCeleb.celebName),
+                        theCeleb: currentCeleb,
+                        celebsInfo: CelebsInfo.instance,
+                        celebIndex: index,
+                        onTap: () {
+                          print('pressed ${currentCeleb.celebName} which has distance $currentDistance');
+                        },
+                      );
+                    },
+                  )
+                  ,
                 )
               ],
             ),
