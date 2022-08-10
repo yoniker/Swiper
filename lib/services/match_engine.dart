@@ -69,26 +69,6 @@ class MatchEngine extends ChangeNotifier {
     }
 
 
-  Future<void> prefetchMatchesImages(BuildContext context,List<Match?> matches)async{
-
-    List<Future<void>> futuresGettingImages = [];
-    for(var match in matches){
-      if((match?.profile?.imageUrls?.length??0)<1){continue;}
-      var img = ExtendedImage.network(
-        AWSServer.getProfileImageUrl(match!.profile!.imageUrls![0]),
-        scale: 1.0,
-        fit: BoxFit.cover,
-        //headers:{"Keep-Alive":"timeout=20"},
-      );
-      futuresGettingImages.add(precacheImage(img.image, context));
-      print('prefetching ');
-      print(match.profile!.imageUrls![0]);
-    }
-    Future.wait(futuresGettingImages);
-    return;
-  }
-
-
 
 
 

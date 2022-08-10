@@ -286,7 +286,6 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
       fit: BoxFit.cover,
       //headers:{"Keep-Alive":"timeout=20"},
     );
-    print('prefetching ${match.profile!.imageUrls![i]}');
     futuresGettingImages.add(precacheImage(img.image, context));}
     }
 
@@ -295,16 +294,6 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
   Future.wait(futuresGettingImages);
   return;
   }
-
-
-
-
-
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
