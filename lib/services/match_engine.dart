@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/location_service.dart';
 import 'package:betabeta/services/settings_model.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:collection';
 
@@ -58,6 +61,36 @@ class MatchEngine extends ChangeNotifier {
     }
     return _matches.elementAt(1);
   }
+
+  List<Match?> topMatches({int maxNumMatchesPreload = 5}){
+    return _matches.toList().sublist(0,min(maxNumMatchesPreload, _matches.length));
+
+
+    }
+
+
+  Future<void> prefetchMatchesImages(BuildContext context,List<Match?> matches)async{
+
+    List<Future<void>> futuresGettingImages = [];
+    for(var match in matches){
+      if((match?.profile?.imageUrls?.length??0)<1){continue;}
+      var img = ExtendedImage.network(
+        AWSServer.getProfileImageUrl(match!.profile!.imageUrls![0]),
+        scale: 1.0,
+        fit: BoxFit.cover,
+        //headers:{"Keep-Alive":"timeout=20"},
+      );
+      futuresGettingImages.add(precacheImage(img.image, context));
+      print('prefetching ');
+      print(match.profile!.imageUrls![0]);
+    }
+    Future.wait(futuresGettingImages);
+    return;
+  }
+
+
+
+
 
   Future<void> getMoreMatchesFromServer() async {
     if (_serverMatchesSearchStatus == MatchSearchStatus.not_found) {

@@ -8,6 +8,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/screens/profile_edit_screen.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/location_service.dart';
 import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -17,6 +18,7 @@ import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/match_card.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:betabeta/widgets/voila_logo_widget.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -98,12 +100,15 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
       ..addListener(() {
         setState(() {});
       });
+    prefetchMatchesImages();
+    MatchEngine.instance.addListener(prefetchMatchesImages);
     super.initState();
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
+    MatchEngine.instance.removeListener(prefetchMatchesImages);
     super.dispose();
   }
 
@@ -265,18 +270,49 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
     );
   }
 
+
+  Future<void> prefetchMatchesImages()async{
+    //This function prefetches images while listening to MatchEngine.
+    //TODO is this ideal?
+    var matches = MatchEngine.instance.topMatches();
+    List<Future<void>> futuresGettingImages = [];
+    matches.asMap().forEach((i, match){
+    if((match?.profile?.imageUrls?.length??0)>=1){
+      var maxIndexToFetch = i<=1?match!.profile!.imageUrls!.length-1:0;
+      for(int i=0; i<maxIndexToFetch+1; i++){
+    var img = ExtendedImage.network(
+      AWSServer.getProfileImageUrl(match!.profile!.imageUrls![i]),
+      scale: 1.0,
+      fit: BoxFit.cover,
+      //headers:{"Keep-Alive":"timeout=20"},
+    );
+    print('prefetching ${match.profile!.imageUrls![i]}');
+    futuresGettingImages.add(precacheImage(img.image, context));}
+    }
+
+
+  });
+  Future.wait(futuresGettingImages);
+  return;
+  }
+
+
+
+
+
+
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     // return a stack of cards well positioned.
     return ListenerWidget(
       notifier: MatchEngine.instance,
       builder: (context) {
-        List<Match?> topEngineMatches = [
-          if (MatchEngine.instance.currentMatch() != null)
-            MatchEngine.instance.currentMatch(),
-          if (MatchEngine.instance.nextMatch() != null)
-            MatchEngine.instance.nextMatch()
-        ];
+        List<Match?> topEngineMatches = MatchEngine.instance.topMatches();
 
         Widget _buildThumbIcon() {
           if (currentJudgment == SwipeDirection.Right) {
