@@ -6,6 +6,7 @@ import 'package:betabeta/screens/chat/other_user_profile_screen.dart';
 import 'package:betabeta/screens/complete_profile_pageview_screen.dart';
 import 'package:betabeta/screens/mock_new_match_card_page.dart';
 import 'package:betabeta/screens/my_look_a_like_screen.dart';
+import 'package:betabeta/screens/my_mirror_screen.dart';
 import 'package:betabeta/screens/onboarding/onboarding_pageview_screen.dart';
 import 'package:betabeta/screens/onboarding/tutorial_screen_starter.dart';
 import 'package:betabeta/screens/pending_approvment_screen.dart';
@@ -213,6 +214,8 @@ void main() async {
             page: () => TutorialScreenStarter()),
         GetPage(
             name: MyLookALikeScreen.routeName, page: () => MyLookALikeScreen()),
+        GetPage(
+            name: MyMirrorScreen.routeName, page: () => MyMirrorScreen()),
         GetPage(
             name: PendingApprovementScreen.routeName,
             page: () => PendingApprovementScreen()),

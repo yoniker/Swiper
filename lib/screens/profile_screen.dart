@@ -6,6 +6,7 @@ import 'package:betabeta/screens/current_user_profile_view_screen.dart';
 import 'package:betabeta/screens/mock_new_match_card_page.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/my_look_a_like_screen.dart';
+import 'package:betabeta/screens/my_mirror_screen.dart';
 import 'package:betabeta/screens/pending_approvment_screen.dart';
 import 'package:betabeta/screens/profile_edit_screen.dart';
 import 'package:betabeta/services/app_tutorial_brain.dart';
@@ -212,7 +213,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ),
                       ),
                       CircleButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.toNamed(MyMirrorScreen.routeName);
+                        },
                         color: circleButtonColor,
                         padding: EdgeInsets.all(12),
                         label: 'My mirror',
