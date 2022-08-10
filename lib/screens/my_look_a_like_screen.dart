@@ -7,6 +7,8 @@ import 'package:betabeta/widgets/celeb_widget.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
 class MyLookALikeScreen extends StatefulWidget {
@@ -17,45 +19,43 @@ class MyLookALikeScreen extends StatefulWidget {
   static const String routeName = '/my_celeb_look_a_like';
 }
 
-class CelebDetails{
+class CelebDetails {
   Celeb celeb;
   double faceRecognitionDistance;
-  CelebDetails({required this.celeb,required this.faceRecognitionDistance});
-
+  CelebDetails({required this.celeb, required this.faceRecognitionDistance});
 }
 
 class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
-  final double percentage = 75;
-  final String celebMock = 'Bruce Willis';
   String selectedImage = '';
   ServerResponse currentState = ServerResponse.InProgress;
   List<String> facesUrls = [];
   List<CelebSimilarityDetails> celebsSimilarities = [];
-  bool  profileIsBeingProcessed = false;
+  bool profileIsBeingProcessed = false;
   bool celebsBeingProcessed = false;
 
-  Future<void> updateCelebs(String link)async{
+  Future<void> updateCelebs(String link) async {
     setState(() {
       celebsBeingProcessed = true;
     });
-    celebsSimilarities = await AWSServer.instance.getSimilarCelebsByImageUrl(link);
+    celebsSimilarities =
+        await AWSServer.instance.getSimilarCelebsByImageUrl(link);
     setState(() {
       celebsBeingProcessed = false;
     });
   }
 
-
-
-  Future<void> updateProfileFacesUrls()async{
+  Future<void> updateProfileFacesUrls() async {
     var response = await AWSServer.instance.getProfileFacesAnalysis();
     ServerResponse serverResponse = response.item2;
     List<String>? data = response.item1;
-    while(serverResponse == ServerResponse.InProgress){
+    while (serverResponse == ServerResponse.InProgress) {
       setState(() {
         profileIsBeingProcessed = true;
       });
       //TODO Nitzan update UI to show this is being processed at the server
-      await Future.delayed(Duration(seconds: 1)); //TODO in the future,might replace polling with a websocket/FCM push
+      await Future.delayed(Duration(
+          seconds:
+              1)); //TODO in the future,might replace polling with a websocket/FCM push
       response = await AWSServer.instance.getProfileFacesAnalysis();
       serverResponse = response.item2;
       data = response.item1;
@@ -65,12 +65,21 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
       profileIsBeingProcessed = false;
     });
 
-
-    if(serverResponse==ServerResponse.Success && data!=null){
+    if (serverResponse == ServerResponse.Success && data != null) {
       setState(() {
         facesUrls = data!;
       });
     } //TODO what if not successful?
+  }
+
+  String ConvertDistanceToString(double distance) {
+    if (distance < 1.1) return 'You look almost identical to';
+    if (distance < 1.15) return 'You look extremely similar to';
+    if (distance < 1.2) return 'You look very similar to';
+    if (distance < 1.3)
+      return 'You look somewhat like';
+    else
+      return 'Tou look a bit like';
   }
 
   @override
@@ -81,6 +90,7 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ScrollController? scrollController = ScrollController();
     return ListenerWidget(
       notifier: SettingsData.instance,
       builder: (context) {
@@ -88,19 +98,11 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
           backgroundColor: backgroundThemeColor,
           appBar: CustomAppBar(
             hasTopPadding: true,
-            title: 'My Celeb Look-A-Like',
+            title: 'Which Celeb Look-Like-Me?',
           ),
           body: SingleChildScrollView(
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Pick a picture to find out!',
-                    style: LargeTitleStyle.copyWith(fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
                 Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.only(
@@ -119,103 +121,179 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                     child: !(facesUrls.length > 0)
                         ? Center(
                             child: Text(
-                              'No Profile image Available for match',
+                              'No Profile faces found',
                               style: mediumBoldedCharStyle,
                             ),
                           )
-                        : ListView.separated(
-                            key: UniqueKey(),
-                            scrollDirection: Axis.horizontal,
-                            itemCount: facesUrls.length,
-                            itemBuilder: (cntx, index) {
-                              final String _url = AWSServer.profileFaceLinkToFullUrl(
-                                  facesUrls[index]);
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedImage = _url;
-
-                                  });
-                                 updateCelebs(facesUrls[index]);
-                                },
-                                child: ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    minHeight: 30.5,
-                                    maxHeight: 100.5,
-                                    minWidth: 30.5,
-                                    maxWidth: 100.5,
-                                  ),
-                                  // height: 80.5,
-                                  // width: 100.0,
-                                  child: AspectRatio(
-                                    aspectRatio: 1 / 1,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        border: selectedImage == _url
-                                            ? Border.all(
-                                                width: 2, color: appMainColor)
-                                            : null,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(20),
-                                        ),
+                        : RawScrollbar(
+                            scrollbarOrientation: ScrollbarOrientation.top,
+                            controller: scrollController,
+                            radius: Radius.circular(30),
+                            thickness: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 12.0),
+                              child: ListView.separated(
+                                controller: scrollController,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: facesUrls.length,
+                                itemBuilder: (cntx, index) {
+                                  final String _url =
+                                      AWSServer.profileFaceLinkToFullUrl(
+                                          facesUrls[index]);
+                                  return GestureDetector(
+                                    onTap: () {
+                                      if (selectedImage != _url)
+                                        setState(() {
+                                          selectedImage = _url;
+                                        });
+                                      else
+                                        setState(() {
+                                          selectedImage = '';
+                                        });
+                                      updateCelebs(facesUrls[index]);
+                                    },
+                                    child: ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                        minHeight: 30.5,
+                                        maxHeight: 100.5,
+                                        minWidth: 30.5,
+                                        maxWidth: 100.5,
                                       ),
-                                      child: Card(
-                                        margin: EdgeInsets.all(0.0),
-                                        clipBehavior: Clip.antiAlias,
-                                        elevation: 2.1,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(18.0),
-                                        ),
-                                        child: PrecachedImage.network(
-                                          imageURL: _url,
-                                          fadeIn: true,
-                                          shouldPrecache: false,
-                                          fit: BoxFit.cover,
+                                      // height: 80.5,
+                                      // width: 100.0,
+                                      child: AspectRatio(
+                                        aspectRatio: 1 / 1,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: selectedImage == _url
+                                                ? Border.all(
+                                                    width: 2.5,
+                                                    color: appMainColor)
+                                                : null,
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                                image: NetworkImage(_url),
+                                                fit: BoxFit.cover),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              );
-                            },
-                            separatorBuilder: (cntx, index) {
-                              return SizedBox(width: 16.0);
-                            },
+                                  );
+                                },
+                                separatorBuilder: (cntx, index) {
+                                  return SizedBox(width: 16.0);
+                                },
+                              ),
+                            ),
                           ),
                   ),
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.95,
-                  height: MediaQuery.of(context).size.width * 0.55,
-                  decoration: kSettingsBlockBoxDecor,
-                  child:
-                  profileIsBeingProcessed?Text('Processing profile'): //TODO Nitzan - change this text to a nice looking widget
-                  celebsBeingProcessed? Text('Processing Celebs'): //TODO Nitzan - change this text to a nice looking widget
-                  ListView.separated(
-                    physics: BouncingScrollPhysics(),
-                    //controller: _listController,
-                    separatorBuilder: (BuildContext context, int index) {
-                      return SizedBox(height: 15.0);
-                    },
-                    itemCount: celebsSimilarities.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      Celeb currentCeleb =
-                      celebsSimilarities[index].celeb;
-                      double currentDistance = celebsSimilarities[index].faceRecognitionDistance;
-                      return CelebWidget(
-                        key: ValueKey(currentCeleb.celebName),
-                        theCeleb: currentCeleb,
-                        celebsInfo: CelebsInfo.instance,
-                        celebIndex: index,
-                        onTap: () {
-                          print('pressed ${currentCeleb.celebName} which has distance $currentDistance');
-                        },
-                      );
-                    },
-                  )
-                  ,
+                profileIsBeingProcessed
+                    ? Container(
+                        height: MediaQuery.of(context).size.height * 0.5,
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : celebsBeingProcessed
+                        ? Container(
+                            height: MediaQuery.of(context).size.height * 0.5,
+                            width: MediaQuery.of(context).size.width,
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                        : selectedImage != ''
+                            ? Wrap(
+                                direction: Axis.vertical,
+                                children: celebsSimilarities.map((celeb) {
+                                  Celeb currentCeleb = celeb.celeb;
+                                  double currentDistance =
+                                      celeb.faceRecognitionDistance;
+                                  return Container(
+                                      margin: EdgeInsets.only(
+                                        top: 10,
+                                      ),
+                                      height: 300,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.9,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(30),
+                                          bottom: Radius.circular(10),
+                                        ),
+                                      ),
+                                      child: CelebWidget(
+                                        enableCarousel: true,
+                                        key: ValueKey(currentCeleb.celebName),
+                                        backgroundImageMode: true,
+                                        headline: ConvertDistanceToString(
+                                            currentDistance),
+                                        theCeleb: currentCeleb,
+                                        celebsInfo: CelebsInfo.instance,
+                                        onTap: () {
+                                          print(
+                                              'pressed ${currentCeleb.celebName} which has distance $currentDistance');
+                                        },
+                                      ));
+                                }).toList(),
+                              )
+                            : Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.5,
+                                child: Center(
+                                  child: Text(
+                                    'Pick a face to find out who you look like!',
+                                    style: LargeTitleStyle,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                SizedBox(
+                  height: 20,
                 )
+                // Container(
+                //   width: MediaQuery.of(context).size.width * 0.95,
+                //   height: MediaQuery.of(context).size.width * 0.85,
+                //   decoration: kSettingsBlockBoxDecor,
+                //   child: profileIsBeingProcessed
+                //       ? Center(
+                //           child: CircularProgressIndicator(),
+                //         )
+                //       : celebsBeingProcessed
+                //           ? Center(
+                //               child: CircularProgressIndicator(),
+                //             )
+                //           : ListView.separated(
+                //               physics: BouncingScrollPhysics(),
+                //               //controller: _listController,
+                //               separatorBuilder:
+                //                   (BuildContext context, int index) {
+                //                 return SizedBox(height: 15.0);
+                //               },
+                //               itemCount: celebsSimilarities.length,
+                //               itemBuilder: (BuildContext context, int index) {
+                //                 Celeb currentCeleb =
+                //                     celebsSimilarities[index].celeb;
+                //                 double currentDistance =
+                //                     celebsSimilarities[index]
+                //                         .faceRecognitionDistance;
+                //                 return CelebWidget(
+                //                   backgroundImageMode: true,
+                //                   key: ValueKey(currentCeleb.celebName),
+                //                   theCeleb: currentCeleb,
+                //                   celebsInfo: CelebsInfo.instance,
+                //                   celebIndex: index,
+                //                   onTap: () {
+                //                     print(
+                //                         'pressed ${currentCeleb.celebName} which has distance $currentDistance');
+                //                   },
+                //                 );
+                //               },
+                //             ),
+                // )
               ],
             ),
           ),

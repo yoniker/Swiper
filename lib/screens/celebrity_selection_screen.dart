@@ -88,6 +88,7 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
 
   @override
   Widget build(BuildContext context) {
+    ScrollController scrollController = ScrollController();
     return ListenerWidget(
       notifier: CelebsInfo.instance,
       builder: (context) {
@@ -110,92 +111,97 @@ class _ScreenCelebritySelectionState extends State<ScreenCelebritySelection> {
             hasTopPadding: true,
             trailing: FaIcon(FontAwesomeIcons.addressCard),
           ),
-          body: Column(
-            children: [
-              Container(
-                margin: EdgeInsets.symmetric(
-                  vertical: 12.50,
-                  horizontal: 7.5,
-                ),
-                child: TextField(
-                  controller: _controller,
-                  focusNode: textFieldFocus,
-                  cursorColor: mainAppColor02,
-                  decoration: InputDecoration(
-                    fillColor: lightCardColor,
-                    filled: true,
-                    prefixIcon: Icon(Icons.search),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        Icons.close_rounded,
-                        color: searchBoxIsFocused
-                            ? mainAppColor02
-                            : darkTextColor.withOpacity(0.5),
-                      ),
-                      onPressed: () {
-                        _controller.clear();
-                        _onSearchChanged('', CelebsInfo.instance);
-                      },
-                      iconSize: 24.0,
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: lightCardColor),
-                      borderRadius: BorderRadius.circular(12.5),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: lightCardColor),
-                      borderRadius: BorderRadius.circular(12.5),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: lightCardColor),
-                      borderRadius: BorderRadius.circular(12.5),
-                    ),
-                    hintText: 'Enter Celeb Name Here',
+          body: RawScrollbar(
+            controller: scrollController,
+            thumbColor: Colors.black38,
+            radius: Radius.circular(30),
+            child: Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.symmetric(
+                    vertical: 12.50,
+                    horizontal: 7.5,
                   ),
-                  onTap: () {
-                    // here we will set "searchBoxIsFocused" to true and this will
-                    // cause the color of the "clear-button" to change to the color want.
-                    setState(() {
-                      searchBoxIsFocused = true;
-                    });
-                  },
-                  onChanged: (String newText) {
-                    _onSearchChanged(newText, CelebsInfo.instance);
-                  },
-                  onEditingComplete: () {
-                    // remove focus form the Text Field.
-                    unfocus();
-                  },
-                ),
-              ),
-              Flexible(
-                flex: 1,
-                child: Container(
-                  margin: EdgeInsets.all(8.0),
-                  child: ListView.separated(
-                    physics: BouncingScrollPhysics(),
-                    controller: _listController,
-                    separatorBuilder: (BuildContext context, int index) {
-                      return SizedBox(height: 15.0);
-                    },
-                    itemCount: _numCelebsToShow,
-                    itemBuilder: (BuildContext context, int index) {
-                      Celeb currentCeleb =
-                          CelebsInfo.instance.entireCelebsList[index];
-                      return CelebWidget(
-                        key: ValueKey(currentCeleb.celebName),
-                        theCeleb: currentCeleb,
-                        celebsInfo: CelebsInfo.instance,
-                        celebIndex: index,
-                        onTap: () {
-                          Get.back(result: currentCeleb);
+                  child: TextField(
+                    controller: _controller,
+                    focusNode: textFieldFocus,
+                    cursorColor: Colors.blueAccent,
+                    decoration: InputDecoration(
+                      fillColor: lightCardColor,
+                      filled: true,
+                      prefixIcon: Icon(Icons.search),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          Icons.close_rounded,
+                          color: searchBoxIsFocused
+                              ? Colors.blueAccent
+                              : darkTextColor.withOpacity(0.5),
+                        ),
+                        onPressed: () {
+                          _controller.clear();
+                          _onSearchChanged('', CelebsInfo.instance);
                         },
-                      );
+                        iconSize: 24.0,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: lightCardColor),
+                        borderRadius: BorderRadius.circular(12.5),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: lightCardColor),
+                        borderRadius: BorderRadius.circular(12.5),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: lightCardColor),
+                        borderRadius: BorderRadius.circular(12.5),
+                      ),
+                      hintText: 'Enter Celeb Name Here',
+                    ),
+                    onTap: () {
+                      // here we will set "searchBoxIsFocused" to true and this will
+                      // cause the color of the "clear-button" to change to the color want.
+                      setState(() {
+                        searchBoxIsFocused = true;
+                      });
+                    },
+                    onChanged: (String newText) {
+                      _onSearchChanged(newText, CelebsInfo.instance);
+                    },
+                    onEditingComplete: () {
+                      // remove focus form the Text Field.
+                      unfocus();
                     },
                   ),
                 ),
-              )
-            ],
+                Flexible(
+                  child: Container(
+                    margin: EdgeInsets.all(8.0),
+                    child: ListView.separated(
+                      physics: BouncingScrollPhysics(),
+                      controller: _listController,
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(height: 15.0);
+                      },
+                      itemCount: _numCelebsToShow,
+                      itemBuilder: (BuildContext context, int index) {
+                        Celeb currentCeleb =
+                            CelebsInfo.instance.entireCelebsList[index];
+                        return CelebWidget(
+                          height: 300,
+                          key: ValueKey(currentCeleb.celebName),
+                          theCeleb: currentCeleb,
+                          celebsInfo: CelebsInfo.instance,
+                          celebIndex: index,
+                          onTap: () {
+                            Get.back(result: currentCeleb);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         );
       },
