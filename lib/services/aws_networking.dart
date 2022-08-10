@@ -602,4 +602,22 @@ class AWSServer {
   }
 
 
+
+
+  Future<Map> getTraitsByImageUrl(String shortFaceAnalysisUrl)async{
+    //Input : a short face analysis url, point out to a face detection on the server
+    //Output : a list of the most similar celebs to that detection, and their corresponding distances
+
+    Uri getAnalysisUri =
+    Uri.https(SERVER_ADDR, 'analyze-user-fr/get_traits/$shortFaceAnalysisUrl');
+
+    http.Response response = await http.get(getAnalysisUri);
+    if (response.statusCode != 200) {return {};} //TODO something other than returning an empty map
+    var decodedResponse = json.jsonDecode(response.body);
+    Map traitsData = Map.from(decodedResponse[API_CONSTS.TRAITS]);
+    return traitsData;
+
+  }
+
+
 }

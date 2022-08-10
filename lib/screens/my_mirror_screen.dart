@@ -17,30 +17,21 @@ class MyMirrorScreen extends StatefulWidget {
   static const String routeName = '/my_mirror';
 }
 
-class CelebDetails{
-  Celeb celeb;
-  double faceRecognitionDistance;
-  CelebDetails({required this.celeb,required this.faceRecognitionDistance});
-
-}
-
 class _MyMirrorScreenState extends State<MyMirrorScreen> {
-  final double percentage = 75;
-  final String celebMock = 'Bruce Willis';
   String selectedImage = '';
   ServerResponse currentState = ServerResponse.InProgress;
   List<String> facesUrls = [];
-  List<CelebSimilarityDetails> celebsSimilarities = [];
+  Map traits = {};
   bool  profileIsBeingProcessed = false;
-  bool celebsBeingProcessed = false;
+  bool traitsBeingFetched = false;
 
-  Future<void> updateCelebs(String link)async{
+  Future<void> updateTraits(String link)async{
     setState(() {
-      celebsBeingProcessed = true;
+      traitsBeingFetched = true;
     });
-    celebsSimilarities = await AWSServer.instance.getSimilarCelebsByImageUrl(link);
+    traits = await AWSServer.instance.getTraitsByImageUrl(link);
     setState(() {
-      celebsBeingProcessed = false;
+      traitsBeingFetched = false;
     });
   }
 
@@ -88,7 +79,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
           backgroundColor: backgroundThemeColor,
           appBar: CustomAppBar(
             hasTopPadding: true,
-            title: 'My Celeb Look-A-Like',
+            title: 'My Mirror - shitty working UI',
           ),
           body: SingleChildScrollView(
             child: Column(
@@ -124,7 +115,6 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                       ),
                     )
                         : ListView.separated(
-                      key: UniqueKey(),
                       scrollDirection: Axis.horizontal,
                       itemCount: facesUrls.length,
                       itemBuilder: (cntx, index) {
@@ -136,7 +126,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                               selectedImage = _url;
 
                             });
-                            updateCelebs(facesUrls[index]);
+                            updateTraits(facesUrls[index]);
                           },
                           child: ConstrainedBox(
                             constraints: BoxConstraints(
@@ -191,29 +181,8 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                   decoration: kSettingsBlockBoxDecor,
                   child:
                   profileIsBeingProcessed?Text('Processing profile'): //TODO Nitzan - change this text to a nice looking widget
-                  celebsBeingProcessed? Text('Processing Celebs'): //TODO Nitzan - change this text to a nice looking widget
-                  ListView.separated(
-                    physics: BouncingScrollPhysics(),
-                    //controller: _listController,
-                    separatorBuilder: (BuildContext context, int index) {
-                      return SizedBox(height: 15.0);
-                    },
-                    itemCount: celebsSimilarities.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      Celeb currentCeleb =
-                          celebsSimilarities[index].celeb;
-                      double currentDistance = celebsSimilarities[index].faceRecognitionDistance;
-                      return CelebWidget(
-                        key: ValueKey(currentCeleb.celebName),
-                        theCeleb: currentCeleb,
-                        celebsInfo: CelebsInfo.instance,
-                        celebIndex: index,
-                        onTap: () {
-                          print('pressed ${currentCeleb.celebName} which has distance $currentDistance');
-                        },
-                      );
-                    },
-                  )
+                  traitsBeingFetched? Text('Fetching traits'): //TODO Nitzan - change this text to a nice looking widget
+                  Center(child: Text(traits.toString()))
                   ,
                 )
               ],

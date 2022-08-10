@@ -75,5 +75,6 @@ class API_CONSTS{
   //responses when analysing user profile, getting info etc
   static const String FACES_DETAILS = 'faces_details';
   static const String CELEBS_DATA = 'celebs_data';
+  static const String TRAITS = 'traits';
 
 }
