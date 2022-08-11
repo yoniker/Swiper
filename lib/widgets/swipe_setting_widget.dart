@@ -107,7 +107,7 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              if (SettingsData.instance.isTestUser)
+              if (SettingsData.instance.isTestUserName=='true')
                 Text(
                   "Test user mode is active",
                   style: TextStyle(
@@ -287,7 +287,7 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
                         ),
                       ],
                     ),
-                    if (SettingsData.instance.isTestUser)
+                    if (SettingsData.instance.isTestUserName=='true')
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -306,7 +306,7 @@ class _SwipeSettingWidgetState extends State<SwipeSettingWidget> {
                           ),
                         ],
                       ),
-                    if (SettingsData.instance.isTestUser)
+                    if (SettingsData.instance.isTestUserName=='true')
                       TextButton(
                         child: Text(
                           'Clear all my likes',

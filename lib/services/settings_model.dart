@@ -7,6 +7,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+enum TestUserState {isTestUser,notTestUser}
+enum RegistrationStatus{notRegistered,registeredNotApproved,registeredApproved,deleted}
+
 class SettingsData extends ChangeNotifier {
   //Some consts to facilitate share preferences access
   static const String PREFERRED_GENDER_KEY = 'gender_preferred';
@@ -52,7 +55,7 @@ class SettingsData extends ChangeNotifier {
   static const String PETS_KEY = 'pets';
   static const String HEIGHT_IN_CM_KEY = 'height_in_cm';
   static const String TEXT_SEARCH_KEY = 'text_search';
-  static const String IS_TEST_USER_KEY = 'is_test_user';
+  static const String IS_TEST_USER_NAME_KEY = 'is_test_user';
   static const String USER_TOOK_TUTORIAL_KEY = 'user_took_tutorial';
   static const String REGISTRATION_STATUS_KEY = 'registration_status';
 
@@ -158,7 +161,7 @@ class SettingsData extends ChangeNotifier {
   List<String> _pets = [];
   int _heightInCm = 0;
   String _registrationStatus = '';
-  bool _isTestUser = false;
+  String _isTestUserName = TestUserState.isTestUser.name;
 
   SettingsData._privateConstructor() {
     //And after that, read settings from shared
@@ -236,7 +239,7 @@ class SettingsData extends ChangeNotifier {
     _registrationStatus =
         sharedPreferences.getString(REGISTRATION_STATUS_KEY) ??
             _registrationStatus;
-    _isTestUser = sharedPreferences.getBool(IS_TEST_USER_KEY) ?? _isTestUser;
+    _isTestUserName = sharedPreferences.getString(IS_TEST_USER_NAME_KEY) ?? _isTestUserName;
     _readFromShared = true;
 
     return;
@@ -300,6 +303,7 @@ class SettingsData extends ChangeNotifier {
     _textSearch = userData[TEXT_SEARCH_KEY] ?? _textSearch;
     _registrationStatus =
         userData[REGISTRATION_STATUS_KEY] ?? _registrationStatus;
+    _isTestUserName = userData[IS_TEST_USER_NAME_KEY] ?? _isTestUserName;
 
     savePreferences(FIREBASE_UID_KEY, _uid,
         sendServer: false, resetMatchEngine: false);
@@ -455,14 +459,23 @@ class SettingsData extends ChangeNotifier {
     savePreferences(MAX_AGE_KEY, newMaxAge);
   }
 
-  bool get isTestUser {
-    return _isTestUser;
+  String get isTestUserName {
+    return _isTestUserName;
   }
 
-  set isTestUser(bool newIsTestUser) {
-    _isTestUser = newIsTestUser;
-    savePreferences(IS_TEST_USER_KEY, newIsTestUser,
-        sendServer: false, resetMatchEngine: false);
+  set isTestUserName(String newIsTestUser) {
+    _isTestUserName = newIsTestUser;
+    savePreferences(IS_TEST_USER_NAME_KEY, newIsTestUser,
+        sendServer: true, resetMatchEngine: false);
+  }
+
+  TestUserState get testUserState {
+    return TestUserState.values.firstWhere((state) => state.name == _isTestUserName,
+        orElse: () => TestUserState.isTestUser);
+  }
+
+  set testUserState(TestUserState testUserState) {
+    this._isTestUserName = testUserState.name;
   }
 
   int get auditionCount {

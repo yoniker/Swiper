@@ -181,7 +181,8 @@ class AWSServer {
       SettingsData.PETS_KEY: json.jsonEncode(settings.pets),
       SettingsData.HEIGHT_IN_CM_KEY: settings.heightInCm.toString(),
       SettingsData.TEXT_SEARCH_KEY: settings.textSearch,
-      SettingsData.REGISTRATION_STATUS_KEY: settings.registrationStatus
+      SettingsData.REGISTRATION_STATUS_KEY: settings.registrationStatus,
+      SettingsData.IS_TEST_USER_NAME_KEY : settings.isTestUserName
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri = Uri.https(SERVER_ADDR, '/user_data/settings/${settings.uid}');
@@ -526,10 +527,10 @@ class AWSServer {
           status_option.name ==
               decodedResponse[API_CONSTS.LOCATION_STATUS_KEY],
           orElse: () => LocationCountStatus.initial_state);
-      if (decodedResponse[API_CONSTS.IS_TEST_USER_KEY] == true) {
-        SettingsData.instance.isTestUser = true;
+      if (decodedResponse[API_CONSTS.IS_TEST_USER_KEY] == 'true') {
+        SettingsData.instance.isTestUserName = 'true';
       } else {
-        SettingsData.instance.isTestUser = false;
+        SettingsData.instance.isTestUserName = 'false';
       }
       //Here there should be just enough users or not enough users + data
       if (status == LocationCountStatus.enough_users) {
