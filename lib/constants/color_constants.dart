@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 // UI for the Settings Screen.
 
 const Color lightCardColor = Color(0xFFF5F5F5);
-const Color backgroundThemeColor = Color(0xFFE8EBF1);
+const Color backgroundThemeColor = Color(0xFFF5F5F5);
+// const Color backgroundThemeColor = Color(0xFFE8EBF1);
 const Color backgroundThemeColorALT = Color(0xEFF5F8F8);
 const Color darkTextColor = Color(0xFF747474);
 const Color unselectedTabColor = Colors.white60;

@@ -1,13 +1,17 @@
+import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/data_models/celeb.dart';
-import 'package:betabeta/models/celebs_info_model.dart';
+import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
-import 'package:betabeta/widgets/celeb_widget.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
+
+import 'package:get/get.dart';
+
+import '../constants/assets_paths.dart';
 
 class MyMirrorScreen extends StatefulWidget {
   const MyMirrorScreen({Key? key}) : super(key: key);
@@ -22,31 +26,34 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
   ServerResponse currentState = ServerResponse.InProgress;
   List<String> facesUrls = [];
   Map traits = {};
-  bool  profileIsBeingProcessed = false;
+  bool profileIsBeingProcessed = false;
   bool traitsBeingFetched = false;
 
-  Future<void> updateTraits(String link)async{
-    setState(() {
-      traitsBeingFetched = true;
-    });
+  Future<void> updateTraits(String link) async {
+    if (mounted)
+      setState(() {
+        traitsBeingFetched = true;
+      });
     traits = await AWSServer.instance.getTraitsByImageUrl(link);
-    setState(() {
-      traitsBeingFetched = false;
-    });
+    if (mounted)
+      setState(() {
+        traitsBeingFetched = false;
+      });
   }
 
-
-
-  Future<void> updateProfileFacesUrls()async{
+  Future<void> updateProfileFacesUrls() async {
     var response = await AWSServer.instance.getProfileFacesAnalysis();
     ServerResponse serverResponse = response.item2;
     List<String>? data = response.item1;
-    while(serverResponse == ServerResponse.InProgress){
-      setState(() {
-        profileIsBeingProcessed = true;
-      });
+    while (serverResponse == ServerResponse.InProgress) {
+      if (mounted)
+        setState(() {
+          profileIsBeingProcessed = true;
+        });
       //TODO Nitzan update UI to show this is being processed at the server
-      await Future.delayed(Duration(seconds: 1)); //TODO in the future,might replace polling with a websocket/FCM push
+      await Future.delayed(Duration(
+          seconds:
+              1)); //TODO in the future,might replace polling with a websocket/FCM push
       response = await AWSServer.instance.getProfileFacesAnalysis();
       serverResponse = response.item2;
       data = response.item1;
@@ -56,8 +63,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
       profileIsBeingProcessed = false;
     });
 
-
-    if(serverResponse==ServerResponse.Success && data!=null){
+    if (serverResponse == ServerResponse.Success && data != null) {
       setState(() {
         facesUrls = data!;
       });
@@ -70,126 +76,608 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
     super.initState();
   }
 
+  int age = 0;
+  String BMI = '';
+  String firstEyeColor = '';
+  String secondEyeColor = '';
+  String firstHairColor = '';
+  String secondHairColor = '';
+  String gender = '';
+  String ethnicity = '';
+  String dominatedEyeColor = '';
+  String dominatedHairColor = '';
+  String education = '';
+
+  String maxKey(
+      {required Map<String, double> map, double minPossibleValue = -1.0}) {
+    double thevalue =
+        minPossibleValue; //assumption: the values are non negative
+    String thekey = '';
+    map.forEach((k, v) {
+      if (v > thevalue) {
+        thevalue = v;
+        thekey = k;
+      }
+    });
+    return thekey;
+  }
+
+  String minKey(
+      {required Map<String, double> map, double maxPossibleValue = 101.0}) {
+    double thevalue =
+        maxPossibleValue; //assumption: the values are non negative
+    String thekey = '';
+    map.forEach((k, v) {
+      if (v < thevalue) {
+        thevalue = v;
+        thekey = k;
+      }
+    });
+    return thekey;
+  }
+
+  double getRelativeTextSize(num baseValue) {
+    // get the aspect Ratio of the Device i.e. the length dived by the breadth (something of that sort)
+    double multiplicativeRatio = MediaQuery.of(context).size.height / 2;
+
+    // clamp the value to a range between "0.0" and the supplied baseValue
+    double clampedValue = (multiplicativeRatio).clamp(
+          0.0,
+          1.0,
+        ) *
+        baseValue.toDouble();
+
+    return clampedValue;
+  }
+
+  Color getEyeColor() {
+    switch (dominatedEyeColor) {
+      case 'Hazel':
+      case 'Brown':
+        return Colors.brown;
+      case 'Green':
+        return Colors.green;
+      case 'Blue':
+        return Colors.blue;
+      case 'Gray':
+        return Colors.blueGrey;
+    }
+    return Colors.black87;
+  }
+
+  Color getHairColor() {
+    switch (dominatedHairColor) {
+      case 'Brown':
+        return Colors.brown;
+      case 'Bald':
+        return Colors.transparent;
+      case 'Blond':
+        return goldColorish;
+      case 'Red':
+        return Colors.red;
+      case 'Gray':
+        return Colors.white;
+    }
+    return Colors.black87;
+  }
+
+  GlobalKey containerSizeKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
+    if (traits.isNotEmpty) {
+      print(traits);
+      Map<String, double> eyeColors =
+          Map<String, double>.from(traits['eyes_color']);
+      Map<String, double> genders = Map<String, double>.from(traits['gender']);
+      Map<String, double> hairColors =
+          Map<String, double>.from(traits['hair_color']);
+      Map<String, double> ethnicities =
+          Map<String, double>.from(traits['race']);
+      Map<String, double> educations =
+          Map<String, double>.from(traits['education']);
+
+      age = traits['age'].round();
+      BMI = traits['bmi_estimate'].toStringAsFixed(1);
+      firstEyeColor = maxKey(map: eyeColors).toLowerCase();
+
+      secondEyeColor = minKey(map: eyeColors).toLowerCase();
+
+      firstHairColor = maxKey(map: hairColors).toLowerCase();
+      secondHairColor = minKey(map: hairColors).toLowerCase();
+      ethnicity = maxKey(map: ethnicities).toLowerCase();
+
+      gender = maxKey(map: genders);
+      if (gender == 'f') {
+        gender = 'female';
+      } else if (gender == 'm') {
+        gender = 'male';
+      } else
+        gender = '';
+
+      education = maxKey(map: educations);
+      print(education);
+
+      dominatedEyeColor = maxKey(map: eyeColors);
+      dominatedHairColor = maxKey(map: hairColors);
+    }
+
     return ListenerWidget(
       notifier: SettingsData.instance,
       builder: (context) {
+        TextStyle cardFontStyle = boldTextStyle.copyWith(
+          color: Colors.black.withOpacity(0.8),
+          fontSize: getRelativeTextSize(15),
+        );
         return Scaffold(
-          backgroundColor: backgroundThemeColor,
+          backgroundColor: Colors.white,
           appBar: CustomAppBar(
             hasTopPadding: true,
-            title: 'My Mirror - shitty working UI',
+            title: 'My mirror on the wall',
+            backgroundColor: Colors.white,
+            elevation: 0,
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Pick a picture to find out!',
-                    style: LargeTitleStyle.copyWith(fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.only(
-                    top: 8.0,
-                    bottom: 12.0,
-                    left: 5.0,
-                    right: 5.0,
-                  ),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: 30.5,
-                      maxHeight: 100.5,
-                      minWidth: 250.0,
-                      maxWidth: MediaQuery.of(context).size.width,
-                    ),
-                    child: !(facesUrls.length > 0)
-                        ? Center(
-                      child: Text(
-                        'No Profile image Available for match',
-                        style: mediumBoldedCharStyle,
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              profileIsBeingProcessed
+                  ? Container(
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: CircularProgressIndicator(),
                       ),
                     )
-                        : ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: facesUrls.length,
-                      itemBuilder: (cntx, index) {
-                        final String _url = AWSServer.profileFaceLinkToFullUrl(
-                            facesUrls[index]);
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedImage = _url;
-
-                            });
-                            updateTraits(facesUrls[index]);
-                          },
-                          child: ConstrainedBox(
-                            constraints: BoxConstraints(
-                              minHeight: 30.5,
-                              maxHeight: 100.5,
-                              minWidth: 30.5,
-                              maxWidth: 100.5,
-                            ),
-                            // height: 80.5,
-                            // width: 100.0,
-                            child: AspectRatio(
-                              aspectRatio: 1 / 1,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: selectedImage == _url
-                                      ? Border.all(
-                                      width: 2, color: appMainColor)
-                                      : null,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(20),
+                  : //TODO Nitzan - change this text to a nice looking widget
+                  traitsBeingFetched
+                      ? Container(
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          width: MediaQuery.of(context).size.width,
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        )
+                      : //TODO Nitzan - change this text to a nice looking widget
+                      selectedImage != ''
+                          ? Expanded(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5.0),
+                                child: Container(
+                                  child: Stack(
+                                    alignment: Alignment.bottomCenter,
+                                    children: [
+                                      Container(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.39,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            opacity: 0.7,
+                                            image: NetworkImage(selectedImage),
+                                          ),
+                                        ),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                                colors: [
+                                                  Colors.white,
+                                                  Colors.white.withOpacity(0.2),
+                                                  Colors.white.withOpacity(0),
+                                                  Colors.white.withOpacity(0),
+                                                  Colors.white
+                                                ],
+                                                begin: Alignment.topCenter,
+                                                end: Alignment.bottomCenter),
+                                          ),
+                                        ),
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(10),
+                                                  ),
+                                                ),
+                                                child: AspectRatio(
+                                                  aspectRatio: 1 / 0.5,
+                                                  child: CustomPaint(
+                                                    painter: ProfilePainter(
+                                                        eyesColorInput:
+                                                            getEyeColor(),
+                                                        hairColorInput:
+                                                            getHairColor(),
+                                                        isMale:
+                                                            gender == 'male'),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              7.0),
+                                                      child: Text(
+                                                        'Selected image estimate results:',
+                                                        style: TextStyle(
+                                                            fontSize: 18,
+                                                            color: goldColorish,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Column(
+                                                children: [
+                                                  Text(
+                                                    '${age} years old $ethnicity $gender',
+                                                    textAlign: TextAlign.center,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style:
+                                                        boldTextStyle.copyWith(
+                                                      color: Colors.black
+                                                          .withOpacity(0.8),
+                                                      fontSize:
+                                                          getRelativeTextSize(
+                                                              20),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    '${firstEyeColor.capitalizeFirst} $secondEyeColor eyes and $firstHairColor $secondHairColor hair',
+                                                    style: cardFontStyle,
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 5.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'BMI: $BMI',
+                                                      style: cardFontStyle
+                                                          .copyWith(
+                                                              fontSize: 14,
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.6)),
+                                                    ),
+                                                    Text(
+                                                      'Education: $education',
+                                                      style: cardFontStyle
+                                                          .copyWith(
+                                                        fontSize: 14,
+                                                        color: Colors.black
+                                                            .withOpacity(0.6),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.all(10),
+                                                  child: Image.asset(
+                                                    BetaIconPaths
+                                                        .AIprofileMePath,
+                                                    scale: 5,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                child: Card(
-                                  margin: EdgeInsets.all(0.0),
-                                  clipBehavior: Clip.antiAlias,
-                                  elevation: 2.1,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(18.0),
-                                  ),
-                                  child: PrecachedImage.network(
-                                    imageURL: _url,
-                                    fadeIn: true,
-                                    shouldPrecache: false,
+                              ),
+                            )
+                          : Flexible(
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.8,
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    opacity: 0.7,
                                     fit: BoxFit.cover,
+                                    image: AssetImage(
+                                        AssetsPaths.mirrorOnTheWall1),
+                                  ),
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                        colors: [
+                                          Colors.white,
+                                          Colors.white.withOpacity(0),
+                                          Colors.white.withOpacity(0),
+                                          Colors.white
+                                        ],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 15.0),
+                                    child: Text(
+                                      'Choose a picture for \nVoilà to analyze',
+                                      textAlign: TextAlign.center,
+                                      style:
+                                          kWhiteDescriptionShadowStyle.copyWith(
+                                              fontSize: getRelativeTextSize(30),
+                                              color: Colors.white),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                      separatorBuilder: (cntx, index) {
-                        return SizedBox(width: 16.0);
-                      },
-                    ),
-                  ),
+              Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.only(
+                  top: 8.0,
+                  bottom: 12.0,
+                  left: 5.0,
+                  right: 5.0,
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.95,
-                  height: MediaQuery.of(context).size.width * 0.55,
-                  decoration: kSettingsBlockBoxDecor,
-                  child:
-                  profileIsBeingProcessed?Text('Processing profile'): //TODO Nitzan - change this text to a nice looking widget
-                  traitsBeingFetched? Text('Fetching traits'): //TODO Nitzan - change this text to a nice looking widget
-                  Center(child: Text(traits.toString()))
-                  ,
-                )
-              ],
-            ),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: 30.5,
+                    maxHeight: 100.5,
+                    minWidth: 250.0,
+                    maxWidth: MediaQuery.of(context).size.width,
+                  ),
+                  child: !(facesUrls.length > 0)
+                      ? Center(
+                          child: Text(
+                            'No Profile image Available',
+                            style: mediumBoldedCharStyle,
+                          ),
+                        )
+                      : ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: facesUrls.length,
+                          itemBuilder: (cntx, index) {
+                            final String _url =
+                                AWSServer.profileFaceLinkToFullUrl(
+                                    facesUrls[index]);
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedImage = _url;
+                                });
+                                updateTraits(facesUrls[index]);
+                              },
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  minHeight: 30.5,
+                                  maxHeight: 100.5,
+                                  minWidth: 30.5,
+                                  maxWidth: 100.5,
+                                ),
+                                // height: 80.5,
+                                // width: 100.0,
+                                child: AspectRatio(
+                                  aspectRatio: 1 / 1,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: selectedImage == _url
+                                          ? Border.all(
+                                              width: 2, color: appMainColor)
+                                          : null,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(20),
+                                      ),
+                                    ),
+                                    child: Card(
+                                      margin: EdgeInsets.all(0.0),
+                                      clipBehavior: Clip.antiAlias,
+                                      elevation: 2.1,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(18.0),
+                                      ),
+                                      child: PrecachedImage.network(
+                                        imageURL: _url,
+                                        fadeIn: true,
+                                        shouldPrecache: false,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          separatorBuilder: (cntx, index) {
+                            return SizedBox(width: 16.0);
+                          },
+                        ),
+                ),
+              ),
+            ],
           ),
         );
       },
     );
   }
+}
+
+class ProfilePainter extends CustomPainter {
+  final Color eyesColorInput;
+  final Color hairColorInput;
+  final bool isMale;
+  ProfilePainter(
+      {this.eyesColorInput = Colors.blue,
+      this.hairColorInput = Colors.black87,
+      this.isMale = true});
+  @override
+  void paint(Canvas canvas, Size size) {
+    final double eyesWidth = size.width * 0.05;
+    final double eyesHeight = size.height * 0.04;
+    final pupilsRadius = size.width * 0.0075;
+    final secondHairColor = hairColorInput == goldColorish
+        ? Colors.yellow
+        : hairColorInput == Colors.transparent
+            ? Colors.transparent
+            : hairColorInput == Colors.red
+                ? Colors.orange
+                : hairColorInput == Colors.white
+                    ? Color(0xFF616161)
+                    : hairColorInput == Colors.brown
+                        ? Color(0xFF4E342E)
+                        : Colors.black87;
+    final Offset hairCenterPosition =
+        Offset(size.width * 0.5, size.height * 0.76);
+    final Offset maleHairCenterPosition =
+        Offset(size.width * 0.5, size.height * 0.55);
+    final Offset avatarBackgroundCirclePosition =
+        Offset(size.width * 0.5, size.height * 0.68);
+
+    final backgroundColor = Paint()..color = Colors.black;
+    canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromPoints(Offset(size.width * 0, size.height * 0.0),
+              Offset(size.width * 1.0, size.height * 0.451)),
+          Radius.circular(10),
+        ),
+        backgroundColor);
+    canvas.drawRect(
+        Rect.fromPoints(
+          Offset(size.width * 0, size.height * 0.2),
+          Offset(size.width * 1.0, size.height * 0.851),
+        ),
+        backgroundColor);
+    final arc1 = Path();
+    arc1.moveTo(size.width * 0.0, size.height * 0.85);
+    arc1.arcToPoint(Offset(size.width, size.height * 0.85),
+        radius: Radius.circular(550), clockwise: false);
+    canvas.drawPath(arc1, backgroundColor);
+    final avatarBackgroundCircleBorder = Paint()
+      ..shader = LinearGradient(
+          colors: [Colors.white, Colors.white.withOpacity(0)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: [0.85, 0.87]).createShader(
+        Rect.fromCircle(
+            center: avatarBackgroundCirclePosition, radius: size.width * 0.24),
+      );
+
+    canvas.drawCircle(avatarBackgroundCirclePosition, size.width * 0.24,
+        avatarBackgroundCircleBorder);
+
+    final faceColor = Paint()
+      ..shader = LinearGradient(colors: [Color(0xFFD7A587), Color(0xFFEBC6B1)])
+          .createShader(Rect.fromCircle(
+              center: Offset(size.width * 0.5, size.height * 0.64),
+              radius: size.height * 0.17));
+    Paint hairColor = Paint()
+      ..shader = LinearGradient(
+              colors: [secondHairColor, hairColorInput],
+              begin: Alignment.bottomLeft,
+              end: Alignment.topRight)
+          .createShader(
+        Rect.fromCenter(
+          center: Offset(size.width * 0.5, size.height * 0.21),
+          height: size.height * 0.66,
+          width: size.width * 0.28,
+        ),
+      );
+    Paint eyesColor = Paint()..color = eyesColorInput;
+    Paint bodyColor = Paint()
+      ..shader = LinearGradient(
+              colors: [Color(0xFFEBC6B1), Color(0xFFD7A587)],
+              begin: Alignment.bottomLeft,
+              end: Alignment.topRight)
+          .createShader(
+        Rect.fromCenter(
+          center: Offset(size.width * 0.5, size.height * 0.5),
+          height: size.height * 0.80,
+          width: size.width * 0.37,
+        ),
+      );
+    Paint eyesBackgroundColor = Paint()..color = Colors.white;
+    if (isMale != true)
+      canvas.drawArc(
+        Rect.fromCenter(
+          center: hairCenterPosition,
+          height: size.height * 0.87,
+          width: size.width * 0.28,
+        ),
+        math.pi,
+        math.pi,
+        false,
+        hairColor,
+      );
+    if (isMale)
+      canvas.drawRRect(
+          RRect.fromRectAndRadius(
+              Rect.fromCenter(
+                  center: maleHairCenterPosition,
+                  width: size.width * 0.17,
+                  height: size.height * 0.28),
+              Radius.circular(30)),
+          hairColor);
+    canvas.drawArc(
+      Rect.fromCenter(
+        center: Offset(size.width * 0.5, size.height * 0.95),
+        height: size.height * 0.24,
+        width: size.width * 0.34,
+      ),
+      math.pi,
+      math.pi,
+      false,
+      bodyColor,
+    );
+
+    canvas.drawCircle(Offset(size.width * 0.5, size.height * 0.64),
+        size.height * 0.17, faceColor);
+    canvas.drawOval(
+        Rect.fromCenter(
+            center: Offset(size.width * 0.465, size.height * 0.6),
+            width: eyesWidth,
+            height: eyesHeight),
+        eyesBackgroundColor);
+    canvas.drawOval(
+        Rect.fromCenter(
+            center: Offset(size.width * 0.535, size.height * 0.6),
+            width: eyesWidth,
+            height: eyesHeight),
+        eyesBackgroundColor);
+    canvas.drawCircle(
+        Offset(
+          size.width * 0.465,
+          size.height * 0.6,
+        ),
+        pupilsRadius,
+        eyesColor);
+    canvas.drawCircle(
+        Offset(size.width * 0.535, size.height * 0.6), pupilsRadius, eyesColor);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

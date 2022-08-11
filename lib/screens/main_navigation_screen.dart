@@ -131,7 +131,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
             ],
           ),
         );
-        break;
+
       case MainNavigationScreen.MATCHING_PAGE_INDEX:
         return CircleButton(
           padding: EdgeInsets.all(padding),

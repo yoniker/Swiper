@@ -49,9 +49,10 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
     ServerResponse serverResponse = response.item2;
     List<String>? data = response.item1;
     while (serverResponse == ServerResponse.InProgress) {
-      setState(() {
-        profileIsBeingProcessed = true;
-      });
+      if (mounted)
+        setState(() {
+          profileIsBeingProcessed = true;
+        });
       //TODO Nitzan update UI to show this is being processed at the server
       await Future.delayed(Duration(
           seconds:
@@ -60,10 +61,10 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
       serverResponse = response.item2;
       data = response.item1;
     }
-
-    setState(() {
-      profileIsBeingProcessed = false;
-    });
+    if (mounted)
+      setState(() {
+        profileIsBeingProcessed = false;
+      });
 
     if (serverResponse == ServerResponse.Success && data != null) {
       setState(() {
@@ -82,6 +83,8 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
       return 'Tou look a bit like';
   }
 
+  ScrollController? scrollController = ScrollController();
+
   @override
   void initState() {
     updateProfileFacesUrls();
@@ -89,8 +92,13 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
   }
 
   @override
+  void dispose() {
+    if (scrollController != null) scrollController!.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    ScrollController? scrollController = ScrollController();
     return ListenerWidget(
       notifier: SettingsData.instance,
       builder: (context) {
@@ -128,6 +136,7 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                         : RawScrollbar(
                             scrollbarOrientation: ScrollbarOrientation.top,
                             controller: scrollController,
+                            thumbVisibility: true,
                             radius: Radius.circular(30),
                             thickness: 5,
                             child: Padding(

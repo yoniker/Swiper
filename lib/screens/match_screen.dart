@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:betabeta/constants/api_consts.dart';

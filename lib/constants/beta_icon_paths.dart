@@ -10,6 +10,8 @@ class BetaIconPaths {
 
   static const String quillPenIconPath = 'assets/images/quill-pen1.png';
 
+  static const String AIprofileMePath = 'assets/images/profileAIme.png';
+
   /// Voila search filter button.
   static const String voilaSearchSettingsPath = 'assets/images/search.png';
 
