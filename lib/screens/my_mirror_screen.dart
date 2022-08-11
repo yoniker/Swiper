@@ -206,8 +206,15 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
       notifier: SettingsData.instance,
       builder: (context) {
         TextStyle cardFontStyle = boldTextStyle.copyWith(
-          color: Colors.black.withOpacity(0.8),
+          color: Colors.white,
           fontSize: getRelativeTextSize(15),
+          shadows: [
+            Shadow(
+              blurRadius: 17.0,
+              color: Colors.black,
+              offset: Offset(-2.0, 2.0),
+            ),
+          ],
         );
         return Scaffold(
           backgroundColor: Colors.white,
@@ -243,15 +250,46 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                               child: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 5.0),
-                                child: Container(
-                                  child: Stack(
-                                    alignment: Alignment.bottomCenter,
-                                    children: [
-                                      Container(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.39,
-                                        width: double.infinity,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(10),
+                                            ),
+                                          ),
+                                          child: AspectRatio(
+                                            aspectRatio: 1 / 0.5,
+                                            child: CustomPaint(
+                                              painter: ProfilePainter(
+                                                  eyesColorInput: getEyeColor(),
+                                                  hairColorInput:
+                                                      getHairColor(),
+                                                  isMale: gender == 'male'),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(7.0),
+                                                child: Text(
+                                                  'Selected image estimate results:',
+                                                  style: TextStyle(
+                                                      fontSize: 18,
+                                                      color: goldColorish,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Expanded(
+                                      child: Container(
                                         decoration: BoxDecoration(
                                           image: DecorationImage(
                                             fit: BoxFit.cover,
@@ -264,60 +302,24 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                             gradient: LinearGradient(
                                                 colors: [
                                                   Colors.white,
-                                                  Colors.white.withOpacity(0.2),
                                                   Colors.white.withOpacity(0),
                                                   Colors.white.withOpacity(0),
                                                   Colors.white
                                                 ],
+                                                stops: [
+                                                  0,
+                                                  0.43,
+                                                  0.77,
+                                                  1
+                                                ],
                                                 begin: Alignment.topCenter,
                                                 end: Alignment.bottomCenter),
                                           ),
-                                        ),
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Column(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            mainAxisSize: MainAxisSize.max,
                                             children: [
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(10),
-                                                  ),
-                                                ),
-                                                child: AspectRatio(
-                                                  aspectRatio: 1 / 0.5,
-                                                  child: CustomPaint(
-                                                    painter: ProfilePainter(
-                                                        eyesColorInput:
-                                                            getEyeColor(),
-                                                        hairColorInput:
-                                                            getHairColor(),
-                                                        isMale:
-                                                            gender == 'male'),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              7.0),
-                                                      child: Text(
-                                                        'Selected image estimate results:',
-                                                        style: TextStyle(
-                                                            fontSize: 18,
-                                                            color: goldColorish,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
                                               Column(
                                                 children: [
                                                   Text(
@@ -326,9 +328,9 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     style:
-                                                        boldTextStyle.copyWith(
-                                                      color: Colors.black
-                                                          .withOpacity(0.8),
+                                                        kWhiteDescriptionShadowStyle
+                                                            .copyWith(
+                                                      color: Colors.white,
                                                       fontSize:
                                                           getRelativeTextSize(
                                                               20),
@@ -341,56 +343,54 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                                   ),
                                                 ],
                                               ),
-                                            ],
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 5.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 5.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
-                                                    Text(
-                                                      'BMI: $BMI',
-                                                      style: cardFontStyle
-                                                          .copyWith(
-                                                              fontSize: 14,
-                                                              color: Colors
-                                                                  .black
-                                                                  .withOpacity(
-                                                                      0.6)),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          'BMI: $BMI',
+                                                          style: cardFontStyle
+                                                              .copyWith(
+                                                            fontSize: 14,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          'Education: $education',
+                                                          style: cardFontStyle
+                                                              .copyWith(
+                                                            fontSize: 14,
+                                                          ),
+                                                        )
+                                                      ],
                                                     ),
-                                                    Text(
-                                                      'Education: $education',
-                                                      style: cardFontStyle
-                                                          .copyWith(
-                                                        fontSize: 14,
-                                                        color: Colors.black
-                                                            .withOpacity(0.6),
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsets.all(10),
+                                                      child: Image.asset(
+                                                        BetaIconPaths
+                                                            .AIprofileMePath,
+                                                        scale: 5,
                                                       ),
-                                                    )
+                                                    ),
                                                   ],
                                                 ),
-                                                Padding(
-                                                  padding: EdgeInsets.all(10),
-                                                  child: Image.asset(
-                                                    BetaIconPaths
-                                                        .AIprofileMePath,
-                                                    scale: 5,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
+                                              )
+                                            ],
+                                          ),
+                                        ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             )
