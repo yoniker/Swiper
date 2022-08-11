@@ -181,7 +181,7 @@ class AWSServer {
       SettingsData.PETS_KEY: json.jsonEncode(settings.pets),
       SettingsData.HEIGHT_IN_CM_KEY: settings.heightInCm.toString(),
       SettingsData.TEXT_SEARCH_KEY: settings.textSearch,
-      SettingsData.REGISTRATION_STATUS_KEY: settings.registrationStatus,
+      SettingsData.REGISTRATION_STATUS_NAME_KEY: settings.registrationStatusName,
       SettingsData.IS_TEST_USER_NAME_KEY : settings.isTestUserName
     };
     String encoded = jsonEncode(toSend);
@@ -475,7 +475,7 @@ class AWSServer {
     return false;
   }
 
-  Future<ServerRegistrationStatus> registerUid(
+  Future<ServerRegistrationStatusResponse> registerUid(
       {required String firebaseIdToken}) async {
     Uri verifyTokenUri = Uri.https(SERVER_ADDR, 'user_data/register_firebase_uid');
     http.Response response = await http
@@ -489,13 +489,13 @@ class AWSServer {
     if (decodedResponse[API_CONSTS.STATUS] == API_CONSTS.ALREADY_REGISTERED) {
       SettingsData.instance
           .updateFromServerData(decodedResponse[API_CONSTS.USER_DATA]);
-      return ServerRegistrationStatus.already_registered;
+      return ServerRegistrationStatusResponse.already_registered;
     }
     //The only possible response possible now is that the user is newly registered - so had to go through onboarding
     //if(decodedResponse[API_CONSTS.STATUS]==API_CONSTS.NEW_REGISTER){
     SettingsData.instance.uid =
     decodedResponse[API_CONSTS.USER_DATA][SettingsData.FIREBASE_UID_KEY];
-    return ServerRegistrationStatus.new_register;
+    return ServerRegistrationStatusResponse.new_register;
     //}
   }
 

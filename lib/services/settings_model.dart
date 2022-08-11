@@ -57,7 +57,7 @@ class SettingsData extends ChangeNotifier {
   static const String TEXT_SEARCH_KEY = 'text_search';
   static const String IS_TEST_USER_NAME_KEY = 'is_test_user';
   static const String USER_TOOK_TUTORIAL_KEY = 'user_took_tutorial';
-  static const String REGISTRATION_STATUS_KEY = 'registration_status';
+  static const String REGISTRATION_STATUS_NAME_KEY = 'registration_status';
 
   static const _debounceSettingsTime =
       Duration(milliseconds: 200); //Debounce time such that we notify listeners
@@ -160,7 +160,7 @@ class SettingsData extends ChangeNotifier {
   List<String> _hobbies = [];
   List<String> _pets = [];
   int _heightInCm = 0;
-  String _registrationStatus = '';
+  String _registrationStatusName = '';
   String _isTestUserName = TestUserState.isTestUser.name;
 
   SettingsData._privateConstructor() {
@@ -236,9 +236,9 @@ class SettingsData extends ChangeNotifier {
     _heightInCm = sharedPreferences.getInt(HEIGHT_IN_CM_KEY) ?? _heightInCm;
     _jobTitle = sharedPreferences.getString(JOB_TITLE_KEY) ?? _jobTitle;
     _textSearch = sharedPreferences.getString(TEXT_SEARCH_KEY) ?? _textSearch;
-    _registrationStatus =
-        sharedPreferences.getString(REGISTRATION_STATUS_KEY) ??
-            _registrationStatus;
+    _registrationStatusName =
+        sharedPreferences.getString(REGISTRATION_STATUS_NAME_KEY) ??
+            _registrationStatusName;
     _isTestUserName = sharedPreferences.getString(IS_TEST_USER_NAME_KEY) ?? _isTestUserName;
     _readFromShared = true;
 
@@ -301,8 +301,8 @@ class SettingsData extends ChangeNotifier {
     _heightInCm = castToInt(userData[HEIGHT_IN_CM_KEY], onNoCast: _heightInCm);
     _jobTitle = userData[JOB_TITLE_KEY] ?? _jobTitle;
     _textSearch = userData[TEXT_SEARCH_KEY] ?? _textSearch;
-    _registrationStatus =
-        userData[REGISTRATION_STATUS_KEY] ?? _registrationStatus;
+    _registrationStatusName =
+        userData[REGISTRATION_STATUS_NAME_KEY] ?? _registrationStatusName;
     _isTestUserName = userData[IS_TEST_USER_NAME_KEY] ?? _isTestUserName;
 
     savePreferences(FIREBASE_UID_KEY, _uid,
@@ -381,7 +381,7 @@ class SettingsData extends ChangeNotifier {
         sendServer: false, resetMatchEngine: false);
     savePreferences(TEXT_SEARCH_KEY, _textSearch,
         sendServer: false, resetMatchEngine: false);
-    savePreferences(REGISTRATION_STATUS_KEY, _registrationStatus,
+    savePreferences(REGISTRATION_STATUS_NAME_KEY, _registrationStatusName,
         sendServer: false, resetMatchEngine: false);
     AWSServer.instance.syncCurrentProfileImagesUrls();
   }
@@ -475,7 +475,7 @@ class SettingsData extends ChangeNotifier {
   }
 
   set testUserState(TestUserState testUserState) {
-    this._isTestUserName = testUserState.name;
+    this.isTestUserName = testUserState.name;
   }
 
   int get auditionCount {
@@ -900,13 +900,22 @@ class SettingsData extends ChangeNotifier {
     savePreferences(TEXT_SEARCH_KEY, newTextSearch);
   }
 
-  String get registrationStatus {
-    return _registrationStatus;
+  String get registrationStatusName {
+    return _registrationStatusName;
   }
 
-  set registrationStatus(String newRegistrationStatus) {
-    _registrationStatus = newRegistrationStatus;
-    savePreferences(REGISTRATION_STATUS_KEY, newRegistrationStatus);
+  set registrationStatusName(String newRegistrationStatus) {
+    _registrationStatusName = newRegistrationStatus;
+    savePreferences(REGISTRATION_STATUS_NAME_KEY, newRegistrationStatus);
+  }
+
+  RegistrationStatus get registrationStatus {
+    return RegistrationStatus.values.firstWhere((state) => state.name == _registrationStatusName,
+        orElse: () => RegistrationStatus.notRegistered);
+  }
+
+  set registrationStatus(RegistrationStatus registrationStatus) {
+    this.registrationStatusName = registrationStatus.name;
   }
 
   int get heightInCm {

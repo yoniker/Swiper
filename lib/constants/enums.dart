@@ -13,7 +13,7 @@ enum FilterType {
 
 enum Gender { male, female, other }
 
-enum ServerRegistrationStatus { already_registered, new_register }
+enum ServerRegistrationStatusResponse { already_registered, new_register }
 
 extension uiDescription on FilterType {
   String get description {

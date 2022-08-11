@@ -44,7 +44,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   late VideoPlayerController _controller;
   bool currentlyTryingToLogin = false;
 
-  _continueIfLoggedIn(ServerRegistrationStatus currentStatus) async {
+  _continueIfLoggedIn(ServerRegistrationStatusResponse currentStatus) async {
     await SettingsData.instance.readSettingsFromShared();
 
     if (SettingsData.instance.readFromShared! &&
@@ -57,10 +57,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         arguments: currentStatus);
   }
 
-  Future<ServerRegistrationStatus> _registerUserAtServer() async {
+  Future<ServerRegistrationStatusResponse> _registerUserAtServer() async {
     var idToken = await FirebaseAuth.instance.currentUser?.getIdToken();
     String uid = FirebaseAuth.instance.currentUser!.uid;
-    ServerRegistrationStatus currentRegistrationStatus =
+    ServerRegistrationStatusResponse currentRegistrationStatus =
         await AWSServer.instance.registerUid(firebaseIdToken: idToken!);
     return currentRegistrationStatus;
   }
@@ -74,9 +74,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       await LoginsService.instance.getFacebookUserData();
       await LoginsService.signInUser(
           credential: LoginsService.instance.facebookCredential!);
-      ServerRegistrationStatus currentServerRegistrationStatus =
+      ServerRegistrationStatusResponse currentServerRegistrationStatusResponse =
           await _registerUserAtServer();
-      await _continueIfLoggedIn(currentServerRegistrationStatus);
+      await _continueIfLoggedIn(currentServerRegistrationStatusResponse);
     }
     setState(() {
       currentlyTryingToLogin = false;
@@ -90,14 +90,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     UserCredential? credential = await LoginsService.instance.signInWithApple();
     if (credential != null) {
       //TODO replace condition with "apple login failed".
-      ServerRegistrationStatus currentServerRegistrationStatus =
+      ServerRegistrationStatusResponse currentServerRegistrationStatus =
           await _registerUserAtServer();
       await _continueIfLoggedIn(currentServerRegistrationStatus);
     }
-    setState(() {
-      currentlyTryingToLogin = false;
-    });
-
     setState(() {
       currentlyTryingToLogin = false;
     });
@@ -110,7 +106,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     var credential = await Get.toNamed(PhoneScreen.routeName, arguments: true);
     if (credential != null) {
       //TODO replace condition with "phone login failed".
-      ServerRegistrationStatus currentServerRegistrationStatus =
+      ServerRegistrationStatusResponse currentServerRegistrationStatus =
           await _registerUserAtServer();
       await _continueIfLoggedIn(currentServerRegistrationStatus);
     }

@@ -67,8 +67,10 @@ class _SplashScreenState extends State<SplashScreen>
 
     await SettingsData.instance.readSettingsFromShared();
     if (SettingsData.instance.uid.length > 0 &&
-        SettingsData.instance.registrationStatus ==
-            API_CONSTS.ALREADY_REGISTERED) {
+        (SettingsData.instance.registrationStatus == RegistrationStatus.registeredNotApproved || SettingsData.instance.registrationStatus == RegistrationStatus.registeredApproved))
+    //If the user is currently registered
+
+     {
       return MainNavigationScreen.routeName;
     }
 
