@@ -88,6 +88,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
   String dominatedEyeColor = '';
   String dominatedHairColor = '';
   String education = '';
+  String genderEmoji = '👨';
 
   String maxKey(
       {required Map<String, double> map, double minPossibleValue = -1.0}) {
@@ -195,6 +196,10 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
         gender = 'male';
       } else
         gender = '';
+
+      if (gender != 'f') {
+        genderEmoji = '👩';
+      }
 
       education = maxKey(map: educations);
       print(education);
@@ -327,28 +332,28 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                                   MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Text(
-                                                  'Age: $age',
+                                                  '🕰️ $age years old',
                                                   style: cardFontStyle,
                                                 ),
                                                 Text(
-                                                  'Ethnicity: $ethnicity',
+                                                  '🧑🏿‍🤝‍🧑🏻 $ethnicity ethnicity',
                                                   style: cardFontStyle,
                                                 ),
                                                 Text(
-                                                  'Gender: $gender',
+                                                  '$genderEmoji $gender',
                                                   style: cardFontStyle,
                                                 ),
                                                 Text(
-                                                  'Eyes Color: $dominatedEyeColor $secondEyeColor',
+                                                  '👀 $dominatedEyeColor $secondEyeColor eyes',
                                                   style: cardFontStyle,
                                                 ),
                                                 Text(
-                                                  'Hair Color: $dominatedHairColor $secondHairColor',
+                                                  '🌈 $dominatedHairColor $secondHairColor hair',
                                                   style: cardFontStyle,
                                                 ),
-                                                Text('BMI: $BMI',
+                                                Text('⚖️ $BMI BMI',
                                                     style: cardFontStyle),
-                                                Text('Education: $education',
+                                                Text('🎓 $education',
                                                     style: cardFontStyle)
                                               ],
                                             ),
