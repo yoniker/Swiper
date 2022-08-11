@@ -333,12 +333,17 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                                       color: Colors.white,
                                                       fontSize:
                                                           getRelativeTextSize(
-                                                              20),
+                                                              25),
                                                     ),
                                                   ),
                                                   Text(
                                                     '${firstEyeColor.capitalizeFirst} $secondEyeColor eyes and $firstHairColor $secondHairColor hair',
-                                                    style: cardFontStyle,
+                                                    style:
+                                                        cardFontStyle.copyWith(
+                                                      fontSize:
+                                                          getRelativeTextSize(
+                                                              17),
+                                                    ),
                                                     textAlign: TextAlign.center,
                                                   ),
                                                 ],
@@ -361,14 +366,14 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                                           'BMI: $BMI',
                                                           style: cardFontStyle
                                                               .copyWith(
-                                                            fontSize: 14,
+                                                            fontSize: 18,
                                                           ),
                                                         ),
                                                         Text(
                                                           'Education: $education',
                                                           style: cardFontStyle
                                                               .copyWith(
-                                                            fontSize: 14,
+                                                            fontSize: 18,
                                                           ),
                                                         )
                                                       ],
