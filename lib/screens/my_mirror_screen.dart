@@ -7,6 +7,7 @@ import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:math' as math;
 
 import 'package:get/get.dart';
@@ -207,7 +208,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
       builder: (context) {
         TextStyle cardFontStyle = boldTextStyle.copyWith(
           color: Colors.white,
-          fontSize: getRelativeTextSize(15),
+          fontSize: getRelativeTextSize(23),
           shadows: [
             Shadow(
               blurRadius: 17.0,
@@ -290,6 +291,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                     ),
                                     Expanded(
                                       child: Container(
+                                        width: double.infinity,
                                         decoration: BoxDecoration(
                                           image: DecorationImage(
                                             fit: BoxFit.cover,
@@ -315,77 +317,41 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                                 begin: Alignment.topCenter,
                                                 end: Alignment.bottomCenter),
                                           ),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Column(
-                                                children: [
-                                                  Text(
-                                                    '${age} years old $ethnicity $gender',
-                                                    textAlign: TextAlign.center,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style:
-                                                        kWhiteDescriptionShadowStyle
-                                                            .copyWith(
-                                                      color: Colors.white,
-                                                      fontSize:
-                                                          getRelativeTextSize(
-                                                              20),
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    '${firstEyeColor.capitalizeFirst} $secondEyeColor eyes and $firstHairColor $secondHairColor hair',
-                                                    style: cardFontStyle,
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ],
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 5.0),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          'BMI: $BMI',
-                                                          style: cardFontStyle
-                                                              .copyWith(
-                                                            fontSize: 14,
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          'Education: $education',
-                                                          style: cardFontStyle
-                                                              .copyWith(
-                                                            fontSize: 14,
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsets.all(10),
-                                                      child: Image.asset(
-                                                        BetaIconPaths
-                                                            .AIprofileMePath,
-                                                        scale: 5,
-                                                      ),
-                                                    ),
-                                                  ],
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 5.0, vertical: 5),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Text(
+                                                  'Age: $age',
+                                                  style: cardFontStyle,
                                                 ),
-                                              )
-                                            ],
+                                                Text(
+                                                  'Ethnicity: $ethnicity',
+                                                  style: cardFontStyle,
+                                                ),
+                                                Text(
+                                                  'Gender: $gender',
+                                                  style: cardFontStyle,
+                                                ),
+                                                Text(
+                                                  'Eyes Color: $dominatedEyeColor $secondEyeColor',
+                                                  style: cardFontStyle,
+                                                ),
+                                                Text(
+                                                  'Hair Color: $dominatedHairColor $secondHairColor',
+                                                  style: cardFontStyle,
+                                                ),
+                                                Text('BMI: $BMI',
+                                                    style: cardFontStyle),
+                                                Text('Education: $education',
+                                                    style: cardFontStyle)
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
