@@ -161,7 +161,7 @@ class SettingsData extends ChangeNotifier {
   List<String> _pets = [];
   int _heightInCm = 0;
   String _registrationStatusName = '';
-  String _isTestUserName = TestUserState.isTestUser.name;
+  String _isTestUserName = TestUserState.notTestUser.name;
 
   SettingsData._privateConstructor() {
     //And after that, read settings from shared
@@ -251,7 +251,7 @@ class SettingsData extends ChangeNotifier {
     return _readFromShared;
   }
 
-  void updateFromServerData(Map<dynamic, dynamic> userData) {
+  void updateAllSettingsFromServerData(Map<dynamic, dynamic> userData) {
     _uid = userData[SettingsData.FIREBASE_UID_KEY] ?? _uid;
     _preferredGender = userData[PREFERRED_GENDER_KEY] ?? _preferredGender;
     _name = userData[NAME_KEY] ?? _name;
@@ -384,6 +384,28 @@ class SettingsData extends ChangeNotifier {
     savePreferences(REGISTRATION_STATUS_NAME_KEY, _registrationStatusName,
         sendServer: false, resetMatchEngine: false);
     AWSServer.instance.syncCurrentProfileImagesUrls();
+  }
+
+  void updateUserStatusFromServer(String userStatusKey,String userStatusNewValue){
+
+    if(userStatusKey == REGISTRATION_STATUS_NAME_KEY || userStatusKey == IS_TEST_USER_NAME_KEY){
+      if(userStatusKey == REGISTRATION_STATUS_NAME_KEY){
+        SettingsData.instance._registrationStatusName = userStatusNewValue; //TODO check if this is valid?
+      }
+
+      if(userStatusKey == IS_TEST_USER_NAME_KEY){
+        SettingsData.instance._isTestUserName = userStatusNewValue; //TODO check if this is valid?
+      }
+
+      savePreferences(userStatusKey, userStatusNewValue,
+          sendServer: false, resetMatchEngine: false);
+      MatchEngine.instance.onUserStatusChange(); //TODO think about a better way to do it (a singleton approaching directly another one doesn't seem best).
+
+
+
+    }
+
+
   }
 
   String get preferredGender {

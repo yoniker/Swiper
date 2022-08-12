@@ -33,9 +33,6 @@ class _FinishOnboardingScreenState extends State<FinishOnboardingScreen> {
 
   @override
   void initState() {
-    if(!(SettingsData.instance.registrationStatus==RegistrationStatus.registeredApproved || SettingsData.instance.registrationStatus == RegistrationStatus.registeredNotApproved)){
-      SettingsData.instance.registrationStatus = RegistrationStatus.registeredNotApproved;
-    }
     _controller =
     VideoPlayerController.asset('assets/onboarding/videos/startvideo.mp4')
       ..initialize().then((_) {

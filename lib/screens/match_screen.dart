@@ -123,6 +123,11 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
   }
 
   Widget _widgetWhenNoCardsExist() {
+
+    if(SettingsData.instance.registrationStatus == RegistrationStatus.registeredNotApproved){
+      return Text('You were not approved yet widget should appear here');
+    }
+
     if (MatchEngine.instance.locationCountData.status ==
         LocationCountStatus.not_enough_users) {
       String maleOrFemaleImage =
@@ -220,6 +225,9 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
         ),
       );
     }
+
+
+
     if (MatchEngine.instance.locationCountData.status ==
         LocationCountStatus.initial_state) {
       return NoMatchesDisplayWidget(

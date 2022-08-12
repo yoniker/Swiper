@@ -40,6 +40,10 @@ class MatchEngine extends ChangeNotifier {
     addMatchesIfNeeded();
   }
 
+  void onUserStatusChange(){
+    notifyListeners();
+  }
+
   bool previousMatchExists() {
     return _previousMatches.length > 0;
   }
@@ -67,6 +71,8 @@ class MatchEngine extends ChangeNotifier {
 
 
     }
+
+  RegistrationStatus get registrationStatus => SettingsData.instance.registrationStatus; //Just forward this value- listeners of MatchEngine shouldn't care for the fact that it is taken from SettingsData
 
 
 

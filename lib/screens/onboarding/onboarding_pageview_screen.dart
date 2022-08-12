@@ -54,6 +54,10 @@ class _OnboardingPageViewScreenState extends State<OnboardingPageViewScreen> {
           duration: Duration(milliseconds: 300), curve: Curves.fastOutSlowIn);
     } else {
       syncWithServer();
+      //Register the user at server if this wasn't done already
+      if(!(SettingsData.instance.registrationStatus==RegistrationStatus.registeredApproved || SettingsData.instance.registrationStatus == RegistrationStatus.registeredNotApproved)){
+        SettingsData.instance.registrationStatus = RegistrationStatus.registeredNotApproved;
+      }
       if (widget.registrationStatus ==
           ServerRegistrationStatusResponse.already_registered)
         Get.offAllNamed(MainNavigationScreen.routeName);

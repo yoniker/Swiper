@@ -2,6 +2,7 @@ import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/constants/assets_paths.dart';
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/models/celebs_info_model.dart';
+import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/services/app_state_info.dart';
@@ -59,6 +60,7 @@ class _SplashScreenState extends State<SplashScreen>
     LocationService.instance.onInit();
     MatchEngine.instance;
     navigatedFromNotification = await ChatData.instance.onInitApp();
+    await AWSServer.instance.updateUserStatusFromServer();
   }
 
   Future<String> _chooseRoute() async {
