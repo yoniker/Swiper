@@ -209,6 +209,9 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
       } else
         gender = '';
 
+      if (firstEyeColor == 'other') firstEyeColor = '';
+      if (secondEyeColor == 'other') secondEyeColor = '';
+
       education = maxKey(map: educations);
       print(education);
 
@@ -236,13 +239,13 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
           backgroundColor: Colors.white,
           appBar: CustomAppBar(
             hasTopPadding: true,
-            backColor: goldColorish,
+            backColor: selectedImage == '' ? goldColorish : Colors.black87,
             customTitle: SizedBox(
               height: 80,
             ),
             centerWidget: VoilaLogoWidget(
               logoOnlyMode: true,
-              goldLogo: true,
+              goldLogo: selectedImage == '',
             ),
             backgroundColor: Colors.white,
             elevation: 0,
@@ -315,6 +318,9 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                       child: Container(
                                         width: double.infinity,
                                         decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.vertical(
+                                            bottom: Radius.circular(10),
+                                          ),
                                           image: DecorationImage(
                                             fit: BoxFit.cover,
                                             opacity: 1,
@@ -326,13 +332,13 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                             gradient: LinearGradient(
                                                 colors: [
                                                   Colors.white,
-                                                  Colors.white.withOpacity(0),
+                                                  Colors.white.withOpacity(0.0),
                                                   Colors.white.withOpacity(0),
                                                   Colors.white
                                                 ],
                                                 stops: [
                                                   0,
-                                                  0.10,
+                                                  0.15,
                                                   1,
                                                   1
                                                 ],
@@ -342,106 +348,114 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                           child: LayoutBuilder(
                                             builder: (BuildContext context,
                                                 BoxConstraints constraints) {
-                                              return Stack(
-                                                alignment:
-                                                    Alignment.bottomRight,
-                                                children: [
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    children: [
-                                                      Column(
-                                                        children: [
-                                                          Text(
-                                                            '${age} years old $ethnicity $gender',
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            style:
-                                                                kWhiteDescriptionShadowStyle
-                                                                    .copyWith(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize:
-                                                                  getRelativeTextSize(
-                                                                      25),
-                                                            ),
-                                                          ),
-                                                          // Text(
-                                                          //   '${firstEyeColor.capitalizeFirst} $secondEyeColor eyes and $firstHairColor $secondHairColor hair',
-                                                          //   style:
-                                                          //       cardFontStyle.copyWith(
-                                                          //     fontSize:
-                                                          //         getRelativeTextSize(
-                                                          //             17),
-                                                          //   ),
-                                                          //   textAlign: TextAlign.center,
-                                                          // ),
-                                                        ],
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.all(5.0),
+                                                child: Stack(
+                                                  alignment:
+                                                      Alignment.bottomRight,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              5.0),
+                                                      child: Image.asset(
+                                                        BetaIconPaths
+                                                            .aiLogoRobot,
+                                                        scale: 2,
                                                       ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                horizontal:
-                                                                    5.0),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.max,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .stretch,
+                                                    ),
+                                                    Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: [
+                                                        Column(
                                                           children: [
-                                                            Text('📊 $BMI BMI',
-                                                                style:
-                                                                    cardFontStyle),
                                                             Text(
-                                                              '👀 $firstEyeColor $secondEyeColor eyes',
-                                                              style:
-                                                                  cardFontStyle,
-                                                            ),
-                                                            if (gender ==
-                                                                'male')
-                                                              Text(
-                                                                '$maleHairEmoji $dominatedHairColor $secondHairColor hair',
-                                                                style:
-                                                                    cardFontStyle,
-                                                              ),
-                                                            if (gender ==
-                                                                'female')
-                                                              Text(
-                                                                '$femaleHairEmoji $dominatedHairColor $secondHairColor hair',
-                                                                style:
-                                                                    cardFontStyle,
-                                                              ),
-                                                            Text(
-                                                              '🎓 $education education',
-                                                              style:
-                                                                  cardFontStyle,
+                                                              '${age} years old $ethnicity $gender',
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
                                                               overflow:
                                                                   TextOverflow
                                                                       .ellipsis,
+                                                              style:
+                                                                  kWhiteDescriptionShadowStyle
+                                                                      .copyWith(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize:
+                                                                    getRelativeTextSize(
+                                                                        25),
+                                                              ),
                                                             ),
+                                                            // Text(
+                                                            //   '${firstEyeColor.capitalizeFirst} $secondEyeColor eyes and $firstHairColor $secondHairColor hair',
+                                                            //   style:
+                                                            //       cardFontStyle.copyWith(
+                                                            //     fontSize:
+                                                            //         getRelativeTextSize(
+                                                            //             17),
+                                                            //   ),
+                                                            //   textAlign: TextAlign.center,
+                                                            // ),
                                                           ],
                                                         ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            5.0),
-                                                    child: Image.asset(
-                                                      BetaIconPaths.aiLogoRobot,
-                                                      scale: 2,
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      5.0),
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .max,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .stretch,
+                                                            children: [
+                                                              Text(
+                                                                  '📊 $BMI BMI',
+                                                                  style:
+                                                                      cardFontStyle),
+                                                              Text(
+                                                                '👀 ${firstEyeColor.capitalizeFirst} $secondEyeColor eyes',
+                                                                style:
+                                                                    cardFontStyle,
+                                                              ),
+                                                              if (gender ==
+                                                                  'male')
+                                                                Text(
+                                                                  '$maleHairEmoji $dominatedHairColor $secondHairColor hair',
+                                                                  style:
+                                                                      cardFontStyle,
+                                                                ),
+                                                              if (gender ==
+                                                                  'female')
+                                                                Text(
+                                                                  '$femaleHairEmoji $dominatedHairColor $secondHairColor hair',
+                                                                  style:
+                                                                      cardFontStyle,
+                                                                ),
+                                                              Text(
+                                                                '🎓 $education education',
+                                                                style:
+                                                                    cardFontStyle,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      ],
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               );
                                             },
                                           ),
@@ -553,9 +567,17 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                         decoration: BoxDecoration(
                                             border: selectedImage == _url
                                                 ? Border.all(
-                                                    width: 2,
-                                                    color: appMainColor)
+                                                    width: 3,
+                                                    color:
+                                                        Colors.lightBlueAccent)
                                                 : null,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black,
+                                                blurRadius: 10,
+                                                offset: Offset(-2, 0),
+                                              )
+                                            ],
                                             shape: BoxShape.circle,
                                             image: DecorationImage(
                                                 image: NetworkImage(_url),
@@ -612,7 +634,12 @@ class ProfilePainter extends CustomPainter {
     final Offset avatarBackgroundCirclePosition =
         Offset(size.width * 0.5, size.height * 0.68);
 
-    final backgroundColor = Paint()..color = Colors.black;
+    final backgroundColor = Paint()
+      ..shader = LinearGradient(colors: [
+        Colors.black,
+        Color(0xFF3E2723),
+      ], begin: Alignment.topLeft, end: Alignment.bottomRight)
+          .createShader(Rect.largest);
     canvas.drawRRect(
         RRect.fromRectAndRadius(
           Rect.fromPoints(Offset(size.width * 0, size.height * 0.0),

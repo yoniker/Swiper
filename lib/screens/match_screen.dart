@@ -121,8 +121,8 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
   }
 
   Widget _widgetWhenNoCardsExist() {
-
-    if(SettingsData.instance.registrationStatus == RegistrationStatus.registeredNotApproved){
+    if (MatchEngine.instance.registrationStatus ==
+        RegistrationStatus.registeredNotApproved) {
       return Text('You were not approved yet widget should appear here');
     }
 
@@ -224,8 +224,6 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
       );
     }
 
-
-
     if (MatchEngine.instance.locationCountData.status ==
         LocationCountStatus.initial_state) {
       return NoMatchesDisplayWidget(
@@ -276,29 +274,28 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
     );
   }
 
-
-  Future<void> prefetchMatchesImages()async{
+  Future<void> prefetchMatchesImages() async {
     //This function prefetches images while listening to MatchEngine.
     //TODO is this ideal?
     var matches = MatchEngine.instance.topMatches();
     List<Future<void>> futuresGettingImages = [];
-    matches.asMap().forEach((i, match){
-    if((match?.profile?.imageUrls?.length??0)>=1){
-      var maxIndexToFetch = i<=1?match!.profile!.imageUrls!.length-1:0;
-      for(int i=0; i<maxIndexToFetch+1; i++){
-    var img = ExtendedImage.network(
-      AWSServer.getProfileImageUrl(match!.profile!.imageUrls![i]),
-      scale: 1.0,
-      fit: BoxFit.cover,
-      //headers:{"Keep-Alive":"timeout=20"},
-    );
-    futuresGettingImages.add(precacheImage(img.image, context));}
-    }
-
-
-  });
-  Future.wait(futuresGettingImages);
-  return;
+    matches.asMap().forEach((i, match) {
+      if ((match?.profile?.imageUrls?.length ?? 0) >= 1) {
+        var maxIndexToFetch =
+            i <= 1 ? match!.profile!.imageUrls!.length - 1 : 0;
+        for (int i = 0; i < maxIndexToFetch + 1; i++) {
+          var img = ExtendedImage.network(
+            AWSServer.getProfileImageUrl(match!.profile!.imageUrls![i]),
+            scale: 1.0,
+            fit: BoxFit.cover,
+            //headers:{"Keep-Alive":"timeout=20"},
+          );
+          futuresGettingImages.add(precacheImage(img.image, context));
+        }
+      }
+    });
+    Future.wait(futuresGettingImages);
+    return;
   }
 
   @override
