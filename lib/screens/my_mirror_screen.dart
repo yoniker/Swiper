@@ -567,14 +567,13 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                         decoration: BoxDecoration(
                                             border: selectedImage == _url
                                                 ? Border.all(
-                                                    width: 3,
-                                                    color:
-                                                        Colors.lightBlueAccent)
+                                                    width: 3.0,
+                                                    color: Colors.white)
                                                 : null,
                                             boxShadow: [
                                               BoxShadow(
-                                                color: Colors.black,
-                                                blurRadius: 10,
+                                                color: Colors.grey,
+                                                blurRadius: 2,
                                                 offset: Offset(-2, 0),
                                               )
                                             ],

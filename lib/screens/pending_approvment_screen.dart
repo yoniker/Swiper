@@ -1,11 +1,14 @@
+import 'package:betabeta/constants/assets_paths.dart';
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/url-consts.dart';
 import 'package:betabeta/screens/account_settings.dart';
 import 'package:betabeta/screens/current_user_profile_view_screen.dart';
+import 'package:betabeta/screens/my_mirror_screen.dart';
 import 'package:betabeta/screens/onboarding/tutorial_screen_starter.dart';
 import 'package:betabeta/screens/profile_edit_screen.dart';
 import 'package:betabeta/services/aws_networking.dart';
+import 'package:betabeta/widgets/rounded_picture_button.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/utils/mixins.dart';
@@ -97,8 +100,9 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
     );
   }
 
-  void moveToTutorialWhenApproved(){
-    if(SettingsData.instance.registrationStatus == RegistrationStatus.registeredApproved){
+  void moveToTutorialWhenApproved() {
+    if (SettingsData.instance.registrationStatus ==
+        RegistrationStatus.registeredApproved) {
       Get.offAllNamed(TutorialScreenStarter.routeName);
     }
   }
@@ -106,6 +110,7 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
   @override
   Widget build(BuildContext context) {
     final double adaptiveFontSize = MediaQuery.of(context).size.width * 0.05;
+    final smartBottonHeight = MediaQuery.of(context).size.height * 0.09;
     return ListenerWidget(
       notifier: SettingsData.instance,
       builder: (context) {
@@ -182,8 +187,8 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
                                         AccountSettingsScreen.routeName);
                                   },
                                   child: Image.asset(
-                                    BetaIconPaths.voilaSwipeSettingsButtonPath,
-                                    scale: 12,
+                                    BetaIconPaths.settingsIconPath,
+                                    scale: 4,
                                   ),
                                 ),
                               ],
@@ -209,13 +214,46 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
                     height: MediaQuery.of(context).size.height * 0.02,
                   ),
                   Text(
-                    'In the meantime, try the Celeb Look-A-Like & invite friends! (It will help you get approved!)\n\nWe will notify you as soon as your profile has been approved.',
+                    'In the meantime, check this out.. 😉 ',
                     style: titleStyle.copyWith(
                         fontSize: adaptiveFontSize,
                         fontWeight: FontWeight.normal),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.02,
+                    height: MediaQuery.of(context).size.height * 0.01,
+                  ),
+                  RoundedPictureButton(
+                    image: AssetImage(AssetsPaths.starPictureCeleb),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(60),
+                    ),
+                    height: smartBottonHeight,
+                    child: Text(
+                      'My Look-A-Like',
+                      style: LargeTitleStyleWhite,
+                      textAlign: TextAlign.center,
+                    ),
+                    onTap: () {
+                      Get.toNamed(MyLookALikeScreen.routeName);
+                    },
+                  ),
+                  RoundedPictureButton(
+                    height: smartBottonHeight,
+                    image: AssetImage(AssetsPaths.mirrorOnTheWall1),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(60),
+                    ),
+                    child: Text(
+                      'Mirror on the Wall',
+                      style: LargeTitleStyleWhite,
+                      textAlign: TextAlign.center,
+                    ),
+                    onTap: () {
+                      Get.toNamed(MyMirrorScreen.routeName);
+                    },
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.01,
                   ),
                   if (SettingsData.instance.email != '')
                     Text(
@@ -256,6 +294,7 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
       },
     );
   }
+
   @override
   void dispose() {
     SettingsData.instance.removeListener(moveToTutorialWhenApproved);
@@ -283,6 +322,4 @@ class ArcPainter2 extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-
-
 }
