@@ -7,6 +7,7 @@ import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:math' as math;
 
 import 'package:get/get.dart';
@@ -88,6 +89,8 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
   String dominatedHairColor = '';
   String education = '';
 
+  int test = 1;
+
   String maxKey(
       {required Map<String, double> map, double minPossibleValue = -1.0}) {
     double thevalue =
@@ -145,17 +148,27 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
     return Colors.black87;
   }
 
+  String maleHairEmoji = '👨‍🦱';
+  String femaleHairEmoji = '👩‍🦱';
+
   Color getHairColor() {
     switch (dominatedHairColor) {
       case 'Brown':
         return Colors.brown;
       case 'Bald':
+        maleHairEmoji = '👨‍🦲';
         return Colors.transparent;
       case 'Blond':
+        maleHairEmoji = '👱‍♂️';
+        femaleHairEmoji = '👱‍♀️';
         return goldColorish;
       case 'Red':
+        maleHairEmoji = '👨‍🦰';
+        femaleHairEmoji = '👩‍🦰';
         return Colors.red;
       case 'Gray':
+        maleHairEmoji = '👨‍🦳';
+        femaleHairEmoji = '👩‍🦳';
         return Colors.white;
     }
     return Colors.black87;
@@ -207,10 +220,10 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
       builder: (context) {
         TextStyle cardFontStyle = boldTextStyle.copyWith(
           color: Colors.white,
-          fontSize: getRelativeTextSize(15),
+          fontSize: getRelativeTextSize(18),
           shadows: [
             Shadow(
-              blurRadius: 17.0,
+              blurRadius: 22.0,
               color: Colors.black,
               offset: Offset(-2.0, 2.0),
             ),
@@ -290,6 +303,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                     ),
                                     Expanded(
                                       child: Container(
+                                        width: double.infinity,
                                         decoration: BoxDecoration(
                                           image: DecorationImage(
                                             fit: BoxFit.cover,
@@ -315,82 +329,111 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                                 begin: Alignment.topCenter,
                                                 end: Alignment.bottomCenter),
                                           ),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Column(
+                                          child: LayoutBuilder(
+                                            builder: (BuildContext context,
+                                                BoxConstraints constraints) {
+                                              return Stack(
+                                                alignment:
+                                                    Alignment.bottomRight,
                                                 children: [
-                                                  Text(
-                                                    '${age} years old $ethnicity $gender',
-                                                    textAlign: TextAlign.center,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style:
-                                                        kWhiteDescriptionShadowStyle
-                                                            .copyWith(
-                                                      color: Colors.white,
-                                                      fontSize:
-                                                          getRelativeTextSize(
-                                                              25),
-                                                    ),
+                                                  Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: [
+                                                      Column(
+                                                        children: [
+                                                          Text(
+                                                            '${age} years old $ethnicity $gender',
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style:
+                                                                kWhiteDescriptionShadowStyle
+                                                                    .copyWith(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize:
+                                                                  getRelativeTextSize(
+                                                                      25),
+                                                            ),
+                                                          ),
+                                                          // Text(
+                                                          //   '${firstEyeColor.capitalizeFirst} $secondEyeColor eyes and $firstHairColor $secondHairColor hair',
+                                                          //   style:
+                                                          //       cardFontStyle.copyWith(
+                                                          //     fontSize:
+                                                          //         getRelativeTextSize(
+                                                          //             17),
+                                                          //   ),
+                                                          //   textAlign: TextAlign.center,
+                                                          // ),
+                                                        ],
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal:
+                                                                    5.0),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.max,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .stretch,
+                                                          children: [
+                                                            Text('📊 $BMI BMI',
+                                                                style:
+                                                                    cardFontStyle),
+                                                            Text(
+                                                              '👀 $firstEyeColor $secondEyeColor eyes',
+                                                              style:
+                                                                  cardFontStyle,
+                                                            ),
+                                                            if (gender ==
+                                                                'male')
+                                                              Text(
+                                                                '$maleHairEmoji $dominatedHairColor $secondHairColor hair',
+                                                                style:
+                                                                    cardFontStyle,
+                                                              ),
+                                                            if (gender ==
+                                                                'female')
+                                                              Text(
+                                                                '$femaleHairEmoji $dominatedHairColor $secondHairColor hair',
+                                                                style:
+                                                                    cardFontStyle,
+                                                              ),
+                                                            Text(
+                                                              '🎓 $education education',
+                                                              style:
+                                                                  cardFontStyle,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    ],
                                                   ),
-                                                  Text(
-                                                    '${firstEyeColor.capitalizeFirst} $secondEyeColor eyes and $firstHairColor $secondHairColor hair',
-                                                    style:
-                                                        cardFontStyle.copyWith(
-                                                      fontSize:
-                                                          getRelativeTextSize(
-                                                              17),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            5.0),
+                                                    child: Image.asset(
+                                                      BetaIconPaths.aiLogoRobot,
+                                                      scale: 2,
                                                     ),
-                                                    textAlign: TextAlign.center,
                                                   ),
                                                 ],
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 5.0),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          'BMI: $BMI',
-                                                          style: cardFontStyle
-                                                              .copyWith(
-                                                            fontSize: 18,
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          'Education: $education',
-                                                          style: cardFontStyle
-                                                              .copyWith(
-                                                            fontSize: 18,
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                    Padding(
-                                                      padding:
-                                                          EdgeInsets.all(10),
-                                                      child: Image.asset(
-                                                        BetaIconPaths
-                                                            .AIprofileMePath,
-                                                        scale: 5,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
-                                            ],
+                                              );
+                                            },
                                           ),
                                         ),
                                       ),

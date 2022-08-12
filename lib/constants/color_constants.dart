@@ -55,7 +55,7 @@ const TextStyle kWhiteDescriptionShadowStyle = TextStyle(
   fontWeight: FontWeight.w700,
   shadows: [
     Shadow(
-      blurRadius: 17.0,
+      blurRadius: 19.0,
       color: Colors.black,
       offset: Offset(-2.0, 2.0),
     ),

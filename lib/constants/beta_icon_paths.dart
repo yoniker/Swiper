@@ -8,10 +8,6 @@ class BetaIconPaths {
   /// The path to the active Profile Tab image.
   static const String activeVoilaTabIconPath = 'assets/images/voila.png';
 
-  static const String quillPenIconPath = 'assets/images/quill-pen1.png';
-
-  static const String AIprofileMePath = 'assets/images/profileAIme.png';
-
   /// Voila search filter button.
   static const String voilaSearchSettingsPath = 'assets/images/search.png';
 
@@ -31,8 +27,8 @@ class BetaIconPaths {
   static const String inactiveVoilaTabIconPath = 'assets/images/voila.png';
 
   /// The path to the active Likes Tab image.
-  static const String activeLikesTabIconPath =
-      'assets/images/likes_tab_icon_active.png';
+  // static const String activeLikesTabIconPath =
+  //     'assets/images/likes_tab_icon_active.png';
 
   /// The path to the active Messages Tab image.
   static const String activeMessagesTabIconPath =
@@ -160,6 +156,8 @@ class BetaIconPaths {
       'assets/images/voila_logo_black_alt.png';
 
   static const String voilaLogoWhite = 'assets/images/voila_logoWhite.png';
+
+  static const String aiLogoRobot = 'assets/images/ai2.png';
 
   static const String anonymousProfileUrl =
       'user_data/profile_images/real/app_assets/anonymous_user.jpg'; //short url to anon profile
