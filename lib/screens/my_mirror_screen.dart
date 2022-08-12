@@ -28,7 +28,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
   ServerResponse currentState = ServerResponse.InProgress;
   List<String> facesUrls = [];
   Map traits = {};
-  bool profileIsBeingProcessed = false;
+  bool profileIsFacesBeingProcessed = false;
   bool traitsBeingFetched = false;
 
   Future<void> updateTraits(String link) async {
@@ -50,7 +50,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
     while (serverResponse == ServerResponse.InProgress) {
       if (mounted)
         setState(() {
-          profileIsBeingProcessed = true;
+          profileIsFacesBeingProcessed = true;
         });
       //TODO Nitzan update UI to show this is being processed at the server
       await Future.delayed(Duration(
@@ -62,7 +62,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
     }
 
     setState(() {
-      profileIsBeingProcessed = false;
+      profileIsFacesBeingProcessed = false;
     });
 
     if (serverResponse == ServerResponse.Success && data != null) {
@@ -253,7 +253,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
           body: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              profileIsBeingProcessed
+              profileIsFacesBeingProcessed
                   ? Container(
                       height: MediaQuery.of(context).size.height * 0.5,
                       width: MediaQuery.of(context).size.width,
@@ -525,7 +525,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                   child: !(facesUrls.length > 0)
                       ? Center(
                           child: Text(
-                            'No Profile image Available',
+                            profileIsFacesBeingProcessed?'Analyzing your profile':'No faces found in profile images',
                             style: mediumBoldedCharStyle,
                           ),
                         )

@@ -132,7 +132,7 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                     child: !(facesUrls.length > 0)
                         ? Center(
                             child: Text(
-                              'No Profile faces found',
+                              profileIsBeingProcessed?'Analyzing your profile':'No faces found in profile images',
                               style: mediumBoldedCharStyle,
                             ),
                           )
