@@ -2,6 +2,7 @@ import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/constants/assets_paths.dart';
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/models/celebs_info_model.dart';
+import 'package:betabeta/screens/pending_approvment_screen.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/services/match_engine.dart';
@@ -73,7 +74,9 @@ class _SplashScreenState extends State<SplashScreen>
     //If the user is currently registered
 
      {
-      return MainNavigationScreen.routeName;
+       if(SettingsData.instance.registrationStatus==RegistrationStatus.registeredApproved)
+      return  MainNavigationScreen.routeName;
+       return PendingApprovementScreen.routeName;
     }
 
     return WelcomeScreen.routeName;
@@ -81,10 +84,9 @@ class _SplashScreenState extends State<SplashScreen>
 
   // loads in the shared preference.
   void _load() async {
-    final routeTo = await _chooseRoute();
-
     await _initializeApp();
-    if (routeTo == MainNavigationScreen.routeName) {
+    final routeTo = await _chooseRoute();
+    if (routeTo == MainNavigationScreen.routeName || routeTo==PendingApprovementScreen.routeName) {
       await _initAppAlreadyRegistered();
     }
 

@@ -3,6 +3,7 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/url-consts.dart';
 import 'package:betabeta/screens/account_settings.dart';
 import 'package:betabeta/screens/current_user_profile_view_screen.dart';
+import 'package:betabeta/screens/onboarding/tutorial_screen_starter.dart';
 import 'package:betabeta/screens/profile_edit_screen.dart';
 import 'package:betabeta/screens/profile_screen.dart';
 import 'package:betabeta/services/aws_networking.dart';
@@ -36,6 +37,8 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
     with MountedStateMixin<PendingApprovementScreen> {
   @override
   void initState() {
+    SettingsData.instance.addListener(moveToTutorialWhenApproved);
+    print('added listener');
     super.initState();
   }
 
@@ -94,6 +97,12 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
         ),
       ),
     );
+  }
+
+  void moveToTutorialWhenApproved(){
+    if(SettingsData.instance.registrationStatus == RegistrationStatus.registeredApproved){
+      Get.offAllNamed(TutorialScreenStarter.routeName);
+    }
   }
 
   @override
@@ -249,6 +258,11 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
       },
     );
   }
+  @override
+  void dispose() {
+    SettingsData.instance.removeListener(moveToTutorialWhenApproved);
+    super.dispose();
+  }
 }
 
 class ArcPainter2 extends CustomPainter {
@@ -271,4 +285,6 @@ class ArcPainter2 extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+
+
 }
