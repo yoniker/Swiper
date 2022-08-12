@@ -56,7 +56,7 @@ class SettingsData extends ChangeNotifier {
   static const String HEIGHT_IN_CM_KEY = 'height_in_cm';
   static const String TEXT_SEARCH_KEY = 'text_search';
   static const String IS_TEST_USER_NAME_KEY = 'is_test_user';
-  static const String USER_TOOK_TUTORIAL_KEY = 'user_took_tutorial';
+  static const String USER_WATCHED_MAIN_TUTORIAL_KEY = 'user_watched_main_tutorial';
   static const String REGISTRATION_STATUS_NAME_KEY = 'registration_status';
 
   static const _debounceSettingsTime =
@@ -156,7 +156,7 @@ class SettingsData extends ChangeNotifier {
   String _jobTitle = '';
   String _covid_vaccine = '';
   String _textSearch = '';
-  bool _userTookTutorial = false;
+  bool _userWatchedMainTutorial = false;
   List<String> _hobbies = [];
   List<String> _pets = [];
   int _heightInCm = 0;
@@ -240,6 +240,7 @@ class SettingsData extends ChangeNotifier {
         sharedPreferences.getString(REGISTRATION_STATUS_NAME_KEY) ??
             _registrationStatusName;
     _isTestUserName = sharedPreferences.getString(IS_TEST_USER_NAME_KEY) ?? _isTestUserName;
+    _userWatchedMainTutorial = sharedPreferences.getBool(USER_WATCHED_MAIN_TUTORIAL_KEY) ?? _userWatchedMainTutorial;
     _readFromShared = true;
 
     return;
@@ -593,13 +594,13 @@ class SettingsData extends ChangeNotifier {
     savePreferences(GET_DUMMY_PROFILES_KEY, newShowDummyProfiles);
   }
 
-  bool get userTookTutorial {
-    return _userTookTutorial;
+  bool get userWatchedMainTutorial {
+    return _userWatchedMainTutorial;
   }
 
-  set userTookTutorial(bool newUserTookTutorial) {
-    _userTookTutorial = newUserTookTutorial;
-    savePreferences(USER_TOOK_TUTORIAL_KEY, newUserTookTutorial,
+  set userWatchedMainTutorial(bool newUserTookTutorial) {
+    _userWatchedMainTutorial = newUserTookTutorial;
+    savePreferences(USER_WATCHED_MAIN_TUTORIAL_KEY, newUserTookTutorial,
         sendServer: false, resetMatchEngine: false);
   }
 

@@ -3,6 +3,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/services/onboarding_flow_controller.dart';
+import 'package:betabeta/services/settings_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -26,6 +27,7 @@ class _TutorialScreenStarterState extends State<TutorialScreenStarter>
 
   @override
   void initState() {
+    SettingsData.instance.userWatchedMainTutorial=true;
     timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
       if (timer.isActive)
         setState(() {
