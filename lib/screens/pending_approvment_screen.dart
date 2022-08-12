@@ -201,10 +201,12 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
                 ],
               ),
               CustomScrollViewTakesAllAvailableSpace(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                margin: EdgeInsets.only(right: 5),
                 padding: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.07,
+                    left: MediaQuery.of(context).size.width * 0.03,
                     top: MediaQuery.of(context).size.height * 0.02,
-                    right: MediaQuery.of(context).size.width * 0.07),
+                    right: MediaQuery.of(context).size.width * 0.015),
                 children: [
                   Text(
                     'Thank you and welcome to Voilà! Your profile is now being reviewed',
@@ -222,57 +224,70 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.01,
                   ),
-                  RoundedPictureButton(
-                    image: AssetImage(AssetsPaths.starPictureCeleb),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(60),
+                  Center(
+                    child: RoundedPictureButton(
+                      image: AssetImage(AssetsPaths.starPictureCeleb),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(60),
+                      ),
+                      height: smartBottonHeight,
+                      child: Text(
+                        'Celeb look-a-like',
+                        style: LargeTitleStyleWhite,
+                        textAlign: TextAlign.center,
+                      ),
+                      onTap: () {
+                        Get.toNamed(MyLookALikeScreen.routeName);
+                      },
                     ),
-                    height: smartBottonHeight,
-                    child: Text(
-                      'Celeb look-a-like',
-                      style: LargeTitleStyleWhite,
-                      textAlign: TextAlign.center,
-                    ),
-                    onTap: () {
-                      Get.toNamed(MyLookALikeScreen.routeName);
-                    },
                   ),
-                  RoundedPictureButton(
-                    height: smartBottonHeight,
-                    image: AssetImage(AssetsPaths.mirrorOnTheWall1),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(60),
+                  Center(
+                    child: RoundedPictureButton(
+                      height: smartBottonHeight,
+                      image: AssetImage(AssetsPaths.mirrorOnTheWall1),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(60),
+                      ),
+                      child: Text(
+                        'Mirror on the wall',
+                        style: LargeTitleStyleWhite,
+                        textAlign: TextAlign.center,
+                      ),
+                      onTap: () {
+                        Get.toNamed(MyMirrorScreen.routeName);
+                      },
                     ),
-                    child: Text(
-                      'Mirror on the wall',
-                      style: LargeTitleStyleWhite,
-                      textAlign: TextAlign.center,
-                    ),
-                    onTap: () {
-                      Get.toNamed(MyMirrorScreen.routeName);
-                    },
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.01,
+                    height: MediaQuery.of(context).size.height * 0.02,
                   ),
-                  if (SettingsData.instance.email != '')
-                    Text(
-                      'We will send the updates to',
-                      style: titleStyle.copyWith(
-                          color: Colors.black54, fontSize: adaptiveFontSize),
-                      textAlign: TextAlign.left,
-                    ),
-                  if (SettingsData.instance.email != '')
-                    Center(
-                      child: MainAppBox(
-                        child: Text(
-                          SettingsData.instance.email,
-                          style: titleStyle.copyWith(
-                              fontSize: adaptiveFontSize,
-                              fontWeight: FontWeight.normal),
-                        ),
-                      ),
-                    ),
+                  Text(
+                    "Try the Celeb Look-A-Like , Mirror on the wall & invite friends! (It will help you get approved faster!)",
+                    style: titleStyle.copyWith(
+                        color: Colors.black54, fontSize: adaptiveFontSize),
+                    textAlign: TextAlign.left,
+                  ),
+                  // if (SettingsData.instance.email != '')
+                  //   Padding(
+                  //     padding: const EdgeInsets.all(8.0),
+                  //     child: Text(
+                  //       'We will send the updates to',
+                  //       style: titleStyle.copyWith(
+                  //           color: Colors.black54, fontSize: adaptiveFontSize),
+                  //       textAlign: TextAlign.left,
+                  //     ),
+                  //   ),
+                  // if (SettingsData.instance.email != '')
+                  //   Center(
+                  //     child: MainAppBox(
+                  //       child: Text(
+                  //         SettingsData.instance.email,
+                  //         style: titleStyle.copyWith(
+                  //             fontSize: adaptiveFontSize,
+                  //             fontWeight: FontWeight.normal),
+                  //       ),
+                  //     ),
+                  //   ),
                 ],
               ),
               Padding(

@@ -11,6 +11,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
+import '../constants/assets_paths.dart';
+
 class MyLookALikeScreen extends StatefulWidget {
   const MyLookALikeScreen({Key? key}) : super(key: key);
 
@@ -175,10 +177,16 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                                         aspectRatio: 1 / 1,
                                         child: Container(
                                           decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color: Colors.grey,
+                                                  offset: Offset(-2, 0),
+                                                  blurRadius: 2),
+                                            ],
                                             border: selectedImage == _url
                                                 ? Border.all(
-                                                    width: 2.5,
-                                                    color: appMainColor)
+                                                    width: 3,
+                                                    color: Colors.white)
                                                 : null,
                                             shape: BoxShape.circle,
                                             image: DecorationImage(
@@ -252,12 +260,35 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                               )
                             : Container(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.5,
-                                child: Center(
-                                  child: Text(
-                                    'Pick a face to find out who you look like!',
-                                    style: LargeTitleStyle,
-                                    textAlign: TextAlign.center,
+                                    MediaQuery.of(context).size.height * 0.6,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: AssetImage(
+                                        AssetsPaths.starPictureCeleb),
+                                  ),
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                          colors: [
+                                        backgroundThemeColor,
+                                        Colors.white.withOpacity(0.85),
+                                        Colors.white.withOpacity(0.85),
+                                        backgroundThemeColor
+                                      ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter)),
+                                  child: Center(
+                                    child: Text(
+                                      'Pick a face to find out who you look like!',
+                                      textAlign: TextAlign.center,
+                                      style:
+                                          kWhiteDescriptionShadowStyle.copyWith(
+                                              fontSize: 30,
+                                              color: Colors.white),
+                                      overflow: TextOverflow.fade,
+                                    ),
                                   ),
                                 ),
                               ),

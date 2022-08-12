@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class CustomScrollViewTakesAllAvailableSpace extends StatelessWidget {
   final List<Widget> children;
   final EdgeInsetsGeometry padding;
+  final EdgeInsetsGeometry margin;
   final CrossAxisAlignment crossAxisAlignment;
   const CustomScrollViewTakesAllAvailableSpace(
       {Key? key,
       required this.children,
       required this.padding,
+      this.margin = EdgeInsets.zero,
       this.crossAxisAlignment = CrossAxisAlignment.start})
       : super(key: key);
 
@@ -37,10 +39,13 @@ class CustomScrollViewTakesAllAvailableSpace extends StatelessWidget {
               slivers: [
                 SliverFillRemaining(
                   hasScrollBody: false,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: crossAxisAlignment,
-                    children: children,
+                  child: Padding(
+                    padding: margin,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: crossAxisAlignment,
+                      children: children,
+                    ),
                   ),
                 )
               ],
