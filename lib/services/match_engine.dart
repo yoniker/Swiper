@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:betabeta/constants/api_consts.dart';
 import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/location_service.dart';
 import 'package:betabeta/services/settings_model.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:collection';
 
@@ -37,6 +40,10 @@ class MatchEngine extends ChangeNotifier {
     addMatchesIfNeeded();
   }
 
+  void onUserStatusChange(){
+    notifyListeners();
+  }
+
   bool previousMatchExists() {
     return _previousMatches.length > 0;
   }
@@ -58,6 +65,18 @@ class MatchEngine extends ChangeNotifier {
     }
     return _matches.elementAt(1);
   }
+
+  List<Match?> topMatches({int maxNumMatchesPreload = 5}){
+    return _matches.toList().sublist(0,min(maxNumMatchesPreload, _matches.length));
+
+
+    }
+
+  RegistrationStatus get registrationStatus => SettingsData.instance.registrationStatus; //Just forward this value- listeners of MatchEngine shouldn't care for the fact that it is taken from SettingsData
+
+
+
+
 
   Future<void> getMoreMatchesFromServer() async {
     if (_serverMatchesSearchStatus == MatchSearchStatus.not_found) {

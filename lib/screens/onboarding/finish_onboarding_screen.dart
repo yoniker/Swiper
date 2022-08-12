@@ -33,16 +33,16 @@ class _FinishOnboardingScreenState extends State<FinishOnboardingScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     _controller =
-        VideoPlayerController.asset('assets/onboarding/videos/startvideo.mp4')
-          ..initialize().then((_) {
-            _controller.seekTo(Duration(seconds: 36));
-            _controller.play();
-            _controller.setLooping(true);
-            setState(() {});
-          });
+    VideoPlayerController.asset('assets/onboarding/videos/startvideo.mp4')
+      ..initialize().then((_) {
+        _controller.seekTo(Duration(seconds: 36));
+        _controller.play();
+        _controller.setLooping(true);
+        setState(() {});
+      });
+    super.initState();
+
   }
 
   @override

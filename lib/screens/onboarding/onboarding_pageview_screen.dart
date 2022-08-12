@@ -29,7 +29,7 @@ import 'package:get/get.dart';
 class OnboardingPageViewScreen extends StatefulWidget {
   static const String routeName = '/onboarding_page_view_screen';
 
-  late final ServerRegistrationStatus? registrationStatus;
+  late final ServerRegistrationStatusResponse? registrationStatus;
   OnboardingPageViewScreen({Key? key}) : super(key: key) {
     registrationStatus = Get.arguments;
   }
@@ -54,8 +54,12 @@ class _OnboardingPageViewScreenState extends State<OnboardingPageViewScreen> {
           duration: Duration(milliseconds: 300), curve: Curves.fastOutSlowIn);
     } else {
       syncWithServer();
+      //Register the user at server if this wasn't done already
+      if(!(SettingsData.instance.registrationStatus==RegistrationStatus.registeredApproved || SettingsData.instance.registrationStatus == RegistrationStatus.registeredNotApproved)){
+        SettingsData.instance.registrationStatus = RegistrationStatus.registeredNotApproved;
+      }
       if (widget.registrationStatus ==
-          ServerRegistrationStatus.already_registered)
+          ServerRegistrationStatusResponse.already_registered)
         Get.offAllNamed(MainNavigationScreen.routeName);
       else
         Get.offAllNamed(TutorialScreenStarter.routeName);
@@ -70,7 +74,6 @@ class _OnboardingPageViewScreenState extends State<OnboardingPageViewScreen> {
     MatchEngine.instance.clear();
     LocationService.instance.onInit();
     MatchEngine.instance;
-    SettingsData.instance.registrationStatus = API_CONSTS.ALREADY_REGISTERED;
   }
 
   @override
@@ -118,12 +121,12 @@ class _OnboardingPageViewScreenState extends State<OnboardingPageViewScreen> {
       // MainNavigationScreen()
     ];
 
-    void setOnboardingPath(ServerRegistrationStatus loginStatus) {
-      if (loginStatus == ServerRegistrationStatus.new_register) {
+    void setOnboardingPath(ServerRegistrationStatusResponse loginStatus) {
+      if (loginStatus == ServerRegistrationStatusResponse.new_register) {
         chosenOnboradingFlow = fullOnboardingFlow;
         return;
       }
-      if (loginStatus == ServerRegistrationStatus.already_registered) {
+      if (loginStatus == ServerRegistrationStatusResponse.already_registered) {
         chosenOnboradingFlow = [];
         if (!Platform.isAndroid) {
           chosenOnboradingFlow

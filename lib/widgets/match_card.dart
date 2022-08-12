@@ -919,7 +919,7 @@ class _PhotoViewState extends State<PhotoView> {
         fit: BoxFit.cover,
         //headers:{"Keep-Alive":"timeout=20"},
       );
-      precacheImage(img.image, context);
+      //precacheImage(img.image, context);
       imagesList.add(img);
     }
   }

@@ -7,6 +7,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+enum TestUserState {isTestUser,notTestUser}
+enum RegistrationStatus{notRegistered,registeredNotApproved,registeredApproved,deleted}
+
 class SettingsData extends ChangeNotifier {
   //Some consts to facilitate share preferences access
   static const String PREFERRED_GENDER_KEY = 'gender_preferred';
@@ -52,9 +55,9 @@ class SettingsData extends ChangeNotifier {
   static const String PETS_KEY = 'pets';
   static const String HEIGHT_IN_CM_KEY = 'height_in_cm';
   static const String TEXT_SEARCH_KEY = 'text_search';
-  static const String IS_TEST_USER_KEY = 'is_test_user';
+  static const String IS_TEST_USER_NAME_KEY = 'is_test_user';
   static const String USER_TOOK_TUTORIAL_KEY = 'user_took_tutorial';
-  static const String REGISTRATION_STATUS_KEY = 'registration_status';
+  static const String REGISTRATION_STATUS_NAME_KEY = 'registration_status';
 
   static const _debounceSettingsTime =
       Duration(milliseconds: 200); //Debounce time such that we notify listeners
@@ -157,8 +160,8 @@ class SettingsData extends ChangeNotifier {
   List<String> _hobbies = [];
   List<String> _pets = [];
   int _heightInCm = 0;
-  String _registrationStatus = '';
-  bool _isTestUser = false;
+  String _registrationStatusName = '';
+  String _isTestUserName = TestUserState.notTestUser.name;
 
   SettingsData._privateConstructor() {
     //And after that, read settings from shared
@@ -233,10 +236,10 @@ class SettingsData extends ChangeNotifier {
     _heightInCm = sharedPreferences.getInt(HEIGHT_IN_CM_KEY) ?? _heightInCm;
     _jobTitle = sharedPreferences.getString(JOB_TITLE_KEY) ?? _jobTitle;
     _textSearch = sharedPreferences.getString(TEXT_SEARCH_KEY) ?? _textSearch;
-    _registrationStatus =
-        sharedPreferences.getString(REGISTRATION_STATUS_KEY) ??
-            _registrationStatus;
-    _isTestUser = sharedPreferences.getBool(IS_TEST_USER_KEY) ?? _isTestUser;
+    _registrationStatusName =
+        sharedPreferences.getString(REGISTRATION_STATUS_NAME_KEY) ??
+            _registrationStatusName;
+    _isTestUserName = sharedPreferences.getString(IS_TEST_USER_NAME_KEY) ?? _isTestUserName;
     _readFromShared = true;
 
     return;
@@ -248,7 +251,7 @@ class SettingsData extends ChangeNotifier {
     return _readFromShared;
   }
 
-  void updateFromServerData(Map<dynamic, dynamic> userData) {
+  void updateAllSettingsFromServerData(Map<dynamic, dynamic> userData) {
     _uid = userData[SettingsData.FIREBASE_UID_KEY] ?? _uid;
     _preferredGender = userData[PREFERRED_GENDER_KEY] ?? _preferredGender;
     _name = userData[NAME_KEY] ?? _name;
@@ -298,8 +301,9 @@ class SettingsData extends ChangeNotifier {
     _heightInCm = castToInt(userData[HEIGHT_IN_CM_KEY], onNoCast: _heightInCm);
     _jobTitle = userData[JOB_TITLE_KEY] ?? _jobTitle;
     _textSearch = userData[TEXT_SEARCH_KEY] ?? _textSearch;
-    _registrationStatus =
-        userData[REGISTRATION_STATUS_KEY] ?? _registrationStatus;
+    _registrationStatusName =
+        userData[REGISTRATION_STATUS_NAME_KEY] ?? _registrationStatusName;
+    _isTestUserName = userData[IS_TEST_USER_NAME_KEY] ?? _isTestUserName;
 
     savePreferences(FIREBASE_UID_KEY, _uid,
         sendServer: false, resetMatchEngine: false);
@@ -377,9 +381,31 @@ class SettingsData extends ChangeNotifier {
         sendServer: false, resetMatchEngine: false);
     savePreferences(TEXT_SEARCH_KEY, _textSearch,
         sendServer: false, resetMatchEngine: false);
-    savePreferences(REGISTRATION_STATUS_KEY, _registrationStatus,
+    savePreferences(REGISTRATION_STATUS_NAME_KEY, _registrationStatusName,
         sendServer: false, resetMatchEngine: false);
     AWSServer.instance.syncCurrentProfileImagesUrls();
+  }
+
+  void updateUserStatusFromServer(String userStatusKey,String userStatusNewValue){
+
+    if(userStatusKey == REGISTRATION_STATUS_NAME_KEY || userStatusKey == IS_TEST_USER_NAME_KEY){
+      if(userStatusKey == REGISTRATION_STATUS_NAME_KEY){
+        SettingsData.instance._registrationStatusName = userStatusNewValue; //TODO check if this is valid?
+      }
+
+      if(userStatusKey == IS_TEST_USER_NAME_KEY){
+        SettingsData.instance._isTestUserName = userStatusNewValue; //TODO check if this is valid?
+      }
+
+      savePreferences(userStatusKey, userStatusNewValue,
+          sendServer: false, resetMatchEngine: false);
+      MatchEngine.instance.onUserStatusChange(); //TODO think about a better way to do it (a singleton approaching directly another one doesn't seem best).
+
+
+
+    }
+
+
   }
 
   String get preferredGender {
@@ -455,14 +481,23 @@ class SettingsData extends ChangeNotifier {
     savePreferences(MAX_AGE_KEY, newMaxAge);
   }
 
-  bool get isTestUser {
-    return _isTestUser;
+  String get isTestUserName {
+    return _isTestUserName;
   }
 
-  set isTestUser(bool newIsTestUser) {
-    _isTestUser = newIsTestUser;
-    savePreferences(IS_TEST_USER_KEY, newIsTestUser,
-        sendServer: false, resetMatchEngine: false);
+  set isTestUserName(String newIsTestUser) {
+    _isTestUserName = newIsTestUser;
+    savePreferences(IS_TEST_USER_NAME_KEY, newIsTestUser,
+        sendServer: true, resetMatchEngine: false);
+  }
+
+  TestUserState get testUserState {
+    return TestUserState.values.firstWhere((state) => state.name == _isTestUserName,
+        orElse: () => TestUserState.isTestUser);
+  }
+
+  set testUserState(TestUserState testUserState) {
+    this.isTestUserName = testUserState.name;
   }
 
   int get auditionCount {
@@ -887,13 +922,22 @@ class SettingsData extends ChangeNotifier {
     savePreferences(TEXT_SEARCH_KEY, newTextSearch);
   }
 
-  String get registrationStatus {
-    return _registrationStatus;
+  String get registrationStatusName {
+    return _registrationStatusName;
   }
 
-  set registrationStatus(String newRegistrationStatus) {
-    _registrationStatus = newRegistrationStatus;
-    savePreferences(REGISTRATION_STATUS_KEY, newRegistrationStatus);
+  set registrationStatusName(String newRegistrationStatus) {
+    _registrationStatusName = newRegistrationStatus;
+    savePreferences(REGISTRATION_STATUS_NAME_KEY, newRegistrationStatus);
+  }
+
+  RegistrationStatus get registrationStatus {
+    return RegistrationStatus.values.firstWhere((state) => state.name == _registrationStatusName,
+        orElse: () => RegistrationStatus.notRegistered);
+  }
+
+  set registrationStatus(RegistrationStatus registrationStatus) {
+    this.registrationStatusName = registrationStatus.name;
   }
 
   int get heightInCm {

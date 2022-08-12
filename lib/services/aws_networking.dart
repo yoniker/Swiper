@@ -181,7 +181,8 @@ class AWSServer {
       SettingsData.PETS_KEY: json.jsonEncode(settings.pets),
       SettingsData.HEIGHT_IN_CM_KEY: settings.heightInCm.toString(),
       SettingsData.TEXT_SEARCH_KEY: settings.textSearch,
-      SettingsData.REGISTRATION_STATUS_KEY: settings.registrationStatus
+      SettingsData.REGISTRATION_STATUS_NAME_KEY: settings.registrationStatusName,
+      SettingsData.IS_TEST_USER_NAME_KEY : settings.isTestUserName
     };
     String encoded = jsonEncode(toSend);
     Uri postSettingsUri = Uri.https(SERVER_ADDR, '/user_data/settings/${settings.uid}');
@@ -450,13 +451,14 @@ class AWSServer {
   }
 
   static Future<Tuple2<List<InfoMessage>, List<dynamic>>>
-  getMessagesByTimestamp() async {
+  syncWithServerByTimestamp() async {
     Uri syncChatDataUri = Uri.https(SERVER_ADDR,
         'user_data/sync/${SettingsData.instance.uid}/${SettingsData.instance.lastSync}');
     http.Response response = await http.get(syncChatDataUri);
     var unparsedData = json.jsonDecode(response.body);
     List<dynamic> unparsedMessages = unparsedData['messages_data'];
     List<dynamic> unparsedMatchesChanges = unparsedData['matches_data'];
+
     List<InfoMessage> messages = unparsedMessages
         .map((message) => InfoMessage.fromJson(message))
         .toList();
@@ -474,7 +476,22 @@ class AWSServer {
     return false;
   }
 
-  Future<ServerRegistrationStatus> registerUid(
+
+  Future<void> updateUserStatusFromServer()async{
+    Uri getAllUserDataUri = Uri.https(SERVER_ADDR, 'user_data/get_user_data/${SettingsData.instance.uid}');
+    http.Response response = await http.get(getAllUserDataUri);
+    if (response.statusCode != 200) {
+      //TODO throw error (bad jwt? server down?)
+    }
+
+    var decodedResponse = json.jsonDecode(response.body);
+    Map<String,String> statusesMap = {SettingsData.REGISTRATION_STATUS_NAME_KEY:decodedResponse[API_CONSTS.USER_DATA][SettingsData.REGISTRATION_STATUS_NAME_KEY],
+    SettingsData.IS_TEST_USER_NAME_KEY:decodedResponse[API_CONSTS.USER_DATA][SettingsData.IS_TEST_USER_NAME_KEY]
+    };
+    statusesMap.forEach((key, value) {SettingsData.instance.updateUserStatusFromServer(key,value); });
+  }
+
+  Future<ServerRegistrationStatusResponse> registerUid(
       {required String firebaseIdToken}) async {
     Uri verifyTokenUri = Uri.https(SERVER_ADDR, 'user_data/register_firebase_uid');
     http.Response response = await http
@@ -487,14 +504,14 @@ class AWSServer {
 
     if (decodedResponse[API_CONSTS.STATUS] == API_CONSTS.ALREADY_REGISTERED) {
       SettingsData.instance
-          .updateFromServerData(decodedResponse[API_CONSTS.USER_DATA]);
-      return ServerRegistrationStatus.already_registered;
+          .updateAllSettingsFromServerData(decodedResponse[API_CONSTS.USER_DATA]);
+      return ServerRegistrationStatusResponse.already_registered;
     }
     //The only possible response possible now is that the user is newly registered - so had to go through onboarding
     //if(decodedResponse[API_CONSTS.STATUS]==API_CONSTS.NEW_REGISTER){
     SettingsData.instance.uid =
     decodedResponse[API_CONSTS.USER_DATA][SettingsData.FIREBASE_UID_KEY];
-    return ServerRegistrationStatus.new_register;
+    return ServerRegistrationStatusResponse.new_register;
     //}
   }
 
@@ -526,11 +543,6 @@ class AWSServer {
           status_option.name ==
               decodedResponse[API_CONSTS.LOCATION_STATUS_KEY],
           orElse: () => LocationCountStatus.initial_state);
-      if (decodedResponse[API_CONSTS.IS_TEST_USER_KEY] == true) {
-        SettingsData.instance.isTestUser = true;
-      } else {
-        SettingsData.instance.isTestUser = false;
-      }
       //Here there should be just enough users or not enough users + data
       if (status == LocationCountStatus.enough_users) {
         return LocationCountData(status: status);

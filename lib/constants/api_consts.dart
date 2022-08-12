@@ -64,8 +64,13 @@ class API_CONSTS{
   //Possible notification types and fields
   static const String PUSH_NOTIFICATION_TYPE_KEY = 'push_notification_type';
   static const String PUSH_NOTIFICATION_NEW_MATCH = 'new_match';
+  static const String PUSH_NOTIFICATION_MATCH_INFO = 'match_info';
+  static const String NEW_READ_RECEIPT = 'new_read_receipt';
   static const String PUSH_NOTIFICATION_NEW_MESSAGE = 'new_message';
   static const String PUSH_NOTIFICATION_USER_ID = 'user_id';
+  static const String CHANGE_USER_STATUS = 'change_user_status';
+  static const String CHANGE_USER_KEY = 'change_user_key';
+  static const String CHANGE_USER_VALUE = 'change_user_value';
   //Possible location count responses
   static const String LOCATION_STATUS_KEY = 'status';
   static const String IS_TEST_USER_KEY  = 'is_test_user';
