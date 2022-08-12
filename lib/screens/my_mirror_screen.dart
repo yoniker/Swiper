@@ -6,6 +6,7 @@ import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
+import 'package:betabeta/widgets/voila_logo_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:math' as math;
@@ -215,6 +216,8 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
       dominatedHairColor = maxKey(map: hairColors);
     }
 
+    ScrollController _scrollController = ScrollController();
+
     return ListenerWidget(
       notifier: SettingsData.instance,
       builder: (context) {
@@ -233,7 +236,14 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
           backgroundColor: Colors.white,
           appBar: CustomAppBar(
             hasTopPadding: true,
-            title: 'My mirror on the wall',
+            backColor: goldColorish,
+            customTitle: SizedBox(
+              height: 80,
+            ),
+            centerWidget: VoilaLogoWidget(
+              logoOnlyMode: true,
+              goldLogo: true,
+            ),
             backgroundColor: Colors.white,
             elevation: 0,
           ),
@@ -307,7 +317,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                         decoration: BoxDecoration(
                                           image: DecorationImage(
                                             fit: BoxFit.cover,
-                                            opacity: 0.7,
+                                            opacity: 1,
                                             image: NetworkImage(selectedImage),
                                           ),
                                         ),
@@ -322,8 +332,8 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                                 ],
                                                 stops: [
                                                   0,
-                                                  0.43,
-                                                  0.77,
+                                                  0.10,
+                                                  1,
                                                   1
                                                 ],
                                                 begin: Alignment.topCenter,
@@ -449,7 +459,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                 width: MediaQuery.of(context).size.width,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
-                                    opacity: 0.7,
+                                    opacity: 1,
                                     fit: BoxFit.cover,
                                     image: AssetImage(
                                         AssetsPaths.mirrorOnTheWall1),
@@ -505,64 +515,61 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                             style: mediumBoldedCharStyle,
                           ),
                         )
-                      : ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: facesUrls.length,
-                          itemBuilder: (cntx, index) {
-                            final String _url =
-                                AWSServer.profileFaceLinkToFullUrl(
-                                    facesUrls[index]);
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedImage = _url;
-                                });
-                                updateTraits(facesUrls[index]);
-                              },
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  minHeight: 30.5,
-                                  maxHeight: 100.5,
-                                  minWidth: 30.5,
-                                  maxWidth: 100.5,
-                                ),
-                                // height: 80.5,
-                                // width: 100.0,
-                                child: AspectRatio(
-                                  aspectRatio: 1 / 1,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      border: selectedImage == _url
-                                          ? Border.all(
-                                              width: 2, color: appMainColor)
-                                          : null,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(20),
-                                      ),
+                      : RawScrollbar(
+                          scrollbarOrientation: ScrollbarOrientation.top,
+                          controller: _scrollController,
+                          thumbVisibility: true,
+                          radius: Radius.circular(30),
+                          thickness: 5,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 12.0),
+                            child: ListView.separated(
+                              controller: _scrollController,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: facesUrls.length,
+                              itemBuilder: (cntx, index) {
+                                final String _url =
+                                    AWSServer.profileFaceLinkToFullUrl(
+                                        facesUrls[index]);
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedImage = _url;
+                                    });
+                                    updateTraits(facesUrls[index]);
+                                  },
+                                  child: ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                      minHeight: 30.5,
+                                      maxHeight: 100.5,
+                                      minWidth: 30.5,
+                                      maxWidth: 100.5,
                                     ),
-                                    child: Card(
-                                      margin: EdgeInsets.all(0.0),
-                                      clipBehavior: Clip.antiAlias,
-                                      elevation: 2.1,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(18.0),
-                                      ),
-                                      child: PrecachedImage.network(
-                                        imageURL: _url,
-                                        fadeIn: true,
-                                        shouldPrecache: false,
-                                        fit: BoxFit.cover,
+                                    // height: 80.5,
+                                    // width: 100.0,
+                                    child: AspectRatio(
+                                      aspectRatio: 1 / 1,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            border: selectedImage == _url
+                                                ? Border.all(
+                                                    width: 2,
+                                                    color: appMainColor)
+                                                : null,
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                                image: NetworkImage(_url),
+                                                fit: BoxFit.cover)),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            );
-                          },
-                          separatorBuilder: (cntx, index) {
-                            return SizedBox(width: 16.0);
-                          },
+                                );
+                              },
+                              separatorBuilder: (cntx, index) {
+                                return SizedBox(width: 16.0);
+                              },
+                            ),
+                          ),
                         ),
                 ),
               ),

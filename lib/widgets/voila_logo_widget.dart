@@ -6,15 +6,17 @@ import 'package:flutter/material.dart';
 class VoilaLogoWidget extends StatefulWidget {
   const VoilaLogoWidget(
       {Key? key,
-      this.freeText = 'Voilà-dating',
+      this.freeText = 'Voilà',
       this.logoOnlyMode = false,
       this.whiteLogo = false,
+      this.goldLogo = false,
       this.logoScale = 9})
       : super(key: key);
   final String freeText;
   final bool logoOnlyMode;
   final double logoScale;
   final bool whiteLogo;
+  final bool goldLogo;
   @override
   State<VoilaLogoWidget> createState() => _VoilaLogoWidgetState();
 }
@@ -47,7 +49,9 @@ class _VoilaLogoWidgetState extends State<VoilaLogoWidget>
   Widget build(BuildContext context) {
     final String logoUrl = widget.whiteLogo == true
         ? BetaIconPaths.voilaLogoWhite
-        : BetaIconPaths.voilaLogoBlackALT;
+        : widget.goldLogo == true
+            ? BetaIconPaths.voilaLogo
+            : BetaIconPaths.voilaLogoBlackALT;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(8.0),

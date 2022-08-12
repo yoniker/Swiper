@@ -17,6 +17,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.trailing,
     this.titleTextColor = Colors.black,
     this.customTitle,
+    this.backColor = Colors.black87,
     this.backgroundColor = backgroundThemeColor,
     this.elevation = 1,
     this.centerTitle = false,
@@ -40,6 +41,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.hasBackButton = true,
     this.hasTopPadding = false,
     this.elevation = 1,
+    this.backColor = Colors.black87,
     this.trailingPad = 5.0,
     this.hasVerticalPadding = true,
     this.centerWidget,
@@ -70,6 +72,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   /// The Color of the title text. Defaults to `Colors.black`
   final Color titleTextColor;
+
+  final Color backColor;
 
   /// Determines whether to add a Padding to the Top of the AppBar in a case where it is used
   /// as the `appBar` parameter of the [Scaffold] widget.
@@ -140,7 +144,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         padding: const EdgeInsets.all(6.0),
                         child: Icon(
                           FontAwesomeIcons.chevronLeft,
-                          color: Colors.black87,
+                          color: backColor,
                           size: 22,
                         ),
                       ),

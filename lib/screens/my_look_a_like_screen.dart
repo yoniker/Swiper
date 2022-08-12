@@ -80,7 +80,7 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
     if (distance < 1.3)
       return 'You look somewhat like';
     else
-      return 'Tou look a bit like';
+      return 'You look a bit like';
   }
 
   ScrollController? scrollController = ScrollController();
@@ -105,6 +105,7 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
         return Scaffold(
           backgroundColor: backgroundThemeColor,
           appBar: CustomAppBar(
+            elevation: 0,
             hasTopPadding: true,
             title: 'Which Celeb Look-Like-Me?',
           ),

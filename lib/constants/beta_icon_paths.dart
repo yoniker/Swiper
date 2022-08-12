@@ -27,8 +27,6 @@ class BetaIconPaths {
   static const String inactiveVoilaTabIconPath = 'assets/images/voila.png';
 
   /// The path to the active Likes Tab image.
-  // static const String activeLikesTabIconPath =
-  //     'assets/images/likes_tab_icon_active.png';
 
   /// The path to the active Messages Tab image.
   static const String activeMessagesTabIconPath =
@@ -157,7 +155,7 @@ class BetaIconPaths {
 
   static const String voilaLogoWhite = 'assets/images/voila_logoWhite.png';
 
-  static const String aiLogoRobot = 'assets/images/ai2.png';
+  static const String aiLogoRobot = 'assets/images/ai1.png';
 
   static const String anonymousProfileUrl =
       'user_data/profile_images/real/app_assets/anonymous_user.jpg'; //short url to anon profile
