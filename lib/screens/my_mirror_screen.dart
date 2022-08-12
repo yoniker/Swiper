@@ -325,37 +325,40 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                           child: Padding(
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 5.0, vertical: 5),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Text(
-                                                  '🕰️ $age years old',
-                                                  style: cardFontStyle,
-                                                ),
-                                                Text(
-                                                  '🧑🏿‍🤝‍🧑🏻 $ethnicity ethnicity',
-                                                  style: cardFontStyle,
-                                                ),
-                                                Text(
-                                                  '$genderEmoji $gender',
-                                                  style: cardFontStyle,
-                                                ),
-                                                Text(
-                                                  '👀 $dominatedEyeColor $secondEyeColor eyes',
-                                                  style: cardFontStyle,
-                                                ),
-                                                Text(
-                                                  '🌈 $dominatedHairColor $secondHairColor hair',
-                                                  style: cardFontStyle,
-                                                ),
-                                                Text('⚖️ $BMI BMI',
-                                                    style: cardFontStyle),
-                                                Text('🎓 $education',
-                                                    style: cardFontStyle)
-                                              ],
+                                            child: SingleChildScrollView(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  Text(
+                                                    '🕰️ $age years old',
+                                                    style: cardFontStyle,
+                                                  ),
+                                                  Text(
+                                                    '🧑🏿‍🤝‍🧑🏻 $ethnicity ethnicity',
+                                                    style: cardFontStyle,
+                                                  ),
+                                                  Text(
+                                                    '$genderEmoji $gender',
+                                                    style: cardFontStyle,
+                                                  ),
+                                                  Text(
+                                                    '👀 $dominatedEyeColor $secondEyeColor eyes',
+                                                    style: cardFontStyle,
+                                                  ),
+                                                  Text(
+                                                    '🌈 $dominatedHairColor $secondHairColor hair',
+                                                    style: cardFontStyle,
+                                                  ),
+                                                  Text('⚖️ $BMI BMI',
+                                                      style: cardFontStyle),
+                                                  Text('🎓 $education',
+                                                      style: cardFontStyle)
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
