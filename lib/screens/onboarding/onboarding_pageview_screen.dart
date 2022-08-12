@@ -16,6 +16,7 @@ import 'package:betabeta/screens/onboarding/relationship_type_onboarding_screen.
 import 'package:betabeta/screens/onboarding/terms_screen.dart';
 import 'package:betabeta/screens/onboarding/tutorial_screen_starter.dart';
 import 'package:betabeta/screens/onboarding/upload_images_onboarding_screen.dart';
+import 'package:betabeta/screens/pending_approvment_screen.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/services/location_service.dart';
@@ -60,9 +61,17 @@ class _OnboardingPageViewScreenState extends State<OnboardingPageViewScreen> {
       }
       if (widget.registrationStatus ==
           ServerRegistrationStatusResponse.already_registered)
-        Get.offAllNamed(MainNavigationScreen.routeName);
+        {
+          if(MatchEngine.instance.registrationStatus==RegistrationStatus.registeredApproved)
+          {Get.offAllNamed(MainNavigationScreen.routeName);}
+          Get.offAllNamed(PendingApprovementScreen.routeName);
+
+        }
       else
-        Get.offAllNamed(TutorialScreenStarter.routeName);
+        {
+          Get.offAllNamed(PendingApprovementScreen.routeName); //TODO Nitzan build a tutorial here
+          //Get.offAllNamed(TutorialScreenStarter.routeName);
+          }
     }
   }
 
