@@ -229,7 +229,7 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
                     ),
                     height: smartBottonHeight,
                     child: Text(
-                      'My Look-A-Like',
+                      'Celeb look-a-like',
                       style: LargeTitleStyleWhite,
                       textAlign: TextAlign.center,
                     ),
@@ -244,7 +244,7 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
                       Radius.circular(60),
                     ),
                     child: Text(
-                      'Mirror on the Wall',
+                      'Mirror on the wall',
                       style: LargeTitleStyleWhite,
                       textAlign: TextAlign.center,
                     ),
