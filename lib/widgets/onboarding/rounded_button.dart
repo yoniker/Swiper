@@ -57,7 +57,7 @@ class RoundedButton extends StatelessWidget {
         color: color,
         onPressed: onTap,
         minWidth: minWidth,
-        height: screenHeight * 0.04,
+        height: screenHeight * 0.07,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: icon == null

@@ -28,6 +28,7 @@ class _CircleButtonState extends State<CircleButton> {
     return Column(
       children: [
         MaterialButton(
+          splashColor: Colors.grey,
           elevation: widget.elevation,
           padding: widget.padding,
           onPressed: widget.onPressed,

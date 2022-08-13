@@ -1,14 +1,12 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
-import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
-import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:betabeta/widgets/voila_logo_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'dart:math' as math;
 
 import 'package:get/get.dart';
@@ -517,8 +515,8 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                 ),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    minHeight: 30.5,
-                    maxHeight: 100.5,
+                    minHeight: 40.5,
+                    maxHeight: 110.5,
                     minWidth: 250.0,
                     maxWidth: MediaQuery.of(context).size.width,
                   ),
@@ -554,33 +552,37 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                   },
                                   child: ConstrainedBox(
                                     constraints: BoxConstraints(
-                                      minHeight: 30.5,
-                                      maxHeight: 100.5,
-                                      minWidth: 30.5,
-                                      maxWidth: 100.5,
+                                      minHeight: 40.5,
+                                      maxHeight: 110.5,
+                                      minWidth: 40.5,
+                                      maxWidth: 110.5,
                                     ),
                                     // height: 80.5,
                                     // width: 100.0,
                                     child: AspectRatio(
                                       aspectRatio: 1 / 1,
                                       child: Container(
-                                        decoration: BoxDecoration(
-                                            border: selectedImage == _url
-                                                ? Border.all(
-                                                    width: 3.0,
-                                                    color: Colors.white)
-                                                : null,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey,
-                                                blurRadius: 2,
-                                                offset: Offset(-2, 0),
-                                              )
-                                            ],
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                                image: NetworkImage(_url),
-                                                fit: BoxFit.cover)),
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 3),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              border: selectedImage == _url
+                                                  ? Border.all(
+                                                      width: 3.0,
+                                                      color: Colors.white)
+                                                  : null,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black87,
+                                                  blurRadius: 3,
+                                                  offset: Offset(-2, 0),
+                                                )
+                                              ],
+                                              shape: BoxShape.circle,
+                                              image: DecorationImage(
+                                                  image: NetworkImage(_url),
+                                                  fit: BoxFit.cover)),
+                                        ),
                                       ),
                                     ),
                                   ),
