@@ -50,11 +50,10 @@ class ServiceWebsocket {
     try {
       _creatingConnection = true;
       await _waitUntilConnected();
-      _channel =  await WebSocket.connect('wss://services.voilaserver.com/websockets/register',headers: {'user_id':SettingsData.instance.uid});
-      if(_channel == null){
-        print('connect returned null. Trying to reconnect...');
-        await Future.delayed(Duration(seconds: 2));
-        await connectWs();}
+      while(_channel==null){
+        _channel =  await WebSocket.connect('wss://services.voilaserver.com/websockets/register',headers: {'user_id':SettingsData.instance.uid});
+        if(_channel==null){await Future.delayed(Duration(seconds: 2));}
+      }
       print('Registering my WS!');
       var encoded = jsonEncode({'user_id':SettingsData.instance.uid});
       _channel!.add(encoded);

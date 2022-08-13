@@ -109,7 +109,7 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
           appBar: CustomAppBar(
             elevation: 0,
             hasTopPadding: true,
-            title: 'Which Celeb Look-Like-Me?',
+            title: 'Which Celeb Looks-Like-Me?',
           ),
           body: SingleChildScrollView(
             child: Column(
