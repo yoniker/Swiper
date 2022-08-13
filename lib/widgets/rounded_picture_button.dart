@@ -25,30 +25,37 @@ class RoundedPictureButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: padding,
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-            border: Border.all(width: 2, color: Colors.white),
-            color: Colors.black,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey,
-                blurRadius: 6,
-                offset: Offset(0, 4),
-              ),
-            ],
-            image: DecorationImage(
-              image: image,
-              fit: fit,
-              colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.75), BlendMode.dstATop),
+    return Container(
+      margin: padding,
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+          border: Border.all(width: 2, color: Colors.white),
+          color: Colors.black,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              blurRadius: 6,
+              offset: Offset(0, 4),
             ),
-            borderRadius: borderRadius),
-        child: Center(child: child),
+          ],
+          image: DecorationImage(
+            image: image,
+            fit: fit,
+            colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(0.75), BlendMode.dstATop),
+          ),
+          borderRadius: borderRadius),
+      child: ElevatedButton(
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(
+              Colors.white.withOpacity(0),
+            ),
+            elevation: MaterialStateProperty.all(0)),
+        onPressed: onTap,
+        child: Center(
+          child: child,
+        ),
       ),
     );
   }

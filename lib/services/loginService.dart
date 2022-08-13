@@ -11,8 +11,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-
-enum LoginState{
+enum LoginState {
   LoggedOut,
   Success,
   WrongPassword,
@@ -22,33 +21,28 @@ enum LoginState{
   Error
 }
 
-class LoginsService{
-
-
-
+class LoginsService {
   LoginsService._privateConstructor();
 
   static final LoginsService _instance = LoginsService._privateConstructor();
 
   static LoginsService get instance => _instance;
 
-
   LoginState _facebookLoginState = LoginState.LoggedOut;
   LoginState _phoneLoginState = LoginState.LoggedOut;
   PhoneAuthCredential? _phoneCredential;
   OAuthCredential? _facebookCredential;
 
-  LoginState get facebookLoginState =>  _facebookLoginState;
+  LoginState get facebookLoginState => _facebookLoginState;
   LoginState get phoneLoginState => _phoneLoginState;
   PhoneAuthCredential? get phoneCredential => _phoneCredential;
-  OAuthCredential? get facebookCredential =>_facebookCredential;
+  OAuthCredential? get facebookCredential => _facebookCredential;
 
-
-
-  
-   Future<void> saveInfoFacebookUser()async{
+  Future<void> saveInfoFacebookUser() async {
     //Save some info about the user in our app. Do it only while onboarding eg we don't have this info already
-    if(_facebookLoginState!=LoginState.Success) {return;}
+    if (_facebookLoginState != LoginState.Success) {
+      return;
+    }
     final userData = await FacebookAuth.instance.getUserData(
       fields: "name,email,picture.width(200),birthday",
     );
@@ -57,62 +51,73 @@ class LoginsService{
     SettingsData.instance.facebookId = userData['id'];
     //TODO the following code does nothing as the actual birthday isn't provided yet (facebook wants to see how this integrated into the app, so do this after onboarding is complete)
     var facebookDateFormat = DateFormat('MM/dd/yyyy');
-    String birthday = facebookDateFormat.parse(userData['birthday']??'01/01/1995').toString();
+    String birthday = facebookDateFormat
+        .parse(userData['birthday'] ?? '01/01/1995')
+        .toString();
     SettingsData.instance.facebookBirthday = birthday;
     SettingsData.instance.facebookProfileImageUrl =
-    userData['picture']['data']['url'];
-    DefaultCacheManager().getSingleFile(SettingsData.instance.facebookProfileImageUrl);
+        userData['picture']['data']['url'];
+    DefaultCacheManager()
+        .getSingleFile(SettingsData.instance.facebookProfileImageUrl);
   }
 
-  
-  
-   Future<LoginState> tryLoginFacebook()async{
+  Future<LoginState> tryLoginFacebook() async {
     //Try to login with facebook, this is the complete process eg in the end we will know if the user is logged in or not
-  final loginResult = await FacebookAuth.instance
-      .login(permissions: ['email', 'public_profile', ]); //'user_birthday'
-  switch (loginResult.status) {
-  case LoginStatus.success:
-    final OAuthCredential facebookAuthCredential =
-    FacebookAuthProvider.credential(loginResult.accessToken!.token);
-     _facebookCredential=  facebookAuthCredential;
-    _facebookLoginState = LoginState.Success;
-    break;
+    final loginResult = await FacebookAuth.instance.login(permissions: [
+      'email',
+      'public_profile',
+    ]); //'user_birthday'
+    switch (loginResult.status) {
+      case LoginStatus.success:
+        final OAuthCredential facebookAuthCredential =
+            FacebookAuthProvider.credential(loginResult.accessToken!.token);
+        _facebookCredential = facebookAuthCredential;
+        print(_facebookCredential);
+        _facebookLoginState = LoginState.Success;
+        break;
 
-  case LoginStatus.cancelled:
-    _facebookCredential = null;
-    _facebookLoginState = LoginState.UserCancelled;
-    break;
-  case LoginStatus.operationInProgress:
-  case LoginStatus.failed:
-  //TODO loginResult.message has the official error message
-  _facebookLoginState = LoginState.Error;
-  _facebookCredential = null;
-  break;
+      case LoginStatus.cancelled:
+        _facebookCredential = null;
+        _facebookLoginState = LoginState.UserCancelled;
+        break;
+      case LoginStatus.operationInProgress:
+      case LoginStatus.failed:
+        //TODO loginResult.message has the official error message
+        _facebookLoginState = LoginState.Error;
+        _facebookCredential = null;
+        break;
+    }
+
+    return _facebookLoginState;
   }
 
-  return _facebookLoginState;
-  }
+  Future<void> getFacebookUserData() async {
+    if (_facebookLoginState != LoginState.Success) {
+      return;
+    }
 
-   Future<void>getFacebookUserData()async{
-    if(_facebookLoginState!=LoginState.Success){return;}
+    var dor = await FacebookAuth.instance.accessToken;
+
     final userData = await FacebookAuth.instance.getUserData(
       fields: "name,email,picture.width(200),birthday",
     );
 
-
-    if(SettingsData.instance.name.length==0){
-    SettingsData.instance.name = ((userData['name'] as String?)??'').split(' ').first;}
+    if (SettingsData.instance.name.length == 0) {
+      SettingsData.instance.name =
+          ((userData['name'] as String?) ?? '').split(' ').first;
+    }
     SettingsData.instance.facebookId = userData['id'];
     //TODO the following code does nothing as the actual birthday isn't provided yet (facebook wants to see how this integrated into the app, so do this after onboarding is complete)
     var facebookDateFormat = DateFormat('MM/dd/yyyy');
-    String birthday = facebookDateFormat.parse(userData['birthday']??'01/01/1995').toString();
+    String birthday = facebookDateFormat
+        .parse(userData['birthday'] ?? '01/01/1995')
+        .toString();
     SettingsData.instance.facebookBirthday = birthday;
-    SettingsData.instance.facebookProfileImageUrl = userData['picture']['data']['url'];
-    if((userData['email']??'').length>0){
+    SettingsData.instance.facebookProfileImageUrl =
+        userData['picture']['data']['url'];
+    if ((userData['email'] ?? '').length > 0) {
       SettingsData.instance.email = userData['email'];
     }
-
-
 
     DefaultCacheManager().emptyCache();
     DefaultCacheManager()
@@ -144,51 +149,49 @@ class LoginsService{
     final rawNonce = generateNonce();
     final nonce = sha256ofString(rawNonce);
 
+    try {
+      // Request credential for the currently signed in Apple account.
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+        nonce: nonce,
+      );
 
-    try{
-    // Request credential for the currently signed in Apple account.
-    final appleCredential = await SignInWithApple.getAppleIDCredential(
-      scopes: [
-        AppleIDAuthorizationScopes.email,
-        AppleIDAuthorizationScopes.fullName,
-      ],
-      nonce: nonce,
-    );
+      // Create an `OAuthCredential` from the credential returned by Apple.
+      final oauthCredential = OAuthProvider("apple.com").credential(
+        idToken: appleCredential.identityToken,
+        rawNonce: rawNonce,
+      );
 
-    // Create an `OAuthCredential` from the credential returned by Apple.
-    final oauthCredential = OAuthProvider("apple.com").credential(
-      idToken: appleCredential.identityToken,
-      rawNonce: rawNonce,
-    );
-
-    // Sign in the user with Firebase. If the nonce we generated earlier does
-    // not match the nonce in `appleCredential.identityToken`, sign in will fail.
-    return await FirebaseAuth.instance.signInWithCredential(oauthCredential);}
-    on SignInWithAppleException catch(e){
-      print('There was an exception ${e.toString()} while trying to login with Apple');
+      // Sign in the user with Firebase. If the nonce we generated earlier does
+      // not match the nonce in `appleCredential.identityToken`, sign in will fail.
+      return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+    } on SignInWithAppleException catch (e) {
+      print(
+          'There was an exception ${e.toString()} while trying to login with Apple');
       return null;
     }
   }
 
-
-
-
-  
-  static Future<UserCredential?> signInUser({required AuthCredential credential,void Function(Object)? onError})async{
-
+  static Future<UserCredential?> signInUser(
+      {required AuthCredential credential,
+      void Function(Object)? onError}) async {
+    print('got hereeeee');
     // Sign the user in (or link) with the credential
-    try{
-      var userCredentials = await FirebaseAuth.instance.signInWithCredential(credential);
+    try {
+      var userCredentials =
+          await FirebaseAuth.instance.signInWithCredential(credential);
       return userCredentials;
-    }
-    catch(e){
+    } catch (e) {
       //TODO something in this situation of bad credentials
-      Get.snackbar('Exception-probably wrong verification code or password by the user', e.toString(),duration: Duration(seconds: 10));
+      Get.snackbar(
+          'Exception-probably wrong verification code or password by the user',
+          e.toString(),
+          duration: Duration(seconds: 10));
       onError?.call(e);
       return null;
     }
-
-
   }
-
 }

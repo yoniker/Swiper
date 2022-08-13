@@ -1,27 +1,16 @@
 import 'dart:io';
 
+import 'package:betabeta/constants/assets_paths.dart';
+import 'package:betabeta/constants/beta_icon_paths.dart';
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/enums.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/constants/url-consts.dart';
-import 'package:betabeta/screens/main_navigation_screen.dart';
-import 'package:betabeta/screens/onboarding/about_me_screen.dart';
-import 'package:betabeta/screens/onboarding/birthday_screen.dart';
-import 'package:betabeta/screens/onboarding/finish_onboarding_screen.dart';
-import 'package:betabeta/screens/onboarding/get_name_screen.dart';
-import 'package:betabeta/screens/onboarding/location_permission_screen.dart';
-import 'package:betabeta/screens/onboarding/notifications_permission_screen.dart';
 import 'package:betabeta/screens/onboarding/onboarding_pageview_screen.dart';
-import 'package:betabeta/screens/onboarding/orientation_screen.dart';
 import 'package:betabeta/screens/onboarding/phone_screen.dart';
-import 'package:betabeta/screens/onboarding/pronouns_screen.dart';
-import 'package:betabeta/screens/onboarding/relationship_type_onboarding_screen.dart';
-import 'package:betabeta/screens/onboarding/terms_screen.dart';
-import 'package:betabeta/screens/onboarding/tutorial_screen_starter.dart';
-import 'package:betabeta/screens/onboarding/upload_images_onboarding_screen.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/loginService.dart';
 import 'package:betabeta/services/settings_model.dart';
-import 'package:betabeta/services/onboarding_flow_controller.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/widgets/onboarding/conditional_parent_widget.dart';
 import 'package:betabeta/widgets/onboarding/loading_indicator.dart';
@@ -70,10 +59,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       currentlyTryingToLogin = true;
     });
     await LoginsService.instance.tryLoginFacebook();
+
     if (LoginsService.instance.facebookLoginState == LoginState.Success) {
       await LoginsService.instance.getFacebookUserData();
+
+      print(LoginsService.instance.facebookCredential!);
       await LoginsService.signInUser(
           credential: LoginsService.instance.facebookCredential!);
+
       ServerRegistrationStatusResponse currentServerRegistrationStatusResponse =
           await _registerUserAtServer();
       await _continueIfLoggedIn(currentServerRegistrationStatusResponse);
@@ -117,13 +110,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   void initState() {
-    _controller =
-        VideoPlayerController.asset('assets/onboarding/videos/startvideo.mp4')
-          ..initialize().then((_) {
-            _controller.play();
-            _controller.setLooping(true);
-            setState(() {});
-          });
+    _controller = VideoPlayerController.asset(AssetsPaths.backgroundVideoPath)
+      ..initialize().then((_) {
+        _controller.play();
+        _controller.setLooping(true);
+        setState(() {});
+      });
     super.initState();
   }
 
@@ -161,11 +153,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       conditionalBuilder: (Widget child) => FittedBox(
                         child: child,
                       ),
-                      child: Center(
-                        child: Image.asset(
-                          'assets/onboarding/images/Voila-logo.png',
-                          width: MediaQuery.of(context).size.width * 0.60,
-                          height: MediaQuery.of(context).size.height * 0.30,
+                      child: SafeArea(
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 30),
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  BetaIconPaths.activeVoilaTabIconPath,
+                                  scale: 4,
+                                ),
+                                Text(
+                                  'Voilà - dating',
+                                  style: LargeTitleStyleWhite,
+                                  // style: TextStyle(
+                                  //     color: Colors.white,
+                                  //     fontSize: 30,
+                                  //     fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ),
