@@ -46,11 +46,11 @@ class ServiceWebsocket {
   }
 
   connectWs() async{
-    if(_creatingConnection==true){return;}
+    if(_creatingConnection==true ||(_channel!=null && _channel!.readyState==WebSocket.open)){return;}
     try {
       _creatingConnection = true;
       await _waitUntilConnected();
-      while(_channel==null){
+      while(_channel==null || _channel!.readyState!=WebSocket.open){
         _channel =  await WebSocket.connect('wss://services.voilaserver.com/websockets/register',headers: {'user_id':SettingsData.instance.uid});
         if(_channel==null){await Future.delayed(Duration(seconds: 2));}
       }
