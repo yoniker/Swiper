@@ -66,9 +66,10 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
       });
 
     if (serverResponse == ServerResponse.Success && data != null) {
-      setState(() {
-        facesUrls = data!;
-      });
+      if (mounted)
+        setState(() {
+          facesUrls = data!;
+        });
     } //TODO what if not successful?
   }
 
@@ -129,7 +130,9 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                     child: !(facesUrls.length > 0)
                         ? Center(
                             child: Text(
-                              profileIsBeingProcessed?'Analyzing your profile':'No faces found in profile images',
+                              profileIsBeingProcessed
+                                  ? 'Analyzing your profile'
+                                  : 'No faces found in profile images',
                               style: mediumBoldedCharStyle,
                             ),
                           )
@@ -247,7 +250,6 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                                       child: CelebWidget(
                                         enableCarousel: true,
                                         key: ValueKey(currentCeleb.celebName),
-                                        backgroundImageMode: true,
                                         headline: ConvertDistanceToString(
                                             currentDistance),
                                         theCeleb: currentCeleb,

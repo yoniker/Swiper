@@ -1,10 +1,8 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
+import 'package:betabeta/constants/url-consts.dart';
 import 'package:betabeta/screens/current_user_profile_view_screen.dart';
-
-import 'package:betabeta/screens/mock_new_match_card_page.dart';
-import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/screens/my_look_a_like_screen.dart';
 import 'package:betabeta/screens/my_mirror_screen.dart';
 import 'package:betabeta/screens/pending_approvment_screen.dart';
@@ -23,6 +21,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../widgets/onboarding/rounded_button.dart';
@@ -343,8 +342,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                         showBorder: false,
                         minWidth: double.minPositive,
                         color: Colors.white,
-                        onTap: () {
-                          Get.toNamed(PendingApprovementScreen.routeName);
+                        onTap: () async {
+                          await Share.share(SettingsData.instance.name +
+                              ' has invited you to download Voilà! a personalized dating app where people actually care.\n' +
+                              shareLink);
                         },
                         name: 'Invite a friend',
                       ),

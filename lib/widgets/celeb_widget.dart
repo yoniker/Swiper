@@ -12,7 +12,6 @@ class CelebWidget extends StatefulWidget {
   final CelebsInfo? celebsInfo;
   final void Function()? onTap;
   final int? celebIndex;
-  final bool backgroundImageMode;
   final bool enableCarousel;
   final String? headline;
   final double height;
@@ -23,7 +22,6 @@ class CelebWidget extends StatefulWidget {
       this.onTap,
       this.height = 300,
       this.width = 200,
-      this.backgroundImageMode = false,
       this.enableCarousel = false,
       this.celebIndex,
       this.headline,
@@ -35,11 +33,10 @@ class CelebWidget extends StatefulWidget {
 
 class _CelebWidgetState extends State<CelebWidget> {
   int _imageIndex = 0;
-  late List<ExtendedImage> celebImages;
+  late List<DecorationImage> celebImages;
 
   @override
   void didChangeDependencies() {
-    celebImages = [];
     updateCelebImages();
     super.didChangeDependencies();
   }
@@ -61,43 +58,33 @@ class _CelebWidgetState extends State<CelebWidget> {
 
   @override
   Widget build(BuildContext context) {
-    Widget imageWidget;
-    final ThemeData theme = Theme.of(context);
     bool backImageButtonEnabled = false;
     bool nextImageButtonEnabled = false;
     if (widget.theCeleb.imagesUrls == null) {
       widget.celebsInfo!.getCelebImageLinks(widget.theCeleb);
-      imageWidget = Text('Loading...');
     } else {
       //TODO handle empty celeb images from server
 
-      if (_imageIndex > widget.theCeleb.imagesUrls!.length - 1) {
+      if (_imageIndex > celebImages.length - 1) {
         _imageIndex = 0;
       }
-      imageWidget = ClipOval(
-        child: celebImages[_imageIndex],
-      );
 
       backImageButtonEnabled = (_imageIndex > 0);
-      nextImageButtonEnabled =
-          (_imageIndex < ((widget.theCeleb.imagesUrls?.length) ?? 0 - 1));
+      nextImageButtonEnabled = (_imageIndex < ((celebImages.length) - 1));
     }
 
     double iconSize = 45;
-    double celebNameFontSize = widget.backgroundImageMode ? 28 : 20;
+    double celebNameFontSize = 28;
 
-    Color themeColor = widget.backgroundImageMode ? Colors.white : Colors.black;
-    Color disabledColor =
-        widget.backgroundImageMode ? Colors.white38 : theme.disabledColor;
-    List<Shadow>? themeShadows = widget.backgroundImageMode
-        ? const [
-            Shadow(
-              blurRadius: 17.0,
-              color: Colors.black,
-              offset: Offset(-2.0, 2.0),
-            ),
-          ]
-        : null;
+    Color themeColor = Colors.white;
+    Color disabledColor = Colors.white38;
+    List<Shadow>? themeShadows = const [
+      Shadow(
+        blurRadius: 17.0,
+        color: Colors.black,
+        offset: Offset(-2.0, 2.0),
+      ),
+    ];
 
     Widget Carousel(bool highlighted) {
       return Expanded(
@@ -114,6 +101,8 @@ class _CelebWidgetState extends State<CelebWidget> {
       );
     }
 
+    print('going to show image number $_imageIndex');
+
     return GestureDetector(
       onTap: () {
         print('tapped ${widget.theCeleb.celebName}');
@@ -125,13 +114,7 @@ class _CelebWidgetState extends State<CelebWidget> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15.0),
-          image: widget.backgroundImageMode
-              ? DecorationImage(
-                  fit: BoxFit.cover,
-                  image: ExtendedNetworkImageProvider(AWSServer.instance
-                      .celebImageUrlToFullUrl(
-                          widget.theCeleb.imagesUrls![_imageIndex])))
-              : null,
+          image: celebImages[_imageIndex],
           boxShadow: <BoxShadow>[
             BoxShadow(
               color: lightCardColor,
@@ -146,9 +129,9 @@ class _CelebWidgetState extends State<CelebWidget> {
               padding: const EdgeInsets.all(10.0),
               child: Row(
                 children: widget.theCeleb.imagesUrls!.map(
-                  (image) {
+                  (image_url) {
                     return Carousel(
-                        widget.theCeleb.imagesUrls![_imageIndex] == image);
+                        widget.theCeleb.imagesUrls![_imageIndex] == image_url);
                   },
                 ).toList(),
               ),
@@ -220,11 +203,9 @@ class _CelebWidgetState extends State<CelebWidget> {
                             }
                           : () {},
                       iconSize: iconSize),
-                  widget.backgroundImageMode == false
-                      ? imageWidget
-                      : SizedBox(
-                          width: 100,
-                        ),
+                  SizedBox(
+                    width: 100,
+                  ),
                   IconButton(
                     icon: Icon(Icons.arrow_forward_ios,
                         color:
@@ -242,6 +223,8 @@ class _CelebWidgetState extends State<CelebWidget> {
                                     widget.theCeleb.imagesUrls?.length ?? 0 - 1,
                                   ),
                                 );
+                                print(
+                                    'set state because of forward arrow called, $_imageIndex');
                               },
                             );
                           }
@@ -274,20 +257,27 @@ class _CelebWidgetState extends State<CelebWidget> {
   }
 
   void updateCelebImages() async {
+    print('update celeb image was called');
+    celebImages = [];
     if (widget.theCeleb.imagesUrls != null) {
-      celebImages = [];
+      print(
+          'Going to precaches ${widget.theCeleb.imagesUrls?.length ?? 0} images of the celeb ${widget.theCeleb.celebName}');
       List<Future<void>> precacheImagesFutures = [];
       for (int imageIndex = 0;
           imageIndex < (widget.theCeleb.imagesUrls?.length ?? 0);
           imageIndex++) {
         String url = AWSServer.instance
             .celebImageUrlToFullUrl(widget.theCeleb.imagesUrls![imageIndex]);
-        ExtendedImage img = ExtendedImage.network(url,
-            height: 150.0, width: 150.0, fit: BoxFit.cover);
+        DecorationImage img = DecorationImage(
+          fit: BoxFit.cover,
+          image: ExtendedNetworkImageProvider(url),
+        );
+
         precacheImagesFutures.add(precacheImage(img.image, context));
         celebImages.add(img);
       }
       await Future.wait(precacheImagesFutures);
+      print('finished precaching images of ${widget.theCeleb.celebName}');
     }
   }
 }
