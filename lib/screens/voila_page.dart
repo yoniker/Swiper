@@ -52,7 +52,6 @@ class _VoilaPageState extends State<VoilaPage>
   void showTutorial() {
     initTargets();
     VoilaTutorial = TutorialCoachMark(
-      context,
       hideSkip: true,
       alignSkip: Alignment.centerLeft,
       targets: targets,
@@ -67,7 +66,7 @@ class _VoilaPageState extends State<VoilaPage>
         if (target.keyTarget == targets[2].keyTarget)
           Future.delayed(Duration(milliseconds: 100), ScrollPageDown);
       },
-    )..show();
+    )..show(context: context);
   }
 
   void initTargets() {
@@ -336,8 +335,8 @@ class _VoilaPageState extends State<VoilaPage>
     });
 
     try {
-      Tuple2<img.Image, String> imageFileDetails =
-          await AWSServer.instance.preparedFaceSearchImageFileDetails(chosenImage);
+      Tuple2<img.Image, String> imageFileDetails = await AWSServer.instance
+          .preparedFaceSearchImageFileDetails(chosenImage);
 
       //
       await AWSServer.instance.postFaceSearchImage(imageFileDetails);
@@ -631,12 +630,11 @@ class _VoilaPageState extends State<VoilaPage>
                                                       .instance.filterType ==
                                                   FilterType.THEIR_TASTE
                                               ? ExtendedNetworkImageProvider(
-                                                  AWSServer
-                                                      .getProfileImageUrl(
-                                                          SettingsData
-                                                              .instance
-                                                              .profileImagesUrls
-                                                              .first),
+                                                  AWSServer.getProfileImageUrl(
+                                                      SettingsData
+                                                          .instance
+                                                          .profileImagesUrls
+                                                          .first),
                                                   cache: true)
                                               : AssetImage(AssetsPaths
                                                       .theirTasteSearchPic)

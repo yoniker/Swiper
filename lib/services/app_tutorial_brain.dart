@@ -23,7 +23,6 @@ class AppTutorialBrain {
   showTutorial(context) {
     initTargets();
     VoilaTutorial = TutorialCoachMark(
-      context,
       hideSkip: true,
       alignSkip: Alignment.centerLeft,
       targets: targets,
@@ -37,7 +36,7 @@ class AppTutorialBrain {
             Duration(milliseconds: 300), moveToChatPage?.call());
         showStage2Tutorial(context);
       },
-    )..show();
+    )..show(context: context);
   }
 
   void initTargets() {
@@ -120,7 +119,6 @@ class AppTutorialBrain {
   showStage2Tutorial(context) {
     initStage2Targets();
     VoilaTutorialStage2 = TutorialCoachMark(
-      context,
       hideSkip: true,
       alignSkip: Alignment.centerLeft,
       targets: targets,
@@ -131,7 +129,7 @@ class AppTutorialBrain {
       onFinish: () {
         moveBackToMatchPage?.call();
       },
-    )..show();
+    )..show(context: context);
   }
 
   void initStage2Targets() {

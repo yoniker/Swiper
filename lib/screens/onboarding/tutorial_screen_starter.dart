@@ -27,7 +27,7 @@ class _TutorialScreenStarterState extends State<TutorialScreenStarter>
 
   @override
   void initState() {
-    SettingsData.instance.userWatchedMainTutorial=true;
+    //SettingsData.instance.userWatchedMainTutorial=true;
     timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
       if (timer.isActive)
         setState(() {
