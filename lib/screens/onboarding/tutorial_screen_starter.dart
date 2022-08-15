@@ -5,6 +5,7 @@ import 'package:betabeta/screens/main_navigation_screen.dart';
 import 'package:betabeta/services/onboarding_flow_controller.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 
 class TutorialScreenStarter extends StatefulWidget {
@@ -27,7 +28,6 @@ class _TutorialScreenStarterState extends State<TutorialScreenStarter>
 
   @override
   void initState() {
-    //SettingsData.instance.userWatchedMainTutorial=true;
     timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
       if (timer.isActive)
         setState(() {
@@ -37,6 +37,9 @@ class _TutorialScreenStarterState extends State<TutorialScreenStarter>
         timer.cancel();
         time = 0;
         Get.offAllNamed(MainNavigationScreen.routeName, arguments: true);
+        SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+          SettingsData.instance.userWatchedMainTutorial = true;
+        });
       }
     });
     _controller = AnimationController(
