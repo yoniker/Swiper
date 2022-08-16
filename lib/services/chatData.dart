@@ -74,6 +74,7 @@ Future<bool> setupInteractedMessage() async {
 }
 
 Future<bool> _handleMessageOpenedFromNotification(RemoteMessage message) async {
+  await SettingsData.instance.readSettingsFromShared();
   await ChatData.instance.syncWithServer();
   AWSServer.instance.updateUserStatusFromServer();
   var messageData = message.data;
