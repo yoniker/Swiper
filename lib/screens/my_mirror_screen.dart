@@ -4,6 +4,7 @@ import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
+import 'package:betabeta/widgets/rive_animations/female_avatar_rive.dart';
 import 'package:betabeta/widgets/voila_logo_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -288,26 +289,33 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                           ),
                                           child: AspectRatio(
                                             aspectRatio: 1 / 0.5,
-                                            child: CustomPaint(
-                                              painter: ProfilePainter(
-                                                  eyesColorInput: getEyeColor(),
-                                                  hairColorInput:
-                                                      getHairColor(),
-                                                  isMale: gender == 'male'),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(7.0),
-                                                child: Text(
-                                                  'Selected image estimate results:',
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      color: goldColorish,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                  textAlign: TextAlign.center,
-                                                ),
+                                            child: Center(
+                                              child: Container(
+                                                height: 100,
+                                                width: 200,
+                                                child: FemaleAvatarRive(),
                                               ),
                                             ),
+                                            // child: CustomPaint(
+                                            //   painter: ProfilePainter(
+                                            //       eyesColorInput: getEyeColor(),
+                                            //       hairColorInput:
+                                            //           getHairColor(),
+                                            //       isMale: gender == 'male'),
+                                            //   child: Padding(
+                                            //     padding:
+                                            //         const EdgeInsets.all(7.0),
+                                            //     child: Text(
+                                            //       'Selected image estimate results:',
+                                            //       style: TextStyle(
+                                            //           fontSize: 18,
+                                            //           color: goldColorish,
+                                            //           fontWeight:
+                                            //               FontWeight.bold),
+                                            //       textAlign: TextAlign.center,
+                                            //     ),
+                                            //   ),
+                                            // ),
                                           ),
                                         ),
                                       ],
@@ -523,7 +531,9 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                   child: !(facesUrls.length > 0)
                       ? Center(
                           child: Text(
-                            profileIsFacesBeingProcessed?'Analyzing your profile':'No faces found in profile images',
+                            profileIsFacesBeingProcessed
+                                ? 'Analyzing your profile'
+                                : 'No faces found in profile images',
                             style: mediumBoldedCharStyle,
                           ),
                         )
