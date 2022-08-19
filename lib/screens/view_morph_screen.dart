@@ -87,16 +87,21 @@ class _ViewMorphScreenState extends State<ViewMorphScreen> {
             hasTopPadding: true,
             title: 'Morphing screen',
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(child:Center(child: _buildMorphinStatusWidget())),
-                (_VideoPlayerController!=null && _VideoPlayerController!.value.isInitialized)?
-                AspectRatio(
-                    aspectRatio: _VideoPlayerController!.value.aspectRatio,child:VideoPlayer(_VideoPlayerController!)):SizedBox.shrink()
+          body: Center(
+            child: SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(child:Center(child: _buildMorphinStatusWidget())),
+                    (_VideoPlayerController!=null && _VideoPlayerController!.value.isInitialized)?
+                    AspectRatio(
+                        aspectRatio: _VideoPlayerController!.value.aspectRatio,child:VideoPlayer(_VideoPlayerController!)):SizedBox.shrink()
 
 
-              ],
+                  ],
+                ),
+              ),
             ),
           ),
         );
