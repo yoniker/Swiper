@@ -59,12 +59,12 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
       data = response.item1;
     }
 
-    setState(() {
+    if(mounted) setState(() {
       profileIsFacesBeingProcessed = false;
     });
 
     if (serverResponse == ServerResponse.Success && data != null) {
-      setState(() {
+      if(mounted) setState(() {
         facesUrls = data!;
       });
     } //TODO what if not successful?

@@ -631,5 +631,40 @@ class AWSServer {
 
   }
 
+  Future<Tuple2<ServerResponse,String?>> morphFaces({required String celebUrl,required String userUrl})async{
+    celebUrl = celebUrl.substring(celebUrl.indexOf('celeb_image/')).substring('celeb_image/'.length);
+    List<String> celebDetails = celebUrl.split('/'); //[Bar Refaeli, wiki_image.jpeg]
+    String celebName = celebDetails[0];
+    String celebImageFileName = celebDetails[1];
+    userUrl = userUrl.substring(userUrl.indexOf('/fr_face_image/')).substring('/fr_face_image/'.length);
+    List<String> userFaceImageData = userUrl.split('/'); //[5EX44AtZ5cXxW1O12G3tByRcC012, 1659217900.4540095_5EX44AtZ5cXxW1O12G3tByRcC012_92715.jpg, 0]
+    String user_id = userFaceImageData[0]; //Should be the same as SettingsData.instance.uid
+    String user_image_filename = userFaceImageData[1];
+    String detection_index = userFaceImageData[2];
+
+    var queryParameters = {
+      'user_id': user_id,
+      'user_image_filename':user_image_filename,
+      'detection_index':detection_index,
+      'celeb_name':celebName,
+      'celeb_filename':celebImageFileName
+    };
+    Uri getAllUserDataUri = Uri.https(AWSServer.SERVER_ADDR, '/morph/perform',queryParameters);
+    print(getAllUserDataUri.toString());
+    http.Response response = await http.get(getAllUserDataUri);
+    if(response.statusCode!=200){
+
+
+      return Tuple2(ServerResponse.Error, null);}
+    var decodedResponse = json.jsonDecode(response.body);
+    String morphFileName = decodedResponse['morph_filename'];
+    print(morphFileName);
+    var statusOfMorphing = ServerResponse.Success;
+    String videoUrl = Uri.https(AWSServer.SERVER_ADDR, '/morph/get_video/$user_id/$morphFileName').toString();
+    //https://services.voilaserver.com/morph/get_video/5EX44AtZ5cXxW1O12G3tByRcC012/1660863191.116642.avi
+    return Tuple2(statusOfMorphing, videoUrl);
+
+  }
+
 
 }

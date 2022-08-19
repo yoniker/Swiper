@@ -1,14 +1,15 @@
+import 'package:betabeta/constants/assets_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/data_models/celeb.dart';
 import 'package:betabeta/models/celebs_info_model.dart';
+import 'package:betabeta/screens/view_morph_screen.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/celeb_widget.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:flutter/material.dart';
-
-import '../constants/assets_paths.dart';
+import 'package:get/get.dart';
 
 class MyLookALikeScreen extends StatefulWidget {
   const MyLookALikeScreen({Key? key}) : super(key: key);
@@ -254,9 +255,11 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                                             currentDistance),
                                         theCeleb: currentCeleb,
                                         celebsInfo: CelebsInfo.instance,
-                                        onTap: () {
+                                        onTapCelebImage: (celebImageUrl) {
                                           print(
-                                              'pressed ${currentCeleb.celebName} which has distance $currentDistance');
+                                              'pressed ${currentCeleb.celebName} at $celebImageUrl and user image is $selectedImage');
+                                          Get.toNamed(ViewMorphScreen.routeName,arguments: {'celeb_image_url':celebImageUrl,'face_image_url':selectedImage});
+
                                         },
                                       ));
                                 }).toList(),

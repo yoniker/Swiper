@@ -11,6 +11,7 @@ class CelebWidget extends StatefulWidget {
   final Celeb theCeleb;
   final CelebsInfo? celebsInfo;
   final void Function()? onTap;
+  final void Function(String)? onTapCelebImage;
   final int? celebIndex;
   final bool enableCarousel;
   final String? headline;
@@ -25,6 +26,7 @@ class CelebWidget extends StatefulWidget {
       this.enableCarousel = false,
       this.celebIndex,
       this.headline,
+        this.onTapCelebImage,
       Key? key})
       : super(key: key);
   @override
@@ -106,7 +108,10 @@ class _CelebWidgetState extends State<CelebWidget> {
     return GestureDetector(
       onTap: () {
         print('tapped ${widget.theCeleb.celebName}');
-        widget.onTap!();
+        widget.onTap?.call();
+        if(widget.theCeleb.imagesUrls?.elementAt(_imageIndex)!=null) {
+          widget.onTapCelebImage?.call((widget.theCeleb.imagesUrls?.elementAt(_imageIndex))!);
+        }
       },
       child: Container(
         height: widget.height,
