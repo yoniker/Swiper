@@ -288,13 +288,9 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                             ),
                                           ),
                                           child: AspectRatio(
-                                            aspectRatio: 1 / 0.5,
+                                            aspectRatio: 1 / 1,
                                             child: Center(
-                                              child: Container(
-                                                height: 100,
-                                                width: 200,
-                                                child: FemaleAvatarRive(),
-                                              ),
+                                              child: FemaleAvatarRive(),
                                             ),
                                             // child: CustomPaint(
                                             //   painter: ProfilePainter(

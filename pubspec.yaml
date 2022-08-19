@@ -130,6 +130,7 @@ flutter:
     - assets/celebs.json
     - assets/onboarding/images/
     - assets/onboarding/videos/
+    - assets/rive/
   fonts:
     - family: RougeScript
       fonts:
