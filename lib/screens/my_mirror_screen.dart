@@ -305,16 +305,6 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                           ),
                                           child: AspectRatio(
                                             aspectRatio: 2 / 1,
-                                            // child: Center(
-                                            //   child: AvatarRive(
-                                            //     artBoard: gender == 'male'
-                                            //         ? kAvatarMaleArtboard
-                                            //         : kAvatarFemaleArtboard,
-                                            //     eyesColor: getEyeColor(),
-                                            //     hairColor: getHairColor(),
-                                            //     darkSkin: ethnicity == 'black',
-                                            //   ),
-                                            // ),
                                             child: CustomPaint(
                                               painter: ProfilePainter(),
                                               child: Padding(
@@ -403,16 +393,6 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                                                           25),
                                                                 ),
                                                               ),
-                                                              // Text(
-                                                              //   '${firstEyeColor.capitalizeFirst} $secondEyeColor eyes and $firstHairColor $secondHairColor hair',
-                                                              //   style:
-                                                              //       cardFontStyle.copyWith(
-                                                              //     fontSize:
-                                                              //         getRelativeTextSize(
-                                                              //             17),
-                                                              //   ),
-                                                              //   textAlign: TextAlign.center,
-                                                              // ),
                                                             ],
                                                           ),
                                                           Padding(
@@ -626,7 +606,7 @@ class ProfilePainter extends CustomPainter {
     final backgroundColor = Paint()
       ..shader = LinearGradient(colors: [
         Colors.black,
-        Color(0xFF3E2723),
+        Colors.black,
       ], begin: Alignment.topLeft, end: Alignment.bottomRight)
           .createShader(Rect.largest);
     canvas.drawRRect(

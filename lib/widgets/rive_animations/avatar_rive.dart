@@ -60,13 +60,21 @@ class _AvatarRiveState extends State<AvatarRive> {
           _isPlaying?.value = !_isPlaying!.value;
         }
       },
-      child: RiveAnimation.asset(
-        'assets/rive/avatars.riv',
-        artboard: widget.artBoard,
-        animations: animations,
-        stateMachines: ['State_Machine'],
-        onInit: _onRiveInit,
-        fit: BoxFit.contain,
+      child: Container(
+        margin: EdgeInsets.only(top: 5),
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+        ),
+        child: RiveAnimation.asset(
+          'assets/rive/avatars.riv',
+          artboard: widget.artBoard,
+          animations: animations,
+          stateMachines: ['State_Machine'],
+          onInit: _onRiveInit,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }
