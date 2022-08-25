@@ -8,6 +8,7 @@ import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/celeb_widget.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -194,7 +195,7 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                                                   : null,
                                               shape: BoxShape.circle,
                                               image: DecorationImage(
-                                                  image: NetworkImage(_url),
+                                                  image: ExtendedNetworkImageProvider(_url),
                                                   fit: BoxFit.cover),
                                             ),
                                           ),

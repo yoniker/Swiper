@@ -7,6 +7,7 @@ import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/rive_animations/avatar_rive.dart';
 import 'package:betabeta/widgets/voila_logo_widget.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 
 import 'dart:math' as math;
@@ -286,7 +287,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                         decoration: BoxDecoration(
                                           image: DecorationImage(
                                             fit: BoxFit.cover,
-                                            image: NetworkImage(selectedImage),
+                                            image: ExtendedNetworkImageProvider(selectedImage),
                                           ),
                                         ),
                                       ),
@@ -576,7 +577,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                               ],
                                               shape: BoxShape.circle,
                                               image: DecorationImage(
-                                                  image: NetworkImage(_url),
+                                                  image: ExtendedNetworkImageProvider(_url),
                                                   fit: BoxFit.cover)),
                                         ),
                                       ),
