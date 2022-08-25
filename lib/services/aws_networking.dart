@@ -18,29 +18,26 @@ import 'dart:convert' as json;
 
 import 'package:tuple/tuple.dart';
 
-enum ServerResponse { Success, Failed,InProgress, Error }
+enum ServerResponse { Success, Failed, InProgress, Error }
 
-class CelebSimilarityDetails{
+class CelebSimilarityDetails {
   Celeb celeb;
-  double faceRecognitionDistance; //A smaller distance is better (=more similar) than a larger distance.
-  CelebSimilarityDetails({required this.celeb,required this.faceRecognitionDistance});
-
+  double
+      faceRecognitionDistance; //A smaller distance is better (=more similar) than a larger distance.
+  CelebSimilarityDetails(
+      {required this.celeb, required this.faceRecognitionDistance});
 }
-
 
 class AWSServer {
   static const SERVER_ADDR = 'services.voilaserver.com';
   static const MIN_MATCHES_CALL_INTERVAL = Duration(seconds: 1);
-  
+
   DateTime _lastMatchCall = DateTime(2000);
   AWSServer._privateConstructor();
 
-  static final AWSServer _instance =
-  AWSServer._privateConstructor();
+  static final AWSServer _instance = AWSServer._privateConstructor();
 
   static AWSServer get instance => _instance;
-
-
 
   /*
   //A helper method to shrink an image if it's too large, and decode it into a workable image format
@@ -153,7 +150,7 @@ class AWSServer {
       SettingsData.RADIUS_KEY: settings.radius.toString(),
       SettingsData.FCM_TOKEN_KEY: settings.fcmToken,
       SettingsData.FACEBOOK_PROFILE_IMAGE_URL_KEY:
-      settings.facebookProfileImageUrl,
+          settings.facebookProfileImageUrl,
       SettingsData.FACEBOOK_BIRTHDAY_KEY: settings.facebookBirthday,
       SettingsData.EMAIL_KEY: settings.email,
       SettingsData.USER_GENDER_KEY: settings.userGender,
@@ -164,9 +161,9 @@ class AWSServer {
       SettingsData.LONGITUDE_KEY: settings.longitude.toString(),
       SettingsData.LATITUDE_KEY: settings.latitude.toString(),
       SettingsData.SEARCH_DISTANCE_ENABLED_KEY:
-      settings.searchDistanceEnabled.toString(),
+          settings.searchDistanceEnabled.toString(),
       SettingsData.GET_DUMMY_PROFILES_KEY:
-      settings.showDummyProfiles.toString(),
+          settings.showDummyProfiles.toString(),
       SettingsData.JOB_TITLE_KEY: settings.jobTitle,
       SettingsData.SCHOOL_KEY: settings.school,
       SettingsData.RELIGION_KEY: settings.religion,
@@ -181,11 +178,13 @@ class AWSServer {
       SettingsData.PETS_KEY: json.jsonEncode(settings.pets),
       SettingsData.HEIGHT_IN_CM_KEY: settings.heightInCm.toString(),
       SettingsData.TEXT_SEARCH_KEY: settings.textSearch,
-      SettingsData.REGISTRATION_STATUS_NAME_KEY: settings.registrationStatusName,
-      SettingsData.IS_TEST_USER_NAME_KEY : settings.isTestUserName
+      SettingsData.REGISTRATION_STATUS_NAME_KEY:
+          settings.registrationStatusName,
+      SettingsData.IS_TEST_USER_NAME_KEY: settings.isTestUserName
     };
     String encoded = jsonEncode(toSend);
-    Uri postSettingsUri = Uri.https(SERVER_ADDR, '/user_data/settings/${settings.uid}');
+    Uri postSettingsUri =
+        Uri.https(SERVER_ADDR, '/user_data/settings/${settings.uid}');
     http.Response response = await http.post(postSettingsUri, body: encoded);
     if (response.statusCode == 200) {
       //TODO something if response wasnt 200
@@ -197,6 +196,7 @@ class AWSServer {
       }
     }
   }
+
   /*
 
 
@@ -209,7 +209,7 @@ class AWSServer {
     }
     _lastMatchCall = DateTime.now();
     Uri matchesUrl =
-    Uri.https(SERVER_ADDR, '/matches/${SettingsData.instance.uid}');
+        Uri.https(SERVER_ADDR, '/matches/${SettingsData.instance.uid}');
     http.Response response = await http.get(matchesUrl); //eg /12313?gender=Male
     if (response.statusCode != 200) {
       return null; //TODO error handling
@@ -217,8 +217,8 @@ class AWSServer {
     dynamic profilesSearchResult = jsonDecode(response.body);
     print('dor');
     return profilesSearchResult;
-
   }
+
   //A helper method to shrink an image if it's too large, and decode it into a workable image format
   Future<img.Image> _prepareImage(XFile pickedImageFile) async {
     const MAX_IMAGE_SIZE = 800; //TODO make it  a parameter (if needed)
@@ -236,10 +236,10 @@ class AWSServer {
   Future<Tuple2<img.Image, String>> preparedFaceSearchImageFileDetails(
       XFile imageFile) async {
     img.Image theImage = await _prepareImage(imageFile);
-    String fileName = 'custom_face_search_${DateTime.now().microsecondsSinceEpoch}.jpg';
+    String fileName =
+        'custom_face_search_${DateTime.now().microsecondsSinceEpoch}.jpg';
     return Tuple2<img.Image, String>(theImage, fileName);
   }
-
 
   Future<void> postFaceSearchImage(
       Tuple2<img.Image, String> imageFileDetails) async {
@@ -248,7 +248,8 @@ class AWSServer {
 
     http.MultipartRequest request = http.MultipartRequest(
       'POST',
-      Uri.https(SERVER_ADDR, '/user_data/upload_custom_image/${SettingsData.instance.uid}'),
+      Uri.https(SERVER_ADDR,
+          '/user_data/upload_custom_image/${SettingsData.instance.uid}'),
     );
     var multipartFile = new http.MultipartFile.fromBytes(
       'file',
@@ -259,23 +260,34 @@ class AWSServer {
     request.files.add(multipartFile);
     var response = await request.send(); //TODO something if response wasn't 200
 
-
     return;
   }
 
-  Future<List<String>> getFaceSearchAnalysis(String imageFileName) async{
-    var analyzeUrl =
-    Uri.https(SERVER_ADDR, '/user_data/analyze_custom_image/${SettingsData.instance.uid}/$imageFileName');
+  Future<List<String>> getFaceSearchAnalysis(String imageFileName) async {
+    var analyzeUrl = Uri.https(SERVER_ADDR,
+        '/user_data/analyze_custom_image/${SettingsData.instance.uid}/$imageFileName');
     var response = await http.get(analyzeUrl);
-    if(response.statusCode!=200){
+    if (response.statusCode != 200) {
       return []; //TODO retry?
     }
     dynamic faceSearchResult = jsonDecode(response.body);
-    List<String> customFacesLinks = List<String>.from(faceSearchResult["display_images"]);
+    List<String> customFacesLinks =
+        List<String>.from(faceSearchResult["display_images"]);
     return customFacesLinks;
   }
 
+  Future<List<String>> getCelebUrls(String celebName) async {
+    Uri celebsLinkUri =
+        Uri.https(SERVER_ADDR, 'user_data/celeb_image_links/$celebName');
 
+    http.Response resp = await http.get(celebsLinkUri);
+    if (resp.statusCode == 200) {
+      //TODO think how to handle network errors
+      dynamic faceSearchResult = jsonDecode(resp.body);
+      List<String> celebImagesLinks =
+          List<String>.from(faceSearchResult["celeb_image_links"]);
+      return celebImagesLinks;
+    }
 
   Future<List<String>> getCelebUrls(String celebName)async{
     Uri celebsLinkUri = Uri.https(SERVER_ADDR, 'user_data/free_celeb_image_links/$celebName');
@@ -288,31 +300,25 @@ class AWSServer {
         return celebImagesLinks;
   }
 
-      return [];
-
+  String celebImageUrlToFullUrl(String celebImageUrl) {
+    return Uri.https(SERVER_ADDR, 'user_data/$celebImageUrl').toString();
   }
 
-  String celebImageUrlToFullUrl(String celebImageUrl){
-    return Uri.https(SERVER_ADDR,'user_data/$celebImageUrl').toString();
-  }
-
-  String CustomFaceLinkToFullUrl(String faceUrl){
+  String CustomFaceLinkToFullUrl(String faceUrl) {
     //example input: 5EX44AtZ5cXxW1O12G3tByRcC012/custom_image/analysis1658383341.368371/0.jpg
     return 'https://$SERVER_ADDR/user_data/custom_face_search_image/$faceUrl';
     //user_data/custom_face_search_image/<user_id>/custom_image/<analysis_directory_name>/<filename>
   }
 
-  static String profileFaceLinkToFullUrl(String faceUrl){
-    return Uri.https(SERVER_ADDR, '/analyze-user-fr/fr_face_image/'+faceUrl).toString();
+  static String profileFaceLinkToFullUrl(String faceUrl) {
+    return Uri.https(SERVER_ADDR, '/analyze-user-fr/fr_face_image/' + faceUrl)
+        .toString();
   }
-
-
-
 
   //Profile image methods
 
   static String getProfileImageUrl(String shortUrl) {
-    return Uri.https(SERVER_ADDR,shortUrl).toString();
+    return Uri.https(SERVER_ADDR, shortUrl).toString();
   }
 
   Future<void> postProfileImage(XFile pickedImage) async {
@@ -321,12 +327,12 @@ class AWSServer {
 
     http.MultipartRequest request = http.MultipartRequest(
       'POST',
-      Uri.https(
-          SERVER_ADDR, 'user_data/upload_profile_image/${SettingsData.instance.uid}'),
+      Uri.https(SERVER_ADDR,
+          'user_data/upload_profile_image/${SettingsData.instance.uid}'),
     );
     var multipartFile = new http.MultipartFile.fromBytes(
       'file',
-      img.encodeJpg(theImage, quality: 50),
+      img.encodeJpg(theImage, quality: 80),
       filename: fileName,
       contentType: media.MediaType.parse('image/jpeg'),
     );
@@ -336,7 +342,7 @@ class AWSServer {
       var resp_text = await response.stream.bytesToString();
       var responseMap = jsonDecode(resp_text);
       String url = getProfileImageUrl(responseMap['image_url']);
-      await CacheService.saveToCache(url, img.encodeJpg(theImage, quality: 50));
+      await CacheService.saveToCache(url, img.encodeJpg(theImage, quality: 80));
       print('SAVED UPLOADED IMAGE TO CACHE!');
     }
 
@@ -344,8 +350,8 @@ class AWSServer {
   }
 
   Future<void> syncCurrentProfileImagesUrls() async {
-    Uri getUrlsUri = Uri.https(
-        SERVER_ADDR, '/user_data/profile_images/get_urls/${SettingsData.instance.uid}');
+    Uri getUrlsUri = Uri.https(SERVER_ADDR,
+        '/user_data/profile_images/get_urls/${SettingsData.instance.uid}');
     var response = await http.get(getUrlsUri);
     if (response.statusCode == 200) {
       var parsed = json.jsonDecode(response.body);
@@ -360,7 +366,6 @@ class AWSServer {
     //Get the user's main profile image by her userId
     return 'user_data/profile_image/$userId';
   }
-
 
   Future<Profile?> getSingleUserProfile(String userId) async {
     Uri getUserUri = Uri.https(SERVER_ADDR, 'user_data/profile/$userId');
@@ -386,15 +391,15 @@ class AWSServer {
 
     String encoded = jsonEncode(toSend);
 
-    Uri swapUri = Uri.https(
-        SERVER_ADDR, 'user_data/profile_images/swap/${SettingsData.instance.uid}');
+    Uri swapUri = Uri.https(SERVER_ADDR,
+        'user_data/profile_images/swap/${SettingsData.instance.uid}');
     http.Response response = await http.post(swapUri, body: encoded);
     return;
   }
 
   Future<void> deleteProfileImage(String profileImageUrl) async {
-    Uri deletionUri = Uri.https(
-        SERVER_ADDR, 'user_data/profile_images/delete/${SettingsData.instance.uid}');
+    Uri deletionUri = Uri.https(SERVER_ADDR,
+        'user_data/profile_images/delete/${SettingsData.instance.uid}');
     Map<String, String> toSend = {
       'file_url': profileImageUrl,
     };
@@ -412,23 +417,23 @@ class AWSServer {
       API_CONSTS.DECISION_KEY: decision.name
     };
     String encoded = jsonEncode(toSend);
-    Uri postDecisionUri =
-    Uri.https(SERVER_ADDR, 'user_data/decision/${SettingsData.instance.uid}');
+    Uri postDecisionUri = Uri.https(
+        SERVER_ADDR, 'user_data/decision/${SettingsData.instance.uid}');
     http.Response response = await http.post(postDecisionUri,
         body: encoded); //TODO something if response wasnt 200
   }
 
   Future<void> unmatch(String uid) async {
-    Uri unmatchUrl =
-    Uri.https(SERVER_ADDR, 'user_data/unmatch/${SettingsData.instance.uid}/$uid');
+    Uri unmatchUrl = Uri.https(
+        SERVER_ADDR, 'user_data/unmatch/${SettingsData.instance.uid}/$uid');
     http.Response response = await http.get(unmatchUrl);
     //TODO something if not 200
     return;
   }
 
   Future<void> clearLikes() async {
-    Uri clearLikesUrl =
-    Uri.https(SERVER_ADDR, 'user_data/clear_likes/${SettingsData.instance.uid}');
+    Uri clearLikesUrl = Uri.https(
+        SERVER_ADDR, 'user_data/clear_likes/${SettingsData.instance.uid}');
     http.Response response = await http.get(clearLikesUrl);
     return;
   }
@@ -441,8 +446,8 @@ class AWSServer {
       'sender_epoch_time': senderEpochTime
     };
     String encoded = jsonEncode(toSend);
-    Uri postMessageUri =
-    Uri.https(SERVER_ADDR, 'user_data/send_message/${SettingsData.instance.uid}');
+    Uri postMessageUri = Uri.https(
+        SERVER_ADDR, 'user_data/send_message/${SettingsData.instance.uid}');
     http.Response response = await http.post(postMessageUri, body: encoded);
     if (response.statusCode == 200) {
       return ServerResponse.Success;
@@ -451,7 +456,7 @@ class AWSServer {
   }
 
   static Future<Tuple2<List<InfoMessage>, List<dynamic>>>
-  syncWithServerByTimestamp() async {
+      syncWithServerByTimestamp() async {
     Uri syncChatDataUri = Uri.https(SERVER_ADDR,
         'user_data/sync/${SettingsData.instance.uid}/${SettingsData.instance.lastSync}');
     http.Response response = await http.get(syncChatDataUri);
@@ -469,31 +474,38 @@ class AWSServer {
     Uri syncChatDataUri = Uri.https(SERVER_ADDR,
         'user_data/mark_conversation_read/${SettingsData.instance.uid}/$conversationId');
     http.Response response =
-    await http.get(syncChatDataUri); //TODO something when there's an error
+        await http.get(syncChatDataUri); //TODO something when there's an error
     if (response.statusCode == 200) {
       return true;
     }
     return false;
   }
 
-
-  Future<void> updateUserStatusFromServer()async{
-    Uri getAllUserDataUri = Uri.https(SERVER_ADDR, 'user_data/get_user_data/${SettingsData.instance.uid}');
+  Future<void> updateUserStatusFromServer() async {
+    Uri getAllUserDataUri = Uri.https(
+        SERVER_ADDR, 'user_data/get_user_data/${SettingsData.instance.uid}');
     http.Response response = await http.get(getAllUserDataUri);
     if (response.statusCode != 200) {
       //TODO throw error (bad jwt? server down?)
     }
 
     var decodedResponse = json.jsonDecode(response.body);
-    Map<String,String> statusesMap = {SettingsData.REGISTRATION_STATUS_NAME_KEY:decodedResponse[API_CONSTS.USER_DATA][SettingsData.REGISTRATION_STATUS_NAME_KEY],
-    SettingsData.IS_TEST_USER_NAME_KEY:decodedResponse[API_CONSTS.USER_DATA][SettingsData.IS_TEST_USER_NAME_KEY]
+    Map<String, String> statusesMap = {
+      SettingsData.REGISTRATION_STATUS_NAME_KEY:
+          decodedResponse[API_CONSTS.USER_DATA]
+              [SettingsData.REGISTRATION_STATUS_NAME_KEY],
+      SettingsData.IS_TEST_USER_NAME_KEY: decodedResponse[API_CONSTS.USER_DATA]
+          [SettingsData.IS_TEST_USER_NAME_KEY]
     };
-    statusesMap.forEach((key, value) {SettingsData.instance.updateUserStatusFromServer(key,value); });
+    statusesMap.forEach((key, value) {
+      SettingsData.instance.updateUserStatusFromServer(key, value);
+    });
   }
 
   Future<ServerRegistrationStatusResponse> registerUid(
       {required String firebaseIdToken}) async {
-    Uri verifyTokenUri = Uri.https(SERVER_ADDR, 'user_data/register_firebase_uid');
+    Uri verifyTokenUri =
+        Uri.https(SERVER_ADDR, 'user_data/register_firebase_uid');
     http.Response response = await http
         .get(verifyTokenUri, headers: {'firebase_id_token': firebaseIdToken});
     if (response.statusCode != 200) {
@@ -503,14 +515,14 @@ class AWSServer {
     var decodedResponse = json.jsonDecode(response.body);
 
     if (decodedResponse[API_CONSTS.STATUS] == API_CONSTS.ALREADY_REGISTERED) {
-      SettingsData.instance
-          .updateAllSettingsFromServerData(decodedResponse[API_CONSTS.USER_DATA]);
+      SettingsData.instance.updateAllSettingsFromServerData(
+          decodedResponse[API_CONSTS.USER_DATA]);
       return ServerRegistrationStatusResponse.already_registered;
     }
     //The only possible response possible now is that the user is newly registered - so had to go through onboarding
     //if(decodedResponse[API_CONSTS.STATUS]==API_CONSTS.NEW_REGISTER){
     SettingsData.instance.uid =
-    decodedResponse[API_CONSTS.USER_DATA][SettingsData.FIREBASE_UID_KEY];
+        decodedResponse[API_CONSTS.USER_DATA][SettingsData.FIREBASE_UID_KEY];
     return ServerRegistrationStatusResponse.new_register;
     //}
   }
@@ -530,8 +542,8 @@ class AWSServer {
   }
 
   Future<LocationCountData> getCountUsersByLocation() async {
-    Uri countUsersByLocationUri = Uri.https(
-        SERVER_ADDR, 'user_data/users_in_location/${SettingsData.instance.uid}');
+    Uri countUsersByLocationUri = Uri.https(SERVER_ADDR,
+        'user_data/users_in_location/${SettingsData.instance.uid}');
     http.Response response = await http.get(countUsersByLocationUri);
     if (response.statusCode != 200) {
       return LocationCountData(status: LocationCountStatus.initial_state);
@@ -539,8 +551,8 @@ class AWSServer {
     try {
       var decodedResponse = jsonDecode(response.body);
       LocationCountStatus status = LocationCountStatus.values.firstWhere(
-              (status_option) =>
-          status_option.name ==
+          (status_option) =>
+              status_option.name ==
               decodedResponse[API_CONSTS.LOCATION_STATUS_KEY],
           orElse: () => LocationCountStatus.initial_state);
       //Here there should be just enough users or not enough users + data
@@ -560,34 +572,36 @@ class AWSServer {
   }
 
   Future<void> deleteAccount() async {
-    Uri deleteAccountUri =
-    Uri.https(SERVER_ADDR, 'user_data/delete_account/${SettingsData.instance.uid}');
+    Uri deleteAccountUri = Uri.https(
+        SERVER_ADDR, 'user_data/delete_account/${SettingsData.instance.uid}');
     http.Response response = await http.get(deleteAccountUri);
     //TODO check for a successful response and give user feedback if not successful
   }
 
-
-  Future<Tuple2<List<String>?,ServerResponse>> getProfileFacesAnalysis()async{
-    Uri getAnalysisUri =
-    Uri.https(SERVER_ADDR, 'analyze-user-fr/get_analysis/${SettingsData.instance.uid}');
+  Future<Tuple2<List<String>?, ServerResponse>>
+      getProfileFacesAnalysis() async {
+    Uri getAnalysisUri = Uri.https(SERVER_ADDR,
+        'analyze-user-fr/get_analysis/${SettingsData.instance.uid}');
     http.Response response = await http.get(getAnalysisUri);
 
     if (response.statusCode != 200) {
-
       //TODO throw error (bad jwt? server down? analysis not completed?)
-      if(response.statusCode == 202)
-      {return Tuple2(null, ServerResponse.InProgress);}
+      if (response.statusCode == 202) {
+        return Tuple2(null, ServerResponse.InProgress);
+      }
 
       return Tuple2(null, ServerResponse.Error);
     }
 
     var decodedResponse = json.jsonDecode(response.body);
-    var facesUrls = List<String>.from(decodedResponse[API_CONSTS.FACES_DETAILS]);
+    var facesUrls =
+        List<String>.from(decodedResponse[API_CONSTS.FACES_DETAILS]);
     print('Dor');
-     return Tuple2(facesUrls, ServerResponse.Success);
+    return Tuple2(facesUrls, ServerResponse.Success);
   }
 
-  Future<List<CelebSimilarityDetails>> getSimilarCelebsByImageUrl(String shortFaceAnalysisUrl)async{
+  Future<List<CelebSimilarityDetails>> getSimilarCelebsByImageUrl(
+      String shortFaceAnalysisUrl) async {
     //Input : a short face analysis url, point out to a face detection on the server
     //Output : a list of the most similar celebs to that detection, and their corresponding distances
 
@@ -595,40 +609,44 @@ class AWSServer {
     Uri.https(SERVER_ADDR, 'analyze-user-fr/get_free_celebs_lookalike/$shortFaceAnalysisUrl');
 
     http.Response response = await http.get(getAnalysisUri);
-    if (response.statusCode != 200) {return [];} //TODO something other than returning an empty list
+    if (response.statusCode != 200) {
+      return [];
+    } //TODO something other than returning an empty list
     var decodedResponse = json.jsonDecode(response.body);
-    List<Map> celebsData = List<Map>.from(decodedResponse[API_CONSTS.CELEBS_DATA]);
+    List<Map> celebsData =
+        List<Map>.from(decodedResponse[API_CONSTS.CELEBS_DATA]);
     List<String> celebsNames = [];
-    for(var celebData in celebsData){
+    for (var celebData in celebsData) {
       celebsNames.add(celebData["celebname"]);
     }
-    UnmodifiableListView<Celeb> celebs =CelebsInfo.instance.getCelebsByNames(celebsNames);
+    UnmodifiableListView<Celeb> celebs =
+        CelebsInfo.instance.getCelebsByNames(celebsNames);
     await CelebsInfo.instance.getCelebsImageLinks(celebs: celebs);
     List<CelebSimilarityDetails> similarities = [];
-    for(Celeb celeb in celebs){
-      double distance = celebsData.firstWhere((celebData) => celebData["celebname"] == celeb.celebName,orElse: ()=>{"distance":100})["distance"];
-      similarities.add(CelebSimilarityDetails(celeb:celeb,faceRecognitionDistance: distance));
+    for (Celeb celeb in celebs) {
+      double distance = celebsData.firstWhere(
+          (celebData) => celebData["celebname"] == celeb.celebName,
+          orElse: () => {"distance": 100})["distance"];
+      similarities.add(CelebSimilarityDetails(
+          celeb: celeb, faceRecognitionDistance: distance));
     }
     return similarities;
-
   }
 
-
-
-
-  Future<Map> getTraitsByImageUrl(String shortFaceAnalysisUrl)async{
+  Future<Map> getTraitsByImageUrl(String shortFaceAnalysisUrl) async {
     //Input : a short face analysis url, point out to a face detection on the server
     //Output : a list of the most similar celebs to that detection, and their corresponding distances
 
-    Uri getAnalysisUri =
-    Uri.https(SERVER_ADDR, 'analyze-user-fr/get_traits/$shortFaceAnalysisUrl');
+    Uri getAnalysisUri = Uri.https(
+        SERVER_ADDR, 'analyze-user-fr/get_traits/$shortFaceAnalysisUrl');
 
     http.Response response = await http.get(getAnalysisUri);
-    if (response.statusCode != 200) {return {};} //TODO something other than returning an empty map
+    if (response.statusCode != 200) {
+      return {};
+    } //TODO something other than returning an empty map
     var decodedResponse = json.jsonDecode(response.body);
     Map traitsData = Map.from(decodedResponse[API_CONSTS.TRAITS]);
     return traitsData;
-
   }
 
   Future<Tuple2<ServerResponse,String?>> morphFaces({required String celebUrl,required String userUrl})async{ //TODO make morph service work with free celebs
