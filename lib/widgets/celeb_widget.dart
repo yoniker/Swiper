@@ -119,7 +119,7 @@ class _CelebWidgetState extends State<CelebWidget> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15.0),
-          image: celebImages[_imageIndex],
+          image: celebImages.length>0? celebImages[_imageIndex]:null,
           boxShadow: <BoxShadow>[
             BoxShadow(
               color: lightCardColor,

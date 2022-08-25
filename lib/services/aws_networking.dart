@@ -649,7 +649,7 @@ class AWSServer {
       'celeb_name':celebName,
       'celeb_filename':celebImageFileName
     };
-    Uri getAllUserDataUri = Uri.https(AWSServer.SERVER_ADDR, '/morph/perform',queryParameters);
+    Uri getAllUserDataUri = Uri.https(AWSServer.SERVER_ADDR, '/morph/free_perform',queryParameters);
     print(getAllUserDataUri.toString());
     http.Response response = await http.get(getAllUserDataUri);
     if(response.statusCode!=200){
