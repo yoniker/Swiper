@@ -278,7 +278,7 @@ class AWSServer {
 
 
   Future<List<String>> getCelebUrls(String celebName)async{
-    Uri celebsLinkUri = Uri.https(SERVER_ADDR, 'user_data/celeb_image_links/$celebName');
+    Uri celebsLinkUri = Uri.https(SERVER_ADDR, 'user_data/free_celeb_image_links/$celebName');
 
       http.Response resp = await http.get(celebsLinkUri);
       if (resp.statusCode == 200) {
@@ -592,7 +592,7 @@ class AWSServer {
     //Output : a list of the most similar celebs to that detection, and their corresponding distances
 
     Uri getAnalysisUri =
-    Uri.https(SERVER_ADDR, 'analyze-user-fr/get_celebs_lookalike/$shortFaceAnalysisUrl');
+    Uri.https(SERVER_ADDR, 'analyze-user-fr/get_free_celebs_lookalike/$shortFaceAnalysisUrl');
 
     http.Response response = await http.get(getAnalysisUri);
     if (response.statusCode != 200) {return [];} //TODO something other than returning an empty list
@@ -631,8 +631,8 @@ class AWSServer {
 
   }
 
-  Future<Tuple2<ServerResponse,String?>> morphFaces({required String celebUrl,required String userUrl})async{
-    celebUrl = celebUrl.substring(celebUrl.indexOf('celeb_image/')).substring('celeb_image/'.length);
+  Future<Tuple2<ServerResponse,String?>> morphFaces({required String celebUrl,required String userUrl})async{ //TODO make morph service work with free celebs
+    celebUrl = celebUrl.substring(celebUrl.indexOf('free_celeb_image/')).substring('free_celeb_image/'.length);
     List<String> celebDetails = celebUrl.split('/'); //[Bar Refaeli, wiki_image.jpeg]
     String celebName = celebDetails[0];
     String celebImageFileName = celebDetails[1];
