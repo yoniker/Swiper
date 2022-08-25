@@ -28,6 +28,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
   String selectedImage = '';
   ServerResponse currentState = ServerResponse.InProgress;
   List<String> facesUrls = [];
+  String bestFaceUrl = '';
   Map traits = {};
   bool profileIsFacesBeingProcessed = false;
   bool traitsBeingFetched = false;
@@ -46,8 +47,9 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
 
   Future<void> updateProfileFacesUrls() async {
     var response = await AWSServer.instance.getProfileFacesAnalysis();
-    ServerResponse serverResponse = response.item2;
+    ServerResponse serverResponse = response.item3;
     List<String>? data = response.item1;
+    String? bestFaceUrlData = response.item2;
     while (serverResponse == ServerResponse.InProgress) {
       if (mounted)
         setState(() {
@@ -58,8 +60,9 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
           seconds:
               1)); //TODO in the future,might replace polling with a websocket/FCM push
       response = await AWSServer.instance.getProfileFacesAnalysis();
-      serverResponse = response.item2;
+      serverResponse = response.item3;
       data = response.item1;
+      bestFaceUrlData = response.item2;
     }
 
     if(mounted) setState(() {
@@ -69,6 +72,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
     if (serverResponse == ServerResponse.Success && data != null) {
       if(mounted) setState(() {
         facesUrls = data!;
+        bestFaceUrl = bestFaceUrlData ?? '';
       });
     } //TODO what if not successful?
   }
@@ -287,7 +291,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                         decoration: BoxDecoration(
                                           image: DecorationImage(
                                             fit: BoxFit.cover,
-                                            image: ExtendedNetworkImageProvider(selectedImage),
+                                            image: ExtendedNetworkImageProvider(AWSServer.profileFaceLinkToFullUrl(selectedImage)),
                                           ),
                                         ),
                                       ),
@@ -537,9 +541,8 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                               scrollDirection: Axis.horizontal,
                               itemCount: facesUrls.length,
                               itemBuilder: (cntx, index) {
-                                final String _url =
-                                    AWSServer.profileFaceLinkToFullUrl(
-                                        facesUrls[index]);
+                                final String _url = facesUrls[index];
+                                bool isBestImage = (_url==bestFaceUrl);
                                 return GestureDetector(
                                   onTap: () {
                                     setState(() {
@@ -563,7 +566,10 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                             EdgeInsets.symmetric(vertical: 3),
                                         child: Container(
                                           decoration: BoxDecoration(
-                                              border: selectedImage == _url
+                                              border: isBestImage? Border.all(//TODO Nitzan this is an ugly demonstration of how to show the best image
+                                                  width: 8.0,
+                                                  color: Colors.red):
+                                              selectedImage == _url
                                                   ? Border.all(
                                                       width: 3.0,
                                                       color: Colors.white)
@@ -577,7 +583,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                               ],
                                               shape: BoxShape.circle,
                                               image: DecorationImage(
-                                                  image: ExtendedNetworkImageProvider(_url),
+                                                  image: ExtendedNetworkImageProvider(AWSServer.profileFaceLinkToFullUrl(_url)),
                                                   fit: BoxFit.cover)),
                                         ),
                                       ),

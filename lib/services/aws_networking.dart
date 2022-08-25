@@ -567,7 +567,7 @@ class AWSServer {
     //TODO check for a successful response and give user feedback if not successful
   }
 
-  Future<Tuple2<List<String>?, ServerResponse>>
+  Future<Tuple3<List<String>?,String?, ServerResponse>>
       getProfileFacesAnalysis() async {
     Uri getAnalysisUri = Uri.https(SERVER_ADDR,
         'analyze-user-fr/get_analysis/${SettingsData.instance.uid}');
@@ -576,17 +576,19 @@ class AWSServer {
     if (response.statusCode != 200) {
       //TODO throw error (bad jwt? server down? analysis not completed?)
       if (response.statusCode == 202) {
-        return Tuple2(null, ServerResponse.InProgress);
+        return Tuple3(null,null, ServerResponse.InProgress);
       }
 
-      return Tuple2(null, ServerResponse.Error);
+      return Tuple3(null,null, ServerResponse.Error);
     }
 
     var decodedResponse = json.jsonDecode(response.body);
     var facesUrls =
         List<String>.from(decodedResponse[API_CONSTS.FACES_DETAILS]);
+    String bestFaceUrl = decodedResponse[API_CONSTS.BEST_FACE_URL];
     print('Dor');
-    return Tuple2(facesUrls, ServerResponse.Success);
+    print('King');
+    return Tuple3(facesUrls,bestFaceUrl, ServerResponse.Success);
   }
 
   Future<List<CelebSimilarityDetails>> getSimilarCelebsByImageUrl(

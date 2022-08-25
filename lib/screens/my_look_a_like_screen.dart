@@ -47,7 +47,7 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
 
   Future<void> updateProfileFacesUrls() async {
     var response = await AWSServer.instance.getProfileFacesAnalysis();
-    ServerResponse serverResponse = response.item2;
+    ServerResponse serverResponse = response.item3;
     List<String>? data = response.item1;
     while (serverResponse == ServerResponse.InProgress) {
       if (mounted)
@@ -59,7 +59,7 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
           seconds:
               1)); //TODO in the future,might replace polling with a websocket/FCM push
       response = await AWSServer.instance.getProfileFacesAnalysis();
-      serverResponse = response.item2;
+      serverResponse = response.item3;
       data = response.item1;
     }
     if (mounted)
