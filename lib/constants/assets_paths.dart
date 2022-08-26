@@ -15,4 +15,5 @@ class AssetsPaths {
   static const String locationGif = 'assets/onboarding/images/location.gif';
   static const String backgroundVideoPath =
       'assets/onboarding/videos/startvideo.mp4';
+  static const String riveAvatarsPath = 'assets/rive/avatars.riv';
 }

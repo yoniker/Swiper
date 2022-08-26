@@ -1,6 +1,7 @@
 import 'package:betabeta/constants/app_functionality_consts.dart';
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/animated_widgets/animated_appear_widget.dart';
@@ -249,7 +250,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: CustomAppBar(
-            backColor: selectedImage != '' ? Colors.white : Colors.black,
+            backColor: Colors.black,
             hasTopPadding: true,
             customTitle: SizedBox(
               height: MediaQuery.of(context).size.height * 0.08,
@@ -257,9 +258,9 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
             centerWidget: VoilaLogoWidget(
               logoOnlyMode: true,
               // whiteLogo: selectedImage != '',
-              goldLogo: selectedImage != '',
             ),
-            backgroundColor: selectedImage == '' ? Colors.white : Colors.black,
+            backgroundColor:
+                selectedImage == '' ? Colors.white : kBackroundThemeColor,
             elevation: 0,
           ),
           body: Column(
@@ -341,7 +342,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                               painter: ProfilePainter(),
                                               child: Padding(
                                                 padding: const EdgeInsets.only(
-                                                    bottom: 5.0),
+                                                    bottom: 3.0),
                                                 child: Column(
                                                   children: [
                                                     Row(
@@ -355,10 +356,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                                         Text(
                                                           'AI analysis results  '
                                                               .toUpperCase(),
-                                                          style: boldTextStyle
-                                                              .copyWith(
-                                                                  color:
-                                                                      goldColorish),
+                                                          style: boldTextStyle,
                                                         ),
                                                         GestureDetector(
                                                           onTap: () {
@@ -396,7 +394,6 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                                           child: Icon(
                                                             FontAwesomeIcons
                                                                 .infoCircle,
-                                                            color: goldColorish,
                                                             size: 23,
                                                           ),
                                                         )
@@ -691,7 +688,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
 class ProfilePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final Color background = Colors.black;
+    final Color background = kBackroundThemeColor;
     final backgroundColor = Paint()
       ..shader = LinearGradient(colors: [
         background,

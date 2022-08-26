@@ -1,4 +1,5 @@
 import 'package:betabeta/constants/app_functionality_consts.dart';
+import 'package:betabeta/constants/assets_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:flutter/material.dart';
@@ -73,25 +74,20 @@ class _AvatarRiveState extends State<AvatarRive> {
         _lookPercent!.value = details.globalPosition.dx / screenWidth * 100;
       },
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 10),
-        decoration:
-            BoxDecoration(shape: BoxShape.circle, color: kBackroundThemeColor),
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 3),
-          clipBehavior: Clip.hardEdge,
-          decoration:
-              BoxDecoration(color: kBackroundThemeColor, shape: BoxShape.circle
-                  // borderRadius: BorderRadius.vertical(
-                  //     bottom: Radius.elliptical(600, 200),),
-                  ),
-          child: RiveAnimation.asset(
-            'assets/rive/avatars.riv',
-            artboard: widget.artBoard,
-            animations: animations,
-            stateMachines: ['State_Machine'],
-            onInit: _onRiveInit,
-            fit: BoxFit.contain,
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(
+          color: kBackroundThemeColor,
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.elliptical(500, 110),
           ),
+        ),
+        child: RiveAnimation.asset(
+          AssetsPaths.riveAvatarsPath,
+          artboard: widget.artBoard,
+          animations: animations,
+          stateMachines: ['State_Machine'],
+          onInit: _onRiveInit,
+          fit: BoxFit.contain,
         ),
       ),
     );
