@@ -276,20 +276,17 @@ class AWSServer {
     return customFacesLinks;
   }
 
-  Future<List<String>> getCelebUrls(String celebName) async {
-    Uri celebsLinkUri =
-        Uri.https(SERVER_ADDR, 'user_data/celeb_image_links/$celebName');
+  Future<List<String>> getCelebUrls(String celebName)async{
+    Uri celebsLinkUri = Uri.https(SERVER_ADDR, 'user_data/free_celeb_image_links/$celebName');
 
-    http.Response resp = await http.get(celebsLinkUri);
-    if (resp.statusCode == 200) {
-      //TODO think how to handle network errors
-      dynamic faceSearchResult = jsonDecode(resp.body);
-      List<String> celebImagesLinks =
-          List<String>.from(faceSearchResult["celeb_image_links"]);
-      return celebImagesLinks;
-    }
-
-    return [];
+      http.Response resp = await http.get(celebsLinkUri);
+      if (resp.statusCode == 200) {
+        //TODO think how to handle network errors
+        dynamic faceSearchResult = jsonDecode(resp.body);
+        List<String> celebImagesLinks = List<String>.from(faceSearchResult["celeb_image_links"]);
+        return celebImagesLinks;
+  }
+  return [];
   }
 
   String celebImageUrlToFullUrl(String celebImageUrl) {
@@ -570,7 +567,7 @@ class AWSServer {
     //TODO check for a successful response and give user feedback if not successful
   }
 
-  Future<Tuple2<List<String>?, ServerResponse>>
+  Future<Tuple3<List<String>?,String?, ServerResponse>>
       getProfileFacesAnalysis() async {
     Uri getAnalysisUri = Uri.https(SERVER_ADDR,
         'analyze-user-fr/get_analysis/${SettingsData.instance.uid}');
@@ -579,17 +576,19 @@ class AWSServer {
     if (response.statusCode != 200) {
       //TODO throw error (bad jwt? server down? analysis not completed?)
       if (response.statusCode == 202) {
-        return Tuple2(null, ServerResponse.InProgress);
+        return Tuple3(null,null, ServerResponse.InProgress);
       }
 
-      return Tuple2(null, ServerResponse.Error);
+      return Tuple3(null,null, ServerResponse.Error);
     }
 
     var decodedResponse = json.jsonDecode(response.body);
     var facesUrls =
         List<String>.from(decodedResponse[API_CONSTS.FACES_DETAILS]);
+    String bestFaceUrl = decodedResponse[API_CONSTS.BEST_FACE_URL];
     print('Dor');
-    return Tuple2(facesUrls, ServerResponse.Success);
+    print('King');
+    return Tuple3(facesUrls,bestFaceUrl, ServerResponse.Success);
   }
 
   Future<List<CelebSimilarityDetails>> getSimilarCelebsByImageUrl(
@@ -597,8 +596,8 @@ class AWSServer {
     //Input : a short face analysis url, point out to a face detection on the server
     //Output : a list of the most similar celebs to that detection, and their corresponding distances
 
-    Uri getAnalysisUri = Uri.https(SERVER_ADDR,
-        'analyze-user-fr/get_celebs_lookalike/$shortFaceAnalysisUrl');
+    Uri getAnalysisUri =
+    Uri.https(SERVER_ADDR, 'analyze-user-fr/get_free_celebs_lookalike/$shortFaceAnalysisUrl');
 
     http.Response response = await http.get(getAnalysisUri);
     if (response.statusCode != 200) {
@@ -640,4 +639,41 @@ class AWSServer {
     Map traitsData = Map.from(decodedResponse[API_CONSTS.TRAITS]);
     return traitsData;
   }
+
+  Future<Tuple2<ServerResponse,String?>> morphFaces({required String celebUrl,required String userUrl})async{ //TODO make morph service work with free celebs
+    celebUrl = celebUrl.substring(celebUrl.indexOf('free_celeb_image/')).substring('free_celeb_image/'.length);
+    List<String> celebDetails = celebUrl.split('/'); //[Bar Refaeli, wiki_image.jpeg]
+    String celebName = celebDetails[0];
+    String celebImageFileName = celebDetails[1];
+    userUrl = userUrl.substring(userUrl.indexOf('/fr_face_image/')).substring('/fr_face_image/'.length);
+    List<String> userFaceImageData = userUrl.split('/'); //[5EX44AtZ5cXxW1O12G3tByRcC012, 1659217900.4540095_5EX44AtZ5cXxW1O12G3tByRcC012_92715.jpg, 0]
+    String user_id = userFaceImageData[0]; //Should be the same as SettingsData.instance.uid
+    String user_image_filename = userFaceImageData[1];
+    String detection_index = userFaceImageData[2];
+
+    var queryParameters = {
+      'user_id': user_id,
+      'user_image_filename':user_image_filename,
+      'detection_index':detection_index,
+      'celeb_name':celebName,
+      'celeb_filename':celebImageFileName
+    };
+    Uri getAllUserDataUri = Uri.https(AWSServer.SERVER_ADDR, '/morph/free_perform',queryParameters);
+    print(getAllUserDataUri.toString());
+    http.Response response = await http.get(getAllUserDataUri);
+    if(response.statusCode!=200){
+
+
+      return Tuple2(ServerResponse.Error, null);}
+    var decodedResponse = json.jsonDecode(response.body);
+    String morphFileName = decodedResponse['morph_filename'];
+    print(morphFileName);
+    var statusOfMorphing = ServerResponse.Success;
+    String videoUrl = Uri.https(AWSServer.SERVER_ADDR, '/morph/get_video/$user_id/$morphFileName').toString();
+    //https://services.voilaserver.com/morph/get_video/5EX44AtZ5cXxW1O12G3tByRcC012/1660863191.116642.avi
+    return Tuple2(statusOfMorphing, videoUrl);
+
+  }
+
+
 }

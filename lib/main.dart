@@ -49,6 +49,7 @@ import 'package:betabeta/screens/user_edit/smoking_screen.dart';
 import 'package:betabeta/screens/swipe_settings_screen.dart';
 import 'package:betabeta/screens/view_likes_screen.dart';
 import 'package:betabeta/screens/splash_screen.dart';
+import 'package:betabeta/screens/view_morph_screen.dart';
 import 'package:betabeta/screens/voila_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -224,7 +225,8 @@ void main() async {
             page: () => OnboardingPageViewScreen()),
         GetPage(
             name: MockNewMatchCardPage.routePage,
-            page: () => MockNewMatchCardPage())
+            page: () => MockNewMatchCardPage()),
+        GetPage(name: ViewMorphScreen.routeName, page: ()=>ViewMorphScreen())
       ],
       title: 'Voilà MVP',
       debugShowCheckedModeBanner: false,

@@ -4,15 +4,15 @@ import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/animated_widgets/animated_appear_widget.dart';
+import 'package:betabeta/widgets/animated_widgets/animated_love_voila_heart.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/rive_animations/avatar_rive.dart';
 import 'package:betabeta/widgets/voila_logo_widget.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'dart:math' as math;
 
 import 'package:get/get.dart';
 
@@ -30,6 +30,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
   String selectedImage = '';
   ServerResponse currentState = ServerResponse.InProgress;
   List<String> facesUrls = [];
+  String bestFaceUrl = '';
   Map traits = {};
   bool profileIsFacesBeingProcessed = false;
   bool traitsBeingFetched = false;
@@ -48,8 +49,9 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
 
   Future<void> updateProfileFacesUrls() async {
     var response = await AWSServer.instance.getProfileFacesAnalysis();
-    ServerResponse serverResponse = response.item2;
+    ServerResponse serverResponse = response.item3;
     List<String>? data = response.item1;
+    String? bestImageKeyData = response.item2;
     while (serverResponse == ServerResponse.InProgress) {
       if (mounted)
         setState(() {
@@ -60,8 +62,9 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
           seconds:
               1)); //TODO in the future,might replace polling with a websocket/FCM push
       response = await AWSServer.instance.getProfileFacesAnalysis();
-      serverResponse = response.item2;
+      serverResponse = response.item3;
       data = response.item1;
+      bestImageKeyData = response.item2;
     }
 
     setState(() {
@@ -71,6 +74,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
     if (serverResponse == ServerResponse.Success && data != null) {
       setState(() {
         facesUrls = data!;
+        bestFaceUrl = bestImageKeyData ?? '';
       });
     } //TODO what if not successful?
   }
@@ -245,18 +249,17 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: CustomAppBar(
+            backColor: selectedImage != '' ? Colors.white : Colors.black,
             hasTopPadding: true,
-            backColor: selectedImage == '' ? Colors.black : Colors.white,
             customTitle: SizedBox(
-              height: 80,
+              height: MediaQuery.of(context).size.height * 0.08,
             ),
             centerWidget: VoilaLogoWidget(
               logoOnlyMode: true,
-              whiteLogo: selectedImage != '',
+              // whiteLogo: selectedImage != '',
+              goldLogo: selectedImage != '',
             ),
-            backgroundColor: selectedImage == ''
-                ? Colors.white
-                : Colors.black.withOpacity(0.98),
+            backgroundColor: selectedImage == '' ? Colors.white : Colors.black,
             elevation: 0,
           ),
           body: Column(
@@ -295,28 +298,30 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                             bottom: Radius.circular(10),
                                           ),
                                         ),
-                                        child: AspectRatio(
-                                          aspectRatio: 1.1 / 1,
+                                        child: Container(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.5,
                                           child: Container(
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.black26,
-                                                borderRadius:
-                                                    BorderRadius.vertical(
-                                                  bottom: Radius.circular(10),
-                                                ),
-                                              ),
-                                            ),
                                             decoration: BoxDecoration(
+                                              color: Colors.black
+                                                  .withOpacity(0.19),
                                               borderRadius:
                                                   BorderRadius.vertical(
                                                 bottom: Radius.circular(10),
                                               ),
-                                              image: DecorationImage(
-                                                fit: BoxFit.cover,
-                                                image:
-                                                    NetworkImage(selectedImage),
-                                              ),
+                                            ),
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.vertical(
+                                              bottom: Radius.circular(10),
+                                            ),
+                                            image: DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image: NetworkImage(AWSServer
+                                                  .profileFaceLinkToFullUrl(
+                                                      selectedImage)),
                                             ),
                                           ),
                                         ),
@@ -327,8 +332,11 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          AspectRatio(
-                                            aspectRatio: 1.6 / 1,
+                                          Container(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.3,
                                             child: CustomPaint(
                                               painter: ProfilePainter(),
                                               child: Padding(
@@ -347,7 +355,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                                         Text(
                                                           'AI analysis results  '
                                                               .toUpperCase(),
-                                                          style: cardFontStyle
+                                                          style: boldTextStyle
                                                               .copyWith(
                                                                   color:
                                                                       goldColorish),
@@ -360,8 +368,12 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                                                   CupertinoAlertDialog(
                                                                 title: Text(
                                                                     'Voilà analyzed the selected image'),
-                                                                content: Text(
-                                                                    'Voilà analyzed the face in the image that you\'ve selected & estimated the person\'s traits based solely on the image. \n\nPick any other image in order to see what Voilà thinks about it!'),
+                                                                content: Column(
+                                                                  children: [
+                                                                    Text(
+                                                                        'Voilà estimated the person\'s traits based solely on the image. \n\n We\'ve put a ❤️ on our favorite picture!\n\nPick any other image in order to see what Voilà thinks about it!'),
+                                                                  ],
+                                                                ),
                                                                 actions: [
                                                                   TextButton(
                                                                     onPressed:
@@ -384,7 +396,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                                           child: Icon(
                                                             FontAwesomeIcons
                                                                 .infoCircle,
-                                                            color: Colors.white,
+                                                            color: goldColorish,
                                                             size: 23,
                                                           ),
                                                         )
@@ -461,6 +473,15 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                                                             25),
                                                                   ),
                                                                 ),
+                                                                if (bestFaceUrl ==
+                                                                    selectedImage)
+                                                                  Center(
+                                                                    child: Text(
+                                                                      'You look amazing in this image ❤️',
+                                                                      style:
+                                                                          cardFontStyle,
+                                                                    ),
+                                                                  )
                                                               ],
                                                             ),
                                                             Padding(
@@ -556,7 +577,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        vertical: 15.0),
+                                        vertical: 40.0),
                                     child: Text(
                                       'Choose a picture for \nVoilà to analyze',
                                       textAlign: TextAlign.center,
@@ -581,7 +602,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
                     minHeight: 40.5,
-                    maxHeight: 110.5,
+                    maxHeight: MediaQuery.of(context).size.height * 0.145,
                     minWidth: 250.0,
                     maxWidth: MediaQuery.of(context).size.width,
                   ),
@@ -607,9 +628,8 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                               scrollDirection: Axis.horizontal,
                               itemCount: facesUrls.length,
                               itemBuilder: (cntx, index) {
-                                final String _url =
-                                    AWSServer.profileFaceLinkToFullUrl(
-                                        facesUrls[index]);
+                                final String _url = facesUrls[index];
+                                final bool isBestImage = bestFaceUrl == _url;
                                 return GestureDetector(
                                   onTap: () {
                                     setState(() {
@@ -617,39 +637,36 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                     });
                                     updateTraits(facesUrls[index]);
                                   },
-                                  child: ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                      minHeight: 40.5,
-                                      maxHeight: 110.5,
-                                      minWidth: 40.5,
-                                      maxWidth: 110.5,
-                                    ),
-                                    // height: 80.5,
-                                    // width: 100.0,
-                                    child: AspectRatio(
-                                      aspectRatio: 1 / 1,
+                                  child: AspectRatio(
+                                    aspectRatio: 1 / 1,
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 3),
                                       child: Container(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 3),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              border: selectedImage == _url
-                                                  ? Border.all(
-                                                      width: 3.0,
-                                                      color: Colors.white)
-                                                  : null,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black87,
-                                                  blurRadius: 3,
-                                                  offset: Offset(-2, 0),
-                                                )
-                                              ],
-                                              shape: BoxShape.circle,
-                                              image: DecorationImage(
-                                                  image: NetworkImage(_url),
-                                                  fit: BoxFit.cover)),
-                                        ),
+                                        child:
+                                            isBestImage && selectedImage != ''
+                                                ? AnimatedLoveVoilaHeart()
+                                                : null,
+                                        decoration: BoxDecoration(
+                                            border: selectedImage == _url
+                                                ? Border.all(
+                                                    width: 3.0,
+                                                    color: Colors.white)
+                                                : null,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black87,
+                                                blurRadius: 3,
+                                                offset: Offset(-2, 0),
+                                              )
+                                            ],
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                                image: ExtendedNetworkImageProvider(
+                                                    AWSServer
+                                                        .profileFaceLinkToFullUrl(
+                                                            _url)),
+                                                fit: BoxFit.cover)),
                                       ),
                                     ),
                                   ),
@@ -674,10 +691,11 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
 class ProfilePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
+    final Color background = Colors.black;
     final backgroundColor = Paint()
       ..shader = LinearGradient(colors: [
-        Colors.black,
-        Colors.black,
+        background,
+        background,
       ], begin: Alignment.topLeft, end: Alignment.bottomRight)
           .createShader(Rect.largest);
     canvas.drawRRect(

@@ -50,10 +50,10 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _initializeApp() async {
     //initialize the app when user is already logged in
+    await SettingsData.instance.readSettingsFromShared();
     AppStateInfo.instance;
     await NotificationsController.instance.initialize();
     await ChatData.initDB();
-    await SettingsData.instance.readSettingsFromShared();
     await CelebsInfo.instance.getCelebsFromDatabase();
   }
 

@@ -362,8 +362,9 @@ class GlobalWidgets {
       return InkWell(
         onTap: () async {
           // Pop the dialogue and execute the image-picking Function.
-          await _onImageButtonPressed(source);
           Get.back();
+          await _onImageButtonPressed(source);
+
         },
         child: Container(
           margin: const EdgeInsets.all(8.0),

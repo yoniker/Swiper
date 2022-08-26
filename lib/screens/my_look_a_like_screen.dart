@@ -1,14 +1,16 @@
+import 'package:betabeta/constants/assets_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/data_models/celeb.dart';
 import 'package:betabeta/models/celebs_info_model.dart';
+import 'package:betabeta/screens/view_morph_screen.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/celeb_widget.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-
-import '../constants/assets_paths.dart';
+import 'package:get/get.dart';
 
 class MyLookALikeScreen extends StatefulWidget {
   const MyLookALikeScreen({Key? key}) : super(key: key);
@@ -45,7 +47,7 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
 
   Future<void> updateProfileFacesUrls() async {
     var response = await AWSServer.instance.getProfileFacesAnalysis();
-    ServerResponse serverResponse = response.item2;
+    ServerResponse serverResponse = response.item3;
     List<String>? data = response.item1;
     while (serverResponse == ServerResponse.InProgress) {
       if (mounted)
@@ -57,7 +59,7 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
           seconds:
               1)); //TODO in the future,might replace polling with a websocket/FCM push
       response = await AWSServer.instance.getProfileFacesAnalysis();
-      serverResponse = response.item2;
+      serverResponse = response.item3;
       data = response.item1;
     }
     if (mounted)
@@ -193,7 +195,9 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                                                   : null,
                                               shape: BoxShape.circle,
                                               image: DecorationImage(
-                                                  image: NetworkImage(_url),
+                                                  image:
+                                                      ExtendedNetworkImageProvider(
+                                                          _url),
                                                   fit: BoxFit.cover),
                                             ),
                                           ),
@@ -254,9 +258,15 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                                             currentDistance),
                                         theCeleb: currentCeleb,
                                         celebsInfo: CelebsInfo.instance,
-                                        onTap: () {
+                                        onTapCelebImage: (celebImageUrl) {
                                           print(
-                                              'pressed ${currentCeleb.celebName} which has distance $currentDistance');
+                                              'pressed ${currentCeleb.celebName} at $celebImageUrl and user image is $selectedImage');
+                                          Get.toNamed(ViewMorphScreen.routeName,
+                                              arguments: {
+                                                'celeb_image_url':
+                                                    celebImageUrl,
+                                                'face_image_url': selectedImage
+                                              });
                                         },
                                       ));
                                 }).toList(),
@@ -298,46 +308,6 @@ class _MyLookALikeScreenState extends State<MyLookALikeScreen> {
                 SizedBox(
                   height: 20,
                 )
-                // Container(
-                //   width: MediaQuery.of(context).size.width * 0.95,
-                //   height: MediaQuery.of(context).size.width * 0.85,
-                //   decoration: kSettingsBlockBoxDecor,
-                //   child: profileIsBeingProcessed
-                //       ? Center(
-                //           child: CircularProgressIndicator(),
-                //         )
-                //       : celebsBeingProcessed
-                //           ? Center(
-                //               child: CircularProgressIndicator(),
-                //             )
-                //           : ListView.separated(
-                //               physics: BouncingScrollPhysics(),
-                //               //controller: _listController,
-                //               separatorBuilder:
-                //                   (BuildContext context, int index) {
-                //                 return SizedBox(height: 15.0);
-                //               },
-                //               itemCount: celebsSimilarities.length,
-                //               itemBuilder: (BuildContext context, int index) {
-                //                 Celeb currentCeleb =
-                //                     celebsSimilarities[index].celeb;
-                //                 double currentDistance =
-                //                     celebsSimilarities[index]
-                //                         .faceRecognitionDistance;
-                //                 return CelebWidget(
-                //                   backgroundImageMode: true,
-                //                   key: ValueKey(currentCeleb.celebName),
-                //                   theCeleb: currentCeleb,
-                //                   celebsInfo: CelebsInfo.instance,
-                //                   celebIndex: index,
-                //                   onTap: () {
-                //                     print(
-                //                         'pressed ${currentCeleb.celebName} which has distance $currentDistance');
-                //                   },
-                //                 );
-                //               },
-                //             ),
-                // )
               ],
             ),
           ),

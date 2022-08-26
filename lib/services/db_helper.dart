@@ -18,7 +18,7 @@ class DatabaseHelper {
        String jsonString = await rootBundle.loadString('assets/celebs.json');
        final celebsFromJson = json.decode(jsonString);
        for (var celeb in celebsFromJson) {
-         var aliases = celeb['aliases'].split('@');
+         var aliases = celeb['aliases']?.split('@')??<String>[];
          aliases.add(celeb['celeb_name'] ?? '');
          Celeb currentCeleb = Celeb(
            celebName: celeb['celeb_name'] ?? '',

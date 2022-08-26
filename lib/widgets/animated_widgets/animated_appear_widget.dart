@@ -37,7 +37,10 @@ class _AnimatedAppearWidgetState extends State<AnimatedAppearWidget>
   Widget build(BuildContext context) {
     return Opacity(
       opacity: _animation.value,
-      child: GestureDetector(onTap: widget.onTap, child: widget.child),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: widget.child,
+      ),
     );
   }
 }

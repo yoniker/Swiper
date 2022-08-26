@@ -1,4 +1,6 @@
 import 'package:betabeta/constants/app_functionality_consts.dart';
+import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
@@ -24,6 +26,7 @@ class AvatarRive extends StatefulWidget {
 
 class _AvatarRiveState extends State<AvatarRive> {
   SMIBool? _isPlaying;
+  SMINumber? _lookPercent;
   final List<String> animations = [kAvatarIdleAnimation];
 
   void _onRiveInit(Artboard artboard) {
@@ -33,6 +36,7 @@ class _AvatarRiveState extends State<AvatarRive> {
     artboard.addController(controller!);
 
     _isPlaying = controller.findInput<bool>('isChecking') as SMIBool?;
+    _lookPercent = controller.findSMI('numLook') as SMINumber?;
   }
 
   @override
@@ -54,27 +58,40 @@ class _AvatarRiveState extends State<AvatarRive> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return GestureDetector(
       onTap: () {
         if (_isPlaying?.value != null) {
           _isPlaying?.value = !_isPlaying!.value;
         }
       },
+      onHorizontalDragStart: (DragStartDetails details) {
+        _lookPercent!.value = details.globalPosition.dx / screenWidth * 100;
+      },
+      onHorizontalDragUpdate: (DragUpdateDetails details) {
+        _lookPercent!.value = details.globalPosition.dx / screenWidth * 100;
+      },
       child: Container(
-        clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.elliptical(600, 200),
+        margin: EdgeInsets.symmetric(vertical: 10),
+        decoration:
+            BoxDecoration(shape: BoxShape.circle, color: kBackroundThemeColor),
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 3),
+          clipBehavior: Clip.hardEdge,
+          decoration:
+              BoxDecoration(color: kBackroundThemeColor, shape: BoxShape.circle
+                  // borderRadius: BorderRadius.vertical(
+                  //     bottom: Radius.elliptical(600, 200),),
+                  ),
+          child: RiveAnimation.asset(
+            'assets/rive/avatars.riv',
+            artboard: widget.artBoard,
+            animations: animations,
+            stateMachines: ['State_Machine'],
+            onInit: _onRiveInit,
+            fit: BoxFit.contain,
           ),
-        ),
-        child: RiveAnimation.asset(
-          'assets/rive/avatars.riv',
-          artboard: widget.artBoard,
-          animations: animations,
-          stateMachines: ['State_Machine'],
-          onInit: _onRiveInit,
-          fit: BoxFit.contain,
         ),
       ),
     );
