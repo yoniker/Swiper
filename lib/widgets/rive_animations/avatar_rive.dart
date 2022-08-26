@@ -61,25 +61,20 @@ class _AvatarRiveState extends State<AvatarRive> {
         }
       },
       child: Container(
-        padding: EdgeInsets.all(2),
+        clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white.withOpacity(0.7),
+          color: Colors.black,
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.elliptical(600, 200),
+          ),
         ),
-        child: Container(
-          clipBehavior: Clip.hardEdge,
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            shape: BoxShape.circle,
-          ),
-          child: RiveAnimation.asset(
-            'assets/rive/avatars.riv',
-            artboard: widget.artBoard,
-            animations: animations,
-            stateMachines: ['State_Machine'],
-            onInit: _onRiveInit,
-            fit: BoxFit.contain,
-          ),
+        child: RiveAnimation.asset(
+          'assets/rive/avatars.riv',
+          artboard: widget.artBoard,
+          animations: animations,
+          stateMachines: ['State_Machine'],
+          onInit: _onRiveInit,
+          fit: BoxFit.contain,
         ),
       ),
     );

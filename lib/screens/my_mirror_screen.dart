@@ -333,7 +333,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                               painter: ProfilePainter(),
                                               child: Padding(
                                                 padding: const EdgeInsets.only(
-                                                    bottom: 10.0),
+                                                    bottom: 5.0),
                                                 child: Column(
                                                   children: [
                                                     Row(
@@ -390,9 +390,6 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                                         )
                                                       ],
                                                     ),
-                                                    SizedBox(
-                                                      height: 10,
-                                                    ),
                                                     Expanded(
                                                       child: Center(
                                                         child: AvatarRive(
@@ -409,9 +406,6 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                                         ),
                                                       ),
                                                     ),
-                                                    SizedBox(
-                                                      height: 5,
-                                                    )
                                                   ],
                                                 ),
                                               ),
