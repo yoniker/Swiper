@@ -8,6 +8,7 @@ import 'package:betabeta/screens/my_mirror_screen.dart';
 import 'package:betabeta/screens/onboarding/tutorial_screen_starter.dart';
 import 'package:betabeta/screens/profile_edit_screen.dart';
 import 'package:betabeta/services/aws_networking.dart';
+import 'package:betabeta/widgets/animated_widgets/animated_color_text_widget.dart';
 import 'package:betabeta/widgets/rounded_picture_button.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -17,7 +18,6 @@ import 'package:betabeta/widgets/circle_button.dart';
 import 'package:betabeta/widgets/clickable.dart';
 import 'package:betabeta/widgets/custom_scrollview_take_all_available_space.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
-import 'package:betabeta/widgets/main_app_box.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:extended_image/extended_image.dart';
@@ -165,7 +165,8 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
                                     ),
                                     RoundedButton(
                                       elevation: 0,
-                                      name: 'Edit Profile',
+                                      height: 2,
+                                      name: 'Edit profile',
                                       onTap: () async {
                                         await Get.toNamed(
                                             ProfileEditScreen.routeName);
@@ -176,7 +177,7 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
                                     SizedBox(
                                       height:
                                           MediaQuery.of(context).size.height *
-                                              0.03,
+                                              0.02,
                                     )
                                   ],
                                 ),
@@ -208,12 +209,17 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
                     top: MediaQuery.of(context).size.height * 0.02,
                     right: MediaQuery.of(context).size.width * 0.015),
                 children: [
+                  AnimatedColorTextWidget(
+                      text: 'Your profile is now being reviewed.',
+                      duration: Duration(milliseconds: 1000),
+                      textStyle:
+                          titleStyle.copyWith(fontSize: adaptiveFontSize)),
                   Text(
-                    'Thank you and welcome to Voilà! Your profile is now being reviewed',
+                    'We\'ll update you here.',
                     style: titleStyle.copyWith(fontSize: adaptiveFontSize),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.02,
+                    height: MediaQuery.of(context).size.height * 0.01,
                   ),
                   Text(
                     'In the meantime, check this out.. 😉 ',
@@ -262,7 +268,7 @@ class _PendingApprovementScreenState extends State<PendingApprovementScreen>
                     height: MediaQuery.of(context).size.height * 0.02,
                   ),
                   Text(
-                    "Try the Celeb Look-A-Like , Mirror on the wall & invite friends! (It will help you get approved faster!)",
+                    "Invite your friends! (It will help you get approved faster!)",
                     style: titleStyle.copyWith(
                         color: Colors.black54, fontSize: adaptiveFontSize),
                     textAlign: TextAlign.left,

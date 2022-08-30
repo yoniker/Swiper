@@ -1,14 +1,12 @@
 import 'dart:async';
 
 import 'package:betabeta/constants/onboarding_consts.dart';
-import 'package:betabeta/screens/onboarding/onboarding_pageview_screen.dart';
 import 'package:betabeta/services/settings_model.dart';
-import 'package:betabeta/services/onboarding_flow_controller.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
-import 'package:betabeta/widgets/onboarding/progress_bar.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:intl/intl.dart' as intl;
 
 class AboutMeOnboardingScreen extends StatefulWidget {
   static const String routeName = '/aboutMeOnboardingScreen';
@@ -23,10 +21,15 @@ class AboutMeOnboardingScreen extends StatefulWidget {
 }
 
 class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
+  bool isRTL(String text) {
+    return intl.Bidi.detectRtlDirectionality(text);
+  }
+
   String aboutMeText = '';
   bool clickOnDisable = false;
   Timer? _debounce;
   int _count = 0;
+  TextDirection? textDirectionAboutMe = TextDirection.ltr;
 
   @override
   Widget build(BuildContext context) {
@@ -107,11 +110,26 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
                             icon: Icons.send,
                             onType: (value) {
                               aboutMeText = value;
-                              final RegExp regExp = new RegExp(r"[\w-._]+");
+                              setState(() {
+                                if (isRTL(aboutMeText)) {
+                                  textDirectionAboutMe = TextDirection.rtl;
+                                } else {
+                                  textDirectionAboutMe = TextDirection.ltr;
+                                }
+                              });
+
+                              final RegExp regExp = textDirectionAboutMe ==
+                                      TextDirection.rtl
+                                  ? RegExp(
+                                      r"[^\x00-\x7F\u00E2\u00E4\u00E8\u00E9\u00EA\u00EB\u00EE\u00EF\u00F4\u0153\u00F9\u00FB\u00FC\u00FF\u00E7\u00C0\u00C2\u00C4\u00C8\u00C9\u00CA\u00CB\u00CE\u00CF\u00D4\u0152\u00D9\u00DB\u00DC\u0178\u00C7]+")
+                                  : RegExp(r"[\w-._]+");
+
                               final Iterable matches = regExp.allMatches(value);
                               _count = matches.length;
-                              setState(() {});
+
+                              print(textDirectionAboutMe);
                             },
+                            textDirection: textDirectionAboutMe,
                             maxCharacters: 500,
                             keyboardType: TextInputType.multiline,
                             maxLines: 15,

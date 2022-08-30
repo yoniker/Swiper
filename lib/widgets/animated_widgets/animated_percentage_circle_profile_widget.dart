@@ -146,7 +146,7 @@ class _AnimatedPercentageCircleProfileWidgetState
               ),
             ),
             child: Text(
-              '${(_animation.value * (percentIndicator)).toInt()}% done',
+              '${(_animation.value * (percentIndicator)).toInt()}% Complete',
               maxLines: 1,
               style: kTypeTextStyle.copyWith(
                   color: _colorTween.value,

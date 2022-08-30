@@ -1019,7 +1019,10 @@ class _PhotoViewState extends State<PhotoView> {
       alignment: Alignment.center,
       heightFactor: 1.0,
       widthFactor: widget.descriptionWidthFraction,
-      child: widget.descriptionWidget,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: widget.descriptionWidget,
+      ),
     );
   }
 
@@ -1125,6 +1128,8 @@ class _PhotoViewState extends State<PhotoView> {
         children: [
           // declare the ImageLayer of the PhotoView.
           _imageLayer(),
+          // declare the CarouselLayer of the PhotoView.
+          if (widget.showCarousel) _carouselLayer(),
           Align(
             alignment: Alignment.bottomCenter,
             child: ConstrainedBox(
@@ -1162,9 +1167,6 @@ class _PhotoViewState extends State<PhotoView> {
                     // for Explicit Gestures.
                     if (widget.descriptionWidget != null)
                       Expanded(child: _descriptionLayer()),
-
-                    // declare the CarouselLayer of the PhotoView.
-                    if (widget.showCarousel) _carouselLayer(),
                   ],
                 ),
               ),
