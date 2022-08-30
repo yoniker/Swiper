@@ -50,6 +50,8 @@ Future<void> handleBackgroundMessage(RemoteMessage rawMessage) async {
     await NotificationsController.instance.showNewMatchNotification(
         matchedPersonId: matchedPersonId, showSnackIfResumed: false);
   }
+
+  //if it is PUSH_NOTIFICATION_SILENT_NEW_MATCH then literally do nothing here
 }
 
 Future<bool> setupInteractedMessage() async {
@@ -85,6 +87,8 @@ Future<bool> _handleMessageOpenedFromNotification(RemoteMessage message) async {
     Get.offAllNamed(MainNavigationScreen.routeName);
     return true;
   }
+
+  //By definition, no notification for PUSH_NOTIFICATION_SILENT_NEW_MATCH
 
   if (messageData[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY] ==
       API_CONSTS.PUSH_NOTIFICATION_NEW_MESSAGE) {
@@ -302,19 +306,20 @@ class ChatData extends ChangeNotifier {
 
 
     if (message[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY] ==
-        API_CONSTS.PUSH_NOTIFICATION_NEW_MATCH) {
+        API_CONSTS.PUSH_NOTIFICATION_NEW_MATCH || message[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY] == API_CONSTS.PUSH_NOTIFICATION_SILENT_NEW_MATCH) {
       await syncWithServer();
       String? userId = message['user_id'];
       Profile? theUser = userId == null ? null : getUserById(userId);
       if (theUser != null) {
         await ChatData.instance.updateUserDataFromServer(theUser
             .uid); //TODO this is not optimal, update server such that it sends all relevant user info.
-        Get.toNamed(GotNewMatchScreen.routeName,
-            arguments: getUserById(theUser.uid));
+        if(message[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY] ==
+            API_CONSTS.PUSH_NOTIFICATION_NEW_MATCH) {Get.toNamed(GotNewMatchScreen.routeName, arguments: getUserById(theUser.uid));}
       }
 
-      NotificationsController.instance
-          .showNewMatchNotification(matchedPersonId: userId);
+      if(message[API_CONSTS.PUSH_NOTIFICATION_TYPE_KEY] ==
+          API_CONSTS.PUSH_NOTIFICATION_NEW_MATCH) {NotificationsController.instance
+          .showNewMatchNotification(matchedPersonId: userId);}
 
       return;
     }
@@ -337,7 +342,7 @@ class ChatData extends ChangeNotifier {
 
   Future<void> syncWithServer({bool getUserData=false}) async {
     Tuple2<List<InfoMessage>, List<dynamic>> newData =
-        await AWSServer.syncWithServerByTimestamp();
+        await AWSServer.syncWithServerByTimestamp().timeout(Duration(seconds: 5));
     List<InfoMessage> newMessages = newData.item1;
     List<dynamic> unparsedUsers = newData.item2;
     await updateUsersData(unparsedUsers);
@@ -376,9 +381,11 @@ class ChatData extends ChangeNotifier {
 
   Future<bool> onInitApp() async {
     //Returns true if there's a notification navigation thx to interaction from terminated state
+    try{
     updateFcmToken();
-    await syncWithServer(getUserData: true); //Sync with the server as soon as the app starts
     setupStreams();
+    await syncWithServer(getUserData: true);}catch(_){} //Sync with the server as soon as the app starts,if that fails continue anyways,otherwise the app won't load
+
     return await setupInteractedMessage();
   }
 

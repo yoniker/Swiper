@@ -393,7 +393,7 @@ class _MyMirrorScreenState extends State<MyMirrorScreen> {
                                                           },
                                                           child: Icon(
                                                             FontAwesomeIcons
-                                                                .infoCircle,
+                                                                .circleInfo,
                                                             size: 23,
                                                           ),
                                                         )

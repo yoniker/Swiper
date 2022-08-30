@@ -18,8 +18,6 @@ class MatchEngine extends ChangeNotifier {
   Future?
       matchesBeingGotten; //See https://stackoverflow.com/questions/63402499/flutter-how-not-to-call-the-same-service-over-and-over/63402620?noredirect=1#comment112113319_63402620
   MatchSearchStatus _serverMatchesSearchStatus = MatchSearchStatus.empty;
-  LocationCountData _locationCountData =
-      LocationCountData(status: LocationCountStatus.initial_state);
   DateTime lastLocationCheck = DateTime(1990);
   bool listeningToLocation = false;
   static const Duration minIntervalWaitLocation = Duration(minutes: 5);
@@ -84,11 +82,9 @@ class MatchEngine extends ChangeNotifier {
       return;
     }
 
-    if(SettingsData.instance.currentlyPostingSettings){
+    while(SettingsData.instance.currentlyPostingSettings){
       print('Currently new settings being posted, so going to wait for that to complete');
       await Future.delayed(Duration(milliseconds: 500));
-      await getMoreMatchesFromServer();
-      return;
     }
 
     if (!(matchesBeingGotten == null &&
@@ -130,15 +126,11 @@ class MatchEngine extends ChangeNotifier {
         _matches.addAll(newPotentialMatches);
         notifyListeners();
       }
-    } finally {
+    } catch (_) {}
+    finally {
       matchesBeingGotten = null;
       addMatchesIfNeeded();
     }
-  }
-
-  LocationCountData get locationCountData {
-    return LocationCountData.clone(
-        _locationCountData); //So that we will not change it by a mistake
   }
 
   MatchSearchStatus get getServerSearchStatus {
@@ -150,44 +142,9 @@ class MatchEngine extends ChangeNotifier {
     addMatchesIfNeeded();
   }
 
-  Future<void> updateLocationCountData() async {
-    await SettingsData.instance.readSettingsFromShared();
-
-    if (_locationCountData.status == LocationCountStatus.initial_state ||
-        _locationCountData.status == LocationCountStatus.not_enough_users ||
-        _locationCountData.status == LocationCountStatus.unknown_location) {
-      if (_locationCountData == LocationCountStatus.not_enough_users &&
-          DateTime.now().difference(lastLocationCheck) <
-              minIntervalWaitLocation) {
-        print('Too soon to check again user location!');
-        return;
-      }
-      if (SettingsData.instance.longitude == 0 &&
-          SettingsData.instance.latitude == 0) {
-        print(
-            'No user info about location,so no point in addressing the server');
-        _locationCountData =
-            LocationCountData(status: LocationCountStatus.unknown_location);
-        if (!listeningToLocation) {
-          LocationService.instance.addListener(locationListener);
-          listeningToLocation = true;
-        }
-        return;
-      }
-      _locationCountData = await AWSServer.instance.getCountUsersByLocation();
-    }
-  }
-
   void addMatchesIfNeeded() async {
     if (this.length() >= MINIMUM_CACHED_PROFILES) {
       print('no more matches are needed,length is ${this.length()}');
-      return;
-    }
-
-    await updateLocationCountData();
-    if (_locationCountData.status != LocationCountStatus.enough_users) {
-      print(
-          'location count status is ${_locationCountData.status} so not getting users');
       return;
     }
 

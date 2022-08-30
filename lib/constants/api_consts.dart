@@ -6,15 +6,6 @@ enum LocationCountStatus{ //Possible responses from Location count request
 unknown_location, enough_users,not_enough_users, initial_state
 }
 
-class LocationCountData{
-  LocationCountStatus status;
-  int? requiredNumUsers;
-  int? currentNumUsers;
-  LocationCountData({required this.status,this.currentNumUsers,this.requiredNumUsers});
-  LocationCountData.clone(LocationCountData copiedData): this(status: copiedData.status,requiredNumUsers: copiedData.requiredNumUsers,currentNumUsers: copiedData.currentNumUsers);
-
-}
-
 class API_CONSTS{
   static const String MATCHES_SEARCH_STATUS_KEY = 'status';
   static const String MATCHES_SEARCH_MATCHES_KEY = 'matches';
@@ -64,6 +55,7 @@ class API_CONSTS{
   //Possible notification types and fields
   static const String PUSH_NOTIFICATION_TYPE_KEY = 'push_notification_type';
   static const String PUSH_NOTIFICATION_NEW_MATCH = 'new_match';
+  static const String PUSH_NOTIFICATION_SILENT_NEW_MATCH = 'silent_new_match';
   static const String PUSH_NOTIFICATION_MATCH_INFO = 'match_info';
   static const String NEW_READ_RECEIPT = 'new_read_receipt';
   static const String PUSH_NOTIFICATION_NEW_MESSAGE = 'new_message';

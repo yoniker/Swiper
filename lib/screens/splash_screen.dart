@@ -1,5 +1,3 @@
-import 'package:betabeta/constants/api_consts.dart';
-import 'package:betabeta/constants/assets_paths.dart';
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/models/celebs_info_model.dart';
 import 'package:betabeta/screens/onboarding/tutorial_screen_starter.dart';
@@ -53,21 +51,21 @@ class _SplashScreenState extends State<SplashScreen>
     await SettingsData.instance.readSettingsFromShared();
     AppStateInfo.instance;
     await NotificationsController.instance.initialize();
-    await ChatData.initDB();
-    await CelebsInfo.instance.getCelebsFromDatabase();
+    await ChatData.initDB(); //Initizalize DB, not side effects expected
+    CelebsInfo.instance.getCelebsFromDatabase();
   }
 
   Future<void> _initAppAlreadyRegistered() async {
     //Stuff we want to do only if the user is already registered
+    try{
     LocationService.instance.onInit();
     MatchEngine.instance;
     navigatedFromNotification = await ChatData.instance.onInitApp();
-    await AWSServer.instance.updateUserStatusFromServer();
+    await AWSServer.instance.updateUserStatusFromServer();}catch(_){}
   }
 
   Future<String> _chooseRoute() async {
-    // we are making sure that if the user is already logged in at a time and i.e. sharedPreferences data exist
-    // we move to the Main-navigation screen otherwise we move to the LoginScreen.
+    //Choose the next screen based on SettingsData info (shared preferences).
 
     await SettingsData.instance.readSettingsFromShared();
     if (SettingsData.instance.uid.length > 0 &&
@@ -89,7 +87,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   // loads in the shared preference.
   void _load() async {
-    await _initializeApp();
+    try{await _initializeApp();}catch(_){}
     final routeTo = await _chooseRoute();
     print('the route which was chosen is $routeTo');
     if (routeTo == MainNavigationScreen.routeName || routeTo==PendingApprovementScreen.routeName || routeTo==TutorialScreenStarter.routeName) {
@@ -105,7 +103,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.black87,
+      color: Colors.white,
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

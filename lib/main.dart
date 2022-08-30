@@ -65,9 +65,11 @@ class MyHttpOverrides extends HttpOverrides {
   //TODO it's a temporary fix so we can use self signed certificates. DON'T USE IN PRODUCTION
   @override
   HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
+
+      var client = super.createHttpClient(context)
       ..badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
+      return client;
   }
 }
 
