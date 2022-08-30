@@ -1,7 +1,9 @@
+import 'package:betabeta/constants/assets_paths.dart';
 import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/constants/url-consts.dart';
+import 'package:betabeta/screens/account_settings.dart';
 import 'package:betabeta/screens/current_user_profile_view_screen.dart';
 import 'package:betabeta/screens/my_look_a_like_screen.dart';
 import 'package:betabeta/screens/my_mirror_screen.dart';
@@ -17,6 +19,7 @@ import 'package:betabeta/widgets/clickable.dart';
 import 'package:betabeta/widgets/custom_scrollview_take_all_available_space.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
+import 'package:betabeta/widgets/rounded_picture_button.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -257,18 +260,17 @@ class _ProfileScreenState extends State<ProfileScreen>
                       iconSize: adaptiveScaleOfMiddleIconButtons,
                       icon: FontAwesomeIcons.book,
                     ),
-                  )
-                  //   RoundedPictureButton(
-                  //       height: smartButtonsHeight,
-                  //       image: AssetImage(AssetsPaths.editProfilePicture),
-                  //       child: Text(
-                  //         'Edit profile',
-                  //         maxLines: 1,
-                  //         style: LargeTitleStyleWhite,
-                  //       ),
-                  //       onTap: () {
-                  //         Get.toNamed(AccountSettingsScreen.routeName);
-                  //       }),
+                  ),
+                  RoundedPictureButton(
+                      image: AssetImage(AssetsPaths.editProfilePicture),
+                      child: Text(
+                        'Edit profile',
+                        maxLines: 1,
+                        style: LargeTitleStyleWhite,
+                      ),
+                      onTap: () {
+                        print(SettingsData.instance.uid);
+                      }),
                   //   RoundedPictureButton(
                   //     image: AssetImage(AssetsPaths.starPictureCeleb),
                   //     borderRadius: BorderRadius.all(

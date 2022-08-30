@@ -14,6 +14,7 @@ class InputField extends StatelessWidget {
       this.pressed = false,
       this.readonly = false,
       this.showCursor = true,
+      this.textDirection,
       this.icon,
       this.iconHeight = 1,
       this.iconSize,
@@ -36,6 +37,7 @@ class InputField extends StatelessWidget {
   final List<TextInputFormatter>? formatters;
   final TextStyle? style;
   final String? hintText;
+  final TextDirection? textDirection;
   final int maxLines;
   final int minLines;
   final double? iconSize;
@@ -66,6 +68,7 @@ class InputField extends StatelessWidget {
           onFocusChange: onFocusChange,
           child: TextFormField(
             showCursor: showCursor,
+            textDirection: textDirection,
             inputFormatters: formatters,
             controller: controller,
             readOnly: readonly,

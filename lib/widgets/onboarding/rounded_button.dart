@@ -11,6 +11,7 @@ class RoundedButton extends StatelessWidget {
     this.minWidth = 400,
     this.withPadding = true,
     this.showBorder = true,
+    this.height,
     this.textStyle = kButtonText,
     this.decoration,
     this.iconColor,
@@ -20,6 +21,7 @@ class RoundedButton extends StatelessWidget {
   final double minWidth;
   final bool? showBorder;
   final bool? withPadding;
+  final double? height;
   final TextStyle? textStyle;
   final BoxDecoration? decoration;
   final Color? iconColor;
@@ -57,7 +59,7 @@ class RoundedButton extends StatelessWidget {
         color: color,
         onPressed: onTap,
         minWidth: minWidth,
-        height: screenHeight * 0.07,
+        height: height != null ? height : screenHeight * 0.07,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: icon == null

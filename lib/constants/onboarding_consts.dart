@@ -15,7 +15,6 @@ const TextStyle kSmallInfoStyle = TextStyle(
   color: Colors.black54,
   fontWeight: FontWeight.w500,
   fontSize: 15,
-  overflow: TextOverflow.ellipsis,
 );
 const TextStyle kSmallInfoStyleAlert =
     TextStyle(color: Colors.red, fontWeight: FontWeight.w600, fontSize: 16);
