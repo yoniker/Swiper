@@ -79,7 +79,7 @@ class _CurrentUserProfileViewScreenState
           Scaffold(
             // appBar: CustomAppBar(),
             body: MatchCard(
-              scrollController: _scrollController,
+              // scrollController: _scrollController,
               clickable: true,
               showCarousel: true,
               profile: currentUserProfile,
@@ -88,7 +88,8 @@ class _CurrentUserProfileViewScreenState
           ),
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

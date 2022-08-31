@@ -261,16 +261,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                       icon: FontAwesomeIcons.book,
                     ),
                   ),
-                  RoundedPictureButton(
-                      image: AssetImage(AssetsPaths.editProfilePicture),
-                      child: Text(
-                        'Edit profile',
-                        maxLines: 1,
-                        style: LargeTitleStyleWhite,
-                      ),
-                      onTap: () {
-                        print(SettingsData.instance.uid);
-                      }),
+                  // RoundedPictureButton(
+                  //     image: AssetImage(AssetsPaths.editProfilePicture),
+                  //     child: Text(
+                  //       'Edit profile',
+                  //       maxLines: 1,
+                  //       style: LargeTitleStyleWhite,
+                  //     ),
+                  //     onTap: () {
+                  //       print(SettingsData.instance.uid);
+                  //     }),
                   //   RoundedPictureButton(
                   //     image: AssetImage(AssetsPaths.starPictureCeleb),
                   //     borderRadius: BorderRadius.all(
