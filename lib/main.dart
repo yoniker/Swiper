@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:betabeta/screens/admin_introduction_text.dart';
 import 'package:betabeta/screens/advanced_settings_screen.dart';
 import 'package:betabeta/screens/celebrity_selection_screen.dart';
 import 'package:betabeta/screens/chat/chat_screen.dart';
@@ -228,7 +229,11 @@ void main() async {
         GetPage(
             name: MockNewMatchCardPage.routePage,
             page: () => MockNewMatchCardPage()),
-        GetPage(name: ViewMorphScreen.routeName, page: ()=>ViewMorphScreen())
+        GetPage(name: ViewMorphScreen.routeName, page: ()=>ViewMorphScreen()),
+
+        GetPage(name: AdminIntroductionTextScreen.routeName, page: () => AdminIntroductionTextScreen())
+
+
       ],
       title: 'Voilà MVP',
       debugShowCheckedModeBanner: false,

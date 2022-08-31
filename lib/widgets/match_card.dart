@@ -2,6 +2,7 @@ import 'package:betabeta/constants/beta_icon_paths.dart';
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/lists_consts.dart';
 import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/screens/admin_introduction_text.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/screens/full_image_screen.dart';
@@ -153,7 +154,8 @@ class _MatchCardState extends State<MatchCard> {
                             padding: EdgeInsets.all(30),
                             color: Colors.black.withOpacity(0.1),
                             onPressed: () {
-                              print('pressed the message button');
+                              Get.toNamed(AdminIntroductionTextScreen.routeName,arguments: widget.profile);
+                              //AWSServer.instance.adminIntroduce(introductionText:'Placeholder introduction text', userUid:widget.profile.uid);
                             },
                             child: Icon(
                               FontAwesomeIcons.message,

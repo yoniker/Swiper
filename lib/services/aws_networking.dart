@@ -6,6 +6,7 @@ import 'package:betabeta/data_models/celeb.dart';
 import 'package:betabeta/models/celebs_info_model.dart';
 import 'package:betabeta/models/infoMessage.dart';
 import 'package:betabeta/models/profile.dart';
+import 'package:betabeta/services/chatData.dart';
 import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/services/cache_service.dart';
 import 'package:betabeta/constants/enums.dart';
@@ -669,8 +670,12 @@ class AWSServer {
 
   }
 
-  Future<void> adminIntroduce()async{
-    double epochTime = DateTime.now().millisecondsSinceEpoch / 1000;
+  Future<void> adminIntroduce({required String introductionText,required String userUid})async{
+    Uri silentMatchUri = Uri.https(SERVER_ADDR, 'user_data/silent_match/$userUid/${SettingsData.instance.uid}');
+    http.Response response = await http.get(silentMatchUri);
+    if(response.statusCode == 200)
+    {ChatData.instance.sendMessage(userUid, ChatData.encodeTextMessage(introductionText));}
+
 
   }
 
