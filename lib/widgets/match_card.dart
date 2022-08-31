@@ -16,6 +16,7 @@ import 'package:betabeta/widgets/main_app_box.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
@@ -84,40 +85,114 @@ class _MatchCardState extends State<MatchCard> {
             carouselActiveDotColor: activeDot,
           ),
           if (widget.showActionButtons)
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Container(
-                height: 60,
-                width: 60,
-                child: Center(
-                  child: Opacity(
-                    opacity: 1,
-                    child: AnimatedLiveButtonWidget(
-                      child: CircleButton(
-                        elevation: 12,
-                        border: true,
-                        padding: EdgeInsets.all(30),
-                        color: Colors.black.withOpacity(0.1),
-                        onPressed: () {
-                          print(scrollController!.offset);
-                          if (scrollController != null) {
-                            Scrollable.ensureVisible(
-                                descriptionKey.currentContext!,
-                                duration: Duration(milliseconds: 500),
-                                alignment: 0.5);
-                          }
-                        },
-                        child: Icon(
-                          FontAwesomeIcons.chevronDown,
-                          color: Colors.white,
-                          size: 100,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Container(
+                    height: 60,
+                    width: 60,
+                    child: Center(
+                      child: Opacity(
+                        opacity: 1,
+                        child: AnimatedLiveButtonWidget(
+                          child: CircleButton(
+                            elevation: 12,
+                            border: true,
+                            padding: EdgeInsets.all(30),
+                            color: Colors.black.withOpacity(0.1),
+                            onPressed: () {
+                              print('Pressed approve');
+                            },
+                            child: Icon(
+                              FontAwesomeIcons.check,
+                              color: Colors.white,
+                              size: 100,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            )
+
+
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Container(
+                    height: 60,
+                    width: 60,
+                    child: Center(
+                      child: Opacity(
+                        opacity: 1,
+                        child: AnimatedLiveButtonWidget(
+                          child: CircleButton(
+                            elevation: 12,
+                            border: true,
+                            padding: EdgeInsets.all(30),
+                            color: Colors.black.withOpacity(0.1),
+                            onPressed: () {
+                              print('pressed the message button');
+                            },
+                            child: Icon(
+                              FontAwesomeIcons.message,
+                              color: Colors.white,
+                              size: 100,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+
+
+
+
+
+
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Container(
+                    height: 60,
+                    width: 60,
+                    child: Center(
+                      child: Opacity(
+                        opacity: 1,
+                        child: AnimatedLiveButtonWidget(
+                          child: CircleButton(
+                            elevation: 12,
+                            border: true,
+                            padding: EdgeInsets.all(30),
+                            color: Colors.black.withOpacity(0.1),
+                            onPressed: () {
+                              print(scrollController!.offset);
+                              if (scrollController != null) {
+                                Scrollable.ensureVisible(
+                                    descriptionKey.currentContext!,
+                                    duration: Duration(milliseconds: 500),
+                                    alignment: 0.5);
+                              }
+                            },
+                            child: Icon(
+                              FontAwesomeIcons.chevronDown,
+                              color: Colors.white,
+                              size: 100,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+
+
         ],
       ),
     );
