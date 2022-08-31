@@ -8,12 +8,14 @@ class CircleButton extends StatefulWidget {
   final double elevation;
   final EdgeInsets padding;
   final String? label;
+  final bool border;
   const CircleButton(
       {Key? key,
       this.onPressed,
       this.child,
       this.color = backgroundThemeColor,
       this.padding = const EdgeInsets.all(8.0),
+      this.border = false,
       this.label,
       this.elevation = 0})
       : super(key: key);
@@ -32,7 +34,10 @@ class _CircleButtonState extends State<CircleButton> {
           elevation: widget.elevation,
           padding: widget.padding,
           onPressed: widget.onPressed,
-          shape: CircleBorder(),
+          shape: CircleBorder(
+              side: widget.border
+                  ? BorderSide(width: 6, color: Colors.white)
+                  : BorderSide.none),
           child: widget.child,
           color: widget.color,
         ),

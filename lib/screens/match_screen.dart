@@ -90,14 +90,14 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
   Offset bottomCardOffset = Offset(0.0, 1.7);
   SwipeDirection? currentJudgment;
   late double currentInterpolation;
-  late final ScrollController _scrollController;
+  // late final ScrollController _scrollController;
 
   @override
   void initState() {
-    _scrollController = ScrollController()
-      ..addListener(() {
-        setState(() {});
-      });
+    // _scrollController = ScrollController()
+    //   ..addListener(() {
+    //     setState(() {});
+    //   });
     prefetchMatchesImages();
     MatchEngine.instance.addListener(prefetchMatchesImages);
     super.initState();
@@ -105,7 +105,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    // _scrollController.dispose();
     MatchEngine.instance.removeListener(prefetchMatchesImages);
     super.dispose();
   }
@@ -239,7 +239,7 @@ class _MatchCardBuilderState extends State<MatchCardBuilder>
                     },
                     cards: topEngineMatches.map<Widget>((match) {
                       return MatchCard(
-                        scrollController: _scrollController,
+                        // scrollController: _scrollController,
                         key: Key(match!.profile!.uid),
                         profile: match.profile!,
                         showCarousel: true,
