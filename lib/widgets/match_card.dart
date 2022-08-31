@@ -5,8 +5,9 @@ import 'package:betabeta/models/profile.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/screens/full_image_screen.dart';
+import 'package:betabeta/widgets/animated_widgets/animated_live_button_widget.dart';
 import 'package:betabeta/widgets/basic_detail.dart';
-import 'package:betabeta/widgets/bubble_edit_block.dart';
+import 'package:betabeta/widgets/circle_button.dart';
 import 'package:betabeta/widgets/compatibility_scale.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/like_scale.dart';
@@ -24,7 +25,7 @@ class MatchCard extends StatefulWidget {
   MatchCard(
       {Key? key,
       required this.profile,
-      required this.scrollController,
+      // required this.scrollController,
       this.clickable = true,
       this.showCarousel = true,
       this.showActionButtons = true,
@@ -46,13 +47,34 @@ class MatchCard extends StatefulWidget {
   /// Whether to show AI title
   final bool showAI;
 
-  final ScrollController? scrollController;
-
   @override
   _MatchCardState createState() => _MatchCardState();
 }
 
 class _MatchCardState extends State<MatchCard> {
+  final ScrollController _scrollController = ScrollController();
+  bool buttonIsActive = true;
+
+  void scrollbarDisappear() {
+    setState(() {});
+    if (_scrollController.hasClients) {
+      print(_scrollController.offset);
+      if (_scrollController.offset != 0) {
+        //There is no need to show the down arrow again
+        _scrollController.removeListener(scrollbarDisappear);
+        buttonIsActive = false;
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    _scrollController.addListener(scrollbarDisappear);
+    super.initState();
+  }
+
+  final GlobalKey descriptionKey = GlobalKey();
+
   /// This connotes the Widget to display as the background.
   /// This is typically a [PhotoView].
   Widget _buildBackground(BuildContext context) {
@@ -60,19 +82,62 @@ class _MatchCardState extends State<MatchCard> {
         MediaQuery.of(context).orientation == Orientation.portrait;
 
     // returns a [PhotoView] widget.
+
     return FractionallySizedBox(
       alignment: Alignment.center,
       heightFactor: 1.0,
       widthFactor: 1.0,
-      child: PhotoView(
-        isClickable: widget.clickable,
-        initialPhotoIndex: 0,
-        descriptionHeightFraction: _isPotrait ? 0.2 : 0.4,
-        imageUrls: widget.profile.imageUrls,
-        showCarousel: widget.showCarousel,
-        descriptionWidget: _descriptionWidget(),
-        carouselInactiveDotColor: inactiveDot,
-        carouselActiveDotColor: activeDot,
+      child: Stack(
+        alignment: Alignment.bottomRight,
+        children: [
+          PhotoView(
+            isClickable: widget.clickable,
+            initialPhotoIndex: 0,
+            descriptionHeightFraction: _isPotrait ? 0.2 : 0.4,
+            imageUrls: widget.profile.imageUrls,
+            showCarousel: widget.showCarousel,
+            descriptionWidget: _descriptionWidget(),
+            carouselInactiveDotColor: inactiveDot,
+            carouselActiveDotColor: activeDot,
+          ),
+          if (widget.showActionButtons)
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Container(
+                height: 60,
+                width: 60,
+                child: Center(
+                  child: AnimatedOpacity(
+                    opacity: _scrollController.hasClients
+                        ? (_scrollController.offset != 0 ? 0 : 1)
+                        : 1,
+                    duration: Duration(milliseconds: 500),
+                    child: AnimatedLiveButtonWidget(
+                      child: CircleButton(
+                        elevation: 12,
+                        border: true,
+                        padding: EdgeInsets.all(30),
+                        color: Colors.black.withOpacity(0.1),
+                        onPressed: buttonIsActive
+                            ? () {
+                                Scrollable.ensureVisible(
+                                    descriptionKey.currentContext!,
+                                    duration: Duration(milliseconds: 500),
+                                    alignment: 0.5);
+                              }
+                            : null,
+                        child: Icon(
+                          FontAwesomeIcons.chevronDown,
+                          color: Colors.white,
+                          size: 100,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )
+        ],
       ),
     );
   }
@@ -287,6 +352,7 @@ class _MatchCardState extends State<MatchCard> {
         height: 16,
       ),
       Container(
+        key: descriptionKey,
         margin: EdgeInsets.symmetric(horizontal: 15),
         child: Text(
           (widget.profile.description != null &&
@@ -704,7 +770,7 @@ class _MatchCardState extends State<MatchCard> {
               ],
             ),
             child: SingleChildScrollView(
-              controller: widget.scrollController,
+              controller: _scrollController,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -1034,6 +1100,18 @@ class _PhotoViewState extends State<PhotoView> {
       return SizedBox();
     }
     var carousels = List.generate(widget.imageUrls!.length, (index) {
+      // double focusedSize = 12;
+      // double unFocusedSize = 6;
+      // return Container(
+      //   margin: EdgeInsets.symmetric(horizontal: 4),
+      //   key: Key(index.toString()),
+      //   height: index == selectedPhotoIndex ? focusedSize : unFocusedSize,
+      //   width: index == selectedPhotoIndex ? focusedSize : unFocusedSize,
+      //   decoration: BoxDecoration(
+      //     shape: BoxShape.circle,
+      //     color: index == selectedPhotoIndex ? Colors.white : Colors.white38,
+      //   ),
+      // );
       return CarouselDot(
         key: Key(
           index.toString(),
@@ -1057,11 +1135,12 @@ class _PhotoViewState extends State<PhotoView> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
         decoration: BoxDecoration(
-            color: widget.carouselBackgroundColor,
-            borderRadius: BorderRadius.circular(16.0)),
+          color: widget.carouselBackgroundColor,
+          borderRadius: BorderRadius.circular(16.0),
+        ),
         child: widget.imageUrls!.length > 1 && widget.imageUrls != null
             ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: carousels,
               )
             : SizedBox(),
@@ -1084,7 +1163,7 @@ class _PhotoViewState extends State<PhotoView> {
           onTap: _showPrevImg,
           child: FractionallySizedBox(
             heightFactor: 1.0,
-            widthFactor: 0.5,
+            widthFactor: 1.5,
             alignment: Alignment.topLeft,
             child: Container(
               color: Colors.transparent,
@@ -1129,14 +1208,14 @@ class _PhotoViewState extends State<PhotoView> {
           // declare the ImageLayer of the PhotoView.
           _imageLayer(),
           // declare the CarouselLayer of the PhotoView.
-          if (widget.showCarousel) _carouselLayer(),
+          if (widget.showCarousel) SafeArea(child: _carouselLayer()),
           Align(
             alignment: Alignment.bottomCenter,
             child: ConstrainedBox(
               constraints: BoxConstraints(
                 minHeight: 55.0,
                 maxHeight: 200.0,
-                minWidth: 300,
+                minWidth: 200,
                 maxWidth: MediaQuery.of(context).size.width,
               ),
               child: Container(
@@ -1166,7 +1245,9 @@ class _PhotoViewState extends State<PhotoView> {
                     // This is placed above the Gesture Layer to allow
                     // for Explicit Gestures.
                     if (widget.descriptionWidget != null)
-                      Expanded(child: _descriptionLayer()),
+                      Expanded(
+                        child: _descriptionLayer(),
+                      ),
                   ],
                 ),
               ),
@@ -1242,7 +1323,14 @@ class CarouselDot extends StatelessWidget {
             },
             child: DecoratedBox(
               decoration: BoxDecoration(
-                color: isFocused ? activeColor : inactiveColor,
+                boxShadow: [
+                  if (isFocused)
+                    BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        offset: Offset(-1, 1),
+                        blurRadius: 4)
+                ],
+                color: isFocused ? activeColor : Colors.black12,
                 borderRadius: BorderRadius.circular(24.0),
               ),
             ),

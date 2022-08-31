@@ -102,7 +102,7 @@ class _GotNewMatchScreenState extends State<GotNewMatchScreen>
             ),
           ),
           MatchCard(
-            scrollController: _scrollController,
+            // scrollController: _scrollController,
             profile: theUser,
             clickable: true,
             showCarousel: true,
