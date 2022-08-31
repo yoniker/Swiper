@@ -663,4 +663,16 @@ class AWSServer {
   }
 
 
+  Future<void> adminApproveUser(String userUid)async{
+    Uri approveUserUri = Uri.https(SERVER_ADDR, 'user_data/approve_user/$userUid');
+    http.Response response = await http.get(approveUserUri);
+
+  }
+
+  Future<void> adminIntroduce()async{
+    double epochTime = DateTime.now().millisecondsSinceEpoch / 1000;
+
+  }
+
+
 }

@@ -55,7 +55,6 @@ class _OtherUserProfileScreenState extends State<OtherUserProfileScreen> {
                 ? SizedBox()
                 : MatchCard(
                     clickable: true,
-                    // scrollController: _scrollController,
                     showCarousel: true,
                     profile: profileToShow,
                     showActionButtons: false,

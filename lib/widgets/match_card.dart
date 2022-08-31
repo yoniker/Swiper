@@ -7,7 +7,6 @@ import 'package:betabeta/services/match_engine.dart';
 import 'package:betabeta/screens/full_image_screen.dart';
 import 'package:betabeta/widgets/animated_widgets/animated_live_button_widget.dart';
 import 'package:betabeta/widgets/basic_detail.dart';
-import 'package:betabeta/widgets/bubble_edit_block.dart';
 import 'package:betabeta/widgets/circle_button.dart';
 import 'package:betabeta/widgets/compatibility_scale.dart';
 import 'package:betabeta/widgets/global_widgets.dart';
@@ -49,15 +48,33 @@ class MatchCard extends StatefulWidget {
   /// Whether to show AI title
   final bool showAI;
 
-  // final ScrollController? scrollController;
-
   @override
   _MatchCardState createState() => _MatchCardState();
 }
 
 class _MatchCardState extends State<MatchCard> {
+  final ScrollController _scrollController = ScrollController();
+  bool buttonIsActive = true;
+
+  void scrollbarDisappear() {
+    setState(() {});
+    if (_scrollController.hasClients) {
+      print(_scrollController.offset);
+      if (_scrollController.offset != 0) {
+        //There is no need to show the down arrow again
+        _scrollController.removeListener(scrollbarDisappear);
+        buttonIsActive = false;
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    _scrollController.addListener(scrollbarDisappear);
+    super.initState();
+  }
+
   final GlobalKey descriptionKey = GlobalKey();
-  final ScrollController? scrollController = ScrollController();
 
   /// This connotes the Widget to display as the background.
   /// This is typically a [PhotoView].
@@ -104,7 +121,9 @@ class _MatchCardState extends State<MatchCard> {
                             padding: EdgeInsets.all(30),
                             color: Colors.black.withOpacity(0.1),
                             onPressed: () {
-                              print('Pressed approve');
+                              print('Pressed approve for user with used ${widget.profile.uid}');
+                              AWSServer.instance.adminApproveUser(widget.profile.uid);
+
                             },
                             child: Icon(
                               FontAwesomeIcons.check,
@@ -169,13 +188,6 @@ class _MatchCardState extends State<MatchCard> {
                             padding: EdgeInsets.all(30),
                             color: Colors.black.withOpacity(0.1),
                             onPressed: () {
-                              print(scrollController!.offset);
-                              if (scrollController != null) {
-                                Scrollable.ensureVisible(
-                                    descriptionKey.currentContext!,
-                                    duration: Duration(milliseconds: 500),
-                                    alignment: 0.5);
-                              }
                             },
                             child: Icon(
                               FontAwesomeIcons.chevronDown,
@@ -826,7 +838,7 @@ class _MatchCardState extends State<MatchCard> {
               ],
             ),
             child: SingleChildScrollView(
-              controller: scrollController,
+              controller: _scrollController,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

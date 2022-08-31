@@ -142,13 +142,13 @@ class _AnimatedPercentageCircleProfileWidgetState
             decoration: BoxDecoration(
               color: widget.buttonBackgroundColor,
               borderRadius: BorderRadius.all(
-                Radius.circular(20),
+                Radius.circular(30),
               ),
             ),
             child: Text(
               '${(_animation.value * (percentIndicator)).toInt()}% Complete',
               maxLines: 1,
-              style: kTypeTextStyle.copyWith(
+              style: titleStyle.copyWith(
                   color: _colorTween.value,
                   fontSize: 18,
                   fontWeight: FontWeight.bold),
