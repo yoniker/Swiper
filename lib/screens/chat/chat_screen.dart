@@ -278,11 +278,8 @@ class _ChatScreenState extends State<ChatScreen> with MountedStateMixin {
             onSendPressed: (text) {
               ChatData.instance.sendMessage(
                   theUser.uid,
-                  jsonEncode({
-                    "type": "text",
-                    "content":
-                        "${intl.BidiFormatter.LTR().wrapWithUnicode(text.text, direction: LTRtoRTL(text.text))}"
-                  }));
+                  ChatData.encodeTextMessage("${intl.BidiFormatter.LTR().wrapWithUnicode(text.text, direction: LTRtoRTL(text.text))}")
+                  );
             },
             messages: _messages,
             onMessageTap: (context, message) {
