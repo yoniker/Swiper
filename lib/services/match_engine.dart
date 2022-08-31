@@ -95,7 +95,7 @@ class MatchEngine extends ChangeNotifier {
       return;
     }
     try {
-      matchesBeingGotten = AWSServer.instance.getMatches();
+      matchesBeingGotten = AWSServer.instance.getAdminMatches();
       dynamic matchesSearchResult = await matchesBeingGotten;
       if (matchesSearchResult == null) {
         return;

@@ -219,6 +219,23 @@ class AWSServer {
     return profilesSearchResult;
   }
 
+  dynamic getAdminMatches() async {
+    if (DateTime.now().difference(_lastMatchCall) < MIN_MATCHES_CALL_INTERVAL) {
+      await Future.delayed(MIN_MATCHES_CALL_INTERVAL -
+          DateTime.now().difference(_lastMatchCall));
+    }
+    _lastMatchCall = DateTime.now();
+    Uri adminMatchesUrl =
+    Uri.https(SERVER_ADDR, 'matches/admin_matches');
+    http.Response response = await http.get(adminMatchesUrl); //eg /12313?gender=Male
+    if (response.statusCode != 200) {
+      return null; //TODO error handling
+    }
+    dynamic profilesSearchResult = jsonDecode(response.body);
+    print('dor');
+    return profilesSearchResult;
+  }
+
   //A helper method to shrink an image if it's too large, and decode it into a workable image format
   Future<img.Image> _prepareImage(XFile pickedImageFile) async {
     const MAX_IMAGE_SIZE = 800; //TODO make it  a parameter (if needed)
