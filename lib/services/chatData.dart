@@ -155,6 +155,13 @@ class ChatData extends ChangeNotifier {
     } catch (_) {}
   }
 
+  static String encodeTextMessage(String text){
+    return jsonEncode({
+      "type": "text",
+      "content":text
+    });
+  }
+
   Future<void> updateUserBox(String uid, Profile newProfileInformation) async {
     Profile? currentUserProfile = usersBox.get(uid);
     if (currentUserProfile != null &&
