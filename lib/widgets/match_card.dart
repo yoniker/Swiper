@@ -122,6 +122,40 @@ class _MatchCardState extends State<MatchCard> {
                             padding: EdgeInsets.all(30),
                             color: Colors.black.withOpacity(0.1),
                             onPressed: () {
+                              print('Pressed delete account for user with uid ${widget.profile.uid}');
+                              AWSServer.instance.adminDeleteAccount(widget.profile.uid);
+
+                            },
+                            child: Icon(
+                              FontAwesomeIcons.trash,
+                              color: Colors.white,
+                              size: 100,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+
+
+
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Container(
+                    height: 60,
+                    width: 60,
+                    child: Center(
+                      child: Opacity(
+                        opacity: 1,
+                        child: AnimatedLiveButtonWidget(
+                          child: CircleButton(
+                            elevation: 12,
+                            border: true,
+                            padding: EdgeInsets.all(30),
+                            color: Colors.black.withOpacity(0.1),
+                            onPressed: () {
                               print('Pressed approve for user with used ${widget.profile.uid}');
                               AWSServer.instance.adminApproveUser(widget.profile.uid);
 

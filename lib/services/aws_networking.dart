@@ -555,6 +555,13 @@ class AWSServer {
     //TODO check for a successful response and give user feedback if not successful
   }
 
+  Future<void> adminDeleteAccount(String uid) async {
+    Uri deleteAccountUri = Uri.https(
+        SERVER_ADDR, 'user_data/delete_account/$uid');
+    http.Response response = await http.get(deleteAccountUri);
+    //TODO check for a successful response and give user feedback if not successful
+  }
+
   Future<Tuple3<List<String>?,String?, ServerResponse>>
       getProfileFacesAnalysis() async {
     Uri getAnalysisUri = Uri.https(SERVER_ADDR,
