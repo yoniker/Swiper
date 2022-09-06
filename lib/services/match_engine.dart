@@ -11,14 +11,15 @@ import 'dart:collection';
 
 class MatchEngine extends ChangeNotifier {
   static const MINIMUM_CACHED_PROFILES =
-      15; //TODO get it from shared preferences rather than hardcoded
+  15; //TODO get it from shared preferences rather than hardcoded
   Queue<Match> _previousMatches; //This will be a stack
   Queue<Match> _matches;
   bool? addedMoreProfiles;
   Future?
-      matchesBeingGotten; //See https://stackoverflow.com/questions/63402499/flutter-how-not-to-call-the-same-service-over-and-over/63402620?noredirect=1#comment112113319_63402620
+  matchesBeingGotten; //See https://stackoverflow.com/questions/63402499/flutter-how-not-to-call-the-same-service-over-and-over/63402620?noredirect=1#comment112113319_63402620
   MatchSearchStatus _serverMatchesSearchStatus = MatchSearchStatus.empty;
   DateTime lastLocationCheck = DateTime(1990);
+  DateTime _lastEngineResetTime = DateTime(1990);
   bool listeningToLocation = false;
   static const Duration minIntervalWaitLocation = Duration(minutes: 5);
 
@@ -33,6 +34,7 @@ class MatchEngine extends ChangeNotifier {
 
   clear() {
     _matches.clear();
+    _lastEngineResetTime = DateTime.now();
     _serverMatchesSearchStatus = MatchSearchStatus.empty;
     notifyListeners();
     addMatchesIfNeeded();
@@ -68,7 +70,7 @@ class MatchEngine extends ChangeNotifier {
     return _matches.toList().sublist(0,min(maxNumMatchesPreload, _matches.length));
 
 
-    }
+  }
 
   RegistrationStatus get registrationStatus => SettingsData.instance.registrationStatus; //Just forward this value- listeners of MatchEngine shouldn't care for the fact that it is taken from SettingsData
 
@@ -95,14 +97,20 @@ class MatchEngine extends ChangeNotifier {
       return;
     }
     try {
-      matchesBeingGotten = AWSServer.instance.getMatches();
-      dynamic matchesSearchResult = await matchesBeingGotten;
+      dynamic matchesSearchResult = null;
+      while(true){
+        var currentTime = DateTime.now();
+        matchesBeingGotten = AWSServer.instance.getMatches();
+        matchesSearchResult = await matchesBeingGotten;
+        if(currentTime.isAfter(_lastEngineResetTime))  break; //This makes sure that the current matches are "fresh" and represent what the user wants
+      }
+
       if (matchesSearchResult == null) {
         return;
       }
       MatchSearchStatus newStatus = MatchSearchStatus.values.firstWhere(
-          (s) =>
-              s.name ==
+              (s) =>
+          s.name ==
               matchesSearchResult[API_CONSTS.MATCHES_SEARCH_STATUS_KEY],
           orElse: () => MatchSearchStatus.empty);
       if (_serverMatchesSearchStatus != newStatus) {
@@ -111,7 +119,7 @@ class MatchEngine extends ChangeNotifier {
       }
       print('STATUS OF FINDING MATCHES IS $_serverMatchesSearchStatus');
       dynamic matches =
-          matchesSearchResult[API_CONSTS.MATCHES_SEARCH_MATCHES_KEY];
+      matchesSearchResult[API_CONSTS.MATCHES_SEARCH_MATCHES_KEY];
       List newProfiles = matches.map<Profile>((match) {
         return Profile.fromJson(match);
       }).toList();
@@ -122,7 +130,7 @@ class MatchEngine extends ChangeNotifier {
         //Remove all of the profiles in the queue that already exist so there is no duplicate.
         var currentUids = _matches.map((match) => match.profile?.uid ?? '');
         newPotentialMatches.removeWhere(
-            (newMatch) => currentUids.contains(newMatch.profile?.uid));
+                (newMatch) => currentUids.contains(newMatch.profile?.uid));
         _matches.addAll(newPotentialMatches);
         notifyListeners();
       }
