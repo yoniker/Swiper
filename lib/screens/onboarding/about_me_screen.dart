@@ -5,7 +5,6 @@ import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/onboarding/input_field.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:intl/intl.dart' as intl;
 
 class AboutMeOnboardingScreen extends StatefulWidget {
@@ -61,7 +60,7 @@ class _AboutMeOnboardingScreenState extends State<AboutMeOnboardingScreen> {
         body: RawScrollbar(
           thumbColor: Colors.black54,
           thickness: 5,
-          isAlwaysShown: true,
+          thumbVisibility: true,
           child: CustomScrollView(
             scrollDirection: Axis.vertical,
             reverse: true,

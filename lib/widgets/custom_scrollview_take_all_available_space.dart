@@ -28,7 +28,7 @@ class CustomScrollViewTakesAllAvailableSpace extends StatelessWidget {
             thumbColor: Colors.black87,
             trackVisibility: true,
             trackRadius: Radius.circular(20),
-            trackColor: Colors.red,
+            trackColor: Colors.grey[300],
             radius: Radius.circular(20),
             thumbVisibility: true,
             child: CustomScrollView(

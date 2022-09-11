@@ -82,7 +82,7 @@ class _TermsScreenState extends State<TermsScreen> {
                     radius: Radius.circular(30),
                     scrollbarOrientation: ScrollbarOrientation.right,
                     child: Padding(
-                      padding: const EdgeInsets.all(30.0),
+                      padding: const EdgeInsets.all(20.0),
                       child: SingleChildScrollView(
                         controller: scrollController,
                         reverse: false,
@@ -111,7 +111,7 @@ class _TermsScreenState extends State<TermsScreen> {
                               height: 10,
                             ),
                             Text(
-                              'We are excited for you to join our community! \nBefore you swipe, please follow these guidelines:',
+                              'Please follow these guidelines:',
                               style: kSmallInfoStyleWhite.copyWith(
                                 fontSize: 16,
                                 color: Colors.white.withOpacity(0.8),
@@ -119,7 +119,7 @@ class _TermsScreenState extends State<TermsScreen> {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.only(bottom: 20, top: 20),
+                                  const EdgeInsets.only(bottom: 5, top: 20),
                               child: Row(
                                 children: [
                                   Text(
@@ -145,7 +145,7 @@ class _TermsScreenState extends State<TermsScreen> {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.only(bottom: 20, top: 20),
+                                  const EdgeInsets.only(bottom: 5, top: 20),
                               child: Row(
                                 children: [
                                   Text(
@@ -163,7 +163,7 @@ class _TermsScreenState extends State<TermsScreen> {
                               ),
                             ),
                             Text(
-                              'Treat others the same way you want to be treated.',
+                              'Treat others the same way you would want to be treated.',
                               style: kSmallInfoStyleWhite.copyWith(
                                 fontSize: 16,
                                 color: Colors.white.withOpacity(0.8),
@@ -171,7 +171,7 @@ class _TermsScreenState extends State<TermsScreen> {
                             ),
                             Padding(
                               padding:
-                                  const EdgeInsets.only(bottom: 20, top: 20),
+                                  const EdgeInsets.only(bottom: 5, top: 20),
                               child: Row(
                                 children: [
                                   Text(
@@ -189,7 +189,7 @@ class _TermsScreenState extends State<TermsScreen> {
                               ),
                             ),
                             Text(
-                              'Keep your personal information to yourself. \nDont give your phone number too quickly!',
+                              'Don\'t give away your personal information too quickly!',
                               style: kSmallInfoStyleWhite.copyWith(
                                 fontSize: 16,
                                 color: Colors.white.withOpacity(0.8),
