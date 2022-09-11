@@ -187,7 +187,7 @@ class _PhoneScreenState extends State<PhoneScreen> {
                             duration: Duration(milliseconds: 300),
                             height: showVerificationWidget
                                 ? 0
-                                : MediaQuery.of(context).size.height * 0.08,
+                                : MediaQuery.of(context).size.height * 0.10,
                             child: SingleChildScrollView(
                               physics: NeverScrollableScrollPhysics(),
                               child: PhoneNumberCollector(

@@ -58,7 +58,6 @@ class InputField extends StatelessWidget {
       color: Colors.transparent,
       child: Theme(
         data: ThemeData(
-          textSelectionHandleColor: Colors.blue,
           textSelectionTheme: TextSelectionThemeData(
               selectionColor: Colors.blue[100],
               cursorColor: Colors.blue,

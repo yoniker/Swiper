@@ -1,5 +1,4 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
-import 'package:betabeta/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedLoveVoilaHeart extends StatefulWidget {
