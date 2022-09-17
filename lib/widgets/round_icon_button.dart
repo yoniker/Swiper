@@ -5,22 +5,30 @@ class RoundIconButton extends StatelessWidget {
   final Color? iconColor;
   final double? size;
   final VoidCallback? onPressed;
+  final Color buttonColor;
+  final double? iconSize;
 
   RoundIconButton.large({
     this.icon,
     this.iconColor,
+    this.buttonColor = Colors.white,
+    this.iconSize,
     this.onPressed,
   }) : size = 60.0;
 
   RoundIconButton.small({
     this.icon,
     this.iconColor,
+    this.buttonColor = Colors.white,
+    this.iconSize,
     this.onPressed,
   }) : size = 50.0;
 
-   RoundIconButton({
+  RoundIconButton({
     this.icon,
     this.iconColor,
+    this.buttonColor = Colors.white,
+    this.iconSize,
     this.size,
     this.onPressed,
   });
@@ -31,31 +39,25 @@ class RoundIconButton extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(color: const Color(0x11000000), blurRadius: 10.0),
-          ]),
-      child:  RawMaterialButton(
-        shape:  CircleBorder(),
+        shape: BoxShape.circle,
+        color: buttonColor,
+        boxShadow: [
+          BoxShadow(color: const Color(0x11000000), blurRadius: 10.0),
+        ],
+      ),
+      child: RawMaterialButton(
+        shape: CircleBorder(),
         elevation: 0.0,
-        child:  Icon(
+        child: Icon(
           icon,
           color: iconColor,
+          size: iconSize,
         ),
         onPressed: onPressed,
       ),
     );
   }
 }
-
-
-
-
-
-
-
-
 
 class RoundButton extends StatelessWidget {
   final Widget? child;
@@ -89,10 +91,10 @@ class RoundButton extends StatelessWidget {
           boxShadow: [
             BoxShadow(color: const Color(0x11000000), blurRadius: 10.0),
           ]),
-      child:  RawMaterialButton(
-        shape:  CircleBorder(),
+      child: RawMaterialButton(
+        shape: CircleBorder(),
         elevation: 0.0,
-        child:  child,
+        child: child,
         onPressed: onPressed,
       ),
     );

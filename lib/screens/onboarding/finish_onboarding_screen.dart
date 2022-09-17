@@ -34,15 +34,14 @@ class _FinishOnboardingScreenState extends State<FinishOnboardingScreen> {
   @override
   void initState() {
     _controller =
-    VideoPlayerController.asset('assets/onboarding/videos/startvideo.mp4')
-      ..initialize().then((_) {
-        _controller.seekTo(Duration(seconds: 36));
-        _controller.play();
-        _controller.setLooping(true);
-        setState(() {});
-      });
+        VideoPlayerController.asset('assets/onboarding/videos/startvideo.mp4')
+          ..initialize().then((_) {
+            _controller.seekTo(Duration(seconds: 36));
+            _controller.play();
+            _controller.setLooping(true);
+            setState(() {});
+          });
     super.initState();
-
   }
 
   @override
@@ -61,7 +60,7 @@ class _FinishOnboardingScreenState extends State<FinishOnboardingScreen> {
             ),
           ),
           RawScrollbar(
-            isAlwaysShown: true,
+            thumbVisibility: true,
             thumbColor: Colors.white24,
             thickness: 5,
             child: CustomScrollView(

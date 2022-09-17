@@ -56,6 +56,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -94,142 +95,160 @@ void main() async {
     // statusBarIconBrightness: Brightness.dark,
   ));
   runApp(
-    GetMaterialApp(
-      localizationsDelegates: [
-        // ... app-specific localization delegate[s] here
-        // TODO: uncomment the line below after codegen
-        // AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: [
-        const Locale('en', ''), // English, no country code
-        const Locale('ar', ''), // Arabic, no country code
-        const Locale('he', ''),
-        const Locale.fromSubtags(
-            languageCode: 'zh'), // Chinese *See Advanced Locales below*
-        // ... other locales the app supports
-      ],
-      home: SplashScreen(),
-      getPages: [
-        GetPage(
-          name: ProfileScreen.routeName,
-          page: () => ProfileScreen(),
-        ),
-        GetPage(
-            name: UploadImagesOnboardingScreen.routeName,
-            page: () => UploadImagesOnboardingScreen()),
-        GetPage(
-            name: FinishOnboardingScreen.routeName,
-            page: () => FinishOnboardingScreen()),
-        GetPage(
-            name: AboutMeOnboardingScreen.routeName,
-            page: () => AboutMeOnboardingScreen()),
-        GetPage(
-            name: RelationshipTypeOnboardingScreen.routeName,
-            page: () => RelationshipTypeOnboardingScreen()),
-        GetPage(
-            name: EmailAddressScreen.routeName,
-            page: () => EmailAddressScreen()),
-        GetPage(
-            name: OrientationScreen.routeName, page: () => OrientationScreen()),
-        GetPage(name: PronounScreen.routeName, page: () => PronounScreen()),
-        GetPage(
-            name: BirthdayOnboardingScreen.routeName,
-            page: () => BirthdayOnboardingScreen()),
-        GetPage(name: GetNameScreen.routeName, page: () => GetNameScreen()),
-        GetPage(name: TermsScreen.routeName, page: () => TermsScreen()),
-        GetPage(
-            name: NotificationsPermissionScreen.routeName,
-            page: () => NotificationsPermissionScreen()),
-        GetPage(
-            name: LocationPermissionScreen.routeName,
-            page: () => LocationPermissionScreen()),
-        GetPage(name: PhoneScreen.routeName, page: () => PhoneScreen()),
-        GetPage(name: WelcomeScreen.routeName, page: () => WelcomeScreen()),
-        GetPage(name: SplashScreen.routeName, page: () => SplashScreen()),
-        GetPage(
-            name: MainNavigationScreen.routeName,
-            page: () => MainNavigationScreen()),
-        GetPage(
-            name: AdvancedSettingsScreen.routeName,
-            page: () => AdvancedSettingsScreen()),
-        GetPage(
-            name: ScreenCelebritySelection.routeName,
-            page: () => ScreenCelebritySelection()),
-        GetPage(
-            name: FaceSelectionScreen.routeName,
-            page: () => FaceSelectionScreen()), //had args previously
-        GetPage(
-            name: SwipeSettingsScreen.routeName,
-            page: () => SwipeSettingsScreen()),
-        GetPage(name: ChatScreen.routeName, page: () => ChatScreen()),
-        GetPage(
-            name: AccountSettingsScreen.routeName,
-            page: () => AccountSettingsScreen()),
-        GetPage(
-            name: ConversationsScreen.routeName,
-            page: () => ConversationsScreen()),
-        GetPage(name: MatchScreen.routeName, page: () => MatchScreen()),
-        GetPage(
-            name: NotificationScreen.routeName,
-            page: () => NotificationScreen()),
-        GetPage(
-            name: ProfileEditScreen.routeName, page: () => ProfileEditScreen()),
-        GetPage(
-            name: SwipeSettingsScreen.routeName,
-            page: () => SwipeSettingsScreen()),
-        GetPage(name: ViewLikesScreen.routeName, page: () => ViewLikesScreen()),
-        GetPage(name: FullImageScreen.routeName, page: () => FullImageScreen()),
-        GetPage(
-            name: GotNewMatchScreen.routeName, page: () => GotNewMatchScreen()),
-        GetPage(name: VoilaPage.routeName, page: () => VoilaPage()),
-        GetPage(
-            name: CurrentUserProfileViewScreen.routeName,
-            page: () => CurrentUserProfileViewScreen()),
-        GetPage(
-            name: PronounsEditScreen.routeName,
-            page: () => PronounsEditScreen()),
-        GetPage(
-            name: OrientationEditScreen.routeName,
-            page: () => OrientationEditScreen()),
-        GetPage(name: MyHobbiesScreen.routeName, page: () => MyHobbiesScreen()),
-        GetPage(name: FitnessScreen.routeName, page: () => FitnessScreen()),
-        GetPage(name: SmokingScreen.routeName, page: () => SmokingScreen()),
-        GetPage(name: KidsScreen.routeName, page: () => KidsScreen()),
-        GetPage(name: DrinkingScreen.routeName, page: () => DrinkingScreen()),
-        GetPage(name: CovidScreen.routeName, page: () => CovidScreen()),
-        GetPage(name: EducationScreen.routeName, page: () => EducationScreen()),
-        GetPage(name: MyPetsScreen.routeName, page: () => MyPetsScreen()),
-        GetPage(
-            name: OtherUserProfileScreen.routeName,
-            page: () => OtherUserProfileScreen()),
-        GetPage(
-            name: LookingForScreen.routeName, page: () => LookingForScreen()),
-        GetPage(
-            name: CompleteProfilePageViewScreen.routeName,
-            page: () => CompleteProfilePageViewScreen()),
-        GetPage(
-            name: TutorialScreenStarter.routeName,
-            page: () => TutorialScreenStarter()),
-        GetPage(
-            name: MyLookALikeScreen.routeName, page: () => MyLookALikeScreen()),
-        GetPage(
-            name: MyMirrorScreen.routeName, page: () => MyMirrorScreen()),
-        GetPage(
-            name: PendingApprovementScreen.routeName,
-            page: () => PendingApprovementScreen()),
-        GetPage(
-            name: OnboardingPageViewScreen.routeName,
-            page: () => OnboardingPageViewScreen()),
-        GetPage(
-            name: MockNewMatchCardPage.routePage,
-            page: () => MockNewMatchCardPage()),
-        GetPage(name: ViewMorphScreen.routeName, page: ()=>ViewMorphScreen())
-      ],
-      title: 'Voilà MVP',
-      debugShowCheckedModeBanner: false,
+    ScreenUtilInit(
+      designSize: const Size(392.72727272727275, 781.0909090909091),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (BuildContext context, Widget? child) {
+        return GetMaterialApp(
+          localizationsDelegates: [
+            // ... app-specific localization delegate[s] here
+            // TODO: uncomment the line below after codegen
+            // AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: [
+            const Locale('en', ''), // English, no country code
+            const Locale('ar', ''), // Arabic, no country code
+            const Locale('he', ''),
+            const Locale.fromSubtags(
+                languageCode: 'zh'), // Chinese *See Advanced Locales below*
+            // ... other locales the app supports
+          ],
+          home: SplashScreen(),
+          getPages: [
+            GetPage(
+              name: ProfileScreen.routeName,
+              page: () => ProfileScreen(),
+            ),
+            GetPage(
+                name: UploadImagesOnboardingScreen.routeName,
+                page: () => UploadImagesOnboardingScreen()),
+            GetPage(
+                name: FinishOnboardingScreen.routeName,
+                page: () => FinishOnboardingScreen()),
+            GetPage(
+                name: AboutMeOnboardingScreen.routeName,
+                page: () => AboutMeOnboardingScreen()),
+            GetPage(
+                name: RelationshipTypeOnboardingScreen.routeName,
+                page: () => RelationshipTypeOnboardingScreen()),
+            GetPage(
+                name: EmailAddressScreen.routeName,
+                page: () => EmailAddressScreen()),
+            GetPage(
+                name: OrientationScreen.routeName,
+                page: () => OrientationScreen()),
+            GetPage(name: PronounScreen.routeName, page: () => PronounScreen()),
+            GetPage(
+                name: BirthdayOnboardingScreen.routeName,
+                page: () => BirthdayOnboardingScreen()),
+            GetPage(name: GetNameScreen.routeName, page: () => GetNameScreen()),
+            GetPage(name: TermsScreen.routeName, page: () => TermsScreen()),
+            GetPage(
+                name: NotificationsPermissionScreen.routeName,
+                page: () => NotificationsPermissionScreen()),
+            GetPage(
+                name: LocationPermissionScreen.routeName,
+                page: () => LocationPermissionScreen()),
+            GetPage(name: PhoneScreen.routeName, page: () => PhoneScreen()),
+            GetPage(name: WelcomeScreen.routeName, page: () => WelcomeScreen()),
+            GetPage(name: SplashScreen.routeName, page: () => SplashScreen()),
+            GetPage(
+                name: MainNavigationScreen.routeName,
+                page: () => MainNavigationScreen()),
+            GetPage(
+                name: AdvancedSettingsScreen.routeName,
+                page: () => AdvancedSettingsScreen()),
+            GetPage(
+                name: ScreenCelebritySelection.routeName,
+                page: () => ScreenCelebritySelection()),
+            GetPage(
+                name: FaceSelectionScreen.routeName,
+                page: () => FaceSelectionScreen()), //had args previously
+            GetPage(
+                name: SwipeSettingsScreen.routeName,
+                page: () => SwipeSettingsScreen()),
+            GetPage(name: ChatScreen.routeName, page: () => ChatScreen()),
+            GetPage(
+                name: AccountSettingsScreen.routeName,
+                page: () => AccountSettingsScreen()),
+            GetPage(
+                name: ConversationsScreen.routeName,
+                page: () => ConversationsScreen()),
+            GetPage(name: MatchScreen.routeName, page: () => MatchScreen()),
+            GetPage(
+                name: NotificationScreen.routeName,
+                page: () => NotificationScreen()),
+            GetPage(
+                name: ProfileEditScreen.routeName,
+                page: () => ProfileEditScreen()),
+            GetPage(
+                name: SwipeSettingsScreen.routeName,
+                page: () => SwipeSettingsScreen()),
+            GetPage(
+                name: ViewLikesScreen.routeName, page: () => ViewLikesScreen()),
+            GetPage(
+                name: FullImageScreen.routeName, page: () => FullImageScreen()),
+            GetPage(
+                name: GotNewMatchScreen.routeName,
+                page: () => GotNewMatchScreen()),
+            GetPage(name: VoilaPage.routeName, page: () => VoilaPage()),
+            GetPage(
+                name: CurrentUserProfileViewScreen.routeName,
+                page: () => CurrentUserProfileViewScreen()),
+            GetPage(
+                name: PronounsEditScreen.routeName,
+                page: () => PronounsEditScreen()),
+            GetPage(
+                name: OrientationEditScreen.routeName,
+                page: () => OrientationEditScreen()),
+            GetPage(
+                name: MyHobbiesScreen.routeName, page: () => MyHobbiesScreen()),
+            GetPage(name: FitnessScreen.routeName, page: () => FitnessScreen()),
+            GetPage(name: SmokingScreen.routeName, page: () => SmokingScreen()),
+            GetPage(name: KidsScreen.routeName, page: () => KidsScreen()),
+            GetPage(
+                name: DrinkingScreen.routeName, page: () => DrinkingScreen()),
+            GetPage(name: CovidScreen.routeName, page: () => CovidScreen()),
+            GetPage(
+                name: EducationScreen.routeName, page: () => EducationScreen()),
+            GetPage(name: MyPetsScreen.routeName, page: () => MyPetsScreen()),
+            GetPage(
+                name: OtherUserProfileScreen.routeName,
+                page: () => OtherUserProfileScreen()),
+            GetPage(
+                name: LookingForScreen.routeName,
+                page: () => LookingForScreen()),
+            GetPage(
+                name: CompleteProfilePageViewScreen.routeName,
+                page: () => CompleteProfilePageViewScreen()),
+            GetPage(
+                name: TutorialScreenStarter.routeName,
+                page: () => TutorialScreenStarter()),
+            GetPage(
+                name: MyLookALikeScreen.routeName,
+                page: () => MyLookALikeScreen()),
+            GetPage(
+                name: MyMirrorScreen.routeName, page: () => MyMirrorScreen()),
+            GetPage(
+                name: PendingApprovementScreen.routeName,
+                page: () => PendingApprovementScreen()),
+            GetPage(
+                name: OnboardingPageViewScreen.routeName,
+                page: () => OnboardingPageViewScreen()),
+            GetPage(
+                name: MockNewMatchCardPage.routePage,
+                page: () => MockNewMatchCardPage()),
+            GetPage(
+                name: ViewMorphScreen.routeName, page: () => ViewMorphScreen())
+          ],
+          title: 'Voilà MVP',
+          debugShowCheckedModeBanner: false,
+        );
+      },
     ),
   );
 }

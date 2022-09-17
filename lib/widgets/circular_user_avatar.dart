@@ -1,9 +1,11 @@
 import 'package:betabeta/constants/beta_icon_paths.dart';
+import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CircularUserAvatar extends StatelessWidget {
   ///Optional image provider to use for this avatar(otherwise it will be the current user image)
@@ -87,20 +89,37 @@ class CircularUserAvatar extends StatelessWidget {
                 : ExtendedNetworkImageProvider(
                     AWSServer.getProfileImageUrl(_profileImageToShow),
                     cache: true) as ImageProvider;
-        return Material(
-          shape: CircleBorder(),
-          color: borderColor,
-          child: Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: CircleAvatar(
-              backgroundColor: backgroundColor,
-              backgroundImage: toUseImageProvider,
-              radius: radius,
-              minRadius: minRadius,
-              maxRadius: maxRadius,
-              child: child,
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Material(
+              shape: CircleBorder(),
+              color: borderColor,
+              child: Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: CircleAvatar(
+                  backgroundColor: backgroundColor,
+                  backgroundImage: toUseImageProvider,
+                  radius: radius,
+                  minRadius: minRadius,
+                  maxRadius: maxRadius,
+                  child: child,
+                ),
+              ),
             ),
-          ),
+            Padding(
+              padding: EdgeInsets.only(left: 2.w),
+              child: SizedBox(
+                height: 10.h,
+                width: 10.w,
+                child: Material(
+                  shape: CircleBorder(),
+                  color: appMainColor,
+                ),
+              ),
+            )
+          ],
         );
       },
     );

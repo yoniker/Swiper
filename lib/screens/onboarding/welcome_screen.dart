@@ -8,6 +8,7 @@ import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/constants/url-consts.dart';
 import 'package:betabeta/screens/onboarding/onboarding_pageview_screen.dart';
 import 'package:betabeta/screens/onboarding/phone_screen.dart';
+import 'package:betabeta/screens/onboarding/terms_screen.dart';
 import 'package:betabeta/services/aws_networking.dart';
 import 'package:betabeta/services/loginService.dart';
 import 'package:betabeta/services/settings_model.dart';
@@ -17,6 +18,7 @@ import 'package:betabeta/widgets/onboarding/loading_indicator.dart';
 import 'package:betabeta/widgets/onboarding/rounded_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -119,6 +121,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     super.initState();
   }
 
+  Future<void> _launchUrl(String url) async {
+    final Uri _url = Uri.parse(url);
+    if (!await launchUrl(_url)) {
+      throw 'Could not launch $_url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenSize.getSize(context);
@@ -147,41 +156,29 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ConditionalParentWidget(
-                      condition: ScreenSize.getSize(context) ==
-                          ScreenSizeCategory.small,
-                      conditionalBuilder: (Widget child) => FittedBox(
-                        child: child,
-                      ),
-                      child: SafeArea(
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 30),
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  BetaIconPaths.activeVoilaTabIconPath,
-                                  scale: 4,
-                                ),
-                                Text(
-                                  'Voilà - dating',
-                                  style: LargeTitleStyleWhite,
-                                  // style: TextStyle(
-                                  //     color: Colors.white,
-                                  //     fontSize: 30,
-                                  //     fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
+                    SafeArea(
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 40.h),
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                BetaIconPaths.activeVoilaTabIconPath,
+                                scale: 4,
+                              ),
+                              Text(
+                                'Voilà - dating',
+                                style: LargeTitleStyleWhite.copyWith(
+                                    fontSize: 28.sp),
+                              )
+                            ],
                           ),
                         ),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(
-                          bottom: screenHeight * 0.03,
-                          left: screenWidth * 0.06,
-                          right: screenWidth * 0.06),
+                          bottom: 10.h, left: 30.w, right: 30.w),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.values[1],
                         children: [
@@ -199,8 +196,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             },
                           ),
                           if (Platform.isIOS)
-                            const SizedBox(
-                              height: 20,
+                            SizedBox(
+                              height: 20.h,
                             ),
                           if (Platform.isIOS)
                             RoundedButton(
@@ -217,7 +214,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 },
                                 icon: Icons.apple_rounded),
                           SizedBox(
-                            height: 20,
+                            height: 20.h,
                           ),
                           RoundedButton(
                               name: 'Continue with phone      ',
@@ -229,12 +226,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           Center(
                             child: Column(
                               children: [
-                                const SizedBox(height: 20),
+                                SizedBox(height: 20.h),
                                 const Text(
                                   "Don't worry! We never post to Facebook.",
                                   style: kSmallInfoStyleWhite,
                                 ),
-                                const SizedBox(height: 5),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -243,20 +239,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                         'Terms of Service',
                                         style: kSmallInfoStyleUnderlineWhite,
                                       ),
-                                      onPressed: () async {
-                                        final url = privacyPolicyUrl;
-                                        if (await canLaunch(url)) {
-                                          await launch(url);
-                                        }
+                                      onPressed: () {
+                                        _launchUrl(termsOfUseUrl);
                                       },
                                     ),
-                                    SizedBox(width: 20),
+                                    SizedBox(width: 20.w),
                                     TextButton(
-                                      onPressed: () async {
-                                        final url = privacyPolicyUrl;
-                                        if (await canLaunch(url)) {
-                                          await launch(url);
-                                        }
+                                      onPressed: () {
+                                        _launchUrl(privacyPolicyUrl);
                                       },
                                       child: Text(
                                         'Privacy Policy',

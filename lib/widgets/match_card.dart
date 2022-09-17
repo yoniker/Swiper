@@ -13,8 +13,10 @@ import 'package:betabeta/widgets/global_widgets.dart';
 import 'package:betabeta/widgets/like_scale.dart';
 import 'package:betabeta/widgets/main_app_box.dart';
 import 'package:betabeta/widgets/pre_cached_image.dart';
+import 'package:betabeta/widgets/round_icon_button.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
@@ -607,81 +609,72 @@ class _MatchCardState extends State<MatchCard> {
           widget.profile.drinking != '' ||
           widget.profile.smoking != '')
         SizedBox(height: 10),
-      if (widget.showAI != false)
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Text(
-            'Artificial Intelligence',
-            style: boldTextStyle.copyWith(color: Colors.black54),
-          ),
+      Container(
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.only(
+          top: 8.0,
+          bottom: 12.0,
+          left: 5.0,
+          right: 5.0,
         ),
-      if (widget.showAI != false)
-        Container(
-          alignment: Alignment.centerLeft,
-          padding: EdgeInsets.only(
-            top: 8.0,
-            bottom: 12.0,
-            left: 5.0,
-            right: 5.0,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (profile.compatibilityScore != null)
-                DescriptionBanner(
-                  message: 'Personal preference',
-                  leading: Icon(
-                    Icons.info,
-                    color: Colors.blue,
-                  ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (profile.compatibilityScore != null)
+              DescriptionBanner(
+                message: 'Personal preference',
+                leading: Icon(
+                  Icons.info,
+                  color: Colors.blue,
+                ),
+                overflow: null,
+                constraints: BoxConstraints(
+                  minHeight: 75.0,
+                  maxHeight: 90.5,
+                  maxWidth: MediaQuery.of(context).size.width,
+                ),
+                trailing: CompatibilityScale(
+                  value: profile.compatibilityScore!,
+                  startValue: 20.0,
+                ),
+                onTap: () async {
+                  await GlobalWidgets.showAlertDialogue(
+                    context,
+                    title: 'Info',
+                    message:
+                        'The probability that you will like the current profile, according to Alex,your AI which learnt your personal taste.',
+                  );
+                },
+              ),
+            if (profile.hotnessScore != null)
+              DescriptionBanner(
+                  message: 'Compatibility',
                   overflow: null,
                   constraints: BoxConstraints(
                     minHeight: 75.0,
                     maxHeight: 90.5,
                     maxWidth: MediaQuery.of(context).size.width,
                   ),
-                  trailing: CompatibilityScale(
-                    value: profile.compatibilityScore!,
-                    startValue: 20.0,
+                  leading: Icon(
+                    Icons.info,
+                    color: Colors.blue,
                   ),
+                  trailing: LikeScale(value: profile.hotnessScore!),
                   onTap: () async {
-                    await GlobalWidgets.showAlertDialogue(
-                      context,
-                      title: 'Info',
-                      message:
-                          'The probability that you will like the current profile, according to Alex,your AI which learnt your personal taste.',
-                    );
-                  },
-                ),
-              if (profile.hotnessScore != null)
-                DescriptionBanner(
-                    message: 'Compatibility',
-                    overflow: null,
-                    constraints: BoxConstraints(
-                      minHeight: 75.0,
-                      maxHeight: 90.5,
-                      maxWidth: MediaQuery.of(context).size.width,
-                    ),
-                    leading: Icon(
-                      Icons.info,
-                      color: Colors.blue,
-                    ),
-                    trailing: LikeScale(value: profile.hotnessScore!),
-                    onTap: () async {
-                      try {
-                        await GlobalWidgets.showAlertDialogue(
-                          context,
-                          title: 'Info',
-                          message:
-                              'The probability that you will be a good match, according to Chris. Chris is an AI which was trained on millions of successful couples!',
-                        );
-                      } catch (e, s) {
-                        print(s);
-                      }
-                    }),
-            ],
-          ),
+                    try {
+                      await GlobalWidgets.showAlertDialogue(
+                        context,
+                        title: 'Info',
+                        message:
+                            'The probability that you will be a good match, according to Chris. Chris is an AI which was trained on millions of successful couples!',
+                      );
+                    } catch (e, s) {
+                      print(s);
+                    }
+                  }),
+          ],
         ),
+      ),
     ];
   }
 
@@ -700,7 +693,6 @@ class _MatchCardState extends State<MatchCard> {
         color: Colors.transparent,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: lightCardColor,
@@ -714,37 +706,28 @@ class _MatchCardState extends State<MatchCard> {
       //
       // Note: Any Container Within the Widget tree will obscure the action of any InkWell Widget
       // below such Container in the Widget tree.
-      child: Material(
-        // With this as transparent we can retain the original color of the Enclosing
-        // Decoration Widget.
-        color: Colors.transparent,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            GestureDetector(
-              onTap: () {
-                MatchEngine.instance.currentMatchDecision(Decision.nope);
-                print('nope pressed');
-              },
-              child: Icon(
-                Icons.thumb_down,
-                color: Colors.red,
-                size: 40,
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                MatchEngine.instance.currentMatchDecision(Decision.like);
-                print('yes pressed');
-              },
-              child: Icon(
-                Icons.thumb_up_sharp,
-                color: Colors.green,
-                size: 40,
-              ),
-            ),
-          ],
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          RoundIconButton.large(
+            onPressed: () {
+              MatchEngine.instance.currentMatchDecision(Decision.nope);
+              print('nope pressed');
+            },
+            iconColor: Colors.redAccent,
+            iconSize: 40,
+            icon: Icons.close,
+          ),
+          RoundIconButton.large(
+            onPressed: () {
+              MatchEngine.instance.currentMatchDecision(Decision.like);
+              print('yes pressed');
+            },
+            iconColor: Colors.green,
+            iconSize: 30,
+            icon: FontAwesomeIcons.heart,
+          ),
+        ],
       ),
     );
   }
