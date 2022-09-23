@@ -1,5 +1,6 @@
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/lists_consts.dart';
+import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
@@ -23,7 +24,7 @@ class _FitnessScreen extends State<FitnessScreen> {
         notifier: SettingsData.instance,
         builder: (context) {
           return Scaffold(
-              backgroundColor: backgroundThemeColor,
+              backgroundColor: kBackroundThemeColor,
               appBar: widget.onboardingMode
                   ? null
                   : CustomAppBar(

@@ -18,65 +18,75 @@ class _GetNameScreenState extends State<GetNameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kBackroundThemeColor,
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const FittedBox(
-                    child: Text(
-                      "What's your first name?",
-                      style: kTitleStyle,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: kBackroundThemeColor,
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const FittedBox(
+                          child: Text(
+                            "What's your first name?",
+                            style: kTitleStyle,
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                        InputField(
+                          initialvalue: userName,
+                          onTapIcon: () {
+                            SettingsData.instance.name = userName;
+                            widget.onNext?.call();
+                          },
+                          icon: userName.length == 0 ? null : Icons.send,
+                          hintText: ' Enter your first name here.',
+                          onType: (value) {
+                            setState(() {
+                              userName = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: const [
+                            Icon(Icons.remove_red_eye_rounded,
+                                color: Colors.black54),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: Text(
+                                'This will be shown on your profile.',
+                                style: kSmallInfoStyle,
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 30),
-                  InputField(
-                    initialvalue: userName,
-                    onTapIcon: () {
-                      SettingsData.instance.name = userName;
-                      widget.onNext?.call();
-                    },
-                    icon: userName.length == 0 ? null : Icons.send,
-                    hintText: ' Enter your first name here.',
-                    onType: (value) {
-                      setState(() {
-                        userName = value;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: const [
-                      Icon(Icons.remove_red_eye_rounded, color: Colors.black54),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          'This will be shown on your profile.',
-                          style: kSmallInfoStyle,
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-              RoundedButton(
-                name: 'NEXT',
-                onTap: userName.isEmpty
-                    ? null
-                    : () {
-                        SettingsData.instance.name = userName;
-                        widget.onNext?.call();
-                      },
-              )
-            ],
+                ),
+                RoundedButton(
+                  name: 'NEXT',
+                  onTap: userName.isEmpty
+                      ? null
+                      : () {
+                          SettingsData.instance.name = userName;
+                          widget.onNext?.call();
+                        },
+                )
+              ],
+            ),
           ),
         ),
       ),

@@ -65,117 +65,135 @@ class _TermsScreenState extends State<TermsScreen> {
                   )),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 30.h, horizontal: 30.w),
+              padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 20.w),
               child: SafeArea(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Center(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          AnimatedTextKit(
-                            animatedTexts: [
-                              ColorizeAnimatedText('Welcome to Voilà!',
-                                  colors: colorizeColors,
-                                  textStyle: kTitleStyleBlack)
+                    Expanded(
+                      child: RawScrollbar(
+                        radius: Radius.circular(30),
+                        thumbVisibility: true,
+                        controller: scrollController,
+                        child: SingleChildScrollView(
+                          controller: scrollController,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              AnimatedTextKit(
+                                animatedTexts: [
+                                  ColorizeAnimatedText('Welcome to Voilà!',
+                                      colors: colorizeColors,
+                                      textStyle: kTitleStyleBlack)
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'Please follow these guidelines:',
+                                style: kSmallInfoStyleWhite.copyWith(
+                                  fontSize: 16,
+                                  color: Colors.white.withOpacity(0.8),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(bottom: 5, top: 20),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      '✔',
+                                      style: kVstyle,
+                                    ),
+                                    Text(
+                                      '  No Catfishing.',
+                                      style:
+                                          kWhiteDescriptionShadowStyle.copyWith(
+                                              color: Colors.white,
+                                              fontSize: 20),
+                                      textAlign: TextAlign.start,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                'Use your own bio, age and photos',
+                                style: kSmallInfoStyleWhite.copyWith(
+                                  fontSize: 16,
+                                  color: Colors.white.withOpacity(0.8),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(bottom: 5, top: 20),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      '✔',
+                                      style: kVstyle,
+                                    ),
+                                    Text(
+                                      '  Respect.',
+                                      style:
+                                          kWhiteDescriptionShadowStyle.copyWith(
+                                              color: Colors.white,
+                                              fontSize: 20),
+                                      textAlign: TextAlign.start,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                'Treat others the same way you would want to be treated.',
+                                style: kSmallInfoStyleWhite.copyWith(
+                                  fontSize: 16,
+                                  color: Colors.white.withOpacity(0.8),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(bottom: 5, top: 20),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      '✔',
+                                      style: kVstyle,
+                                    ),
+                                    Text(
+                                      '  Security.',
+                                      style:
+                                          kWhiteDescriptionShadowStyle.copyWith(
+                                              color: Colors.white,
+                                              fontSize: 20),
+                                      textAlign: TextAlign.start,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                'Don\'t give away your personal information too quickly!',
+                                style: kSmallInfoStyleWhite.copyWith(
+                                  fontSize: 16,
+                                  color: Colors.white.withOpacity(0.8),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 20, top: 20),
+                                child: Text(
+                                  'And remember that we are here for you!',
+                                  style: kSmallInfoStyleWhite.copyWith(
+                                    fontSize: 16,
+                                    color: Colors.white.withOpacity(0.8),
+                                  ),
+                                  textAlign: TextAlign.start,
+                                ),
+                              ),
                             ],
                           ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            'Please follow these guidelines:',
-                            style: kSmallInfoStyleWhite.copyWith(
-                              fontSize: 16,
-                              color: Colors.white.withOpacity(0.8),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 5, top: 20),
-                            child: Row(
-                              children: [
-                                Text(
-                                  '✔',
-                                  style: kVstyle,
-                                ),
-                                Text(
-                                  '  No Catfishing.',
-                                  style: kWhiteDescriptionShadowStyle.copyWith(
-                                      color: Colors.white, fontSize: 20),
-                                  textAlign: TextAlign.start,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Text(
-                            'Use your own bio, age and photos',
-                            style: kSmallInfoStyleWhite.copyWith(
-                              fontSize: 16,
-                              color: Colors.white.withOpacity(0.8),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 5, top: 20),
-                            child: Row(
-                              children: [
-                                Text(
-                                  '✔',
-                                  style: kVstyle,
-                                ),
-                                Text(
-                                  '  Respect.',
-                                  style: kWhiteDescriptionShadowStyle.copyWith(
-                                      color: Colors.white, fontSize: 20),
-                                  textAlign: TextAlign.start,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Text(
-                            'Treat others the same way you would want to be treated.',
-                            style: kSmallInfoStyleWhite.copyWith(
-                              fontSize: 16,
-                              color: Colors.white.withOpacity(0.8),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 5, top: 20),
-                            child: Row(
-                              children: [
-                                Text(
-                                  '✔',
-                                  style: kVstyle,
-                                ),
-                                Text(
-                                  '  Security.',
-                                  style: kWhiteDescriptionShadowStyle.copyWith(
-                                      color: Colors.white, fontSize: 20),
-                                  textAlign: TextAlign.start,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Text(
-                            'Don\'t give away your personal information too quickly!',
-                            style: kSmallInfoStyleWhite.copyWith(
-                              fontSize: 16,
-                              color: Colors.white.withOpacity(0.8),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 20, top: 20),
-                            child: Text(
-                              'And remember that we are here for you!',
-                              style: kSmallInfoStyleWhite.copyWith(
-                                fontSize: 16,
-                                color: Colors.white.withOpacity(0.8),
-                              ),
-                              textAlign: TextAlign.start,
-                            ),
-                          )
-                        ],
+                        ),
                       ),
                     ),
                     RoundedButton(

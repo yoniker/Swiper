@@ -1,4 +1,5 @@
 import 'package:betabeta/constants/color_constants.dart';
+import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/screen_size.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/listener_widget.dart';
@@ -30,7 +31,7 @@ class _DynamicPickerScreenState extends State<DynamicPickerScreen> {
       notifier: SettingsData.instance,
       builder: (context) {
         return Scaffold(
-          backgroundColor: backgroundThemeColor,
+          backgroundColor: kBackroundThemeColor,
           body: Padding(
             padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
             child: Column(

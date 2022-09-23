@@ -1,5 +1,6 @@
 import 'package:betabeta/constants/color_constants.dart';
 import 'package:betabeta/constants/lists_consts.dart';
+import 'package:betabeta/constants/onboarding_consts.dart';
 import 'package:betabeta/services/settings_model.dart';
 import 'package:betabeta/widgets/bubbles_list_widget.dart';
 import 'package:betabeta/widgets/custom_app_bar.dart';
@@ -18,7 +19,7 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundThemeColor,
+      backgroundColor: kBackroundThemeColor,
       appBar: widget.onboardingMode
           ? null
           : CustomAppBar(

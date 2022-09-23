@@ -46,110 +46,124 @@ class _FinishOnboardingScreenState extends State<FinishOnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          SizedBox.expand(
-            child: FittedBox(
-              fit: BoxFit.cover,
-              child: SizedBox(
-                width: _controller.value.size.width,
-                height: _controller.value.size.height,
-                child: VideoPlayer(_controller),
+    ScrollController _scrollController = ScrollController();
+    return GestureDetector(
+      onTap: () {
+        if (_scrollController.position.maxScrollExtent.isFinite)
+          _scrollController.animateTo(
+              _scrollController.position.maxScrollExtent,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeIn);
+      },
+      child: Scaffold(
+        body: Stack(
+          children: [
+            SizedBox.expand(
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: SizedBox(
+                  width: _controller.value.size.width,
+                  height: _controller.value.size.height,
+                  child: VideoPlayer(_controller),
+                ),
               ),
             ),
-          ),
-          RawScrollbar(
-            thumbVisibility: true,
-            thumbColor: Colors.white24,
-            thickness: 5,
-            child: CustomScrollView(
-              scrollDirection: Axis.vertical,
-              reverse: true,
-              slivers: [
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Container(
-                    color: Colors.black26,
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Center(
-                                child: Image.asset(
-                                  'assets/onboarding/images/Voila-logo.png',
-                                  height: 200,
+            RawScrollbar(
+              thumbVisibility: true,
+              thumbColor: Colors.white70,
+              controller: _scrollController,
+              radius: Radius.circular(30),
+              thickness: 5,
+              child: CustomScrollView(
+                controller: _scrollController,
+                scrollDirection: Axis.vertical,
+                reverse: false,
+                slivers: [
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Container(
+                      color: Colors.black26,
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Center(
+                                  child: Image.asset(
+                                    'assets/onboarding/images/Voila-logo.png',
+                                    height: 200,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                lookingFor(),
-                                style: kWhiteDescriptionShadowStyle.copyWith(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    overflow: TextOverflow.visible),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                'You can start up to 3 conversations unless they message you first!',
-                                style: kWhiteDescriptionShadowStyle.copyWith(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    overflow: TextOverflow.visible),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Text(
-                                'People love to see a detailed profile. \nYou can add more information about yourself below.',
-                                style: kWhiteDescriptionShadowStyle.copyWith(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    overflow: TextOverflow.visible),
-                              )
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              TextButton(
-                                onPressed: () {
-                                  widget.onNext?.call();
-                                },
-                                child: Text(
-                                  'Skip for now',
-                                  style: kButtonTextWhite.copyWith(
-                                      decoration: TextDecoration.underline),
+                                Text(
+                                  lookingFor(),
+                                  style: kWhiteDescriptionShadowStyle.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      overflow: TextOverflow.visible),
                                 ),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              RoundedButton(
-                                name: 'Complete profile now',
-                                onTap: () async {
-                                  await Get.toNamed(
-                                      CompleteProfilePageViewScreen.routeName);
-                                  widget.onNext?.call();
-                                },
-                                color: Colors.white,
-                              ),
-                            ],
-                          )
-                        ],
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  'You can start up to 3 conversations unless they message you first!',
+                                  style: kWhiteDescriptionShadowStyle.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      overflow: TextOverflow.visible),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                  'You can add more information about yourself below.',
+                                  style: kWhiteDescriptionShadowStyle.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      overflow: TextOverflow.visible),
+                                )
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    widget.onNext?.call();
+                                  },
+                                  child: Text(
+                                    'Skip for now',
+                                    style: kButtonTextWhite.copyWith(
+                                        decoration: TextDecoration.underline),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                RoundedButton(
+                                  name: 'Complete profile now',
+                                  onTap: () async {
+                                    await Get.toNamed(
+                                        CompleteProfilePageViewScreen
+                                            .routeName);
+                                    widget.onNext?.call();
+                                  },
+                                  color: Colors.white,
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

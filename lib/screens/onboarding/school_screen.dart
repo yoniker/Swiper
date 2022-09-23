@@ -23,7 +23,7 @@ class _SchoolScreenState extends State<SchoolScreen> {
       notifier: SettingsData.instance,
       builder: (context) {
         return Scaffold(
-          backgroundColor: backgroundThemeColor,
+          backgroundColor: kBackroundThemeColor,
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
