@@ -89,19 +89,19 @@ class _TermsScreenState extends State<TermsScreen> {
                                       textStyle: kTitleStyleBlack)
                                 ],
                               ),
-                              const SizedBox(
-                                height: 10,
+                              SizedBox(
+                                height: 10.h,
                               ),
                               Text(
                                 'Please follow these guidelines:',
                                 style: kSmallInfoStyleWhite.copyWith(
-                                  fontSize: 16,
+                                  fontSize: 20.sp,
                                   color: Colors.white.withOpacity(0.8),
                                 ),
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(bottom: 5, top: 20),
+                                    EdgeInsets.only(bottom: 5.h, top: 20.h),
                                 child: Row(
                                   children: [
                                     Text(
@@ -113,7 +113,7 @@ class _TermsScreenState extends State<TermsScreen> {
                                       style:
                                           kWhiteDescriptionShadowStyle.copyWith(
                                               color: Colors.white,
-                                              fontSize: 20),
+                                              fontSize: 22.sp),
                                       textAlign: TextAlign.start,
                                     ),
                                   ],
@@ -122,13 +122,13 @@ class _TermsScreenState extends State<TermsScreen> {
                               Text(
                                 'Use your own bio, age and photos',
                                 style: kSmallInfoStyleWhite.copyWith(
-                                  fontSize: 16,
+                                  fontSize: 20.sp,
                                   color: Colors.white.withOpacity(0.8),
                                 ),
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(bottom: 5, top: 20),
+                                    EdgeInsets.only(bottom: 5.h, top: 20.h),
                                 child: Row(
                                   children: [
                                     Text(
@@ -140,7 +140,7 @@ class _TermsScreenState extends State<TermsScreen> {
                                       style:
                                           kWhiteDescriptionShadowStyle.copyWith(
                                               color: Colors.white,
-                                              fontSize: 20),
+                                              fontSize: 22.sp),
                                       textAlign: TextAlign.start,
                                     ),
                                   ],
@@ -149,13 +149,13 @@ class _TermsScreenState extends State<TermsScreen> {
                               Text(
                                 'Treat others the same way you would want to be treated.',
                                 style: kSmallInfoStyleWhite.copyWith(
-                                  fontSize: 16,
+                                  fontSize: 20.sp,
                                   color: Colors.white.withOpacity(0.8),
                                 ),
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.only(bottom: 5, top: 20),
+                                    EdgeInsets.only(bottom: 5.h, top: 20.h),
                                 child: Row(
                                   children: [
                                     Text(
@@ -167,7 +167,7 @@ class _TermsScreenState extends State<TermsScreen> {
                                       style:
                                           kWhiteDescriptionShadowStyle.copyWith(
                                               color: Colors.white,
-                                              fontSize: 20),
+                                              fontSize: 22.sp),
                                       textAlign: TextAlign.start,
                                     ),
                                   ],
@@ -176,16 +176,17 @@ class _TermsScreenState extends State<TermsScreen> {
                               Text(
                                 'Don\'t give away your personal information too quickly!',
                                 style: kSmallInfoStyleWhite.copyWith(
-                                  fontSize: 16,
+                                  fontSize: 20.sp,
                                   color: Colors.white.withOpacity(0.8),
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(bottom: 20, top: 20),
+                                padding:
+                                    EdgeInsets.only(bottom: 20.h, top: 20.h),
                                 child: Text(
                                   'And remember that we are here for you!',
                                   style: kSmallInfoStyleWhite.copyWith(
-                                    fontSize: 16,
+                                    fontSize: 20.sp,
                                     color: Colors.white.withOpacity(0.8),
                                   ),
                                   textAlign: TextAlign.start,
